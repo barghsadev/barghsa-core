@@ -1535,3 +1535,9 @@ Review and validation: four controlled catalogue checks and both production-migr
 Gift-code date/time inputs now display and edit the saved account timezone. Editor initialization waits for the preference, failed reads remain retryable through search, and changed fields use the validated wall-clock conversion. Unchanged start/end fields retain their original timestamp strings, including fractional seconds.
 
 Review and validation: all three controlled gift-code browser checks and both production-migrated API/browser gift-code checks pass. New coverage verifies 12:34 UTC displays as 16:04 in Tehran, changing another field preserves both original timestamps exactly, and changing the start time to 10:15 stores 06:45 UTC without changing expiry. Existing discount scope, profile selection, status changes and captured step-up retry remain covered. Root build/types/lint and bundle checks pass.
+
+### Apply account calendar days to CRM filters and labels (F20)
+
+CRM registration filters now resolve calendar days in the saved account timezone. The final day retains PostgreSQL microsecond precision, and displayed registration/last-login dates plus active date-filter labels use the same zone and locale. Pickers constrain reversed date ranges. A failed preference read disables date selection, prevents a CRM request in an unknown zone and remains recoverable through refresh. Pagination resets when the timezone changes.
+
+Review and validation: all six CRM browser checks and four date-helper checks pass. Coverage verifies Tehran Nowruz and Esfand leap-day UTC boundaries, full Persian labels, account-zone registration display across midnight, failed preference retry, cursor navigation and extreme +14-hour date construction. Root build, types, lint and bundle checks pass. All five current production DatePicker consumers now pass the account timezone; unrelated date displays elsewhere and administrator numeral preferences remain open F20 work.

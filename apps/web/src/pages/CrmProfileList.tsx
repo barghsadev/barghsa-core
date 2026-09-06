@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n';
-import { Button, Input, Label, DatePicker } from '@barghsa/ui';
+import {
+  Button,
+  Input,
+  Label,
+  DatePicker,
+  datePickerCalendarDate,
+  datePickerDayBounds,
+} from '@barghsa/ui';
+import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 interface User {
   userId: string;
@@ -22,6 +30,7 @@ const emptyFilters = {
 };
 export default function CrmProfileList() {
   const locale = useLocale();
+  const preference = useTimezone();
   const search = useSearch({ from: '/admin/crm/' });
   const [filters, setFilters] = useState({
     ...emptyFilters,
@@ -51,9 +60,17 @@ export default function CrmProfileList() {
     }, 300);
     return () => clearTimeout(timer);
   }, [text, term]);
+  useEffect(() => {
+    setCursors(['']);
+  }, [preference.timezone]);
   const cursor = cursors.at(-1) ?? '';
   const load = useCallback(async () => {
     const current = ++generation.current;
+    if (preference.status !== 'ready') {
+      setLoading(false);
+      setResult(null);
+      return;
+    }
     setLoading(true);
     setError(false);
     setResult(null);
@@ -62,8 +79,16 @@ export default function CrmProfileList() {
     for (const [key, value] of Object.entries({ ...filters, search: term, cursor })) {
       if (value) params.set(key, String(value));
     }
-    // Inclusive final day, independent of the browser's local time zone.
-    if (filters.dateTo) params.set('dateTo', `${filters.dateTo}T23:59:59.999999Z`);
+    for (const key of ['dateFrom', 'dateTo'] as const) {
+      const selected = datePickerCalendarDate(filters[key], preference.timezone);
+      if (!selected) continue;
+      const { start, end } = datePickerDayBounds(selected, preference.timezone);
+      // PostgreSQL records microseconds; retain the entire inclusive final day.
+      params.set(
+        key,
+        key === 'dateFrom' ? start.toISOString() : end.toISOString().replace('.999Z', '.999999Z')
+      );
+    }
     try {
       const response = await fetch(`/api/crm/users?${params}`, { credentials: 'include' });
       if (!response.ok) throw new Error('CRM unavailable');
@@ -75,7 +100,7 @@ export default function CrmProfileList() {
     } finally {
       if (current === generation.current) setLoading(false);
     }
-  }, [filters, term, cursor]);
+  }, [filters, term, cursor, preference.status, preference.timezone]);
   useEffect(() => {
     void load();
     return () => {
@@ -90,7 +115,7 @@ export default function CrmProfileList() {
     return value
       ? new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-GB', {
           dateStyle: 'medium',
-          timeZone: 'UTC',
+          timeZone: preference.timezone,
         }).format(new Date(value))
       : '—';
   }
@@ -134,8 +159,18 @@ export default function CrmProfileList() {
               id={`crm-${key}`}
               label={t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}
               placeholder={t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}
-              jalali={locale === 'fa'}
-              {...(filters[key] ? { value: new Date(`${filters[key]}T12:00:00`) } : {})}
+              locale={locale}
+              timezone={preference.timezone}
+              disabled={preference.status !== 'ready'}
+              {...(filters[key]
+                ? { value: datePickerCalendarDate(filters[key], preference.timezone) }
+                : {})}
+              {...(key === 'dateTo' && filters.dateFrom
+                ? { minDate: datePickerCalendarDate(filters.dateFrom, preference.timezone) }
+                : {})}
+              {...(key === 'dateFrom' && filters.dateTo
+                ? { maxDate: datePickerCalendarDate(filters.dateTo, preference.timezone) }
+                : {})}
               onChange={(value) =>
                 update(
                   key,
@@ -156,6 +191,11 @@ export default function CrmProfileList() {
           {t('crm.list.staffOnly', locale)}
         </Label>
       </div>
+      {preference.status === 'ready' && (
+        <p className="text-sm text-muted-foreground">
+          {t('crm.list.timezone', locale).replace('{timezone}', preference.timezone)}
+        </p>
+      )}
       <div className="flex flex-wrap gap-2">
         <Button
           variant="outline"
@@ -171,7 +211,14 @@ export default function CrmProfileList() {
         <Button variant="outline" onClick={() => setExpanded({})}>
           {t('crm.list.collapse', locale)}
         </Button>
-        <Button variant="outline" disabled={loading} onClick={() => void load()}>
+        <Button
+          variant="outline"
+          disabled={loading || preference.status === 'loading'}
+          onClick={() => {
+            if (preference.status === 'error') preference.retry();
+            else void load();
+          }}
+        >
           {t('crm.list.refresh', locale)}
         </Button>
       </div>
@@ -189,13 +236,16 @@ export default function CrmProfileList() {
                 `crm.list.${key === 'staffOnly' ? 'staffOnly' : key === 'dateFrom' ? 'from' : key === 'dateTo' ? 'to' : String(value)}`,
                 locale
               )}
-              {key === 'dateFrom' || key === 'dateTo' ? `: ${value}` : ''} ×
+              {key === 'dateFrom' || key === 'dateTo'
+                ? `: ${date(datePickerCalendarDate(String(value), preference.timezone)?.toISOString() ?? null)}`
+                : ''}{' '}
+              ×
             </Button>
           ))}
       </div>
-      {loading ? (
+      {loading || preference.status === 'loading' ? (
         <p role="status">{t('crm.list.loading', locale)}</p>
-      ) : error ? (
+      ) : error || preference.status === 'error' ? (
         <p role="alert">{t('crm.list.error', locale)}</p>
       ) : !result?.users.length ? (
         <p>{t('crm.list.empty', locale)}</p>

@@ -25,8 +25,8 @@ interface DatePickerBaseProps {
   timezone?: string;
   numerals?: 'arabext' | 'latn';
   /** Inclusive calendar-day limits. Existing values are never silently changed. */
-  minDate?: Date;
-  maxDate?: Date;
+  minDate?: Date | undefined;
+  maxDate?: Date | undefined;
   disabled?: boolean;
   error?: string;
   placeholder?: string;
@@ -37,7 +37,7 @@ interface DatePickerBaseProps {
 
 interface DatePickerSingleProps extends DatePickerBaseProps {
   calendarMode?: 'single';
-  value?: Date;
+  value?: Date | undefined;
   onChange?: (date: Date | undefined) => void;
 }
 
@@ -286,5 +286,20 @@ function datePickerAtTime(
   return new Date(value.getTime());
 }
 
-export { DatePicker, datePickerDayBounds, datePickerAtTime };
+/** Convert a Gregorian date-only filter into noon in its account timezone. */
+function datePickerCalendarDate(value: string, timezone: string): Date | undefined {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return undefined;
+  const year = Number(match[1]),
+    month = Number(match[2]) - 1,
+    day = Number(match[3]);
+  const date = new TZDate(0, timezone);
+  date.setFullYear(year, month, day);
+  date.setHours(12, 0, 0, 0);
+  return date.getFullYear() === year && date.getMonth() === month && date.getDate() === day
+    ? date
+    : undefined;
+}
+
+export { DatePicker, datePickerDayBounds, datePickerAtTime, datePickerCalendarDate };
 export type { DatePickerProps, DatePickerSingleProps, DatePickerRangeProps };

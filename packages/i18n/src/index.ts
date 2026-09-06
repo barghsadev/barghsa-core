@@ -1912,6 +1912,7 @@ export const fa: I18nDictionary = {
 
   // ── Staff bank-receipt confirmation (T-04.2.02.04) ──────
   'admin.approvals.title': 'تأییدهای مالی',
+  'crm.list.timezone': 'منطقه زمانی حساب: {timezone}',
   'crm.list.title': 'کاربران مدیریت مشتریان',
   'crm.list.search': 'جست‌وجوی کاربر یا نام پروفایل',
   'crm.list.type': 'نوع پروفایل',
@@ -3964,6 +3965,7 @@ export const en: I18nDictionary = {
 
   // ── Staff bank-receipt confirmation (T-04.2.02.04) ──────
   'admin.approvals.title': 'Financial approvals',
+  'crm.list.timezone': 'Account timezone: {timezone}',
   'crm.list.title': 'CRM users',
   'crm.list.search': 'Search users or profile names',
   'crm.list.type': 'Profile type',

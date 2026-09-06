@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { datePickerAtTime, datePickerDayBounds } from './date-picker';
+import { datePickerAtTime, datePickerDayBounds, datePickerCalendarDate } from './date-picker';
 
 describe('account calendar timestamps', () => {
   it('resolves the Tehran day independently of the host zone', () => {
@@ -24,4 +24,16 @@ describe('account calendar timestamps', () => {
     expect(start.toISOString()).toBe('2026-11-01T04:00:00.000Z');
     expect(end.toISOString()).toBe('2026-11-02T04:59:59.999Z');
   });
+});
+
+it('constructs date-only filters in extreme zones and rejects invalid dates', () => {
+  expect(datePickerCalendarDate('2026-03-21', 'Pacific/Kiritimati')?.toISOString()).toBe(
+    '2026-03-21T12:00:00.000+14:00'
+  );
+  const selected = datePickerCalendarDate('2026-03-21', 'Pacific/Kiritimati')!;
+  expect(datePickerDayBounds(selected, 'Pacific/Kiritimati').start.toISOString()).toBe(
+    '2026-03-20T10:00:00.000Z'
+  );
+  expect(datePickerCalendarDate('2026-02-30', 'UTC')).toBeUndefined();
+  expect(datePickerCalendarDate('2026-13-01', 'UTC')).toBeUndefined();
 });

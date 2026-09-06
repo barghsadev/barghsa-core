@@ -23,6 +23,9 @@ for (const locale of ['en', 'fa'])
       }).observe(document, { childList: true });
     }, locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
     const requests: URL[] = [];
     await page.route('**/api/crm/users?*', (route) => {
       const url = new URL(route.request().url());
@@ -79,6 +82,9 @@ test('CRM access errors remain errors and can be retried', async ({ page }) => {
     }).observe(document, { childList: true });
   });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
   let allowed = false;
   await page.route('**/api/crm/users?*', (route) =>
     route.fulfill(
@@ -94,19 +100,23 @@ test('CRM access errors remain errors and can be retried', async ({ page }) => {
 test('Persian picker uses Jalali month boundaries and sends Gregorian API dates', async ({
   page,
 }) => {
-  await page.clock.install({ time: new Date('2026-03-21T12:00:00Z') });
   await page.addInitScript(() => {
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'fa';
     }).observe(document, { childList: true });
   });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
   const requests: URL[] = [];
   await page.route('**/api/crm/users?*', (route) => {
     requests.push(new URL(route.request().url()));
     return route.fulfill({ json: { users: [], cursor: null, hasMore: false } });
   });
   await page.goto('/admin/crm');
+  await expect(page.getByRole('combobox', { name: 'ثبت‌نام از', exact: true })).toBeEnabled();
+  await page.clock.setFixedTime(new Date('2026-03-21T12:00:00Z'));
   await page.getByRole('combobox', { name: 'ثبت‌نام از', exact: true }).click();
   const calendar = page.locator('[data-slot="calendar"]');
   await expect(calendar).toContainText('فروردین');
@@ -114,19 +124,23 @@ test('Persian picker uses Jalali month boundaries and sends Gregorian API dates'
     .getByRole('button', { name: /فروردین.*۱.*۱۴۰۵|۱.*فروردین.*۱۴۰۵/ })
     .first();
   await firstDay.click();
-  await expect.poll(() => requests.at(-1)?.searchParams.get('dateFrom')).toBe('2026-03-21');
+  await expect
+    .poll(() => requests.at(-1)?.searchParams.get('dateFrom'))
+    .toBe('2026-03-20T20:30:00.000Z');
   await expect(page.getByRole('combobox', { name: 'ثبت‌نام از', exact: true })).toContainText(
     '۱ فروردین ۱۴۰۵'
   );
 });
 test('Jalali leap-day selection and keyboard dismissal preserve the date', async ({ page }) => {
-  await page.clock.install({ time: new Date('2025-03-20T12:00:00Z') });
   await page.addInitScript(() => {
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'fa';
     }).observe(document, { childList: true });
   });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
   const requests: URL[] = [];
   await page.route('**/api/crm/users?*', (route) => {
     requests.push(new URL(route.request().url()));
@@ -134,6 +148,8 @@ test('Jalali leap-day selection and keyboard dismissal preserve the date', async
   });
   await page.goto('/admin/crm');
   const trigger = page.getByRole('combobox', { name: 'ثبت‌نام تا', exact: true });
+  await expect(trigger).toBeEnabled();
+  await page.clock.setFixedTime(new Date('2025-03-20T12:00:00Z'));
   await trigger.focus();
   await page.keyboard.press('Enter');
   const calendar = page.locator('[data-slot="calendar"]');
@@ -141,10 +157,55 @@ test('Jalali leap-day selection and keyboard dismissal preserve the date', async
   await calendar.getByRole('button', { name: /۳۰.*اسفند.*۱۴۰۳|اسفند.*۳۰.*۱۴۰۳/ }).click();
   await expect
     .poll(() => requests.at(-1)?.searchParams.get('dateTo'))
-    .toBe('2025-03-20T23:59:59.999999Z');
+    .toBe('2025-03-20T20:29:59.999999Z');
   await trigger.click();
   await page.keyboard.press('Escape');
   await expect(calendar).toHaveCount(0);
   await expect(trigger).toBeFocused();
   await expect(trigger).toContainText('۳۰ اسفند ۱۴۰۳');
+});
+
+test('CRM waits for account timezone, retries and displays registration in that zone', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    new MutationObserver(() => {
+      document.documentElement.lang = 'en';
+    }).observe(document, { childList: true });
+  });
+  let failed = true;
+  let queries = 0;
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill(failed ? { status: 503, json: {} } : { json: { timezone: 'Asia/Tehran' } })
+  );
+  await page.route('**/api/crm/users?*', (route) => {
+    queries++;
+    return route.fulfill({
+      json: {
+        users: [
+          {
+            userId: 'zone-user',
+            username: 'zone@example.test',
+            registrationDate: '2026-03-20T22:00:00Z',
+            lastLogin: null,
+            profileCount: 0,
+            hasVerifiedProfile: false,
+            profiles: [],
+          },
+        ],
+        cursor: null,
+        hasMore: false,
+      },
+    });
+  });
+  await page.goto('/admin/crm');
+  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.locator('#crm-dateFrom')).toBeDisabled();
+  expect(queries).toBe(0);
+  failed = false;
+  await page.getByRole('button', { name: 'Refresh', exact: true }).click();
+  await expect(page.locator('#crm-dateFrom')).toBeEnabled();
+  await expect(page.getByText('Account timezone: Asia/Tehran', { exact: true })).toBeVisible();
+  await expect(page.getByText('21 Mar 2026', { exact: true })).toBeVisible();
 });
