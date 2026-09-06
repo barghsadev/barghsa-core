@@ -132,3 +132,69 @@ it('does not sign missing files or create history for unknown records', async ()
   expect((await row(key)).status).toBe('active');
   expect((await request('unknown', 'DELETE')).status).toBe(404);
 });
+
+it('authenticates every upload step and requires CSRF before storage access', async () => {
+  const bytes = Buffer.from('%PDF-1.7 test');
+  const body = {
+    fileName: 'upload.pdf',
+    contentType: 'application/pdf',
+    fileSize: bytes.length,
+    category: 'document',
+  };
+  for (const suffix of [
+    'presigned-url',
+    `${encodeURIComponent('uploads/document/test.pdf')}/verify`,
+    `${encodeURIComponent('uploads/document/test.pdf')}/record`,
+  ]) {
+    const url = `${http.base}/api/upload/${suffix}`;
+    expect(
+      (
+        await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+      ).status
+    ).toBe(401);
+    expect(
+      (
+        await fetch(url, {
+          method: 'POST',
+          headers: { Cookie: headers.Cookie!, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+      ).status
+    ).toBe(403);
+  }
+  const presigned = await fetch(`${http.base}/api/upload/presigned-url`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+  expect(presigned.status).toBe(200);
+  const upload = (await presigned.json()) as {
+    key: string;
+    presignedUrl: string;
+    expiresIn: number;
+  };
+  expect(upload.key).toMatch(/^uploads\/document\/[a-f0-9-]+\.pdf$/);
+  expect(upload.expiresIn).toBe(3600);
+  objects.set(upload.key, bytes);
+  const verify = await fetch(`${http.base}/api/upload/${encodeURIComponent(upload.key)}/verify`, {
+    method: 'POST',
+    headers,
+    body: '{}',
+  });
+  expect(verify.status).toBe(200);
+  expect(await verify.json()).toMatchObject({ status: 'confirmed' });
+  const record = await fetch(`${http.base}/api/upload/${encodeURIComponent(upload.key)}/record`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+  expect(record.status).toBe(200);
+  expect((await row(upload.key)).metadata).toMatchObject({
+    uploadedBy: 'storage-actor',
+    verified: true,
+  });
+});

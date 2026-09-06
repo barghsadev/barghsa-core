@@ -40,6 +40,7 @@ const UPLOAD_PREFIX = 'uploads/';
 const DEFAULT_EXPIRES_IN = 3600; // 1 hour
 
 @Controller('api/upload')
+@UseGuards(SessionAuthGuard)
 export class UploadController {
   constructor(
     @Inject(STORAGE_PROVIDER)
@@ -223,7 +224,6 @@ export class UploadController {
    */
   @Post(':key/record')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(SessionAuthGuard)
   async recordUpload(
     @Param('key') key: string,
     @Body()
