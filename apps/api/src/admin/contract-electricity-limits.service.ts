@@ -75,9 +75,8 @@ export class ContractElectricityLimitsService {
    *
    * Returns the T-09.12.06 defaults (`20%` increase cap, `24` Jalali
    * months, `0` lead days) when no admin value has been persisted. A
-   * persisted row that does not normalize to a *valid* config is warned
-   * about and served as the defaults — a corrupt value must not crash the
-   * read path or silently change the enforced limits.
+   * malformed persisted row fails closed instead of replacing saved limits
+   * with defaults.
    */
   async get(): Promise<ContractElectricityLimits> {
     const pool = getDbPool();
@@ -89,16 +88,17 @@ export class ContractElectricityLimitsService {
       return { ...DEFAULT_CONTRACT_ELECTRICITY_LIMITS };
     }
     const persisted = result.rows[0]!.value as Record<string, unknown> | null;
-    // The stored snake_case shape must itself validate; a malformed row is
-    // logged and served as the documented defaults, so a corrupt value can
-    // never widen or narrow the enforced limits (same fail-safe as the
-    // green-electricity config read path).
+    // Missing and malformed settings have different behavior.
     const validation = validateContractElectricityLimits(persisted);
     if (!validation.ok) {
-      this.logger.warn(
-        `Contract electricity limits row for key ${CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving defaults`
+      throw new HttpException(
+        {
+          statusCode: 503,
+          error: 'CONFIG:STORED_VALUE_INVALID',
+          message: 'Stored ordering configuration is invalid',
+        },
+        503
       );
-      return { ...DEFAULT_CONTRACT_ELECTRICITY_LIMITS };
     }
     return toContractElectricityLimits(persisted);
   }

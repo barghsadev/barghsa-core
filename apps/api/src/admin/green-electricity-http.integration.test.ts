@@ -145,3 +145,29 @@ it('rolls back config and global version if the final audit fails', async () => 
     await http.pool.query('DROP TRIGGER reject_green_audit ON audit_log');
   }
 });
+
+it('refuses corrupt saved rules and limits while leaving their evidence intact', async () => {
+  for (const [key, path] of [
+    [configKey, 'green-electricity-rules'],
+    ['electricity.contract_limits', 'contract-electricity-limits'],
+  ]) {
+    await http.pool.query(
+      'INSERT INTO app_config(key,value) VALUES ($1,\'{"damaged":true}\') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value',
+      [key]
+    );
+    const response = await fetch(`${http.base}/api/admin/config/${path}`, {
+      headers: headers.operator!,
+    });
+    expect(response.status).toBe(503);
+    expect(
+      (await http.pool.query('SELECT value FROM app_config WHERE key=$1', [key])).rows[0].value
+    ).toEqual({ damaged: true });
+  }
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/config/green-electricity-rules/safety-status`, {
+        headers: headers.operator!,
+      })
+    ).status
+  ).toBe(503);
+});

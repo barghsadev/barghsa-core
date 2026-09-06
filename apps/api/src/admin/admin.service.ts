@@ -1583,10 +1583,8 @@ export class AdminService {
    *
    * Returns the T-09.10.02 defaults (simple enabled, advanced disabled,
    * 1000 kW threshold, 4% share) when no admin value has been persisted
-   * yet. A persisted row that does not normalize to a *valid* config is
-   * warned about and served as the defaults — a corrupt value must not crash
-   * the read path or silently change the enforced rule. The product-state
-   * fail-closed safety check (T-09.10.03) is out of scope for this slice.
+   * yet. An invalid persisted value fails closed with 503 rather than
+   * substituting defaults that could weaken a saved restriction.
    */
   async getGreenElectricityConfig(): Promise<GreenElectricityConfig> {
     const pool = getDbPool();
@@ -1600,10 +1598,14 @@ export class AdminService {
     // confusing mix of persisted + default fields.
     const validation = validateGreenElectricityConfig(persisted);
     if (!validation.ok) {
-      this.logger.warn(
-        `Green electricity config row for key ${GREEN_ELECTRICITY_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving defaults`
+      throw new HttpException(
+        {
+          statusCode: 503,
+          error: 'CONFIG:STORED_VALUE_INVALID',
+          message: 'Stored ordering configuration is invalid',
+        },
+        503
       );
-      return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG };
     }
     return toGreenElectricityConfig(persisted);
   }

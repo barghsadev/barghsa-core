@@ -109,21 +109,13 @@ describe('ContractElectricityLimitsService.get (T-09.12.06)', () => {
     });
   });
 
-  it('falls back to defaults with a warning for a malformed persisted row', async () => {
+  it('refuses malformed stored limits instead of widening them with defaults', async () => {
     const { pool, router } = makeDb();
     router.on('FROM app_config', () => ({
       rows: [{ value: { max_quantity_increase_percent: 'twenty' } }],
     }));
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const service = await loadService(pool);
-
-    const result = await service.get();
-    expect(result).toEqual({
-      maxQuantityIncreasePercent: 20,
-      maxContractDuration: 24,
-      leadTimeDays: 0,
-    });
-    warn.mockRestore();
+    await expect(service.get()).rejects.toMatchObject({ status: 503 });
   });
 });
 

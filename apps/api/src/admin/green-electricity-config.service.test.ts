@@ -112,16 +112,13 @@ describe('AdminService.getGreenElectricityConfig (T-09.10.02)', () => {
     });
   });
 
-  it('serves the defaults and warns on a corrupt persisted value', async () => {
+  it('refuses corrupt persisted rules instead of weakening them with defaults', async () => {
     const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ value: { simple_order: 'corrupted' } }],
     });
 
-    const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
-    const result = await service.getGreenElectricityConfig();
-    expect(result).toEqual(DEFAULT_GREEN_ELECTRICITY_CONFIG);
-    expect(warnSpy).toHaveBeenCalledTimes(1);
+    await expect(service.getGreenElectricityConfig()).rejects.toMatchObject({ status: 503 });
   });
 });
 
