@@ -21,15 +21,17 @@ beforeAll(async () => {
   })
   await new Promise<void>(resolve => storageServer.listen(0,'127.0.0.1',resolve))
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!,`http://127.0.0.1:${(storageServer.address() as { port: number }).port}`)
-  for (const user of ['staff', 'customer', 'disabled', 'inactive']) {
+  for (const user of ['staff', 'customer', 'disabled', 'inactive', 'assigned']) {
     await http.pool.query(`INSERT INTO users(user_id,username,password_hash,is_admin,disabled_at,activation_token)
-      VALUES ($1,$2,'test-only',$3,$4,$5)`, [user, `${user}@example.test`, user !== 'customer',
+      VALUES ($1,$2,'test-only',$3,$4,$5)`, [user, `${user}@example.test`, !['customer','assigned'].includes(user),
       user === 'disabled' ? new Date() : null, user === 'inactive' ? 'pending-activation' : null])
     const id = randomUUID(), csrf = randomUUID()
     await http.pool.query(`INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`, [id,user,csrf,randomUUID()])
     headers[user] = { Cookie: `barghsa_session=${id}`, 'X-CSRF-Token': csrf, 'Content-Type': 'application/json' }
   }
+  await http.pool.query("INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('test-assigned','Assigned support','Test role','[\"tickets:assigned\"]')")
+  await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ('assigned','test-assigned')")
 }, 40000)
 // Each scenario has its own rate-limit budget in this disposable database.
 beforeEach(async () => { await http.pool.query('DELETE FROM rate_limit_counters') })
@@ -205,4 +207,47 @@ it('rolls back ticket creation when its audit fails and leaves existing tickets 
     expect((await http.pool.query("SELECT id FROM tickets WHERE subject='Audit failure ticket'")).rows).toHaveLength(0)
   } finally {await http.pool.query('DROP TRIGGER fail_ticket_create_audit ON audit_log; DROP FUNCTION fail_ticket_create_audit()')}
   expect((await createTicket({subject:'Audit failure ticket',body:'Details'},'staff')).status).toBe(201)
+})
+it('limits assigned-only staff to their current tickets and refuses reassignment to another account', async () => {
+  const mine=await ticket(), other=await ticket()
+  expect((await assign(mine,'assigned')).status).toBe(200)
+  const list=await fetch(`${http.base}/api/staff/tickets?assignedTo=staff`,{headers:headers.assigned!})
+  expect(list.status).toBe(200)
+  expect((await list.json() as {data:{id:string}[]}).data.map(row=>row.id)).toEqual([mine])
+  const call=(id:string,suffix='',method='GET',body?:unknown)=>fetch(`${http.base}/api/staff/tickets/${id}${suffix}`,{
+    method,headers:headers.assigned!,...(body ? {body:JSON.stringify(body)} : {}),
+  })
+  expect((await call(mine)).status).toBe(200)
+  expect((await call(other)).status).toBe(404)
+  expect((await call(other,'/comments')).status).toBe(404)
+  expect((await call(other,'/comments','POST',{body:'Forbidden',visibility:'internal'})).status).toBe(404)
+  expect((await call(other,'/status','PATCH',{status:'resolved'})).status).toBe(404)
+  expect((await call(other,'/assign','PUT',{})).status).toBe(404)
+  expect((await call(mine,'/assign','PUT',{assigneeId:'staff'})).status).toBe(403)
+  expect((await call(mine,'/comments','POST',{body:'Own ticket note',visibility:'internal'})).status).toBe(201)
+  expect((await call(mine,'/status','PATCH',{status:'waiting_customer'})).status).toBe(200)
+  expect((await assign(mine,'staff')).status).toBe(200)
+  expect((await call(mine,'/comments')).status).toBe(404)
+  expect((await call(mine,'/comments','POST',{body:'Stale access'})).status).toBe(404)
+})
+it('rechecks assigned-only permission after waiting on a concurrent reassignment', async () => {
+  const id=await ticket(),client=await http.pool.connect()
+  await assign(id,'assigned')
+  let response:Promise<Response>|undefined
+  try {
+    await client.query('BEGIN')
+    await client.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1",[id])
+    response=fetch(`${http.base}/api/staff/tickets/${id}/comments`,{method:'POST',headers:headers.assigned!,body:JSON.stringify({body:'Stale private note',visibility:'internal'})})
+    const deadline=Date.now()+5000
+    let waiting=false
+    while(Date.now()<deadline){
+      const rows=await http.pool.query("SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT * FROM tickets WHERE id=%'")
+      if(rows.rows.length){waiting=true;break}
+      await new Promise(resolve=>setTimeout(resolve,20))
+    }
+    expect(waiting).toBe(true)
+    await client.query('COMMIT')
+    expect((await response).status).toBe(404)
+    expect((await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1',[id])).rows).toHaveLength(0)
+  } finally {await client.query('ROLLBACK');client.release();await response}
 })

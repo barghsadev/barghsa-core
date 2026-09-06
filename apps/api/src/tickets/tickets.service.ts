@@ -260,7 +260,7 @@ export class TicketsService {
     return this.changeStatus(ticketId, status, userId, userId)
   }
 
-  private async changeStatus(ticketId: string, status: string, actorId: string, ownerId?: string): Promise<TicketRow> {
+  private async changeStatus(ticketId: string, status: string, actorId: string, ownerId?: string, assignedTo?: string): Promise<TicketRow> {
     const transitions: Record<string, string[]> = {
       open: ['in_progress'], in_progress: ['waiting_customer', 'waiting_staff', 'resolved'],
       waiting_customer: ['in_progress'], waiting_staff: ['in_progress'], resolved: ['closed'], closed: [],
@@ -270,7 +270,7 @@ export class TicketsService {
     try {
       await client.query('BEGIN')
       const row = (await client.query(`SELECT * FROM tickets WHERE id=$1
-        AND ($2::text IS NULL OR user_id=$2) FOR UPDATE`, [ticketId, ownerId ?? null])).rows[0]
+        AND ($2::text IS NULL OR user_id=$2) AND ($3::text IS NULL OR assigned_to=$3) FOR UPDATE`, [ticketId, ownerId ?? null, assignedTo ?? null])).rows[0]
       if (!row) throw new HttpException('Ticket not found', 404)
       if (row.status === status) { await client.query('COMMIT'); return mapRow(row) }
       if (status !== 'open' && (!transitions[row.status]?.includes(status) || (status === 'in_progress' && !row.assigned_to))) {
@@ -330,7 +330,7 @@ export class TicketsService {
     return this.insertComment(ticketId, userId, body, visibility, userId)
   }
 
-  private async insertComment(ticketId: string, actorId: string, body: string, visibility: string, ownerId?: string): Promise<TicketCommentRow> {
+  private async insertComment(ticketId: string, actorId: string, body: string, visibility: string, ownerId?: string, assignedTo?: string): Promise<TicketCommentRow> {
     if (typeof body !== 'string' || !body.trim()) throw new HttpException('Comment body is required', 400)
     if (body.trim().length > 10000) throw new HttpException('Comment body must be 10,000 characters or fewer', 400)
     if (visibility !== 'public' && visibility !== 'internal') throw new HttpException('Invalid comment visibility', 400)
@@ -338,7 +338,7 @@ export class TicketsService {
     try {
       await client.query('BEGIN')
       const ticket = (await client.query(`SELECT * FROM tickets WHERE id=$1
-        AND ($2::text IS NULL OR user_id=$2) FOR UPDATE`, [ticketId,ownerId ?? null])).rows[0]
+        AND ($2::text IS NULL OR user_id=$2) AND ($3::text IS NULL OR assigned_to=$3) FOR UPDATE`, [ticketId,ownerId ?? null,assignedTo ?? null])).rows[0]
       if (!ticket) throw new HttpException('Ticket not found', 404)
       if (ticket.status === 'closed' || ticket.status === 'resolved') throw new HttpException('Reopen the ticket before replying', 409)
       const result = await client.query(`INSERT INTO ticket_comments(ticket_id,author_id,body,visibility)
@@ -436,12 +436,12 @@ export class TicketsService {
   /**
    * Staff get any ticket by ID (no user_id scoping).
    */
-  async staffGetTicket(ticketId: string): Promise<TicketRow> {
+  async staffGetTicket(ticketId: string, assignedTo?: string): Promise<TicketRow> {
     const pool = getDbPool()
 
     const result = await pool.query(
-      `SELECT * FROM tickets WHERE id = $1`,
-      [ticketId],
+      `SELECT * FROM tickets WHERE id = $1 AND ($2::text IS NULL OR assigned_to=$2)`,
+      [ticketId,assignedTo ?? null],
     )
 
     if (result.rows.length === 0) {
@@ -463,6 +463,7 @@ export class TicketsService {
     ticketId: string,
     assigneeUserId: string,
     actorId: string,
+    assignedTo?: string,
   ): Promise<TicketRow> {
     if (typeof assigneeUserId !== 'string' || !assigneeUserId.trim() || assigneeUserId.length > 512) {
       throw new HttpException('Invalid assignee', 400)
@@ -477,12 +478,12 @@ export class TicketsService {
         FROM users u WHERE u.user_id=$1 FOR UPDATE OF u`, [assigneeUserId])).rows[0]
       const permissions = resolveStaffPermissions(account?.role_permissions)
       if (!account || account.disabled_at || account.activation_token ||
-          !(account.is_admin || permissions.includes('*') || permissions.includes('tickets:write'))) {
+          !(account.is_admin || permissions.includes('*') || permissions.includes('tickets:write') || permissions.includes('tickets:*') || permissions.includes('tickets:assigned'))) {
         throw new HttpException('Assignee must be active staff with ticket access', 400)
       }
       const result = await client.query(`UPDATE tickets SET assigned_to=$1,
         status=CASE WHEN status='open' THEN 'in_progress' ELSE status END, updated_at=NOW()
-        WHERE id=$2 RETURNING *`, [assigneeUserId, ticketId])
+        WHERE id=$2 AND ($3::text IS NULL OR assigned_to=$3) RETURNING *`, [assigneeUserId, ticketId, assignedTo ?? null])
       if (!result.rows[0]) throw new HttpException('Ticket not found', 404)
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata)
         VALUES ($1,$2,'ticket_assigned',$3::jsonb)`,
@@ -503,23 +504,24 @@ export class TicketsService {
     ticketId: string,
     status: string,
     actorId: string,
+    assignedTo?: string,
   ): Promise<TicketRow> {
-    return this.changeStatus(ticketId, status, actorId)
+    return this.changeStatus(ticketId, status, actorId, undefined, assignedTo)
   }
 
   /**
    * Staff list comments on any ticket (all visibility levels).
    * No user_id scoping — staff can see all comments including internal.
    */
-  async staffListComments(ticketId: string): Promise<TicketCommentRow[]> {
+  async staffListComments(ticketId: string, assignedTo?: string): Promise<TicketCommentRow[]> {
     // Verify the ticket exists
-    await this.staffGetTicket(ticketId)
+    await this.staffGetTicket(ticketId, assignedTo)
 
     const pool = getDbPool()
 
     const result = await pool.query(
-      `SELECT * FROM ticket_comments WHERE ticket_id = $1 ORDER BY created_at ASC, id ASC`,
-      [ticketId],
+      `SELECT * FROM ticket_comments WHERE ticket_id = $1 AND EXISTS (SELECT 1 FROM tickets t WHERE t.id=ticket_id AND ($2::text IS NULL OR t.assigned_to=$2)) ORDER BY created_at ASC, id ASC`,
+      [ticketId, assignedTo ?? null],
     )
 
     return result.rows.map(mapCommentRow)
@@ -534,7 +536,8 @@ export class TicketsService {
     staffUserId: string,
     body: string,
     visibility: 'public' | 'internal' = 'public',
+    assignedTo?: string,
   ): Promise<TicketCommentRow> {
-    return this.insertComment(ticketId, staffUserId, body, visibility)
+    return this.insertComment(ticketId, staffUserId, body, visibility, undefined, assignedTo)
   }
 }

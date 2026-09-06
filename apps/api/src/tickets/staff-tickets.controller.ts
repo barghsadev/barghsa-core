@@ -28,6 +28,11 @@ export class StaffTicketsController {
 
   constructor(private readonly ticketsService: TicketsService) {}
 
+  private assignedScope(req: AuthenticatedRequest, action: 'read' | 'write'): string | undefined {
+    return hasStaffPermission(req, `tickets:${action}`) || hasStaffPermission(req, 'tickets:*')
+      ? undefined : req.session.userId
+  }
+
   /**
    * GET /api/staff/tickets
    *
@@ -56,7 +61,7 @@ export class StaffTicketsController {
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'asc' | 'desc',
   ) {
-    if (!hasStaffPermission(req, 'tickets:read')) {
+    if (!hasStaffPermission(req, 'tickets:read') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
         403,
@@ -78,7 +83,11 @@ export class StaffTicketsController {
     if (sortBy !== undefined) options.sortBy = sortBy
     if (sortOrder !== undefined) options.sortOrder = sortOrder
 
-    return this.ticketsService.staffListTickets(options)
+    const scope = this.assignedScope(req, 'read')
+    if (scope) options.assignedTo = scope
+    return { ...await this.ticketsService.staffListTickets(options), viewer: { userId: req.session.userId,
+      canWrite: hasStaffPermission(req, 'tickets:write') || hasStaffPermission(req, 'tickets:*') || hasStaffPermission(req, 'tickets:assigned'),
+      canAssignOthers: this.assignedScope(req, 'write') === undefined } }
   }
 
   /**
@@ -95,13 +104,13 @@ export class StaffTicketsController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!hasStaffPermission(req, 'tickets:read')) {
+    if (!hasStaffPermission(req, 'tickets:read') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
         403,
       )
     }
-    return this.ticketsService.staffGetTicket(id)
+    return this.ticketsService.staffGetTicket(id, this.assignedScope(req, 'read'))
   }
 
   /**
@@ -122,7 +131,7 @@ export class StaffTicketsController {
     @Body() body: { assigneeId?: string },
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!hasStaffPermission(req, 'tickets:write')) {
+    if (!hasStaffPermission(req, 'tickets:write') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can assign tickets' },
         403,
@@ -130,7 +139,9 @@ export class StaffTicketsController {
     }
     // Default to self-assignment if no assigneeId provided
     const assigneeId = body?.assigneeId ?? req.session.userId
-    return this.ticketsService.staffAssignTicket(id, assigneeId, req.session.userId)
+    const scope = this.assignedScope(req, 'write')
+    if (scope && assigneeId !== scope) throw new HttpException('Assigned-only staff cannot reassign another user',403)
+    return this.ticketsService.staffAssignTicket(id, assigneeId, req.session.userId, scope)
   }
 
   /**
@@ -149,13 +160,13 @@ export class StaffTicketsController {
     @Body() body: { status: string },
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!hasStaffPermission(req, 'tickets:write')) {
+    if (!hasStaffPermission(req, 'tickets:write') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can update ticket status' },
         403,
       )
     }
-    return this.ticketsService.staffUpdateTicketStatus(id, body?.status, req.session.userId)
+    return this.ticketsService.staffUpdateTicketStatus(id, body?.status, req.session.userId, this.assignedScope(req, 'write'))
   }
 
   /**
@@ -172,13 +183,13 @@ export class StaffTicketsController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!hasStaffPermission(req, 'tickets:read')) {
+    if (!hasStaffPermission(req, 'tickets:read') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
         403,
       )
     }
-    return this.ticketsService.staffListComments(id)
+    return this.ticketsService.staffListComments(id, this.assignedScope(req, 'read'))
   }
 
   /**
@@ -202,13 +213,13 @@ export class StaffTicketsController {
     },
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!hasStaffPermission(req, 'tickets:write')) {
+    if (!hasStaffPermission(req, 'tickets:write') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
         403,
       )
     }
     const visibility = body?.visibility ?? 'public'
-    return this.ticketsService.staffAddComment(id, req.session.userId, body?.body, visibility)
+    return this.ticketsService.staffAddComment(id, req.session.userId, body?.body, visibility, this.assignedScope(req, 'write'))
   }
 }

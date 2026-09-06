@@ -477,3 +477,11 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Creation and audit commit together. Migration 0098 adds an empty attachment list for existing tickets; the schema definition and production journal agree. Storage copies written before a failed database commit can remain unlinked and require the existing storage cleanup process; no external storage transaction is claimed.
 - Review: 32 focused ticket checks, the populated baseline migration/rerun test, all workspace typechecks and the full API suite passed. Full API result: 191 files, 2479 tests. The lower count reflects replacing SQL-mock mutation tests with real HTTP/database coverage.
 - Remaining ticket work: screens, assigned-only/team access, notices and full acceptance reconciliation. Contract integration remains dependent on the unbuilt contract module.
+
+### F16.4 — Assigned-only ticket access
+
+- Ticket endpoints recognize the explicit `tickets:assigned` and ticket-specific `tickets:*` capabilities without changing generic permission-prefix behavior elsewhere.
+- Assigned-only staff receive a server-enforced own-assignment filter. Detail/comments/status/assignment writes include the assignment condition in the database query. They cannot claim unassigned work or reassign another user.
+- An actual blocked comment transaction proves that reassignment removes access before the pending write can commit. The staff queue reports current action capabilities for its screen.
+- Review: 36 ticket/permission checks passed, including 12 real HTTP/database scenarios; API typecheck and whitespace check passed. Tests also cover forged list filters, another ticket's internal comments, status/assignment refusal and access after reassignment.
+- Team assignment/configuration consumption and ticket screens remain open.
