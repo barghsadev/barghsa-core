@@ -1,4 +1,5 @@
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 import {
@@ -225,6 +226,31 @@ for (const item of cases) {
       await pending;
       await http.pool.query(
         "INSERT INTO user_roles(user_id,role_id) VALUES ('operator','test-config-editor') ON CONFLICT DO NOTHING"
+      );
+    }
+    expect((await write(item)).status).toBe(200);
+  });
+}
+
+for (const item of cases.filter((item) => item.grant === 'admin:financial:edit')) {
+  it(`${item.path}: requires recent password confirmation before changing settings`, async () => {
+    const before = await snapshot();
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='operator'");
+    try {
+      const response = await write(item);
+      expect(response.status).toBe(403);
+      expect(await response.json()).toMatchObject({
+        error: { code: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code },
+      });
+      expect(await snapshot()).toEqual(before);
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '16 minutes' WHERE user_id='operator'"
+      );
+      expect((await write(item)).status).toBe(403);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='operator'"
       );
     }
     expect((await write(item)).status).toBe(200);

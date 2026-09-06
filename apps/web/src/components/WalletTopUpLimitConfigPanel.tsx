@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { t, type Locale } from '@barghsa/i18n';
 import { validateWalletTopUpLimitConfig } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
-import { withCsrf } from '../lib/csrf.js';
+import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 /**
  * Admin panel for the versioned `onlineTopUpLimit` (T-04.2.02.06).
@@ -14,7 +14,17 @@ import { withCsrf } from '../lib/csrf.js';
 
 interface WalletTopUpLimitDto {
   limitIrR: number;
-  version?: number;
+  version: number;
+}
+
+function isConfig(value: unknown): value is WalletTopUpLimitDto {
+  if (!value || typeof value !== 'object') return false;
+  const data = value as WalletTopUpLimitDto;
+  return (
+    validateWalletTopUpLimitConfig({ limit_irr: data.limitIrR }).ok &&
+    Number.isSafeInteger(data.version) &&
+    data.version >= 0
+  );
 }
 
 function normalizeIrrDigits(raw: string): string {
@@ -47,36 +57,46 @@ export default function WalletTopUpLimitConfigPanel() {
   const [config, setConfig] = useState<WalletTopUpLimitDto | null>(null);
   const [limitDigits, setLimitDigits] = useState('');
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [action, setAction] = useState<TeamAction | null>(null);
+  const generation = useRef(0);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [forbidden, setForbidden] = useState(false);
   const [clientIssue, setClientIssue] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    const current = ++generation.current;
+    setLoading(true);
+    setConfig(null);
+    setSaved(false);
+    setError(null);
+    setForbidden(false);
     try {
-      setLoading(true);
-      setForbidden(false);
-      const res = await fetch('/api/admin/config/wallet-top-up-limit', {
-        credentials: 'include',
-      });
+      const res = await fetch('/api/admin/config/wallet-top-up-limit', { credentials: 'include' });
+      if (current !== generation.current) return;
       if (res.status === 403) {
         setForbidden(true);
         return;
       }
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json()) as WalletTopUpLimitDto;
-      setConfig(data);
-      setLimitDigits(String(data.limitIrR));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.walletLimit.loadFailed', locale));
+      if (!res.ok) throw new Error('Unavailable');
+      const data: unknown = await res.json();
+      if (!isConfig(data)) throw new Error('Invalid configuration');
+      if (current === generation.current) {
+        setConfig(data);
+        setLimitDigits(String(data.limitIrR));
+      }
+    } catch {
+      if (current === generation.current) setError(t('admin.walletLimit.loadFailed', locale));
     } finally {
-      setLoading(false);
+      if (current === generation.current) setLoading(false);
     }
   }, [locale]);
 
   useEffect(() => {
     void load();
+    return () => {
+      ++generation.current;
+    };
   }, [load]);
 
   const tomanPreview = useMemo(() => {
@@ -88,8 +108,9 @@ export default function WalletTopUpLimitConfigPanel() {
     }
   }, [limitDigits]);
 
-  async function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    if (loading || !config || action) return;
     const raw = limitDigits === '' ? undefined : Number(limitDigits);
     const validation = validateWalletTopUpLimitConfig({ limit_irr: raw });
     if (!validation.ok) {
@@ -99,36 +120,16 @@ export default function WalletTopUpLimitConfigPanel() {
       return;
     }
     setClientIssue(null);
-    setSaving(true);
     setSaved(false);
     setError(null);
-    try {
-      const res = await fetch('/api/admin/config/wallet-top-up-limit', {
-        method: 'PUT',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          limit_irr: raw,
-          expected_version: config?.version ?? 0,
-        }),
-      });
-      if (res.status === 409) {
-        await load();
-        throw new Error(t('admin.walletLimit.conflict', locale));
-      }
-      if (!res.ok) {
-        const errData = (await res.json().catch(() => ({}))) as { message?: string };
-        throw new Error(errData.message ?? `HTTP ${res.status}`);
-      }
-      const data = (await res.json()) as WalletTopUpLimitDto;
-      setConfig(data);
-      setLimitDigits(String(data.limitIrR));
-      setSaved(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.walletLimit.saveFailed', locale));
-    } finally {
-      setSaving(false);
-    }
+    setAction({
+      title: t('admin.walletLimit.save', locale),
+      description: `${t('admin.walletLimit.label', locale)}: ${formatGroupedIrr(String(raw), locale)}. ${t('admin.walletLimit.warning', locale)}`,
+      path: '/api/admin/config/wallet-top-up-limit',
+      method: 'PUT',
+      body: { limit_irr: raw, expected_version: config.version },
+      conflictMessage: t('admin.walletLimit.conflict', locale),
+    });
   }
 
   if (forbidden) {
@@ -203,6 +204,7 @@ export default function WalletTopUpLimitConfigPanel() {
             inputMode="numeric"
             autoComplete="off"
             dir="ltr"
+            disabled={loading || !config || !!action}
             value={formatGroupedIrr(limitDigits, locale)}
             onChange={(event) => {
               setLimitDigits(normalizeIrrDigits(event.target.value));
@@ -242,7 +244,7 @@ export default function WalletTopUpLimitConfigPanel() {
                 {' · '}
                 {t('admin.walletLimit.version', locale).replace(
                   '{version}',
-                  String(config.version)
+                  new Intl.NumberFormat(locale).format(config.version)
                 )}
               </>
             )}
@@ -253,10 +255,18 @@ export default function WalletTopUpLimitConfigPanel() {
           <button
             type="submit"
             data-testid="wallet-top-up-limit-save"
-            disabled={saving}
+            disabled={loading || !config || !!action}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
           >
-            {saving ? t('admin.walletLimit.saving', locale) : t('admin.walletLimit.save', locale)}
+            {t('admin.walletLimit.save', locale)}
+          </button>
+          <button
+            type="button"
+            disabled={loading || !!action}
+            onClick={() => void load()}
+            className="px-4 py-2 border rounded"
+          >
+            {t('admin.walletLimit.reload', locale)}
           </button>
           {saved && (
             <span className="text-sm text-green-600" role="status">
@@ -265,6 +275,25 @@ export default function WalletTopUpLimitConfigPanel() {
           )}
         </div>
       </form>
+      {action && (
+        <TeamActionDialog
+          action={action}
+          onClose={() => setAction(null)}
+          onSuccess={async (data) => {
+            const submitted = action.body as { limit_irr: number; expected_version: number };
+            if (
+              !isConfig(data) ||
+              data.limitIrR !== submitted.limit_irr ||
+              data.version !== submitted.expected_version + 1
+            ) {
+              throw new Error('Saved configuration does not match');
+            }
+            setConfig(data);
+            setLimitDigits(String(data.limitIrR));
+            setSaved(true);
+          }}
+        />
+      )}
     </section>
   );
 }

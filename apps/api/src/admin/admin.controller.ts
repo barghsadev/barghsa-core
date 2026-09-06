@@ -1823,15 +1823,11 @@ export class AdminController {
    * (0 = dual approval disabled). Changes are versioned and audited.
    * Permission: `admin:financial:edit` (T-09.07.01).
    *
-   * Step-up on this mutation is deliberately deferred: the web app does not
-   * implement the step-up challenge flow yet (admin config panels use raw
-   * fetch), so requiring step-up here would regress the working save path. It
-   * must land together with the client-side step-up flow (same follow-up as
-   * the T-09.06.01/02/03 admin config UI). The emergency override (reason +
-   * elevated permission + immediate alert + audit) is likewise deferred until
-   * the step-up flow and alert pipeline exist.
+   * Requires recent password confirmation.
    */
   @Put('config/dual-approval-threshold')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update the dual-approval threshold configuration (admin)' })
   @ApiBody({
     schema: {
@@ -1899,12 +1895,11 @@ export class AdminController {
    * so a stale admin editor cannot clobber a later write (T-04.2.02.06).
    * Permission: `admin:financial:edit` (T-09.10.01).
    *
-   * Step-up on this mutation is deliberately deferred, matching the other
-   * admin config panels (see setDualApprovalThreshold): the web app does not
-   * implement the step-up challenge flow yet. The emergency override is
-   * likewise deferred until the step-up flow and alert pipeline exist.
+   * Requires recent password confirmation.
    */
   @Put('config/wallet-top-up-limit')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update the online wallet top-up limit configuration (admin)' })
   @ApiBody({
     schema: {
