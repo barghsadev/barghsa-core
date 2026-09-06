@@ -390,12 +390,13 @@ describe('AiAgentsService (T-09.11.04)', () => {
       const { mockQuery, pool } = mockPool();
       service = await loadService(pool);
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb
         .mockResolvedValueOnce({ rowCount: 1, rows: [{ agent_id: 'agent-1' }] }) // insert
         .mockResolvedValueOnce({ rows: [] }); // audit
       await service.addKb({ agentId: 'agent-1', kbId: 'kb-1', actorUserId: ACTOR, ip: '1.2.3.4' });
-      const insertSql = String(mockQuery.mock.calls[2]![0]);
+      const insertSql = String(mockQuery.mock.calls[3]![0]);
       expect(insertSql).toContain('INSERT INTO ai_agent_kbs');
       expect(insertSql).toContain('ON CONFLICT (agent_id, kb_id) DO NOTHING');
       const auditCalls = mockQuery.mock.calls.filter((c) =>
@@ -409,6 +410,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
       const { mockQuery, pool } = mockPool();
       service = await loadService(pool);
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb
         .mockResolvedValueOnce({ rowCount: 0, rows: [] }); // insert → conflict
@@ -423,6 +425,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
       const { mockQuery, pool } = mockPool();
       service = await loadService(pool);
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [] }); // findKb
       await expect(
@@ -434,17 +437,19 @@ describe('AiAgentsService (T-09.11.04)', () => {
       const { mockQuery, pool } = mockPool();
       service = await loadService(pool);
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 1 }) // DELETE
         .mockResolvedValueOnce({ rows: [] }); // audit
       await expect(service.removeKb('agent-1', 'kb-1', ACTOR, '1.2.3.4')).resolves.toBeUndefined();
-      expect(mockQuery.mock.calls[2]![1]).toContain('ai_agent_kb_removed');
+      expect(mockQuery.mock.calls[3]![1]).toContain('ai_agent_kb_removed');
     });
 
     it('throws 404 when removing a KB that is not linked', async () => {
       const { mockQuery, pool } = mockPool();
       service = await loadService(pool);
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 0 }); // DELETE → no row
       await expect(service.removeKb('agent-1', 'kb-1', ACTOR, '1.2.3.4')).rejects.toMatchObject({
@@ -459,6 +464,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
       const { mockQuery, pool } = mockPool();
       service = await loadService(pool);
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [policyRow()] }) // findPolicy
         .mockResolvedValueOnce({ rowCount: 1, rows: [{ agent_id: 'agent-1' }] }) // insert
@@ -469,7 +475,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
         actorUserId: ACTOR,
         ip: '1.2.3.4',
       });
-      expect(String(mockQuery.mock.calls[2]![0])).toContain('INSERT INTO ai_agent_policies');
+      expect(String(mockQuery.mock.calls[3]![0])).toContain('INSERT INTO ai_agent_policies');
       const auditCalls = mockQuery.mock.calls.filter((c) =>
         String(c[0]).includes('INSERT INTO audit_log')
       );
@@ -481,17 +487,19 @@ describe('AiAgentsService (T-09.11.04)', () => {
       const { mockQuery, pool } = mockPool();
       service = await loadService(pool);
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 1 }) // DELETE
         .mockResolvedValueOnce({ rows: [] }); // audit
       await service.removePolicy('agent-1', 'pol-1', ACTOR, '1.2.3.4');
-      expect(mockQuery.mock.calls[2]![1]).toContain('ai_agent_policy_removed');
+      expect(mockQuery.mock.calls[3]![1]).toContain('ai_agent_policy_removed');
     });
 
     it('throws 404 when the policy does not exist on link', async () => {
       const { mockQuery, pool } = mockPool();
       service = await loadService(pool);
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [] }); // findPolicy
       await expect(

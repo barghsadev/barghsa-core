@@ -149,7 +149,11 @@ it('audits the latest enabled state after a concurrent edit', async () => {
     await client.query('COMMIT');
     expect((await pending).status).toBe(200);
     expect(
-      (await http.pool.query("SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='ai_agent_updated'")).rows
+      (
+        await http.pool.query(
+          "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='ai_agent_updated'"
+        )
+      ).rows
     ).toEqual([
       {
         metadata: expect.objectContaining({
@@ -165,3 +169,119 @@ it('audits the latest enabled state after a concurrent edit', async () => {
     await pending;
   }
 });
+
+const linkCases = (['kb', 'policy'] as const).flatMap((kind) =>
+  (['add', 'remove'] as const).map((action) => ({ kind, action }))
+);
+async function prepareLink(entry: (typeof linkCases)[number]) {
+  const id =
+    entry.kind === 'kb'
+      ? ((
+          await http.pool.query(
+            "INSERT INTO knowledge_bases(title,created_by) VALUES ('Agent KB','slot-admin') RETURNING id"
+          )
+        ).rows[0].id as string)
+      : ((
+          await http.pool.query(
+            `INSERT INTO ai_policies(title,policy_type,rules,created_by) VALUES ('Agent policy','allowed_topics','{"topics":["energy"]}','slot-admin') RETURNING id`
+          )
+        ).rows[0].id as string);
+  if (entry.action === 'remove')
+    await http.pool.query(
+      `INSERT INTO ${entry.kind === 'kb' ? 'ai_agent_kbs' : 'ai_agent_policies'}(agent_id,${entry.kind === 'kb' ? 'kb_id' : 'policy_id'}) VALUES ($1,$2)`,
+      [agentId, id]
+    );
+  return id;
+}
+function linkRequest(entry: (typeof linkCases)[number], id: string) {
+  return fetch(
+    `${http.base}/api/admin/agents/${agentId}/${entry.kind === 'kb' ? 'kbs' : 'policies'}${entry.action === 'remove' ? `/${id}` : ''}`,
+    {
+      method: entry.action === 'add' ? 'POST' : 'DELETE',
+      headers,
+      ...(entry.action === 'add'
+        ? { body: JSON.stringify(entry.kind === 'kb' ? { kbId: id } : { policyId: id }) }
+        : {}),
+    }
+  );
+}
+async function unchangedLink(entry: (typeof linkCases)[number]) {
+  expect(
+    (
+      await http.pool.query(
+        `SELECT agent_id FROM ${entry.kind === 'kb' ? 'ai_agent_kbs' : 'ai_agent_policies'} WHERE agent_id=$1`,
+        [agentId]
+      )
+    ).rows
+  ).toHaveLength(entry.action === 'remove' ? 1 : 0);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+  ).toHaveLength(0);
+}
+it.each(linkCases)('rolls back agent $kind $action links on audit failure', async (entry) => {
+  const id = await prepareLink(entry);
+  await http.pool.query(
+    "CREATE OR REPLACE FUNCTION reject_agent_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$; CREATE TRIGGER reject_agent_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_agent_%') EXECUTE FUNCTION reject_agent_audit()"
+  );
+  try {
+    expect((await linkRequest(entry, id)).status).toBe(500);
+    await unchangedLink(entry);
+  } finally {
+    await http.pool.query('DROP TRIGGER reject_agent_audit ON audit_log');
+  }
+});
+it.each(linkCases)('rechecks agent $kind $action link authority', async (entry) => {
+  const id = await prepareLink(entry),
+    client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("SELECT user_id FROM users WHERE user_id='slot-admin' FOR UPDATE");
+    pending = linkRequest(entry, id);
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query("DELETE FROM user_roles WHERE user_id='slot-admin'");
+    await client.query('COMMIT');
+    expect((await pending).status).toBe(403);
+    await unchangedLink(entry);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES ('slot-admin','slot-editor') ON CONFLICT DO NOTHING"
+    );
+  }
+});
+it.each(['kb', 'policy'] as const)(
+  'adds and removes %s links with one audit per change',
+  async (kind) => {
+    const id = await prepareLink({ kind, action: 'add' });
+    expect((await linkRequest({ kind, action: 'add' }, id)).status).toBe(204);
+    expect((await linkRequest({ kind, action: 'add' }, id)).status).toBe(204);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+    ).toHaveLength(1);
+    expect((await linkRequest({ kind, action: 'remove' }, id)).status).toBe(204);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+    ).toHaveLength(2);
+    expect(
+      (
+        await http.pool.query(
+          `SELECT id FROM ${kind === 'kb' ? 'knowledge_bases' : 'ai_policies'} WHERE id=$1`,
+          [id]
+        )
+      ).rows
+    ).toHaveLength(1);
+  }
+);

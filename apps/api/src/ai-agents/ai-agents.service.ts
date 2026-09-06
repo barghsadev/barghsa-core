@@ -456,113 +456,119 @@ export class AiAgentsService {
 
   /** Link a KB to an agent (idempotent; both records must exist). */
   async addKb(input: AddAgentKbInput): Promise<void> {
-    const agent = await this.findAgent(getDbPool(), input.agentId);
-    if (!agent) throw this.agentNotFound(input.agentId);
-    const kb = await this.findKb(getDbPool(), input.kbId);
-    if (!kb) throw this.kbNotFound(input.kbId);
+    return this.withTransaction(input.actorUserId, async (q) => {
+      const agent = await this.findAgent(q, input.agentId, true);
+      if (!agent) throw this.agentNotFound(input.agentId);
+      const kb = await this.findKb(q, input.kbId);
+      if (!kb) throw this.kbNotFound(input.kbId);
 
-    let inserted = false;
-    try {
-      const res = await getDbPool().query(
-        `INSERT INTO ai_agent_kbs (agent_id, kb_id, created_at)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (agent_id, kb_id) DO NOTHING
-         RETURNING agent_id`,
-        [input.agentId, input.kbId, new Date()]
-      );
-      inserted = (res.rowCount ?? 0) > 0;
-    } catch (error) {
-      if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
-        // Race: the agent or KB was deleted between the existence check and insert.
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'AI_AGENT_KB_LINK_FAILED',
-            message: 'Agent or knowledge base no longer exists',
-          },
-          409
+      let inserted = false;
+      try {
+        const res = await q.query(
+          `INSERT INTO ai_agent_kbs (agent_id, kb_id, created_at)
+           VALUES ($1, $2, $3)
+           ON CONFLICT (agent_id, kb_id) DO NOTHING
+           RETURNING agent_id`,
+          [input.agentId, input.kbId, new Date()]
         );
+        inserted = (res.rowCount ?? 0) > 0;
+      } catch (error) {
+        if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
+          // Translate missing references before rolling back the transaction.
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'AI_AGENT_KB_LINK_FAILED',
+              message: 'Agent or knowledge base no longer exists',
+            },
+            409
+          );
+        }
+        throw error;
       }
-      throw error;
-    }
-    if (inserted) {
-      await this.recordAudit(getDbPool(), 'ai_agent_kb_added', input.actorUserId, input.ip, {
-        targetId: input.agentId,
-        kbId: input.kbId,
-      });
-    }
-    this.logger.log(
-      `KB ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, kb=${input.kbId}, actor=${input.actorUserId}`
-    );
+      if (inserted) {
+        await this.recordAudit(q, 'ai_agent_kb_added', input.actorUserId, input.ip, {
+          targetId: input.agentId,
+          kbId: input.kbId,
+        });
+      }
+      this.logger.log(
+        `KB ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, kb=${input.kbId}, actor=${input.actorUserId}`
+      );
+    });
   }
 
   /** Remove a KB link from an agent. */
   async removeKb(agentId: string, kbId: string, actorUserId: string, ip: string): Promise<void> {
-    const agent = await this.findAgent(getDbPool(), agentId);
-    if (!agent) throw this.agentNotFound(agentId);
+    return this.withTransaction(actorUserId, async (q) => {
+      const agent = await this.findAgent(q, agentId, true);
+      if (!agent) throw this.agentNotFound(agentId);
 
-    const result = await getDbPool().query(
-      'DELETE FROM ai_agent_kbs WHERE agent_id = $1 AND kb_id = $2',
-      [agentId, kbId]
-    );
-    if ((result.rowCount ?? 0) === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: 'AI_AGENT_KB_NOT_FOUND',
-          message: `Knowledge base ${kbId} is not linked to agent ${agentId}`,
-        },
-        404
-      );
-    }
-    await this.recordAudit(getDbPool(), 'ai_agent_kb_removed', actorUserId, ip, {
-      targetId: agentId,
-      kbId,
+      const result = await q.query('DELETE FROM ai_agent_kbs WHERE agent_id = $1 AND kb_id = $2', [
+        agentId,
+        kbId,
+      ]);
+      if ((result.rowCount ?? 0) === 0) {
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: 'AI_AGENT_KB_NOT_FOUND',
+            message: `Knowledge base ${kbId} is not linked to agent ${agentId}`,
+          },
+          404
+        );
+      }
+      await this.recordAudit(q, 'ai_agent_kb_removed', actorUserId, ip, {
+        targetId: agentId,
+        kbId,
+      });
+      this.logger.log(`KB unlinked from agent: agent=${agentId}, kb=${kbId}, actor=${actorUserId}`);
     });
-    this.logger.log(`KB unlinked from agent: agent=${agentId}, kb=${kbId}, actor=${actorUserId}`);
   }
 
   // ─── Policy links ───────────────────────────────────────────────────────
 
   /** Link a policy to an agent (idempotent; both records must exist). */
   async addPolicy(input: AddAgentPolicyInput): Promise<void> {
-    const agent = await this.findAgent(getDbPool(), input.agentId);
-    if (!agent) throw this.agentNotFound(input.agentId);
-    const policy = await this.findPolicy(getDbPool(), input.policyId);
-    if (!policy) throw this.policyNotFound(input.policyId);
+    return this.withTransaction(input.actorUserId, async (q) => {
+      const agent = await this.findAgent(q, input.agentId, true);
+      if (!agent) throw this.agentNotFound(input.agentId);
+      const policy = await this.findPolicy(q, input.policyId);
+      if (!policy) throw this.policyNotFound(input.policyId);
 
-    let inserted = false;
-    try {
-      const res = await getDbPool().query(
-        `INSERT INTO ai_agent_policies (agent_id, policy_id, created_at)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (agent_id, policy_id) DO NOTHING
-         RETURNING agent_id`,
-        [input.agentId, input.policyId, new Date()]
-      );
-      inserted = (res.rowCount ?? 0) > 0;
-    } catch (error) {
-      if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'AI_AGENT_POLICY_LINK_FAILED',
-            message: 'Agent or policy no longer exists',
-          },
-          409
+      let inserted = false;
+      try {
+        const res = await q.query(
+          `INSERT INTO ai_agent_policies (agent_id, policy_id, created_at)
+           VALUES ($1, $2, $3)
+           ON CONFLICT (agent_id, policy_id) DO NOTHING
+           RETURNING agent_id`,
+          [input.agentId, input.policyId, new Date()]
         );
+        inserted = (res.rowCount ?? 0) > 0;
+      } catch (error) {
+        if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'AI_AGENT_POLICY_LINK_FAILED',
+              message: 'Agent or policy no longer exists',
+            },
+            409
+          );
+        }
+        throw error;
       }
-      throw error;
-    }
-    if (inserted) {
-      await this.recordAudit(getDbPool(), 'ai_agent_policy_added', input.actorUserId, input.ip, {
-        targetId: input.agentId,
-        policyId: input.policyId,
-      });
-    }
-    this.logger.log(
-      `Policy ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, policy=${input.policyId}, actor=${input.actorUserId}`
-    );
+      if (inserted) {
+        await this.recordAudit(q, 'ai_agent_policy_added', input.actorUserId, input.ip, {
+          targetId: input.agentId,
+          policyId: input.policyId,
+        });
+      }
+      this.logger.log(
+        `Policy ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, policy=${input.policyId}, actor=${input.actorUserId}`
+      );
+    });
   }
 
   /** Remove a policy link from an agent. */
@@ -572,30 +578,32 @@ export class AiAgentsService {
     actorUserId: string,
     ip: string
   ): Promise<void> {
-    const agent = await this.findAgent(getDbPool(), agentId);
-    if (!agent) throw this.agentNotFound(agentId);
+    return this.withTransaction(actorUserId, async (q) => {
+      const agent = await this.findAgent(q, agentId, true);
+      if (!agent) throw this.agentNotFound(agentId);
 
-    const result = await getDbPool().query(
-      'DELETE FROM ai_agent_policies WHERE agent_id = $1 AND policy_id = $2',
-      [agentId, policyId]
-    );
-    if ((result.rowCount ?? 0) === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: 'AI_AGENT_POLICY_NOT_FOUND',
-          message: `Policy ${policyId} is not linked to agent ${agentId}`,
-        },
-        404
+      const result = await q.query(
+        'DELETE FROM ai_agent_policies WHERE agent_id = $1 AND policy_id = $2',
+        [agentId, policyId]
       );
-    }
-    await this.recordAudit(getDbPool(), 'ai_agent_policy_removed', actorUserId, ip, {
-      targetId: agentId,
-      policyId,
+      if ((result.rowCount ?? 0) === 0) {
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: 'AI_AGENT_POLICY_NOT_FOUND',
+            message: `Policy ${policyId} is not linked to agent ${agentId}`,
+          },
+          404
+        );
+      }
+      await this.recordAudit(q, 'ai_agent_policy_removed', actorUserId, ip, {
+        targetId: agentId,
+        policyId,
+      });
+      this.logger.log(
+        `Policy unlinked from agent: agent=${agentId}, policy=${policyId}, actor=${actorUserId}`
+      );
     });
-    this.logger.log(
-      `Policy unlinked from agent: agent=${agentId}, policy=${policyId}, actor=${actorUserId}`
-    );
   }
 
   // ─── Transaction helper ─────────────────────────────────────────────────
