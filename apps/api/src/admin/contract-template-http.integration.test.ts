@@ -228,3 +228,32 @@ it.each([
     (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
   ).toHaveLength(0);
 });
+
+it('accepts a 10 MiB template and rejects a larger decoded file before storage', async () => {
+  const upload = (content: string) =>
+    fetch(`${http.base}/api/admin/contract-templates/${templateId}/versions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ fileName: 'large.txt', content }),
+    });
+  const response = await upload('x'.repeat(10 * 1024 * 1024));
+  expect(response.status).toBe(201);
+  expect(await response.json()).toMatchObject({ fileSize: 10 * 1024 * 1024 });
+  expect((await upload('x'.repeat(10 * 1024 * 1024 + 1))).status).toBe(413);
+  expect(objects.size).toBe(1);
+  expect((await http.pool.query('SELECT id FROM contract_template_versions')).rows).toHaveLength(1);
+}, 15000);
+it('retains the ordinary JSON body limit outside version uploads', async () => {
+  const response = await fetch(`${http.base}/api/admin/contract-templates`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ name: 'Oversized', description: 'x'.repeat(120 * 1024) }),
+  });
+  expect(response.status).toBe(413);
+  expect(await response.json()).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:PAYLOAD_TOO_LARGE', message: 'The request is too large' },
+  });
+  expect((await http.pool.query('SELECT name FROM contract_templates')).rows).toEqual([
+    { name: 'Original' },
+  ]);
+});

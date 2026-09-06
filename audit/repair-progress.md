@@ -1363,3 +1363,9 @@ Review and validation: 29 existing service/controller checks and ten production-
 The detail endpoint now returns ordered version metadata with a count and latest version from the same version query. File sizes are normalized to numbers on reads, matching upload responses. Metadata schemas reject blank names after trimming and unknown fields; version upload payloads reject unknown fields.
 
 Review and validation: all 45 template service/controller/production-migrated HTTP checks pass. New HTTP coverage verifies both archived files remain after a second upload and that invalid payloads leave metadata, storage and audits unchanged. The history comparison exposed the old PostgreSQL bigint string response; fixed and reran successfully. Root build, types, lint, contract and whitespace checks pass. Binary template support, the UI and the upload request-size boundary remain separate work.
+
+### Align template upload limits across API and pilot proxy (F17/F18)
+
+The version-upload JSON parser now allows escaping overhead for a 10 MiB text file; other JSON endpoints retain the default request limit. Compressed large-upload bodies are disabled. The pilot proxy has a matching route-specific ceiling. Oversized parser requests now return a stable localized 413 rather than a 500.
+
+Review and validation: 34 migrated-template HTTP and exception-filter checks pass, including an actual 10 MiB upload, a larger decoded file rejected before storage and the ordinary endpoint limit. The local container proxy probe passes TLS/routing/header/size/SSE/WebSocket/quota checks plus the template exception and its upper bound. Its first run caught a missing nested-location proxy handler; added the explicit upstream and reran successfully. Root build, types, lint, contract, bundle and whitespace checks pass. Only disposable local containers were used; no deployment occurred.

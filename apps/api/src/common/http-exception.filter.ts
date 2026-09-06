@@ -147,6 +147,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
     }
 
+    if (
+      exception instanceof Error &&
+      'type' in exception &&
+      exception.type === 'entity.too.large' &&
+      'status' in exception &&
+      exception.status === 413
+    ) {
+      return { httpStatus: 413, errorCode: defaultErrorCode(413), rawMessage: undefined };
+    }
+
     // Zod validation errors — return 400
     if (exception instanceof ZodError) {
       return {

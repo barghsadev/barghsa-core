@@ -1,5 +1,6 @@
 import { trustedProxyIps } from './common/proxy-trust.js';
 import { NestFactory } from '@nestjs/core';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
 import { CacheControlInterceptor } from './common/cache-control.interceptor.js';
@@ -9,11 +10,25 @@ import { Reflector } from '@nestjs/core';
 
 export async function createApplication() {
   const proxies = trustedProxyIps();
-  const app = await NestFactory.create(AppModule, { rawBody: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
   app
     .getHttpAdapter()
     .getInstance()
     .set('trust proxy', proxies.length ? proxies : false);
+
+  // A 10 MiB text file may expand sixfold when escaped inside JSON. Restrict
+  // the larger parser to version uploads; retain the default limit elsewhere.
+  app.useBodyParser('json', {
+    limit: 61 * 1024 * 1024,
+    inflate: false,
+    type: (request) =>
+      request.method === 'POST' &&
+      /^\/api\/admin\/contract-templates\/[0-9a-f-]{36}\/versions\/?(?:\?|$)/i.test(
+        request.url ?? ''
+      ) &&
+      /^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
+  });
+  app.useBodyParser('json');
 
   // Enable shutdown hooks for graceful SIGTERM/SIGINT handling.
   // NestJS will call OnApplicationShutdown lifecycle hooks on all registered

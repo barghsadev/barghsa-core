@@ -59,6 +59,12 @@ assert.equal(
   (await request('/api/large', { body: Buffer.alloc(10 * 1024 * 1024 + 1) })).status,
   413
 );
+const templatePath = '/api/admin/contract-templates/01900000-0000-7000-8000-000000000001/versions';
+const templateUpload = await request(templatePath, {body: Buffer.alloc(11 * 1024 * 1024)});
+assert.equal(templateUpload.status, 200);
+assert.equal(JSON.parse(templateUpload.body).service, 'api');
+assert.equal(templateUpload.headers['x-content-type-options'], 'nosniff');
+assert.equal((await request(templatePath, {body: Buffer.alloc(61 * 1024 * 1024 + 1)})).status, 413);
 const stream = await request('/api/stream');
 assert.ok(stream.chunks.length >= 2, 'SSE must reach the client before the final chunk');
 assert.ok(stream.chunks[0].includes('first') && !stream.chunks[0].includes('last'));

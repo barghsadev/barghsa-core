@@ -24,6 +24,12 @@ export interface ErrorCodeDef {
 /** Error code definitions */
 export const ErrorCodes = {
   // ── Validation ──────────────────────────────────────────
+  VALIDATION_PAYLOAD_TOO_LARGE: {
+    code: 'VALIDATION:INPUT:PAYLOAD_TOO_LARGE',
+    httpStatus: 413,
+    messageKey: 'error.validation.payload_too_large',
+    severity: 'debug' as ErrorSeverity,
+  },
   VALIDATION_INPUT_INVALID: {
     code: 'VALIDATION:INPUT:INVALID',
     httpStatus: 400,
