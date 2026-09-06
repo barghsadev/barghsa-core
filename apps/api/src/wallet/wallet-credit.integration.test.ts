@@ -10,24 +10,21 @@
  *      ledger row and does not double-credit.
  *   3. Concurrent credits with distinct keys both post; the final
  *      posted_balance equals the sum.
- *   4. A wallet whose posted_balance is already negative is rejected
- *      and left unchanged (no ledger row).
+ *   4. The production constraint rejects negative stored balances
+ *      without changing wallet state or history.
  *   5. A missing wallet is NotFound.
  *   6. Reusing a debit or reservation idempotency key, or retrying a credit
  *      with a different amount/type/refId, is ConflictException and does not
  *      mutate the wallet.
  *
  * Wiring: only `getDbPool()` is stubbed, handing the service the
- * schema-scoped Testcontainers pool.
+ * fully migrated disposable PostgreSQL pool.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { v7 as uuidv7 } from 'uuid';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { startHttpFixture } from '../test/http-fixture.js';
 import { WalletService } from './wallet.service.js';
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }));
@@ -45,35 +42,25 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   };
 });
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
-);
-
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 
 describe('WalletService.credit — real PostgreSQL (T-04.2.01.03)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   let service: WalletService;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4);
+    ctx = await startHttpFixture(process.env.TEST_DATABASE_URL!);
     poolHolder.pool = ctx.pool;
     service = new WalletService();
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B]);
+    await ctx.pool.query(
+      "INSERT INTO users(user_id,username,password_hash) VALUES ('wallet-test-owner','wallet-test@example.test','test-only')"
+    );
+    await ctx.pool.query(
+      `INSERT INTO profiles (id,user_id) VALUES ($1,'wallet-test-owner'), ($2,'wallet-test-owner')`,
+      [PROFILE_A, PROFILE_B]
+    );
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2)`, [
       PROFILE_A,
       PROFILE_B,
@@ -82,8 +69,7 @@ describe('WalletService.credit — real PostgreSQL (T-04.2.01.03)', () => {
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   async function fetchWallet(profileId: string) {
@@ -234,19 +220,14 @@ describe('WalletService.credit — real PostgreSQL (T-04.2.01.03)', () => {
     expect(after.version).toBe(before.version + 2);
   });
 
-  it('rejects credit when postedBalance is already negative and writes no ledger row', async () => {
-    await ctx.pool.query(
-      `UPDATE wallets SET posted_balance = -1, version = 0 WHERE profile_id = $1`,
-      [PROFILE_B]
-    );
-
+  it('rejects negative stored balances at the production constraint without changing history', async () => {
+    const before = await fetchWallet(PROFILE_B);
     await expect(
-      service.credit(PROFILE_B, 100n, { type: 'topup' }, 'credit-negative-posted')
-    ).rejects.toBeInstanceOf(ConflictException);
-
-    const wallet = await fetchWallet(PROFILE_B);
-    expect(wallet.posted_balance).toBe('-1');
-    expect(wallet.version).toBe(0);
+      ctx.pool.query('UPDATE wallets SET posted_balance=-1,version=0 WHERE profile_id=$1', [
+        PROFILE_B,
+      ])
+    ).rejects.toMatchObject({ code: '23514' });
+    expect(await fetchWallet(PROFILE_B)).toEqual(before);
     expect(await fetchLedger(PROFILE_B)).toHaveLength(0);
   });
 

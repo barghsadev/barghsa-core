@@ -1049,3 +1049,9 @@ Review: all 28 cases pass on the fully migrated database; typecheck and lint pas
 Rebuilt API, web and worker runtime images with product code through ab96c26, then passed the complete disposable-container probe. All three run non-root with read-only filesystems and packaged migrations. Database loss changes readiness while preserving liveness; recovery restores readiness. SIGTERM waits for concurrent inbox and invoice commits. Forced shutdown leaves rolled-back/retryable work, and a replacement worker completes each exactly once; web/API exit cleanly. The probe removed its containers/network, verified by an empty matching container inventory.
 
 The first builds stalled in Docker's stored-credential helper. Stopped those build processes and used a temporary credential-free configuration for public base images; all builds then passed. Removed the temporary configuration. Image identities, product-source revision, checks and operational limitations are recorded in `audit/production-image-verification.json`. No registry push or deployment was performed. The prior forced-lease-clock limitation remains explicit.
+
+### Wallet ledger primitives on the production schema (F02/F14)
+
+Moved credit, debit, reserve/release and optimistic-balance integration suites to the full migration chain, preserving concurrency, idempotency, amount/ref binding, insufficient available balance and UUID normalization checks. The old negative-balance setup deliberately wrote data that production constraints now reject. That case now verifies the production constraint rejects the write without changing balance/history; service-level invalid-state checks remain in unit coverage.
+
+Review/validation: 54 real-database cases, typecheck and lint pass. No production wallet implementation changed. Evidence covers the existing `T-04.2.01.03` through `.06` primitive tasks, not new customer payment or contract flows. Reversal/provider-callback suites are the next matrix group.
