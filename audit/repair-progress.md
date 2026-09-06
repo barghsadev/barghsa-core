@@ -1643,3 +1643,5 @@ Four wrapper tests pass for checksum rejection before extraction, ignoring archi
 Collected the full installed-package license inventory and compared metadata against T-05.03.04's literal allowlist. Twenty-three package entries fall outside it, including Nodemailer, axe-core, Lightning CSS and tslib. Saved the package/version/license list in license-policy-review.md and the normalized inventory in license-inventory.json. No dependency was silently exempted and no broader license list was approved. Asked the user which approved policy to use; independent repair work continues while that decision is pending.
 
 Post-commit secret verification also passed at f9de86b: the synthetic credential was detected, and all 1,030 project commits had zero untriaged findings.
+
+License policy update: the user instructed "ignore it. install any dependencies you need." The original allowlist is waived for this repair work, so the 23 metadata differences no longer block the plan. The inventory is retained as reference, without claiming legal review.

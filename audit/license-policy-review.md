@@ -2,7 +2,7 @@
 
 The canonical T-05.03.04 requirement specifies an allowlist of MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause. This inventory applies that written list literally; it is not a legal assessment of these licenses.
 
-`pnpm licenses list --json` on the repaired dependencies identified the following packages outside that list. No risk exception or expanded license policy has been approved. Conjunctive Apache/MIT and alternative MIT/CC0 expressions can satisfy the written list. The full normalized inventory is in `license-inventory.json`.
+`pnpm licenses list --json` on the repaired dependencies identified the following packages outside that list. The user subsequently instructed: "ignore it. install any dependencies you need." The original allowlist is therefore waived for this repair work. Conjunctive Apache/MIT and alternative MIT/CC0 expressions can satisfy the written list. The full normalized inventory is in `license-inventory.json`.
 
 | Package | Installed versions | Reported license |
 | --- | --- | --- |
@@ -32,4 +32,4 @@ The canonical T-05.03.04 requirement specifies an allowlist of MIT, Apache-2.0, 
 
 The inventory was collected on macOS ARM64. Platform-specific packages can differ on Linux CI and must be evaluated by the same policy there. This is dependency metadata, not a full review of each package's license files or distribution obligations.
 
-The remaining decision is whether to retain the original allowlist and replace these dependencies, or approve a documented expanded list after review. Until then, the licensing portion of F19 remains blocked on policy; it must not be marked passed or silently baselined as accepted risk.
+User disposition on 2026-09-07: do not block repairs or required dependency installation on the original allowlist. The inventory remains reference evidence. No license-policy enforcement gate is required for this repair run; this is not a legal assessment or a claim that distribution obligations have been reviewed.
