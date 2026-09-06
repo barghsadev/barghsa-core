@@ -1606,6 +1606,7 @@ export const fa: I18nDictionary = {
 
   // ── Admin — Notification Templates (T-09.04.01) ─────────────
   'admin.notifications.title': 'قالب‌های اعلان',
+  'admin.notifications.dismissError': 'بستن پیام خطا',
   'admin.notifications.newTemplate': 'قالب جدید',
   'admin.notifications.loading': 'در حال بارگذاری قالب‌های اعلان…',
   'admin.notifications.editTitle': 'ویرایش قالب',
@@ -3654,6 +3655,7 @@ export const en: I18nDictionary = {
 
   // ── Admin — Notification Templates (T-09.04.01) ─────────────
   'admin.notifications.title': 'Notification Templates',
+  'admin.notifications.dismissError': 'Dismiss error',
   'admin.notifications.newTemplate': 'New Template',
   'admin.notifications.loading': 'Loading notification templates...',
   'admin.notifications.editTitle': 'Edit Template',

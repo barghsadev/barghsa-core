@@ -842,3 +842,68 @@ for (const locale of ['en', 'fa']) {
     await expect(identifier).toBeDisabled();
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`notification editor and delivery window expose localized control names (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/admin/notifications/templates*', (route) =>
+      route.fulfill({ json: [] })
+    );
+    let writes = 0;
+    await page.route('**/api/admin/config/delivery-window', (route) => {
+      if (route.request().method() === 'GET')
+        return route.fulfill({ json: { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 } });
+      writes++;
+      return route.fulfill({ status: 503, json: { message: 'Unavailable' } });
+    });
+    await page.goto('/admin/notifications');
+    const windowForm = page
+      .locator('form')
+      .filter({ has: page.locator('#delivery-window-timezone') });
+    for (const control of await windowForm.locator('select').all()) {
+      await expect(control).toHaveAccessibleName(/.+/);
+    }
+    await page
+      .getByLabel(locale === 'fa' ? 'ساعت شروع' : 'Start time', { exact: false })
+      .selectOption('20');
+    await windowForm
+      .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
+      .click();
+    await expect(windowForm.getByRole('alert')).toContainText(
+      locale === 'fa' ? '۴ ساعت' : '4 hours'
+    );
+    expect(writes).toBe(0);
+    await page
+      .getByLabel(locale === 'fa' ? 'ساعت شروع' : 'Start time', { exact: false })
+      .selectOption('9');
+    await windowForm
+      .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
+      .click();
+    const error = page.getByRole('alert').filter({ hasText: 'Unavailable' });
+    await expect(error).toBeVisible();
+    await error
+      .getByRole('button', { name: locale === 'fa' ? 'بستن پیام خطا' : 'Dismiss error' })
+      .press('Enter');
+    await expect(error).toHaveCount(0);
+    expect(writes).toBe(1);
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
+      .click();
+    const editor = page
+      .locator('form')
+      .filter({ has: page.locator('#notification-template-eventKey') });
+    await expect(editor.locator('select, input, textarea')).toHaveCount(6);
+    for (const control of await editor.locator('select, input, textarea').all()) {
+      await expect(control).toHaveAccessibleName(/.+/);
+    }
+    const subject = page.getByLabel(locale === 'fa' ? 'موضوع ایمیل' : 'Subject Line', {
+      exact: true,
+    });
+    await page.locator('label[for="notification-template-subject"]').click();
+    await expect(subject).toBeFocused();
+    await subject.fill('Test subject');
+    await expect(subject).toHaveValue('Test subject');
+  });
+}

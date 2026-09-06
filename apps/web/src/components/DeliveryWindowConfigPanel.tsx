@@ -151,11 +151,16 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+        <div
+          role="alert"
+          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+        >
           {error}
           <button
+            type="button"
+            aria-label={t('admin.notifications.dismissError', uiLocale)}
             onClick={() => setError(null)}
-            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+            className="absolute top-2 end-2 text-red-500 hover:text-red-700"
           >
             ✕
           </button>
@@ -165,11 +170,15 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         {/* Timezone */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="delivery-window-timezone"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             {t('admin.notifications.window.timezone', uiLocale)}{' '}
             <span className="text-red-500">*</span>
           </label>
           <select
+            id="delivery-window-timezone"
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
             className="w-full border border-gray-300 rounded px-3 py-2"
@@ -185,11 +194,15 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
         {/* Start / End hour */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="delivery-window-start"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t('admin.notifications.window.start', uiLocale)}{' '}
               <span className="text-red-500">*</span>
             </label>
             <select
+              id="delivery-window-start"
               value={startHour}
               onChange={(e) => setStartHour(Number(e.target.value))}
               className="w-full border border-gray-300 rounded px-3 py-2"
@@ -202,11 +215,15 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="delivery-window-end"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t('admin.notifications.window.end', uiLocale)}{' '}
               <span className="text-red-500">*</span>
             </label>
             <select
+              id="delivery-window-end"
               value={endHour}
               onChange={(e) => setEndHour(Number(e.target.value))}
               className="w-full border border-gray-300 rounded px-3 py-2"
@@ -220,7 +237,11 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
           </div>
         </div>
 
-        {clientIssue && <p className="text-sm text-red-600">{clientIssue}</p>}
+        {clientIssue && (
+          <p role="alert" className="text-sm text-red-600">
+            {clientIssue}
+          </p>
+        )}
 
         {config && (
           <p className="text-xs text-gray-400">
@@ -242,7 +263,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
               : t('admin.notifications.window.save', uiLocale)}
           </button>
           {saved && (
-            <span className="text-sm text-green-600">
+            <span role="status" className="text-sm text-green-600">
               {t('admin.notifications.window.saved', uiLocale)}
             </span>
           )}

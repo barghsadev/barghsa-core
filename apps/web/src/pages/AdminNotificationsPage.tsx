@@ -429,11 +429,16 @@ export default function AdminNotificationsPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+        <div
+          role="alert"
+          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+        >
           {error}
           <button
+            type="button"
+            aria-label={t('admin.notifications.dismissError', uiLocale)}
             onClick={() => setError(null)}
-            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+            className="absolute top-2 end-2 text-red-500 hover:text-red-700"
           >
             ✕
           </button>
@@ -452,6 +457,7 @@ export default function AdminNotificationsPage() {
       {/* Filters */}
       <div className="flex gap-4 items-center">
         <select
+          aria-label={t('admin.notifications.locale', uiLocale)}
           value={filterLocale}
           onChange={(e) => setFilterLocale(e.target.value)}
           className="border border-gray-300 rounded px-3 py-1.5 text-sm"
@@ -461,6 +467,7 @@ export default function AdminNotificationsPage() {
           <option value="en">English</option>
         </select>
         <select
+          aria-label={t('admin.notifications.channel', uiLocale)}
           value={filterChannel}
           onChange={(e) => setFilterChannel(e.target.value)}
           className="border border-gray-300 rounded px-3 py-1.5 text-sm"
@@ -471,6 +478,7 @@ export default function AdminNotificationsPage() {
           <option value="in_app">In-App</option>
         </select>
         <select
+          aria-label={t('admin.notifications.allStatus', uiLocale)}
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
           className="border border-gray-300 rounded px-3 py-1.5 text-sm"
@@ -495,13 +503,22 @@ export default function AdminNotificationsPage() {
 
           {/* Event key */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="notification-template-eventKey"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t('admin.notifications.eventKey', uiLocale)} <span className="text-red-500">*</span>
             </label>
             {editId ? (
-              <p className="text-sm text-gray-500 py-2">{eventKey}</p>
+              <input
+                id="notification-template-eventKey"
+                readOnly
+                value={eventKey}
+                className="text-sm text-gray-500 py-2"
+              />
             ) : (
               <select
+                id="notification-template-eventKey"
                 value={eventKey}
                 onChange={(e) => setEventKey(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2"
@@ -519,15 +536,22 @@ export default function AdminNotificationsPage() {
           {/* Channel + Locale */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="notification-template-channel"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {t('admin.notifications.channel', uiLocale)} <span className="text-red-500">*</span>
               </label>
               {editId ? (
-                <p className="text-sm text-gray-500 py-2">
-                  {CHANNEL_LABELS[channel as TemplateChannel] ?? channel}
-                </p>
+                <input
+                  id="notification-template-channel"
+                  readOnly
+                  value={CHANNEL_LABELS[channel as TemplateChannel] ?? channel}
+                  className="text-sm text-gray-500 py-2"
+                />
               ) : (
                 <select
+                  id="notification-template-channel"
                   value={channel}
                   onChange={(e) => setChannel(e.target.value as TemplateChannel)}
                   className="w-full border border-gray-300 rounded px-3 py-2"
@@ -542,15 +566,22 @@ export default function AdminNotificationsPage() {
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="notification-template-locale"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {t('admin.notifications.locale', uiLocale)} <span className="text-red-500">*</span>
               </label>
               {editId ? (
-                <p className="text-sm text-gray-500 py-2">
-                  {LOCALE_LABELS[locale as TemplateLocale] ?? locale}
-                </p>
+                <input
+                  id="notification-template-locale"
+                  readOnly
+                  value={LOCALE_LABELS[locale as TemplateLocale] ?? locale}
+                  className="text-sm text-gray-500 py-2"
+                />
               ) : (
                 <select
+                  id="notification-template-locale"
                   value={locale}
                   onChange={(e) => setLocale(e.target.value as TemplateLocale)}
                   className="w-full border border-gray-300 rounded px-3 py-2"
@@ -569,11 +600,15 @@ export default function AdminNotificationsPage() {
           {/* Subject (email only) */}
           {channel === 'email' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="notification-template-subject"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {t('admin.notifications.subject', uiLocale)}
               </label>
               <input
                 type="text"
+                id="notification-template-subject"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2"
@@ -585,17 +620,22 @@ export default function AdminNotificationsPage() {
 
           {/* Body template + variable sidebar + preview */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="notification-template-bodyTemplate"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t('admin.notifications.bodyTemplate', uiLocale)}{' '}
               <span className="text-red-500">*</span>
             </label>
-            <p className="text-xs text-gray-400 mb-1">
+            <p id="notification-body-hint" className="text-xs text-gray-400 mb-1">
               {t('admin.notifications.bodyHint', uiLocale)}
             </p>
             <div className="flex gap-4">
               <div className="flex-1">
                 <textarea
+                  aria-describedby="notification-body-hint"
                   ref={bodyRef}
+                  id="notification-template-bodyTemplate"
                   value={bodyTemplate}
                   onChange={(e) => setBodyTemplate(e.target.value)}
                   className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
@@ -660,13 +700,17 @@ export default function AdminNotificationsPage() {
 
           {/* Variables (allow-list: names + optional descriptions) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="notification-template-variablesLabel"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t('admin.notifications.variablesLabel', uiLocale)}
             </label>
             <p className="text-xs text-gray-400 mb-1">
               {t('admin.notifications.variablesHintNew', uiLocale)}
             </p>
             <textarea
+              id="notification-template-variablesLabel"
               value={variablesStr}
               onChange={(e) => setVariablesStr(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
