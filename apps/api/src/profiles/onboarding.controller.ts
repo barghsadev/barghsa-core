@@ -1,7 +1,11 @@
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { OnboardingDraftsService, legalDraftInputSchema } from './onboarding-drafts.service.js';
 import { z } from 'zod';
 import {
   Controller,
   Post,
+  Get,
+  Put,
   Body,
   Param,
   HttpCode,
@@ -27,8 +31,31 @@ export class OnboardingController {
 
   constructor(
     private readonly profilesService: ProfilesService,
-    private readonly legalProfilesService: LegalProfilesService
+    private readonly legalProfilesService: LegalProfilesService,
+    private readonly drafts: OnboardingDraftsService
   ) {}
+
+  @Get('draft/:profileId')
+  @RateLimit({ namespace: 'onboarding:draft:get:user', limit: 60, windowMs: 60000 })
+  @ApiOperation({ summary: 'Read the current owned legal onboarding draft' })
+  getDraft(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.drafts.get(req.session.userId, profileId);
+  }
+
+  @Put('draft/:profileId')
+  @ApiZodBody(legalDraftInputSchema)
+  @RateLimit({ namespace: 'onboarding:draft:save:user', limit: 60, windowMs: 60000 })
+  @ApiOperation({ summary: 'Save legal onboarding fields with a draft version check' })
+  saveDraft(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.drafts.save(req.session.userId, profileId, body);
+  }
 
   /**
    * POST /api/onboarding/start

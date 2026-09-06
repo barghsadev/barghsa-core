@@ -1,3 +1,4 @@
+import { OnboardingDraftsService } from './onboarding-drafts.service.js';
 import { Module } from '@nestjs/common';
 import { ProfilesController } from './profiles.controller.js';
 import { OnboardingController } from './onboarding.controller.js';
@@ -15,6 +16,7 @@ import { NotificationsModule } from '../notifications/index.js';
   imports: [SessionModule, NotificationsModule],
   controllers: [ProfilesController, OnboardingController, AgentsController, InvitationsController],
   providers: [
+    OnboardingDraftsService,
     ProfilesService,
     LegalProfilesService,
     AgentsService,

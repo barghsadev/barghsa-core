@@ -115,6 +115,7 @@ export class LegalProfilesService {
 
     const parsed = z
       .object({
+        draftVersion: z.number().int().min(0).max(2147483647).optional(),
         legalName: z.string().trim().min(1).max(200),
         nationalIdentifier: z
           .string()
@@ -188,6 +189,14 @@ export class LegalProfilesService {
         );
       }
 
+      if (data.draftVersion !== undefined) {
+        const draft = await client.query(
+          'SELECT version FROM profile_onboarding_drafts WHERE profile_id=$1',
+          [profileId]
+        );
+        if ((draft.rows[0]?.version ?? 0) !== data.draftVersion)
+          throw new HttpException({ error: ErrorCodes.CONFLICT_VERSION.code }, 409);
+      }
       await requireAddressGeography(client, data.officialProvinceId, data.officialCityId);
       const companyType = await client.query('SELECT id FROM company_types WHERE id=$1 FOR SHARE', [
         data.companyTypeId,
@@ -284,6 +293,7 @@ export class LegalProfilesService {
           : 'PENDING_VERIFICATION',
       ]);
 
+      await client.query('DELETE FROM profile_onboarding_drafts WHERE profile_id=$1', [profileId]);
       await client.query('COMMIT');
 
       this.logger.log(`Legal profile ${profileId} saved for user ${userId}`);

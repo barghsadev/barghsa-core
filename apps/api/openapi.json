@@ -10209,6 +10209,168 @@
         ]
       }
     },
+    "/api/onboarding/draft/{profileId}": {
+      "get": {
+        "operationId": "OnboardingController_getDraft",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read the current owned legal onboarding draft",
+        "tags": [
+          "Onboarding"
+        ]
+      },
+      "put": {
+        "operationId": "OnboardingController_saveDraft",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "companyTypeId": {
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "economicCode": {
+                        "maxLength": 50,
+                        "type": "string"
+                      },
+                      "legalName": {
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      "nationalIdentifier": {
+                        "maxLength": 11,
+                        "type": "string"
+                      },
+                      "officialCityId": {
+                        "maxLength": 36,
+                        "type": "string"
+                      },
+                      "officialEmail": {
+                        "maxLength": 254,
+                        "type": "string"
+                      },
+                      "officialFullAddress": {
+                        "maxLength": 500,
+                        "type": "string"
+                      },
+                      "officialPhone": {
+                        "maxLength": 30,
+                        "type": "string"
+                      },
+                      "officialPostalCode": {
+                        "maxLength": 10,
+                        "type": "string"
+                      },
+                      "officialProvinceId": {
+                        "maxLength": 36,
+                        "type": "string"
+                      },
+                      "registrationDate": {
+                        "maxLength": 10,
+                        "type": "string"
+                      },
+                      "registrationNumber": {
+                        "maxLength": 50,
+                        "type": "string"
+                      },
+                      "representativeCityId": {
+                        "maxLength": 36,
+                        "type": "string"
+                      },
+                      "representativeFirstName": {
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "representativeFullAddress": {
+                        "maxLength": 500,
+                        "type": "string"
+                      },
+                      "representativeHonorific": {
+                        "maxLength": 50,
+                        "type": "string"
+                      },
+                      "representativeLastName": {
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "representativeNationalId": {
+                        "maxLength": 10,
+                        "type": "string"
+                      },
+                      "representativePostalCode": {
+                        "maxLength": 10,
+                        "type": "string"
+                      },
+                      "representativeProvinceId": {
+                        "maxLength": 36,
+                        "type": "string"
+                      },
+                      "representativeRelationship": {
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "representativeTitle": {
+                        "maxLength": 100,
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483646,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "expectedVersion",
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Save legal onboarding fields with a draft version check",
+        "tags": [
+          "Onboarding"
+        ]
+      }
+    },
     "/api/onboarding/individual/{profileId}": {
       "post": {
         "operationId": "OnboardingController_saveIndividualProfile",

@@ -445,3 +445,5 @@ export * from './schema/bank-receipt-attachment-claims';
 
 export * from './schema/auth-delivery-outbox';
 export * from './schema/user-profile-contexts';
+
+export * from './schema/onboarding-drafts';

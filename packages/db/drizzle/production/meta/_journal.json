@@ -204,6 +204,13 @@
       "when": 1791331200011,
       "tag": "0108_legal_representative",
       "breakpoints": true
+    },
+    {
+      "idx": 109,
+      "version": "7",
+      "when": 1791331200012,
+      "tag": "0109_onboarding_drafts",
+      "breakpoints": true
     }
   ]
 }

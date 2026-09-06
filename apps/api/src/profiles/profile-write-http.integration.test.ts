@@ -522,3 +522,131 @@ it('validates representative identity, preserves both addresses and rolls back o
   // A person may represent more than one company, without duplicate personal-profile identity.
   expect((await submit({ ...body, nationalIdentifier: '12345678902' }, second)).status).toBe(200);
 });
+
+it('persists incomplete legal drafts, rejects stale versions and rolls back failed audit writes', async () => {
+  await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [profileId]);
+  const read = async () =>
+    (await fetch(`${http.base}/api/onboarding/draft/${profileId}`, { headers })).json();
+  const save = (body: unknown) =>
+    fetch(`${http.base}/api/onboarding/draft/${profileId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body),
+    });
+  expect(await read()).toEqual({ version: 0, data: {} });
+  for (const body of [
+    null,
+    { expectedVersion: 0, data: { isAdmin: 'true' } },
+    { expectedVersion: 0, data: { legalName: 123 } },
+    { expectedVersion: 0, data: { legalName: 'x'.repeat(201) } },
+    { expectedVersion: -1, data: {} },
+    { expectedVersion: '0', data: {} },
+  ])
+    expect((await save(body)).status).toBe(400);
+  expect(
+    (
+      await save({
+        expectedVersion: 0,
+        data: { legalName: 'In progress', representativeNationalId: '123' },
+      })
+    ).status
+  ).toBe(200);
+  expect(await read()).toEqual({
+    version: 1,
+    data: { legalName: 'In progress', representativeNationalId: '123' },
+  });
+  const competing = await Promise.all(
+    ['First', 'Second'].map((legalName) => save({ expectedVersion: 1, data: { legalName } }))
+  );
+  expect(competing.map((response) => response.status).sort()).toEqual([200, 409]);
+  const persisted = await read();
+  expect(persisted).toMatchObject({ version: 2 });
+  expect((await snapshot()).status).toBe('DRAFT');
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+  await http.pool.query(
+    "CREATE FUNCTION reject_draft_save_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test draft audit failure'; END $$; CREATE TRIGGER reject_draft_save_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='onboarding_draft_saved') EXECUTE FUNCTION reject_draft_save_audit()"
+  );
+  expect((await save({ expectedVersion: 2, data: { legalName: 'Lost' } })).status).toBe(500);
+  expect(await read()).toEqual(persisted);
+});
+for (const mutation of ['archive', 'complete', 'transfer']) {
+  it(`rechecks draft access after concurrent ${mutation}`, async () => {
+    await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [profileId]);
+    await http.pool.query(
+      "INSERT INTO users(user_id,username,password_hash) VALUES ('other-draft-owner','other-draft@example.test','test')"
+    );
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query(
+        `UPDATE profiles SET ${mutation === 'archive' ? 'archived=true' : mutation === 'complete' ? "status='ACTIVE'" : "user_id='other-draft-owner'"} WHERE id=$1`,
+        [profileId]
+      );
+      pending = fetch(`${http.base}/api/onboarding/draft/${profileId}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ expectedVersion: 0, data: { legalName: 'Changed' } }),
+      });
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type=%'"
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await blocker.query('COMMIT');
+      expect((await pending).status).toBe(404);
+      expect(
+        (await fetch(`${http.base}/api/onboarding/draft/${profileId}`, { headers })).status
+      ).toBe(404);
+      expect(
+        (await http.pool.query('SELECT profile_id FROM profile_onboarding_drafts')).rows
+      ).toHaveLength(0);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending;
+    }
+  });
+}
+it('binds final legal submission to the saved version and removes its draft on success', async () => {
+  await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [profileId]);
+  const save = () =>
+    fetch(`${http.base}/api/onboarding/draft/${profileId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ expectedVersion: 0, data: { legalName: 'Newer draft' } }),
+    });
+  expect((await save()).status).toBe(200);
+  const body = {
+    ...representativeData(),
+    legalName: 'Company',
+    nationalIdentifier: '12345678901',
+    registrationNumber: '123',
+    companyTypeId: 'limited-liability',
+    representativeTitle: 'CEO',
+    representativeRelationship: 'director',
+    officialProvinceId: provinceId,
+    officialCityId: cityId,
+    officialFullAddress: 'Company Street',
+    officialPostalCode: '1234567890',
+  };
+  const submit = (draftVersion: number) =>
+    fetch(`${http.base}/api/onboarding/legal/${profileId}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ ...body, draftVersion }),
+    });
+  expect((await submit(0)).status).toBe(409);
+  expect((await snapshot()).status).toBe('DRAFT');
+  expect((await submit(1)).status).toBe(200);
+  expect(
+    (await http.pool.query('SELECT profile_id FROM profile_onboarding_drafts')).rows
+  ).toHaveLength(0);
+  expect((await save()).status).toBe(404);
+});
