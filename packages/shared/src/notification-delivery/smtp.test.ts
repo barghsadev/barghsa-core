@@ -1,3 +1,4 @@
+vi.mock('./email-breaker.js', () => ({ EmailCircuitBreaker: class { async decision() { return { allow: true, kind: 'closed' } } async recordOutcome() {} } }))
 import { beforeEach, expect, it, vi } from 'vitest'
 import { createEmailSender } from './email.js'
 const { lookup, createTransport, sendMail, close } = vi.hoisted(() => ({ lookup: vi.fn(), createTransport: vi.fn(), sendMail: vi.fn(), close: vi.fn() }))
@@ -10,7 +11,7 @@ beforeEach(() => {
   sendMail.mockResolvedValue({ accepted: ['staff@example.test'], rejected: [], messageId: 'smtp-receipt' })
 })
 function sender() {
-  return createEmailSender({ query: async sql => ({ rows: sql.includes('email_suppressions') ? [] : [{ transport: 'smtp', config: {
+  return createEmailSender({ query: async sql => ({ rows: sql.includes('email_suppressions') ? [] : [{ id: 'smtp-provider', transport: 'smtp', config: {
     host: 'mail.example.test', from_email: 'sender@example.test', security: 'STARTTLS', username: 'test-only', password: 'test-only',
   } }] }) })
 }

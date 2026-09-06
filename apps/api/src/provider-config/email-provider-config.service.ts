@@ -470,7 +470,7 @@ export class EmailProviderConfigService {
    * (older test harnesses) the gate is always open.
    */
   async breakerDecision(id: string): Promise<
-    | { allow: true; kind: 'closed' | 'half_open' }
+    | { allow: true; kind: 'closed' | 'half_open'; probeToken?: string }
     | { allow: false; kind: 'open'; degradedReason: string; cooldownUntil: Date }
   > {
     if (!this.circuitBreaker) return { allow: true, kind: 'closed' }
@@ -483,7 +483,7 @@ export class EmailProviderConfigService {
         cooldownUntil: decision.cooldownUntil,
       }
     }
-    return { allow: true, kind: decision.kind }
+    return { allow: true, kind: decision.kind, ...(decision.probeToken ? { probeToken: decision.probeToken } : {}) }
   }
 
   /**
@@ -530,7 +530,7 @@ export class EmailProviderConfigService {
 
     if (existing.transport === 'resend') {
       const outcome = await this.testResendConnection(existing.id, recipient)
-      return this.recordBreakerOutcome(existing.id, outcome)
+      return this.recordBreakerOutcome(existing.id, outcome, breaker.probeToken)
     }
     if (existing.transport !== 'smtp') {
       throw new HttpException(
@@ -543,7 +543,7 @@ export class EmailProviderConfigService {
       )
     }
     const outcome = await this.testSmtpConnection(existing.id)
-    return this.recordBreakerOutcome(existing.id, outcome)
+    return this.recordBreakerOutcome(existing.id, outcome, breaker.probeToken)
   }
 
   /**
@@ -557,13 +557,13 @@ export class EmailProviderConfigService {
   private async recordBreakerOutcome(
     id: string,
     outcome: { ok: boolean; error: string | null },
+    probeToken?: string,
   ): Promise<{ ok: boolean; error: string | null; result: EmailProviderConfigResult }> {
     if (this.circuitBreaker) {
-      const before = await this.circuitBreaker.readState(id)
       await this.circuitBreaker.recordOutcome(id, {
         ok: outcome.ok,
         ...(outcome.error ? { cause: outcome.error } : {}),
-        isProbe: before.degraded,
+        ...(probeToken ? { probeToken } : {}),
       })
     }
     const result = await this.findById(id)

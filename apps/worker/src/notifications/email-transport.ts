@@ -17,7 +17,7 @@ export class EmailNotificationTransport implements INotificationTransport {
     if (jobs.rows.length !== 1) throw new Error('Email job unavailable')
     let snapshot = jobs.rows[0]!.delivery_payload
     if (!snapshot) {
-      const providers = await this.pool.query("SELECT id FROM email_provider_configs WHERE status='active' AND last_test_status='passed' AND degraded=false")
+      const providers = await this.pool.query("SELECT id FROM email_provider_configs WHERE status='active' AND last_test_status='passed'")
       if (providers.rows.length !== 1 || typeof providers.rows[0]!.id !== 'string') throw new Error('Email provider unavailable')
       const templates = await this.pool.query(`SELECT id,version,subject,body_template,variables FROM notification_templates
         WHERE event_key=$1 AND channel='email' AND locale=$2 AND status='active' AND is_active=true`, [payload.eventKey, recipient.locale])

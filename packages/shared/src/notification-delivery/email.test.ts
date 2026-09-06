@@ -1,3 +1,4 @@
+vi.mock('./email-breaker.js', () => ({ EmailCircuitBreaker: class { async decision() { return { allow: true, kind: 'closed' } } async recordOutcome() {} } }))
 import { afterAll, beforeAll, expect, it, vi } from 'vitest'
 import { createServer, type Server } from 'node:http'
 import { createEmailSender } from './email.js'
