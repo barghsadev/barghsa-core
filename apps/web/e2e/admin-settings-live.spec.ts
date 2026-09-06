@@ -1172,3 +1172,136 @@ for (const locale of ['en', 'fa'])
       ).status()
     ).toBe(404);
   });
+
+for (const locale of ['en', 'fa'])
+  test(`AI policy UI persists through the migrated API (${locale})`, async ({ page }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    const name = `Policy live ${locale}`,
+      renamed = `${name} edited`,
+      groupName = `Policy group ${locale}`;
+    await page.goto('/admin/policies');
+    await page
+      .getByRole('button', { name: fa ? 'افزودن سیاست' : 'Add policy', exact: true })
+      .click();
+    await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(name);
+    await page.getByLabel(fa ? 'توضیحات' : 'Description', { exact: true }).fill('Meter guidance');
+    await page
+      .getByLabel(fa ? 'موضوعات مجاز' : 'Allowed topics', { exact: true })
+      .fill('Meter readings');
+    await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await confirm();
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+      .click();
+    await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(renamed);
+    await page
+      .getByLabel(fa ? 'نوع سیاست' : 'Policy type', { exact: true })
+      .selectOption('response_style');
+    await page.getByLabel(fa ? 'لحن' : 'Tone', { exact: true }).fill('Clear and concise');
+    await page
+      .getByLabel(fa ? 'زبان (اختیاری)' : 'Language (optional)', { exact: true })
+      .fill(locale);
+    await page
+      .getByLabel(fa ? 'حداکثر طول (اختیاری)' : 'Maximum length (optional)', { exact: true })
+      .fill('1200');
+    await page.getByLabel(fa ? 'فعال' : 'Enabled', { exact: true }).uncheck();
+    await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await confirm();
+    await page.reload();
+    await expect(page.getByRole('heading', { name: renamed, exact: true })).toBeVisible();
+    const headers = { cookie: `barghsa_session=${http.session}` };
+    const kbs = (await (
+      await page.request.get(`${http.base}/api/admin/policies`, { headers })
+    ).json()) as Array<{ id: string; title: string; description: string }>;
+    const kb = kbs.find((item) => item.title === renamed)!;
+    expect(kb.description).toBe('Meter guidance');
+    expect(kb).toMatchObject({
+      policyType: 'response_style',
+      enabled: false,
+      rules: { tone: 'Clear and concise', language: locale, maxLength: 1200 },
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await page.screenshot({ path: `/tmp/ai-policies-${locale}.png`, fullPage: true });
+    await page
+      .getByRole('button', {
+        name: fa ? 'گروه‌های سیاست' : 'Policy groups',
+        exact: true,
+      })
+      .click();
+    await page.getByRole('button', { name: fa ? 'افزودن گروه' : 'Add group', exact: true }).click();
+    await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(groupName);
+    await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await confirm();
+    await page
+      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${groupName}`, exact: true })
+      .click();
+    await page
+      .getByLabel(fa ? 'انتخاب سیاست' : 'Choose a policy', { exact: true })
+      .selectOption(kb.id);
+    await page
+      .getByRole('button', { name: fa ? 'افزودن به گروه' : 'Add to group', exact: true })
+      .click();
+    await confirm();
+    const groups = (await (
+      await page.request.get(`${http.base}/api/admin/policy-groups`, { headers })
+    ).json()) as Array<{ id: string; title: string; memberCount: number }>;
+    const group = groups.find((item) => item.title === groupName)!;
+    expect(group.memberCount).toBe(1);
+    await page
+      .getByRole('button', {
+        name: `${fa ? 'حذف از گروه' : 'Remove from group'} ${renamed}`,
+        exact: true,
+      })
+      .click();
+    await confirm();
+    expect(
+      (
+        await (
+          await page.request.get(`${http.base}/api/admin/policy-groups/${group.id}`, { headers })
+        ).json()
+      ).members
+    ).toEqual([]);
+    await page
+      .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${groupName}`, exact: true })
+      .click();
+    await confirm();
+    await expect(page.getByRole('heading', { name: groupName, exact: true })).toHaveCount(0);
+    await page.getByRole('button', { name: fa ? 'سیاست‌ها' : 'Policies', exact: true }).click();
+    await page
+      .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
+      .click();
+    await confirm();
+    expect(
+      (await page.request.get(`${http.base}/api/admin/policies/${kb.id}`, { headers })).status()
+    ).toBe(404);
+  });

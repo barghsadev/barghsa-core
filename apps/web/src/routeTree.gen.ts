@@ -41,6 +41,7 @@ import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminKnowledgeBasesRouteImport } from './routes/admin/knowledge-bases'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
+import { Route as AdminPoliciesRouteImport } from './routes/admin/policies'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
 import { Route as AdminReconciliationRouteImport } from './routes/admin/reconciliation'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
@@ -232,6 +233,11 @@ const AdminKnowledgeBasesRoute = AdminKnowledgeBasesRouteImport.update({
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPoliciesRoute = AdminPoliciesRouteImport.update({
+  id: '/policies',
+  path: '/policies',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminProvidersRoute = AdminProvidersRouteImport.update({
@@ -429,6 +435,7 @@ export interface FileRoutesByFullPath {
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
@@ -490,6 +497,7 @@ export interface FileRoutesByTo {
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
@@ -557,6 +565,7 @@ export interface FileRoutesById {
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
@@ -624,6 +633,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/notifications'
+    | '/admin/policies'
     | '/admin/providers'
     | '/admin/reconciliation'
     | '/admin/roles'
@@ -685,6 +695,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/notifications'
+    | '/admin/policies'
     | '/admin/providers'
     | '/admin/reconciliation'
     | '/admin/roles'
@@ -751,6 +762,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/notifications'
+    | '/admin/policies'
     | '/admin/providers'
     | '/admin/reconciliation'
     | '/admin/roles'
@@ -1023,6 +1035,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/admin/notifications'
       preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/policies': {
+      id: '/admin/policies'
+      path: '/policies'
+      fullPath: '/admin/policies'
+      preLoaderRoute: typeof AdminPoliciesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/providers': {
@@ -1329,6 +1348,7 @@ interface AdminRouteChildren {
   AdminInvoicesRoute: typeof AdminInvoicesRoute
   AdminKnowledgeBasesRoute: typeof AdminKnowledgeBasesRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminPoliciesRoute: typeof AdminPoliciesRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
   AdminReconciliationRoute: typeof AdminReconciliationRoute
   AdminRolesRoute: typeof AdminRolesRoute
@@ -1357,6 +1377,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminInvoicesRoute: AdminInvoicesRoute,
   AdminKnowledgeBasesRoute: AdminKnowledgeBasesRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminPoliciesRoute: AdminPoliciesRoute,
   AdminProvidersRoute: AdminProvidersRoute,
   AdminReconciliationRoute: AdminReconciliationRoute,
   AdminRolesRoute: AdminRolesRoute,

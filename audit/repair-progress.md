@@ -1291,3 +1291,9 @@ Review and validation: 36 existing service/controller tests and 20 production-mi
 Policy/group route IDs and membership payloads now require UUIDs. Create/edit trim titles, reject blank titles and unknown fields, and preserve structured rule validation and existing length limits.
 
 Review and validation: 46 controller/production-migrated HTTP tests pass, including malformed routes and nested member IDs, invalid policy/group create/edit payloads, valid trimmed titles and unchanged records/audits after rejection. Updated legacy controller fixture IDs to valid UUIDs. Root types, lint and whitespace checks pass. The policy administration editor remains open.
+
+### Add structured policy and group administration (F17)
+
+Added /admin/policies with Persian/English policy lists, type badges, enabled status, structured per-type fields and group management. List rules use one entry per line; response style exposes tone, optional language and maximum length. Changing type clears the prior rule fields. Save/delete/membership actions use the existing captured password-verification flow.
+
+Review and validation: four production-browser checks pass. Controlled password retry/permission-loss checks cover data scopes and prohibited actions. Migrated-API checks create allowed topics, change to response style, disable/reload, verify exact stored rules and manage groups in both languages. Reviewed the Persian mobile screenshot; no horizontal page overflow. Root build, types, lint, contract and bundle checks pass. The complete API suite passed 2,738 tests across 217 files after the preceding knowledge-base/policy API changes. Rule-document whitespace and unknown-field validation is the next review finding; agent policy enforcement remains a separate consumer review.
