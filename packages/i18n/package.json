@@ -46,6 +46,11 @@
       "types": "./dist/admin-controls.d.ts",
       "import": "./dist/admin-controls.js",
       "default": "./dist/admin-controls.js"
+    },
+    "./verification-config": {
+      "types": "./dist/verification-config.d.ts",
+      "import": "./dist/verification-config.js",
+      "default": "./dist/verification-config.js"
     }
   },
   "scripts": {

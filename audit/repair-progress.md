@@ -1595,3 +1595,9 @@ Review and validation: four browser component checks pass for keyboard ascending
 Added localized names to geography filters and the TOS error-dismiss action. Current breadcrumb text now uses aria-current without a disabled link role. Full page translation remains separate work.
 
 Review and validation: both geography/TOS browser checks and the combined 63 auth/form/calendar/table checks pass. Root build, types, lint and bundle checks pass. The same-version full scan now reports 268 warnings, zero errors and one accessibility diagnostic, down from 316 diagnostics, five errors and 43 accessibility diagnostics. Reviewed the remaining toast warning as a wrapper-analysis false positive because ToastPrimitive.Close provides its accessible name. Saved the report and explicit limitations in accessibility-triage.md. Broader task acceptance and localization remain open.
+
+### Make verification configuration truthful and retryable (F06/F20)
+
+Verification settings now require a valid read before editing. Failed reads offer retry, pending writes disable the form, duplicate writes are guarded, and failed/mismatched responses preserve the selection without claiming success. Automatic verification is unavailable because the user confirmed that no identity provider exists. Existing API configuration can be read and changed to manual review. Added Persian/English page text and accessible status/error messages.
+
+Review and validation: both production-browser checks pass, including unavailable and malformed reads, legacy API configuration, disabled automatic mode with its explanation, pending-save protection, failed and mismatched responses, preserved selection and confirmed manual mode after reload. Root build, types, lint and bundle checks pass. This UI change does not configure a provider or certify the backend's configuration-write authority race; that is the next repair.

@@ -1217,3 +1217,75 @@ for (const locale of ['en', 'fa']) {
     await expect(error).toHaveCount(0);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`verification settings require a valid read and keep automatic verification unavailable (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let reads = 0;
+    let writes = 0;
+    let mode = locale === 'en' ? 'API' : 'DISABLED';
+    let finish: (() => void) | undefined;
+    await page.route('**/api/admin/config/profile-verification-mode', async (route) => {
+      if (route.request().method() === 'GET') {
+        reads++;
+        return route.fulfill(
+          reads === 1
+            ? { status: locale === 'en' ? 503 : 200, json: { mode: 'unknown' } }
+            : { json: { mode } }
+        );
+      }
+      writes++;
+      expect(route.request().postDataJSON()).toEqual({ mode: 'MANUAL' });
+      if (writes === 1) {
+        await new Promise<void>((resolve) => {
+          finish = resolve;
+        });
+        return route.fulfill({ status: 503, json: {} });
+      }
+      if (writes === 2) return route.fulfill({ json: { mode } });
+      mode = 'MANUAL';
+      return route.fulfill({ json: { mode } });
+    });
+    await page.goto('/admin/verification');
+    const save = page.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره تنظیمات' : 'Save Configuration',
+      exact: true,
+    });
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(save).toBeDisabled();
+    for (const radio of await page.getByRole('radio').all()) await expect(radio).toBeDisabled();
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+      .click();
+    const manual = page.locator('#verification-mode-MANUAL');
+    const automatic = page.locator('#verification-mode-API');
+    await expect(automatic).toBeDisabled();
+    await expect(automatic).toHaveAccessibleDescription(
+      locale === 'fa' ? /پیکربندی نشده/ : /No identity-verification provider/
+    );
+    await manual.check();
+    await save.click();
+    await expect.poll(() => writes).toBe(1);
+    await expect(manual).toBeDisabled();
+    finish!();
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(manual).toBeChecked();
+    await expect(save).toBeEnabled();
+    await save.click();
+    await expect.poll(() => writes).toBe(2);
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.getByRole('status')).toHaveCount(0);
+    await save.click();
+    await expect(page.getByRole('status')).toContainText(
+      locale === 'fa' ? 'به‌روزرسانی شد' : 'updated'
+    );
+    await expect(save).toBeDisabled();
+    await page.reload();
+    await expect(manual).toBeChecked();
+    await expect(automatic).toBeDisabled();
+    await expect(save).toBeDisabled();
+    expect(writes).toBe(3);
+  });
+}

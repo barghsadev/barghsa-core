@@ -1,181 +1,166 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { verificationConfigText } from '@barghsa/i18n/verification-config';
+import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
+const MODES = ['DISABLED', 'MANUAL', 'API'] as const;
+type VerificationMode = (typeof MODES)[number];
 
-type VerificationMode = 'DISABLED' | 'MANUAL' | 'API';
-
-interface VerificationModeResponse {
-  mode: VerificationMode;
+function readMode(body: unknown): VerificationMode {
+  const mode = (body as { mode?: unknown } | null)?.mode;
+  if (!MODES.some((value) => value === mode)) throw new Error('Invalid verification mode');
+  return mode as VerificationMode;
 }
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-async function fetchMode(): Promise<VerificationMode> {
-  const res = await fetch('/api/admin/config/profile-verification-mode');
-  if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`);
-  const data: VerificationModeResponse = await res.json();
-  return data.mode;
-}
-
-async function saveMode(mode: VerificationMode): Promise<void> {
-  const res = await fetch('/api/admin/config/profile-verification-mode', {
-    method: 'PUT',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ mode }),
-  });
-  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`);
-}
-
-// ---------------------------------------------------------------------------
-// Mode descriptions
-// ---------------------------------------------------------------------------
-
-const MODE_DESCRIPTIONS: Record<VerificationMode, { title: string; description: string }> = {
-  DISABLED: {
-    title: 'No verification',
-    description:
-      'Profiles are created without verification. Suitable for testing or closed systems.',
-  },
-  MANUAL: {
-    title: 'Manual verification',
-    description: 'Staff review and verify profiles manually. Recommended for initial deployment.',
-  },
-  API: {
-    title: 'API-based auto-verification',
-    description:
-      'Profiles are automatically verified via external APIs (national ID, etc.). Requires provider configuration.',
-  },
-};
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
 
 export default function AdminVerificationConfig() {
+  const locale = useLocale();
+  const text = (key: Parameters<typeof verificationConfigText>[0]) =>
+    verificationConfigText(key, locale);
   const [currentMode, setCurrentMode] = useState<VerificationMode | null>(null);
-  const [selectedMode, setSelectedMode] = useState<VerificationMode>('DISABLED');
+  const [selectedMode, setSelectedMode] = useState<VerificationMode>('MANUAL');
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [reload, setReload] = useState(0);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const savingRef = useRef(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    fetchMode()
-      .then((mode) => {
+    const controller = new AbortController();
+    setLoading(true);
+    setLoadFailed(false);
+    void (async () => {
+      try {
+        const response = await fetch('/api/admin/config/profile-verification-mode', {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error('Read failed');
+        const mode = readMode(await response.json());
+        if (controller.signal.aborted) return;
         setCurrentMode(mode);
         setSelectedMode(mode);
-      })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const clearMessages = useCallback(() => {
-    setError(null);
-    setSuccess(null);
-  }, []);
+      } catch {
+        if (!controller.signal.aborted) {
+          setCurrentMode(null);
+          setLoadFailed(true);
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    })();
+    return () => controller.abort();
+  }, [reload]);
 
   const handleSave = useCallback(async () => {
-    clearMessages();
+    if (
+      loading ||
+      loadFailed ||
+      currentMode === null ||
+      selectedMode === currentMode ||
+      selectedMode === 'API' ||
+      savingRef.current
+    )
+      return;
+    savingRef.current = true;
     setSaving(true);
+    setSaved(false);
+    setSaveFailed(false);
     try {
-      await saveMode(selectedMode);
-      setCurrentMode(selectedMode);
-      setSuccess('Verification mode updated.');
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Save failed');
+      const response = await fetch('/api/admin/config/profile-verification-mode', {
+        method: 'PUT',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ mode: selectedMode }),
+      });
+      if (!response.ok) throw new Error('Save failed');
+      const confirmed = readMode(await response.json());
+      if (confirmed !== selectedMode) throw new Error('Mismatched verification mode');
+      setCurrentMode(confirmed);
+      setSaved(true);
+    } catch {
+      setSaveFailed(true);
     } finally {
+      savingRef.current = false;
       setSaving(false);
     }
-  }, [selectedMode, clearMessages]);
-
-  // -----------------------------------------------------------------------
-  // Loading state
-  // -----------------------------------------------------------------------
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">Loading verification configuration...</p>
-      </div>
-    );
-  }
-
-  // -----------------------------------------------------------------------
-  // Render
-  // -----------------------------------------------------------------------
+  }, [currentMode, selectedMode, loading, loadFailed]);
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Profile Verification</h1>
-
-      <p className="text-sm text-gray-600 mb-6">
-        Choose how new profiles are verified. Changing this mode affects all profiles.
-      </p>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
-          {error}
+    <div dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <h1 className="text-2xl font-bold mb-6">{text('title')}</h1>
+      <p className="text-sm text-gray-600 mb-6">{text('description')}</p>
+      {loading && <p role="status">{text('loading')}</p>}
+      {loadFailed && (
+        <div
+          role="alert"
+          className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm"
+        >
+          <p>{text('loadFailed')}</p>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => setReload((value) => value + 1)}
+            className="underline"
+          >
+            {text('retry')}
+          </button>
         </div>
       )}
-
-      {success && (
-        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded text-green-700 text-sm">
-          {success}
-        </div>
+      {saveFailed && (
+        <p role="alert" className="mb-4 text-red-700">
+          {text('saveFailed')}
+        </p>
       )}
-
-      <div className="space-y-4 max-w-xl">
-        {(
-          Object.entries(MODE_DESCRIPTIONS) as [
-            VerificationMode,
-            (typeof MODE_DESCRIPTIONS)[VerificationMode],
-          ][]
-        ).map(([mode, desc]) => (
+      {saved && (
+        <p role="status" className="mb-4 text-green-700">
+          {text('saved')}
+        </p>
+      )}
+      <fieldset disabled={loading || currentMode === null || saving} className="space-y-4 max-w-xl">
+        <legend className="sr-only">{text('title')}</legend>
+        {MODES.map((mode) => (
           <label
             key={mode}
             htmlFor={`verification-mode-${mode}`}
-            className={`block p-4 border rounded-lg cursor-pointer transition-colors ${
-              selectedMode === mode
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:bg-gray-50'
-            }`}
+            className={`block p-4 border rounded-lg transition-colors ${selectedMode === mode ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
           >
-            <div className="flex items-center gap-3">
+            <span className="flex items-center gap-3">
               <input
                 type="radio"
                 id={`verification-mode-${mode}`}
                 name="verification-mode"
                 value={mode}
-                checked={selectedMode === mode}
+                disabled={mode === 'API'}
+                checked={currentMode !== null && selectedMode === mode}
+                aria-describedby={`verification-mode-${mode}-description`}
                 onChange={() => {
-                  clearMessages();
+                  setSaveFailed(false);
+                  setSaved(false);
                   setSelectedMode(mode);
                 }}
                 className="text-blue-600 focus:ring-blue-500"
               />
-              <div>
-                <p className="font-medium text-sm text-gray-900">{desc.title}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{desc.description}</p>
-              </div>
-            </div>
+              <span>
+                <span className="block font-medium text-sm text-gray-900">{text(mode)}</span>
+                <span
+                  id={`verification-mode-${mode}-description`}
+                  className="block text-xs text-gray-500 mt-0.5"
+                >
+                  {text(`${mode}_description`)}
+                </span>
+              </span>
+            </span>
           </label>
         ))}
-
-        <div className="flex gap-3 pt-2">
-          <button
-            onClick={handleSave}
-            disabled={saving || selectedMode === currentMode}
-            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {saving ? 'Saving...' : 'Save Configuration'}
-          </button>
-        </div>
-      </div>
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={selectedMode === currentMode || selectedMode === 'API'}
+          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {saving ? text('saving') : text('save')}
+        </button>
+      </fieldset>
     </div>
   );
 }
