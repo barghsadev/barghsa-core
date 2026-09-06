@@ -1465,3 +1465,9 @@ All 17 unit and migrated-service checks pass. Added a grant-revocation race prov
 Adjustment creation now holds the actor's current invoices:write grant before locking the original invoice. Both positive charges and negative credit notes use the same boundary. Existing signed accounting, payability exclusions and original-document preservation remain covered.
 
 All 20 unit and production-migrated service checks pass. Added grant-revocation races and actual issue-audit failures for both signs; each preserves the original invoice and leaves no adjustment. The fixture uses the real Finance role. Root types, lint and whitespace checks pass. This repairs the existing service contract; no new staff API, refund workflow or production financial operation was added.
+
+### Require current invoice authority for manual creation and replay (F04/F14)
+
+Manual invoice creation now holds invoices:write authority before inspecting the profile or replaying an idempotency key. Removed grants cannot create a new invoice or retrieve an old result through the mutation service. The calculation-replay fixture now grants its staff actor the actual Finance role.
+
+All 24 unit, production-migrated manual-invoice and calculation-replay checks pass. New coverage pauses a replay at the actor lock, revokes the grant, checks denial for replay and new creation, then restores the grant and verifies the original invoice is returned. The audit rollback test now fails the actual issue audit for an authorized actor and verifies invoice/line/audit counts are unchanged. Root types, lint and whitespace checks pass. Cross-actor concurrent idempotency remains the next review item; this step does not add an HTTP caller.

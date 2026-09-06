@@ -57,10 +57,13 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     );
 
     await ctx.pool.query(
-      `INSERT INTO users (user_id, username, password_hash)
-      VALUES ($1, 'invoice-staff@example.test', 'test-only')`,
+      `INSERT INTO users (user_id, username, password_hash, is_staff)
+      VALUES ($1, 'invoice-staff@example.test', 'test-only', true)`,
       [ACTOR_USER_ID]
     );
+    await ctx.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance')", [
+      ACTOR_USER_ID,
+    ]);
     await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
       PROFILE_ID,
       ACTOR_USER_ID,
@@ -271,10 +274,6 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
   });
 
   it('rolls back every row when the audit insert fails mid-transaction', async () => {
-    // Break the audit_log FK by referencing a non-existent user for a
-    // synthetic actor: the transition's audit insert then fails, which must
-    // roll back the invoice AND its lines AND the audit row (no orphan
-    // Draft, no orphan lines, no partial audit trail).
     const before = {
       invoices: (await ctx.db.execute<{ n: number }>(`SELECT COUNT(*)::int AS n FROM invoices`))
         .rows[0]!.n,
@@ -284,13 +283,20 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
         .rows[0]!.n,
     };
 
-    await expect(
-      service.createManualInvoice({
-        profileId: PROFILE_ID,
-        actorUserId: 'ghost-staff-no-user-row',
-        lines: [{ description: 'x', quantity: 1, unitPrice: 100n, vatRate: 0 }],
-      })
-    ).rejects.toThrow();
+    await ctx.pool.query(
+      "CREATE FUNCTION reject_manual_issue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test manual issue audit failure'; END $$; CREATE TRIGGER reject_manual_issue BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_manual_issue()"
+    );
+    try {
+      await expect(
+        service.createManualInvoice({
+          profileId: PROFILE_ID,
+          actorUserId: ACTOR_USER_ID,
+          lines: [{ description: 'x', quantity: 1, unitPrice: 100n, vatRate: 0 }],
+        })
+      ).rejects.toThrow('test manual issue audit failure');
+    } finally {
+      await ctx.pool.query('DROP TRIGGER reject_manual_issue ON audit_log');
+    }
 
     const after = {
       invoices: (await ctx.db.execute<{ n: number }>(`SELECT COUNT(*)::int AS n FROM invoices`))
@@ -362,5 +368,56 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
 
     expect(second.invoiceId).not.toBe(first.invoiceId);
     expect(second.profileId).toBe(otherProfile);
+  });
+  it('requires current invoice authority for both creation and idempotent replay', async () => {
+    const cmd = {
+      profileId: PROFILE_ID,
+      actorUserId: ACTOR_USER_ID,
+      lines: [{ description: 'x', quantity: 1, unitPrice: 100n, vatRate: 0 }],
+      idempotencyKey: 'authority-replay',
+    };
+    const first = await service.createManualInvoice(cmd);
+    const countBefore = (await ctx.pool.query('SELECT count(*) AS count FROM invoices')).rows[0]
+      .count;
+    const client = await ctx.pool.connect();
+    let pending: Promise<unknown> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [ACTOR_USER_ID]);
+      pending = service.createManualInvoice(cmd).then(
+        (value) => value,
+        (error) => error
+      );
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await ctx.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await client.query('DELETE FROM user_roles WHERE user_id=$1', [ACTOR_USER_ID]);
+      await client.query('COMMIT');
+      expect(await pending).toMatchObject({ status: 403 });
+      await expect(
+        service.createManualInvoice({ ...cmd, idempotencyKey: 'authority-new' })
+      ).rejects.toMatchObject({ status: 403 });
+      expect((await ctx.pool.query('SELECT count(*) AS count FROM invoices')).rows[0].count).toBe(
+        countBefore
+      );
+      expect(await countAuditRows(first.invoiceId)).toBe(1);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+      await ctx.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance') ON CONFLICT DO NOTHING",
+        [ACTOR_USER_ID]
+      );
+    }
+    expect((await service.createManualInvoice(cmd)).invoiceId).toBe(first.invoiceId);
   });
 });

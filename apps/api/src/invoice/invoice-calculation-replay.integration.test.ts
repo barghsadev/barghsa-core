@@ -74,6 +74,10 @@ describe('invoice calculation snapshot replay — real PostgreSQL (T-04.1.02.09)
       `INSERT INTO users (user_id, username, password_hash) VALUES ('${USER_ID}', 'replay-owner@example.test', 'test-only'), ('${ACTOR_USER_ID}', 'replay-staff@example.test', 'test-only')
        ON CONFLICT (user_id) DO NOTHING`
     );
+    await ctx.pool.query('UPDATE users SET is_staff=true WHERE user_id=$1', [ACTOR_USER_ID]);
+    await ctx.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance')", [
+      ACTOR_USER_ID,
+    ]);
     await ctx.db.execute(
       `INSERT INTO profiles (id, user_id) VALUES ('${PROFILE_ID}', '${USER_ID}')
        ON CONFLICT (id) DO NOTHING`
