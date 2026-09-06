@@ -1044,6 +1044,12 @@ export class AgentsService {
       }
       let targetExists = true;
       if (decision === 'accept') {
+        // Use the same account-first credential lock order for both parties.
+        // Sorting prevents opposite transfers from reversing account lock order.
+        await client.query(
+          'SELECT user_id FROM users WHERE user_id=ANY($1::text[]) ORDER BY user_id FOR UPDATE',
+          [[transfer.from_user_id, transfer.to_user_id]]
+        );
         const target = await client.query(
           `SELECT pa.id FROM profile_agents pa JOIN users u ON u.user_id=pa.user_id
            WHERE pa.profile_id=$1 AND pa.user_id=$2 AND u.disabled_at IS NULL FOR UPDATE OF pa FOR SHARE OF u`,

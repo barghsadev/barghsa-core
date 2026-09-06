@@ -652,7 +652,7 @@ export class CrmV2Service {
         [userId]
       );
 
-      await this.sessionService.revokeAllUserSessions(userId);
+      await this.sessionService.revokeAllUserSessions(userId, undefined, client);
 
       const auditId = uuidv7();
       const correlationId = uuidv7();
@@ -710,7 +710,7 @@ export class CrmV2Service {
     try {
       await client.query('BEGIN');
 
-      await this.sessionService.revokeAllUserSessions(userId);
+      await this.sessionService.revokeAllUserSessions(userId, undefined, client);
 
       const auditId = uuidv7();
       const correlationId = uuidv7();

@@ -340,7 +340,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
 
     expect(result).not.toBeNull();
     expect(result).not.toHaveProperty('error');
-    expect(ms.revokeAllUserSessions).toHaveBeenCalledWith(TARGET_USER_ID);
+    expect(ms.revokeAllUserSessions).toHaveBeenCalledWith(TARGET_USER_ID, undefined, client);
     expect(mockRelease).toHaveBeenCalledTimes(1);
   });
 
@@ -450,7 +450,7 @@ describe('CrmV2Service.expireSessions', () => {
 
     expect(result).not.toBeNull();
     expect(result).not.toHaveProperty('error');
-    expect(ms.revokeAllUserSessions).toHaveBeenCalledWith(TARGET_USER_ID);
+    expect(ms.revokeAllUserSessions).toHaveBeenCalledWith(TARGET_USER_ID, undefined, client);
     expect(mockRelease).toHaveBeenCalledTimes(1);
   });
 

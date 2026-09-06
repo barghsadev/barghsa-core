@@ -328,9 +328,9 @@ describe('SessionService', () => {
       mockClient.query.mockImplementation(async (sql: string) => {
         if (sql === 'COMMIT') return { rows: [] };
         if (sql.startsWith('ROLLBACK')) return { rows: [] };
-        if (sql.includes('token_hash')) return { rows: [tokenRow] };
-        // Disabled account status lookup
+        // Account lock must recheck disability before the credential is touched.
         if (sql.includes('FROM users')) return { rows: [{ disabled_at: new Date() }] };
+        if (sql.includes('token_hash')) return { rows: [tokenRow] };
         return { rows: [] };
       });
 

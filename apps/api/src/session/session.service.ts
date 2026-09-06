@@ -301,7 +301,6 @@ export class SessionService {
    */
   async rotateSession(oldSessionId: string, reason: string): Promise<CreatedSession | null> {
     const pool = getDbPool();
-    const now = new Date();
 
     const client = await pool.connect();
     try {
@@ -324,7 +323,7 @@ export class SessionService {
         `SELECT session_id, user_id, csrf_token, family_id,
                 device_info, expires_at, idle_deadline
          FROM sessions
-         WHERE session_id = $1 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()
+         WHERE session_id = $1 AND revoked_at IS NULL AND expires_at > clock_timestamp() AND idle_deadline > clock_timestamp()
          FOR UPDATE`,
         [oldSessionId]
       );
@@ -335,6 +334,14 @@ export class SessionService {
       }
 
       const oldRow = oldResult.rows[0];
+      const now = new Date();
+      if (
+        new Date(oldRow.expires_at).getTime() <= now.getTime() ||
+        new Date(oldRow.idle_deadline).getTime() <= now.getTime()
+      ) {
+        await client.query('ROLLBACK');
+        return null;
+      }
 
       // 2. Revoke the old session
       await client.query(
@@ -446,11 +453,31 @@ export class SessionService {
   async redeemRefreshToken(token: string): Promise<RefreshResult> {
     const pool = getDbPool();
     const tokenHash = createHash('sha256').update(token).digest('hex');
-    const now = new Date();
 
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+
+      // Every credential mutation locks the account first, then sessions,
+      // then refresh credentials. Re-read credentials after any lock wait.
+      const account = await client.query(
+        `SELECT u.user_id,u.disabled_at FROM users u
+         JOIN refresh_tokens r ON r.user_id=u.user_id WHERE r.token_hash=$1 FOR UPDATE OF u`,
+        [tokenHash]
+      );
+      if (!account.rows[0] || account.rows[0].disabled_at) {
+        throw new UnauthorizedException({
+          statusCode: 401,
+          error: account.rows[0]?.disabled_at
+            ? ErrorCodes.AUTH_ACCOUNT_DISABLED.code
+            : ErrorCodes.AUTH_TOKEN_INVALID.code,
+        });
+      }
+      await client.query(
+        `SELECT s.session_id FROM sessions s JOIN refresh_tokens r ON r.session_id=s.session_id
+         WHERE r.token_hash=$1 FOR UPDATE OF s`,
+        [tokenHash]
+      );
 
       // 1. Look up the token, lock for update
       const tokenResult = await client.query(
@@ -471,21 +498,7 @@ export class SessionService {
 
       const tokenRow = tokenResult.rows[0];
 
-      // 1b. Reject tokens belonging to a disabled account (T-10.01.01).
-      // Disable consumes every active refresh token, so an unconsumed token
-      // here means a race between disable and refresh — the refresh must not
-      // mint a fresh session for a disabled user either way.
-      const refreshUserStatus = await client.query(
-        `SELECT disabled_at FROM users WHERE user_id = $1`,
-        [tokenRow.user_id]
-      );
-      if (refreshUserStatus.rows.length > 0 && refreshUserStatus.rows[0].disabled_at) {
-        await client.query('ROLLBACK');
-        throw new UnauthorizedException({
-          statusCode: 401,
-          error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code,
-        });
-      }
+      const now = new Date();
 
       // 2. Check for token reuse (already consumed)
       if (tokenRow.consumed_at) {
@@ -653,6 +666,11 @@ export class SessionService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await client.query(
+        `SELECT u.user_id FROM users u JOIN sessions s ON s.user_id=u.user_id
+         WHERE s.session_id=$1 FOR UPDATE OF u`,
+        [sessionId]
+      );
 
       // Fetch family ID before revoking
       const sessionResult = await client.query(
@@ -701,15 +719,21 @@ export class SessionService {
    * Revoke all active sessions for a user.
    *
    * Optionally excludes a specific session (e.g. the current one).
-   * Also consumes all active refresh tokens for the user.
+   * Consumes credentials for revoked sessions, preserving an excluded session.
+   * A supplied transaction belongs to the caller, including commit/rollback/release.
    */
-  async revokeAllUserSessions(userId: string, excludeSessionId?: string): Promise<void> {
+  async revokeAllUserSessions(
+    userId: string,
+    excludeSessionId?: string,
+    transaction?: PoolClient
+  ): Promise<void> {
     const pool = getDbPool();
     const now = new Date();
 
-    const client = await pool.connect();
+    const client = transaction ?? (await pool.connect());
     try {
-      await client.query('BEGIN');
+      if (!transaction) await client.query('BEGIN');
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
 
       // Revoke all sessions except the excluded one
       if (excludeSessionId) {
@@ -733,19 +757,20 @@ export class SessionService {
       await client.query(
         `UPDATE refresh_tokens
          SET consumed_at = $1
-         WHERE user_id = $2 AND consumed_at IS NULL`,
-        [now, userId]
+         WHERE user_id = $2 AND consumed_at IS NULL
+           AND ($3::text IS NULL OR session_id != $3::text)`,
+        [now, userId, excludeSessionId ?? null]
       );
 
-      await client.query('COMMIT');
+      if (!transaction) await client.query('COMMIT');
 
-      this.logger.log(`All sessions revoked for user ${userId}`);
+      if (!transaction) this.logger.log(`All sessions revoked for user ${userId}`);
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {});
+      if (!transaction) await client.query('ROLLBACK').catch(() => {});
       this.logger.error(`Failed to revoke all sessions for user ${userId}: ${String(err)}`);
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release();
+      if (!transaction) client.release();
     }
   }
 
@@ -761,6 +786,14 @@ export class SessionService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await client.query(
+        `SELECT u.user_id FROM users u WHERE EXISTS (
+          SELECT 1 FROM sessions s WHERE s.user_id=u.user_id AND s.family_id=$1
+        ) OR EXISTS (
+          SELECT 1 FROM refresh_tokens r WHERE r.user_id=u.user_id AND r.family_id=$1
+        ) ORDER BY u.user_id FOR UPDATE OF u`,
+        [familyId]
+      );
 
       await client.query(
         `UPDATE sessions

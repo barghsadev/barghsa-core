@@ -196,3 +196,183 @@ it('does not revive an idle-expired session through refresh', async () => {
     { consumed_at: null },
   ]);
 });
+
+for (const action of ['single', 'all', 'family', 'rotate'] as const) {
+  for (const first of ['refresh', 'mutation'] as const) {
+    it(`serializes ${action} with refresh when ${first} queues first`, async () => {
+      const original = await service.createSession('cap-user', false);
+      const family = (
+        await db.pool.query('SELECT family_id FROM sessions WHERE session_id=$1', [
+          original.sessionId,
+        ])
+      ).rows[0].family_id;
+      const blocker = await db.pool.connect();
+      const operations: Promise<PromiseSettledResult<unknown>[]>[] = [];
+      const waitForLocks = (count: number) =>
+        expect
+          .poll(async () =>
+            Number(
+              (
+                await db.pool.query(
+                  `SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users%'`
+                )
+              ).rows[0].count
+            )
+          )
+          .toBe(count);
+      const refresh = () => service.redeemRefreshToken(original.refreshToken);
+      const mutate = () =>
+        action === 'single'
+          ? service.revokeSession(original.sessionId)
+          : action === 'all'
+            ? service.revokeAllUserSessions('cap-user')
+            : action === 'family'
+              ? service.revokeFamily(family)
+              : service.rotateSession(original.sessionId, 'concurrent refresh');
+      try {
+        await blocker.query('BEGIN');
+        await blocker.query("SELECT user_id FROM users WHERE user_id='cap-user' FOR UPDATE");
+        operations.push(Promise.allSettled([first === 'refresh' ? refresh() : mutate()]));
+        await waitForLocks(1);
+        operations.push(Promise.allSettled([first === 'refresh' ? mutate() : refresh()]));
+        await waitForLocks(2);
+        await blocker.query('COMMIT');
+        const results = (await Promise.all(operations)).flat();
+        for (const result of results) {
+          if (result.status === 'rejected') expect(result.reason).toMatchObject({ status: 401 });
+        }
+        const refreshResult = results[first === 'refresh' ? 0 : 1]!;
+        expect(refreshResult.status).toBe(first === 'refresh' ? 'fulfilled' : 'rejected');
+        expect(await service.validateSession(original.sessionId)).toBeNull();
+        expect(await usable()).toHaveLength(action === 'rotate' && first === 'refresh' ? 1 : 0);
+      } finally {
+        await blocker.query('ROLLBACK');
+        blocker.release();
+        await Promise.all(operations);
+      }
+    });
+  }
+}
+
+it('keeps the excluded session refresh credential usable when signing out all other sessions', async () => {
+  const current = await service.createSession('cap-user', false);
+  const other = await service.createSession('cap-user', false);
+  await service.revokeAllUserSessions('cap-user', current.sessionId);
+  expect(await usable()).toEqual([{ session_id: current.sessionId }]);
+  expect(await service.redeemRefreshToken(current.refreshToken)).toMatchObject({
+    sessionId: current.sessionId,
+  });
+  await expect(service.redeemRefreshToken(other.refreshToken)).rejects.toMatchObject({
+    status: 401,
+  });
+  expect(await usable()).toEqual([{ session_id: current.sessionId }]);
+});
+
+for (const method of ['forcePasswordChange', 'expireSessions'] as const) {
+  it(`rolls back CRM ${method} and credentials when audit insertion fails`, async () => {
+    const { CrmV2Service } = await import('../crm/crm-v2.service.js');
+    const { NotificationsService } = await import('../notifications/notifications.service.js');
+    const crm = new CrmV2Service(service, new NotificationsService());
+    const original = await service.createSession('cap-user', false);
+    const before = (
+      await db.pool.query("SELECT must_change_password FROM users WHERE user_id='cap-user'")
+    ).rows[0];
+    await db.pool
+      .query(`CREATE FUNCTION fail_session_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$;
+      CREATE TRIGGER fail_session_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_session_audit()`);
+    await expect(crm[method]('cap-user', 'test reason', 'cap-user', '127.0.0.1')).rejects.toThrow(
+      'test audit failure'
+    );
+    expect(
+      (await db.pool.query("SELECT must_change_password FROM users WHERE user_id='cap-user'"))
+        .rows[0]
+    ).toEqual(before);
+    expect(await usable()).toEqual([{ session_id: original.sessionId }]);
+    expect(await service.redeemRefreshToken(original.refreshToken)).toMatchObject({
+      sessionId: original.sessionId,
+    });
+    await db.pool.query('DROP TRIGGER fail_session_audit ON audit_log');
+    await expect(
+      crm[method]('cap-user', 'test reason', 'cap-user', '127.0.0.1')
+    ).resolves.toMatchObject({ success: true });
+    expect(await usable()).toHaveLength(0);
+    expect((await db.pool.query('SELECT id FROM audit_log')).rows).toHaveLength(1);
+  });
+}
+
+it('rechecks disabled status after refresh waits for an account edit', async () => {
+  const original = await service.createSession('cap-user', false);
+  const client = await db.pool.connect();
+  let refresh: Promise<PromiseSettledResult<unknown>[]> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE users SET disabled_at=NOW() WHERE user_id='cap-user'");
+    refresh = Promise.allSettled([service.redeemRefreshToken(original.refreshToken)]);
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await db.pool.query(
+              `SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%JOIN refresh_tokens r ON r.user_id=u.user_id%'`
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query('COMMIT');
+    expect((await refresh)[0]).toMatchObject({ status: 'rejected', reason: { status: 401 } });
+    expect((await db.pool.query('SELECT consumed_at FROM refresh_tokens')).rows).toEqual([
+      { consumed_at: null },
+    ]);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await refresh;
+  }
+});
+
+it('does not rotate a session whose idle cutoff passes while waiting for the account lock', async () => {
+  const original = await service.createSession('cap-user', false);
+  const client = await db.pool.connect();
+  let rotation: Promise<unknown> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("SELECT user_id FROM users WHERE user_id='cap-user' FOR UPDATE");
+    await db.pool.query(
+      "UPDATE sessions SET idle_deadline=clock_timestamp()+INTERVAL '250 milliseconds' WHERE session_id=$1",
+      [original.sessionId]
+    );
+    rotation = service.rotateSession(original.sessionId, 'idle cutoff during lock wait');
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await db.pool.query(
+              `SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%JOIN sessions s ON s.user_id=u.user_id%'`
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await expect
+      .poll(
+        async () =>
+          (
+            await db.pool.query(
+              'SELECT idle_deadline<=clock_timestamp() AS expired FROM sessions WHERE session_id=$1',
+              [original.sessionId]
+            )
+          ).rows[0].expired
+      )
+      .toBe(true);
+    await client.query('COMMIT');
+    await expect(rotation).resolves.toBeNull();
+    expect((await db.pool.query('SELECT consumed_at FROM refresh_tokens')).rows).toEqual([
+      { consumed_at: null },
+    ]);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await rotation;
+  }
+});
