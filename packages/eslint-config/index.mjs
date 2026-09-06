@@ -17,6 +17,8 @@ export default tseslint.config(
       '**/.tanstack/**',
       'apps/web/src/routeTree.gen.ts',
       'audit/**',
+      // Intentionally unsafe examples are validated by the Semgrep rule test runner.
+      '.semgrep/security.tsx',
     ],
   },
   js.configs.recommended,

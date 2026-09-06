@@ -10,6 +10,33 @@ env:
   PNPM_VERSION: '10.8.1'
 
 jobs:
+  sast:
+    name: Static security checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      SEMGREP_SEND_METRICS: 'off'
+      SEMGREP_ENABLE_VERSION_CHECK: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install static scanner
+        run: python -m pip install semgrep==1.176.1
+      - name: Verify static scan report handling
+        run: python -m unittest discover -s scripts -p 'test_check_sast.py'
+      - name: Verify rules and scan application source
+        run: python scripts/check-sast.py --report "$RUNNER_TEMP/static-security.json"
+      - name: Upload static scan locations without source snippets
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-security
+          path: ${{ runner.temp }}/static-security.json
+          retention-days: 14
+
   secrets:
     name: Scan Git history for secrets
     runs-on: ubuntu-latest

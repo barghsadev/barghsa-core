@@ -1645,3 +1645,9 @@ Collected the full installed-package license inventory and compared metadata aga
 Post-commit secret verification also passed at f9de86b: the synthetic credential was detected, and all 1,030 project commits had zero untriaged findings.
 
 License policy update: the user instructed "ignore it. install any dependencies you need." The original allowlist is waived for this repair work, so the 23 metadata differences no longer block the plan. The inventory is retained as reference, without claiming legal review.
+
+### Add tested static security rules and a fail-closed report gate (F19)
+
+Added five local Semgrep rules with positive/negative fixtures for SQL text, outbound destinations, redirects, HTML output and literal credentials. The pinned tool runs without registry rules or telemetry. Reports preserve locations and severities but omit source, metavariables and parser snippets. Findings, parser errors, empty scans, missing reports and unexpected scanner versions fail.
+
+Review and validation: all five rule fixtures and four report/failure-handling tests pass. Corrected draft-rule false positives caused by treating database query methods as request sources and Map.get as an HTTP client. Escaped one chart-heading ampersand to remove a JSX parser warning without changing display text. The final scan covered 654 source/runtime files with zero findings or parser errors; production build, lint and formatting passed. See static-security-review.md for the scope limits and static-security-scan.json for the normalized report. This does not replace cross-service review or close all F19 coverage/ownership requirements.

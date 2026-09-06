@@ -1,0 +1,109 @@
+rules:
+  - id: request-data-in-sql
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Bind request values as query parameters; never include them in SQL text.
+    metadata:
+      cwe: CWE-89
+    mode: taint
+    pattern-sources: &request_sources
+      - patterns:
+          - pattern-either:
+              - pattern: $REQ.query
+              - pattern: $REQ.body
+              - pattern: $REQ.params
+              - pattern: $REQ.headers
+          - metavariable-regex:
+              metavariable: $REQ
+              regex: ^(req|request)$
+        exact: true
+    pattern-sinks:
+      - patterns:
+          - pattern: $DB.query($SQL, ...)
+          - focus-metavariable: $SQL
+
+  - id: request-data-in-outbound-url
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Resolve outbound URLs through the reviewed destination policy before making a request.
+    metadata:
+      cwe: CWE-918
+    mode: taint
+    pattern-sources: *request_sources
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: fetch($URL, ...)
+              - pattern: globalThis.fetch($URL, ...)
+              - pattern: axios.get($URL, ...)
+              - pattern: axios.post($URL, ...)
+              - pattern: http.get($URL, ...)
+              - pattern: https.get($URL, ...)
+              - pattern: http.request($URL, ...)
+              - pattern: https.request($URL, ...)
+          - focus-metavariable: $URL
+
+  - id: request-data-in-redirect
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Choose a fixed redirect target or validate the target against the permitted local routes.
+    metadata:
+      cwe: CWE-601
+    mode: taint
+    pattern-sources: *request_sources
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: $RES.redirect($URL)
+              - pattern: $RES.redirect($STATUS, $URL)
+          - focus-metavariable: $URL
+
+  - id: untrusted-html-output
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Render text normally or sanitize untrusted HTML with DOMPurify before HTML output.
+    metadata:
+      cwe: CWE-79
+    mode: taint
+    pattern-sources:
+      - patterns:
+          - pattern-either:
+              - pattern: $REQ.query
+              - pattern: $REQ.body
+              - pattern: $REQ.params
+          - metavariable-regex:
+              metavariable: $REQ
+              regex: ^(req|request)$
+        exact: true
+      - pattern-either:
+          - pattern: $RESPONSE.json(...)
+          - pattern: window.location.hash
+          - pattern: window.location.search
+        exact: true
+    pattern-sanitizers:
+      - pattern: DOMPurify.sanitize(...)
+        exact: true
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: $NODE.innerHTML = $HTML
+              - pattern: $NODE.insertAdjacentHTML($POSITION, $HTML)
+              - pattern: '<$TAG ... dangerouslySetInnerHTML={{ __html: $HTML }} ... />'
+          - focus-metavariable: $HTML
+
+  - id: literal-credential-assignment
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Read credentials from the configured secret store instead of embedding a literal.
+    metadata:
+      cwe: CWE-798
+    patterns:
+      - pattern-either:
+          - pattern: $NAME = "$VALUE"
+          - pattern: '{ $NAME: "$VALUE", ... }'
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: (?i)^(api_?key|api_?token|client_?secret|password)$
+      - metavariable-regex:
+          metavariable: $VALUE
+          regex: .{16,}
