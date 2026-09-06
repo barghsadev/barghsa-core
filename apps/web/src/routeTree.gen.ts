@@ -29,6 +29,7 @@ import { Route as AppTicketsRouteImport } from './routes/_app/tickets'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminAiModelsRouteImport } from './routes/admin/ai-models'
 import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminContractLimitsRouteImport } from './routes/admin/contract-limits'
@@ -169,6 +170,11 @@ const AppWalletRoute = AppWalletRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAiModelsRoute = AdminAiModelsRouteImport.update({
+  id: '/ai-models',
+  path: '/ai-models',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminApprovalRequestsRoute = AdminApprovalRequestsRouteImport.update({
@@ -405,6 +411,7 @@ export interface FileRoutesByFullPath {
   '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
+  '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
@@ -465,6 +472,7 @@ export interface FileRoutesByTo {
   '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
+  '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
@@ -529,6 +537,7 @@ export interface FileRoutesById {
   '/_app/tickets': typeof AppTicketsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
+  '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
@@ -594,6 +603,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/videos'
     | '/wallet'
+    | '/admin/ai-models'
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/contract-limits'
@@ -654,6 +664,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/videos'
     | '/wallet'
+    | '/admin/ai-models'
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/contract-limits'
@@ -717,6 +728,7 @@ export interface FileRouteTypes {
     | '/_app/tickets'
     | '/_app/videos'
     | '/_app/wallet'
+    | '/admin/ai-models'
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/contract-limits'
@@ -915,6 +927,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ai-models': {
+      id: '/admin/ai-models'
+      path: '/ai-models'
+      fullPath: '/admin/ai-models'
+      preLoaderRoute: typeof AdminAiModelsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/approval-requests': {
@@ -1279,6 +1298,7 @@ const AdminCrmRouteWithChildren = AdminCrmRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAiModelsRoute: typeof AdminAiModelsRoute
   AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminContractLimitsRoute: typeof AdminContractLimitsRoute
@@ -1305,6 +1325,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAiModelsRoute: AdminAiModelsRoute,
   AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminContractLimitsRoute: AdminContractLimitsRoute,

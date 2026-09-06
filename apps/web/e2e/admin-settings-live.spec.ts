@@ -926,3 +926,92 @@ for (const locale of ['en', 'fa'])
     });
     await page.screenshot({ path: `/tmp/contract-limits-${locale}.png`, fullPage: true });
   });
+
+for (const locale of ['en', 'fa'])
+  test(`AI model UI persists through the migrated API (${locale})`, async ({ page }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const fa = locale === 'fa',
+      title = `Local AI ${locale}`;
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    await page.goto('/admin/ai-models');
+    await page.getByRole('button', { name: fa ? 'افزودن مدل' : 'Add model', exact: true }).click();
+    await page.getByLabel(fa ? 'عنوان مدل' : 'Model title', { exact: true }).fill(title);
+    await page
+      .getByLabel(fa ? 'نشانی پایه' : 'Base URL', { exact: true })
+      .fill('http://127.0.0.1:1/v1');
+    await page
+      .getByLabel(fa ? 'شناسه مدل نزد ارائه‌دهنده' : 'Provider model name', { exact: true })
+      .fill('local-only-model');
+    await page
+      .getByLabel(fa ? 'کلید API' : 'API token', { exact: true })
+      .fill('browser-test-private-token');
+    await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
+    await confirm();
+    const card = page.getByRole('row', { name: title, exact: true });
+    await expect(card).toBeVisible();
+    await expect(card).not.toContainText('browser-test-private-token');
+    await card.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
+    await expect(page.locator('#ai-model-token')).toHaveCount(0);
+    await page
+      .getByLabel(fa ? 'نشانی پایه' : 'Base URL', { exact: true })
+      .fill('http://127.0.0.1:2/v1');
+    await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog').getByRole('alert')).toContainText(
+      fa ? 'دوباره وارد' : 'Re-enter'
+    );
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true })
+      .click();
+    await page
+      .getByLabel(fa ? 'تغییر کلید' : 'Token change', { exact: true })
+      .selectOption('clear');
+    await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
+    await confirm();
+    await page.reload();
+    await expect(card).toContainText('127.0.0.1:2');
+    await expect(card).toContainText(fa ? 'بدون کلید' : 'No token');
+    await card
+      .getByRole('button', { name: fa ? 'آزمایش اتصال' : 'Test connection', exact: true })
+      .click();
+    await confirm();
+    await expect(card).toContainText(fa ? 'اتصال ناموفق' : 'Unreachable');
+    await page.screenshot({ path: `/tmp/ai-models-${locale}.png`, fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+    ).toBe(true);
+    await page.screenshot({ path: `/tmp/ai-models-mobile-${locale}.png`, fullPage: true });
+    await card.getByRole('button', { name: fa ? 'حذف' : 'Delete', exact: true }).click();
+    await confirm();
+    await expect(card).toHaveCount(0);
+  });

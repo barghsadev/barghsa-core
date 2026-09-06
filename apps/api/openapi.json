@@ -426,7 +426,7 @@
         ]
       },
       "put": {
-        "description": "Partial update. apiToken semantics: omit = unchanged, masked placeholder = unchanged, empty string = clear, anything else = new token (encrypted at rest).",
+        "description": "Partial update. apiToken semantics: omit = unchanged, masked placeholder = unchanged, empty string = clear, anything else = new token (encrypted at rest). Changing base URL or provider with a stored token requires explicit token re-entry or clearing.",
         "operationId": "AiModelsController_update",
         "parameters": [
           {
