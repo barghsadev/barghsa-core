@@ -41,6 +41,31 @@ it.each(['API', 'MANUAL', 'DISABLED'])(
     const started = await post('onboarding/start', { profileType: 'INDIVIDUAL' });
     expect(started.status).toBe(201);
     const { profileId } = (await started.json()) as { profileId: string };
+    expect((await post(`onboarding/complete/${profileId}`)).status).toBe(400);
+    const provinceId = (
+      await http.pool.query(
+        "INSERT INTO provinces(name_fa,name_en) VALUES ('استان','Province') RETURNING id"
+      )
+    ).rows[0].id;
+    const cityId = (
+      await http.pool.query(
+        "INSERT INTO cities(province_id,name_fa,name_en) VALUES ($1,'شهر','City') RETURNING id",
+        [provinceId]
+      )
+    ).rows[0].id;
+    expect(
+      (
+        await post(`onboarding/individual/${profileId}`, {
+          firstName: 'Person',
+          lastName: 'Owner',
+          nationalId: '1234567891',
+          provinceId,
+          cityId,
+          fullAddress: 'Street',
+          postalCode: '1234567890',
+        })
+      ).status
+    ).toBe(200);
     const completed = await post(`onboarding/complete/${profileId}`);
     expect(completed.status).toBe(200);
     expect(await completed.json()).toMatchObject({

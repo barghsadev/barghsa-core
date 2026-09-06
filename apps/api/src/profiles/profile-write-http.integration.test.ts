@@ -183,3 +183,67 @@ for (const type of ['INDIVIDUAL', 'LEGAL']) {
     expect((await snapshot()).status).not.toBe('DRAFT');
   });
 }
+
+it('requires saved identity and address before finalizing a draft and audits the transition once', async () => {
+  const complete = () =>
+    fetch(`${http.base}/api/onboarding/complete/${profileId}`, { method: 'POST', headers });
+  expect((await complete()).status).toBe(400);
+  expect((await snapshot()).status).toBe('DRAFT');
+  expect(
+    (
+      await update({
+        firstName: 'Person',
+        lastName: 'Owner',
+        nationalId: '1234567891',
+        provinceId,
+        cityId,
+        fullAddress: 'Street',
+        postalCode: '1234567890',
+      })
+    ).status
+  ).toBe(200);
+  expect((await snapshot()).status).toBe('DRAFT');
+  const first = await complete();
+  expect(first.status).toBe(200);
+  const completed = await snapshot();
+  expect(completed.status).toBe('ACTIVE');
+  expect((await complete()).status).toBe(200);
+  expect(await snapshot()).toEqual(completed);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_onboarding_completed'"))
+      .rows
+  ).toHaveLength(1);
+});
+it('does not replace a concurrent verification decision while finalizing a draft', async () => {
+  const client = await http.pool.connect();
+  let completing: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE profiles SET status='VERIFIED' WHERE id=$1", [profileId]);
+    completing = fetch(`${http.base}/api/onboarding/complete/${profileId}`, {
+      method: 'POST',
+      headers,
+    });
+    await waitForWrite();
+    await client.query('COMMIT');
+    expect((await completing).status).toBe(200);
+    expect((await snapshot()).status).toBe('VERIFIED');
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_onboarding_completed'"))
+        .rows
+    ).toHaveLength(0);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await completing;
+  }
+});
+it('does not finalize a legal draft without its legal entity record', async () => {
+  await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [profileId]);
+  const response = await fetch(`${http.base}/api/onboarding/complete/${profileId}`, {
+    method: 'POST',
+    headers,
+  });
+  expect(response.status).toBe(400);
+  expect((await snapshot()).status).toBe('DRAFT');
+});

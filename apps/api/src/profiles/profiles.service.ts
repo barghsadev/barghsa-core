@@ -2,7 +2,11 @@ import { requireAddressGeography } from './address-geography.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
-import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
+import {
+  validateNationalId,
+  validatePostalCode,
+  validateLegalNationalIdentifier,
+} from '@barghsa/shared/validation';
 import {
   hasAnyRolePermission,
   type AgentPermission,
@@ -1221,6 +1225,61 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      const locked = (
+        await client.query(
+          'SELECT * FROM profiles WHERE id=$1 AND user_id=$2 AND NOT archived FOR UPDATE',
+          [profileId, userId]
+        )
+      ).rows[0];
+      if (!locked)
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404
+        );
+      if (locked.status !== 'DRAFT') {
+        await client.query('COMMIT');
+        return mapRow(locked);
+      }
+      const address = (
+        await client.query(
+          'SELECT province_id,city_id,full_address,postal_code FROM addresses WHERE profile_id=$1 AND main_address FOR SHARE',
+          [profileId]
+        )
+      ).rows[0];
+      let identityComplete = false;
+      if (locked.profile_type === 'INDIVIDUAL') {
+        identityComplete =
+          !!locked.first_name?.trim() &&
+          !!locked.last_name?.trim() &&
+          typeof locked.national_id === 'string' &&
+          validateNationalId(locked.national_id);
+      } else if (locked.profile_type === 'LEGAL') {
+        const legal = (
+          await client.query(
+            'SELECT legal_name,national_identifier,registration_number,representative_title,representative_relationship FROM legal_profiles WHERE id=$1 FOR SHARE',
+            [profileId]
+          )
+        ).rows[0];
+        identityComplete =
+          !!legal?.legal_name?.trim() &&
+          !!legal?.registration_number?.trim() &&
+          !!legal?.representative_title?.trim() &&
+          !!legal?.representative_relationship?.trim() &&
+          typeof legal?.national_identifier === 'string' &&
+          validateLegalNationalIdentifier(legal.national_identifier);
+      }
+      if (
+        !identityComplete ||
+        !address?.full_address?.trim() ||
+        typeof address?.postal_code !== 'string' ||
+        !validatePostalCode(address.postal_code)
+      ) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code },
+          400
+        );
+      }
+      await requireAddressGeography(client, address.province_id, address.city_id);
 
       // Determine target status based on verification settings
       const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED';
@@ -1231,7 +1290,7 @@ export class ProfilesService {
         `SELECT id FROM profiles WHERE user_id = $1 AND is_default = true LIMIT 1`,
         [userId]
       );
-      const becomesDefault = profile.isDefault || existing.rows.length === 0;
+      const becomesDefault = locked.is_default || existing.rows.length === 0;
 
       await client.query(
         `UPDATE profiles
@@ -1240,6 +1299,11 @@ export class ProfilesService {
         [targetStatus, becomesDefault, profileId]
       );
 
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES (uuid_generate_v7(),$1,'profile_onboarding_completed',$2::jsonb,uuid_generate_v7(),NOW())`,
+        [userId, JSON.stringify({ profileId, fromStatus: 'DRAFT', toStatus: targetStatus })]
+      );
       await client.query('COMMIT');
 
       this.logger.log(
@@ -1264,11 +1328,17 @@ export class ProfilesService {
    * - the active profile is verified, OR
    * - the system does not require verification
    *
-   * Used by ProfileVerifiedGuard and order submission endpoints.
+   * Used by ProfileVerifiedGuard. Commercial submission handlers must opt in;
+   * the current general orders endpoint creates drafts and does not mount it.
    */
   async canPlaceCommercialOrder(userId: string): Promise<boolean> {
     const status = await this.getVerificationStatus(userId);
-    if (!status.activeProfileId) return false;
+    if (
+      !status.activeProfileId ||
+      status.profileStatus === 'DRAFT' ||
+      status.profileStatus === 'SUSPENDED'
+    )
+      return false;
     // If verification is not required, commercial orders are allowed
     if (!status.verificationRequired) return true;
     // If verification is required, the profile must be verified

@@ -37,6 +37,26 @@ describe('ProfilesService', () => {
   });
 
   describe('canPlaceCommercialOrder', () => {
+    it.each(['DRAFT', 'SUSPENDED'])(
+      'rejects %s even when verification is disabled',
+      async (status) => {
+        vi.mocked(configCache.get).mockResolvedValue('DISABLED');
+        mockPool.query.mockResolvedValue({
+          rows: [
+            {
+              id: 'prof-1',
+              user_id: 'user-1',
+              profile_type: 'INDIVIDUAL',
+              is_default: true,
+              is_active: true,
+              status,
+            },
+          ],
+        });
+        expect(await service.canPlaceCommercialOrder('user-1')).toBe(false);
+      }
+    );
+
     it('returns true when verification is not required', async () => {
       vi.mocked(configCache.get).mockResolvedValue('DISABLED');
       mockPool.query.mockResolvedValue({
@@ -325,6 +345,7 @@ describe('ProfilesService', () => {
       title: null,
       first_name: 'John',
       last_name: 'Doe',
+      national_id: '1234567891',
       created_at: new Date(),
       updated_at: new Date(),
     };
@@ -338,6 +359,18 @@ describe('ProfilesService', () => {
       mockPool.connect.mockResolvedValue(mockClient);
       // BEGIN
       mockClient.query.mockResolvedValueOnce({});
+      mockClient.query.mockResolvedValueOnce({ rows: [draftRow] }); // locked current profile
+      mockClient.query.mockResolvedValueOnce({
+        rows: [
+          {
+            province_id: 'province',
+            city_id: 'city',
+            full_address: 'Street',
+            postal_code: '1234567890',
+          },
+        ],
+      });
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'city' }] }); // selected geography
       // Check existing default profiles
       mockClient.query.mockResolvedValueOnce({ rows: [] });
       // UPDATE status to ACTIVE
@@ -353,7 +386,9 @@ describe('ProfilesService', () => {
       expect(result.id).toBe('prof-1');
 
       // Verify the update query uses ACTIVE
-      const updateCall = mockClient.query.mock.calls[2];
+      const updateCall = mockClient.query.mock.calls.find(([sql]) =>
+        String(sql).includes('UPDATE profiles')
+      );
       expect(updateCall).toBeDefined();
       expect(updateCall![0]).toContain('UPDATE profiles');
       expect(updateCall![0]).toContain('status = $1');
@@ -364,6 +399,18 @@ describe('ProfilesService', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [draftRow] });
       mockPool.connect.mockResolvedValue(mockClient);
       mockClient.query.mockResolvedValueOnce({}); // BEGIN
+      mockClient.query.mockResolvedValueOnce({ rows: [draftRow] }); // locked current profile
+      mockClient.query.mockResolvedValueOnce({
+        rows: [
+          {
+            province_id: 'province',
+            city_id: 'city',
+            full_address: 'Street',
+            postal_code: '1234567890',
+          },
+        ],
+      });
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'city' }] }); // selected geography
       mockClient.query.mockResolvedValueOnce({ rows: [] }); // no existing default
       mockClient.query.mockResolvedValueOnce({ rowCount: 1 }); // UPDATE
       mockClient.query.mockResolvedValueOnce({}); // COMMIT
