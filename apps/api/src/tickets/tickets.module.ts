@@ -1,3 +1,4 @@
+import { TicketAttachmentsService } from './ticket-attachments.service.js'
 import { Module } from '@nestjs/common'
 import { TicketsController } from './tickets.controller.js'
 import { StaffTicketsController } from './staff-tickets.controller.js'
@@ -7,7 +8,7 @@ import { SessionModule } from '../session/session.module.js'
 @Module({
   imports: [SessionModule],
   controllers: [TicketsController, StaffTicketsController],
-  providers: [TicketsService],
+  providers: [TicketsService, TicketAttachmentsService],
   exports: [TicketsService],
 })
 export class TicketsModule {}

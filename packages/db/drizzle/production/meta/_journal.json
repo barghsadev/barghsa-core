@@ -127,6 +127,13 @@
       "when": 1791331200000,
       "tag": "0097_notification_recipient_backfill",
       "breakpoints": true
+    },
+    {
+      "idx": 98,
+      "version": "7",
+      "when": 1791331200001,
+      "tag": "0098_ticket_attachments",
+      "breakpoints": true
     }
   ]
 }

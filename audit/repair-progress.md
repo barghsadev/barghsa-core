@@ -469,3 +469,11 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Comments/status changes and their actor-bound audit records commit together. List/comment ordering now has an ID tie-breaker.
 - Review: 36 ticket checks passed, including seven real HTTP/PostgreSQL scenarios. Added coverage exercises the full lifecycle, internal-note privacy, cross-owner refusal, malformed input, audit rollback and competing transitions. Earlier SQL-mock mutation tests were replaced by these database checks. API typecheck and diff whitespace check passed.
 - Attachments, related records, team/assigned-only access, notices and screens remain in F16.
+
+### F16.3 — Ticket creation, owned record links and persisted attachments
+
+- Creation now validates runtime payloads, requires an active owned profile for profile-linked tickets and verifies order/invoice links belong to that exact profile. Unverifiable contract links return a conflict because the contract table is not implemented.
+- Up to five verified PDF/image uploads are checked against uploader, profile and ticket purpose, inspected for content and size, copied to fixed private storage keys and persisted with the ticket. Detail reads sign five-minute downloads after owner/staff authorization. Replacing a source upload leaves its ticket copy unchanged.
+- Creation and audit commit together. Migration 0098 adds an empty attachment list for existing tickets; the schema definition and production journal agree. Storage copies written before a failed database commit can remain unlinked and require the existing storage cleanup process; no external storage transaction is claimed.
+- Review: 32 focused ticket checks, the populated baseline migration/rerun test, all workspace typechecks and the full API suite passed. Full API result: 191 files, 2479 tests. The lower count reflects replacing SQL-mock mutation tests with real HTTP/database coverage.
+- Remaining ticket work: screens, assigned-only/team access, notices and full acceptance reconciliation. Contract integration remains dependent on the unbuilt contract module.

@@ -55,15 +55,7 @@ export class TicketsController {
   ) {
     const userId = req.session.userId
 
-    const ticket = await this.ticketsService.createTicket(userId, {
-      subject: body.subject,
-      body: body.body,
-      profileId: body.profileId ?? null,
-      relatedEntityType: body.relatedEntityType ?? null,
-      relatedEntityId: body.relatedEntityId ?? null,
-      priority: body.priority ?? 'normal',
-      attachments: body.attachments ?? null,
-    })
+    const ticket = await this.ticketsService.createTicket(userId, body)
 
     this.logger.log(`Ticket ${ticket.id} created for user ${userId}`)
     return ticket

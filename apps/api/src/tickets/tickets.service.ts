@@ -1,3 +1,5 @@
+import { z } from 'zod'
+import { TicketAttachmentsService } from './ticket-attachments.service.js'
 import { randomUUID } from 'node:crypto'
 import { resolveStaffPermissions } from '../session/staff-permissions.js'
 import { Injectable, Logger, HttpException } from '@nestjs/common'
@@ -14,6 +16,8 @@ export interface TicketRow {
   relatedEntityId: string | null
   priority: 'normal' | 'high'
   status: 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed'
+  attachments: string[]
+  attachmentDownloadUrls?: string[]
   assignedTo: string | null
   createdAt: Date
   updatedAt: Date
@@ -68,6 +72,7 @@ function mapRow(row: Record<string, unknown>): TicketRow {
     relatedEntityId: (row.related_entity_id as string) ?? null,
     priority: (row.priority as 'normal' | 'high') ?? 'normal',
     status: (row.status as 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed') ?? 'open',
+    attachments: Array.isArray(row.attachments) ? row.attachments as string[] : [],
     assignedTo: (row.assigned_to as string) ?? null,
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
@@ -88,6 +93,8 @@ function mapCommentRow(row: Record<string, unknown>): TicketCommentRow {
 
 @Injectable()
 export class TicketsService {
+  constructor(private readonly attachmentService: TicketAttachmentsService = new TicketAttachmentsService()) {}
+
   private readonly logger = new Logger(TicketsService.name)
 
   /**
@@ -101,69 +108,43 @@ export class TicketsService {
     userId: string,
     dto: CreateTicketDto,
   ): Promise<TicketRow> {
-    // ── Field validation (fast-path, no DB) ────────────────
-    if (!dto.subject?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Subject is required' },
-        400,
-      )
+    const parsed = z.object({
+      subject: z.string().trim().min(1).max(200), body: z.string().trim().min(1).max(10000),
+      profileId: z.uuid().nullable().optional(), relatedEntityType: z.enum(['order','contract','invoice']).nullable().optional(),
+      relatedEntityId: z.string().trim().min(1).max(512).nullable().optional(),
+      priority: z.enum(['normal','high']).default('normal'), attachments: z.array(z.string().min(1).max(512)).max(5).nullable().optional(),
+    }).strict().safeParse(dto)
+    if (!parsed.success) throw new HttpException('Invalid ticket fields', 400)
+    const data = parsed.data
+    if (Boolean(data.relatedEntityType) !== Boolean(data.relatedEntityId) || (data.relatedEntityId && !data.profileId)) {
+      throw new HttpException('Related records require their type, identifier and profile', 400)
     }
-    if (dto.subject.trim().length > 200) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Subject must be 200 characters or fewer' },
-        400,
-      )
-    }
-    if (!dto.body?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Body is required' },
-        400,
-      )
-    }
-    if (dto.body.trim().length > 10000) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Body must be 10,000 characters or fewer' },
-        400,
-      )
-    }
-
-    const pool = getDbPool()
-
-    // Validate the profile belongs to the user (if provided)
-    if (dto.profileId) {
-      const profileResult = await pool.query(
-        `SELECT id FROM profiles WHERE id = $1 AND user_id = $2`,
-        [dto.profileId, userId],
-      )
-      if (profileResult.rows.length === 0) {
-        throw new HttpException(
-          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
-          404,
-        )
+    const client = await getDbPool().connect()
+    try {
+      await client.query('BEGIN')
+      if (data.profileId) {
+        const profile = await client.query('SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND archived=false FOR UPDATE',[data.profileId,userId])
+        if (!profile.rows.length) throw new HttpException('Profile not found', 404)
       }
-    }
-
-    const priority = dto.priority ?? 'normal'
-
-    // Create the ticket
-    const result = await pool.query(
-      `INSERT INTO tickets (user_id, subject, body, profile_id, related_entity_type, related_entity_id, priority, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, 'open')
-       RETURNING *`,
-      [
-        userId,
-        dto.subject.trim(),
-        dto.body.trim(),
-        dto.profileId?.trim() ?? null,
-        dto.relatedEntityType ?? null,
-        dto.relatedEntityId?.trim() ?? null,
-        priority,
-      ],
-    )
-
-    const ticket = mapRow(result.rows[0]!)
-    this.logger.log(`Ticket ${ticket.id} created for user ${userId}, priority=${priority}`)
-    return ticket
+      if (data.relatedEntityId) {
+        // Contracts are not implemented in this schema. Never accept unverifiable links.
+        if (data.relatedEntityType === 'contract') throw new HttpException('Contract linking is unavailable', 409)
+        if (!z.uuid().safeParse(data.relatedEntityId).success) throw new HttpException('Invalid related record identifier', 400)
+        const table = data.relatedEntityType === 'order' ? 'orders' : 'invoices'
+        const related = await client.query(`SELECT id FROM ${table} WHERE id=$1 AND profile_id=$2 FOR SHARE`,[data.relatedEntityId,data.profileId])
+        if (!related.rows.length) throw new HttpException('Related record not found in this profile', 404)
+      }
+      const attachments = data.attachments?.length ? await this.attachmentService.seal(client,data.attachments,userId,data.profileId ?? null) : []
+      const result = await client.query(`INSERT INTO tickets(user_id,subject,body,profile_id,related_entity_type,related_entity_id,priority,status,attachments)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,'open',$8::jsonb) RETURNING *`,
+        [userId,data.subject,data.body,data.profileId ?? null,data.relatedEntityType ?? null,data.relatedEntityId ?? null,data.priority,JSON.stringify(attachments)])
+      const ticket = mapRow(result.rows[0])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_created',$3::jsonb)`,
+        [randomUUID(),userId,JSON.stringify({ ticketId: ticket.id,profileId: ticket.profileId,attachmentCount: attachments.length })])
+      await client.query('COMMIT')
+      return ticket
+    } catch (error) { await client.query('ROLLBACK'); throw error }
+    finally { client.release() }
   }
 
   /**
@@ -256,7 +237,8 @@ export class TicketsService {
       )
     }
 
-    return mapRow(result.rows[0]!)
+    const ticket = mapRow(result.rows[0]!)
+    return { ...ticket, attachmentDownloadUrls: await this.attachmentService.downloadUrls(ticket.attachments) }
   }
 
   /**
@@ -469,7 +451,8 @@ export class TicketsService {
       )
     }
 
-    return mapRow(result.rows[0]!)
+    const ticket = mapRow(result.rows[0]!)
+    return { ...ticket, attachmentDownloadUrls: await this.attachmentService.downloadUrls(ticket.attachments) }
   }
 
   /**

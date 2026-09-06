@@ -1,11 +1,26 @@
+import { createServer, type Server } from 'node:http'
 import { randomUUID } from 'node:crypto'
-import { afterAll, beforeAll, expect, it } from 'vitest'
+import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest'
 import { startHttpFixture } from '../test/http-fixture.js'
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>
+let storageServer: Server
+const objects = new Map<string, Buffer>()
 const headers: Record<string, Record<string, string>> = {}
 beforeAll(async () => {
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!)
+  storageServer = createServer(async (req,res) => {
+    const key = decodeURIComponent(new URL(req.url!,'http://localhost').pathname).replace('/test-evidence/','')
+    if (req.method === 'PUT') {
+      const chunks: Buffer[] = []
+      for await (const chunk of req) chunks.push(Buffer.from(chunk))
+      objects.set(key,Buffer.concat(chunks));res.setHeader('ETag','"test"');res.end();return
+    }
+    const bytes = objects.get(key)
+    if (!bytes) { res.statusCode=404;res.end();return }
+    res.setHeader('Content-Length',bytes.length);res.setHeader('Content-Type','application/pdf');res.end(bytes)
+  })
+  await new Promise<void>(resolve => storageServer.listen(0,'127.0.0.1',resolve))
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!,`http://127.0.0.1:${(storageServer.address() as { port: number }).port}`)
   for (const user of ['staff', 'customer', 'disabled', 'inactive']) {
     await http.pool.query(`INSERT INTO users(user_id,username,password_hash,is_admin,disabled_at,activation_token)
       VALUES ($1,$2,'test-only',$3,$4,$5)`, [user, `${user}@example.test`, user !== 'customer',
@@ -16,7 +31,9 @@ beforeAll(async () => {
     headers[user] = { Cookie: `barghsa_session=${id}`, 'X-CSRF-Token': csrf, 'Content-Type': 'application/json' }
   }
 }, 40000)
-afterAll(async () => { await http?.close() })
+// Each scenario has its own rate-limit budget in this disposable database.
+beforeEach(async () => { await http.pool.query('DELETE FROM rate_limit_counters') })
+afterAll(async () => { await http?.close(); await new Promise<void>(resolve => storageServer?.close(() => resolve())) })
 async function ticket(status = 'open') {
   const id = randomUUID()
   await http.pool.query(`INSERT INTO tickets(id,user_id,subject,body,status)
@@ -138,4 +155,54 @@ it('rolls back comments and status changes when their audits fail, and serialize
   const responses = await Promise.all([status(id,'resolved'),status(id,'waiting_customer')])
   expect(responses.map(row=>row.status).sort()).toEqual([200,409])
   expect((await http.pool.query("SELECT id FROM audit_log WHERE event='ticket_status_changed' AND metadata::jsonb->>'ticketId'=$1",[id])).rows).toHaveLength(1)
+})
+function createTicket(body: unknown, user = 'customer') {
+  return fetch(`${http.base}/api/tickets`,{method:'POST',headers:headers[user]!,body:JSON.stringify(body)})
+}
+it('validates creation fields and scopes profile and related invoice links to the owner', async () => {
+  const own = randomUUID(), other = randomUUID(), invoice = randomUUID()
+  await http.pool.query(`INSERT INTO profiles(id,user_id,profile_type,status) VALUES ($1,'customer','INDIVIDUAL','VERIFIED'),($2,'staff','INDIVIDUAL','VERIFIED')`,[own,other])
+  await http.pool.query("INSERT INTO invoices(id,profile_id,order_id,total_amount) VALUES ($1,$2,NULL,100)",[invoice,own])
+  const base = {subject:'A question',body:'Please help'}
+  expect((await createTicket({...base,subject:{bad:true}})).status).toBe(400)
+  expect((await createTicket({...base,priority:'urgent'})).status).toBe(400)
+  expect((await createTicket({...base,profileId:other})).status).toBe(404)
+  expect((await createTicket({...base,relatedEntityType:'invoice',relatedEntityId:invoice})).status).toBe(400)
+  expect((await createTicket({...base,profileId:own,relatedEntityType:'invoice',relatedEntityId:randomUUID()})).status).toBe(404)
+  const response = await createTicket({...base,profileId:own,relatedEntityType:'invoice',relatedEntityId:invoice})
+  expect(response.status,http.logs()).toBe(201)
+  expect(await response.json()).toMatchObject({profileId:own,relatedEntityId:invoice,attachments:[]})
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1',[own])
+  expect((await createTicket({...base,profileId:own})).status).toBe(404)
+})
+it('persists a fixed attachment copy and releases downloads only to the owner or staff', async () => {
+  const key=`uploads/document/${randomUUID()}.pdf`, bytes=Buffer.from('%PDF-1.7\nOriginal support attachment\n%%EOF')
+  objects.set(key,bytes)
+  await http.pool.query(`INSERT INTO storage_records(storage_key,status,metadata,file_size,content_type,category,file_name)
+    VALUES ($1,'active',$2::jsonb,$3,'application/pdf','document','help.pdf')`,[key,JSON.stringify({verified:true,uploadedBy:'staff',purpose:'ticket_attachment'}),bytes.length])
+  expect((await createTicket({subject:'No access',body:'Another user file',attachments:[key]})).status).toBe(400)
+  const response=await createTicket({subject:'Attachment',body:'Details',attachments:[key]},'staff')
+  expect(response.status,http.logs()).toBe(201)
+  const row=await response.json() as {id:string;attachments:string[]}
+  expect(row.attachments[0]).toMatch(/^ticket-attachments\//)
+  objects.set(key,Buffer.from('%PDF-1.7\nReplaced original'))
+  expect((await fetch(`${http.base}/api/tickets/${row.id}`,{headers:headers.customer!})).status).toBe(404)
+  const detail=await fetch(`${http.base}/api/tickets/${row.id}`,{headers:headers.staff!})
+  expect(detail.status).toBe(200)
+  const data=await detail.json() as {attachmentDownloadUrls:string[]}
+  const url=new URL(data.attachmentDownloadUrls[0]!)
+  expect(url.searchParams.get('X-Amz-Expires')).toBe('300')
+  expect(await (await fetch(url)).text()).toContain('Original support attachment')
+})
+it('rolls back ticket creation when its audit fails and leaves existing tickets on the empty attachment default', async () => {
+  const id=await ticket()
+  expect((await http.pool.query('SELECT attachments FROM tickets WHERE id=$1',[id])).rows[0].attachments).toEqual([])
+  await http.pool.query(`CREATE FUNCTION fail_ticket_create_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.event='ticket_created' THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_ticket_create_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_ticket_create_audit()`)
+  try {
+    expect((await createTicket({subject:'Audit failure ticket',body:'Details'},'staff')).status).toBe(500)
+    expect((await http.pool.query("SELECT id FROM tickets WHERE subject='Audit failure ticket'")).rows).toHaveLength(0)
+  } finally {await http.pool.query('DROP TRIGGER fail_ticket_create_audit ON audit_log; DROP FUNCTION fail_ticket_create_audit()')}
+  expect((await createTicket({subject:'Audit failure ticket',body:'Details'},'staff')).status).toBe(201)
 })

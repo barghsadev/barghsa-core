@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { uuid, text, timestamp, pgTable } from 'drizzle-orm/pg-core'
+import { uuid, text, timestamp, pgTable, jsonb, check } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 import { users } from './users'
 import { profiles } from './profiles'
@@ -52,6 +52,9 @@ export const tickets = pgTable(
     /** Optional related entity UUID. */
     relatedEntityId: text('related_entity_id'),
 
+    /** Fixed storage copies linked when the ticket is created. */
+    attachments: jsonb('attachments').$type<string[]>().notNull().default([]),
+
     /** Ticket priority. */
     priority: text('priority', {
       enum: ['normal', 'high'],
@@ -80,6 +83,7 @@ export const tickets = pgTable(
       .defaultNow()
       .notNull(),
   },
+  (table) => [check('tickets_attachments_array', sql`jsonb_typeof(${table.attachments})='array' AND jsonb_array_length(${table.attachments})<=5`)],
 )
 
 /**
@@ -96,7 +100,8 @@ export const createTicketsTable = sql`
     related_entity_id TEXT,
     priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('normal', 'high')),
     status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed')),
-    assigned_to UUID REFERENCES users(user_id) ON DELETE SET NULL,
+    attachments JSONB NOT NULL DEFAULT '[]'::jsonb CHECK (jsonb_typeof(attachments)='array' AND jsonb_array_length(attachments)<=5),
+    assigned_to TEXT REFERENCES users(user_id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
