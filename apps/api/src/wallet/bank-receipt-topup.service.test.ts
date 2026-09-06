@@ -105,6 +105,7 @@ function scriptClient(opts: ScriptOptions = {}) {
       if (opts.claimType === null) return { rows: [] }
       return { rows: [{ claim_type: opts.claimType ?? 'wallet_topup' }] }
     }
+    if (sql.includes('FROM profiles')) return { rows: [{ archived: false }] }
     if (sql.includes('FROM wallets')) {
       if (opts.wallet === null) return { rows: [] }
       return { rows: [opts.wallet ?? { profile_id: PROFILE_ID }] }

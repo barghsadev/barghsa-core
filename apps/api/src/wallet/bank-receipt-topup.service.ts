@@ -1,3 +1,4 @@
+import { lockActiveTopUpProfile } from './active-profile.js'
 import { createHash } from 'node:crypto'
 import {
   ConflictException,
@@ -222,6 +223,7 @@ export class BankReceiptTopUpService {
     let canonicalWalletId: string | undefined
     try {
       await client.query('BEGIN')
+      await lockActiveTopUpProfile(client, profileId)
 
       const walletResult = await client.query(
         `SELECT profile_id FROM wallets WHERE profile_id = $1 FOR UPDATE`,

@@ -89,6 +89,7 @@ function scriptClient(opts: ScriptOptions = {}) {
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
       return { rows: [] }
     }
+    if (sql.includes('FROM profiles')) return { rows: [{ archived: false }] }
     if (sql.includes('FROM wallets')) {
       if (opts.wallet === null) return { rows: [] }
       return { rows: [opts.wallet ?? { profile_id: PROFILE_ID }] }

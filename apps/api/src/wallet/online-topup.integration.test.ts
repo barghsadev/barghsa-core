@@ -23,10 +23,7 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 import { BadRequestException, ConflictException, HttpException } from '@nestjs/common'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
-import type { IsolatedTestDb } from '@barghsa/db/test'
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db'
 import { WalletService, type WalletQueryClient } from './wallet.service.js'
 import { OnlineTopUpService } from './online-topup.service.js'
 import type { PaymentGateway } from './payment-gateway.js'
@@ -48,26 +45,12 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   }
 })
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql',
-)
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql',
-)
-
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql',
-)
-
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
 const ADMIN_ACTOR = 'topup-limit-admin'
 
 describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
-  let ctx: IsolatedTestDb
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>
   let walletService: WalletService
   let gateway: PaymentGateway
   let service: OnlineTopUpService
@@ -75,7 +58,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
   let startCalls: number
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 6)
+    ctx = await createMigratedTestDb()
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
     adminService = new AdminService()
@@ -97,42 +80,14 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
     }
     service = new OnlineTopUpService(walletService, gateway)
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `)
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS app_config (
-        key TEXT PRIMARY KEY,
-        value JSONB NOT NULL,
-        version INTEGER NOT NULL DEFAULT 1,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS config_version (
-        id TEXT PRIMARY KEY DEFAULT 'global',
-        version INTEGER NOT NULL DEFAULT 1,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
-    await ctx.pool.query(
-      `INSERT INTO config_version (id, version) VALUES ('global', 1) ON CONFLICT (id) DO NOTHING`,
-    )
-    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`)
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
-    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [PROFILE_A])
-    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1)`, [ADMIN_ACTOR])
+    await ctx.pool.query(`INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'test-only')`, [ADMIN_ACTOR, `${ADMIN_ACTOR}@example.test`])
+    await ctx.pool.query(`INSERT INTO profiles(id,user_id,status) VALUES ($1,$3,'ACTIVE'),($2,$3,'ACTIVE')`, [PROFILE_A,PROFILE_B,ADMIN_ACTOR])
+    await ctx.pool.query(`INSERT INTO wallets(profile_id) VALUES ($1)`, [PROFILE_A])
   }, 60_000)
 
   afterAll(async () => {
     poolHolder.pool = null
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
+    await ctx.close()
   })
 
   async function fetchWallet(profileId: string) {

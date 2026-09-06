@@ -733,6 +733,15 @@ export class CrmV2Service {
         }
       }
 
+      // Top-up initiation holds the profile before the wallet lock. Pending
+      // credits must settle or fail before a zero-balance wallet can archive.
+      const pendingWallet = await client.query(
+        `SELECT EXISTS(SELECT 1 FROM wallet_transactions WHERE wallet_id=$1 AND state='Pending') AS pending`, [profileId])
+      if (pendingWallet.rows[0].pending) {
+        await client.query('ROLLBACK')
+        return { errorCode: 'CRM:PROFILE:DELETION_BLOCKED', error: 'Resolve pending wallet transactions before archiving this profile.' }
+      }
+
       // A legal profile has one canonical owner in profiles.user_id. Agents
       // cannot substitute for that owner or authorize deleting the legal entity.
       if (profileType === 'LEGAL') {

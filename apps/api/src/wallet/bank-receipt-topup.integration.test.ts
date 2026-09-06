@@ -20,10 +20,7 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 import { ConflictException, HttpException } from '@nestjs/common'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
-import type { IsolatedTestDb } from '@barghsa/db/test'
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db'
 import {
   BANK_RECEIPT_STORAGE_PURPOSE,
   BANK_RECEIPT_TOPUP_CHANNEL,
@@ -52,23 +49,6 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   }
 })
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql',
-)
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql',
-)
-const ATTACHMENT_UNIQUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0072_wallet_tx_receipt_attachment_unique.sql',
-)
-const ATTACHMENT_CLAIMS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0079_create_bank_receipt_attachment_claims.sql',
-)
-
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
 const ACTOR_ID = 'user-customer-1'
@@ -80,44 +60,24 @@ function receiptKey(suffix: string): string {
 }
 
 describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
-  let ctx: IsolatedTestDb
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>
   let walletService: WalletService
   let service: BankReceiptTopUpService
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4)
+    ctx = await createMigratedTestDb()
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
     service = new BankReceiptTopUpService(walletService)
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `)
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(ATTACHMENT_UNIQUE_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(ATTACHMENT_CLAIMS_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS storage_records (
-        storage_key TEXT PRIMARY KEY,
-        status TEXT NOT NULL DEFAULT 'active'
-          CHECK (status IN ('active', 'immutable', 'removed')),
-        metadata JSONB,
-        signed_at TIMESTAMPTZ,
-        signed_by TEXT,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
-    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [PROFILE_A])
+    await ctx.pool.query(`INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'test-only')`, [ACTOR_ID, `${ACTOR_ID}@example.test`])
+    await ctx.pool.query(`INSERT INTO profiles(id,user_id,status) VALUES ($1,$3,'ACTIVE'),($2,$3,'ACTIVE')`, [PROFILE_A,PROFILE_B,ACTOR_ID])
+    await ctx.pool.query(`INSERT INTO wallets(profile_id) VALUES ($1)`, [PROFILE_A])
   }, 60_000)
 
   afterAll(async () => {
     poolHolder.pool = null
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
+    await ctx.close()
   })
 
   async function insertReceipt(
