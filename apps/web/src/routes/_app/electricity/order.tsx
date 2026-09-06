@@ -89,6 +89,7 @@ function ElectricityOrderPage() {
   const [formFullAddress, setFormFullAddress] = useState('');
   const [formPostalCode, setFormPostalCode] = useState('');
   const [savingAddress, setSavingAddress] = useState(false);
+  const addressSaveInFlight = useRef(false);
 
   // Order submission
   const [submitting, setSubmitting] = useState(false);
@@ -351,6 +352,7 @@ function ElectricityOrderPage() {
   // ── Save new address ─────────────────────────────────────────────────
 
   const handleSaveNewAddress = useCallback(async () => {
+    if (addressSaveInFlight.current) return;
     if (checking || blocked !== false || verificationError || loadingAddresses || addressError)
       return;
     if (
@@ -369,27 +371,40 @@ function ElectricityOrderPage() {
 
     if (!activeProfileId) return;
 
+    addressSaveInFlight.current = true;
+    const generation = addressGeneration.current;
+    const input = {
+      provinceId: formProvinceId,
+      cityId: formCityId,
+      fullAddress: formFullAddress.trim(),
+      postalCode: formPostalCode.trim(),
+    };
     setSavingAddress(true);
     try {
       const res = await fetch(`/api/profiles/${activeProfileId}/addresses`, {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          provinceId: formProvinceId,
-          cityId: formCityId,
-          fullAddress: formFullAddress.trim(),
-          postalCode: formPostalCode.trim(),
-        }),
+        body: JSON.stringify(input),
       });
 
       if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        const message = (errBody as { message?: string }).message;
-        toast.error(message || t('settings.addresses.error.create', locale));
+        toast.error(t('settings.addresses.error.create', locale));
         return;
       }
 
       const newAddress: Address = await res.json();
+      if (
+        !newAddress ||
+        typeof newAddress.id !== 'string' ||
+        !newAddress.id.trim() ||
+        newAddress.profileId !== activeProfileId ||
+        typeof newAddress.mainAddress !== 'boolean' ||
+        (Object.keys(input) as Array<keyof typeof input>).some(
+          (key) => newAddress[key] !== input[key]
+        )
+      )
+        throw new Error('Invalid saved address');
+      if (generation !== addressGeneration.current) return;
       toast.success(t('settings.addresses.success.create', locale));
 
       // Add to list and select it
@@ -405,6 +420,7 @@ function ElectricityOrderPage() {
     } catch {
       toast.error(t('settings.addresses.error.create', locale));
     } finally {
+      addressSaveInFlight.current = false;
       setSavingAddress(false);
     }
   }, [
@@ -430,6 +446,7 @@ function ElectricityOrderPage() {
   // ── Submit order ────────────────────────────────────────────────────
 
   const handleSubmitOrder = useCallback(async () => {
+    if (addressSaveInFlight.current || showNewAddressForm) return;
     if (
       loadingProducts ||
       productError ||
@@ -485,6 +502,7 @@ function ElectricityOrderPage() {
     }
   }, [
     selectedProductId,
+    showNewAddressForm,
     products,
     loadingProducts,
     productError,
@@ -824,6 +842,7 @@ function ElectricityOrderPage() {
                     </label>
                     <textarea
                       id="order-address-fullAddress"
+                      disabled={savingAddress}
                       value={formFullAddress}
                       onChange={(e) => setFormFullAddress(e.target.value)}
                       placeholder={t('settings.addresses.form.fullAddressPlaceholder', locale)}
@@ -844,6 +863,7 @@ function ElectricityOrderPage() {
                     <input
                       type="text"
                       id="order-address-postalCode"
+                      disabled={savingAddress}
                       value={formPostalCode}
                       onChange={(e) => setFormPostalCode(e.target.value)}
                       placeholder={t('settings.addresses.form.postalCodePlaceholder', locale)}
@@ -856,6 +876,7 @@ function ElectricityOrderPage() {
                   <div className="flex justify-end gap-2 pt-2">
                     <Button
                       variant="outline"
+                      disabled={savingAddress}
                       onClick={() => {
                         setShowNewAddressForm(false);
                         setFormProvinceId('');
@@ -929,7 +950,13 @@ function ElectricityOrderPage() {
       <Button
         onClick={handleSubmitOrder}
         disabled={
-          submitting || loadingAddresses || addressError || !selectedProductId || !selectedAddressId
+          submitting ||
+          savingAddress ||
+          showNewAddressForm ||
+          loadingAddresses ||
+          addressError ||
+          !selectedProductId ||
+          !selectedAddressId
         }
         className="w-full gap-2"
         size="lg"

@@ -1,5 +1,110 @@
 import { test, expect, type Page } from '@playwright/test';
 
+for (const locale of ['en', 'fa']) {
+  test(`ordering address save freezes its draft and rejects malformed success (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
+      })
+    );
+    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({
+        json: [{ id: 'province', nameFa: 'استان', nameEn: 'Province' }],
+      })
+    );
+    await page.route('**/api/geography/provinces/province/cities', (route) =>
+      route.fulfill({
+        json: [{ id: 'city', provinceId: 'province', nameFa: 'شهر', nameEn: 'City' }],
+      })
+    );
+    const writes: unknown[] = [];
+    let release!: () => void;
+    const pending = new Promise<void>((done) => {
+      release = done;
+    });
+    await page.route('**/api/profiles/profile-one/addresses', async (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: { addresses: [] } });
+      const input = route.request().postDataJSON();
+      writes.push(input);
+      if (writes.length === 1) {
+        await pending;
+        return route.fulfill({ status: 503, json: {} });
+      }
+      return route.fulfill({
+        status: 201,
+        json: {
+          ...input,
+          id: writes.length === 3 ? '' : 'saved-address',
+          profileId: writes.length === 2 ? 'another-profile' : 'profile-one',
+          mainAddress: true,
+        },
+      });
+    });
+    await page.goto('/electricity/order');
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+        exact: true,
+      })
+      .click();
+    const province = page.locator('#order-address-province');
+    const city = page.locator('#order-address-city');
+    const address = page.locator('#order-address-fullAddress');
+    const postal = page.locator('#order-address-postalCode');
+    const cancel = page.getByRole('button', {
+      name: locale === 'fa' ? 'انصراف' : 'Cancel',
+      exact: true,
+    });
+    const save = page.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره و استفاده' : 'Save & Use',
+      exact: true,
+    });
+    await province.selectOption('province');
+    await city.selectOption('city');
+    await address.fill('Saved delivery address');
+    await postal.fill('1234567890');
+    try {
+      await save.evaluate((button: HTMLButtonElement) => {
+        button.click();
+        button.click();
+      });
+      await expect.poll(() => writes.length).toBe(1);
+      for (const control of [province, city, address, postal, cancel])
+        await expect(control).toBeDisabled();
+    } finally {
+      release();
+    }
+    await expect(save).toBeEnabled();
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await save.click();
+      await expect.poll(() => writes.length).toBe(attempt + 2);
+      await expect(save).toBeEnabled();
+      await expect(address).toHaveValue('Saved delivery address');
+      await expect(page.getByRole('radio', { name: /Saved delivery address/ })).toHaveCount(0);
+      await expect(
+        page.getByText(locale === 'fa' ? 'آدرس با موفقیت اضافه شد' : 'Address added successfully', {
+          exact: true,
+        })
+      ).toHaveCount(0);
+    }
+    await save.click();
+    await expect(page.getByRole('radio', { name: /Saved delivery address/ })).toBeChecked();
+    expect(writes).toEqual(
+      Array(4).fill({
+        provinceId: 'province',
+        cityId: 'city',
+        fullAddress: 'Saved delivery address',
+        postalCode: '1234567890',
+      })
+    );
+    await expect(address).toHaveCount(0);
+  });
+}
+
 async function shell(page: Page, locale = 'en') {
   await page.addInitScript((value) => {
     new MutationObserver(() => {
