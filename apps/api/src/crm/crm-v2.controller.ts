@@ -155,7 +155,11 @@ export class CrmV2Controller {
       `status=${result.profile.status}, sessions=${result.sessions.count}`,
     )
 
-    return result
+    return { ...result, viewerPermissions: {
+      canEdit: hasStaffPermission(req, 'crm:edit'),
+      canVerify: hasStaffPermission(req, 'crm:verify'),
+      canManageUser: hasStaffPermission(req, 'admin:users:edit'),
+    } }
   }
 
   /**
@@ -244,7 +248,11 @@ export class CrmV2Controller {
       )
     }
 
-    return result
+    return { ...result, viewerPermissions: {
+      canEdit: hasStaffPermission(req, 'crm:edit'),
+      canVerify: hasStaffPermission(req, 'crm:verify'),
+      canManageUser: hasStaffPermission(req, 'admin:users:edit'),
+    } }
   }
 
   /**

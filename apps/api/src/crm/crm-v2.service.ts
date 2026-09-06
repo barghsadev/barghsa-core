@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { Injectable, Logger } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
@@ -89,6 +90,7 @@ export interface CrmProfileSession {
   deviceInfo: Record<string, unknown> | null
   expiresAt: string
   isRevoked: boolean
+  isActive: boolean
 }
 
 /**
@@ -234,7 +236,8 @@ export class CrmV2Service {
       `SELECT session_id, created_at AT TIME ZONE 'UTC' AS created_at,
               updated_at AT TIME ZONE 'UTC' AS updated_at,
               device_info, expires_at AT TIME ZONE 'UTC' AS expires_at,
-              revoked_at IS NOT NULL AS is_revoked
+              revoked_at IS NOT NULL AS is_revoked,
+              (revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()) AS is_active
        FROM sessions
        WHERE user_id = $1
        ORDER BY updated_at DESC
@@ -244,17 +247,19 @@ export class CrmV2Service {
 
     const sessionsList: CrmProfileSession[] = sessionResult.rows.map(
       (row: Record<string, unknown>) => ({
-        sessionId: row.session_id as string,
+        // Never expose the bearer cookie used to authenticate this session.
+        sessionId: `session-ref:${createHash('sha256').update(String(row.session_id)).digest('hex')}`,
         createdAt: (row.created_at as string) ?? '',
         lastActive: (row.updated_at as string) ?? '',
         deviceInfo: (row.device_info as Record<string, unknown>) ?? null,
         expiresAt: (row.expires_at as string) ?? '',
         isRevoked: (row.is_revoked as boolean) ?? false,
+        isActive: row.is_active === true,
       }),
     )
 
     const sessionCountResult = await pool.query(
-      `SELECT COUNT(*)::int AS cnt FROM sessions WHERE user_id = $1 AND revoked_at IS NULL`,
+      `SELECT COUNT(*)::int AS cnt FROM sessions WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()`,
       [userRow.user_id],
     )
 

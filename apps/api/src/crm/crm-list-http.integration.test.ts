@@ -56,3 +56,27 @@ it('keeps the complete profile summary when a type or name matches only one prof
   const staff=await list({staffOnly:'true',search:'crm-page-'})
   expect((await staff.json() as CrmUsersResponse).users).toEqual([])
 })
+it('profile detail reports the current viewer capabilities',async()=>{
+  const id=(await http.pool.query("SELECT id FROM profiles WHERE user_id='crm-page-0' LIMIT 1")).rows[0].id
+  const response=await fetch(`${http.base}/api/crm/profiles/${id}`,{headers:{Cookie:cookie}})
+  expect(response.status).toBe(200)
+  expect(await response.json()).toMatchObject({viewerPermissions:{canEdit:true,canVerify:true,canManageUser:true},user:{isAdmin:false}})
+})
+it('never exposes usable customer session cookies and excludes expired sessions from the count',async()=>{
+  const profileId=(await http.pool.query("SELECT id FROM profiles WHERE user_id='crm-page-0' LIMIT 1")).rows[0].id
+  const active=randomUUID(),expired=randomUUID()
+  for(const [id,expiry] of [[active,'1 day'],[expired,'-1 day']]) await http.pool.query(`INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+    VALUES ($1,'crm-page-0',$2,$3,NOW()+$4::interval,NOW()+INTERVAL '30 minutes')`,[id,randomUUID(),randomUUID(),expiry])
+  const response=await fetch(`${http.base}/api/crm/profiles/${profileId}`,{headers:{Cookie:cookie}})
+  expect(response.status).toBe(200)
+  const body=await response.text()
+  expect(body).not.toContain(active)
+  expect(body).not.toContain(expired)
+  const data=JSON.parse(body)
+  expect(data.sessions.count).toBe(1)
+  for(const session of data.sessions.entries) {
+    expect(session.sessionId).toMatch(/^session-ref:[a-f0-9]{64}$/)
+    const impersonation=await fetch(`${http.base}/api/profiles`,{headers:{Cookie:`barghsa_session=${session.sessionId}`}})
+    expect(impersonation.status).toBe(401)
+  }
+})

@@ -840,7 +840,10 @@ export const fa: I18nDictionary = {
   'crm.profile.label.admin': 'مدیر',
   'crm.profile.label.yes': 'بله',
   'crm.profile.label.no': 'خیر',
-  'crm.profile.label.sessionId': 'شناسه نشست',
+  'crm.profile.label.sessionId': 'مرجع نشست',
+  'crm.profile.session.revoked': 'لغو شده',
+  'crm.profile.session.active': 'فعال',
+  'crm.profile.session.expired': 'منقضی شده',
   'crm.profile.label.created': 'ایجاد شده',
   'crm.profile.label.lastActive': 'آخرین فعالیت',
   'crm.profile.label.expires': 'انقضا',
@@ -2127,6 +2130,10 @@ export const en: I18nDictionary = {
 
     // ── CRM Profile Detail (T-05.02.01) ────────────────────────────
     'crm.profile.title': 'Profile Detail',
+    'crm.profile.label.sessionId': 'Session reference',
+    'crm.profile.session.revoked': 'Revoked',
+    'crm.profile.session.active': 'Active',
+    'crm.profile.session.expired': 'Expired',
     'crm.profile.backToUsers': '← Back to Users',
     'crm.profile.tab.overview': 'Overview',
     'crm.profile.tab.details': 'Profile Details',

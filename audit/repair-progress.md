@@ -412,3 +412,11 @@ Review/validation: 23 API checks, three Chromium scenarios and all 11 workspace 
 The shared date picker now uses Jalali calendar arithmetic as well as localized labels, so its month grid, year boundaries and selected dates agree. Added an accessible trigger name/ID, RTL direction and single-selection dismissal. CRM date filters now use that picker in Persian and Gregorian mode in English, while sending Gregorian date bounds to the API.
 
 Review/validation: all five CRM Chromium scenarios pass, including Farvardin 1, 1405 → 2026-03-21, leap-day Esfand 30, 1403 → 2025-03-20, inclusive end-of-day queries and keyboard Escape/focus return. UI/web typechecks and production web build pass. Broader F20 localization/accessibility and date-range consumer checks remain open.
+
+### F15.3 CRM viewer permissions and session secrecy
+
+CRM detail/edit responses expose the current viewer's edit/verification/user-management capabilities. The page gates controls on those capabilities instead of the customer's isAdmin flag, resets component state between profiles, cancels obsolete reads and uses the selected locale for dates/type labels. Back links return to the working CRM list.
+
+Review found live bearer session IDs in the detail DTO. Replaced them with SHA-256 display references; live/expired status and counts now respect expiry and idle deadlines. No existing sessions were changed.
+
+Review/validation: 29 service/production-HTTP checks, two browser permission scenarios and all 11 workspace typechecks pass. HTTP checks prove raw customer session IDs are absent and every returned reference fails authentication. Step-up and the remaining profile action UI still require completion.

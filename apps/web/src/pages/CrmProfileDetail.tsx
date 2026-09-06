@@ -43,6 +43,7 @@ interface SessionEntry {
   deviceInfo: Record<string, unknown> | null
   expiresAt: string
   isRevoked: boolean
+  isActive?: boolean
 }
 
 interface SessionsInfo {
@@ -74,6 +75,7 @@ interface SiblingProfile {
 }
 
 interface ProfileDetail {
+  viewerPermissions?: { canEdit: boolean; canVerify: boolean; canManageUser: boolean }
   profile: Profile
   user: UserInfo
   legalInfo: LegalInfo | null
@@ -104,13 +106,13 @@ function getStatusBadgeClass(status: string): string {
   }
 }
 
-function getProfileTypeLabel(type: string): string {
-  return type === 'LEGAL' ? 'حقوقی' : 'حقیقی'
+function getProfileTypeLabel(type: string, locale: Locale): string {
+  return t(`crm.list.${type}`, locale)
 }
 
-function formatDate(iso: string | null): string {
+function formatDate(iso: string | null, locale: Locale): string {
   if (!iso) return '—'
-  return new Date(iso).toLocaleDateString('fa-IR', {
+  return new Date(iso).toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-GB', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -135,6 +137,11 @@ const TAB_DEFS: TabDef[] = [
 ]
 
 export default function CrmProfileDetail() {
+  const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' })
+  return <CrmProfileDetailContent key={profileId} />
+}
+
+function CrmProfileDetailContent() {
   const locale: Locale = useLocale()
   const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' })
   const [data, setData] = useState<ProfileDetail | null>(null)
@@ -156,9 +163,11 @@ export default function CrmProfileDetail() {
   const [actionSuccess, setActionSuccess] = useState<string | null>(null)
 
   useEffect(() => {
+    const abort = new AbortController()
+    setData(null)
     setLoading(true)
     setError(null)
-    fetch(`/api/crm/profiles/${profileId}`)
+    fetch(`/api/crm/profiles/${profileId}`, { signal: abort.signal, credentials: 'include' })
       .then((res) => {
         if (!res.ok) {
           if (res.status === 404) throw new Error(t('crm.profile.error.notFound', locale))
@@ -168,14 +177,17 @@ export default function CrmProfileDetail() {
         return res.json()
       })
       .then((json: ProfileDetail) => {
+        if (abort.signal.aborted) return
         setData(json)
         setLoading(false)
       })
       .catch((err: Error) => {
+        if (abort.signal.aborted) return
         setError(err.message)
         setLoading(false)
       })
-  }, [profileId])
+    return () => abort.abort()
+  }, [profileId, locale])
 
   /** Enter edit mode, pre-filling form fields from current data */
   function handleStartEdit() {
@@ -306,7 +318,7 @@ export default function CrmProfileDetail() {
           <h2 className="text-xl font-semibold text-red-700 mb-2">{t('crm.profile.error.title', locale)}</h2>
           <p className="text-gray-600">{error}</p>
           <Link
-            to="/admin/users"
+            to="/admin/crm/"
             className="text-blue-600 hover:underline mt-4 inline-block"
           >
             {t('crm.profile.backToUsers', locale)}
@@ -327,7 +339,7 @@ export default function CrmProfileDetail() {
       {/* Breadcrumb / Header */}
       <div className="mb-6">
         <Link
-          to="/admin/users"
+          to="/admin/crm/"
           className="text-blue-600 hover:underline text-sm"
         >
           {t('crm.profile.backToUsers', locale)}
@@ -338,18 +350,18 @@ export default function CrmProfileDetail() {
             {profile.status}
           </span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">
-            {getProfileTypeLabel(profile.profileType)}
+            {getProfileTypeLabel(profile.profileType, locale)}
           </span>
           <span className="ml-auto flex gap-2">
             {!isEditing ? (
               <>
-                <button
+                {data.viewerPermissions?.canEdit && <button
                   onClick={handleStartEdit}
                   className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                 >
                   {t('crm.profile.edit', locale)}
-                </button>
-                {user.isAdmin && (
+                </button>}
+                {data.viewerPermissions?.canManageUser && (
                   <>
                     <button
                       onClick={() => setShowForcePwChange(true)}
@@ -447,10 +459,10 @@ export default function CrmProfileDetail() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             <SummaryCard title={t('crm.profile.summary.verification', locale)} value={profile.status === 'VERIFIED' ? t('crm.profile.verified', locale) : profile.status} icon="✓" colorClass={profile.status === 'VERIFIED' ? 'text-green-600' : 'text-yellow-600'} />
             <SummaryCard title={t('crm.profile.summary.activeSessions', locale)} value={String(sessions.count)} icon="⚡" colorClass="text-blue-600" />
-            <SummaryCard title={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin) : '—'} icon="🔑" colorClass="text-gray-600" />
+            <SummaryCard title={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'} icon="🔑" colorClass="text-gray-600" />
             <SummaryCard title={t('crm.profile.summary.addresses', locale)} value={String(addresses.length)} icon="📍" colorClass="text-purple-600" />
             <SummaryCard title={t('crm.profile.summary.otherProfiles', locale)} value={String(siblingProfiles.length)} icon="👤" colorClass="text-teal-600" />
-            <SummaryCard title={t('crm.profile.summary.lastActivity', locale)} value={sessions.lastActive ? formatDate(sessions.lastActive) : '—'} icon="⏱" colorClass="text-gray-600" />
+            <SummaryCard title={t('crm.profile.summary.lastActivity', locale)} value={sessions.lastActive ? formatDate(sessions.lastActive, locale) : '—'} icon="⏱" colorClass="text-gray-600" />
           </div>
         </div>
       )}
@@ -483,13 +495,13 @@ export default function CrmProfileDetail() {
               </>
             )}
             <DetailRow label={t('crm.profile.label.admin', locale)} value={user.isAdmin ? t('crm.profile.label.yes', locale) : t('crm.profile.label.no', locale)} />
-            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(user.createdAt)} />
-            <DetailRow label={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin) : '—'} />
+            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(user.createdAt, locale)} />
+            <DetailRow label={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'} />
           </Section>
 
           <Section title={t('crm.profile.section.profile', locale)}>
             <DetailRow label="Profile ID" value={profile.id} />
-            <DetailRow label="Type" value={getProfileTypeLabel(profile.profileType)} />
+            <DetailRow label="Type" value={getProfileTypeLabel(profile.profileType, locale)} />
             <DetailRow label={t('crm.profile.label.status', locale)} value={profile.status} />
             {isEditing ? (
               <EditRow
@@ -524,8 +536,8 @@ export default function CrmProfileDetail() {
             {isEditing && (
               <p className="text-xs text-gray-400 mt-1">{t('crm.profile.edit.identityLocked', locale)}</p>
             )}
-            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(profile.createdAt)} />
-            <DetailRow label="Updated" value={formatDate(profile.updatedAt)} />
+            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(profile.createdAt, locale)} />
+            <DetailRow label="Updated" value={formatDate(profile.updatedAt, locale)} />
           </Section>
 
           {legalInfo && (
@@ -570,7 +582,7 @@ export default function CrmProfileDetail() {
                     Postal code: {addr.postalCode} | Province/City: {addr.provinceId}/{addr.cityId}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
-                    {t('crm.profile.label.created', locale)}: {formatDate(addr.createdAt)}
+                    {t('crm.profile.label.created', locale)}: {formatDate(addr.createdAt, locale)}
                   </p>
                 </div>
               ))}
@@ -583,7 +595,7 @@ export default function CrmProfileDetail() {
       {activeTab === 'sessions' && (
         <div id="panel-sessions" role="tabpanel" aria-labelledby="tab-sessions">
           <div className="mb-4 text-sm text-gray-500">
-            {sessions.count} {t('crm.profile.tab.sessions', locale)} | {t('crm.profile.summary.lastActivity', locale)}: {sessions.lastActive ? formatDate(sessions.lastActive) : '—'}
+            {sessions.count} {t('crm.profile.tab.sessions', locale)} | {t('crm.profile.summary.lastActivity', locale)}: {sessions.lastActive ? formatDate(sessions.lastActive, locale) : '—'}
           </div>
           {sessions.entries.length === 0 ? (
             <p className="text-gray-500 text-center py-8">{t('crm.profile.noSessions', locale)}</p>
@@ -604,16 +616,16 @@ export default function CrmProfileDetail() {
                   {sessions.entries.map((s) => (
                     <tr key={s.sessionId} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-2 font-mono text-xs">
-                        {s.sessionId.substring(0, 8)}...
+                        {s.sessionId.replace(/^session-ref:/, '').substring(0, 12)}...
                       </td>
-                      <td className="py-2">{formatDate(s.createdAt)}</td>
-                      <td className="py-2">{formatDate(s.lastActive)}</td>
-                      <td className="py-2">{formatDate(s.expiresAt)}</td>
+                      <td className="py-2">{formatDate(s.createdAt, locale)}</td>
+                      <td className="py-2">{formatDate(s.lastActive, locale)}</td>
+                      <td className="py-2">{formatDate(s.expiresAt, locale)}</td>
                       <td className="py-2">
                         <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                          s.isRevoked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                          !s.isActive ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
                         }`}>
-                          {s.isRevoked ? 'Revoked' : 'Active'}
+                          {t(s.isRevoked ? 'crm.profile.session.revoked' : s.isActive ? 'crm.profile.session.active' : 'crm.profile.session.expired', locale)}
                         </span>
                       </td>
                       <td className="py-2 text-xs text-gray-500 max-w-[150px] truncate">
@@ -674,7 +686,7 @@ export default function CrmProfileDetail() {
                         {sp.status}
                       </span>
                       <span className="text-xs px-1.5 py-0.5 rounded-full bg-gray-200 text-gray-700">
-                        {getProfileTypeLabel(sp.profileType)}
+                        {getProfileTypeLabel(sp.profileType, locale)}
                       </span>
                       {sp.isDefault && (
                         <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full">
