@@ -1093,3 +1093,7 @@ Validation: 62 focused unit, migrated service, dual-approval, and real HTTP test
 Wallet receipt confirmation/rejection now use the same transaction-held actor and current-grant checks as invoice receipts. Converted all three rollback tests from nonexistent actors to failures of the actual final audit insert, including invoice allocation plus excess wallet credit. This preserves evidence that later failures undo earlier financial changes.
 
 Review and validation: 50 focused unit, migrated transaction, and real HTTP tests pass. Both wallet decision routes reject permission revocation after the session guard with 403 and preserve Pending state and zero balance. API build, root types, lint, and whitespace checks pass. The full database suite also passed 564 tests across 76 files with migration 0112. No deployment or external financial action occurred.
+
+### VAT and invoice due-period calculations on production migrations (F02/F14)
+
+Replaced hand-created VAT/product and due-period tables with the production migration fixture. Product fixtures now include required titles/prices and configuration authors are real users. Review retained override precedence, effective-window boundaries, zero-rate/default-day fallbacks, and caller-owned transaction checks. All 12 cases pass; root types and lint pass. This covers calculation reads, not the separate staff configuration editors.

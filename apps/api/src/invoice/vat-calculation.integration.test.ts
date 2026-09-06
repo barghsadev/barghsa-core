@@ -10,16 +10,12 @@
  *   - works on the shared pool AND a caller-owned transaction client
  *     (the invoice-generation snapshot seam).
  *
- * Tables needed: products (for type derivation), vat_configurations,
- * product_vat_overrides, users (FK). Only the uuid_v7 migration is
- * required — the vat tables are hand-written to mirror the real schema.
+ * Runs against the full production migration chain, including foreign keys
+ * and effective-window constraints.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { VatCalculationRepository } from './vat-calculation.repository.js';
 import { VatCalculationService } from './vat-calculation.service.js';
 
@@ -35,11 +31,6 @@ vi.mock('@barghsa/db', () => ({
   },
 }));
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-
 const USER_ID = 'vat-config-admin';
 const CATEGORY_A = 'electricity';
 const CATEGORY_ENDED_ONLY = 'consultation';
@@ -51,58 +42,28 @@ const RATE_OVERRIDE = '55555555-5555-7555-8555-555555555555';
 const RATE_ENDED_ONLY = '77777777-7777-7777-8777-777777777777';
 
 describe('VatCalculationRepository — real PostgreSQL integration (T-04.1.02.04)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let repo: VatCalculationRepository;
   let service: VatCalculationService;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 2);
+    ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     repo = new VatCalculationRepository();
     service = new VatCalculationService(repo);
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS products (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-      type TEXT NOT NULL,
-      system_key TEXT,
-      title JSONB,
-      price BIGINT
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS vat_configurations (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-      category TEXT NOT NULL,
-      rate INTEGER NOT NULL,
-      effective_from TIMESTAMPTZ NOT NULL,
-      effective_until TIMESTAMPTZ,
-      created_by TEXT NOT NULL,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS product_vat_overrides (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-      product_id UUID NOT NULL,
-      vat_config_id UUID NOT NULL REFERENCES vat_configurations(id) ON DELETE RESTRICT,
-      effective_from TIMESTAMPTZ NOT NULL,
-      effective_until TIMESTAMPTZ,
-      created_by TEXT NOT NULL,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )`);
-
     // Seed: two products, a 9% open category rate, a 5% scheduled category
     // rate, and a 5% override on PRODUCT_ID.
-    await ctx.db.execute(
-      `INSERT INTO users (user_id) VALUES ('${USER_ID}') ON CONFLICT (user_id) DO NOTHING`
+    await ctx.pool.query(
+      `INSERT INTO users (user_id, username, password_hash) VALUES ('${USER_ID}', 'vat@example.test', 'test-only') ON CONFLICT (user_id) DO NOTHING`
     );
-    await ctx.db.execute(
-      `INSERT INTO products (id, type) VALUES
-         ('${PRODUCT_ID}', '${CATEGORY_A}'),
-         ('${PRODUCT_B}', '${CATEGORY_A}')
+    await ctx.pool.query(
+      `INSERT INTO products (id, type, title, price) VALUES
+         ('${PRODUCT_ID}', '${CATEGORY_A}', '{"en":"Test product"}', 1000),
+         ('${PRODUCT_B}', '${CATEGORY_A}', '{"en":"Test product B"}', 1000)
        ON CONFLICT (id) DO NOTHING`
     );
-    await ctx.db.execute(
+    await ctx.pool.query(
       `INSERT INTO vat_configurations (id, category, rate, effective_from, effective_until, created_by)
        VALUES
          ('${RATE_CAT_9}', '${CATEGORY_A}', 900, '2026-06-01T00:00:00Z', NULL, '${USER_ID}'),
@@ -112,7 +73,7 @@ describe('VatCalculationRepository — real PostgreSQL integration (T-04.1.02.04
           '2026-06-01T00:00:00Z', '${USER_ID}')
        ON CONFLICT (id) DO NOTHING`
     );
-    await ctx.db.execute(
+    await ctx.pool.query(
       `INSERT INTO product_vat_overrides (id, product_id, vat_config_id, effective_from, effective_until, created_by)
        VALUES ('66666666-6666-7666-8666-666666666666', '${PRODUCT_ID}', '${RATE_OVERRIDE}',
                '2026-01-01T00:00:00Z', NULL, '${USER_ID}')
@@ -122,8 +83,7 @@ describe('VatCalculationRepository — real PostgreSQL integration (T-04.1.02.04
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   it('product override wins over the category default (pool executor)', async () => {

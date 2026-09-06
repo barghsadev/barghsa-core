@@ -10,10 +10,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { DueAtCalculationRepository } from './due-at.repository.js';
 import { DueAtCalculationService } from './due-at.service.js';
 
@@ -28,20 +25,11 @@ vi.mock('@barghsa/db', () => ({
   },
 }));
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const DUE_PERIODS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0059_create_service_due_periods.sql'
-);
-
 const ACTOR_USER_ID = 'due-at-config-admin';
 const ISSUED = new Date('2026-08-01T10:00:00.000Z');
 
 describe('DueAtCalculationService — real PostgreSQL (T-04.1.03.02)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let service: DueAtCalculationService;
 
   async function insertPeriod(
@@ -69,26 +57,24 @@ describe('DueAtCalculationService — real PostgreSQL (T-04.1.03.02)', () => {
   }
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 2);
+    ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     service = new DueAtCalculationService(new DueAtCalculationRepository());
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`);
-    await ctx.db.execute(
-      `INSERT INTO users (user_id) VALUES ('${ACTOR_USER_ID}') ON CONFLICT DO NOTHING`
+    await ctx.pool.query(
+      `INSERT INTO users (user_id, username, password_hash)
+      VALUES ($1, 'due-at@example.test', 'test-only')`,
+      [ACTOR_USER_ID]
     );
-    await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim());
   }, 60_000);
 
   beforeEach(async () => {
-    await ctx.db.execute(`TRUNCATE service_due_periods`);
+    await ctx.pool.query(`TRUNCATE service_due_periods`);
   });
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   it('computes dueAt as issuedAt + the active period default_days', async () => {
