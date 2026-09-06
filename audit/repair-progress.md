@@ -1315,3 +1315,9 @@ Review and validation: 17 existing unit/controller checks and six production-mig
 Added /admin/agent-slots in Persian and English for the five predefined chatbot slots. Staff can choose an agent or clear an assignment, see disabled-agent status and cross-slot use, and confirm through the existing password-verification dialog. Identical assignments disable Save; failed reads and lost authority remove stale controls.
 
 Review and validation: four production-browser checks pass. Controlled checks verify failed loads, wrong/correct password retries, identical captured assignments, disabled/shared-agent notices and permission loss. Migrated-API checks assign/reload, reuse one agent across two slots and clear an assignment in both languages. Reviewed the Persian mobile screenshot and verified no horizontal page overflow. Root build, types, lint, contract and bundle checks pass. This manages configuration; actual chatbot consumers and the AI agent editor remain separate review items.
+
+### Recheck agent mutation authority and lock current state (F04/F17)
+
+Agent create/update/delete now recheck and hold current admin:ai:agents authority inside their existing transaction. Updates and deletion lock the selected agent row before reading the state used for validation and audit.
+
+Review and validation: 38 existing service/controller checks and eight production-migrated HTTP checks pass. HTTP covers all three mutation audit rollbacks and authority-revocation races, successful CRUD, and an overlapping enabled-state edit whose audit records the actual before/after state. Review corrected the test's audit metadata read to parse the existing text column. Final root types, lint and whitespace checks pass. Individual agent KB/policy link operations remain the next atomicity repair.

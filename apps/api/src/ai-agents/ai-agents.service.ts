@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -236,7 +237,7 @@ export class AiAgentsService {
 
   /** Create an agent, optionally linking KBs and policies in the same call. */
   create(input: CreateAgentInput): Promise<AgentDto> {
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const id = uuidv7();
       const now = new Date();
       const enabled = input.enabled ?? true;
@@ -310,8 +311,8 @@ export class AiAgentsService {
    * half-updated. A links-only change bumps `updated_at`.
    */
   update(id: string, input: UpdateAgentInput): Promise<AgentDto> {
-    return this.withTransaction(async (q) => {
-      const existing = await this.findAgent(q, id);
+    return this.withTransaction(input.actorUserId, async (q) => {
+      const existing = await this.findAgent(q, id, true);
       if (!existing) throw this.agentNotFound(id);
 
       const effectiveModelId = input.modelId ?? existing.model_id;
@@ -438,8 +439,8 @@ export class AiAgentsService {
 
   /** Delete an agent (its KB/policy links cascade). */
   remove(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(async (q) => {
-      const existing = await this.findAgent(q, id);
+    return this.withTransaction(actorUserId, async (q) => {
+      const existing = await this.findAgent(q, id, true);
       if (!existing) throw this.agentNotFound(id);
 
       await q.query('DELETE FROM ai_agents WHERE id = $1', [id]);
@@ -605,11 +606,15 @@ export class AiAgentsService {
    * link/audit rows are atomic, so a failed link insert removes the agent row
    * instead of leaving a half-configured agent.
    */
-  private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
+  private async withTransaction<T>(
+    actorUserId: string,
+    fn: (q: DbExecutor) => Promise<T>
+  ): Promise<T> {
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:ai:agents');
       const result = await fn(client);
       await client.query('COMMIT');
       committed = true;
@@ -798,11 +803,11 @@ export class AiAgentsService {
     return true;
   }
 
-  private async findAgent(q: DbExecutor, id: string): Promise<AgentBaseRow | null> {
+  private async findAgent(q: DbExecutor, id: string, lock = false): Promise<AgentBaseRow | null> {
     const result = await q.query<AgentBaseRow>(
       `SELECT id, title, description, model_id, created_by, enabled, created_at, updated_at
          FROM ai_agents
-        WHERE id = $1`,
+        WHERE id = $1${lock ? ' FOR UPDATE' : ''}`,
       [id]
     );
     return result.rows[0] ?? null;
