@@ -1,6 +1,10 @@
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import {
+  DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+} from '@barghsa/shared/finance';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
@@ -20,6 +24,22 @@ const cases = [
     stored: { timezone: 'UTC', start_hour: 8, end_hour: 20 },
     response: { timezone: 'UTC', startHour: 8, endHour: 20 },
     grant: 'admin:notification-providers:edit',
+  },
+  {
+    path: 'dual-approval-threshold',
+    key: DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+    body: { threshold_irr: 500_000_000 },
+    stored: { threshold_irr: 500_000_000 },
+    response: { thresholdIrR: 500_000_000 },
+    grant: 'admin:financial:edit',
+  },
+  {
+    path: 'wallet-top-up-limit',
+    key: WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+    body: { limit_irr: 1_000_000_000 },
+    stored: { limit_irr: 1_000_000_000 },
+    response: { limitIrR: 1_000_000_000, version: 1 },
+    grant: 'admin:financial:edit',
   },
 ] as const;
 

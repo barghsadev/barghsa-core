@@ -1301,6 +1301,7 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:financial:edit');
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value that is being replaced — read it before
@@ -1363,6 +1364,7 @@ export class AdminService {
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to set dual-approval threshold config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
@@ -1474,6 +1476,7 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:financial:edit');
 
       // SELECT ... FOR UPDATE locks nothing when the config row does not
       // yet exist. Take the same transaction-scoped advisory lock the

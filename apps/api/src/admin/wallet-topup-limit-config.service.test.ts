@@ -7,6 +7,11 @@ import {
   WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
 } from '@barghsa/shared/finance';
 
+// Transaction authority is exercised through the migrated HTTP fixture.
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {

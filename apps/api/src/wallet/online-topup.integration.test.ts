@@ -81,8 +81,16 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
     service = new OnlineTopUpService(walletService, gateway);
 
     await ctx.pool.query(
-      `INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'test-only')`,
+      `INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'test-only',true)`,
       [ADMIN_ACTOR, `${ADMIN_ACTOR}@example.test`]
+    );
+    await ctx.pool.query(
+      `INSERT INTO staff_roles(role_id,name,description,permissions)
+       VALUES ('topup-limit-config-editor','Top-up limit editor','Test role','["admin:financial:edit"]')`
+    );
+    await ctx.pool.query(
+      `INSERT INTO user_roles(user_id,role_id) VALUES ($1,'topup-limit-config-editor')`,
+      [ADMIN_ACTOR]
     );
     await ctx.pool.query(
       `INSERT INTO profiles(id,user_id,status) VALUES ($1,$3,'ACTIVE'),($2,$3,'ACTIVE')`,

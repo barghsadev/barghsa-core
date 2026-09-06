@@ -4,6 +4,11 @@ import type { AdminService as AdminServiceType } from './admin.service.js';
 import { DEFAULT_DUAL_APPROVAL_CONFIG } from '@barghsa/shared/finance';
 import { DUAL_APPROVAL_THRESHOLD_CONFIG_KEY } from '@barghsa/shared/finance';
 
+// Transaction authority is exercised through the migrated HTTP fixture.
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
