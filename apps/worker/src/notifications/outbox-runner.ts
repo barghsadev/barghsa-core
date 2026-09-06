@@ -1,14 +1,13 @@
 import { getDbPool } from '@barghsa/db'
 import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications'
 import { leaseOutbox, dispatchOutbox, type OutboxRow, type OutboxReaderOptions } from './outbox-reader.js'
+import { refreshOutboxState, reconcileChannelWindows, terminalJob, type ChannelJob } from './channel-scheduling.js'
 import { nextRetryDelayMs } from './retry-schedule.js'
 import { writeDeliveryLog, classifyDeliveryError } from './delivery-log.js'
 import { writeDeadLetter } from './dead-letter.js'
 import { sanitizeError } from './error-redact.js'
 import { recordDeliveryAttempt } from './worker-metrics.js'
 import {
-  decideDeliverySchedule,
-  loadDeliveryWindowConfig,
   type DeliveryWindowConfig,
 } from './delivery-window.js'
 import {
@@ -79,10 +78,8 @@ export async function runOutboxPoll(
   },
 ): Promise<OutboxRunResult> {
   const pool = options?.pool ?? getDbPool()
-  // T-05.03.02: re-check queued rows against the delivery window on every
-  // wake-up and park daytime rows that are currently outside the quiet window
-  // (status→scheduled, scheduled_for→next open) so they are not leased until
-  // the window opens.
+  // Schedule due external jobs independently from in-app and derive the
+  // aggregate outbox wake-up from the earliest pending channel.
   await reconcileDeliveryWindows(pool, options?.deliveryWindow)
   const rows = await leaseOutbox(options)
 
@@ -101,12 +98,11 @@ export async function runOutboxPoll(
     try {
       // Reuse committed channel outcomes. A later failure must not resend a
       // delivered leg or reconsider a previously recorded consent skip.
-      const completed = await pool.query(
-        `SELECT channel FROM notification_job WHERE outbox_id=$1
-          AND (status='done' OR (status='failed' AND last_error LIKE 'skipped:%'))`, [row.id],
-      )
-      const completedChannels = new Set(completed.rows.map((job: { channel: string }) => job.channel))
-      const pendingChannels = row.channels.filter(channel => !completedChannels.has(channel))
+      const channelJobs: ChannelJob[] = (await pool.query(
+        'SELECT channel,status,attempts,max_attempts,run_after,last_error FROM notification_job WHERE outbox_id=$1', [row.id],
+      )).rows
+      const pendingChannels = channelJobs.filter(job => !terminalJob(job) && (!job.run_after || new Date(job.run_after) <= new Date()))
+        .map(job => job.channel)
 
       // T-05.05.02 — resolve which requested channels are actually available
       // (verified destinations + marketing consent) before dispatching, so we
@@ -118,12 +114,12 @@ export async function runOutboxPoll(
       await markSkippedJobs(pool, row, decision.skipped)
 
       const outcomes = await dispatchOutbox({ ...row, channels: decision.allowed }, options?.transports ?? {})
-      await persistOutcomes(pool, row, outcomes)
+      const aggregate = await persistOutcomes(pool, row, outcomes, channelJobs)
       // A row is "delivered" only when every requested channel delivered.
       const anyFailed = outcomes.some((o) => o.result.status === 'failed')
-      if (anyFailed) {
+      if (anyFailed || aggregate === 'failed') {
         result.failed += 1
-      } else {
+      } else if (aggregate === 'delivered') {
         result.delivered += 1
       }
     } catch (err) {
@@ -230,7 +226,8 @@ async function persistOutcomes(
   pool: any,
   row: OutboxRow,
   outcomes: DispatchOutcome[],
-): Promise<void> {
+  jobs: ChannelJob[],
+): Promise<'delivered' | 'failed' | 'pending'> {
   // All per-row persistence (job status, dead-letter, delivery log, outbox
   // state) is committed atomically on a pinned client in production.
   const tx = await withWorkerTx(pool)
@@ -239,15 +236,15 @@ async function persistOutcomes(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const qpool = { query: q } as any
   try {
-    let anyFailed = false
-    const attempts = row.attempts + 1
     for (const outcome of outcomes) {
+      const job = jobs.find(item => item.channel === outcome.channel)
+      const attempts = (job?.attempts ?? row.attempts) + 1
+      const maxAttempts = job?.max_attempts ?? row.maxAttempts
       const ok = outcome.result.status === 'delivered'
       recordDeliveryAttempt(outcome.channel, ok ? 'delivered' : 'failed')
-      if (!ok) anyFailed = true
-      const exhausted = attempts >= row.maxAttempts
+      const exhausted = attempts >= maxAttempts
       // Jittered backoff before the next attempt (null when the budget is spent).
-      const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
+      const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, maxAttempts)
       const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
       const jobUpdate = await q(
         `UPDATE notification_job
@@ -284,7 +281,7 @@ async function persistOutcomes(
             profileId: row.profileId,
             userId: row.userId,
             attempts,
-            maxAttempts: row.maxAttempts,
+            maxAttempts,
             idempotencyKey: row.idempotencyKey,
             cause,
             errorCategory: classifyDeliveryError(cause),
@@ -304,19 +301,11 @@ async function persistOutcomes(
       })
     }
 
-    if (!anyFailed) {
-      await q(
-        `UPDATE notification_outbox
-            SET status = 'delivered', locked_until = NULL, updated_at = NOW()
-          WHERE id = $1`,
-        [row.id],
-      )
-    } else {
-      await failRow(qpool, row, 'delivery failed on one or more channels')
-    }
+    const aggregate = await refreshOutboxState(qpool, row.id)
 
     await tx.commit()
     tx.release()
+    return aggregate
   } catch (err) {
     await tx.rollback()
     tx.release()
@@ -431,49 +420,12 @@ async function failRow(
 }
 
 /**
- * T-05.03.02 — apply the delivery window to queued rows on each worker wake-up.
- *
- * Resolves the admin-configurable window (default 09:00–21:00) and re-checks
- * every `queued` outbox row. A `daytime` row that targets an external channel
- * (email/sms) and is currently outside the window is parked as `scheduled`
- * with `scheduled_for` set to the next window open; `immediate` and in-app-only
- * rows stay `queued` and are leased normally. Rows already `scheduled` for a
- * future boundary are intentionally left untouched — `leaseOutbox` skips them
- * until `scheduled_for` passes, which is the "re-check on wakeup" delivery
- * mechanism. Returns the number of rows re-scheduled this pass.
+ * Apply quiet hours per recipient and channel. Future dates and their captured
+ * windows stay intact; in-app jobs remain immediately runnable. Reconciliation
+ * locks each outbox row briefly so it cannot alter a live worker claim.
  */
-export async function reconcileDeliveryWindows(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
-  config?: DeliveryWindowConfig,
-): Promise<number> {
-  const cfg = config ?? (await loadDeliveryWindowConfig(pool))
-  const now = new Date()
-
-  const pending = await pool.query(
-    'SELECT id, event_key, channels FROM notification_outbox WHERE status = $1',
-    ['queued'],
-  )
-  if (pending.rows.length === 0) return 0
-
-  const toSchedule: Array<{ id: string; scheduledFor: Date }> = []
-  for (const row of pending.rows) {
-    const decision = decideDeliverySchedule(row.event_key, row.channels ?? [], now, cfg)
-    if (decision.kind === 'schedule') {
-      toSchedule.push({ id: row.id, scheduledFor: decision.scheduledFor })
-    }
-  }
-  if (toSchedule.length === 0) return 0
-
-  for (const item of toSchedule) {
-    await pool.query(
-      `UPDATE notification_outbox
-          SET status = 'scheduled', scheduled_for = $2, updated_at = NOW()
-        WHERE id = $1 AND status = 'queued'`,
-      [item.id, item.scheduledFor],
-    )
-  }
-  return toSchedule.length
+export async function reconcileDeliveryWindows(pool: any, config?: DeliveryWindowConfig): Promise<number> {
+  return reconcileChannelWindows(pool, config)
 }
 
 export type { OutboxReaderOptions, NotificationChannel, INotificationTransport }

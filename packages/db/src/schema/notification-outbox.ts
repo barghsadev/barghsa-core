@@ -133,6 +133,9 @@ export const notificationJob = pgTable(
     /** Earliest time this job may run (backoff / delivery window). */
     runAfter: timestamptz('run_after'),
 
+    /** Window captured when this channel was first deferred. */
+    deliveryWindow: jsonb('delivery_window'),
+
     /** Durable provider acknowledgement for this channel. */
     providerRef: text('provider_ref'),
 

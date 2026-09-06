@@ -186,12 +186,15 @@ describe('reconcileDeliveryWindows', () => {
 
   function queuePool(rows: Array<{ id: string; event_key: string; channels: string[] }>) {
     const updates: Array<{ sql: string; params: unknown[] }> = []
+    const scheduled = new Map<string, unknown>()
     const pool = {
       async query(sql: string, params: unknown[] = []) {
         if (sql.trim().startsWith('SELECT')) {
           if (sql.includes('app_config')) return { rows: [] } // default window
-          return { rows }
+          if (sql.startsWith('SELECT channel,status')) return { rows: rows.flatMap(row => row.channels.map(channel => ({ channel, status: 'queued', run_after: scheduled.get(`${row.id}:${channel}`) ?? null }))) }
+          return { rows: rows.map(row => ({ ...row, jobs: row.channels.map(channel => ({ channel, status: 'queued', run_after: null })) })) }
         }
+        if (sql.includes('UPDATE notification_job')) scheduled.set(`${params[0]}:${params[1]}`, params[2])
         updates.push({ sql, params })
         return { rows: [], rowCount: 1 }
       },
@@ -205,9 +208,10 @@ describe('reconcileDeliveryWindows', () => {
     ])
     const changed = await reconcileDeliveryWindows(pool)
     expect(changed).toBe(1)
-    expect(updates).toHaveLength(1)
-    expect(updates[0]!.sql).toContain("SET status = 'scheduled', scheduled_for = $2")
-    expect((updates[0]!.params[1] as Date).toISOString()).toBe('2026-08-28T05:30:00.000Z')
+    const jobUpdate = updates.find(update => update.sql.includes('UPDATE notification_job'))!
+    expect(jobUpdate.params[1]).toBe('email')
+    expect((jobUpdate.params[2] as Date).toISOString()).toBe('2026-08-28T05:30:00.000Z')
+    expect(updates.find(update => update.sql.includes('UPDATE notification_outbox'))?.params[1]).toBe('queued')
   })
 
   it('leaves immediate, in-app-only and in-window rows queued (no mutation)', async () => {
@@ -217,7 +221,7 @@ describe('reconcileDeliveryWindows', () => {
     ])
     const changed = await reconcileDeliveryWindows(pool)
     expect(changed).toBe(0)
-    expect(updates).toHaveLength(0)
+    expect(updates.every(update => !update.sql.includes('UPDATE notification_job'))).toBe(true)
   })
 
   it('returns 0 when there are no queued rows', async () => {
@@ -225,4 +229,20 @@ describe('reconcileDeliveryWindows', () => {
     expect(await reconcileDeliveryWindows(pool)).toBe(0)
     expect(updates).toHaveLength(0)
   })
+})
+
+it('advances one local calendar day across a spring DST change', () => {
+  expect(nextWindowOpen(new Date('2026-03-28T22:30:00Z'), { timezone: 'Europe/Berlin', startHour: 9, endHour: 21 }).toISOString())
+    .toBe('2026-03-29T07:00:00.000Z')
+})
+it('falls back safely for an invalid stored timezone', () => {
+  expect(normalizeWindowConfig({ timezone: 'not/a-zone', start_hour: 9, end_hour: 21 }).timezone).toBe(DEFAULT_DELIVERY_WINDOW.timezone)
+})
+it('uses the first valid local minute for a nonexistent spring boundary', () => {
+  expect(nextWindowOpen(new Date('2026-03-28T22:30:00Z'), { timezone: 'Europe/Berlin', startHour: 2, endHour: 9 }).toISOString())
+    .toBe('2026-03-29T01:00:00.000Z')
+})
+it('uses the first occurrence of a repeated fall boundary', () => {
+  expect(nextWindowOpen(new Date('2026-10-24T21:30:00Z'), { timezone: 'Europe/Berlin', startHour: 2, endHour: 9 }).toISOString())
+    .toBe('2026-10-25T00:00:00.000Z')
 })

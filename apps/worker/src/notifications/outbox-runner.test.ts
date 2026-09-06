@@ -14,10 +14,25 @@ import type { INotificationTransport, NotificationSendPayload, NotificationSendR
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makePool() {
   const updates: Array<{ sql: string; params: unknown[] }> = []
+  const jobs: Array<Record<string, any>> = ['in_app', 'email'].map(channel => ({ channel, status: 'queued', run_after: null }))
   const pool = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async query(sql: string, params?: any[]) {
       updates.push({ sql, params: params ?? [] })
+      const values = params ?? []
+      if (sql.startsWith('SELECT channel,status')) return { rows: jobs.map(job => ({ ...job })), rowCount: jobs.length }
+      if (sql.includes('UPDATE notification_job')) {
+        const skipped = sql.includes("SET status = 'failed'")
+        const channel = skipped ? values[1] : values[5]
+        const affected = jobs.filter(job => !channel || job.channel === channel)
+        for (const job of affected) {
+          job.status = skipped ? 'failed' : values[1]
+          job.last_error = skipped ? values[2] : channel ? values[4] : values[3]
+          job.attempts = skipped ? 0 : channel ? values[3] : values[2]
+          job.run_after = skipped ? null : channel ? values[6] : values[4]
+        }
+        return { rows: affected.map(job => ({ id: `job:${job.channel}`, channel: job.channel })), rowCount: affected.length }
+      }
       return { rows: [], rowCount: 0 }
     },
   }
@@ -75,7 +90,7 @@ describe('runOutboxPoll', () => {
 
     const sql = updates.map((u) => u.sql).join('\n')
     expect(sql).toContain("status = 'sending'")
-    expect(sql).toContain("status = 'delivered'")
+    expect(updates.some(update => update.sql.includes('UPDATE notification_outbox') && update.params[1] === 'delivered')).toBe(true)
     // Job status is a bound param ($2): "done" for a delivered job.
     const done = updates.filter((u) => u.sql.includes('UPDATE notification_job'))
     expect(done).toHaveLength(2)
@@ -119,7 +134,7 @@ describe('runOutboxPoll', () => {
 
     // Outbox row returned to queued with an unconsumed locked_until (backoff).
     const outboxUpdate = updates.find(
-      (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'queued',
+      (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'scheduled',
     )
     expect(outboxUpdate).toBeTruthy()
   })

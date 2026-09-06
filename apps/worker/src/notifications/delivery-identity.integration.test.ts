@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, it } from 'vitest'
+import { afterAll, beforeAll, expect, it, vi } from 'vitest'
 import { Pool } from 'pg'
 import { randomUUID } from 'node:crypto'
 import { readFileSync } from 'node:fs'
@@ -36,6 +36,7 @@ beforeAll(async () => {
   await pool.query(`INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
     VALUES ($1,'in_app','delivered',1,$2)`, [proven, inbox])
   await pool.query(readFileSync(resolve(folder, '0092_notification_delivery_identity.sql'), 'utf8'))
+  for (const entry of journal.entries.filter(entry => entry.tag > '0092_notification_delivery_identity')) await pool.query(readFileSync(resolve(folder, `${entry.tag}.sql`), 'utf8'))
 }, 30000)
 afterAll(async () => {
   await pool?.end()
@@ -131,10 +132,76 @@ it('the real runner reuses delivered channel outcomes after an email failure', a
   const options = { pool, transports, availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }), deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 } }
   expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 })
   expect((await pool.query("SELECT status,provider_ref FROM notification_job WHERE outbox_id=$1 AND channel='in_app'", [id])).rows[0].status).toBe('done')
-  await pool.query('UPDATE notification_outbox SET locked_until=NULL WHERE id=$1', [id])
+  await pool.query("UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1", [id])
+  await pool.query("UPDATE notification_outbox SET locked_until=NULL,scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1", [id])
   expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, delivered: 1 })
   expect(inAppCalls).toBe(1)
   expect(emailCalls).toBe(2)
   expect((await pool.query('SELECT status FROM notification_outbox WHERE id=$1', [id])).rows[0].status).toBe('delivered')
   expect((await pool.query("SELECT count(*)::int AS count FROM notification_delivery_log WHERE notification_id=$1 AND channel='in_app'", [id])).rows[0].count).toBe(1)
+})
+
+it('delivers mixed-channel inboxes immediately in each recipient timezone and preserves scheduled window snapshots', async () => {
+  await pool.query("UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')")
+  await pool.query("INSERT INTO users(user_id,username,password_hash,timezone) VALUES ('ny-owner','ny@example.test','test-only','America/New_York')")
+  const nyProfile = (await pool.query("INSERT INTO profiles(user_id) VALUES ('ny-owner') RETURNING id")).rows[0].id
+  const client = await pool.connect()
+  let tehranId: string | null, nyId: string | null
+  try {
+    await client.query('BEGIN')
+    tehranId = (await enqueueOutbox(client, { profileId, eventKey: 'contract.created', channels: ['in_app', 'email'], idempotencyKey: 'quiet:tehran' })).outboxId
+    nyId = (await enqueueOutbox(client, { profileId: nyProfile, eventKey: 'contract.created', channels: ['in_app', 'email'], idempotencyKey: 'quiet:ny' })).outboxId
+    await client.query('COMMIT')
+  } finally { client.release() }
+  const emailed: string[] = []
+  const options = { pool, transports: {
+    in_app: new InAppNotificationTransport(pool),
+    email: { channel: 'email' as const, async send(payload: { profileId: string | null }) { emailed.push(payload.profileId!); return { status: 'delivered' as const, providerRef: `email:${payload.profileId}` } } },
+  }, availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }),
+    deliveryWindow: { timezone: 'UTC', startHour: 9, endHour: 21 } }
+  vi.useFakeTimers({ toFake: ['Date'] })
+  try {
+    vi.setSystemTime(new Date('2026-09-06T22:00:00Z'))
+    expect(await runOutboxPoll(options)).toMatchObject({ leased: 2, delivered: 1, failed: 0 })
+    expect(emailed).toEqual([nyProfile])
+    expect((await pool.query("SELECT count(*)::int AS count FROM notification_job WHERE outbox_id=ANY($1::uuid[]) AND channel='in_app' AND status='done'", [[tehranId, nyId]])).rows[0].count).toBe(2)
+    const scheduled = (await pool.query("SELECT run_after,delivery_window FROM notification_job WHERE outbox_id=$1 AND channel='email'", [tehranId])).rows[0]
+    expect(scheduled.run_after.toISOString()).toBe('2026-09-07T05:30:00.000Z')
+    expect(scheduled.delivery_window).toEqual({ timezone: 'Asia/Tehran', startHour: 9, endHour: 21 })
+    vi.setSystemTime(new Date('2026-09-07T05:00:00Z'))
+    const newConfig = { ...options, deliveryWindow: { timezone: 'UTC', startHour: 12, endHour: 20 } }
+    expect((await runOutboxPoll(newConfig)).leased).toBe(0)
+    vi.setSystemTime(new Date('2026-09-07T05:30:00Z'))
+    expect(await runOutboxPoll(newConfig)).toMatchObject({ leased: 1, delivered: 1, failed: 0 })
+    expect(emailed).toEqual([nyProfile, profileId])
+    expect((await pool.query('SELECT status FROM notification_outbox WHERE id=$1', [tehranId])).rows[0].status).toBe('delivered')
+  } finally { vi.useRealTimers() }
+})
+
+it('exhausts one channel without exhausting a different channel or repeating the terminal job', async () => {
+  await pool.query("UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')")
+  const client = await pool.connect()
+  let id: string | null
+  try {
+    await client.query('BEGIN')
+    id = (await enqueueOutbox(client, { profileId, eventKey: 'wallet.topup_completed', channels: ['in_app', 'email'], idempotencyKey: 'runner:independent-budget' })).outboxId
+    await client.query("UPDATE notification_job SET attempts=4 WHERE outbox_id=$1 AND channel='in_app'", [id])
+    await client.query("UPDATE notification_job SET max_attempts=2 WHERE outbox_id=$1 AND channel='email'", [id])
+    await client.query('COMMIT')
+  } finally { client.release() }
+  let inAppCalls = 0, emailCalls = 0
+  const options = { pool, transports: {
+    in_app: { channel: 'in_app' as const, async send() { inAppCalls++; return { status: 'failed' as const, providerRef: '' } } },
+    email: { channel: 'email' as const, async send() { emailCalls++; return emailCalls === 1 ? { status: 'failed' as const, providerRef: '' } : { status: 'delivered' as const, providerRef: 'email-budget-ref' } } },
+  }, availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }), deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 } }
+  expect((await runOutboxPoll(options)).failed).toBe(1)
+  expect((await pool.query('SELECT channel,status,attempts FROM notification_job WHERE outbox_id=$1 ORDER BY channel', [id])).rows)
+    .toEqual([{ channel: 'email', status: 'retrying', attempts: 1 }, { channel: 'in_app', status: 'dead_letter', attempts: 5 }])
+  await pool.query("UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1 AND channel='email'", [id])
+  await pool.query("UPDATE notification_outbox SET locked_until=NULL,scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1", [id])
+  await runOutboxPoll(options)
+  expect(inAppCalls).toBe(1)
+  expect(emailCalls).toBe(2)
+  expect((await pool.query('SELECT status FROM notification_outbox WHERE id=$1', [id])).rows[0].status).toBe('failed')
+  expect((await pool.query('SELECT channel,attempts FROM notification_dead_letter WHERE outbox_id=$1', [id])).rows).toEqual([{ channel: 'in_app', attempts: 5 }])
 })

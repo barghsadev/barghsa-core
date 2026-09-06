@@ -117,6 +117,25 @@ function atCalendar(
     // wall == targetUtc at the fixpoint; correct the guess by the discrepancy.
     epoch = targetUtc - (wall - epoch)
   }
+  const wallAt = (instant: number) => {
+    const parts = tzParts(new Date(instant), timeZone)
+    return Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second)
+  }
+  // A fall-back boundary can occur twice. Choose its first occurrence.
+  if (wallAt(epoch) === targetUtc) {
+    for (const hours of [3, 2, 1]) {
+      const earlier = epoch - hours * 60 * 60 * 1000
+      if (wallAt(earlier) === targetUtc) return new Date(earlier)
+    }
+    return new Date(epoch)
+  }
+  // A spring-forward boundary may not exist. Use the first valid local
+  // minute after the gap instead of returning a time before the window.
+  const start = epoch - 3 * 60 * 60 * 1000
+  for (let minute = 0; minute <= 360; minute++) {
+    const instant = start + minute * 60 * 1000
+    if (wallAt(instant) >= targetUtc) return new Date(instant)
+  }
   return new Date(epoch)
 }
 
@@ -145,9 +164,8 @@ export function nextWindowOpen(date: Date, config: DeliveryWindowConfig): Date {
   // Never returns "now / inside the window": when the clock is already at or
   // past startHour the open boundary has passed, so bump to the next calendar
   // day (read tomorrow's y/m/d in the target timezone to survive DST shifts).
-  const tomorrow = new Date(date.getTime() + 24 * 60 * 60 * 1000)
-  const t = tzParts(tomorrow, config.timezone)
-  return atCalendar(config.timezone, t.year, t.month, t.day, config.startHour)
+  const tomorrow = new Date(Date.UTC(p.year, p.month - 1, p.day + 1))
+  return atCalendar(config.timezone, tomorrow.getUTCFullYear(), tomorrow.getUTCMonth() + 1, tomorrow.getUTCDate(), config.startHour)
 }
 
 // ───────────────────────────────────────────────────────────────────────────
@@ -201,8 +219,9 @@ export function normalizeWindowConfig(raw: unknown): DeliveryWindowConfig {
   if (!raw || typeof raw !== 'object') return { ...DEFAULT_DELIVERY_WINDOW }
 
   const o = raw as Record<string, unknown>
-  const timezone =
+  let timezone =
     typeof o.timezone === 'string' && o.timezone.length > 0 ? o.timezone : DEFAULT_DELIVERY_WINDOW.timezone
+  try { new Intl.DateTimeFormat('en', { timeZone: timezone }).format() } catch { timezone = DEFAULT_DELIVERY_WINDOW.timezone }
   const startHour = toHour(o.start_hour ?? o.startHour, DEFAULT_DELIVERY_WINDOW.startHour)
   const endHour = toHour(o.end_hour ?? o.endHour, DEFAULT_DELIVERY_WINDOW.endHour)
 
