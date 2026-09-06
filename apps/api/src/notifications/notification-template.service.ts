@@ -1,4 +1,4 @@
-import { createEmailSender } from '@barghsa/shared/notification-delivery'
+import { createEmailSender, createSmsSender, prepareSmsMessage } from '@barghsa/shared/notification-delivery'
 import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
@@ -490,7 +490,7 @@ export class NotificationTemplateService {
     id: string,
     actorUserId: string,
     options?: { destination?: string },
-  ): Promise<{ ok: boolean; destination: 'in_app' | 'email'; lastTestStatus: 'delivered' | 'failed' }> {
+  ): Promise<{ ok: boolean; destination: TemplateChannel; lastTestStatus: 'delivered' | 'failed' }> {
     const pool = getDbPool()
     const tpl = await this.getById(id)
     const data = this.buildSampleData(tpl.variables)
@@ -504,15 +504,17 @@ export class NotificationTemplateService {
 
     try {
       let providerRef: string | undefined
-      if (tpl.channel === 'sms') {
-        throw new HttpException({ statusCode: 503, error: 'NOTIFICATION_TEMPLATE_TRANSPORT_UNAVAILABLE',
-          message: 'The selected channel has no configured template delivery adapter' }, 503)
-      }
       if (tpl.channel === 'email') {
         if (!destination) throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DESTINATION_REQUIRED' }, 400)
         try {
           providerRef = await createEmailSender(pool)({ destination, subject: renderedSubject ?? `Test: ${tpl.eventKey}`,
             html: renderedBody, idempotencyKey: `template-test:${id}:${uuidv7()}` })
+        } catch { throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DELIVERY_FAILED' }, 503) }
+      } else if (tpl.channel === 'sms') {
+        if (!destination) throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DESTINATION_REQUIRED' }, 400)
+        try {
+          const message = await prepareSmsMessage(pool, destination, tpl.eventKey, tpl.variables.map(item => item.name), data)
+          providerRef = await createSmsSender(pool)(message)
         } catch { throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DELIVERY_FAILED' }, 503) }
       } else {
         if (destination) {

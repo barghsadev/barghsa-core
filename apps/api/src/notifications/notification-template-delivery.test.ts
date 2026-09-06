@@ -2,11 +2,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { NotificationTemplateService } from './notification-template.service.js'
 import type { NotificationsService } from './notifications.service.js'
 
-const { query, send } = vi.hoisted(() => ({ query: vi.fn(), send: vi.fn() }))
-vi.mock('@barghsa/shared/notification-delivery', () => ({ createEmailSender: () => send }))
+const { query, send, sms, prepareSms } = vi.hoisted(() => ({ query: vi.fn(), send: vi.fn(), sms: vi.fn(), prepareSms: vi.fn() }))
+vi.mock('@barghsa/shared/notification-delivery', () => ({ createEmailSender: () => send, createSmsSender: () => sms, prepareSmsMessage: prepareSms }))
 vi.mock('@barghsa/db', () => ({ getDbPool: () => ({ query }) }))
 
-beforeEach(() => { query.mockReset(); query.mockResolvedValue({ rows: [{ username: 'staff@example.test' }] }); send.mockReset(); send.mockRejectedValue(new Error('unavailable')) })
+beforeEach(() => { query.mockReset(); query.mockResolvedValue({ rows: [{ username: 'staff@example.test' }] }); send.mockReset(); send.mockRejectedValue(new Error('unavailable')); sms.mockReset(); prepareSms.mockReset(); prepareSms.mockRejectedValue(new Error('unavailable')) })
 
 function service(channel: 'email' | 'sms' | 'in_app') {
   const create = vi.fn().mockResolvedValue({ id: 'inbox-test' })
@@ -53,4 +53,16 @@ it('rejects an arbitrary third-party destination before contacting the provider'
   const { instance } = service('email')
   await expect(instance.testSend('template', 'staff', { destination: 'stranger@example.test' })).rejects.toMatchObject({ status: 403 })
   expect(send).not.toHaveBeenCalled()
+})
+
+it('records a mapped SMS receipt without an inbox substitute', async () => {
+  query.mockResolvedValue({ rows: [{ username: '+989121234567' }] })
+  const { instance, create } = service('sms')
+  const message = { providerId: 'sms-provider', destination: '+989121234567', templateId: '42', parameters: [] }
+  prepareSms.mockResolvedValue(message); sms.mockResolvedValue('123')
+  expect(await instance.testSend('template', 'staff', { destination: '+989121234567' })).toEqual({ ok: true, destination: 'sms', lastTestStatus: 'delivered' })
+  expect(sms).toHaveBeenCalledWith(message)
+  expect(create).not.toHaveBeenCalled()
+  const audit = query.mock.calls.find(([sql]) => sql.includes('INSERT INTO audit_log'))
+  expect(JSON.parse(audit![1][3])).toMatchObject({ deliveredTo: 'sms', providerRef: '123' })
 })

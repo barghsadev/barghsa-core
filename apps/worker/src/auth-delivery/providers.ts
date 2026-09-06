@@ -21,9 +21,9 @@ export function createAuthSender(pool: Pool, request: typeof fetch = fetch) {
     const activation = message.purpose === 'staff_activation'
     if (!(activation ? /^[a-f0-9]{64}$/.test(message.code) && typeof message.activationUrl === 'string' : /^\d{6}$/.test(message.code))) throw new Error('Invalid auth message')
     const email = message.destination.includes('@')
-    const providers = await pool.query<{ transport: string; config: unknown }>(email
-      ? "SELECT transport, config FROM email_provider_configs WHERE status='active' AND last_test_status='passed' AND degraded=false"
-      : "SELECT transport, config FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'")
+    const providers = await pool.query<{ id: string; transport: string; config: unknown }>(email
+      ? "SELECT id, transport, config FROM email_provider_configs WHERE status='active' AND last_test_status='passed' AND degraded=false"
+      : "SELECT id, transport, config FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'")
     const provider = providers.rows[0]
     if (!provider) throw new Error('Auth provider unavailable')
     if (activation && !email) throw new Error('Activation requires email')
@@ -82,7 +82,7 @@ ${message.activationUrl}` : `کد تأیید برق‌آسا: ${message.code}\nB
       const mobile = message.destination.replace(/^\+98/, '0')
       if (!/^09\d{9}$/.test(mobile)) throw new Error('Invalid SMS destination')
       const quota = await new PostgresRateLimiterStore((sql, params) => pool.query(sql, params))
-        .incrementSecurity('provider:smsir:auth-send', config.throughput_limit, 60_000)
+        .incrementSecurity(`provider:smsir:${provider.id}`,  config.throughput_limit, 60_000)
       if (!quota.allowed) throw new Error('SMS provider quota reached')
       return sendSmsirVerification(decryptProviderSecret(config.api_key), process.env.SMSIR_API_BASE || 'https://api.sms.ir',
         mobile, mapping.template_id, [{ name: mapping.variables.code, value: message.code }], request, config.timeout * 1000)

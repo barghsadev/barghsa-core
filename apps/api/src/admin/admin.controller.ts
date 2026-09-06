@@ -1471,7 +1471,7 @@ export class AdminController {
     @Param('id') id: string,
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
-  ): Promise<{ ok: boolean; destination: 'in_app' | 'email'; lastTestStatus: 'delivered' | 'failed' }> {
+  ): Promise<{ ok: boolean; destination: 'in_app' | 'email' | 'sms'; lastTestStatus: 'delivered' | 'failed' }> {
     this.assertNotificationPermission(req)
 
     const parsed = z

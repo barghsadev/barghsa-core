@@ -1,3 +1,5 @@
+import { SmsNotificationTransport } from './sms-transport.js'
+import { createAuthSender } from '../auth-delivery/providers.js'
 import { createServer } from 'node:http'
 import { EmailNotificationTransport } from './email-transport.js'
 import { afterAll, beforeAll, expect, it, vi } from 'vitest'
@@ -360,4 +362,46 @@ it('holds an attempted legacy email without deleting its job or retry evidence',
     .toEqual({ status: 'failed', last_error: 'legacy_email_snapshot_requires_reconciliation' })
   expect((await pool.query('SELECT status,attempts,last_error,delivery_payload FROM notification_job WHERE outbox_id=$1', [legacyEmail])).rows[0])
     .toEqual({ status: 'retrying', attempts: 1, last_error: 'historical-timeout', delivery_payload: null })
+})
+
+
+it('sends stable mapped SMS parameters across a retry and shares the provider quota with authentication', async () => {
+  await pool.query("UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')")
+  await pool.query("UPDATE users SET mobile='+989121234567' WHERE user_id='delivery-recipient'")
+  const config = { api_key: 'local-test-only', sender: '3000', throughput_limit: 2, template_mappings: [
+    { event_key: 'wallet.topup_completed', template_id: '42', variables: { amount: 'AMOUNT' } },
+    { event_key: 'otp:login', template_id: '43', variables: { code: 'CODE' } },
+  ] }
+  await pool.query(`INSERT INTO sms_provider_configs(transport,label,status,config,created_by,last_test_status,supersedes_id)
+    VALUES ('smsir','Local test','active',$1,'delivery-owner','passed',NULL)`, [JSON.stringify(config)])
+  await pool.query(`INSERT INTO notification_templates(event_key,channel,locale,body_template,variables,status,is_active,created_by)
+    VALUES ('wallet.topup_completed','sms','en','Amount {{amount}}','["amount"]','active',true,'delivery-owner')`)
+  let code = 503
+  const received: unknown[] = []
+  const server = createServer(async (req, res) => {
+    const chunks: Buffer[] = []; for await (const chunk of req) chunks.push(Buffer.from(chunk))
+    received.push(JSON.parse(Buffer.concat(chunks).toString()))
+    res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ status: 1, data: { messageId: 987 } }))
+  })
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+  const address = server.address(); if (!address || typeof address === 'string') throw new Error('No local endpoint')
+  const request = vi.fn<typeof fetch>(async (_url, options) => fetch(`http://127.0.0.1:${address.port}`, options))
+  const client = await pool.connect(); let id: string | null
+  try {
+    await client.query('BEGIN')
+    id = (await enqueueOutbox(client, { profileId, userId: 'delivery-recipient', eventKey: 'wallet.topup_completed', channels: ['in_app', 'sms'], payload: { amount: '5000' }, idempotencyKey: 'real-sms:test' })).outboxId
+    await client.query('COMMIT')
+  } finally { client.release() }
+  const options = { pool, transports: { sms: new SmsNotificationTransport(pool, request), in_app: new InAppNotificationTransport(pool) }, deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 } }
+  try {
+    expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 })
+    code = 200
+    await pool.query("UPDATE notification_outbox SET payload='{\"amount\":\"9000\"}',scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1", [id])
+    await pool.query("UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1", [id])
+    expect(await runOutboxPoll(options)).toMatchObject({ delivered: 1, failed: 0 })
+    expect(received).toEqual(Array(2).fill({ Mobile: '09121234567', TemplateId: 42, Parameters: [{ Name: 'AMOUNT', Value: '5000' }] }))
+    expect((await pool.query("SELECT status,provider_ref FROM notification_job WHERE outbox_id=$1 AND channel='sms'", [id])).rows[0]).toEqual({ status: 'done', provider_ref: '987' })
+    await expect(createAuthSender(pool, request)({ id: 'quota-check', destination: '+989121234567', code: '123456', purpose: 'login' })).rejects.toThrow('quota')
+    expect(request).toHaveBeenCalledTimes(2)
+  } finally { await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())) }
 })

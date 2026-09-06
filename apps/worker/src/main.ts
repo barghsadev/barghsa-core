@@ -1,3 +1,4 @@
+import { SmsNotificationTransport } from './notifications/sms-transport.js';
 import { EmailNotificationTransport } from './notifications/email-transport.js';
 import { runAuthDelivery } from './auth-delivery/runner.js';
 import { PollerGroup } from './jobs/poller-group.js';
@@ -177,7 +178,7 @@ async function main(): Promise<void> {
   // Poll for due outbox rows, dispatch channels, and record outcomes.
   // The in-app transport is mandatory and always registered so every row that
   // requests `in_app` delivery lands a durable `in_app_notifications` row.
-  const transports = { in_app: new InAppNotificationTransport(), email: new EmailNotificationTransport() };
+  const transports = { in_app: new InAppNotificationTransport(), email: new EmailNotificationTransport(), sms: new SmsNotificationTransport() };
   const outboxInterval = Number(process.env['OUTBOX_POLL_MS'] ?? '2000');
   const OUTBOX_POLL_MS = Number.isFinite(outboxInterval) && outboxInterval >= 1000 ? outboxInterval : 2000;
   const outboxPoller = pollers.every(async () => {
