@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import * as jalaliCalendar from 'date-fns-jalali';
-import { format as dateFnsFormat } from 'date-fns';
+import { addDays, startOfDay, format as dateFnsFormat } from 'date-fns';
 import { format as jalaliFormat } from 'date-fns-jalali';
 import { faIR as jalaliLocale } from 'date-fns-jalali/locale';
 import { CalendarIcon } from 'lucide-react';
@@ -42,6 +42,7 @@ interface DatePickerSingleProps extends DatePickerBaseProps {
 
 interface DatePickerRangeProps extends DatePickerBaseProps {
   calendarMode: 'range';
+  /** Half-open interval: from is included, to is the first excluded day. */
   value?: DateRange;
   onChange?: (range: DateRange | undefined) => void;
 }
@@ -117,10 +118,20 @@ function DatePicker({
     (range: DateRange) => {
       if (!range.from) return '';
       if (!range.to) return formatDate(range.from);
-      return `${formatDate(range.from)} - ${formatDate(range.to)}`;
+      return `${formatDate(range.from)} - ${formatDate(range.to)} ${jalali ? '(پایان بازه شامل نمی‌شود)' : '(end excluded)'}`;
     },
-    [formatDate]
+    [formatDate, jalali]
   );
+
+  const dayStart = (date: Date) =>
+    startOfDay(timezone ? new TZDate(date.getTime(), timezone) : date);
+  const interval = calendarMode === 'range' ? (value as DateRange | undefined) : undefined;
+  const calendarRange = interval
+    ? {
+        from: interval.from && dayStart(interval.from),
+        to: interval.to ? addDays(dayStart(interval.to), -1) : undefined,
+      }
+    : undefined;
 
   const displayValue = React.useMemo(() => {
     if (!value) return undefined;
@@ -152,7 +163,7 @@ function DatePicker({
           >
             <CalendarIcon className="size-4 shrink-0" />
             {displayValue ? (
-              <span>{displayValue}</span>
+              <span className="whitespace-normal">{displayValue}</span>
             ) : (
               <span className="text-muted-foreground">{prompt}</span>
             )}
@@ -168,8 +179,17 @@ function DatePicker({
         {calendarMode === 'range' ? (
           <Calendar
             mode="range"
-            selected={value as DateRange | undefined}
-            onSelect={onChange as (range: DateRange | undefined) => void}
+            selected={calendarRange}
+            onSelect={(range) => {
+              (onChange as (range: DateRange | undefined) => void)?.(
+                range
+                  ? {
+                      from: range.from && dayStart(range.from),
+                      to: range.to ? addDays(dayStart(range.to), 1) : undefined,
+                    }
+                  : undefined
+              );
+            }}
             disabled={disabledDays}
             dateLib={calendarDateLib}
             timeZone={timezone}

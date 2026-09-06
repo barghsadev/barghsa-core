@@ -1493,3 +1493,9 @@ Review and validation: four new browser component checks pass for inclusive boun
 DatePicker accepts an IANA timezone for its selected-date text, calendar math, limits and returned selection. The Jalali date constructor converts calendar fields into midnight in that zone instead of creating a browser-local midnight. Omitted timezone preserves existing browser-local callers pending the separate account-preference integration.
 
 Review and validation: eight component browser checks pass, including Persian and English Tehran dates from UTC and Los Angeles browsers, exact resulting instants, upper bounds and locale switching without value changes. The first tests compared timezone-aware ISO serialization with Z serialization and used an ambiguous Persian day label; normalized the fixture's output to UTC and made the locator exact. All five production CRM browser checks, root build/types/lint and bundle checks pass. Account timezone defaults and migration of current consumers remain open; this step does not claim global timezone compliance.
+
+### Correct date-picker range boundaries (F20)
+
+Range values now use the required half-open interval. The calendar highlights included days, while the returned to value is midnight at the beginning of the next excluded day. Calendar-day arithmetic respects the configured timezone and daylight-saving transitions. The displayed interval states that its end is excluded. No current product page uses range mode, so no existing inclusive consumer was silently reinterpreted.
+
+Review and validation: all ten browser component checks pass. Added a fresh one-day interval and a three-day New York interval spanning spring DST, verifying exact UTC endpoints, excluded-day highlighting and reopening. The latter is correctly 71 hours, not an assumed 72. Root build, types, lint and bundle checks pass. Full date formatting, responsive month controls and account timezone integration remain open.

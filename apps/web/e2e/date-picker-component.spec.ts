@@ -57,7 +57,9 @@ for (const mode of ['single', 'range']) {
     await expect(trigger).toBeFocused();
     await trigger.click();
     await dialog.getByRole('button', { name: /March 23rd/ }).press('Enter');
-    await expect(page.getByRole('status', { name: 'Stored value' })).toContainText('2026-03-23');
+    await expect(page.getByRole('status', { name: 'Stored value' })).toContainText(
+      mode === 'range' ? '2026-03-24T00:00:00.000Z' : '2026-03-23'
+    );
   });
 }
 
@@ -119,3 +121,41 @@ for (const browserZone of ['UTC', 'America/Los_Angeles']) {
     }
   });
 }
+
+test('range end excludes the next day and keeps calendar days across DST', async ({ page }) => {
+  await page.goto(`${url}?range&dst`);
+  const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+  await trigger.click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: /March 9th/ }).click();
+  await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+    '{"from":"2026-03-07T05:00:00.000Z","to":"2026-03-10T04:00:00.000Z"}'
+  );
+  await expect(trigger).toContainText('2026/03/10 (end excluded)');
+  await expect(
+    dialog.getByRole('gridcell').filter({ has: page.getByRole('button', { name: /March 9th/ }) })
+  ).toHaveAttribute('aria-selected', 'true');
+  await expect(
+    dialog.getByRole('gridcell').filter({ has: page.getByRole('button', { name: /March 10th/ }) })
+  ).not.toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('Escape');
+  await trigger.click();
+  await expect(
+    dialog.getByRole('gridcell').filter({ has: page.getByRole('button', { name: /March 9th/ }) })
+  ).toHaveAttribute('aria-selected', 'true');
+});
+
+test('a fresh one-day range has a nonempty half-open interval', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-03-22T12:00:00Z') });
+  await page.goto(`${url}?range&empty`);
+  const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+  await trigger.click();
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: /March 23rd/ })
+    .click();
+  await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+    '{"from":"2026-03-23T00:00:00.000Z","to":"2026-03-24T00:00:00.000Z"}'
+  );
+  await expect(trigger).toContainText('2026/03/24 (end excluded)');
+});
