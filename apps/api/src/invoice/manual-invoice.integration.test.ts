@@ -15,15 +15,12 @@
  *   6. Errors roll back everything (no orphan Draft, no lines, no audit).
  *
  * Wiring: only `getDbPool()` is stubbed, handing the service the
- * schema-scoped pool of the isolated Testcontainers schema.
+ * fully migrated disposable database pool.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { ManualInvoiceService } from './manual-invoice.service.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
@@ -42,110 +39,37 @@ vi.mock('@barghsa/db', () => ({
   },
 }));
 
-// ---- Migrations / DDL -----------------------------------------------------
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql'
-);
-const PAID_OVERDUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql'
-);
-const LINES_ITEMS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0054_create_invoice_lines_and_items.sql'
-);
-const POSITION_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0055_add_invoice_lines_position.sql'
-);
-const IDEMPOTENCY_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0057_add_invoice_type_idempotency.sql'
-);
-const CALCULATION_SNAPSHOT_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql'
-);
-const DUE_PERIODS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0059_create_service_due_periods.sql'
-);
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
-);
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql'
-);
+// ---- Fixtures ------------------------------------------------------------
 
 const PROFILE_ID = '22222222-2222-7222-8222-222222222222';
 const ACTOR_USER_ID = 'staff-integration-manual';
 
 describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let service: ManualInvoiceService;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 2);
+    ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     service = new ManualInvoiceService(
       new InvoiceStateMachineService(new InvoiceAuditRepository()),
       new DueAtCalculationService(new DueAtCalculationRepository())
     );
 
-    // --- DDL: uuid v7 fn, enum, minimal FK targets, then the invoice
-    // migrations in production order (0052 → 0053 → 0054 → 0055) plus the
-    // audit_log table. invoice_items references products, so a minimal
-    // products table must exist before 0054.
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.db.execute(`CREATE TYPE invoice_state AS ENUM (
-      'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-      'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS profiles (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS orders (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS products (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS users (
-      user_id TEXT PRIMARY KEY
-    )`);
-
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(LINES_ITEMS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim());
-
-    // --- Seed data: one profile + one actor.
-    await ctx.db.execute(
-      `INSERT INTO profiles (id) VALUES ('${PROFILE_ID}')
-       ON CONFLICT (id) DO NOTHING`
+    await ctx.pool.query(
+      `INSERT INTO users (user_id, username, password_hash)
+      VALUES ($1, 'invoice-staff@example.test', 'test-only')`,
+      [ACTOR_USER_ID]
     );
-    await ctx.db.execute(
-      `INSERT INTO users (user_id) VALUES ('${ACTOR_USER_ID}')
-       ON CONFLICT (user_id) DO NOTHING`
-    );
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
+      PROFILE_ID,
+      ACTOR_USER_ID,
+    ]);
   }, 60_000);
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   // ---- Helpers ------------------------------------------------------------
@@ -417,7 +341,7 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     // Second profile exists so a cross-profile key collision is possible
     const otherProfile = '33333333-3333-7333-8333-333333333333';
     await ctx.db.execute(
-      `INSERT INTO profiles (id) VALUES ('${otherProfile}') ON CONFLICT (id) DO NOTHING`
+      `INSERT INTO profiles (id, user_id) VALUES ('${otherProfile}', '${ACTOR_USER_ID}') ON CONFLICT (id) DO NOTHING`
     );
 
     const first = await service.createManualInvoice({

@@ -17,11 +17,8 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { v7 as uuidv7 } from 'uuid';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { CreateAdjustmentInvoiceService } from './create-adjustment-invoice.service.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
@@ -43,63 +40,6 @@ vi.mock('@barghsa/db', () => ({
   },
 }));
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql'
-);
-const PAID_OVERDUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql'
-);
-const LINES_ITEMS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0054_create_invoice_lines_and_items.sql'
-);
-const POSITION_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0055_add_invoice_lines_position.sql'
-);
-const ORIGIN_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0056_add_invoice_origin_links.sql'
-);
-const IDEMPOTENCY_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0057_add_invoice_type_idempotency.sql'
-);
-const CALCULATION_SNAPSHOT_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql'
-);
-const DUE_PERIODS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0059_create_service_due_periods.sql'
-);
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
-);
-const CORRECTION_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0064_add_invoice_correction_self_references.sql'
-);
-const REPLACEMENT_INDEX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0065_invoice_order_type_unique_exclude_replacements.sql'
-);
-const ADJUSTMENT_INDEX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0066_invoice_order_type_unique_exclude_adjustments.sql'
-);
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql'
-);
-
 const PROFILE_ID = '33333333-3333-7333-8333-333333333333';
 const ACTOR_USER_ID = 'staff-create-adjustment';
 const ISSUED = new Date('2026-08-01T10:00:00.000Z');
@@ -108,12 +48,12 @@ const NOW = new Date('2026-08-15T12:00:00.000Z');
 const ORIGINAL_TOTAL = 1_090_000n;
 
 describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let service: CreateAdjustmentInvoiceService;
   let stateMachine: InvoiceStateMachineService;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 2);
+    ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     stateMachine = new InvoiceStateMachineService(new InvoiceAuditRepository());
     service = new CreateAdjustmentInvoiceService(
@@ -121,51 +61,34 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
       new DueAtCalculationService(new DueAtCalculationRepository())
     );
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.db.execute(`CREATE TYPE invoice_state AS ENUM (
-      'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-      'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS profiles (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS orders (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS products (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS users (
-      user_id TEXT PRIMARY KEY
-    )`);
-
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(LINES_ITEMS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ORIGIN_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(CORRECTION_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(REPLACEMENT_INDEX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_INDEX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim());
-
-    await ctx.db.execute(
-      `INSERT INTO profiles (id) VALUES ('${PROFILE_ID}') ON CONFLICT (id) DO NOTHING`
+    await ctx.pool.query(
+      `INSERT INTO users (user_id, username, password_hash)
+      VALUES ($1, 'invoice-staff@example.test', 'test-only')`,
+      [ACTOR_USER_ID]
     );
-    await ctx.db.execute(
-      `INSERT INTO users (user_id) VALUES ('${ACTOR_USER_ID}') ON CONFLICT (user_id) DO NOTHING`
-    );
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
+      PROFILE_ID,
+      ACTOR_USER_ID,
+    ]);
   }, 60_000);
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
+
+  async function insertOrder(id: string) {
+    const product = (
+      await ctx.pool.query(`INSERT INTO products(type,title,price)
+      VALUES ('electricity', '{"en":"Test electricity"}', 1000000) RETURNING id`)
+    ).rows[0].id;
+    await ctx.pool.query(
+      `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,
+      snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)
+      VALUES ($1,$2,$3,$4,'electricity','test-province','test-city','Test address','1234567890')`,
+      [id, ACTOR_USER_ID, PROFILE_ID, product]
+    );
+  }
 
   async function insertInvoice(opts: {
     state: string;
@@ -178,7 +101,7 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     let orderId: string | null;
     if (opts.orderId === undefined) {
       orderId = uuidv7();
-      await ctx.pool.query(`INSERT INTO orders (id) VALUES ($1)`, [orderId]);
+      await insertOrder(orderId);
     } else {
       orderId = opts.orderId;
     }
@@ -312,7 +235,10 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
 
   it('creates a linked credit that reduces net liability and cannot be paid', async () => {
     const liabilityProfileId = uuidv7();
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [liabilityProfileId]);
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
+      liabilityProfileId,
+      ACTOR_USER_ID,
+    ]);
 
     const unpaidSiblingId = await insertInvoice({
       state: 'Unpaid',
@@ -445,7 +371,7 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
 
   it('allows two adjustments on the same order-linked paid original', async () => {
     const orderId = uuidv7();
-    await ctx.pool.query(`INSERT INTO orders (id) VALUES ($1)`, [orderId]);
+    await insertOrder(orderId);
     const originalId = await insertInvoice({
       state: 'Paid',
       type: 'manual',

@@ -1103,3 +1103,13 @@ Replaced hand-created VAT/product and due-period tables with the production migr
 Staff due-date changes now hold the actor account and current override permission through the invoice transaction. The service test database uses all production migrations. Its rollback check now injects a real audit-write failure for an authorized actor, proving that due_at changes are undone. A real HTTP test revokes authority while the request waits, verifies an unchanged date after 403, then restores the grant and verifies one successful audit.
 
 All 33 focused service/controller/HTTP tests pass, as do API build, root types and lint. The full API run before this due-date step passed 2,632 tests across 210 files, covering callback migration and both receipt permission fixes. These counts are evidence for those revisions, not blanket acceptance of the remaining plan.
+
+### Restore generated invoice accounting amounts (F02/F12/F14)
+
+Full migration tests exposed another baseline defect: 0080 created accounting_amount as ordinary nullable BIGINT. The retained 0067 logic then saw the column and skipped its GENERATED ALWAYS definition. Charge adjustment creation failed converting NULL to BigInt; ordinary invoices and credits could also lack their signed liability amount. The Drizzle declaration had omitted the generated expression.
+
+Migration 0113 renames the ordinary column to accounting_amount_legacy, preserving stored values, then adds the generated signed amount. Existing generated installations retain their expression and gain an empty legacy column. No invoice rows or source amounts are deleted. A conflicting legacy backup name blocks the migration rather than overwriting evidence. The Drizzle declaration now declares the generated expression and retained legacy field. Deployment reconciliation and eventual removal of legacy values remain operational follow-up.
+
+Converted manual creation, automatic creation, calculation replay, cancel/replace, and adjustment suites to production migrations. Removed incomplete tables and created actual owned profiles and complete orders. Review retained original-document immutability, distinct replacement/adjustment indexes, signed credit liability, payability exclusions, replay, exact large amounts, and rollback checks.
+
+Validation: all 39 tests across five suites pass. All 564 database tests across 76 files pass, including fresh/repeated migrations and a populated upgrade that preserves legacy value 123 while restoring exact accounting amount 9007199254740993. An explicit write to the generated amount fails with 428C9. Root type checking, lint and whitespace checks pass. No production database was changed; deployment must apply 0113 before adjustment creation is considered repaired there.

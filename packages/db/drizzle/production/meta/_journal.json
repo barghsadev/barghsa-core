@@ -232,6 +232,13 @@
       "when": 1791331200015,
       "tag": "0112_wallet_callback_processing",
       "breakpoints": true
+    },
+    {
+      "idx": 113,
+      "version": "7",
+      "when": 1791331200016,
+      "tag": "0113_invoice_accounting_generated",
+      "breakpoints": true
     }
   ]
 }

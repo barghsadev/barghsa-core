@@ -198,7 +198,11 @@ export const invoices = pgTable(
      * invoices therefore match `total_amount`; credits cannot be
      * mistaken for unpaid debt by amount-based outstanding queries.
      */
-    accountingAmount: irrAmount('accounting_amount'),
+    accountingAmount: irrAmount('accounting_amount').generatedAlwaysAs(
+      sql`CASE WHEN adjustment_kind = 'credit' THEN -total_amount ELSE total_amount END`
+    ),
+    /** Preserved pre-repair values; retained until deployment reconciliation. */
+    accountingAmountLegacy: irrAmount('accounting_amount_legacy'),
 
     /** When the invoice record was created. */
     createdAt: timestamptz('created_at').defaultNow().notNull(),

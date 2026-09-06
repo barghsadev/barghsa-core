@@ -71,6 +71,7 @@ describe('complete production schema baseline', () => {
         '0110_legal_documents',
         '0111_account_login_identifiers',
         '0112_wallet_callback_processing',
+        '0113_invoice_accounting_generated',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -134,6 +135,20 @@ describe('complete production schema baseline', () => {
         ADD CONSTRAINT chk_wallet_topup_callback_events_status
         CHECK (status IN ('credited', 'unpaid', 'duplicate'))`);
       expect(await callbackConstraint()).not.toContain('processing');
+
+      const accountingInvoice = (
+        await pool.query(
+          `INSERT INTO invoices(profile_id,total_amount)
+        VALUES ($1,9007199254740993) RETURNING id,accounting_amount`,
+          [profile]
+        )
+      ).rows[0];
+      expect(accountingInvoice.accounting_amount).toBe('9007199254740993');
+      await pool.query(`ALTER TABLE invoices ALTER COLUMN accounting_amount DROP EXPRESSION;
+        ALTER TABLE invoices DROP COLUMN accounting_amount_legacy`);
+      await pool.query('UPDATE invoices SET accounting_amount=123 WHERE id=$1', [
+        accountingInvoice.id,
+      ]);
 
       // Representative deployed state: populated current product/finance
       // tables with the old migration journal and missing unjournaled schema.
@@ -248,6 +263,17 @@ describe('complete production schema baseline', () => {
         ).rows[0].permissions
       ).toBe('["legal:read"]');
       expect(await callbackConstraint()).toContain('processing');
+      expect(
+        (
+          await pool.query(
+            'SELECT accounting_amount,accounting_amount_legacy FROM invoices WHERE id=$1',
+            [accountingInvoice.id]
+          )
+        ).rows[0]
+      ).toEqual({ accounting_amount: '9007199254740993', accounting_amount_legacy: '123' });
+      await expect(
+        pool.query('UPDATE invoices SET accounting_amount=5 WHERE id=$1', [accountingInvoice.id])
+      ).rejects.toMatchObject({ code: '428C9' });
       expect((await pool.query('SELECT * FROM products ORDER BY id')).rows).toEqual(productsBefore);
       expect(
         (
