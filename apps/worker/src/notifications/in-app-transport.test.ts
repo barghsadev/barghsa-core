@@ -17,6 +17,7 @@ function makePool(insertId: string | null = 'ian-1') {
   const pool = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async query(sql: string, params?: any[]) {
+      if (!sql.includes('INSERT INTO in_app_notifications')) return { rows: [], rowCount: 0 }
       inserts.push({ sql, params: params ?? [] })
       const rows = insertId === null ? [] : [{ id: insertId }]
       return { rows, rowCount: rows.length }
@@ -55,7 +56,7 @@ describe('InAppNotificationTransport', () => {
     expect(p[3]).toBe('notifications.profile_verified.body')
     // Payload interpolation vars are serialized to JSONB.
     expect(JSON.parse(p[4] as string)).toEqual({ name: 'Morteza' })
-    expect(p[5]).toBeNull()
+    expect(p[5]).toBe('/settings/profile')
   })
 
   it('persists a same-origin relative link_route from the dispatch payload', async () => {

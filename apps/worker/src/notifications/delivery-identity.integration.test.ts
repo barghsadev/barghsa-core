@@ -35,8 +35,8 @@ beforeAll(async () => {
   await pool.query("INSERT INTO users(user_id,username,password_hash) VALUES ('delivery-owner','delivery@example.test','test-only')")
   profileId = (await pool.query("INSERT INTO profiles(user_id) VALUES ('delivery-owner') RETURNING id")).rows[0].id
   for (const [id, attempts] of [[proven, 1], [ambiguous, 1], [untouched, 0]] as const) {
-    await pool.query(`INSERT INTO notification_outbox(id,profile_id,event_key,payload,channels,idempotency_key,attempts,status)
-      VALUES ($1::uuid,$2,'wallet.topup_completed','{}',ARRAY['in_app','email'],$1::text,$3,'queued')`, [id, profileId, attempts])
+    await pool.query(`INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,idempotency_key,attempts,status)
+      VALUES ($1::uuid,$2,'delivery-owner','wallet.topup_completed','{}',ARRAY['in_app','email'],$1::text,$3,'queued')`, [id, profileId, attempts])
     await pool.query("INSERT INTO notification_job(outbox_id,channel) VALUES ($1,'in_app'),($1,'email')", [id])
   }
   await pool.query(`INSERT INTO in_app_notifications(id,profile_id,type,title_i18n_key,body_i18n_key,is_read,read_at)
@@ -416,4 +416,22 @@ it('migrates legacy inbox text and read history without deleting its source', as
     .toEqual({recipient_user_id:'delivery-owner',localized_content:{original:{title:'Legacy verified',body:'Original body'}},is_read:true,
       read_at:new Date('2026-01-02T00:00:00Z'),created_at:new Date('2026-01-01T00:00:00Z'),link_route:'/settings/profile',delivery_key:`legacy:${legacyNotice}`})
   expect((await pool.query('SELECT count(*)::int AS count FROM notifications WHERE id=$1',[legacyNotice])).rows[0].count).toBe(1)
+})
+
+it('saves active bilingual inbox templates and keeps original content/read state on retry', async()=>{
+  await pool.query(`INSERT INTO notification_templates(event_key,channel,locale,subject,body_template,variables,status,is_active,created_by)
+    VALUES ('wallet.topup_completed','in_app','fa','شارژ کیف پول','مبلغ {{amount}} ریال','["amount"]','active',true,'delivery-owner'),
+    ('wallet.topup_completed','in_app','en','Wallet credited','Amount {{amount}} IRR','["amount"]','active',true,'delivery-owner')`)
+  const event=row(randomUUID()),transport=new InAppNotificationTransport(pool)
+  const first=await dispatchOutbox({...event,channels:['in_app']},{in_app:transport})
+  const id=first[0]!.result.providerRef
+  expect((await pool.query('SELECT localized_content,recipient_user_id FROM in_app_notifications WHERE id=$1',[id])).rows[0])
+    .toEqual({recipient_user_id:'delivery-owner',localized_content:{fa:{title:'شارژ کیف پول',body:'مبلغ 5000 ریال'},en:{title:'Wallet credited',body:'Amount 5000 IRR'}}})
+  await pool.query("UPDATE in_app_notifications SET is_read=true,read_at='2026-01-01' WHERE id=$1",[id])
+  await pool.query("UPDATE notification_templates SET body_template='{{missing}}' WHERE event_key='wallet.topup_completed' AND channel='in_app'")
+  expect((await dispatchOutbox({...event,channels:['in_app'],payload:{amount:'9999'}},{in_app:transport}))[0]!.result.providerRef).toBe(id)
+  expect((await pool.query('SELECT is_read,read_at FROM in_app_notifications WHERE id=$1',[id])).rows[0])
+    .toEqual({is_read:true,read_at:new Date('2026-01-01T00:00:00Z')})
+  expect((await dispatchOutbox({...row(randomUUID()),channels:['in_app']},{in_app:transport}))[0]!.result.status).toBe('failed')
+  expect((await pool.query('SELECT recipient_user_id FROM in_app_notifications WHERE id=$1',[inbox])).rows[0].recipient_user_id).toBe('delivery-owner')
 })

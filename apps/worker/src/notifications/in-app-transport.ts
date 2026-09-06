@@ -1,4 +1,4 @@
-import { relativeLinkRoute } from '@barghsa/shared/notifications'
+import { defaultInboxContent, defaultInboxLink, renderTemplate } from '@barghsa/shared/notifications'
 export { relativeLinkRoute } from '@barghsa/shared/notifications'
 import { getDbPool } from '@barghsa/db'
 import type {
@@ -52,14 +52,33 @@ export class InAppNotificationTransport implements INotificationTransport {
     }
 
     const pool = this.pool ?? getDbPool()
-    const linkRoute = relativeLinkRoute(payload.payload)
+    const deliveryKey = payload.outboxId ? `outbox:${payload.outboxId}` : `transport:${payload.idempotencyKey}`
+    const recipient = payload.recipientId === payload.profileId ? null : payload.recipientId
+    const existing = await pool.query(`SELECT id FROM in_app_notifications WHERE delivery_key=$1
+      AND profile_id=$2 AND recipient_user_id IS NOT DISTINCT FROM $3::text`, [deliveryKey,payload.profileId,recipient])
+    if(existing.rows[0])return {status:'delivered',providerRef:existing.rows[0].id}
+    const content=defaultInboxContent(payload.eventKey,payload.payload)
+    const templates=await pool.query(`SELECT locale,subject,body_template,variables FROM notification_templates
+      WHERE event_key=$1 AND channel='in_app' AND status='active' AND is_active=true`,[payload.eventKey])
+    for(const template of templates.rows){
+      if(template.locale!=='fa'&&template.locale!=='en')throw new Error('Invalid inbox template locale')
+      if(!Array.isArray(template.variables)||typeof template.body_template!=='string')throw new Error('Invalid inbox template')
+      const names=template.variables.map((item:unknown)=>typeof item==='string'?item.trim():
+        item&&typeof item==='object'&&'name' in item&&typeof item.name==='string'?item.name.trim():'')
+      if(names.some((name:string)=>!name))throw new Error('Invalid inbox template variables')
+      const title=renderTemplate(template.subject ?? content[template.locale as 'fa'|'en'].title,names,{data:payload.payload,escapeValues:false})
+      const body=renderTemplate(template.body_template,names,{data:payload.payload,escapeValues:false})
+      if(title.missing.length||title.unknown.length||body.missing.length||body.unknown.length)throw new Error('Inbox template data incomplete')
+      content[template.locale as 'fa'|'en']={title:title.output,body:body.output}
+    }
+    const linkRoute = defaultInboxLink(payload.eventKey,payload.payload)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inserted: { rows: Array<{ id: string }> } = await pool.query(
       `INSERT INTO in_app_notifications
-         (profile_id, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+         (profile_id, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key,recipient_user_id,localized_content)
+       VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
        ON CONFLICT (delivery_key) DO UPDATE SET delivery_key=EXCLUDED.delivery_key
-       WHERE in_app_notifications.profile_id=EXCLUDED.profile_id AND in_app_notifications.type=EXCLUDED.type
+       WHERE in_app_notifications.profile_id=EXCLUDED.profile_id AND in_app_notifications.type=EXCLUDED.type AND in_app_notifications.recipient_user_id IS NOT DISTINCT FROM EXCLUDED.recipient_user_id
        RETURNING id`,
       [
         payload.profileId,
@@ -68,7 +87,7 @@ export class InAppNotificationTransport implements INotificationTransport {
         `notifications.${payload.eventKey}.body`,
         JSON.stringify(payload.payload ?? {}),
         linkRoute,
-        payload.outboxId ? `outbox:${payload.outboxId}` : `transport:${payload.idempotencyKey}`,
+        deliveryKey,recipient,JSON.stringify(content),
       ],
     )
 
