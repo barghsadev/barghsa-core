@@ -1097,3 +1097,9 @@ Review and validation: 50 focused unit, migrated transaction, and real HTTP test
 ### VAT and invoice due-period calculations on production migrations (F02/F14)
 
 Replaced hand-created VAT/product and due-period tables with the production migration fixture. Product fixtures now include required titles/prices and configuration authors are real users. Review retained override precedence, effective-window boundaries, zero-rate/default-day fallbacks, and caller-owned transaction checks. All 12 cases pass; root types and lint pass. This covers calculation reads, not the separate staff configuration editors.
+
+### Recheck due-date override authority and preserve audit rollback (F04/F14)
+
+Staff due-date changes now hold the actor account and current override permission through the invoice transaction. The service test database uses all production migrations. Its rollback check now injects a real audit-write failure for an authorized actor, proving that due_at changes are undone. A real HTTP test revokes authority while the request waits, verifies an unchanged date after 403, then restores the grant and verifies one successful audit.
+
+All 33 focused service/controller/HTTP tests pass, as do API build, root types and lint. The full API run before this due-date step passed 2,632 tests across 210 files, covering callback migration and both receipt permission fixes. These counts are evidence for those revisions, not blanket acceptance of the remaining plan.

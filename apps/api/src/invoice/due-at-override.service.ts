@@ -2,7 +2,7 @@
  * Staff dueAt override service (T-04.1.03.03).
  *
  * Finance staff may replace an invoice `dueAt` when they hold the
- * explicit override permission (enforced at the controller) and supply
+ * explicit override permission (checked again inside the transaction) and supply
  * a customer-visible reason. The new due instant is written to
  * `invoices.due_at`, the reason + previous/new values land in invoice
  * metadata, and an append-only `invoice.due_at.override` audit row is
@@ -12,6 +12,7 @@
  * Overdue. Terminal / settled invoices keep their original due date.
  */
 
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -134,6 +135,11 @@ export class DueAtOverrideService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(
+        client,
+        input.actorUserId,
+        'admin:finance:invoices:override-due-at'
+      );
 
       const locked = (await client.query(
         `SELECT id, state, issued_at, payable_from, due_at, metadata

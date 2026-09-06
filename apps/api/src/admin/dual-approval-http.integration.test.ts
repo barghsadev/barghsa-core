@@ -765,3 +765,58 @@ it('rechecks wallet receipt authority after waiting for the actor lock', async (
     }
   }
 });
+
+it('holds current authority through staff due-date overrides', async () => {
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='reviewer'");
+  const receipt = await invoiceReceipt();
+  const request = () =>
+    fetch(`${http.base}/api/admin/invoices/${receipt.invoice}/due-at`, {
+      method: 'POST',
+      headers: headers.reviewer!,
+      body: JSON.stringify({
+        dueAt: '2027-01-01T00:00:00Z',
+        reason: 'Extension agreed with customer',
+      }),
+    });
+  const client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("SELECT user_id FROM users WHERE user_id='reviewer' FOR UPDATE");
+    pending = request();
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query("DELETE FROM user_roles WHERE user_id='reviewer'");
+    await client.query('COMMIT');
+    expect((await pending).status).toBe(403);
+    expect(
+      (await http.pool.query('SELECT due_at FROM invoices WHERE id=$1', [receipt.invoice])).rows[0]
+        .due_at
+    ).toBeNull();
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES ('reviewer','role-finance') ON CONFLICT DO NOTHING"
+    );
+  }
+  expect((await request()).status).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT event FROM audit_log WHERE event='invoice.due_at.override' AND metadata::jsonb->>'invoiceId'=$1",
+        [receipt.invoice]
+      )
+    ).rows
+  ).toHaveLength(1);
+});

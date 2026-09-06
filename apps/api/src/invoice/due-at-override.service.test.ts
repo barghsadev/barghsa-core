@@ -23,6 +23,10 @@ const mockPool = {
   query: vi.fn(),
 };
 
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
 }));
