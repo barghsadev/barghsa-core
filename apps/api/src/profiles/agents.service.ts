@@ -116,14 +116,14 @@ export class AgentsService {
 
     // Check direct ownership
     const profileResult = await pool.query(
-      `SELECT id FROM profiles WHERE id = $1 AND user_id = $2 AND profile_type = 'LEGAL'`,
+      `SELECT id FROM profiles WHERE id = $1 AND user_id = $2 AND profile_type = 'LEGAL' AND NOT archived`,
       [profileId, userId],
     )
     if (profileResult.rows.length > 0) return true
 
     // Check manager role in profile_agents
     const agentResult = await pool.query(
-      `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2 AND role = 'Manager'`,
+      `SELECT pa.id FROM profile_agents pa JOIN profiles p ON p.id=pa.profile_id WHERE pa.profile_id=$1 AND pa.user_id=$2 AND pa.role='Manager' AND p.profile_type='LEGAL' AND NOT p.archived`,
       [profileId, userId],
     )
     return agentResult.rows.length > 0
@@ -960,6 +960,38 @@ export class AgentsService {
       if (!committed) await client.query('ROLLBACK').catch(()=>{})
       throw error
     } finally {client.release()}
+  }
+
+
+  /** Replace only non-owner memberships; preserve unchanged association IDs. */
+  async setAgentRoles(profileId: string, targetUserId: string, roles: string[], actorUserId: string): Promise<void> {
+    if (roles.some(role=>!AgentsService.VALID_INVITE_ROLES.has(role)) || new Set(roles).size!==roles.length) {
+      throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
+    }
+    const client=await getDbPool().connect()
+    try {
+      await client.query('BEGIN')
+      const profile=(await client.query(`SELECT user_id FROM profiles WHERE id=$1 AND profile_type='LEGAL' AND NOT archived FOR UPDATE`,[profileId])).rows[0]
+      if (!profile) throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code},404)
+      if (profile.user_id!==actorUserId) {
+        const manager=await client.query(`SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE`,[profileId,actorUserId])
+        if (!manager.rows.length) throw new HttpException({statusCode:403,error:ErrorCodes.AUTHZ_FORBIDDEN.code},403)
+      }
+      if (profile.user_id===targetUserId) {
+        throw new HttpException({statusCode:409,error:ErrorCodes.CONFLICT_STATE.code,message:'The current owner cannot be removed or reassigned as an agent'},409)
+      }
+      const existing=await client.query('SELECT id,role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 FOR UPDATE',[profileId,targetUserId])
+      if (!existing.rows.length) throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code},404)
+      await client.query('DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND NOT (role=ANY($3::text[]))',[profileId,targetUserId,roles])
+      await client.query(`INSERT INTO profile_agents(id,profile_id,user_id,role,joined_at,created_at,updated_at)
+        SELECT uuid_generate_v7(),$1,$2,role,NOW(),NOW(),NOW() FROM unnest($3::text[]) AS role
+        ON CONFLICT (profile_id,user_id,role) DO NOTHING`,[profileId,targetUserId,roles])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,$2,$3::jsonb,uuid_generate_v7(),NOW())`,[actorUserId,
+        roles.length ? 'agent_roles_changed' : 'agent_removed',JSON.stringify({profileId,targetUserId,before:existing.rows.map(r=>r.role),after:roles})])
+      await client.query('COMMIT')
+    } catch(error) {await client.query('ROLLBACK').catch(()=>{});throw error}
+    finally {client.release()}
   }
 
 }

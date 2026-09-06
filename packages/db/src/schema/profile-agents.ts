@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { uuid, text, pgTable, timestamp } from 'drizzle-orm/pg-core'
+import { uuid, text, pgTable, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 import { profiles } from './profiles'
 
@@ -49,13 +49,13 @@ export const profileAgents = pgTable(
       .defaultNow()
       .notNull(),
   },
+  table => [uniqueIndex('idx_profile_agents_profile_user_role').on(table.profileId,table.userId,table.role)],
 )
 
 /**
  * SQL to create the profile_agents table.
  *
- * Enforces a unique constraint per profile+user so the same user
- * cannot be added twice to the same legal profile.
+ * Enforces one membership per profile, user and role. Multiple roles are additive.
  */
 export const createProfileAgentsTable = sql`
   CREATE TABLE IF NOT EXISTS profile_agents (
@@ -68,8 +68,8 @@ export const createProfileAgentsTable = sql`
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
 
-  CREATE UNIQUE INDEX IF NOT EXISTS idx_profile_agents_profile_user
-    ON profile_agents (profile_id, user_id);
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_profile_agents_profile_user_role
+    ON profile_agents (profile_id, user_id, role);
 
   CREATE INDEX IF NOT EXISTS idx_profile_agents_user
     ON profile_agents (user_id);

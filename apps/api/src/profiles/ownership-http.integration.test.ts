@@ -104,3 +104,37 @@ it('allows only one concurrent initiation',async()=>{
   expect(responses.map(r=>r.status).sort()).toEqual([201,409])
   expect((await http.pool.query("SELECT count(*)::int AS count FROM profile_ownership_transfers WHERE profile_id=$1 AND status='Pending'",[profileId])).rows[0].count).toBe(1)
 })
+it('supports additive roles and immediately removes financial access when Finance is removed',async()=>{
+  const edit=(roles:string[])=>fetch(`${http.base}/api/profiles/${profileId}/agents/target/roles`,{method:'PUT',headers:headers.owner!,body:JSON.stringify({roles})})
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='owner'")
+  expect((await edit(['Finance','Legal'])).status).toBe(403)
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='owner'")
+  const changed=await edit(['Finance','Legal'])
+  expect(changed.status,await changed.text()).toBe(200)
+  expect((await http.pool.query('SELECT role FROM profile_agents WHERE profile_id=$1 ORDER BY role',[profileId])).rows).toEqual([{role:'Finance'},{role:'Legal'}])
+  expect((await fetch(`${http.base}/api/wallet/${profileId}/create`,{method:'POST',headers:headers.target!})).status).toBeLessThan(300)
+  expect((await edit(['Legal'])).status).toBe(200)
+  expect((await fetch(`${http.base}/api/wallet/${profileId}`,{headers:headers.target!})).status).toBe(404)
+  expect((await edit(['Owner'])).status).toBe(400)
+  expect((await fetch(`${http.base}/api/profiles/${profileId}/agents/owner`,{method:'DELETE',headers:headers.owner!})).status).toBe(409)
+  expect((await fetch(`${http.base}/api/profiles/${profileId}/agents/target`,{method:'DELETE',headers:headers.owner!})).status).toBe(200)
+  expect((await post('transfer-ownership','owner',{newOwnerUserId:'target'})).status).toBe(400)
+  expect((await http.pool.query("SELECT count(*)::int AS count FROM audit_log WHERE event='agent_removed'")).rows[0].count).toBe(1)
+})
+it('serializes removing a target with ownership acceptance',async()=>{
+  const id=await initiate(),client=await http.pool.connect()
+  let attempts:Promise<Response>[]=[]
+  try{
+    await client.query('BEGIN');await client.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE',[profileId])
+    attempts=[post('ownership-accept','target',{transferId:id}),fetch(`${http.base}/api/profiles/${profileId}/agents/target`,{method:'DELETE',headers:headers.owner!})]
+    await expect.poll(async()=>(await http.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database()
+      AND wait_event_type='Lock' AND query LIKE 'SELECT user_id%FROM profiles%'`)).rows[0].count).toBe(2)
+    await client.query('COMMIT')
+    const results=await Promise.all(attempts)
+    expect(results.map(r=>r.status).filter(s=>s===200)).toHaveLength(1)
+    expect(results.map(r=>r.status).every(s=>[200,403,409].includes(s))).toBe(true)
+    const owner=(await http.pool.query('SELECT user_id FROM profiles WHERE id=$1',[profileId])).rows[0].user_id
+    const agents=(await http.pool.query("SELECT * FROM profile_agents WHERE profile_id=$1 AND user_id='target'",[profileId])).rows
+    expect(agents.length).toBe(owner==='target'?1:0)
+  }finally{await client.query('ROLLBACK');client.release();await Promise.allSettled(attempts)}
+},15000)

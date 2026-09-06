@@ -1,3 +1,5 @@
+import { z } from 'zod'
+import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js'
 import {
   Body,
   Controller,
@@ -8,6 +10,7 @@ import {
   Logger,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common'
@@ -124,4 +127,27 @@ export class AgentsController {
     this.logger.log(`Invitation ${inviteId} withdrawn from profile ${profileId} by user ${userId}`)
     return { message: 'Invitation withdrawn successfully.' }
   }
+
+  @Put('agents/:userId/roles')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @UseGuards(StepUpGuard)
+  async setAgentRoles(@Param('profileId') profileId:string,@Param('userId') targetUserId:string,
+    @Body() body:unknown,@Req() req:AuthenticatedRequest) {
+    const parsed=z.object({roles:z.array(z.enum(['Manager','Finance','Legal'])).min(1).max(3)}).safeParse(body)
+    if (!parsed.success || !z.uuid().safeParse(profileId).success) throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
+    await this.agentsService.setAgentRoles(profileId,targetUserId,parsed.data.roles,req.session.userId)
+    return {roles:parsed.data.roles}
+  }
+
+  @Delete('agents/:userId')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @UseGuards(StepUpGuard)
+  async removeAgent(@Param('profileId') profileId:string,@Param('userId') targetUserId:string,@Req() req:AuthenticatedRequest) {
+    if (!z.uuid().safeParse(profileId).success) throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
+    await this.agentsService.setAgentRoles(profileId,targetUserId,[],req.session.userId)
+    return {removed:true}
+  }
+
 }
