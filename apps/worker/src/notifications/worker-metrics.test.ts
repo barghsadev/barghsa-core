@@ -19,7 +19,6 @@ import {
  * and the Prometheus text-format export.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makePool(
   overrides: {
     age?: number;
@@ -30,7 +29,6 @@ function makePool(
   } = {}
 ): any {
   return {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async query(sql: string): Promise<{ rows: Array<Record<string, unknown>> }> {
       if (sql.includes('EXTRACT(EPOCH FROM (NOW() - created_at))')) {
         return { rows: [{ age: overrides.age ?? 120 }] };

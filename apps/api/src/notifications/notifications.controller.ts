@@ -5,13 +5,12 @@ import {
   Param,
   Post,
   HttpCode,
-  HttpException,
   Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ErrorCodes } from '@barghsa/shared/errors';
+import '@barghsa/shared/errors';
 import { NotificationsService } from './notifications.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';

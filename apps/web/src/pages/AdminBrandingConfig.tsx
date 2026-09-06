@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useId } from 'react';
 import { withCsrf } from '../lib/csrf.js';
 
 // ---------------------------------------------------------------------------
@@ -86,16 +86,21 @@ function ColorInput({
   value: string;
   onChange: (v: string) => void;
 }) {
+  const controlId = useId();
   return (
     <div className="flex items-center gap-3">
-      <label className="text-sm font-medium text-gray-700 w-32">{label}</label>
+      <label htmlFor={controlId} className="text-sm font-medium text-gray-700 w-32">
+        {label}
+      </label>
       <input
+        id={controlId}
         type="color"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-10 h-10 rounded border border-gray-300 cursor-pointer p-0.5"
       />
       <input
+        aria-label={`${label} hex value`}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -119,7 +124,7 @@ export default function AdminBrandingConfig() {
   const [activating, setActivating] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [draftInfo, setDraftInfo] = useState<{ version: number; updatedAt: string } | null>(null);
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [, setLogoFile] = useState<File | null>(null);
 
   // Load current config
   useEffect(() => {
@@ -255,8 +260,14 @@ export default function AdminBrandingConfig() {
         <h2 className="text-lg font-semibold text-gray-800">App Identity</h2>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">App Title</label>
+          <label
+            htmlFor="adminbrandingconfig-field-2"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            App Title
+          </label>
           <input
+            id="adminbrandingconfig-field-2"
             type="text"
             value={config.appTitle}
             onChange={(e) => updateConfig('appTitle', e.target.value)}
@@ -266,8 +277,14 @@ export default function AdminBrandingConfig() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Slogan</label>
+          <label
+            htmlFor="adminbrandingconfig-field-3"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Slogan
+          </label>
           <input
+            id="adminbrandingconfig-field-3"
             type="text"
             value={config.slogan}
             onChange={(e) => updateConfig('slogan', e.target.value)}
@@ -304,8 +321,14 @@ export default function AdminBrandingConfig() {
 
         <div className="flex items-start gap-6">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Upload logo</label>
+            <label
+              htmlFor="adminbrandingconfig-field-4"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Upload logo
+            </label>
             <input
+              id="adminbrandingconfig-field-4"
               type="file"
               accept="image/png,image/jpeg,image/svg+xml"
               onChange={handleLogoUpload}
@@ -333,10 +356,14 @@ export default function AdminBrandingConfig() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="adminbrandingconfig-field-5"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Favicon URL (optional)
           </label>
           <input
+            id="adminbrandingconfig-field-5"
             type="text"
             value={config.faviconUrl ?? ''}
             onChange={(e) => updateConfig('faviconUrl', e.target.value || null)}
@@ -354,6 +381,7 @@ export default function AdminBrandingConfig() {
             <p className="text-sm text-gray-500">Enable dark mode theme for the app</p>
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
+            <span className="sr-only">Dark mode</span>
             <input
               type="checkbox"
               checked={config.darkMode}

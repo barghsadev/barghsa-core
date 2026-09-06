@@ -76,11 +76,9 @@ export interface WalletReconciliationOptions {
 
 const defaultLogger = {
   warn: (msg: string): void => {
-    // eslint-disable-next-line no-console
     console.warn(`[worker] ${msg}`);
   },
   info: (msg: string): void => {
-    // eslint-disable-next-line no-console
     console.log(`[worker] ${msg}`);
   },
 };

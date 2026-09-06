@@ -19,7 +19,7 @@ vi.mock('@tanstack/react-router', () => ({
     to: string;
     params?: Record<string, string>;
   }) => (
-    <a href={typeof to === 'string' ? to : '#'} {...rest}>
+    <a href={typeof to === 'string' ? to : '/invoices'} {...rest}>
       {children}
     </a>
   ),

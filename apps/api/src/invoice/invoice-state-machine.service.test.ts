@@ -49,7 +49,7 @@ function makeInvoiceRow(overrides: Record<string, unknown> = {}) {
   };
 }
 
-function mockTransitionFlowSuccess(fromState: string, updateParamCount: number) {
+function mockTransitionFlowSuccess(fromState: string, _updateParamCount: number) {
   // BEGIN → SELECT ... FOR UPDATE → idempotency check (none) → UPDATE → INSERT audit → COMMIT
   mockClient.query
     .mockReset()

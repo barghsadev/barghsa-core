@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
-import { createHash } from 'node:crypto';
+import { describe, it, expect, vi, afterAll } from 'vitest';
+import 'node:crypto';
 import type { Request, Response } from 'express';
 import {
   SESSION_COOKIE_NAME,

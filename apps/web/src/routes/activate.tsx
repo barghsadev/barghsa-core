@@ -1,4 +1,4 @@
-import { rateLimitMessage } from '../lib/auth-errors.js';
+import '../lib/auth-errors.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';

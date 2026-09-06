@@ -7,7 +7,7 @@ import {
   CorrelationIdProvider,
   correlationIdStorage,
 } from '../src/common/correlation-id.middleware.js';
-import { ErrorCodes } from '@barghsa/shared/errors';
+import '@barghsa/shared/errors';
 import { ZodError, ZodIssue } from 'zod';
 
 // ---------------------------------------------------------------------------
@@ -254,7 +254,7 @@ describe('HttpExceptionFilter', () => {
   it('includes correlationId in response when set', () => {
     const testId = '550e8400-e29b-41d4-a716-446655440000';
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    const { json, status, host } = createMockHost(404, {});
+    const { json, host } = createMockHost(404, {});
 
     correlationIdStorage.run(testId, () => {
       filter.catch(exception, host);
@@ -271,7 +271,7 @@ describe('HttpExceptionFilter', () => {
 
   it('uses English locale when accept-language is en — raw message used for 4xx', () => {
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    const { json, status, host } = createMockHost(404, {}, { 'accept-language': 'en-US' });
+    const { json, host } = createMockHost(404, {}, { 'accept-language': 'en-US' });
 
     filter.catch(exception, host);
 

@@ -55,7 +55,6 @@ function mockDbModule(pool: {
   return { getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES };
 }
 
-let AdminService: typeof AdminServiceType;
 let service: AdminServiceType;
 
 beforeEach(() => {

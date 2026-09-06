@@ -38,7 +38,7 @@ function structuredLog(
 ): void {
   if (process.env.NODE_ENV !== 'production') return;
   // Structured JSON only in production; single line per entry for log aggregation.
-  // eslint-disable-next-line no-console
+
   console.log(JSON.stringify({ level, event, ...details }));
 }
 
@@ -81,7 +81,7 @@ export function buildConnectionString(
  * the client's internal `_activeQuery` or `_queryQueue` right after the
  * call, which is where pg stores the just-created Query.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof client.query {
   const originalQuery = client.query.bind(client);
 
@@ -92,7 +92,7 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
     const text = typeof first === 'string' ? first : first?.text;
 
     // Detect callback-passing usage (last arg is a function).
-    const cbIndex = args.findIndex((a: any) => typeof a === 'function');
+    const cbIndex = args.findIndex((a: unknown) => typeof a === 'function');
     const hasCallback = cbIndex !== -1;
 
     let timedOut = false;
@@ -139,7 +139,7 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
         originalCb(err, res);
       };
       const instrumentedArgs = [...args.slice(0, cbIndex), wrappedCb, ...args.slice(cbIndex + 1)];
-      const result = (originalQuery as Function)(...instrumentedArgs);
+      const result = Reflect.apply(originalQuery, client, instrumentedArgs);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       captureQuery(client as any);
       scheduleTimeout();
@@ -147,7 +147,7 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
     }
 
     // Promise-based invocation.
-    const result = (originalQuery as Function)(...args);
+    const result = Reflect.apply(originalQuery, client, args);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     captureQuery(client as any);
     scheduleTimeout();
@@ -173,7 +173,6 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
 function attachClientQueryHooks(pool: Pool, queryTimeoutMs: number): void {
   if (process.env.NODE_ENV !== 'production' && queryTimeoutMs <= 0) return;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool.on('connect', (client: Client) => {
     client.query = wrapClientQuery(client, queryTimeoutMs);
   });

@@ -444,7 +444,7 @@ async function main(): Promise<void> {
     if (r.skipped > 0) parts.push(`skipped ${r.skipped}`);
     if (r.errors.length > 0) parts.push(`errors: ${r.errors.join(', ')}`);
     const summary = parts.length > 0 ? parts.join(', ') : 'no changes';
-    // eslint-disable-next-line no-console
+
     console.log(`[seed:${r.entity}] ${summary}`);
   }
 

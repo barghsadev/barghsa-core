@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t, type Locale } from '@barghsa/i18n/auth';
-import { Loader2Icon, CheckCircle2Icon } from 'lucide-react';
+import { Loader2Icon } from 'lucide-react';
 import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField, evaluateStrength } from '../components/PasswordField.js';

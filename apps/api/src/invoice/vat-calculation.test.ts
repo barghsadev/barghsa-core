@@ -33,7 +33,6 @@ function makeExecutor(routes: {
         return { rows: routes.category };
       }
       return { rows: [] };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as DbExecutor['query'],
   };
   return { executor, calls };

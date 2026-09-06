@@ -18,16 +18,6 @@ interface DashboardData {
   };
 }
 
-function formatRial(amount: number, locale: Locale): string {
-  try {
-    return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-      style: 'decimal',
-    }).format(amount);
-  } catch {
-    return amount.toLocaleString();
-  }
-}
-
 /**
  * Dashboard overview page (T-08.01.01, T-08.01.02, T-08.01.03).
  *

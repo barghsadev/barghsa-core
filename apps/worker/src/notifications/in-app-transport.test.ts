@@ -11,11 +11,9 @@ import type { NotificationSendPayload } from '@barghsa/shared/notifications';
  * return a `delivered` result whose `providerRef` is the inserted row id.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makePool(insertId: string | null = 'ian-1') {
   const inserts: Array<{ sql: string; params: unknown[] }> = [];
   const pool = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async query(sql: string, params?: any[]) {
       if (!sql.includes('INSERT INTO in_app_notifications')) return { rows: [], rowCount: 0 };
       inserts.push({ sql, params: params ?? [] });

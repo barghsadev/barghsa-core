@@ -21,7 +21,7 @@ describe('custom Drizzle types', () => {
     const columns = getTableColumns(buildIdTable());
     const id = columns.id;
     expect(id.default).toBeDefined();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const query = (id.default as any).toQuery({});
     expect(query.sql).toContain('uuid_generate_v7()');
   });

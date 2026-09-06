@@ -223,7 +223,6 @@ describe('AgentsService', () => {
   describe('createInvitation', () => {
     const profileId = 'prof-legal-1';
     const userId = 'user-owner-1';
-    const normalisedUsername = '+989121234567';
 
     const defaultInviteMock = () => {
       // Permission check: isOwnerOrManager returns true (owner)

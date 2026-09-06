@@ -241,7 +241,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
     });
 
     it('rejects a percentage code without a required max cap', async () => {
-      const { pool, router } = makeDb();
+      const { pool } = makeDb();
       service = await loadService(pool);
 
       const err = await service
@@ -260,7 +260,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
     });
 
     it('rejects maxCapIrr on a fixed_irr code', async () => {
-      const { pool, router } = makeDb();
+      const { pool } = makeDb();
       service = await loadService(pool);
 
       const err = await service
@@ -274,7 +274,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
     });
 
     it('requires profile scopes for profile-restricted codes', async () => {
-      const { pool, router } = makeDb();
+      const { pool } = makeDb();
       service = await loadService(pool);
 
       await expect(
@@ -365,7 +365,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
     });
 
     it('rejects invalid code charset', async () => {
-      const { pool, router } = makeDb();
+      const { pool } = makeDb();
       service = await loadService(pool);
 
       await expect(service.create({ ...createInput, code: 'bad code!' })).rejects.toThrow(
@@ -759,7 +759,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
     it('locks the code row FOR UPDATE before counting consumed redemptions', async () => {
       const { pool, router } = makeDb();
       const rows: Array<{ sql: string }> = [];
-      router.on('FOR UPDATE', (values) => {
+      router.on('FOR UPDATE', (_values) => {
         rows.push({ sql: 'FOR UPDATE' });
         return { rows: [giftRow({ total_limit: 2 })] };
       });

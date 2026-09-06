@@ -789,7 +789,6 @@ export class AuthService {
     const pool = getDbPool();
     const client = await pool.connect();
     let userId: string | undefined;
-    let row: any;
 
     try {
       await client.query('BEGIN');
@@ -811,7 +810,15 @@ export class AuthService {
         );
       }
 
-      row = challengeResult.rows[0];
+      const row = challengeResult.rows[0] as {
+        destination: string;
+        consumed_at: Date | null;
+        expires_at: Date;
+        attempts_remaining: number;
+        password_hash: string | null;
+        tos_version_id: string | null;
+        otp_hash: string;
+      };
 
       // Check consumed
       if (row.consumed_at) {
@@ -1418,8 +1425,8 @@ export class AuthService {
              WHERE user_id = $3`,
             [newUsername, now, userId]
           );
-        } catch (err: any) {
-          if (err?.code === '23505') {
+        } catch (err: unknown) {
+          if (typeof err === 'object' && err !== null && 'code' in err && err.code === '23505') {
             // Unique constraint violation — another user claimed this username
             throw new HttpException(
               { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
@@ -1437,8 +1444,8 @@ export class AuthService {
              WHERE user_id = $3`,
             [newUsername, now, userId]
           );
-        } catch (err: any) {
-          if (err?.code === '23505') {
+        } catch (err: unknown) {
+          if (typeof err === 'object' && err !== null && 'code' in err && err.code === '23505') {
             // Unique constraint violation — another user claimed this username
             throw new HttpException(
               { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },

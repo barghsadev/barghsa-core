@@ -227,14 +227,14 @@ export class NotificationsService {
   }
 
   /** A single dead-letter row surfaced to the admin panel (E-05, T-05.01.06). */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   async listDeadLetters(options: {
     status?: 'open' | 'retried' | 'resolved' | 'dismissed';
     severity?: 'error' | 'critical';
     channel?: 'in_app' | 'email' | 'sms';
     limit?: number;
     offset?: number;
-  }): Promise<any[]> {
+  }): Promise<Record<string, unknown>[]> {
     const pool = getDbPool();
     const limit = Math.min(Math.max(options.limit ?? 50, 1), 200);
     const offset = Math.max(options.offset ?? 0, 0);
@@ -297,12 +297,12 @@ export class NotificationsService {
    * Idempotent: acting on a record already resolved/dismissed/retried is a
    * no-op that returns the current row. Returns the updated record.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   async deadLetterAction(
     id: string,
     action: 'retry' | 'resolve' | 'dismiss',
     actor: string
-  ): Promise<any | null> {
+  ): Promise<Record<string, unknown> | null> {
     const pool = getDbPool();
     const current = await pool.query<{
       id: string;

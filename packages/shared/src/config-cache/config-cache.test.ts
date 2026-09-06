@@ -33,12 +33,6 @@ const VAT_RATE_CACHED: CachedConfigEntry<number> = {
   version: 1,
   cachedAtGlobalVersion: 5,
 };
-const MIN_PRICE_ROW = { value: 1000, version: 3 };
-const MIN_PRICE_CACHED: CachedConfigEntry<number> = {
-  value: 1000,
-  version: 3,
-  cachedAtGlobalVersion: 7,
-};
 
 describe('ConfigCache', () => {
   let redis: MockRedis;

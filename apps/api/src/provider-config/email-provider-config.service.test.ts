@@ -12,11 +12,9 @@ import { ProviderSecretsService } from './provider-secrets.service';
  * query-log for asserting transaction boundaries (BEGIN/COMMIT/ROLLBACK).
  */
 function buildHarness() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rows = new Map<string, any>();
   const queries: string[] = [];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const exec = async (text: string, params?: unknown[]): Promise<any> => {
     queries.push(text);
     const lower = text.toLowerCase();
@@ -155,7 +153,6 @@ function buildHarness() {
     return { rows: [] };
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function toResult(r: any): EmailProviderConfigResult & { config?: ProviderConfigBody } {
     return {
       id: r.id,
@@ -177,7 +174,7 @@ function buildHarness() {
       breakerCooldownUntil: r.cooldown_until ?? null,
       // Raw config is included so the service's maskRow() can build the
       // masked view; it is stripped before the API returns the row.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       config: r.config,
       // Placeholder — maskRow() replaces this with the real masked view.
       maskedConfig: {},
@@ -462,7 +459,7 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
 describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
   // engine-less fake; the real SMTP handshake lives in SmtpConnectionTesterService.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const fakeTester = (outcome: { ok: boolean; error?: string }) =>
     ({ test: async () => outcome }) as never;
 
@@ -474,7 +471,7 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
       config: { host: 'smtp.example.com', from_email: 'noreply@example.com' },
       createdBy: 'admin-1',
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     (service as any).smtpTester = fakeTester({ ok: true });
     const out = await service.testConnection(created.id);
     expect(out.ok).toBe(true);
@@ -483,14 +480,14 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
   });
 
   it('records a failing test with the tester error message', async () => {
-    const { service, rows } = buildHarness();
+    const { service } = buildHarness();
     const created = await service.create({
       transport: 'smtp',
       label: 'SMTP',
       config: { host: 'smtp.example.com', from_email: 'noreply@example.com' },
       createdBy: 'admin-1',
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     (service as any).smtpTester = fakeTester({ ok: false, error: 'Connection refused' });
     const out = await service.testConnection(created.id);
     expect(out.ok).toBe(false);
@@ -559,7 +556,7 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
       config: { port: 587 },
       createdBy: 'admin-1',
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     (service as any).smtpTester = fakeTester({ ok: false, error: 'unused' });
     const out = await service.testConnection(created.id);
     expect(out.ok).toBe(false);

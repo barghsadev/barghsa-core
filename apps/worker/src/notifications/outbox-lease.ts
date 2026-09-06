@@ -1,6 +1,12 @@
+import type { QueryResultRow } from 'pg';
 import type { OutboxRow } from './outbox-reader.js';
 
-type QueryPool = { query: (sql: string, params?: any[]) => Promise<any> };
+type QueryPool = {
+  query: (
+    sql: string,
+    params?: unknown[]
+  ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
+};
 export class OutboxLeaseLost extends Error {
   constructor() {
     super('notification outbox claim is no longer owned');

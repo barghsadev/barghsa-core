@@ -17,7 +17,6 @@ const nonAdminReq = {
 } as unknown as AuthenticatedRequest;
 
 const CODE_ID = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
-const PROFILE_ID = '11111111-1111-4111-8111-111111111111';
 
 const giftCodeDto = {
   id: CODE_ID,

@@ -26,18 +26,13 @@ import { VerifyOtpSchema, ResendOtpSchema } from './dto/otp.dto.js';
 import type { LoginResponse } from './dto/login.dto.js';
 import { LoginSchema } from './dto/login.dto.js';
 import type { LoginVerifyResponse } from './dto/login.dto.js';
-import {
-  LoginVerifySchema,
-  LoginResendSchema,
-  type LoginVerifyInput,
-  type LoginResendInput,
-} from './dto/login.dto.js';
-import type { ForceChangePasswordInput } from './dto/force-change-password.dto.js';
+import { LoginVerifySchema, LoginResendSchema } from './dto/login.dto.js';
+
 import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js';
 import { OtpService } from './otp.service.js';
-import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js';
+import type { ForgotPasswordResponse } from './dto/forgot-password.dto.js';
 import { ForgotPasswordSchema } from './dto/forgot-password.dto.js';
-import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js';
+import type { ResetPasswordResponse } from './dto/reset-password.dto.js';
 import { ResetPasswordSchema } from './dto/reset-password.dto.js';
 import type {
   ChangeUsernameSendOtpResponse,

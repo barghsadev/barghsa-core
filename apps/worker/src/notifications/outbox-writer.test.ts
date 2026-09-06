@@ -20,19 +20,17 @@ import {
 interface RecordedQuery {
   sql: string;
   params: unknown[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   result: any;
 }
 
 /** Minimal fake PoolClient that returns configurable per-call results. */
 function makeClient(onQuery?: (q: string) => unknown): {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   client: any;
   calls: RecordedQuery[];
 } {
   const calls: RecordedQuery[] = [];
   const client = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async query(sql: string, params?: any[]) {
       const result = onQuery ? onQuery(sql) : undefined;
       calls.push({ sql, params: params ?? [], result });

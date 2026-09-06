@@ -16,7 +16,6 @@ import {
 function makePool() {
   const inserts: Array<{ sql: string; params: unknown[] }> = [];
   const pool = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async query(sql: string, params?: any[]) {
       inserts.push({ sql, params: params ?? [] });
       return { rows: [], rowCount: 1 };

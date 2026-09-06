@@ -833,6 +833,7 @@ export default function AdminWalletReceiptsPage() {
       )}
 
       {stepUpOpen && (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
         <div
           ref={stepUpDialogRef}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"

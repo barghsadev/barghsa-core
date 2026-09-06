@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { ForbiddenException } from '@nestjs/common';
-import { CsrfGuard, SkipCsrf } from './csrf.guard.js';
-import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { CsrfGuard } from './csrf.guard.js';
+import '../common/correlation-id.middleware.js';
 
 /**
  * Create a mock ExecutionContext for testing CSRF validation.

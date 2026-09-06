@@ -210,8 +210,14 @@ export default function AdminStorageConfig() {
       <div className="space-y-4 max-w-xl">
         {/* Endpoint */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Endpoint</label>
+          <label
+            htmlFor="adminstorageconfig-field-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Endpoint
+          </label>
           <input
+            id="adminstorageconfig-field-1"
             type="text"
             value={endpoint}
             onChange={(e) => {
@@ -225,8 +231,14 @@ export default function AdminStorageConfig() {
 
         {/* Region */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
+          <label
+            htmlFor="adminstorageconfig-field-2"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Region
+          </label>
           <input
+            id="adminstorageconfig-field-2"
             type="text"
             value={region}
             onChange={(e) => {
@@ -240,8 +252,14 @@ export default function AdminStorageConfig() {
 
         {/* Bucket */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Bucket</label>
+          <label
+            htmlFor="adminstorageconfig-field-3"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Bucket
+          </label>
           <input
+            id="adminstorageconfig-field-3"
             type="text"
             value={bucket}
             onChange={(e) => {
@@ -255,8 +273,14 @@ export default function AdminStorageConfig() {
 
         {/* Access Key ID */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Access Key ID</label>
+          <label
+            htmlFor="adminstorageconfig-field-4"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Access Key ID
+          </label>
           <input
+            id="adminstorageconfig-field-4"
             type="text"
             value={accessKeyId}
             onChange={(e) => {
@@ -270,7 +294,10 @@ export default function AdminStorageConfig() {
 
         {/* Secret Access Key (write-only) */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="adminstorageconfig-field-5"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Secret Access Key
             {config?.hasSecretKey && !secretAccessKey && (
               <span className="ml-2 text-xs text-gray-500 font-normal">
@@ -279,6 +306,7 @@ export default function AdminStorageConfig() {
             )}
           </label>
           <input
+            id="adminstorageconfig-field-5"
             type="password"
             value={secretAccessKey}
             onChange={(e) => {
@@ -310,10 +338,14 @@ export default function AdminStorageConfig() {
 
         {/* Private Endpoint URL */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="adminstorageconfig-field-6"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Private Endpoint URL
           </label>
           <input
+            id="adminstorageconfig-field-6"
             type="text"
             value={privateEndpointUrl}
             onChange={(e) => {
@@ -327,10 +359,14 @@ export default function AdminStorageConfig() {
 
         {/* Public Endpoint URL */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="adminstorageconfig-field-7"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Public Endpoint URL
           </label>
           <input
+            id="adminstorageconfig-field-7"
             type="text"
             value={publicEndpointUrl}
             onChange={(e) => {

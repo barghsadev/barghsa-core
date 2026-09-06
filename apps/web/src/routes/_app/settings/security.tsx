@@ -411,6 +411,7 @@ function SettingsSecurityPage() {
 
       {/* ── Revoke Single Session Confirmation Dialog ──────────────── */}
       {revokeConfirmId && revokeConfirmSession && (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
         <div
           role="dialog"
           aria-modal="true"
@@ -467,6 +468,7 @@ function SettingsSecurityPage() {
 
       {/* ── Revoke All Confirmation Dialog ───────────────────────── */}
       {showRevokeAll && (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
         <div
           role="dialog"
           aria-modal="true"

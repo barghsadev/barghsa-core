@@ -3,7 +3,6 @@ import type { Pool } from 'pg';
 import {
   DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS,
   ONLINE_TOPUP_CHANNEL,
-  ONLINE_TOPUP_EXPIRY_AUDIT_EVENT,
   ONLINE_TOPUP_EXPIRY_REASON,
   ONLINE_TOPUP_EXPIRY_TRANSITION,
 } from '@barghsa/shared/finance';

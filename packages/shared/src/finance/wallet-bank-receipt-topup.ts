@@ -113,6 +113,7 @@ export function parseBankReceiptPayerReference(raw: unknown): string | null {
   if (typeof raw !== 'string') return null;
   const trimmed = raw.trim();
   if (trimmed.length < 1 || trimmed.length > MAX_PAYER_REFERENCE_LENGTH) return null;
+  // eslint-disable-next-line no-control-regex -- Reject control characters in untrusted receipt text.
   if (/[\u0000-\u001f\u007f]/.test(trimmed)) return null;
   return trimmed;
 }
@@ -137,6 +138,7 @@ export function parseBankReceiptCustomerNote(raw: unknown): string | null | unde
   const trimmed = raw.trim();
   if (trimmed.length === 0) return null;
   if (trimmed.length > MAX_CUSTOMER_NOTE_LENGTH) return undefined;
+  // eslint-disable-next-line no-control-regex -- Reject control characters in untrusted receipt text.
   if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(trimmed)) return undefined;
   return trimmed;
 }

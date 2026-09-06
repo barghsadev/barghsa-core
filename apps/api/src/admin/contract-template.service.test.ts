@@ -377,7 +377,7 @@ describe('ContractTemplateService.update (T-09.12.04)', () => {
     }));
     db.router.on('FROM contract_template_versions', () => ({ rows: [] }));
     const { service } = await loadService(db.pool);
-    const dto = await service.update(TEMPLATE_ID, {
+    await service.update(TEMPLATE_ID, {
       name: 'New Name',
       actorUserId: ACTOR,
       ip: 'ip',

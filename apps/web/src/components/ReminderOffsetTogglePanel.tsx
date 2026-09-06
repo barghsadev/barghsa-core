@@ -463,6 +463,7 @@ export default function ReminderOffsetTogglePanel() {
       )}
 
       {stepUpOpen && (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
         <div
           ref={stepUpDialogRef}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
@@ -503,7 +504,6 @@ export default function ReminderOffsetTogglePanel() {
         >
           <form
             className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full space-y-4"
-            onClick={(event) => event.stopPropagation()}
             onSubmit={submitStepUp}
           >
             <div>

@@ -579,7 +579,7 @@ function CrmProfileDetailContent() {
 
       {/* Tabs */}
       <div className="border-b border-gray-200 mb-6">
-        <nav className="flex gap-6" role="tablist" aria-label={t('crm.profile.title', locale)}>
+        <div className="flex gap-6" role="tablist" aria-label={t('crm.profile.title', locale)}>
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -596,7 +596,7 @@ function CrmProfileDetailContent() {
               {tab.label}
             </button>
           ))}
-        </nav>
+        </div>
       </div>
 
       {/* Tab: Overview */}

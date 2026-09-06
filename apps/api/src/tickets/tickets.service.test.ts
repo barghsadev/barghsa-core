@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { TicketsService, type CreateTicketDto } from './tickets.service.js';
+import { TicketsService } from './tickets.service.js';
 
 const mockPool = {
   query: vi.fn(),
@@ -38,11 +38,6 @@ function makeCommentRow(overrides: Record<string, unknown> = {}) {
     ...overrides,
   };
 }
-
-const validDto: CreateTicketDto = {
-  subject: 'Test subject',
-  body: 'Test body content',
-};
 
 describe('TicketsService', () => {
   let service: TicketsService;

@@ -117,6 +117,7 @@ export function parseBankReceiptRejectReason(raw: unknown): ParseRejectReasonRes
   ) {
     return { ok: false, message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON() };
   }
+  // eslint-disable-next-line no-control-regex -- Reject control characters in untrusted receipt text.
   if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(trimmed)) {
     return { ok: false, message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON() };
   }

@@ -396,7 +396,7 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
   });
 
   it('isolates a failing service type and still scans the others', async () => {
-    const db = makeFakeDb((sql, params) => {
+    const db = makeFakeDb((sql, _params) => {
       if (sql.includes('FROM app_config')) {
         return {
           rows: [

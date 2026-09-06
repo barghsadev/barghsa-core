@@ -32,7 +32,6 @@ function makeExecutor(
         return { rows };
       }
       return { rows: [] };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as DbExecutor['query'],
   };
   return { executor, calls, params };

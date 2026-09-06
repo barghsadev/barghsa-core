@@ -15,7 +15,6 @@ import type {
  * claim-vs-dispatch loop is verified at e2e level.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makePool() {
   const updates: Array<{ sql: string; params: unknown[] }> = [];
   const jobs: Array<Record<string, any>> = ['in_app', 'email'].map((channel) => ({
@@ -24,7 +23,6 @@ function makePool() {
     run_after: null,
   }));
   const pool = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async query(sql: string, params?: any[]) {
       updates.push({ sql, params: params ?? [] });
       const values = params ?? [];

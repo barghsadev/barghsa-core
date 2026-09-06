@@ -2,7 +2,7 @@ import { withCsrf } from '../../../lib/csrf.js';
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t, type Locale } from '@barghsa/i18n';
+import { type Locale } from '@barghsa/i18n';
 import { validateLegalNationalIdentifier, validatePostalCode } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { Loader2Icon, ChevronRightIcon, UploadIcon } from 'lucide-react';

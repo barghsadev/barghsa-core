@@ -466,7 +466,7 @@ export class AgentsService {
       [username]
     );
 
-    const invitations = result.rows.map((row: any) => ({
+    const invitations = result.rows.map((row: Record<string, unknown>) => ({
       id: row.id as string,
       profileId: row.profile_id as string,
       profileName: row.profile_name as string,

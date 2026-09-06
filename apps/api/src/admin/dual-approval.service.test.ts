@@ -26,7 +26,6 @@ function mockDbModule(pool: {
   return { getDbPool: () => pool };
 }
 
-let DualApprovalService: typeof DualApprovalServiceType;
 let service: DualApprovalServiceType;
 let notificationsService: { create: ReturnType<typeof vi.fn> };
 
@@ -173,9 +172,9 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
             {
               user_id: 'admin-3',
               is_admin: false,
-              role_permissions: ['[\"admin:financial:edit\"]'],
+              role_permissions: ['["admin:financial:edit"]'],
             },
-            { user_id: 'unqualified', is_admin: false, role_permissions: ['[\"tickets:read\"]'] },
+            { user_id: 'unqualified', is_admin: false, role_permissions: ['["tickets:read"]'] },
           ]
         : [],
     }));

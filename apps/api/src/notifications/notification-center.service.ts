@@ -56,9 +56,12 @@ export interface ListNotificationsOptions {
 }
 
 /** Minimal query-pool surface used by the service (testable + typed). */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export interface NotificationCenterQueryPool {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>;
+  query: (
+    text: string,
+    params?: unknown[]
+  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
 }
 
 /**

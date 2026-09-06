@@ -115,7 +115,7 @@ export async function recordJobFailure(
     );
   } catch (err) {
     // A ledger failure must never crash the worker loop.
-    // eslint-disable-next-line no-console
+
     console.error(`[worker] failed to record job failure: ${sanitizeError(String(err))}`);
   }
 }
@@ -144,7 +144,6 @@ export async function recordJobSuccess(
       [jobType, now]
     );
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error(`[worker] failed to record job success: ${sanitizeError(String(err))}`);
   }
 }

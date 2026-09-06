@@ -116,6 +116,7 @@ export function parseInvoiceBankReceiptRejectReason(raw: unknown): ParseRejectRe
   ) {
     return { ok: false, message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON() };
   }
+  // eslint-disable-next-line no-control-regex -- Reject control characters in untrusted receipt text.
   if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(trimmed)) {
     return { ok: false, message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON() };
   }

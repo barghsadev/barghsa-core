@@ -12,13 +12,11 @@ import { ProviderSecretsService } from './provider-secrets.service';
  * query-log for asserting transaction boundaries (BEGIN/COMMIT/ROLLBACK).
  */
 function buildHarness() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rows = new Map<string, any>();
   const queries: string[] = [];
   // Simulated active notification templates (event keys available for mapping).
   const activeTemplateEvents = new Set(['otp:login', 'invoice:created']);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const exec = async (text: string, params?: unknown[]): Promise<any> => {
     queries.push(text);
     const lower = text.toLowerCase();
@@ -121,7 +119,6 @@ function buildHarness() {
     return { rows: [] };
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function toResult(r: any): SmsProviderConfigResult & { config?: ProviderConfigBody } {
     return {
       id: r.id,
@@ -158,10 +155,9 @@ function buildHarness() {
 }
 
 /** Build a service with a real (no-key) ProviderSecretsService + harness pool. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 function makeService(h: ReturnType<typeof buildHarness>) {
   return new SmsProviderConfigService(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     h.pool as any,
     undefined,
     new ProviderSecretsService(undefined)
@@ -177,7 +173,6 @@ const VALID_CONFIG = {
 };
 
 describe('SmsProviderConfigService (T-09.06.02)', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let h: ReturnType<typeof buildHarness>;
   let svc: SmsProviderConfigService;
 

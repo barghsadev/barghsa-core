@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t, type Locale } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n';
 import { MapPinIcon, PlusIcon, Loader2Icon, CheckIcon, HomeIcon, PackageIcon } from 'lucide-react';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
@@ -56,7 +56,7 @@ function ElectricityOrderPage() {
 
   // Profile & verification
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
-  const [isVerified, setIsVerified] = useState(false);
+  const [, setIsVerified] = useState(false);
   const [checking, setChecking] = useState(true);
   const [blocked, setBlocked] = useState<boolean | null>(null);
 
@@ -502,6 +502,7 @@ function ElectricityOrderPage() {
                   {addresses.map((address) => (
                     <label
                       key={address.id}
+                      htmlFor={`order-address-${address.id}`}
                       className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${
                         selectedAddressId === address.id
                           ? 'border-primary bg-primary/5'
@@ -510,6 +511,7 @@ function ElectricityOrderPage() {
                     >
                       <input
                         type="radio"
+                        id={`order-address-${address.id}`}
                         name="address"
                         value={address.id}
                         checked={selectedAddressId === address.id}

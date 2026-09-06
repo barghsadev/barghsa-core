@@ -14,7 +14,7 @@
     "build": "turbo build",
     "test": "turbo test",
     "test:coverage": "turbo test:coverage",
-    "lint": "turbo lint",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "turbo typecheck",
     "check:suppressed-errors": "./scripts/check-suppressed-errors.sh",
     "setup:bucket": "ts-node scripts/setup-bucket.ts",
@@ -35,7 +35,9 @@
     "size-limit": "13.0.3",
     "turbo": "2.10.11",
     "typescript": "7.0.2",
-    "vitest": "4.1.11"
+    "vitest": "4.1.11",
+    "eslint": "9.39.5",
+    "@barghsa/eslint-config": "workspace:*"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

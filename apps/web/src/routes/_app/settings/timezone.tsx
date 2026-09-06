@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t, type Locale } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n';
 import { GlobeIcon, ClockIcon, Loader2Icon, SaveIcon, SearchIcon, CheckIcon } from 'lucide-react';
-import { Button, Card, CardContent, Label } from '@barghsa/ui';
+import { Button, Card, CardContent } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 
@@ -121,7 +121,7 @@ const FALLBACK_TIMEZONES = [
 /** All IANA timezones from the Intl API, with fallback. */
 function getAllTimezones(): string[] {
   try {
-    const supported = (Intl as any).supportedValuesOf('timeZone');
+    const supported = Intl.supportedValuesOf('timeZone');
     if (Array.isArray(supported) && supported.length > 0) {
       return supported as string[];
     }

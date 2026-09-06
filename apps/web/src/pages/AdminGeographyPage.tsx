@@ -162,8 +162,14 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
           <div className="space-y-4">
             {/* Persian name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Persian Name</label>
+              <label
+                htmlFor="admingeographypage-field-1"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Persian Name
+              </label>
               <input
+                id="admingeographypage-field-1"
                 type="text"
                 value={nameFa}
                 onChange={(e) => setNameFa(e.target.value)}
@@ -176,8 +182,14 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
 
             {/* English name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">English Name</label>
+              <label
+                htmlFor="admingeographypage-field-2"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                English Name
+              </label>
               <input
+                id="admingeographypage-field-2"
                 type="text"
                 value={nameEn}
                 onChange={(e) => setNameEn(e.target.value)}
@@ -190,8 +202,14 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
             {/* Status (edit mode only) */}
             {mode === 'edit' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label
+                  htmlFor="admingeographypage-field-3"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Status
+                </label>
                 <select
+                  id="admingeographypage-field-3"
                   value={status}
                   onChange={(e) => setStatus(e.target.value as 'active' | 'inactive')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

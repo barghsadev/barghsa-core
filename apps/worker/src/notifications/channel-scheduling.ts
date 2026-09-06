@@ -1,3 +1,4 @@
+import type { QueryResultRow } from 'pg';
 import {
   decideDeliverySchedule,
   loadDeliveryWindowConfig,
@@ -6,9 +7,14 @@ import {
 } from './delivery-window.js';
 import type { NotificationChannel } from '@barghsa/shared/notifications';
 
-type QueryConnection = { query: (sql: string, params?: any[]) => Promise<any> };
-type QueryPool = QueryConnection & {
-  connect?: () => Promise<QueryConnection & { release: () => void }>;
+type QueryConnection = {
+  query: (
+    sql: string,
+    params?: unknown[]
+  ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
+};
+export type QueryPool = QueryConnection & {
+  connect?: () => Promise<QueryConnection & { release: (destroy?: boolean) => void }>;
 };
 export interface ChannelJob {
   channel: NotificationChannel;
@@ -34,7 +40,7 @@ export async function refreshOutboxState(
       'SELECT channel,status,attempts,max_attempts,run_after,last_error FROM notification_job WHERE outbox_id=$1',
       [id]
     )
-  ).rows;
+  ).rows as ChannelJob[];
   if (!jobs.length) throw new Error('notification outbox has no channel jobs');
   const pending = jobs.filter((job) => !terminalJob(job));
   const failed = jobs.some(
@@ -114,7 +120,7 @@ export async function reconcileChannelWindows(
           await client.query('ROLLBACK');
           continue;
         }
-        row = locked.rows[0];
+        row = locked.rows[0]!;
       }
       const jobs: ChannelJob[] = row.jobs ?? [];
       if (!jobs.length) {

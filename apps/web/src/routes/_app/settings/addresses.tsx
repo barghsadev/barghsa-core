@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t, type Locale } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n';
 import {
   MapPinIcon,
   PlusIcon,
@@ -11,9 +11,8 @@ import {
   Loader2Icon,
   SaveIcon,
   XIcon,
-  HomeIcon,
 } from 'lucide-react';
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { Button, Card, CardContent, Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 
@@ -459,27 +458,22 @@ function SettingsAddressesPage() {
 
       {/* Add/Edit Modal */}
       {showForm && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={closeForm}
+        <Dialog
+          open
+          onOpenChange={(open) => {
+            if (!open && !saving) closeForm();
+          }}
         >
-          <div
-            className="bg-background rounded-lg shadow-lg w-full max-w-md mx-4 p-6 space-y-4"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={
-              editingAddress
-                ? t('settings.addresses.form.editTitle', locale)
-                : t('settings.addresses.form.title', locale)
-            }
+          <DialogContent
+            showCloseButton={false}
+            className="bg-background rounded-lg shadow-lg w-full sm:max-w-md p-6 space-y-4"
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">
+              <DialogTitle className="text-lg font-semibold">
                 {editingAddress
                   ? t('settings.addresses.form.editTitle', locale)
                   : t('settings.addresses.form.title', locale)}
-              </h2>
+              </DialogTitle>
               <button
                 type="button"
                 onClick={closeForm}
@@ -493,10 +487,11 @@ function SettingsAddressesPage() {
             <div className="space-y-3">
               {/* Province */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="addresses-field-1" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.province', locale)}
                 </label>
                 <select
+                  id="addresses-field-1"
                   value={formProvinceId}
                   onChange={(e) => setFormProvinceId(e.target.value)}
                   className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -515,10 +510,11 @@ function SettingsAddressesPage() {
 
               {/* City */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="addresses-field-2" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.city', locale)}
                 </label>
                 <select
+                  id="addresses-field-2"
                   value={formCityId}
                   onChange={(e) => setFormCityId(e.target.value)}
                   disabled={!formProvinceId}
@@ -536,10 +532,11 @@ function SettingsAddressesPage() {
 
               {/* Full Address */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="addresses-field-3" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.fullAddress', locale)}
                 </label>
                 <textarea
+                  id="addresses-field-3"
                   value={formFullAddress}
                   onChange={(e) => setFormFullAddress(e.target.value)}
                   placeholder={t('settings.addresses.form.fullAddressPlaceholder', locale)}
@@ -551,10 +548,11 @@ function SettingsAddressesPage() {
 
               {/* Postal Code */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="addresses-field-4" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.postalCode', locale)}
                 </label>
                 <input
+                  id="addresses-field-4"
                   type="text"
                   value={formPostalCode}
                   onChange={(e) => setFormPostalCode(e.target.value)}
@@ -581,8 +579,8 @@ function SettingsAddressesPage() {
                   : t('settings.addresses.form.save', locale)}
               </Button>
             </div>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback } from 'react';
 import type { FormEvent } from 'react';
@@ -214,10 +215,14 @@ export default function AdminTosPage() {
           <h2 className="text-lg font-semibold">{editId ? 'Edit Draft' : 'Create New Draft'}</h2>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="admintospage-field-1"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Version ID <span className="text-red-500">*</span>
             </label>
             <input
+              id="admintospage-field-1"
               type="text"
               value={versionId}
               onChange={(e) => setVersionId(e.target.value)}
@@ -229,10 +234,14 @@ export default function AdminTosPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="admintospage-field-2"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Persian Content (Markdown) <span className="text-red-500">*</span>
             </label>
             <textarea
+              id="admintospage-field-2"
               value={contentFa}
               onChange={(e) => setContentFa(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
@@ -243,10 +252,14 @@ export default function AdminTosPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="admintospage-field-3"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               English Content (Markdown) <span className="text-red-500">*</span>
             </label>
             <textarea
+              id="admintospage-field-3"
               value={contentEn}
               onChange={(e) => setContentEn(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
@@ -323,18 +336,22 @@ export default function AdminTosPage() {
 
       {/* Version detail modal (T-09.03.02) */}
       {viewVersion && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-          onClick={closeView}
+        <Dialog
+          open
+          onOpenChange={(open) => {
+            if (!open) closeView();
+          }}
         >
-          <div
-            className="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 max-h-[85vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
+          <DialogContent
+            showCloseButton={false}
+            className="bg-white rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <div>
-                <h2 className="text-lg font-semibold">TOS Version: {viewVersion.versionId}</h2>
+                <DialogTitle className="text-lg font-semibold">
+                  TOS Version: {viewVersion.versionId}
+                </DialogTitle>
                 <p className="text-sm text-gray-500">
                   {viewVersion.status === 'published' ? 'Published' : 'Draft'} ·
                   {viewVersion.changeType && (
@@ -355,6 +372,7 @@ export default function AdminTosPage() {
               </div>
               <button
                 onClick={closeView}
+                aria-label="Close"
                 className="text-gray-400 hover:text-gray-600 text-xl leading-none"
               >
                 ✕
@@ -428,8 +446,8 @@ export default function AdminTosPage() {
                 {detailLocale === 'fa' ? viewVersion.contentFa : viewVersion.contentEn}
               </pre>
             </div>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
 
       {/* Version list */}

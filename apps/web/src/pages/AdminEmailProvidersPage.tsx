@@ -228,7 +228,7 @@ export default function AdminEmailProvidersPage() {
   // Editor state
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [editStatus, setEditStatus] = useState<Status | null>(null);
+  const [, setEditStatus] = useState<Status | null>(null);
   const [label, setLabel] = useState('');
   const [transport, setTransport] = useState<Transport>('smtp');
   const [form, setForm] = useState<TransportForm>(EMPTY_SMTP);

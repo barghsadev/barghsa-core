@@ -138,19 +138,17 @@ export default function AdminVerificationConfig() {
         ).map(([mode, desc]) => (
           <label
             key={mode}
+            htmlFor={`verification-mode-${mode}`}
             className={`block p-4 border rounded-lg cursor-pointer transition-colors ${
               selectedMode === mode
                 ? 'border-blue-500 bg-blue-50'
                 : 'border-gray-200 hover:bg-gray-50'
             }`}
-            onClick={() => {
-              clearMessages();
-              setSelectedMode(mode);
-            }}
           >
             <div className="flex items-center gap-3">
               <input
                 type="radio"
+                id={`verification-mode-${mode}`}
                 name="verification-mode"
                 value={mode}
                 checked={selectedMode === mode}

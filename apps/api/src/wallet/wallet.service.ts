@@ -1135,18 +1135,41 @@ function snapshotFromConfigValue(
   return resolved.ok ? resolved.snapshot : null;
 }
 
-function mapWallet(row: any): WalletRow {
+function mapWallet(row: {
+  profile_id: string;
+  posted_balance: string | bigint;
+  reserved_balance: string | bigint;
+  version: number;
+  updated_at: Date;
+  available_balance?: string | bigint | null;
+}): WalletRow {
   return {
     profileId: row.profile_id,
     postedBalance: BigInt(row.posted_balance),
     reservedBalance: BigInt(row.reserved_balance),
     version: row.version,
     updatedAt: row.updated_at,
-    availableBalance: BigInt(row.available_balance ?? row.posted_balance - row.reserved_balance),
+    availableBalance: BigInt(
+      row.available_balance ?? BigInt(row.posted_balance) - BigInt(row.reserved_balance)
+    ),
   };
 }
 
-function mapTransaction(row: any): TransactionRow {
+function mapTransaction(input: unknown): TransactionRow {
+  const row = input as {
+    id: string;
+    wallet_id: string;
+    type: string;
+    amount: string | bigint;
+    state: string;
+    idempotency_key: string;
+    ref_id?: string | null;
+    description?: string | null;
+    metadata?: unknown;
+    reverses_transaction_id?: string | null;
+    created_at: Date;
+    updated_at: Date;
+  };
   return {
     id: row.id,
     walletId: row.wallet_id,

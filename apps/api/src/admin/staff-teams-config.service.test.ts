@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { HttpException } from '@nestjs/common';
+import '@nestjs/common';
 import type { AdminService as AdminServiceType } from './admin.service.js';
 import {
   DEFAULT_STAFF_ASSIGNMENT_RULES,
@@ -29,7 +29,6 @@ function mockDbModule(pool: {
   return { getDbPool: () => pool, PREDEFINED_ROLES: [] };
 }
 
-let AdminService: typeof AdminServiceType;
 let service: AdminServiceType;
 
 beforeEach(() => {

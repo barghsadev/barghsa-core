@@ -158,7 +158,7 @@ export class FailedJobsService {
       );
     }
 
-    const pool = getDbPool();
+    getDbPool();
     const results: FailedJobDto[] = [];
     for (const id of ids) {
       try {

@@ -3,7 +3,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AgentRoleGuard } from './agent-role.guard.js';
 import { AgentsService } from './agents.service.js';
-import { AGENT_PERMISSION_KEY } from './agent-permission.decorator.js';
+import './agent-permission.decorator.js';
 
 describe('AgentRoleGuard', () => {
   let guard: AgentRoleGuard;

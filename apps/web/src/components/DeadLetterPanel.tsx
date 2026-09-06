@@ -37,13 +37,6 @@ interface DeadLetterRow {
   updatedAt: string;
 }
 
-const STATUS_LABELS: Record<DeadLetterRow['status'], string> = {
-  open: 'Open',
-  retried: 'Retried',
-  resolved: 'Resolved',
-  dismissed: 'Dismissed',
-};
-
 function channelLabel(channel: DeadLetterRow['channel'], uiLocale: Locale): string {
   const key = `admin.notifications.deadLetter.channel${
     channel === 'email' ? 'Email' : channel === 'sms' ? 'Sms' : 'InApp'

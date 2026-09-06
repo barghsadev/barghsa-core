@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t, type Locale } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n';
 import {
   BellIcon,
   SmartphoneIcon,

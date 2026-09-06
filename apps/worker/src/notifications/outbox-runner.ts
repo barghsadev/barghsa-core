@@ -1,3 +1,5 @@
+import type { QueryPool } from './channel-scheduling.js';
+import type { QueryResultRow } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications';
 import {
@@ -200,8 +202,7 @@ interface DispatchOutcome {
  * delivering.
  */
 async function markSkippedJobs(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
+  pool: QueryPool,
   row: OutboxRow,
   skipped: ReadonlyArray<{ channel: 'email' | 'sms'; reason: ChannelSkipReason }>
 ): Promise<void> {
@@ -232,14 +233,16 @@ async function markSkippedJobs(
  * token — use `q(...)` for every statement so the whole per-row persistence is
  * atomic in production, while the fake test pool keeps working unchanged.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function withWorkerTx(pool: any): Promise<{
-  q: (sql: string, params?: unknown[]) => Promise<any>;
+
+async function withWorkerTx(pool: QueryPool): Promise<{
+  q: (
+    sql: string,
+    params?: unknown[]
+  ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
   commit: () => Promise<void>;
   rollback: () => Promise<void>;
   release: () => void;
 }> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const client = typeof pool.connect === 'function' ? await pool.connect() : null;
   if (client) {
     try {
@@ -250,8 +253,12 @@ async function withWorkerTx(pool: any): Promise<{
     }
     return {
       q: (sql, params) => client.query(sql, params),
-      commit: () => client.query('COMMIT'),
-      rollback: () => client.query('ROLLBACK'),
+      commit: async () => {
+        await client.query('COMMIT');
+      },
+      rollback: async () => {
+        await client.query('ROLLBACK');
+      },
       release: () => client.release(),
     };
   }
@@ -271,8 +278,7 @@ async function withWorkerTx(pool: any): Promise<{
  * to `dead_letter` once its per-type attempt budget is exhausted.
  */
 async function persistOutcomes(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
+  pool: QueryPool,
   row: OutboxRow,
   outcomes: DispatchOutcome[],
   jobs: ChannelJob[],
@@ -371,7 +377,7 @@ async function persistOutcomes(
  * locks each outbox row briefly so it cannot alter a live worker claim.
  */
 export async function reconcileDeliveryWindows(
-  pool: any,
+  pool: QueryPool,
   config?: DeliveryWindowConfig
 ): Promise<number> {
   return reconcileChannelWindows(pool, config);

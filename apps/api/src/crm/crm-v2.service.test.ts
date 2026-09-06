@@ -285,7 +285,7 @@ describe('CrmV2Service.getProfileDetail', () => {
     // Verify the profileId is passed as a parameter, not interpolated
     for (const call of mockQuery.mock.calls) {
       const sql = call[0] as string;
-      const params = call[1] as unknown[];
+
       // Every query should use parameterized placeholders
       expect(sql).toMatch(/\$\d+/);
       // The profileId should NOT appear as a literal in the SQL string

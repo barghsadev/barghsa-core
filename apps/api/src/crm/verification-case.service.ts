@@ -76,13 +76,6 @@ const IDENTITY_FIELDS_LEGAL = ['legal_name', 'national_identifier'];
 /**
  * Maps a DB column name to its human-readable label.
  */
-const FIELD_LABELS: Record<string, string> = {
-  first_name: 'First Name',
-  last_name: 'Last Name',
-  national_id: 'National ID',
-  legal_name: 'Legal Name',
-  national_identifier: 'National Identifier',
-};
 
 @Injectable()
 export class VerificationCaseService {

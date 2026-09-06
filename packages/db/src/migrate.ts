@@ -210,10 +210,8 @@ async function main(): Promise<void> {
   }
 
   if (result.applied.length === 0) {
-    // eslint-disable-next-line no-console
     console.log('No pending migrations to apply — schema is up to date.');
   } else {
-    // eslint-disable-next-line no-console
     console.log(
       JSON.stringify({
         level: 'info',
@@ -238,7 +236,7 @@ async function main(): Promise<void> {
       );
       process.exit(1);
     }
-    // eslint-disable-next-line no-console
+
     console.log(
       JSON.stringify({
         level: 'info',

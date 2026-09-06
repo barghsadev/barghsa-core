@@ -1,15 +1,6 @@
 import { domainChecks } from '../domain-checks';
 import { sql } from 'drizzle-orm';
-import {
-  jsonb,
-  pgTable,
-  text,
-  integer,
-  timestamp,
-  uniqueIndex,
-  uuid,
-  check,
-} from 'drizzle-orm/pg-core';
+import { jsonb, pgTable, text, integer, uniqueIndex, uuid, check } from 'drizzle-orm/pg-core';
 import { uuidv7, timestamptz } from '../types.js';
 import { profiles } from './profiles.js';
 import { users } from './users.js';

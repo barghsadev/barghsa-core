@@ -55,7 +55,7 @@ function createMockResponse() {
 
 function createReflector(etagDecorated: boolean): Reflector {
   return {
-    getAllAndOverride: vi.fn((key: string, targets: Array<object>): boolean => {
+    getAllAndOverride: vi.fn((key: string, _targets: Array<object>): boolean => {
       return key === ETAG_METADATA ? etagDecorated : false;
     }),
     getAllAndMerge: vi.fn(),

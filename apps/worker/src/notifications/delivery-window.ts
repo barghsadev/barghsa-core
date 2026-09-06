@@ -32,7 +32,6 @@ import {
   classifyNotificationType,
   DEFAULT_DELIVERY_WINDOW,
   DELIVERY_WINDOW_CONFIG_KEY,
-  MIN_WINDOW_HOURS,
   type DeliveryWindowConfig,
 } from '@barghsa/shared/notifications';
 import type { NotificationChannel } from '@barghsa/shared/notifications';

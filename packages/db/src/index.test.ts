@@ -6,23 +6,19 @@ import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery, dbHeal
  * query-queue and active-query slots so wrapClientQuery can capture the
  * exact Query object.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 function makeMockClient(): {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   client: any;
   cancel: ReturnType<typeof vi.fn>;
   runQuery: ReturnType<typeof vi.fn>;
   resolvePromise: () => void;
 } {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const _queryQueue: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   let _activeQuery: any = null;
   let deferredResolve: (() => void) | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const runQuery = vi.fn((...args: any[]) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const queryObj: any = { text: 'query', id: Math.random(), callback: null };
     _queryQueue.push(queryObj);
 

@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { SmtpConnectionTesterService } from './smtp-connection-tester.service';
 import { SmtpNetworkGuard } from './smtp-network-guard';
-import type { SmtpConfig } from './smtp-config.schema';
 
 describe('SmtpConnectionTesterService (T-05.06.02)', () => {
   beforeEach(() => {

@@ -104,7 +104,7 @@ export class InAppNotificationTransport implements INotificationTransport {
       content[template.locale as 'fa' | 'en'] = { title: title.output, body: body.output };
     }
     const linkRoute = defaultInboxLink(payload.eventKey, payload.payload);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const inserted: { rows: Array<{ id: string }> } = await pool.query(
       `INSERT INTO in_app_notifications
          (profile_id, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key,recipient_user_id,localized_content)

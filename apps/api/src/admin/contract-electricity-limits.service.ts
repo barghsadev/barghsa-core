@@ -59,14 +59,6 @@ export interface UpdateContractElectricityLimitsInput {
 
 // ─── Internal helpers ──────────────────────────────────────────────────────
 
-type QueryFn = <T = Record<string, unknown>>(
-  text: string,
-  values?: unknown[]
-) => Promise<{ rows: T[]; rowCount: number | null }>;
-
-/** Minimal query executor shared by the pool and a transactional client. */
-type DbExecutor = { query: QueryFn };
-
 @Injectable()
 export class ContractElectricityLimitsService {
   private readonly logger = new Logger(ContractElectricityLimitsService.name);

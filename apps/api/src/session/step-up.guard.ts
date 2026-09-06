@@ -129,13 +129,9 @@ export class StepUpGuard implements CanActivate {
  * // or globally via APP_GUARD
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function RequiresStepUp(): MethodDecorator {
-  return (
-    _target: object,
-    _propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<any>
-  ) => {
+  return (_target, _propertyKey, descriptor) => {
     Reflect.defineMetadata('requiresStepUp', true, descriptor.value!);
     return descriptor;
   };

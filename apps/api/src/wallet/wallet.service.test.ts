@@ -61,6 +61,20 @@ describe('WalletService', () => {
   });
 
   describe('getWallet', () => {
+    it('preserves bigint precision when deriving an omitted available balance', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [
+          makeWalletRow({
+            posted_balance: '9007199254740993',
+            reserved_balance: '2',
+            available_balance: null,
+          }),
+        ],
+      });
+      const wallet = await service.getWallet('profile-1');
+      expect(wallet?.availableBalance).toBe(9007199254740991n);
+    });
+
     it('returns null when no wallet exists', async () => {
       mockPool.query.mockResolvedValue({ rows: [] });
       const result = await service.getWallet('profile-1');

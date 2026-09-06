@@ -62,7 +62,6 @@ interface Harness {
   failOnDeliveredUpdate: { value: boolean };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildHarness(
   overrides: { activeConfig?: boolean; failOnDeliveredUpdate?: boolean } = {}
 ): Harness {
@@ -91,7 +90,6 @@ function buildHarness(
     outbox: new Map([...outboxRows].map(([k, v]) => [k, { ...v }])),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const exec = async (text: string, params?: unknown[]): Promise<any> => {
     queries.push(text.replace(/\s+/g, ' ').trim());
     const lower = text.toLowerCase();

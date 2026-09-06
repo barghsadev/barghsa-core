@@ -1,3 +1,4 @@
+import type { QueryResultRow } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import type {
   INotificationTransport,
@@ -57,7 +58,12 @@ export interface OutboxReaderOptions {
   /** Transport registry keyed by channel. In-app is mandatory. */
   transports: Partial<Record<NotificationChannel, INotificationTransport>>;
   /** Pool override for isolated database checks. */
-  pool?: { query: (sql: string, params?: any[]) => Promise<any> };
+  pool?: {
+    query: (
+      sql: string,
+      params?: unknown[]
+    ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
+  };
   /** Maximum rows to claim per poll (default 5). */
   leaseSize?: number;
   /** Lease duration in ms (default 60s). */
@@ -81,7 +87,6 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
   const pool = options?.pool ?? getDbPool();
   const now = new Date();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = await pool.query(
     `UPDATE notification_outbox ob
         SET locked_until = clock_timestamp()+$1*INTERVAL '1 millisecond',

@@ -1,3 +1,4 @@
+import type { QueryResultRow } from 'pg';
 /**
  * Provider-config DI tokens + pool types (E-05, T-05.06.x).
  *
@@ -16,15 +17,19 @@
 // pool used in tests: both expose `query` and `connect()`).
 // ---------------------------------------------------------------------------
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface PoolClient {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>;
+  query: (
+    text: string,
+    params?: unknown[]
+  ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
   release: () => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ProviderPool {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>;
+  query: (
+    text: string,
+    params?: unknown[]
+  ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
   connect: () => Promise<PoolClient>;
 }
 

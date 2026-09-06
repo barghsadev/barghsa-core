@@ -128,13 +128,9 @@ export class CsrfGuard implements CanActivate {
  * async login(@Body() body: LoginDto) { ... }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function SkipCsrf(): MethodDecorator {
-  return (
-    _target: object,
-    _propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<any>
-  ) => {
+  return (_target, _propertyKey, descriptor) => {
     Reflect.defineMetadata('skipCsrf', true, descriptor.value!);
     return descriptor;
   };

@@ -10,13 +10,6 @@ function mockPool() {
   return { mockQuery, mockConnect, pool };
 }
 
-function mockClient() {
-  const mockClientQuery = vi.fn();
-  const mockRelease = vi.fn();
-  const client = { query: mockClientQuery, release: mockRelease };
-  return { mockClientQuery, mockRelease, client };
-}
-
 let service: VerificationCaseService;
 
 beforeEach(() => {
@@ -27,7 +20,6 @@ beforeEach(() => {
 const VALID_PROFILE_ID = '00000000-0000-7000-8000-000000000001';
 const VALID_USER_ID = '00000000-0000-7000-8000-000000000010';
 const VALID_CASE_ID = '00000000-0000-7000-8000-000000000020';
-const IP = '127.0.0.1';
 
 describe('VerificationCaseService', () => {
   describe('listCases', () => {

@@ -94,7 +94,6 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
   useEffect(() => {
     setLoading(true);
     loadProfiles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.state.location.pathname]);
 
   const activeProfile = useMemo(

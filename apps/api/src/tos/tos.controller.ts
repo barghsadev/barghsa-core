@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
-import type { Request } from 'express';
+
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { TosService, type CurrentTosResponse } from './tos.service.js';

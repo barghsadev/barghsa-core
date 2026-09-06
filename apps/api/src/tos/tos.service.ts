@@ -25,7 +25,7 @@ export interface TosVersionListItem {
   updatedAt: Date;
 }
 
-export interface TosVersionDetail extends TosVersionListItem {}
+export type TosVersionDetail = TosVersionListItem;
 
 export interface CreateTosVersionInput {
   versionId: string;

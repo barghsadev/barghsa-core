@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, text, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
 
 /**
  * Sessions table (T-01.02.03 / T-02.02.01 / T-02.02.04).

@@ -43,14 +43,14 @@ describe('base table factory', () => {
     });
 
     it('infers domain column types at compile time', () => {
-      const table = createTable('type_test', {
+      const _table = createTable('type_test', {
         sku: text('sku').notNull(),
         quantity: integer('quantity').default(0),
       });
 
       // $ExpectType - verify the insert/select types are inferred
-      type InsertColumns = typeof table.$inferInsert;
-      type SelectColumns = typeof table.$inferSelect;
+      type InsertColumns = typeof _table.$inferInsert;
+      type SelectColumns = typeof _table.$inferSelect;
 
       // Verify domain columns exist in the inferred types
       expectTypeOf<InsertColumns>().toHaveProperty('sku');
@@ -60,12 +60,12 @@ describe('base table factory', () => {
     });
 
     it('includes base columns in inferred insert/select types', () => {
-      const table = createTable('base_type_test', {
+      const _table = createTable('base_type_test', {
         name: text('name').notNull(),
       });
 
-      type InsertColumns = typeof table.$inferInsert;
-      type SelectColumns = typeof table.$inferSelect;
+      type InsertColumns = typeof _table.$inferInsert;
+      type SelectColumns = typeof _table.$inferSelect;
 
       expectTypeOf<InsertColumns>().toHaveProperty('id');
       expectTypeOf<InsertColumns>().toHaveProperty('createdAt');
