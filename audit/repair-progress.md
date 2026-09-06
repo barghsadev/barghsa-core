@@ -704,3 +704,9 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Shared list parsing rejects fractional/nonfinite/empty/repeated pagination, invalid filters and repeated search values. Page/limit are bounded positive integers; the service repeats numeric validation for non-HTTP callers, preventing fractional/unsafe offsets. Default pagination remains 1/20, with maximum page 100000 and limit 100.
 - Review: all 43 ticket checks and API typecheck pass. Actual HTTP cases exercise all nine affected detail/action routes, customer/staff invalid list inputs, defaults and the largest allowed empty page. The generated OpenAPI contract remains unchanged and passes its drift gate. Existing ownership, assignment, private comments, attachments and notification regressions remain passing.
 - Remaining ticket cleanup concerns, including abandoned object uploads and wider browser acceptance, are separate from this input-validation repair.
+
+### F06 / F20 — Localized verification guidance without a provider
+
+- The mounted verification banner now follows the shared language, including live fa/en changes and request language. Error text renders in the current language. When automatic verification is unavailable, it explains the next action and links to support without offering simulated approval.
+- Review: nine production-browser checks pass, including fa/en unavailable-provider guidance, keyboard dismissal, support destination and live language switching, plus the CRM contact/action regressions after the latest dictionary changes. Web typecheck and all 26 route budgets pass. CI includes the new verification-banner browser file.
+- The three existing actual HTTP verification-mode cases already prove canAutoVerify remains false, direct automatic attempts return 503 and no profile approval is manufactured. No provider adapter or real-provider acceptance is claimed. Commercial-order enforcement remains part of its separate consumer task.

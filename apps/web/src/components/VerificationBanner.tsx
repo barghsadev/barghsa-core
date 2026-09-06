@@ -1,7 +1,8 @@
+import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
 import { useEffect, useState } from 'react'
-import { useRouter } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
+import { Link, useRouter } from '@tanstack/react-router'
+import { t } from '@barghsa/i18n'
 
 interface VerificationStatusResponse {
   activeProfileId: string | null
@@ -31,10 +32,10 @@ export function VerificationBanner() {
   const [verifying, setVerifying] = useState(false)
   const [verified, setVerified] = useState(false)
   const [dismissed, setDismissed] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [hasError, setHasError] = useState(false)
   const router = useRouter()
 
-  const locale: Locale = 'fa' // TODO: read from locale context
+  const locale = useLocale()
   const isRtl = locale === 'fa'
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export function VerificationBanner() {
         const response = await fetch('/api/profiles/verification-status', {
           method: 'GET',
           credentials: 'include',
-          headers: { Accept: 'application/json' },
+          headers: { Accept: 'application/json', 'Accept-Language': locale },
         })
 
         // Not authenticated — no banner
@@ -74,7 +75,7 @@ export function VerificationBanner() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [locale])
 
   // Don't render anything while loading, or if no status data, or if dismissed
   if (loading || !status || dismissed) return null
@@ -91,13 +92,13 @@ export function VerificationBanner() {
   async function handleAutoVerify() {
     if (!currentStatus.activeProfileId) return
     setVerifying(true)
-    setError(null)
+    setHasError(false)
 
     try {
       const response = await fetch(`/api/profiles/${currentStatus.activeProfileId}/verify`, {
         method: 'POST',
         credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        headers: withCsrf({ 'Content-Type': 'application/json', 'Accept-Language': locale }),
       })
 
       if (response.ok) {
@@ -108,11 +109,11 @@ export function VerificationBanner() {
         }, 1500)
       } else {
         setVerifying(false)
-        setError(t('verification.banner.error', locale))
+        setHasError(true)
       }
     } catch {
       setVerifying(false)
-      setError(t('verification.banner.error', locale))
+      setHasError(true)
     }
   }
 
@@ -139,7 +140,9 @@ export function VerificationBanner() {
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex flex-col gap-1">
           <span>{t('verification.banner.title', locale)}</span>
-          {error && <span className="text-xs text-red-600">{error}</span>}
+          {!currentStatus.canAutoVerify && <span className="text-xs">{t('verification.banner.manualHelp', locale)}</span>}
+          <Link to="/tickets" className="text-xs underline underline-offset-2">{t('verification.banner.support', locale)}</Link>
+          {hasError && <span className="text-xs text-red-600">{t('verification.banner.error', locale)}</span>}
         </div>
         <div className="flex items-center gap-3">
           {currentStatus.canAutoVerify && (
