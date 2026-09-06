@@ -697,3 +697,10 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Existing cases on historically archived profiles can be rejected by an independent reviewer with a reason. Approval and continued review remain blocked; rejection cannot modify identity data and its audit commits atomically with closure. Invalid legacy field names cannot prevent rejection, while approval still requires an allowed identity field and valid sealed evidence.
 - Review: all 86 CRM tests and API typecheck pass. New actual HTTP/database cases cover both nonterminal statuses, rejection then archival, archived-case approval denial, creator denial, injected audit failure/rollback, terminal retry, and both correction-versus-archive lock orderings.
 - This closes the correction/archive interaction only. Pending wallet operations and other financial/archive concurrency paths remain under review; no production records were changed.
+
+### F16 / F22 — Reject malformed ticket IDs and list inputs
+
+- Every customer/staff ticket detail, comment, status and assignment route validates its UUID before querying PostgreSQL. A valid absent ID still returns 404.
+- Shared list parsing rejects fractional/nonfinite/empty/repeated pagination, invalid filters and repeated search values. Page/limit are bounded positive integers; the service repeats numeric validation for non-HTTP callers, preventing fractional/unsafe offsets. Default pagination remains 1/20, with maximum page 100000 and limit 100.
+- Review: all 43 ticket checks and API typecheck pass. Actual HTTP cases exercise all nine affected detail/action routes, customer/staff invalid list inputs, defaults and the largest allowed empty page. The generated OpenAPI contract remains unchanged and passes its drift gate. Existing ownership, assignment, private comments, attachments and notification regressions remain passing.
+- Remaining ticket cleanup concerns, including abandoned object uploads and wider browser acceptance, are separate from this input-validation repair.

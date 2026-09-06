@@ -358,3 +358,33 @@ it('reads configured response targets only into the staff queue',async()=>{
   const customer=await fetch(`${http.base}/api/tickets`,{headers:headers.customer!})
   expect(await customer.json()).not.toHaveProperty('responseTargetHours')
 })
+
+it('rejects malformed ticket IDs on every customer and staff detail action', async () => {
+  for (const [prefix, user] of [['/api/tickets', 'customer'], ['/api/staff/tickets', 'staff']] as const) {
+    const actions: [string,string,unknown][] = [
+      ['GET', '', undefined], ['GET', '/comments', undefined],
+      ['PATCH', '/status', { status: 'closed' }], ['POST', '/comments', { body: 'A reply' }],
+      ...(user === 'staff' ? [['PUT', '/assign', { assigneeId: 'staff' }] as [string,string,unknown]] : []),
+    ]
+    for (const [method, suffix, body] of actions) {
+      const response = await fetch(`${http.base}${prefix}/malformed-id${suffix}`, { method, headers: headers[user]!, ...(body ? { body: JSON.stringify(body) } : {}) })
+      expect(response.status, `${method} ${prefix}${suffix}: ${await response.text()}`).toBe(400)
+    }
+    expect((await fetch(`${http.base}${prefix}/${randomUUID()}`, { headers: headers[user]! })).status).toBe(404)
+  }
+})
+it('validates list pagination and filters before SQL on customer and staff paths', async () => {
+  for (const [prefix, user] of [['/api/tickets', 'customer'], ['/api/staff/tickets', 'staff']] as const) {
+    for (const query of ['page=1.5', 'page=NaN', 'page=Infinity', 'page=-1', 'page=0', 'page=100001',
+      'page=', 'page=1&page=2', 'limit=0', 'limit=1.5', 'limit=101', 'limit=Infinity', 'limit=2&limit=3',
+      'search=x&search=y', 'sortBy=unknown', 'sortOrder=ascending', 'status=unknown']) {
+      expect((await fetch(`${http.base}${prefix}?${query}`, { headers: headers[user]! })).status, `${prefix}?${query}`).toBe(400)
+    }
+    const defaults = await fetch(`${http.base}${prefix}`, { headers: headers[user]! })
+    expect(defaults.status).toBe(200)
+    expect(await defaults.json()).toMatchObject({ page: 1, limit: 20 })
+    const empty = await fetch(`${http.base}${prefix}?page=100000&limit=100`, { headers: headers[user]! })
+    expect(empty.status).toBe(200)
+    expect(await empty.json()).toMatchObject({ data: [], page: 100000, limit: 100 })
+  }
+})

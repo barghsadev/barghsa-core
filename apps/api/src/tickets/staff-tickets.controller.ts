@@ -1,3 +1,4 @@
+import { ticketListQuery } from './ticket-input.js'
 import { z } from 'zod'
 import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
@@ -8,6 +9,7 @@ import {
   Patch,
   Put,
   Param,
+  ParseUUIDPipe,
   Query,
   HttpCode,
   HttpException,
@@ -16,7 +18,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger'
-import { TicketsService, type ListTicketsOptions } from './tickets.service.js'
+import { TicketsService } from './tickets.service.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
@@ -69,21 +71,7 @@ export class StaffTicketsController {
       )
     }
 
-    const options: Partial<ListTicketsOptions & { assignedTo?: string }> = {}
-    if (page !== undefined) {
-      const parsed = Number(page)
-      if (Number.isFinite(parsed)) options.page = parsed
-    }
-    if (limit !== undefined) {
-      const parsed = Number(limit)
-      if (Number.isFinite(parsed)) options.limit = parsed
-    }
-    if (status !== undefined) options.status = status
-    if (search !== undefined) options.search = search
-    if (assignedTo !== undefined) options.assignedTo = assignedTo
-    if (sortBy !== undefined) options.sortBy = sortBy
-    if (sortOrder !== undefined) options.sortOrder = sortOrder
-
+    const options = ticketListQuery({ page, limit, status, search, sortBy, sortOrder, assignedTo })
     const scope = this.assignedScope(req, 'read')
     if (scope) options.assignedTo = scope
     return { ...await this.ticketsService.staffListTickets(options), responseTargetHours: await this.ticketsService.responseTargetHours(), viewer: { userId: req.session.userId,
@@ -114,7 +102,7 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async getTicket(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest,
   ) {
     if (!hasStaffPermission(req, 'tickets:read') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
@@ -140,7 +128,7 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async assignTicket(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: { assigneeId?: string; teamId?: string },
     @Req() req: AuthenticatedRequest,
   ) {
@@ -171,7 +159,7 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async updateTicketStatus(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: { status: string },
     @Req() req: AuthenticatedRequest,
   ) {
@@ -195,7 +183,7 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async listComments(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest,
   ) {
     if (!hasStaffPermission(req, 'tickets:read') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
@@ -221,7 +209,7 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async addComment(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: {
       body: string
       visibility?: 'public' | 'internal'

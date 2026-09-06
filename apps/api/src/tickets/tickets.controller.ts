@@ -1,3 +1,4 @@
+import { ticketListQuery } from './ticket-input.js'
 import {
   Body,
   Controller,
@@ -5,6 +6,7 @@ import {
   Get,
   Patch,
   Param,
+  ParseUUIDPipe,
   Query,
   HttpCode,
   HttpException,
@@ -13,7 +15,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger'
-import { TicketsService, type ListTicketsOptions } from './tickets.service.js'
+import { TicketsService } from './tickets.service.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
@@ -87,19 +89,7 @@ export class TicketsController {
     @Query('sortOrder') sortOrder?: 'asc' | 'desc',
     @Req() req?: AuthenticatedRequest,
   ) {
-    const options: Partial<ListTicketsOptions> = {}
-    if (page !== undefined) {
-      const parsed = Number(page)
-      if (Number.isFinite(parsed)) options.page = parsed
-    }
-    if (limit !== undefined) {
-      const parsed = Number(limit)
-      if (Number.isFinite(parsed)) options.limit = parsed
-    }
-    if (status !== undefined) options.status = status
-    if (search !== undefined) options.search = search
-    if (sortBy !== undefined) options.sortBy = sortBy
-    if (sortOrder !== undefined) options.sortOrder = sortOrder
+    const options = ticketListQuery({ page, limit, status, search, sortBy, sortOrder })
     return this.ticketsService.listTickets(req!.session.userId, options)
   }
 
@@ -119,7 +109,7 @@ export class TicketsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async getTicket(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest,
   ) {
     return this.ticketsService.getTicket(id, req.session.userId)
@@ -137,7 +127,7 @@ export class TicketsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async updateTicketStatus(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: { status: string },
     @Req() req: AuthenticatedRequest,
   ) {
@@ -155,7 +145,7 @@ export class TicketsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async listComments(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest,
   ) {
     return this.ticketsService.listComments(id, req.session.userId, false)
@@ -177,7 +167,7 @@ export class TicketsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async addComment(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: {
       body: string
       visibility?: 'public' | 'internal'

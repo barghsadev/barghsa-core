@@ -1,3 +1,4 @@
+import { ticketPagination } from './ticket-input.js'
 import { SERVICE_RESPONSE_TARGETS_CONFIG_KEY, toServiceResponseTargets } from '@barghsa/shared/admin'
 import { StaffAssignmentService } from '../staff-assignment/staff-assignment.service.js'
 import { t } from '@barghsa/i18n'
@@ -235,9 +236,7 @@ export class TicketsService {
     options: Partial<ListTicketsOptions> = {},
   ): Promise<PaginatedResult<TicketRow>> {
     const pool = getDbPool()
-    const page = Math.max(1, options.page ?? 1)
-    const limit = Math.min(100, Math.max(1, options.limit ?? 20))
-    const offset = (page - 1) * limit
+    const { page, limit, offset } = ticketPagination(options.page, options.limit)
 
     // Build WHERE clause
     const conditions: string[] = ['t.user_id = $1']
@@ -445,9 +444,7 @@ export class TicketsService {
     options: Partial<ListTicketsOptions & { assignedTo?: string }> = {},
   ): Promise<PaginatedResult<TicketRow>> {
     const pool = getDbPool()
-    const page = Math.max(1, options.page ?? 1)
-    const limit = Math.min(100, Math.max(1, options.limit ?? 20))
-    const offset = (page - 1) * limit
+    const { page, limit, offset } = ticketPagination(options.page, options.limit)
 
     const conditions: string[] = []
     const params: unknown[] = []
