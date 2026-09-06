@@ -21,10 +21,7 @@
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
 import { ConflictException, HttpException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import {
   BANK_RECEIPT_STORAGE_PURPOSE,
   sealedInvoiceBankReceiptAttachmentKey,
@@ -48,27 +45,6 @@ vi.mock('@barghsa/db', async (importOriginal) => {
     },
   };
 });
-
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql'
-);
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql'
-);
-const BANK_RECEIPTS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0078_create_bank_receipts.sql'
-);
-const ATTACHMENT_CLAIMS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0079_create_bank_receipt_attachment_claims.sql'
-);
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
@@ -130,76 +106,22 @@ function memoryStorage(objects: Map<string, Uint8Array>): StorageProvider {
 }
 
 describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let service: InvoiceBankReceiptUploadService;
   const objects = new Map<string, Uint8Array>();
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4);
+    ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     service = new InvoiceBankReceiptUploadService(
       new CustomerInvoiceDetailsService(),
       memoryStorage(objects)
     );
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        user_id TEXT PRIMARY KEY
-      )
-    `);
-    await ctx.pool.query(`
-      DO $seed$
-      BEGIN
-        CREATE TYPE invoice_state AS ENUM (
-          'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-          'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-        );
-      EXCEPTION
-        WHEN duplicate_object THEN NULL;
-      END
-      $seed$
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-        user_id TEXT NOT NULL,
-        archived BOOLEAN NOT NULL DEFAULT false,
-        is_default BOOLEAN NOT NULL DEFAULT false,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `);
-    // These receipt-boundary fixtures use a minimal schema; active-profile
-    // context itself is verified through the fully migrated HTTP fixture.
-    await ctx.pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS disabled_at TIMESTAMPTZ;
-      ALTER TABLE profiles ADD COLUMN IF NOT EXISTS profile_type TEXT NOT NULL DEFAULT 'INDIVIDUAL';
-      CREATE TABLE user_profile_contexts (user_id TEXT PRIMARY KEY,profile_id UUID);
-      CREATE TABLE profile_agents (profile_id UUID,user_id TEXT,role TEXT);`);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS orders (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(BANK_RECEIPTS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ATTACHMENT_CLAIMS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS storage_records (
-        storage_key TEXT PRIMARY KEY,
-        file_name TEXT,
-        content_type TEXT,
-        file_size BIGINT,
-        category TEXT,
-        status TEXT NOT NULL DEFAULT 'active'
-          CHECK (status IN ('active', 'immutable', 'removed')),
-        metadata JSONB,
-        signed_at TIMESTAMPTZ,
-        signed_by TEXT,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `);
-    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1), ($2)`, [ACTOR_ID, OTHER_ACTOR]);
+    await ctx.pool.query(
+      `INSERT INTO users (user_id, username, password_hash) VALUES ($1, 'receipt-owner@example.test', 'test-only'), ($2, 'other-owner@example.test', 'test-only')`,
+      [ACTOR_ID, OTHER_ACTOR]
+    );
     await ctx.pool.query(
       `INSERT INTO profiles (id, user_id, is_default) VALUES ($1, $2, true), ($3, $4, true)`,
       [PROFILE_A, ACTOR_ID, PROFILE_B, OTHER_ACTOR]
@@ -208,8 +130,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   beforeEach(async () => {

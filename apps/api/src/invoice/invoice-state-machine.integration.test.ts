@@ -23,7 +23,7 @@
  *      (the audit insert failure rolls back the state change).
  *
  * Wiring: only `getDbPool()` is stubbed (via vi.mock), handing the service
- * the schema-scoped pool of the isolated Testcontainers schema. Every SQL
+ * the fully migrated disposable database pool. Every SQL
  * statement, transaction, row lock, FK check and CHECK constraint runs
  * against real PostgreSQL.
  *
@@ -41,10 +41,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
 import {
@@ -57,8 +54,7 @@ import {
 } from './invoice-state.model.js';
 
 // ---- Real-DB wiring ------------------------------------------------------
-// The only mock: @barghsa/db's pool getter, pointed at the schema-scoped
-// Testcontainers pool. Everything below it is genuine PostgreSQL.
+// Only the pool getter is mocked; queries use the production database schema.
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }));
 
 vi.mock('@barghsa/db', () => ({
@@ -69,28 +65,6 @@ vi.mock('@barghsa/db', () => ({
     return poolHolder.pool;
   },
 }));
-
-// ---- Migrations / DDL -----------------------------------------------------
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql'
-);
-const PAID_OVERDUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql'
-);
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
-);
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql'
-);
 
 const PROFILE_ID = '11111111-1111-7111-8111-111111111111';
 const ACTOR_USER_ID = 'actor-integration-test';
@@ -136,52 +110,28 @@ interface InvoiceRow {
 const NOW = new Date('2026-08-01T10:00:00.000Z');
 
 describe('InvoiceStateMachineService — real PostgreSQL integration (T-04.1.01.06)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let service: InvoiceStateMachineService;
 
   beforeAll(async () => {
-    // 4 connections so the concurrency tests can hold parallel transactions.
-    ctx = await createIsolatedTestDb('test_', 4);
+    ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     service = new InvoiceStateMachineService(new InvoiceAuditRepository());
 
-    // --- DDL: uuid v7 fn, enum, minimal FK targets, then migrations in
-    // production order (0052 → 0053) plus the audit_log table.
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.db.execute(`CREATE TYPE invoice_state AS ENUM (
-      'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-      'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS profiles (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS orders (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.db.execute(`CREATE TABLE IF NOT EXISTS users (
-      user_id TEXT PRIMARY KEY
-    )`);
-
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim());
-
-    // --- Seed data: one profile + one actor.
-    await ctx.db.execute(
-      `INSERT INTO profiles (id) VALUES ('${PROFILE_ID}')
-       ON CONFLICT (id) DO NOTHING`
+    await ctx.pool.query(
+      `INSERT INTO users (user_id, username, password_hash)
+      VALUES ($1, 'state-actor@example.test', 'test-only')`,
+      [ACTOR_USER_ID]
     );
-    await ctx.db.execute(
-      `INSERT INTO users (user_id) VALUES ('${ACTOR_USER_ID}')
-       ON CONFLICT (user_id) DO NOTHING`
-    );
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
+      PROFILE_ID,
+      ACTOR_USER_ID,
+    ]);
   }, 60_000);
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   // ---- Helpers ------------------------------------------------------------

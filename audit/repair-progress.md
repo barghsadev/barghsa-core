@@ -1113,3 +1113,9 @@ Migration 0113 renames the ordinary column to accounting_amount_legacy, preservi
 Converted manual creation, automatic creation, calculation replay, cancel/replace, and adjustment suites to production migrations. Removed incomplete tables and created actual owned profiles and complete orders. Review retained original-document immutability, distinct replacement/adjustment indexes, signed credit liability, payability exclusions, replay, exact large amounts, and rollback checks.
 
 Validation: all 39 tests across five suites pass. All 564 database tests across 76 files pass, including fresh/repeated migrations and a populated upgrade that preserves legacy value 123 while restoring exact accounting amount 9007199254740993. An explicit write to the generated amount fails with 428C9. Root type checking, lint and whitespace checks pass. No production database was changed; deployment must apply 0113 before adjustment creation is considered repaired there.
+
+### Finish invoice state and receipt evidence fixtures on production migrations (F02/F14)
+
+Moved invoice state transitions, invoice receipt uploads, and shared wallet/invoice receipt claims to production-migrated databases. Removed the remaining partial invoice schema setup in these suites. Review retained allowed/forbidden transitions, guarded amounts, competing state changes, audit rollback, cross-profile denial, byte inspection, oversized forged uploads, same-attachment races, and immutable sealed-copy assertions. Cross-flow submission still permits exactly one wallet or invoice claim for the same evidence.
+
+Validation: invoice state transitions passed 30 tests; cross-flow receipt claims passed three; receipt uploads passed ten tests. Root type checking, lint and whitespace checks pass. Object storage is an in-memory test provider in these service suites; real object transport is covered separately by existing HTTP storage fixtures.
