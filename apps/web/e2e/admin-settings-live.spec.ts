@@ -1536,3 +1536,128 @@ for (const locale of ['en', 'fa'])
         (await page.request.delete(`${http.base}/api/admin/${path}/${item.id}`, { headers })).ok()
       ).toBe(true);
   });
+
+for (const locale of ['en', 'fa'])
+  test(`contract template UI persists versions through migrated API (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const headers = {
+      cookie: `barghsa_session=${http.session}`,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
+      });
+      await route.fulfill({ response });
+    });
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    const name = `Local template ${locale}`,
+      renamed = `${name} revised`;
+    await page.goto('/admin/contract-templates');
+    await page
+      .getByRole('button', { name: fa ? 'افزودن قالب' : 'Add template', exact: true })
+      .click();
+    await page.getByLabel(fa ? 'نام' : 'Name', { exact: true }).fill(name);
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره قالب' : 'Save template', exact: true })
+      .click();
+    await confirm();
+    await page
+      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${name}`, exact: true })
+      .click();
+    const input = page.getByLabel(fa ? 'فایل قالب' : 'Template file', { exact: true });
+    await input.setInputFiles({
+      name: 'bad.pdf',
+      mimeType: 'application/pdf',
+      buffer: Buffer.from('%PDF-1.7'),
+    });
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: fa ? 'بارگذاری نسخه' : 'Upload version', exact: true })
+    ).toBeDisabled();
+    for (const [file, content] of [
+      ['first.txt', 'Hello {{customerName}}'],
+      ['second.txt', '{{date}} {{amount}}'],
+    ]) {
+      await input.setInputFiles({
+        name: file!,
+        mimeType: 'text/plain',
+        buffer: Buffer.from(content!),
+      });
+      await page
+        .getByRole('button', { name: fa ? 'بارگذاری نسخه' : 'Upload version', exact: true })
+        .click();
+      await confirm();
+    }
+    await expect(page.getByText('{{customerName}}', { exact: true })).toBeVisible();
+    await expect(page.getByText('{{date}}, {{amount}}', { exact: true })).toBeVisible();
+    await page.getByLabel(fa ? 'نام' : 'Name', { exact: true }).fill(renamed);
+    await page.getByLabel(fa ? 'فعال' : 'Active', { exact: true }).uncheck();
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره قالب' : 'Save template', exact: true })
+      .click();
+    await confirm();
+    await page.reload();
+    await page
+      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${renamed}`, exact: true })
+      .click();
+    await expect(page.getByLabel(fa ? 'فعال' : 'Active', { exact: true })).not.toBeChecked();
+    await expect(page.getByText('first.txt', { exact: true })).toBeVisible();
+    await expect(page.getByText('second.txt', { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
+    ).toBeDisabled();
+    const rows = (await (
+      await page.request.get(`${http.base}/api/admin/contract-templates`, { headers })
+    ).json()) as Array<{ id: string; name: string }>;
+    const row = rows.find((item) => item.name === renamed)!;
+    expect(
+      await (
+        await page.request.get(`${http.base}/api/admin/contract-templates/${row.id}`, { headers })
+      ).json()
+    ).toMatchObject({
+      status: 'inactive',
+      versionCount: 2,
+      versions: [
+        { fileName: 'first.txt', placeholders: ['customerName'] },
+        { fileName: 'second.txt', placeholders: ['date', 'amount'] },
+      ],
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await page.screenshot({ path: `/tmp/contract-templates-${locale}.png`, fullPage: true });
+    await page
+      .getByRole('button', { name: fa ? 'افزودن قالب' : 'Add template', exact: true })
+      .click();
+    await page.getByLabel(fa ? 'نام' : 'Name', { exact: true }).fill(`Empty ${locale}`);
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره قالب' : 'Save template', exact: true })
+      .click();
+    await confirm();
+    await page
+      .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} Empty ${locale}`, exact: true })
+      .click();
+    await confirm();
+    await expect(page.getByRole('heading', { name: `Empty ${locale}`, exact: true })).toHaveCount(
+      0
+    );
+  });

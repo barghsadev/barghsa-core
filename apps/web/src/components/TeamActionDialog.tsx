@@ -19,7 +19,7 @@ export interface TeamAction {
   title: string;
   description: string;
   path: string;
-  method: 'POST' | 'PUT' | 'DELETE';
+  method: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
   signsOut?: boolean;
   conflictMessage?: string;

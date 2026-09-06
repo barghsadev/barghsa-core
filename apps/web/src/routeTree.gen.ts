@@ -35,6 +35,7 @@ import { Route as AdminAiModelsRouteImport } from './routes/admin/ai-models'
 import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminContractLimitsRouteImport } from './routes/admin/contract-limits'
+import { Route as AdminContractTemplatesRouteImport } from './routes/admin/contract-templates'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminElectricityRulesRouteImport } from './routes/admin/electricity-rules'
 import { Route as AdminFailedJobsRouteImport } from './routes/admin/failed-jobs'
@@ -204,6 +205,11 @@ const AdminBrandingRoute = AdminBrandingRouteImport.update({
 const AdminContractLimitsRoute = AdminContractLimitsRouteImport.update({
   id: '/contract-limits',
   path: '/contract-limits',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContractTemplatesRoute = AdminContractTemplatesRouteImport.update({
+  id: '/contract-templates',
+  path: '/contract-templates',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCrmRoute = AdminCrmRouteImport.update({
@@ -441,6 +447,7 @@ export interface FileRoutesByFullPath {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
+  '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
@@ -506,6 +513,7 @@ export interface FileRoutesByTo {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
+  '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
@@ -575,6 +583,7 @@ export interface FileRoutesById {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
+  '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
@@ -645,6 +654,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/contract-limits'
+    | '/admin/contract-templates'
     | '/admin/crm'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
@@ -710,6 +720,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/contract-limits'
+    | '/admin/contract-templates'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
@@ -778,6 +789,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/contract-limits'
+    | '/admin/contract-templates'
     | '/admin/crm'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
@@ -1017,6 +1029,13 @@ declare module '@tanstack/react-router' {
       path: '/contract-limits'
       fullPath: '/admin/contract-limits'
       preLoaderRoute: typeof AdminContractLimitsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contract-templates': {
+      id: '/admin/contract-templates'
+      path: '/contract-templates'
+      fullPath: '/admin/contract-templates'
+      preLoaderRoute: typeof AdminContractTemplatesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/crm': {
@@ -1380,6 +1399,7 @@ interface AdminRouteChildren {
   AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminContractLimitsRoute: typeof AdminContractLimitsRoute
+  AdminContractTemplatesRoute: typeof AdminContractTemplatesRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
   AdminElectricityRulesRoute: typeof AdminElectricityRulesRoute
   AdminFailedJobsRoute: typeof AdminFailedJobsRoute
@@ -1411,6 +1431,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminContractLimitsRoute: AdminContractLimitsRoute,
+  AdminContractTemplatesRoute: AdminContractTemplatesRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
   AdminElectricityRulesRoute: AdminElectricityRulesRoute,
   AdminFailedJobsRoute: AdminFailedJobsRoute,

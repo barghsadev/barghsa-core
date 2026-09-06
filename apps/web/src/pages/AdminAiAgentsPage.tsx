@@ -109,6 +109,11 @@ export default function AdminAiAgentsPage() {
     })();
     return () => abort.abort();
   }, [editor, revision]);
+  function chooseEditor(value: string | null) {
+    setState('loading');
+    setEditor(value);
+    setRevision((current) => current + 1);
+  }
   function propose(
     path: string,
     method: TeamAction['method'],
@@ -170,7 +175,7 @@ export default function AdminAiAgentsPage() {
       {state === 'ready' && options && (
         <>
           <div>
-            <Button onClick={() => setEditor('new')}>{label('add')}</Button>
+            <Button onClick={() => chooseEditor('new')}>{label('add')}</Button>
           </div>
           {draft && (
             <form
@@ -257,7 +262,7 @@ export default function AdminAiAgentsPage() {
                 <Button type="submit" disabled={!draft.title.trim() || !draft.modelId}>
                   {label('save')}
                 </Button>
-                <Button type="button" variant="outline" onClick={() => setEditor(null)}>
+                <Button type="button" variant="outline" onClick={() => chooseEditor(null)}>
                   {label('cancel')}
                 </Button>
               </div>
@@ -282,7 +287,7 @@ export default function AdminAiAgentsPage() {
                   <Button
                     variant="outline"
                     aria-label={`${label('edit')} ${row.title}`}
-                    onClick={() => setEditor(row.id)}
+                    onClick={() => chooseEditor(row.id)}
                   >
                     {label('edit')}
                   </Button>
