@@ -1629,3 +1629,11 @@ Final browser rerun: all 230 Chromium checks passed in 3.2 minutes, including bo
 Removed unused size-limit tooling and obsolete UUID type stubs. Upgraded Drizzle ORM/Kit and SWC CLI, selected patched qs within Express's supported range, and removed Drizzle Kit's unused deprecated loader through an exact-version override. Supplied SWC's optional watch dependency through a scoped package extension without changing Nest's Chokidar peer. CI now blocks high/critical dependency advisories and retains the JSON scan report even on failure.
 
 Review and validation: the scan went from five high/seven moderate occurrences to zero advisories. Production build, root types, contract comparison, route budgets, lint, formatting and migration-tool config/journal checks passed. All 2,871 API tests and 567 database tests passed. Drizzle's error wrapping required preserving constraint assertions under cause; native pool assertions remain unchanged. A temporary watch fixture verified initial and changed-file compilation. No schemas, migration history or product routes changed. See dependency-repair.md and both saved JSON scans for detail. Remaining security and license gates are still open.
+
+### Add a tested, redacted Git-history secret gate (F19)
+
+Added a full-history CI secret scan using checksum-pinned Gitleaks 8.30.1. Shallow checkouts fail. Each run first creates a disposable Git fixture and verifies that a generated nonfunctional credential fails detection while the report remains redacted. Reports live outside the checkout and upload even on failure.
+
+Review and validation: scanned 1,029 local commits. Reviewed all 24 generic-key findings as specific test/alphabet/nonce/digest false positives and recorded exact historical fingerprints, without excluding whole files or rules. The self-test detected its new synthetic credential despite the ignore list; the reviewed project scan then found zero remaining findings. See secret-scan-review.md and secret-scan-triage.json. No provider credentials were tested or rotated, and no remote CI run was triggered.
+
+Four wrapper tests pass for checksum rejection before extraction, ignoring archive traversal paths, retaining scanner failure codes with redaction/all-history arguments, and rejecting shallow checkouts before downloading the tool.

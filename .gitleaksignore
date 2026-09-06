@@ -1,0 +1,26 @@
+# Exact historical false positives reviewed in audit/secret-scan-triage.json.
+# New commits and new locations remain subject to all default rules.
+39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/admin/admin.service.ts:generic-api-key:260
+39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/ai-models/ai-model-tester.service.test.ts:generic-api-key:102
+39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/email-webhook/email-webhook.service.test.ts:generic-api-key:15
+39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:14
+39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:15
+39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/provider-config/provider-secrets.service.test.ts:generic-api-key:9
+39d1f0ba532e780114d9e78bcc344c588454c0e2:scripts/check-pilot-proxy.mjs:generic-api-key:74
+2bbfedae53f80031b6918dc284f12593f38552f7:scripts/check-pilot-proxy.mjs:generic-api-key:42
+3f3e8f5a67b22a5c8ddc21f251ac152905767aae:audit/audit-manifest.json:generic-api-key:17
+42388d60b69cb094ef5236b4bf2b6907a97038a0:apps/api/src/wallet/bank-receipt-confirmation.service.test.ts:generic-api-key:50
+afb7528a496237c268ddc1b592ddadfd452f47a9:apps/api/src/ai-models/ai-model-tester.service.test.ts:generic-api-key:101
+afb7528a496237c268ddc1b592ddadfd452f47a9:apps/api/src/ai-models/ai-model-tester.service.test.ts:generic-api-key:105
+0bde7d1f3da46ae1668c96e131ad59b08889df79:apps/api/src/provider-config/smsir-connection-tester.service.test.ts:generic-api-key:15
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:14
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:15
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:38
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:68
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:82
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:107
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:122
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/svix-verifier.test.ts:generic-api-key:136
+af7be0cdae3403052e1e327610c93248348e86d7:apps/api/src/provider-config/provider-secrets.service.test.ts:generic-api-key:9
+fb56a84b4edb100d966a44a86296f1ee79d271f9:apps/api/src/email-webhook/email-webhook.service.test.ts:generic-api-key:15
+0d3dbef4487cd1b537b4e438198b554f495b04e4:apps/api/src/admin/admin.service.ts:generic-api-key:41
