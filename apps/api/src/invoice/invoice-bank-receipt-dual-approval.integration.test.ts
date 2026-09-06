@@ -128,9 +128,10 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         user_id TEXT PRIMARY KEY,
-        username TEXT
+        username TEXT, is_admin boolean NOT NULL DEFAULT true, disabled_at timestamptz, activation_token text
       )
     `)
+    await ctx.pool.query('CREATE TABLE staff_roles(role_id text PRIMARY KEY, permissions text); CREATE TABLE user_roles(user_id text, role_id text)')
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS profiles (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),

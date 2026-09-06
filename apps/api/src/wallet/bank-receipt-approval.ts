@@ -7,7 +7,7 @@ import {
   invoiceBankReceiptRequiresDualApproval,
 } from "@barghsa/shared/finance";
 import { applyApprovalRequestResolutionOnClient } from "../admin/dual-approval-resolution.js";
-import { resolveStaffPermissions } from "../session/staff-permissions.js";
+import { requireCurrentFinancePermission } from "../admin/approval-permissions.js";
 import type { WalletQueryClient } from "./wallet.service.js";
 
 export interface WalletReceiptApproval {
@@ -39,34 +39,6 @@ export function walletReceiptApproval(
   )
     return conflict("Invalid saved receipt approval binding");
   return row as unknown as WalletReceiptApproval;
-}
-async function requireFinance(
-  client: WalletQueryClient,
-  userId: string,
-): Promise<void> {
-  const row = (
-    await client.query(
-      `SELECT u.is_admin, ARRAY(SELECT r.permissions FROM user_roles ur
-    JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id) AS role_permissions
-    FROM users u WHERE u.user_id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
-      [userId],
-    )
-  ).rows[0] as { is_admin: boolean; role_permissions: unknown } | undefined;
-  const permissions = resolveStaffPermissions(row?.role_permissions);
-  if (
-    !row ||
-    (!row.is_admin &&
-      !permissions.includes("*") &&
-      !permissions.includes("admin:financial:edit"))
-  )
-    throw new HttpException(
-      {
-        statusCode: 403,
-        error: ErrorCodes.AUTHZ_FORBIDDEN.code,
-        message: "Current finance permission is required for both approvers",
-      },
-      403,
-    );
 }
 /** Caller holds the receipt lock and owns the transaction. Returns a pending binding, or null to settle. */
 export async function gateWalletReceiptApproval(
@@ -110,7 +82,7 @@ export async function gateWalletReceiptApproval(
       }),
     )
     .digest("hex");
-  await requireFinance(client, input.actorUserId);
+  await requireCurrentFinancePermission(client, input.actorUserId);
   if (!saved) {
     const binding: WalletReceiptApproval = {
       requestId: randomUUID(),
@@ -178,7 +150,7 @@ export async function gateWalletReceiptApproval(
   )
     conflict("Receipt approval does not match its saved binding");
   if (request.status === "rejected") conflict("Receipt approval was rejected");
-  await requireFinance(client, saved.initiatorId);
+  await requireCurrentFinancePermission(client, saved.initiatorId);
   if (request.status === "pending") {
     if (saved.initiatorId === input.actorUserId) return saved;
     await applyApprovalRequestResolutionOnClient(client, {
@@ -201,6 +173,6 @@ export async function gateWalletReceiptApproval(
     request.reviewer_id === saved.initiatorId
   )
     conflict("Receipt has no valid second approval");
-  await requireFinance(client, request.reviewer_id);
+  await requireCurrentFinancePermission(client, request.reviewer_id);
   return null;
 }

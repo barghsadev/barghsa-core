@@ -318,3 +318,41 @@ it('returns and audits large IRR approval amounts without numeric rounding', asy
   const audit=(await http.pool.query("SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='approval_request_approved' AND metadata::jsonb->>'requestId'=$1",[id])).rows[0]
   expect(audit.metadata.amountIrR).toBe(amount)
 })
+
+async function invoiceReceipt() {
+  const profile=(await http.pool.query("INSERT INTO profiles(user_id,status) VALUES ('initiator','ACTIVE') RETURNING id")).rows[0].id
+  const invoice=(await http.pool.query(`INSERT INTO invoices(profile_id,order_id,replaces_invoice_id,adjustment_for_invoice_id,state,total_amount)
+    VALUES ($1,NULL,NULL,NULL,'Overdue',100000) RETURNING id`,[profile])).rows[0].id
+  const id=(await http.pool.query(`INSERT INTO bank_receipts(invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key)
+    VALUES ($1,$2,100000,'2026-09-01','verified-slip',$3) RETURNING id`,[invoice,profile,`sealed/${randomUUID()}.pdf`])).rows[0].id as string
+  return {id,invoice,profile}
+}
+async function confirmInvoice(user:string,id:string) {return fetch(`${http.base}/api/admin/invoices/bank-receipts/${id}/confirm`,{method:'POST',headers:headers[user]!,body:'{}'})}
+it('requires invoice-owned approval evidence and rejects changed receipt evidence',async()=>{
+  await http.pool.query(`UPDATE app_config SET value='{"threshold_irr":100000}' WHERE key='finance.dual_approval_threshold'`)
+  for(const changed of [false,true]) {
+    const receipt=await invoiceReceipt()
+    const first=await confirmInvoice('initiator',receipt.id)
+    expect(first.status,await first.clone().text()).toBe(200)
+    expect(await first.json()).toMatchObject({state:'UnderReview',dualApprovalPending:true})
+    if(changed)await http.pool.query("UPDATE bank_receipts SET payer_reference='different-slip' WHERE id=$1",[receipt.id])
+    const second=await confirmInvoice('reviewer',receipt.id)
+    expect(second.status,await second.text()).toBe(changed?409:200)
+    const invoice=(await http.pool.query('SELECT paid_amount,state FROM invoices WHERE id=$1',[receipt.invoice])).rows[0]
+    expect(invoice).toEqual(changed?{paid_amount:'0',state:'Overdue'}:{paid_amount:'100000',state:'Paid'})
+  }
+})
+it('cannot use a generic approval for an invoice receipt or an approval from a revoked reviewer',async()=>{
+  const forged=await invoiceReceipt()
+  const fake=await seed()
+  await http.pool.query(`UPDATE approval_requests SET details=$2::jsonb WHERE id=$1`,[fake,JSON.stringify({receiptId:forged.id,invoiceId:forged.invoice,profileId:forged.profile,entityType:'invoice_bank_receipt'})])
+  expect((await decide('reviewer',fake)).status).toBe(200)
+  expect((await confirmInvoice('initiator',forged.id)).status).toBe(409)
+  const receipt=await invoiceReceipt()
+  const pending=await (await confirmInvoice('initiator',receipt.id)).json() as {dualApprovalRequestId:string}
+  expect((await decide('reviewer',pending.dualApprovalRequestId)).status).toBe(200)
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='reviewer'")
+  expect((await confirmInvoice('initiator',receipt.id)).status).toBe(403)
+  await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ('reviewer','role-finance')")
+  expect((await http.pool.query('SELECT paid_amount FROM invoices WHERE id=$1',[receipt.invoice])).rows[0].paid_amount).toBe('0')
+})

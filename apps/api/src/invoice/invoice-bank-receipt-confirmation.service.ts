@@ -1,3 +1,4 @@
+import { requireCurrentFinancePermission } from '../admin/approval-permissions.js'
 import { createHash } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import {
@@ -364,6 +365,18 @@ export class InvoiceBankReceiptConfirmationService {
         }
 
         const latestRequest = await this.lockLatestDualApprovalRequest(client, receipt.id)
+        if (latestRequest) {
+          await this.assertApprovalBinding(client, receipt, latestRequest)
+          if (latestRequest.status !== 'rejected') {
+            await requireCurrentFinancePermission(client, latestRequest.initiatorId)
+            if (latestRequest.status === 'approved') {
+              if (!latestRequest.reviewerId || latestRequest.reviewerId === latestRequest.initiatorId) {
+                httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt has no distinct approval reviewer', 409)
+              }
+              await requireCurrentFinancePermission(client, latestRequest.reviewerId)
+            }
+          }
+        }
         const requiresDual = invoiceBankReceiptRequiresDualApproval(
           thresholdRead,
           receipt.amount,
@@ -377,6 +390,7 @@ export class InvoiceBankReceiptConfirmationService {
               ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
             })
           }
+          await requireCurrentFinancePermission(client, input.actorUserId)
           await applyApprovalRequestResolutionOnClient(client, {
             requestId: latestRequest.id,
             reviewerUserId: input.actorUserId,
@@ -701,6 +715,7 @@ export class InvoiceBankReceiptConfirmationService {
     },
   ): Promise<InvoiceBankReceiptConfirmDto> {
     const requestId = uuidv7()
+    const fingerprint = invoiceReceiptFingerprint(input.receipt)
     const details = invoiceBankReceiptDualApprovalDetails({
       receiptId: input.receipt.id,
       invoiceId: input.receipt.invoiceId,
@@ -716,7 +731,7 @@ export class InvoiceBankReceiptConfirmationService {
         input.receipt.amount.toString(),
         input.actorUserId,
         INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REASON,
-        JSON.stringify(details),
+        JSON.stringify({ ...details, fingerprint }),
         input.now,
       ],
     )
@@ -733,6 +748,7 @@ export class InvoiceBankReceiptConfirmationService {
         amount: input.receipt.amount.toString(),
         previousState: input.receipt.state,
         newState: 'UnderReview',
+        fingerprint,
         dualApprovalRequestId: requestId,
         dualApprovalInitiatedBy: input.actorUserId,
         dualApprovalThresholdIrR: thresholdIrRLabel(input.thresholdRead),
@@ -747,6 +763,20 @@ export class InvoiceBankReceiptConfirmationService {
     return this.toDto(parked ?? { ...input.receipt, state: 'UnderReview' }, {
       ...dualApprovalExtrasFromRead(input.thresholdRead, input.receipt.amount, pending),
     })
+  }
+
+  private async assertApprovalBinding(client: WalletQueryClient, receipt: BankReceiptRow, request: DualApprovalRequestSummary): Promise<void> {
+    // Generic user-supplied approval details cannot authorize settlement. The
+    // trusted receipt initiation audit is the durable link to exact evidence.
+    const source = (await client.query(`SELECT metadata::jsonb AS metadata FROM audit_log
+      WHERE event=$1 AND metadata::jsonb->>'dualApprovalRequestId'=$2
+        AND metadata::jsonb->>'receiptId'=$3 AND user_id=$4
+      ORDER BY created_at DESC LIMIT 1`, [INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT, request.id, receipt.id, request.initiatorId])).rows[0] as { metadata?: Record<string, unknown> } | undefined
+    if (source?.metadata?.fingerprint !== invoiceReceiptFingerprint(receipt)
+      || String(request.amountIrR) !== String(receipt.amount)
+      || request.actionType !== INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE) {
+      httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt approval is unbound or its evidence changed; manual reconciliation is required', 409)
+    }
   }
 
   private async ensureUnderReview(
@@ -1596,4 +1626,10 @@ function toIso(value: Date | string): string {
 
 function httpError(code: string, message: string, statusCode: number): never {
   throw new HttpException({ statusCode, error: code, message }, statusCode)
+}
+
+export function invoiceReceiptFingerprint(receipt: BankReceiptRow): string {
+  return createHash('sha256').update(JSON.stringify({id:receipt.id,invoiceId:receipt.invoice_id,
+    profileId:receipt.profile_id,amount:String(receipt.amount),paymentDate:receipt.payment_date,
+    payerReference:receipt.payer_reference,attachmentKey:receipt.attachment_key,customerNote:receipt.customer_note})).digest('hex')
 }

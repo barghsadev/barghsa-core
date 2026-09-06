@@ -1,3 +1,4 @@
+import { invoiceReceiptFingerprint } from './invoice-bank-receipt-confirmation.service.js'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { HttpException } from '@nestjs/common'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -140,11 +141,13 @@ function script(opts: ScriptOptions = {}) {
       if (opts.locked === null) return { rows: [] }
       return { rows: [opts.locked ?? makeReceiptRow()] }
     }
+    if (sql.includes('AS role_permissions')) return { rows: [{is_admin:true,role_permissions:[]}] }
+    if (sql.includes('SELECT metadata::jsonb AS metadata FROM audit_log')) return {rows:[{metadata:{fingerprint:invoiceReceiptFingerprint((opts.locked ?? makeReceiptRow()) as Parameters<typeof invoiceReceiptFingerprint>[0])}}]}
     if (sql.includes('FROM app_config')) {
       return thresholdRows(opts)
     }
     if (sql.includes('FROM approval_requests')) {
-      return { rows: opts.pendingApproval ? [opts.pendingApproval] : [] }
+      return { rows: opts.pendingApproval ? [{action_type:INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,amount_irr:opts.locked?.amount ?? makeReceiptRow().amount,...opts.pendingApproval}] : [] }
     }
     if (sql.includes('INSERT INTO approval_requests')) {
       return { rows: [] }
@@ -235,7 +238,7 @@ function script(opts: ScriptOptions = {}) {
       return thresholdRows(opts)
     }
     if (sql.includes('FROM approval_requests')) {
-      return { rows: opts.pendingApproval ? [opts.pendingApproval] : [] }
+      return { rows: opts.pendingApproval ? [{action_type:INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,amount_irr:opts.locked?.amount ?? makeReceiptRow().amount,...opts.pendingApproval}] : [] }
     }
     if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
       return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
