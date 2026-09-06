@@ -1589,3 +1589,9 @@ Review and validation: both Persian/English production-browser checks pass for a
 Sortable headers now contain native keyboard buttons and expose aria-sort. Columns with enableHiding=false stay visible. Controlled selection follows its parent's selectedRows value. Sorting and selection callbacks run in event handlers rather than state updater functions, preventing duplicate callbacks under Strict Mode. Equal missing sort values compare equally.
 
 Review and validation: four browser component checks pass for keyboard ascending/descending/reset sorting, retained fixed columns, controlled/uncontrolled selection, select-all clearing, external selection updates and exactly one callback per action under Strict Mode. The fixture compiles the actual shared component in a temporary directory and introduces no production route. Root build, types, lint and bundle checks pass. No current product consumer uses this table; this verifies the built shared component, not a future CRM migration.
+
+### Close the remaining baseline control-label findings (F20)
+
+Added localized names to geography filters and the TOS error-dismiss action. Current breadcrumb text now uses aria-current without a disabled link role. Full page translation remains separate work.
+
+Review and validation: both geography/TOS browser checks and the combined 63 auth/form/calendar/table checks pass. Root build, types, lint and bundle checks pass. The same-version full scan now reports 268 warnings, zero errors and one accessibility diagnostic, down from 316 diagnostics, five errors and 43 accessibility diagnostics. Reviewed the remaining toast warning as a wrapper-analysis false positive because ToastPrimitive.Close provides its accessible name. Saved the report and explicit limitations in accessibility-triage.md. Broader task acceptance and localization remain open.

@@ -1,3 +1,5 @@
+import { adminControlsText } from '@barghsa/i18n/admin-controls';
+import { useLocale } from '../hooks/useLocale.js';
 import { Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback } from 'react';
@@ -24,6 +26,7 @@ interface TosVersion {
  * Read-only version detail view shows full Persian and English content.
  */
 export default function AdminTosPage() {
+  const locale = useLocale();
   const [versions, setVersions] = useState<TosVersion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -195,9 +198,13 @@ export default function AdminTosPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+        <div
+          role="alert"
+          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+        >
           {error}
           <button
+            aria-label={adminControlsText('dismissError', locale)}
             onClick={() => setError(null)}
             className="absolute top-2 right-2 text-red-500 hover:text-red-700"
           >

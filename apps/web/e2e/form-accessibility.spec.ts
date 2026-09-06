@@ -1183,3 +1183,37 @@ for (const locale of ['en', 'fa']) {
     await expect(page.locator('#order-address-city')).toBeDisabled();
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`geography filters and terms error dismissal have localized names (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.goto('/admin/geography');
+    const search = page.getByRole('textbox', {
+      name: locale === 'fa' ? 'جستجوی استان‌ها' : 'Search provinces',
+      exact: true,
+    });
+    await search.fill('Tehran');
+    await expect(search).toHaveValue('Tehran');
+    const status = page.getByRole('combobox', {
+      name: locale === 'fa' ? 'فیلتر وضعیت' : 'Filter by status',
+      exact: true,
+    });
+    await status.selectOption('active');
+    await expect(status).toHaveValue('active');
+    await page.route('**/api/admin/tos/versions', (route) =>
+      route.fulfill({ status: 503, json: {} })
+    );
+    await page.goto('/admin/tos');
+    const error = page.getByRole('alert');
+    await expect(error).toBeVisible();
+    await error
+      .getByRole('button', {
+        name: locale === 'fa' ? 'بستن پیام خطا' : 'Dismiss error',
+        exact: true,
+      })
+      .press('Enter');
+    await expect(error).toHaveCount(0);
+  });
+}

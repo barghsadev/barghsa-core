@@ -41,6 +41,11 @@
       "types": "./dist/preferences.d.ts",
       "import": "./dist/preferences.js",
       "default": "./dist/preferences.js"
+    },
+    "./admin-controls": {
+      "types": "./dist/admin-controls.d.ts",
+      "import": "./dist/admin-controls.js",
+      "default": "./dist/admin-controls.js"
     }
   },
   "scripts": {
