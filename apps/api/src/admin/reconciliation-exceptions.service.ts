@@ -1,4 +1,5 @@
 import { Injectable, Logger, HttpException } from '@nestjs/common';
+import { z } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
@@ -35,6 +36,8 @@ export interface ListReconciliationExceptionsOptions {
   severity?: ReconciliationSeverity;
   limit?: number;
   offset?: number;
+  createdFrom?: string;
+  createdBefore?: string;
 }
 
 const DEFAULT_LIST_LIMIT = 50;
@@ -104,6 +107,22 @@ export class ReconciliationExceptionsService {
       );
     }
 
+    const dates = z
+      .object({
+        createdFrom: z.iso.datetime({ offset: true }).optional(),
+        createdBefore: z.iso.datetime({ offset: true }).optional(),
+      })
+      .safeParse({ createdFrom: options.createdFrom, createdBefore: options.createdBefore });
+    if (
+      !dates.success ||
+      (dates.data.createdFrom &&
+        dates.data.createdBefore &&
+        Date.parse(dates.data.createdFrom) >= Date.parse(dates.data.createdBefore))
+    )
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
     const pool = getDbPool();
     const result = await pool.query(
       `SELECT rex.*, assignee.username AS assigned_to_username, resolver.username AS resolved_by_username
@@ -112,9 +131,18 @@ export class ReconciliationExceptionsService {
        LEFT JOIN users resolver ON resolver.user_id = rex.resolved_by_id
        WHERE ($1::text IS NULL OR rex.status = $1)
          AND ($2::text IS NULL OR rex.severity = $2)
+         AND ($5::timestamptz IS NULL OR rex.created_at >= $5)
+         AND ($6::timestamptz IS NULL OR rex.created_at < $6)
        ORDER BY rex.created_at DESC, rex.id DESC
        LIMIT $3 OFFSET $4`,
-      [status, severity, limit, offset]
+      [
+        status,
+        severity,
+        limit,
+        offset,
+        dates.data.createdFrom ?? null,
+        dates.data.createdBefore ?? null,
+      ]
     );
 
     return result.rows.map(toReconciliationExceptionDto);

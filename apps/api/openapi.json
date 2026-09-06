@@ -5581,6 +5581,22 @@
         "parameters": [
           {
             "in": "query",
+            "name": "createdFrom",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "createdBefore",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "offset",
             "required": false,
             "schema": {
@@ -5646,6 +5662,20 @@
           }
         },
         "summary": "List reconciliation exceptions (review queue)",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/reconciliation/items/access": {
+      "get": {
+        "operationId": "ReconciliationExceptionsController_access",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
         "tags": [
           "Admin"
         ]

@@ -70,6 +70,15 @@ async function main() {
         [dead, outbox, job, event, profile]
       );
     }
+  for (const locale of ['en', 'fa']) {
+    await http.pool.query(
+      "INSERT INTO reconciliation_exceptions(exception_type,severity,description,details) VALUES ('wallet_mismatch','high',$1,$2::jsonb)",
+      [
+        `Reconciliation live ${locale}`,
+        JSON.stringify({ ledger: '9007199254740993', balance: '9007199254740992' }),
+      ]
+    );
+  }
   let closing = false;
   const close = async () => {
     if (closing) return;

@@ -38,6 +38,7 @@ import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
+import { Route as AdminReconciliationRouteImport } from './routes/admin/reconciliation'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
 import { Route as AdminServiceTargetsRouteImport } from './routes/admin/service-targets'
 import { Route as AdminStaffTeamsRouteImport } from './routes/admin/staff-teams'
@@ -212,6 +213,11 @@ const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
 const AdminProvidersRoute = AdminProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReconciliationRoute = AdminReconciliationRouteImport.update({
+  id: '/reconciliation',
+  path: '/reconciliation',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminRolesRoute = AdminRolesRouteImport.update({
@@ -396,6 +402,7 @@ export interface FileRoutesByFullPath {
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
@@ -452,6 +459,7 @@ export interface FileRoutesByTo {
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
@@ -514,6 +522,7 @@ export interface FileRoutesById {
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
@@ -576,6 +585,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/notifications'
     | '/admin/providers'
+    | '/admin/reconciliation'
     | '/admin/roles'
     | '/admin/service-targets'
     | '/admin/staff-teams'
@@ -632,6 +642,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/notifications'
     | '/admin/providers'
+    | '/admin/reconciliation'
     | '/admin/roles'
     | '/admin/service-targets'
     | '/admin/staff-teams'
@@ -693,6 +704,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/notifications'
     | '/admin/providers'
+    | '/admin/reconciliation'
     | '/admin/roles'
     | '/admin/service-targets'
     | '/admin/staff-teams'
@@ -942,6 +954,13 @@ declare module '@tanstack/react-router' {
       path: '/providers'
       fullPath: '/admin/providers'
       preLoaderRoute: typeof AdminProvidersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reconciliation': {
+      id: '/admin/reconciliation'
+      path: '/reconciliation'
+      fullPath: '/admin/reconciliation'
+      preLoaderRoute: typeof AdminReconciliationRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/roles': {
@@ -1231,6 +1250,7 @@ interface AdminRouteChildren {
   AdminInvoicesRoute: typeof AdminInvoicesRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
+  AdminReconciliationRoute: typeof AdminReconciliationRoute
   AdminRolesRoute: typeof AdminRolesRoute
   AdminServiceTargetsRoute: typeof AdminServiceTargetsRoute
   AdminStaffTeamsRoute: typeof AdminStaffTeamsRoute
@@ -1254,6 +1274,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminInvoicesRoute: AdminInvoicesRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminProvidersRoute: AdminProvidersRoute,
+  AdminReconciliationRoute: AdminReconciliationRoute,
   AdminRolesRoute: AdminRolesRoute,
   AdminServiceTargetsRoute: AdminServiceTargetsRoute,
   AdminStaffTeamsRoute: AdminStaffTeamsRoute,

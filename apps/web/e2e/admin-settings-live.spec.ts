@@ -659,3 +659,77 @@ for (const locale of ['en', 'fa'])
     expect(await saved.text()).not.toContain(`browser-secret-${locale}`);
     await page.screenshot({ path: `/tmp/storage-config-${locale}.png`, fullPage: true });
   });
+
+for (const locale of ['en', 'fa'])
+  test(`reconciliation review persists through the migrated API (${locale})`, async ({ page }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const fa = locale === 'fa',
+      description = `Reconciliation live ${locale}`;
+    await page.goto('/admin/reconciliation');
+    await page.getByRole('button', { name: description, exact: true }).click();
+    await expect(page.getByRole('dialog')).toContainText('9007199254740993');
+    await page
+      .getByRole('button', { name: fa ? 'شروع بررسی' : 'Investigate', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption('investigating');
+    await page
+      .getByRole('button', { name: fa ? 'اعمال فیلترها' : 'Apply filters', exact: true })
+      .click();
+    await page.getByRole('button', { name: description, exact: true }).click();
+    await page.getByLabel(fa ? 'توضیح' : 'Explanation', { exact: true }).fill(`Reviewed ${locale}`);
+    await page.getByRole('button', { name: fa ? 'رفع مغایرت' : 'Resolve', exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.reload();
+    await page.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption('resolved');
+    await page
+      .getByRole('button', { name: fa ? 'اعمال فیلترها' : 'Apply filters', exact: true })
+      .click();
+    await page.getByRole('button', { name: description, exact: true }).click();
+    await expect(page.getByRole('dialog')).toContainText(`Reviewed ${locale}`);
+    await page.screenshot({ path: `/tmp/reconciliation-${locale}.png`, fullPage: true });
+    await page.getByLabel(fa ? 'توضیح' : 'Explanation', { exact: true }).fill(`Closed ${locale}`);
+    await page
+      .getByRole('button', { name: fa ? 'بستن مغایرت' : 'Close exception', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    const records = (await (
+      await page.request.get(`${http.base}/api/admin/reconciliation/items?status=closed`, {
+        headers: { cookie: `barghsa_session=${http.session}` },
+      })
+    ).json()) as Array<{ description: string; resolutionNote: string }>;
+    expect(records.find((row) => row.description === description)?.resolutionNote).toBe(
+      `Reviewed ${locale}`
+    );
+  });

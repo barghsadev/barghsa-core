@@ -11,6 +11,7 @@ import {
   Query,
   Req,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -24,14 +25,26 @@ import {
 import { RECONCILIATION_STATUSES, RECONCILIATION_SEVERITIES } from '@barghsa/shared/admin';
 
 /** Zod schema for the resolution/close note body (mandatory, bounded). */
-export const ResolutionNoteSchema = z.object({
-  note: z.string().trim().min(1).max(1000),
-});
+export const ResolutionNoteSchema = z
+  .object({
+    note: z.string().trim().min(1).max(1000),
+  })
+  .strict();
 
 /** Strict validation for the list view's limit/offset query params. */
 const ListQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(200).optional(),
-  offset: z.coerce.number().int().min(0).optional(),
+  limit: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number)
+    .pipe(z.number().int().min(1).max(200))
+    .optional(),
+  offset: z
+    .string()
+    .regex(/^\d+$/)
+    .transform(Number)
+    .pipe(z.number().int().min(0).max(1000000))
+    .optional(),
 });
 
 /** Swagger enum values for the reconciliation statuses. */
@@ -64,6 +77,14 @@ export class ReconciliationExceptionsController {
   private readonly logger = new Logger(ReconciliationExceptionsController.name);
 
   constructor(private readonly reconciliationService: ReconciliationExceptionsService) {}
+
+  @Get('access')
+  access(@Req() req: AuthenticatedRequest) {
+    return {
+      canView: hasStaffPermission(req, 'admin:reconciliation:view'),
+      canResolve: hasStaffPermission(req, 'admin:reconciliation:resolve'),
+    };
+  }
 
   /**
    * Permission gate for viewing the reconciliation review queue.
@@ -118,6 +139,8 @@ export class ReconciliationExceptionsController {
   @ApiQuery({ name: 'severity', required: false, enum: SEVERITIES })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'offset', required: false, type: Number })
+  @ApiQuery({ name: 'createdFrom', required: false, type: String })
+  @ApiQuery({ name: 'createdBefore', required: false, type: String })
   @ApiResponse({ status: 200, description: 'List of reconciliation exceptions', type: [Object] })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
@@ -126,7 +149,9 @@ export class ReconciliationExceptionsController {
     @Query('severity') severity: string | undefined,
     @Query('limit') limit: string | undefined,
     @Query('offset') offset: string | undefined,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Query('createdFrom') createdFrom?: string,
+    @Query('createdBefore') createdBefore?: string
   ): Promise<ReconciliationExceptionDto[]> {
     this.assertViewPermission(req);
     const options: Parameters<ReconciliationExceptionsService['listReconciliationExceptions']>[0] =
@@ -152,6 +177,8 @@ export class ReconciliationExceptionsController {
       if (parsed.data.limit !== undefined) options.limit = parsed.data.limit;
       if (parsed.data.offset !== undefined) options.offset = parsed.data.offset;
     }
+    if (createdFrom !== undefined) options.createdFrom = createdFrom;
+    if (createdBefore !== undefined) options.createdBefore = createdBefore;
     return this.reconciliationService.listReconciliationExceptions(options);
   }
 
@@ -171,7 +198,7 @@ export class ReconciliationExceptionsController {
   @ApiResponse({ status: 404, description: 'Exception not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async investigateItem(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest
   ): Promise<ReconciliationExceptionDto> {
     this.assertResolvePermission(req);
@@ -206,7 +233,7 @@ export class ReconciliationExceptionsController {
   @ApiResponse({ status: 404, description: 'Exception not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async resolveItem(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest
   ): Promise<ReconciliationExceptionDto> {
@@ -255,7 +282,7 @@ export class ReconciliationExceptionsController {
   @ApiResponse({ status: 404, description: 'Exception not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async closeItem(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest
   ): Promise<ReconciliationExceptionDto> {

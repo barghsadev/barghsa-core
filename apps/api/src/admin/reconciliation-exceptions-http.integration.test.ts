@@ -164,3 +164,38 @@ it.each(['investigate', 'resolve', 'close'])(
     }
   }
 );
+
+it('filters an exact time interval, pages results, and rejects malformed dates and identifiers', async () => {
+  const first = await seed(),
+    second = await seed(),
+    third = await seed();
+  for (const [id, date] of [
+    [first, '2026-09-01T00:00:00Z'],
+    [second, '2026-09-02T00:00:00Z'],
+    [third, '2026-09-03T00:00:00Z'],
+  ])
+    await http.pool.query('UPDATE reconciliation_exceptions SET created_at=$2 WHERE id=$1', [
+      id,
+      date,
+    ]);
+  const query = new URLSearchParams({
+    createdFrom: '2026-09-01T03:30:00+03:30',
+    createdBefore: '2026-09-03T00:00:00Z',
+    limit: '1',
+    offset: '1',
+  });
+  expect(await (await request(`?${query}`)).json()).toMatchObject([{ id: first }]);
+  for (const query of [
+    'createdFrom=bad',
+    'createdFrom=2026-09-01',
+    'createdFrom=2026-09-03T00:00:00Z&createdBefore=2026-09-01T00:00:00Z',
+    'offset=',
+    'limit=1&limit=2',
+  ])
+    expect((await request(`?${query}`)).status).toBe(400);
+  expect((await request('/bad/resolve', 'POST', { note: 'Invalid ID' })).status).toBe(400);
+  expect(await (await request('/access', 'GET', undefined, 'viewer')).json()).toEqual({
+    canView: true,
+    canResolve: false,
+  });
+});
