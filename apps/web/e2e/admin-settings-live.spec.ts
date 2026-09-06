@@ -444,3 +444,66 @@ for (const locale of ['en', 'fa'])
     await expect(row(ids.dead)).toBeVisible();
     await expect(row(ids.second)).toBeVisible();
   });
+
+for (const locale of ['en', 'fa'])
+  test(`failed notification actions persist through the migrated API (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    await page.goto('/admin/failed-notifications');
+    for (const [action, label, status] of [
+      ['retry', fa ? 'تلاش مجدد' : 'Retry', 'retried'],
+      ['resolve', fa ? 'حل‌شده' : 'Resolve', 'resolved'],
+      ['dismiss', fa ? 'بستن' : 'Dismiss', 'dismissed'],
+    ]) {
+      const event = `triage.${locale}.${action}`;
+      const row = page.locator('tbody tr').filter({ hasText: event });
+      await expect(row).toBeVisible();
+      await row.locator('summary').click();
+      await expect(row).toContainText('***');
+      await expect(row).not.toContainText('private-secret');
+      await expect(row).not.toContainText('private@example.test');
+      await row.getByRole('button', { name: `${label} ${event}`, exact: true }).click();
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toContainText(event);
+      await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+      await expect(dialog).toHaveCount(0);
+      await expect(row).toHaveCount(0);
+      const response = await page.request.get(
+        `${http.base}/api/admin/failed-notifications?status=${status}`,
+        { headers: { cookie: `barghsa_session=${http.session}` } }
+      );
+      expect(response.status()).toBe(200);
+      const records = (await response.json()) as Array<{
+        eventKey: string;
+        status: string;
+        resolvedById: string;
+      }>;
+      expect(records.find((record) => record.eventKey === event)).toMatchObject({
+        status,
+        resolvedById: 'team-ui-admin',
+      });
+    }
+    await page.reload();
+    await expect(page.locator('tbody tr').filter({ hasText: `triage.${locale}.` })).toHaveCount(0);
+  });

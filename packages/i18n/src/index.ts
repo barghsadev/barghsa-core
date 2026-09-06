@@ -1245,6 +1245,23 @@ export const fa: I18nDictionary = {
 
   // ── Admin — Notification Dead-Letter Queue (T-05.01.06) ───
   'admin.notifications.deadLetter.title': 'صف پیام‌های ناموفق (Dead Letter)',
+  'admin.notifications.deadLetter.status': 'وضعیت',
+  'admin.notifications.deadLetter.all': 'همه',
+  'admin.notifications.deadLetter.details': 'جزئیات پوشانده‌شده',
+  'admin.notifications.deadLetter.recipient': 'گیرنده',
+  'admin.notifications.deadLetter.actedBy': 'اقدام‌کننده',
+  'admin.notifications.deadLetter.pagination': 'صفحه‌های پیام‌های ناموفق',
+  'admin.notifications.deadLetter.retryConfirm': 'این پیام دوباره برای ارسال صف می‌شود.',
+  'admin.notifications.deadLetter.resolveConfirm':
+    'این خطا حل‌شده ثبت می‌شود و دیگر قابل تلاش مجدد نیست.',
+  'admin.notifications.deadLetter.dismissConfirm': 'این خطا بسته می‌شود و از فهرست باز حذف می‌شود.',
+  'admin.notifications.deadLetter.conflict':
+    'وضعیت پیام تغییر کرده است. پنجره را ببندید و فهرست را تازه‌سازی کنید.',
+  'admin.notifications.deadLetter.retryNotice':
+    'درخواست ارسال دوباره ثبت شد. تحویل هنوز تأیید نشده است.',
+  'admin.notifications.deadLetter.resolveNotice': 'خطا حل‌شده ثبت شد.',
+  'admin.notifications.deadLetter.dismissNotice': 'خطا بسته شد.',
+
   'admin.notifications.deadLetter.empty': 'هیچ پیام ناموفقی در صف نیست.',
   'admin.notifications.deadLetter.loadFailed': 'خطا در بارگذاری صف پیام‌های ناموفق',
   'admin.notifications.deadLetter.eventKey': 'رویداد',
@@ -2854,6 +2871,25 @@ export const en: I18nDictionary = {
 
   // ── Admin — Notification Dead-Letter Queue (T-05.01.06) ───
   'admin.notifications.deadLetter.title': 'Dead-Letter Queue',
+  'admin.notifications.deadLetter.status': 'Status',
+  'admin.notifications.deadLetter.all': 'All',
+  'admin.notifications.deadLetter.details': 'Masked details',
+  'admin.notifications.deadLetter.recipient': 'Recipient',
+  'admin.notifications.deadLetter.actedBy': 'Action by',
+  'admin.notifications.deadLetter.pagination': 'Failed notification pages',
+  'admin.notifications.deadLetter.retryConfirm':
+    'Queue this notification for another delivery attempt.',
+  'admin.notifications.deadLetter.resolveConfirm':
+    'Mark this failure resolved. It will no longer be available for retry.',
+  'admin.notifications.deadLetter.dismissConfirm':
+    'Dismiss this failure and remove it from the open list.',
+  'admin.notifications.deadLetter.conflict':
+    'The notification state changed. Close this dialog and refresh the list.',
+  'admin.notifications.deadLetter.retryNotice':
+    'Another delivery attempt was requested. Delivery is not yet confirmed.',
+  'admin.notifications.deadLetter.resolveNotice': 'The failure was marked resolved.',
+  'admin.notifications.deadLetter.dismissNotice': 'The failure was dismissed.',
+
   'admin.notifications.deadLetter.empty': 'No dead-lettered notifications.',
   'admin.notifications.deadLetter.loadFailed': 'Failed to load dead-letter queue',
   'admin.notifications.deadLetter.eventKey': 'Event',

@@ -42,6 +42,11 @@ export default function AdminLayout() {
                 </a>
               </li>
               <li>
+                <a href="/admin/failed-notifications" className="text-blue-600 hover:underline">
+                  {t('admin.notifications.deadLetter.title', locale)}
+                </a>
+              </li>
+              <li>
                 <a href="/admin/failed-jobs" className="text-blue-600 hover:underline">
                   {t('admin.jobs.title', locale)}
                 </a>

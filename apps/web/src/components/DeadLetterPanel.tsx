@@ -1,6 +1,7 @@
-import { withCsrf } from '../lib/csrf.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { t } from '@barghsa/i18n';
+import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { Button } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n';
 
 /**
@@ -23,18 +24,16 @@ interface DeadLetterRow {
   channel: 'in_app' | 'email' | 'sms';
   eventKey: string;
   severity: 'error' | 'critical';
-  profileId: string | null;
-  userId: string | null;
+  recipientKey: string | null;
+  data: Record<string, unknown> | null;
   cause: string | null;
   errorCategory: string | null;
   attempts: number;
   maxAttempts: number;
-  idempotencyKey: string;
   status: 'open' | 'retried' | 'resolved' | 'dismissed';
   resolvedAt: string | null;
-  resolvedBy: string | null;
+  resolvedById: string | null;
   createdAt: string;
-  updatedAt: string;
 }
 
 function channelLabel(channel: DeadLetterRow['channel'], uiLocale: Locale): string {
@@ -58,88 +57,159 @@ function statusLabel(status: DeadLetterRow['status'], uiLocale: Locale): string 
 }
 
 export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
+  const filterId = useId();
+  const label = (key: string) => t(`admin.notifications.deadLetter.${key}`, uiLocale);
   const [rows, setRows] = useState<DeadLetterRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [openOnly, setOpenOnly] = useState(true);
-  const [busyId, setBusyId] = useState<string | null>(null);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const qs = openOnly ? '?status=open' : '';
-      const res = await fetch(`/api/admin/notifications/dead-letters${qs}`);
-      if (res.status === 403) {
-        setError(t('admin.notifications.deadLetter.accessDenied', uiLocale));
-        return;
-      }
-      if (!res.ok) {
-        setError(t('admin.notifications.deadLetter.loadFailed', uiLocale));
-        return;
-      }
-      const data = (await res.json()) as DeadLetterRow[];
-      setRows(data);
-    } catch {
-      setError(t('admin.notifications.deadLetter.loadFailed', uiLocale));
-    } finally {
-      setLoading(false);
-    }
-  }, [openOnly, uiLocale]);
-
+  const [error, setError] = useState(false);
+  const [status, setStatus] = useState('open');
+  const [channel, setChannel] = useState('');
+  const [severity, setSeverity] = useState('');
+  const [offset, setOffset] = useState(0);
+  const [revision, setRevision] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [access, setAccess] = useState<{ canView: boolean; canRetry: boolean } | null>(null);
+  const [action, setAction] = useState<TeamAction | null>(null);
+  const [notice, setNotice] = useState<'retry' | 'resolve' | 'dismiss' | null>(null);
   useEffect(() => {
-    void load();
-  }, [load]);
-
-  async function act(id: string, action: 'retry' | 'resolve' | 'dismiss') {
-    setError(null);
-    setBusyId(id);
-    try {
-      const res = await fetch(`/api/admin/notifications/dead-letters/${id}/${action}`, {
-        headers: withCsrf(),
-        method: 'POST',
-      });
-      if (res.status === 403) {
-        setError(t('admin.notifications.deadLetter.accessDenied', uiLocale));
-        return;
+    const controller = new AbortController();
+    setLoading(true);
+    setError(false);
+    void (async () => {
+      try {
+        const accessResponse = await fetch('/api/admin/failed-notifications/access', {
+          signal: controller.signal,
+        });
+        if (!accessResponse.ok) throw new Error('Unavailable');
+        const permissions = (await accessResponse.json()) as {
+          canView: boolean;
+          canRetry: boolean;
+        };
+        if (controller.signal.aborted) return;
+        setAccess(permissions);
+        if (!permissions.canView) {
+          setRows([]);
+          setHasMore(false);
+          return;
+        }
+        const query = new URLSearchParams({
+          limit: '26',
+          offset: String(offset),
+          ...(status ? { status } : {}),
+          ...(channel ? { channel } : {}),
+          ...(severity ? { severity } : {}),
+        });
+        const response = await fetch(`/api/admin/failed-notifications?${query}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error('Unavailable');
+        const result = (await response.json()) as DeadLetterRow[];
+        if (!Array.isArray(result)) throw new Error('Invalid response');
+        if (!controller.signal.aborted) {
+          setRows(result.slice(0, 25));
+          setHasMore(result.length > 25);
+        }
+      } catch {
+        if (!controller.signal.aborted) setError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
-      if (!res.ok) {
-        setError(t('admin.notifications.deadLetter.actionFailed', uiLocale));
-        return;
-      }
-      await load();
-    } catch {
-      setError(t('admin.notifications.deadLetter.actionFailed', uiLocale));
-    } finally {
-      setBusyId(null);
-    }
+    })();
+    return () => controller.abort();
+  }, [status, channel, severity, offset, revision]);
+  function act(row: DeadLetterRow, kind: 'retry' | 'resolve' | 'dismiss') {
+    setNotice(null);
+    setAction({
+      title: label(kind),
+      description: `${label(`${kind}Confirm`)} ${row.eventKey} · ${channelLabel(row.channel, uiLocale)} · ${row.recipientKey ?? ''}`,
+      path: `/api/admin/failed-notifications/${row.id}/${kind}`,
+      method: 'POST',
+      conflictMessage: label('conflict'),
+      forbiddenMessage: label('accessDenied'),
+    });
   }
 
   return (
-    <section className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
-          {t('admin.notifications.deadLetter.title', uiLocale)}
-        </h2>
-        <button
-          onClick={() => setOpenOnly((v) => !v)}
-          className="px-3 py-1.5 border border-gray-300 rounded text-sm hover:bg-gray-50"
-        >
-          {openOnly
-            ? t('admin.notifications.deadLetter.openOnly', uiLocale)
-            : t('admin.notifications.deadLetter.showAll', uiLocale)}
-        </button>
+    <section className="space-y-3" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{label('title')}</h2>
+        <Button variant="outline" disabled={loading} onClick={() => setRevision((v) => v + 1)}>
+          {t('admin.jobs.refresh', uiLocale)}
+        </Button>
       </div>
-
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          {error}
+      {notice && <p role="status">{label(`${notice}Notice`)}</p>}
+      {access?.canView && (
+        <div className="flex flex-wrap gap-3">
+          <div className="space-y-1">
+            <label htmlFor={`${filterId}-status`}>{label('status')}</label>
+            <select
+              id={`${filterId}-status`}
+              className="block rounded border p-2"
+              value={status}
+              onChange={(e) => {
+                setStatus(e.target.value);
+                setOffset(0);
+              }}
+            >
+              <option value="">{label('all')}</option>
+              {(['open', 'retried', 'resolved', 'dismissed'] as const).map((value) => (
+                <option key={value} value={value}>
+                  {statusLabel(value, uiLocale)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label htmlFor={`${filterId}-channel`}>{label('channel')}</label>
+            <select
+              id={`${filterId}-channel`}
+              className="block rounded border p-2"
+              value={channel}
+              onChange={(e) => {
+                setChannel(e.target.value);
+                setOffset(0);
+              }}
+            >
+              <option value="">{label('all')}</option>
+              {(['in_app', 'email', 'sms'] as const).map((value) => (
+                <option key={value} value={value}>
+                  {channelLabel(value, uiLocale)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label htmlFor={`${filterId}-severity`}>{label('severity')}</label>
+            <select
+              id={`${filterId}-severity`}
+              className="block rounded border p-2"
+              value={severity}
+              onChange={(e) => {
+                setSeverity(e.target.value);
+                setOffset(0);
+              }}
+            >
+              <option value="">{label('all')}</option>
+              <option value="error">{label('severityError')}</option>
+              <option value="critical">{label('severityCritical')}</option>
+            </select>
+          </div>
         </div>
       )}
-
+      {error && (
+        <div role="alert">
+          <p>{label('loadFailed')}</p>
+          <Button onClick={() => setRevision((v) => v + 1)}>
+            {t('admin.jobs.reload', uiLocale)}
+          </Button>
+        </div>
+      )}
+      {!loading && !error && !access?.canView && <p role="alert">{label('accessDenied')}</p>}
       {loading ? (
-        <div className="p-4 text-gray-500">{t('admin.notifications.loading', uiLocale)}</div>
-      ) : rows.length === 0 ? (
+        <div role="status" className="p-4 text-gray-500">
+          {t('admin.notifications.loading', uiLocale)}
+        </div>
+      ) : error || !access?.canView ? null : rows.length === 0 ? (
         <div className="p-4 text-gray-500">
           {t('admin.notifications.deadLetter.empty', uiLocale)}
         </div>
@@ -152,7 +222,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
             <caption className="sr-only">
               {t('admin.notifications.deadLetter.title', uiLocale)}
             </caption>
-            <thead className="bg-gray-50 text-left">
+            <thead className="bg-gray-50 text-start">
               <tr>
                 <th className="px-4 py-2 font-medium text-gray-600">
                   {t('admin.notifications.deadLetter.eventKey', uiLocale)}
@@ -204,35 +274,53 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                   </td>
                   <td className="px-4 py-3 font-mono text-xs" dir="ltr">
                     {row.cause ?? '—'}
+                    <details className="mt-2 font-sans" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
+                      <summary className="cursor-pointer">{label('details')}</summary>
+                      <p>
+                        {label('recipient')}: <bdi>{row.recipientKey ?? '—'}</bdi>
+                      </p>
+                      {row.resolvedById && (
+                        <p>
+                          {label('actedBy')}: <bdi>{row.resolvedById}</bdi>
+                        </p>
+                      )}
+                      <pre
+                        dir="ltr"
+                        className="max-w-sm overflow-auto whitespace-pre-wrap break-words"
+                      >
+                        {JSON.stringify(row.data, null, 2)}
+                      </pre>
+                    </details>
                   </td>
                   <td className="px-4 py-3">
-                    {row.attempts}/{row.maxAttempts}
+                    {new Intl.NumberFormat(uiLocale).format(row.attempts)}/
+                    {new Intl.NumberFormat(uiLocale).format(row.maxAttempts)}
                   </td>
                   <td className="px-4 py-3 text-xs text-gray-500">
                     {new Date(row.createdAt).toLocaleString(uiLocale === 'fa' ? 'fa-IR' : 'en-US')}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    {row.status === 'open' ? (
+                    {row.status === 'open' && access?.canRetry ? (
                       <div className="flex gap-2">
                         <button
-                          onClick={() => void act(row.id, 'retry')}
-                          disabled={busyId === row.id}
+                          onClick={() => act(row, 'retry')}
+                          disabled={action !== null}
                           aria-label={`${t('admin.notifications.deadLetter.retry', uiLocale)} ${row.eventKey}`}
                           className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                         >
                           {t('admin.notifications.deadLetter.retry', uiLocale)}
                         </button>
                         <button
-                          onClick={() => void act(row.id, 'resolve')}
-                          disabled={busyId === row.id}
+                          onClick={() => act(row, 'resolve')}
+                          disabled={action !== null}
                           aria-label={`${t('admin.notifications.deadLetter.resolve', uiLocale)} ${row.eventKey}`}
                           className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
                         >
                           {t('admin.notifications.deadLetter.resolve', uiLocale)}
                         </button>
                         <button
-                          onClick={() => void act(row.id, 'dismiss')}
-                          disabled={busyId === row.id}
+                          onClick={() => act(row, 'dismiss')}
+                          disabled={action !== null}
                           aria-label={`${t('admin.notifications.deadLetter.dismiss', uiLocale)} ${row.eventKey}`}
                           className="px-2 py-1 text-xs border border-gray-300 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-50"
                         >
@@ -248,6 +336,41 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
             </tbody>
           </table>
         </div>
+      )}
+      {access?.canView && !error && (
+        <nav aria-label={label('pagination')} className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            disabled={loading || offset === 0}
+            onClick={() => setOffset((v) => Math.max(0, v - 25))}
+          >
+            {t('admin.jobs.previous', uiLocale)}
+          </Button>
+          <span>{new Intl.NumberFormat(uiLocale).format(offset / 25 + 1)}</span>
+          <Button
+            variant="outline"
+            disabled={loading || !hasMore}
+            onClick={() => setOffset((v) => v + 25)}
+          >
+            {t('admin.jobs.next', uiLocale)}
+          </Button>
+        </nav>
+      )}
+      {action && (
+        <TeamActionDialog
+          action={action}
+          onClose={() => setAction(null)}
+          onSuccess={async () => {
+            setNotice(
+              action.path.endsWith('/retry')
+                ? 'retry'
+                : action.path.endsWith('/resolve')
+                  ? 'resolve'
+                  : 'dismiss'
+            );
+            setRevision((v) => v + 1);
+          }}
+        />
       )}
     </section>
   );

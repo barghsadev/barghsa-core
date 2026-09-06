@@ -37,6 +37,28 @@ async function main() {
       );
     }
   }
+  const profile = (
+    await http.pool.query("INSERT INTO profiles(user_id) VALUES ('team-ui-admin') RETURNING id")
+  ).rows[0].id;
+  for (const locale of ['en', 'fa'])
+    for (const action of ['retry', 'resolve', 'dismiss']) {
+      const outbox = randomUUID(),
+        job = randomUUID(),
+        dead = randomUUID(),
+        event = `triage.${locale}.${action}`;
+      await http.pool.query(
+        `INSERT INTO notification_outbox(id,profile_id,event_key,payload,channels,idempotency_key,status) VALUES ($1::uuid,$2,$3,'{"email":"private@example.test","token":"private-secret"}',ARRAY['email'],$1::text,'failed')`,
+        [outbox, profile, event]
+      );
+      await http.pool.query(
+        `INSERT INTO notification_job(id,outbox_id,channel,status,attempts,delivery_payload) VALUES ($1,$2,'email','dead_letter',5,'{"preserved":"snapshot"}')`,
+        [job, outbox]
+      );
+      await http.pool.query(
+        `INSERT INTO notification_dead_letter(id,outbox_id,job_id,channel,event_key,profile_id,attempts,idempotency_key,cause) VALUES ($1::uuid,$2,$3,'email',$4,$5,5,$1::text,'Local provider failed')`,
+        [dead, outbox, job, event, profile]
+      );
+    }
   let closing = false;
   const close = async () => {
     if (closing) return;
