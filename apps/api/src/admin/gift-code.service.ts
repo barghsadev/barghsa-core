@@ -1,3 +1,5 @@
+import type { PoolClient } from 'pg';
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -315,7 +317,7 @@ export class GiftCodeService {
       );
     }
 
-    return this.withTransaction(async (q) => {
+    return this.withAdminTransaction(input.actorUserId, async (q) => {
       const id = uuidv7();
       await q.query(
         `INSERT INTO gift_codes
@@ -376,8 +378,8 @@ export class GiftCodeService {
    * non-empty list; public codes clear scopes). Audits the change.
    */
   async update(id: string, input: UpdateGiftCodeInput): Promise<GiftCodeDto> {
-    return this.withTransaction(async (q) => {
-      const current = await this.findById(q, id);
+    return this.withAdminTransaction(input.actorUserId, async (q) => {
+      const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
 
       const code = input.code !== undefined ? this.assertNormalizedCode(input.code) : current.code;
@@ -528,8 +530,8 @@ export class GiftCodeService {
     ip: string
   ): Promise<GiftCodeDto> {
     if (!isGiftCodeStatus(status)) throw this.invalidField('status');
-    return this.withTransaction(async (q) => {
-      const current = await this.findById(q, id);
+    return this.withAdminTransaction(actorUserId, async (q) => {
+      const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
       if (current.status === status) return this.readDto(q, id);
 
@@ -887,13 +889,13 @@ export class GiftCodeService {
     return rows.map((row) => this.toDto(row, byCode.get(row.id) ?? []));
   }
 
-  private async findById(q: DbExecutor, id: string): Promise<GiftCodeRow | null> {
+  private async findById(q: DbExecutor, id: string, lock = false): Promise<GiftCodeRow | null> {
     const result = await q.query<GiftCodeRow>(
       `SELECT id, code, discount_type, discount_value, max_cap_irr, eligibility,
               total_limit, per_profile_limit, valid_from, valid_until,
               min_order_amount, categories, status, created_by, created_at, updated_at
          FROM gift_codes
-        WHERE id = $1`,
+        WHERE id = $1${lock ? ' FOR UPDATE' : ''}`,
       [id]
     );
     return result.rows[0] ?? null;
@@ -971,7 +973,17 @@ export class GiftCodeService {
   }
 
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
-  private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
+  private async withAdminTransaction<T>(
+    actorUserId: string,
+    fn: (q: DbExecutor) => Promise<T>
+  ): Promise<T> {
+    return this.withTransaction(async (q) => {
+      await requireStaffMutationPermission(q, actorUserId, 'admin:promotions:edit');
+      return fn(q);
+    });
+  }
+
+  private async withTransaction<T>(fn: (q: PoolClient) => Promise<T>): Promise<T> {
     const client = await getDbPool().connect();
     let committed = false;
     try {
