@@ -461,6 +461,7 @@ export class ProfilesService {
       );
     }
 
+    const verificationMode = await this.getVerificationMode();
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
@@ -505,7 +506,7 @@ export class ProfilesService {
       // Transition profile from DRAFT to ACTIVE
       await client.query(`UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`, [
         profileId,
-        (await this.getVerificationMode()) === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION',
+        verificationMode === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION',
       ]);
 
       await client.query(
@@ -514,12 +515,11 @@ export class ProfilesService {
         [userId, profileId]
       );
 
+      const updatedProfile = await this.getProfileById(profileId, client);
       await client.query('COMMIT');
 
       this.logger.log(`Individual profile ${profileId} saved for user ${userId}`);
 
-      // Re-fetch the profile to get the updated status (ACTIVE)
-      const updatedProfile = await this.getProfileById(profileId);
       return updatedProfile ?? mapRow(profileResult.rows[0]);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
@@ -1231,9 +1231,8 @@ export class ProfilesService {
           }),
         ]
       );
+      const updated = await this.getProfileById(profileId, client);
       await client.query('COMMIT');
-
-      const updated = await this.getProfileById(profileId);
       return (
         updated ??
         (() => {
@@ -1291,6 +1290,7 @@ export class ProfilesService {
       return profile;
     }
 
+    const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED';
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
@@ -1373,7 +1373,6 @@ export class ProfilesService {
       await requireAddressGeography(client, address.province_id, address.city_id);
 
       // Determine target status based on verification settings
-      const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED';
       const targetStatus = verificationRequired ? 'PENDING_VERIFICATION' : 'ACTIVE';
 
       // Profile locks precede account locks, as in profile context/ownership changes.
@@ -1398,13 +1397,13 @@ export class ProfilesService {
          VALUES (uuid_generate_v7(),$1,'profile_onboarding_completed',$2::jsonb,uuid_generate_v7(),NOW())`,
         [userId, JSON.stringify({ profileId, fromStatus: 'DRAFT', toStatus: targetStatus })]
       );
+      const updated = await this.getProfileById(profileId, client);
       await client.query('COMMIT');
 
       this.logger.log(
         `Onboarding completed for profile ${profileId} (${targetStatus})${becomesDefault ? ' as default' : ''}`
       );
 
-      const updated = await this.getProfileById(profileId);
       return updated ?? profile;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});

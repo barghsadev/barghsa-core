@@ -381,10 +381,9 @@ describe('ProfilesService', () => {
       mockClient.query.mockResolvedValueOnce({ rows: [] });
       // UPDATE status to ACTIVE
       mockClient.query.mockResolvedValueOnce({ rowCount: 1 });
-      // COMMIT
-      mockClient.query.mockResolvedValueOnce({});
-      // getProfileById (re-fetch)
-      mockPool.query.mockResolvedValueOnce({ rows: [activeRow] });
+      mockClient.query.mockResolvedValueOnce({}); // audit
+      mockClient.query.mockResolvedValueOnce({ rows: [activeRow] }); // transaction readback
+      mockClient.query.mockResolvedValueOnce({}); // COMMIT
 
       const result = await service.completeOnboarding('user-1', 'prof-1');
 
@@ -420,10 +419,11 @@ describe('ProfilesService', () => {
       mockClient.query.mockResolvedValueOnce({ rows: [] }); // account lock
       mockClient.query.mockResolvedValueOnce({ rows: [] }); // no existing default
       mockClient.query.mockResolvedValueOnce({ rowCount: 1 }); // UPDATE
-      mockClient.query.mockResolvedValueOnce({}); // COMMIT
-      mockPool.query.mockResolvedValueOnce({
+      mockClient.query.mockResolvedValueOnce({}); // audit
+      mockClient.query.mockResolvedValueOnce({
         rows: [{ ...draftRow, status: 'PENDING_VERIFICATION' }],
-      });
+      }); // transaction readback
+      mockClient.query.mockResolvedValueOnce({}); // COMMIT
 
       const result = await service.completeOnboarding('user-1', 'prof-1');
 
