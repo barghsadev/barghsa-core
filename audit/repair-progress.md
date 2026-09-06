@@ -1199,3 +1199,9 @@ Review and validation: all 22 live admin browser checks passed. Both languages s
 Model create, edit and delete now hold current AI-model administration permission through one transaction with their audit entry. Edits lock the model before deriving changes. Changes to connection fields invalidate prior test status; title-only changes preserve it. Stored tokens remain encrypted and masked, with explicit clearing supported.
 
 Review and validation: all 20 focused service and production-migrated HTTP checks pass. HTTP checks cover final audit failure for each mutation, permission revocation after guards, encrypted storage and masked responses/audits, connection-change invalidation, and rejection of deleting an agent-referenced model. Root types and lint pass. The connection-test path, worker requirement and model editor remain open for subsequent steps.
+
+### Bound AI connection responses and redact before truncation (F17)
+
+Connection testing now limits streamed provider bodies to 64 KiB and cancels oversized responses. It removes secrets before shortening previews and provider errors, fixing partial token exposure at the 300-character boundary. Base URLs containing credentials, query strings or fragments are rejected before credentials are sent.
+
+Review and validation: all 27 tester checks pass, including cutoff-crossing tokens in success/error responses, cancellation of an oversized stream and early URL rejection. Root types, lint and whitespace checks pass. Tests use injected clients or a mocked fetch, with no provider calls. DNS pinning, concurrent-test result binding, worker execution and the editor remain open.

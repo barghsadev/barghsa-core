@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import {
   AiModelTesterService,
   AI_MODEL_API_CLIENT,
@@ -236,5 +236,52 @@ describe('AiModelTesterService (T-09.11.01)', () => {
 describe('DI token', () => {
   it('is exported for tests and wiring', () => {
     expect(AI_MODEL_API_CLIENT.toString()).toContain('AI_MODEL_API_CLIENT');
+  });
+});
+
+describe('connection-test response limits and token boundaries', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it.each(['preview', 'error'] as const)('redacts a token spanning the %s cutoff', async (kind) => {
+    const token = 'custom-private-credential-without-provider-prefix';
+    const text = 'x'.repeat(290) + token;
+    const body =
+      kind === 'preview'
+        ? { choices: [{ message: { content: text } }] }
+        : { error: { message: text } };
+    const tester = new AiModelTesterService(
+      okClient(kind === 'preview' ? 200 : 401, JSON.stringify(body))
+    );
+    const result = await tester.test(input({ apiToken: token }));
+    expect(JSON.stringify(result)).not.toContain('custom-');
+    expect(JSON.stringify(result)).toContain('[redacted]');
+  });
+
+  it('cancels an oversized streamed response before reading the rest', async () => {
+    const cancel = vi.fn();
+    const body = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        controller.enqueue(new Uint8Array(40_000));
+      },
+      cancel,
+    });
+    const request = vi.fn().mockResolvedValue(new Response(body));
+    vi.stubGlobal('fetch', request);
+    const result = await new AiModelTesterService().test(input());
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain('exceeds size limit');
+    expect(cancel).toHaveBeenCalledOnce();
+    expect(request).toHaveBeenCalledOnce();
+  });
+
+  it.each([
+    'https://user:password@8.8.8.8/v1',
+    'https://8.8.8.8/v1?token=secret',
+    'https://8.8.8.8/v1#fragment',
+  ])('rejects an ambiguous base URL before sending credentials: %s', async (baseUrl) => {
+    const client = okClient(200, 'pong');
+    const result = await new AiModelTesterService(client).test(input({ baseUrl }));
+    expect(result.ok).toBe(false);
+    expect(client.request).not.toHaveBeenCalled();
   });
 });

@@ -79,6 +79,7 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 const PREVIEW_MAX_CHARS = 300;
 /** Provider error-message cap (never echo unbounded response bodies). */
 const ERROR_MAX_CHARS = 300;
+const RESPONSE_MAX_BYTES = 64 * 1024;
 
 const defaultApiClient: AiModelApiClientLike = {
   async request(input, timeoutMs) {
@@ -93,15 +94,32 @@ const defaultApiClient: AiModelApiClientLike = {
       // the response (up to the preview cap) would come back to the admin.
       redirect: 'manual',
     });
-    return { status: res.status, bodyText: await res.text() };
+    if (!res.body) return { status: res.status, bodyText: '' };
+    const reader = res.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let size = 0;
+    try {
+      while (true) {
+        const next = await reader.read();
+        if (next.done) break;
+        size += next.value.byteLength;
+        if (size > RESPONSE_MAX_BYTES) {
+          await reader.cancel();
+          throw new Error('Provider response exceeds size limit');
+        }
+        chunks.push(next.value);
+      }
+      return { status: res.status, bodyText: Buffer.concat(chunks).toString('utf8') };
+    } finally {
+      reader.releaseLock();
+    }
   },
 };
 
 function buildRequest(input: AiModelTestInput): {
   url: string;
   headers: Record<string, string>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body: Record<string, any>;
+  body: Record<string, unknown>;
 } {
   const base = input.baseUrl.trim().replace(/\/+$/, '');
   if (input.providerType === 'anthropic') {
@@ -150,16 +168,16 @@ function extractPreview(providerType: AiModelProviderType, bodyText: string): st
     };
     if (providerType === 'anthropic') {
       const first = body.content?.[0]?.text;
-      if (typeof first === 'string' && first.length > 0) return first.slice(0, PREVIEW_MAX_CHARS);
+      if (typeof first === 'string' && first.length > 0) return first;
     } else {
       const first = body.choices?.[0]?.message?.content;
-      if (typeof first === 'string' && first.length > 0) return first.slice(0, PREVIEW_MAX_CHARS);
+      if (typeof first === 'string' && first.length > 0) return first;
     }
   } catch {
     // Non-JSON body — fall through to prefix of raw text.
   }
   const trimmed = bodyText.trim();
-  return trimmed.length > 0 ? trimmed.slice(0, PREVIEW_MAX_CHARS) : undefined;
+  return trimmed.length > 0 ? trimmed : undefined;
 }
 
 /**
@@ -183,7 +201,7 @@ function extractErrorDetail(bodyText: string): string {
           : typeof body.message === 'string'
             ? body.message
             : '';
-    return msg.slice(0, ERROR_MAX_CHARS);
+    return msg;
   } catch {
     return '';
   }
@@ -246,6 +264,13 @@ export class AiModelTesterService {
     if (url.protocol !== 'http:' && url.protocol !== 'https:') {
       return { ok: false, error: 'Base URL must use http(s)', latencyMs: 0 };
     }
+    if (url.username || url.password || url.search || url.hash) {
+      return {
+        ok: false,
+        error: 'Base URL must not contain credentials, query or fragment',
+        latencyMs: 0,
+      };
+    }
     const blocked = await this.guardHost(url.hostname);
     if (blocked) {
       return { ok: false, error: `Base URL host is not allowed: ${blocked}`, latencyMs: 0 };
@@ -260,7 +285,7 @@ export class AiModelTesterService {
         const preview = redactSecret(
           input.apiToken,
           extractPreview(input.providerType, wire.bodyText) ?? ''
-        );
+        ).slice(0, PREVIEW_MAX_CHARS);
         const result: AiModelTestResult = { ok: true, latencyMs };
         if (preview) result.responsePreview = preview;
         return result;
@@ -275,7 +300,10 @@ export class AiModelTesterService {
           latencyMs,
         };
       }
-      const errorDetail = redactSecret(input.apiToken, extractErrorDetail(wire.bodyText));
+      const errorDetail = redactSecret(input.apiToken, extractErrorDetail(wire.bodyText)).slice(
+        0,
+        ERROR_MAX_CHARS
+      );
       return {
         ok: false,
         error: `Provider request failed (HTTP ${wire.status})${errorDetail ? `: ${errorDetail}` : ''}`,
