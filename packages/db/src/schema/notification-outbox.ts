@@ -70,6 +70,9 @@ export const notificationOutbox = pgTable(
     /** Leased window. NULL when unlocked; future timestamp = claimed by a worker. */
     lockedUntil: timestamptz('locked_until'),
 
+    /** Fences every dispatch/persistence operation to its current claimant. */
+    leaseToken: text('lease_token'),
+
     /** Number of delivery attempts so far. */
     attempts: integer('attempts').notNull().default(0),
 

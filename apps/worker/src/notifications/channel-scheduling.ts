@@ -23,7 +23,7 @@ export async function refreshOutboxState(pool: QueryPool, id: string, now = new 
   const failed = jobs.some(job => job.status === 'dead_letter' || (job.status === 'failed' && !job.last_error?.startsWith('skipped:')))
   const next = pending.length ? new Date(Math.min(...pending.map(job => job.run_after ? new Date(job.run_after).getTime() : now.getTime()))) : null
   const status = pending.length ? (next! > now ? 'scheduled' : 'queued') : failed ? 'failed' : 'delivered'
-  await pool.query(`UPDATE notification_outbox SET status=$2, scheduled_for=$3, locked_until=NULL,
+  await pool.query(`UPDATE notification_outbox SET status=$2, scheduled_for=$3, locked_until=NULL,lease_token=NULL,
     attempts=$4,last_error=$5,updated_at=NOW() WHERE id=$1`, [id, status, next,
     Math.max(0, ...jobs.map(job => Number(job.attempts ?? 0))),
     jobs.find(job => job.status !== 'done' && job.last_error && !job.last_error.startsWith('skipped:'))?.last_error ?? null])
@@ -38,7 +38,7 @@ export async function reconcileChannelWindows(pool: QueryPool, config?: Delivery
       FROM notification_job j WHERE j.outbox_id=o.id) AS jobs
     FROM notification_outbox o JOIN profiles p ON p.id=o.profile_id
     LEFT JOIN users u ON u.user_id=COALESCE(o.user_id,p.user_id)
-    WHERE o.status IN ('queued','scheduled') AND (o.locked_until IS NULL OR o.locked_until<=$1)
+    WHERE o.status IN ('queued','scheduled','sending') AND (o.locked_until IS NULL OR o.locked_until<=clock_timestamp())
       AND (o.scheduled_for IS NULL OR o.scheduled_for<=$1 OR EXISTS (
         SELECT 1 FROM notification_job j WHERE j.outbox_id=o.id AND j.channel='in_app'
           AND j.status IN ('queued','retrying') AND (j.run_after IS NULL OR j.run_after<=$1)))
@@ -54,8 +54,8 @@ export async function reconcileChannelWindows(pool: QueryPool, config?: Delivery
         const locked = await client.query(`SELECT o.*,
           (SELECT u.timezone FROM users u JOIN profiles p ON p.id=o.profile_id WHERE u.user_id=COALESCE(o.user_id,p.user_id)) AS timezone,
           (SELECT jsonb_agg(jsonb_build_object('channel',j.channel,'status',j.status,'run_after',j.run_after,'delivery_window',j.delivery_window)) FROM notification_job j WHERE j.outbox_id=o.id) AS jobs
-          FROM notification_outbox o WHERE o.id=$1 AND o.status IN ('queued','scheduled')
-            AND (o.locked_until IS NULL OR o.locked_until<=$2) FOR UPDATE SKIP LOCKED`, [candidate.id, now])
+          FROM notification_outbox o WHERE o.id=$1 AND o.status IN ('queued','scheduled','sending')
+            AND (o.locked_until IS NULL OR o.locked_until<=clock_timestamp()) FOR UPDATE SKIP LOCKED`, [candidate.id])
         if (!locked.rows.length) { await client.query('ROLLBACK'); continue }
         row = locked.rows[0]
       }

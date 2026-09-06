@@ -48,6 +48,9 @@ export interface NotificationSendPayload {
   /** Durable outbox occurrence, independent of legacy provider key format. */
   outboxId?: string
 
+  /** Abort external work if this worker loses its durable claim. */
+  signal?: AbortSignal
+
   /** The channel this payload should be delivered on. */
   channel: NotificationChannel
 

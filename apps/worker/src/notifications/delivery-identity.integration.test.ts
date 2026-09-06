@@ -205,3 +205,62 @@ it('exhausts one channel without exhausting a different channel or repeating the
   expect((await pool.query('SELECT status FROM notification_outbox WHERE id=$1', [id])).rows[0].status).toBe('failed')
   expect((await pool.query('SELECT channel,attempts FROM notification_dead_letter WHERE outbox_id=$1', [id])).rows).toEqual([{ channel: 'in_app', attempts: 5 }])
 })
+
+it('renews a slow delivery claim so another poll cannot take it', async () => {
+  await pool.query("UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')")
+  const client = await pool.connect()
+  let id: string | null
+  try {
+    await client.query('BEGIN')
+    id = (await enqueueOutbox(client, { profileId, eventKey: 'wallet.topup_completed', channels: ['in_app', 'email'], idempotencyKey: 'runner:slow-renewal' })).outboxId
+    await client.query('COMMIT')
+  } finally { client.release() }
+  let release!: () => void, started = false
+  const gate = new Promise<void>(resolve => { release = resolve })
+  const options = { pool, leaseDurationMs: 150, transports: {
+    in_app: new InAppNotificationTransport(pool), email: { channel: 'email' as const, async send() { started = true; await gate; return { status: 'delivered' as const, providerRef: 'slow-ref' } } },
+  }, availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }), deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 } }
+  const running = runOutboxPoll(options)
+  try {
+    await expect.poll(() => started).toBe(true)
+    const firstDeadline = (await pool.query('SELECT locked_until FROM notification_outbox WHERE id=$1', [id])).rows[0].locked_until.getTime()
+    await expect.poll(async () => (await pool.query('SELECT locked_until FROM notification_outbox WHERE id=$1', [id])).rows[0].locked_until.getTime()).toBeGreaterThan(firstDeadline + 250)
+    expect((await runOutboxPoll(options)).leased).toBe(0)
+  } finally { release() }
+  expect(await running).toMatchObject({ delivered: 1, failed: 0 })
+})
+
+it('a replaced claim cannot send the next channel or overwrite its successor', async () => {
+  await pool.query("UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')")
+  const client = await pool.connect()
+  let id: string | null
+  try {
+    await client.query('BEGIN')
+    id = (await enqueueOutbox(client, { profileId, eventKey: 'wallet.topup_completed', channels: ['in_app', 'email', 'sms'], idempotencyKey: 'runner:takeover' })).outboxId
+    await client.query('COMMIT')
+  } finally { client.release() }
+  let release!: () => void, started = false, smsCalls = 0
+  const gate = new Promise<void>(resolve => { release = resolve })
+  const keys: string[] = []
+  const options = { pool, transports: {
+    in_app: new InAppNotificationTransport(pool),
+    email: { channel: 'email' as const, async send(payload: { idempotencyKey: string }) { keys.push(payload.idempotencyKey); started = true; await gate; return { status: 'delivered' as const, providerRef: 'takeover-ref' } } },
+    sms: { channel: 'sms' as const, async send() { smsCalls++; return { status: 'delivered' as const, providerRef: 'sms-ref' } } },
+  }, availability: () => ({ verifiedEmail: true, verifiedPhone: true, marketingOptedIn: {} }), deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 } }
+  const running = runOutboxPoll(options)
+  try {
+    await expect.poll(() => started).toBe(true)
+    await pool.query("UPDATE notification_outbox SET lease_token='successor-claim',locked_until=NOW()+INTERVAL '1 day',last_error='successor-owned' WHERE id=$1", [id])
+  } finally { release() }
+  expect(await running).toMatchObject({ delivered: 0, failed: 1 })
+  expect(smsCalls).toBe(0)
+  expect((await pool.query('SELECT lease_token,last_error,status FROM notification_outbox WHERE id=$1', [id])).rows[0])
+    .toEqual({ lease_token: 'successor-claim', last_error: 'successor-owned', status: 'sending' })
+  expect((await pool.query('SELECT count(*)::int AS count FROM notification_delivery_log WHERE notification_id=$1', [id])).rows[0].count).toBe(0)
+  await pool.query("UPDATE notification_outbox SET locked_until=NOW()-INTERVAL '1 second' WHERE id=$1", [id])
+  expect(await runOutboxPoll(options)).toMatchObject({ delivered: 1, failed: 0 })
+  expect(keys).toHaveLength(2)
+  expect(keys[0]).toBe(keys[1])
+  expect(smsCalls).toBe(1)
+  expect((await pool.query('SELECT count(*)::int AS count FROM in_app_notifications WHERE delivery_key=$1', [`outbox:${id}`])).rows[0].count).toBe(1)
+})

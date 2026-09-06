@@ -20,6 +20,7 @@ function makePool() {
     async query(sql: string, params?: any[]) {
       updates.push({ sql, params: params ?? [] })
       const values = params ?? []
+      if ((sql.includes('UPDATE notification_outbox') && sql.includes('RETURNING id')) || sql.startsWith('SELECT id FROM notification_outbox')) return { rows: [{ id: values[0] }], rowCount: 1 }
       if (sql.startsWith('SELECT channel,status')) return { rows: jobs.map(job => ({ ...job })), rowCount: jobs.length }
       if (sql.includes('UPDATE notification_job')) {
         const skipped = sql.includes("SET status = 'failed'")
@@ -60,6 +61,7 @@ const baseRow = {
   payload: {},
   channels: ['in_app', 'email'] as ('in_app' | 'email')[],
   idempotencyKey: 'k1',
+  leaseToken: 'test-claim',
   attempts: 0,
   maxAttempts: 5,
   scheduledAt: null,
@@ -238,7 +240,7 @@ describe('runOutboxPoll', () => {
     const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'))
     expect(jobUpdates.length).toBeGreaterThan(0)
     expect(jobUpdates.every((u) => u.params[1] === 'retrying')).toBe(true)
-    expect(jobUpdates[0]!.params[2]).toBe(1) // attempts incremented
+    expect(jobUpdates[0]!.params[3]).toBe(1) // attempts incremented
   })
 
   it('returns zeroed results when no rows are due', async () => {

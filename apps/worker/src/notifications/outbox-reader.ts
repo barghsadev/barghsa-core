@@ -27,8 +27,11 @@ import { deriveChannelIdempotencyKey } from './outbox-writer.js'
  * outcome; it cannot make an undelivered external leg count as success.
  */
 
-const DEFAULT_LEASE_SIZE = 20
+const DEFAULT_LEASE_SIZE = 5
 const DEFAULT_LEASE_MS = 60_000
+export function normalizeLeaseDurationMs(value?: number): number {
+  return value !== undefined && Number.isFinite(value) && value >= 100 && value <= 300_000 ? Math.floor(value) : DEFAULT_LEASE_MS
+}
 
 export interface OutboxRow {
   id: string
@@ -40,6 +43,7 @@ export interface OutboxRow {
   idempotencyKey: string
   /** Absent only in legacy callers; persisted new rows use version 2. */
   idempotencyVersion?: number
+  leaseToken?: string
   attempts: number
   maxAttempts: number
   scheduledAt: Date | null
@@ -52,7 +56,7 @@ export interface OutboxReaderOptions {
   transports: Partial<Record<NotificationChannel, INotificationTransport>>
   /** Pool override for isolated database checks. */
   pool?: { query: (sql: string, params?: any[]) => Promise<any> }
-  /** Maximum rows to claim per poll (default 20). */
+  /** Maximum rows to claim per poll (default 5). */
   leaseSize?: number
   /** Lease duration in ms (default 60s). */
   leaseDurationMs?: number
@@ -67,21 +71,22 @@ export interface OutboxReaderOptions {
  * safe across concurrent workers.
  */
 export async function leaseOutbox(options?: OutboxReaderOptions): Promise<OutboxRow[]> {
-  const limit = Math.max(1, options?.leaseSize ?? DEFAULT_LEASE_SIZE)
-  const leaseMs = options?.leaseDurationMs ?? DEFAULT_LEASE_MS
+  const requestedLimit = options?.leaseSize ?? DEFAULT_LEASE_SIZE
+  const limit = Number.isFinite(requestedLimit) ? Math.max(1, Math.min(100, Math.floor(requestedLimit))) : DEFAULT_LEASE_SIZE
+  const leaseMs = normalizeLeaseDurationMs(options?.leaseDurationMs)
   const pool = options?.pool ?? getDbPool()
   const now = new Date()
-  const leaseUntil = new Date(Date.now() + leaseMs)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = await pool.query(
     `UPDATE notification_outbox ob
-        SET locked_until = $1,
+        SET locked_until = clock_timestamp()+$1*INTERVAL '1 millisecond',
+            lease_token=gen_random_uuid()::text,
             updated_at = NOW()
         WHERE ob.id IN (
           SELECT id FROM notification_outbox
           WHERE status IN ('queued', 'scheduled', 'sending')
-            AND (locked_until IS NULL OR locked_until < $2)
+            AND (locked_until IS NULL OR locked_until < clock_timestamp())
             AND (scheduled_for IS NULL OR scheduled_for <= $2)
           ORDER BY
             /* Urgent jobs (Immediate) dispatch before normal (daytime). */
@@ -94,8 +99,8 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
           FOR UPDATE SKIP LOCKED
         )
         RETURNING id, profile_id, user_id, event_key, payload, channels,
-                  idempotency_key, idempotency_version, attempts, max_attempts, scheduled_for, last_error`,
-    [leaseUntil, now, limit],
+                  idempotency_key, idempotency_version, lease_token, attempts, max_attempts, scheduled_for, last_error`,
+    [leaseMs, now, limit],
   )
   return result.rows.map((row: Record<string, unknown>): OutboxRow => ({
     id: row.id as string,
@@ -106,6 +111,7 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
     channels: (row.channels as NotificationChannel[]) ?? [],
     idempotencyKey: row.idempotency_key as string,
     idempotencyVersion: Number(row.idempotency_version ?? 1),
+    ...(typeof row.lease_token === 'string' ? { leaseToken: row.lease_token } : {}),
     attempts: (row.attempts as number) ?? 0,
     maxAttempts: (row.max_attempts as number) ?? 5,
     scheduledAt: (row.scheduled_for as Date | null) ?? null,
@@ -135,9 +141,11 @@ export interface DispatchOutcome {
 export async function dispatchOutbox(
   row: OutboxRow,
   transports: Partial<Record<NotificationChannel, INotificationTransport>>,
+  control?: { signal: AbortSignal; beforeSend: () => Promise<void> },
 ): Promise<DispatchOutcome[]> {
   const outcomes: DispatchOutcome[] = []
   for (const channel of new Set(row.channels)) {
+    await control?.beforeSend()
     const transport = transports[channel]
     const payload: NotificationSendPayload = {
       idempotencyKey: deriveChannelIdempotencyKey(
@@ -149,6 +157,7 @@ export async function dispatchOutbox(
         row.id,
       ),
       outboxId: row.id,
+      ...(control ? { signal: control.signal } : {}),
       channel,
       recipientId: row.userId ?? row.profileId,
       profileId: row.profileId,
