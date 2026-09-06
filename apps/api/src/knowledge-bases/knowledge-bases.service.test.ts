@@ -1,9 +1,13 @@
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { KnowledgeBasesService as ServiceType } from './knowledge-bases.service.js';
 
 /** Mocked pool: query() returns queued fixtures in order. */
 function mockPool() {
-  const mockQuery = vi.fn();
+  const mockQuery =
+    vi.fn<(...args: unknown[]) => Promise<{ rows: unknown[]; rowCount?: number }>>();
   const pool = { query: mockQuery };
   return { mockQuery, pool };
 }
@@ -49,8 +53,19 @@ function groupBaseRow(over: Record<string, unknown> = {}) {
 const ACTOR = 'user-admin-1';
 
 /** Load KnowledgeBasesService with a mocked @barghsa/db pool. */
-async function loadService(pool: { query: ReturnType<typeof vi.fn> }) {
-  vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }));
+async function loadService(pool: { query: ReturnType<typeof mockPool>['mockQuery'] }) {
+  vi.doMock('@barghsa/db', () => ({
+    getDbPool: () => ({
+      ...pool,
+      connect: async () => ({
+        query: (sql: string, ...args: unknown[]) =>
+          ['BEGIN', 'COMMIT', 'ROLLBACK'].includes(sql)
+            ? Promise.resolve({ rows: [] })
+            : pool.query(sql, ...args),
+        release: vi.fn(),
+      }),
+    }),
+  }));
   const { KnowledgeBasesService: Svc } = await import('./knowledge-bases.service.js');
   return new Svc() as ServiceType;
 }
@@ -402,7 +417,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
       service = await loadService({ query: mockQuery });
       mockQuery
         .mockResolvedValueOnce({ rows: [groupBaseRow()] }) // findGroup
-        .mockResolvedValueOnce({ rowCount: 1 }) // delete
+        .mockResolvedValueOnce({ rows: [], rowCount: 1 }) // delete
         .mockResolvedValueOnce({ rows: [] }); // audit
 
       await expect(

@@ -1,3 +1,5 @@
+import type { PoolClient } from 'pg';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -220,11 +222,11 @@ export class KnowledgeBasesService {
   }
 
   /** Fetch a single KB with its documents and group memberships. */
-  async getKb(id: string): Promise<KbDetailDto> {
-    const base = await this.findKb(id);
+  async getKb(id: string, client?: PoolClient): Promise<KbDetailDto> {
+    const base = await this.findKb(id, client);
     if (!base) throw this.kbNotFound(id);
 
-    const docs = await getDbPool().query<KbDocumentRow>(
+    const docs = await (client ?? getDbPool()).query<KbDocumentRow>(
       `SELECT id, kb_id, storage_key, file_name, mime_type, size_bytes,
               processing_status, processing_error, created_at, updated_at
          FROM kb_documents
@@ -232,7 +234,7 @@ export class KnowledgeBasesService {
         ORDER BY created_at DESC, id`,
       [id]
     );
-    const groups = await getDbPool().query<KbRefRow>(
+    const groups = await (client ?? getDbPool()).query<KbRefRow>(
       `SELECT g.id, g.title
          FROM kb_groups g
          JOIN kb_group_members m ON m.group_id = g.id
@@ -254,83 +256,111 @@ export class KnowledgeBasesService {
 
   /** Create a KB. */
   async createKb(input: CreateKbInput): Promise<KbDto> {
-    const id = uuidv7();
-    const now = new Date();
+    return this.withTransaction(input.actorUserId, async (client) => {
+      const id = uuidv7();
+      const now = new Date();
 
-    const result = await getDbPool().query<KbBaseRow>(
-      `INSERT INTO knowledge_bases (id, title, description, created_by, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $5)
-       RETURNING id, title, description, created_at, updated_at`,
-      [id, input.title, input.description, input.actorUserId, now]
-    );
-    const row = result.rows[0];
-    if (!row) {
-      throw new HttpException(
-        { statusCode: 500, error: 'KB_CREATE_FAILED', message: 'Failed to create knowledge base' },
-        500
+      const result = await client.query<KbBaseRow>(
+        `INSERT INTO knowledge_bases (id, title, description, created_by, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $5)
+         RETURNING id, title, description, created_at, updated_at`,
+        [id, input.title, input.description, input.actorUserId, now]
       );
-    }
-    await this.recordAudit('kb_created', input.actorUserId, input.ip, {
-      targetId: row.id,
-      title: row.title,
+      const row = result.rows[0];
+      if (!row) {
+        throw new HttpException(
+          {
+            statusCode: 500,
+            error: 'KB_CREATE_FAILED',
+            message: 'Failed to create knowledge base',
+          },
+          500
+        );
+      }
+      await this.recordAudit(
+        'kb_created',
+        input.actorUserId,
+        input.ip,
+        {
+          targetId: row.id,
+          title: row.title,
+        },
+        client
+      );
+      this.logger.log(`Knowledge base created: id=${id}, actor=${input.actorUserId}`);
+      return { ...this.kbToDto(row), documentCount: 0, groupCount: 0 };
     });
-    this.logger.log(`Knowledge base created: id=${id}, actor=${input.actorUserId}`);
-    return { ...this.kbToDto(row), documentCount: 0, groupCount: 0 };
   }
 
   /** Update a KB's title/description. */
   async updateKb(id: string, input: UpdateKbInput): Promise<KbDto> {
-    const existing = await this.findKb(id);
-    if (!existing) throw this.kbNotFound(id);
+    return this.withTransaction(input.actorUserId, async (client) => {
+      const existing = await this.findKb(id, client);
+      if (!existing) throw this.kbNotFound(id);
 
-    const fields: string[] = [];
-    const values: unknown[] = [];
-    let param = 1;
-    const push = (column: string, value: unknown): void => {
-      fields.push(`${column} = $${param++}`);
-      values.push(value);
-    };
+      const fields: string[] = [];
+      const values: unknown[] = [];
+      let param = 1;
+      const push = (column: string, value: unknown): void => {
+        fields.push(`${column} = $${param++}`);
+        values.push(value);
+      };
 
-    if (input.title !== undefined) push('title', input.title);
-    if (input.description !== undefined) push('description', input.description);
-    if (fields.length === 0) return this.getKb(id);
+      if (input.title !== undefined) push('title', input.title);
+      if (input.description !== undefined) push('description', input.description);
+      if (fields.length === 0) return this.getKb(id, client);
 
-    fields.push(`updated_at = $${param++}`);
-    values.push(new Date());
-    values.push(id);
+      fields.push(`updated_at = $${param++}`);
+      values.push(new Date());
+      values.push(id);
 
-    const result = await getDbPool().query<KbBaseRow>(
-      `UPDATE knowledge_bases SET ${fields.join(', ')}
-        WHERE id = $${param}
-        RETURNING id, title, description, created_at, updated_at`,
-      values
-    );
-    const row = result.rows[0];
-    if (!row) throw this.kbNotFound(id);
+      const result = await client.query<KbBaseRow>(
+        `UPDATE knowledge_bases SET ${fields.join(', ')}
+          WHERE id = $${param}
+          RETURNING id, title, description, created_at, updated_at`,
+        values
+      );
+      const row = result.rows[0];
+      if (!row) throw this.kbNotFound(id);
 
-    const groups = await this.groupRefsForKb(id);
-    const docs = await this.docsForKb(id);
-    await this.recordAudit('kb_updated', input.actorUserId, input.ip, {
-      targetId: row.id,
-      title: row.title,
+      const groups = await this.groupRefsForKb(id, client);
+      const docs = await this.docsForKb(id, client);
+      await this.recordAudit(
+        'kb_updated',
+        input.actorUserId,
+        input.ip,
+        {
+          targetId: row.id,
+          title: row.title,
+        },
+        client
+      );
+      this.logger.log(`Knowledge base updated: id=${id}, actor=${input.actorUserId}`);
+      return {
+        ...this.kbToDto({ ...row, document_count: docs.length, group_count: groups.length }),
+      };
     });
-    this.logger.log(`Knowledge base updated: id=${id}, actor=${input.actorUserId}`);
-    return {
-      ...this.kbToDto({ ...row, document_count: docs.length, group_count: groups.length }),
-    };
   }
 
   /** Delete a KB (cascades to document links + group memberships). */
   async removeKb(id: string, actorUserId: string, ip: string): Promise<void> {
-    const existing = await this.findKb(id);
-    if (!existing) throw this.kbNotFound(id);
+    return this.withTransaction(actorUserId, async (client) => {
+      const existing = await this.findKb(id, client);
+      if (!existing) throw this.kbNotFound(id);
 
-    await getDbPool().query('DELETE FROM knowledge_bases WHERE id = $1', [id]);
-    await this.recordAudit('kb_deleted', actorUserId, ip, {
-      targetId: existing.id,
-      title: existing.title,
+      await client.query('DELETE FROM knowledge_bases WHERE id = $1', [id]);
+      await this.recordAudit(
+        'kb_deleted',
+        actorUserId,
+        ip,
+        {
+          targetId: existing.id,
+          title: existing.title,
+        },
+        client
+      );
+      this.logger.log(`Knowledge base deleted: id=${id}, actor=${actorUserId}`);
     });
-    this.logger.log(`Knowledge base deleted: id=${id}, actor=${actorUserId}`);
   }
 
   // ─── Knowledge base documents ────────────────────────────────────────────
@@ -478,11 +508,11 @@ export class KnowledgeBasesService {
   }
 
   /** Fetch a single KB group with its member KBs. */
-  async getGroup(id: string): Promise<KbGroupDetailDto> {
-    const base = await this.findGroup(id);
+  async getGroup(id: string, client?: PoolClient): Promise<KbGroupDetailDto> {
+    const base = await this.findGroup(id, client);
     if (!base) throw this.groupNotFound(id);
 
-    const members = await getDbPool().query<KbRefRow>(
+    const members = await (client ?? getDbPool()).query<KbRefRow>(
       `SELECT kb.id, kb.title
          FROM knowledge_bases kb
          JOIN kb_group_members m ON m.kb_id = kb.id
@@ -498,80 +528,108 @@ export class KnowledgeBasesService {
 
   /** Create a KB group. */
   async createGroup(input: CreateKbGroupInput): Promise<KbGroupDto> {
-    const id = uuidv7();
-    const now = new Date();
+    return this.withTransaction(input.actorUserId, async (client) => {
+      const id = uuidv7();
+      const now = new Date();
 
-    const result = await getDbPool().query<KbGroupBaseRow>(
-      `INSERT INTO kb_groups (id, title, description, created_by, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $5)
-       RETURNING id, title, description, created_at, updated_at`,
-      [id, input.title, input.description, input.actorUserId, now]
-    );
-    const row = result.rows[0];
-    if (!row) {
-      throw new HttpException(
-        { statusCode: 500, error: 'KB_GROUP_CREATE_FAILED', message: 'Failed to create KB group' },
-        500
+      const result = await client.query<KbGroupBaseRow>(
+        `INSERT INTO kb_groups (id, title, description, created_by, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $5)
+         RETURNING id, title, description, created_at, updated_at`,
+        [id, input.title, input.description, input.actorUserId, now]
       );
-    }
-    await this.recordAudit('kb_group_created', input.actorUserId, input.ip, {
-      targetId: row.id,
-      title: row.title,
+      const row = result.rows[0];
+      if (!row) {
+        throw new HttpException(
+          {
+            statusCode: 500,
+            error: 'KB_GROUP_CREATE_FAILED',
+            message: 'Failed to create KB group',
+          },
+          500
+        );
+      }
+      await this.recordAudit(
+        'kb_group_created',
+        input.actorUserId,
+        input.ip,
+        {
+          targetId: row.id,
+          title: row.title,
+        },
+        client
+      );
+      this.logger.log(`KB group created: id=${id}, actor=${input.actorUserId}`);
+      return { ...this.groupToDto(row), memberCount: 0 };
     });
-    this.logger.log(`KB group created: id=${id}, actor=${input.actorUserId}`);
-    return { ...this.groupToDto(row), memberCount: 0 };
   }
 
   /** Update a KB group's title/description. */
   async updateGroup(id: string, input: UpdateKbGroupInput): Promise<KbGroupDto> {
-    const existing = await this.findGroup(id);
-    if (!existing) throw this.groupNotFound(id);
+    return this.withTransaction(input.actorUserId, async (client) => {
+      const existing = await this.findGroup(id, client);
+      if (!existing) throw this.groupNotFound(id);
 
-    const fields: string[] = [];
-    const values: unknown[] = [];
-    let param = 1;
-    const push = (column: string, value: unknown): void => {
-      fields.push(`${column} = $${param++}`);
-      values.push(value);
-    };
+      const fields: string[] = [];
+      const values: unknown[] = [];
+      let param = 1;
+      const push = (column: string, value: unknown): void => {
+        fields.push(`${column} = $${param++}`);
+        values.push(value);
+      };
 
-    if (input.title !== undefined) push('title', input.title);
-    if (input.description !== undefined) push('description', input.description);
-    if (fields.length === 0) return this.getGroup(id);
+      if (input.title !== undefined) push('title', input.title);
+      if (input.description !== undefined) push('description', input.description);
+      if (fields.length === 0) return this.getGroup(id, client);
 
-    fields.push(`updated_at = $${param++}`);
-    values.push(new Date());
-    values.push(id);
+      fields.push(`updated_at = $${param++}`);
+      values.push(new Date());
+      values.push(id);
 
-    const result = await getDbPool().query<KbGroupBaseRow>(
-      `UPDATE kb_groups SET ${fields.join(', ')}
-        WHERE id = $${param}
-        RETURNING id, title, description, created_at, updated_at`,
-      values
-    );
-    const row = result.rows[0];
-    if (!row) throw this.groupNotFound(id);
+      const result = await client.query<KbGroupBaseRow>(
+        `UPDATE kb_groups SET ${fields.join(', ')}
+          WHERE id = $${param}
+          RETURNING id, title, description, created_at, updated_at`,
+        values
+      );
+      const row = result.rows[0];
+      if (!row) throw this.groupNotFound(id);
 
-    const memberCount = await this.memberCountForGroup(id);
-    await this.recordAudit('kb_group_updated', input.actorUserId, input.ip, {
-      targetId: row.id,
-      title: row.title,
+      const memberCount = await this.memberCountForGroup(id, client);
+      await this.recordAudit(
+        'kb_group_updated',
+        input.actorUserId,
+        input.ip,
+        {
+          targetId: row.id,
+          title: row.title,
+        },
+        client
+      );
+      this.logger.log(`KB group updated: id=${id}, actor=${input.actorUserId}`);
+      return { ...this.groupToDto(row), memberCount };
     });
-    this.logger.log(`KB group updated: id=${id}, actor=${input.actorUserId}`);
-    return { ...this.groupToDto(row), memberCount };
   }
 
   /** Delete a KB group (cascades to its memberships). */
   async removeGroup(id: string, actorUserId: string, ip: string): Promise<void> {
-    const existing = await this.findGroup(id);
-    if (!existing) throw this.groupNotFound(id);
+    return this.withTransaction(actorUserId, async (client) => {
+      const existing = await this.findGroup(id, client);
+      if (!existing) throw this.groupNotFound(id);
 
-    await getDbPool().query('DELETE FROM kb_groups WHERE id = $1', [id]);
-    await this.recordAudit('kb_group_deleted', actorUserId, ip, {
-      targetId: existing.id,
-      title: existing.title,
+      await client.query('DELETE FROM kb_groups WHERE id = $1', [id]);
+      await this.recordAudit(
+        'kb_group_deleted',
+        actorUserId,
+        ip,
+        {
+          targetId: existing.id,
+          title: existing.title,
+        },
+        client
+      );
+      this.logger.log(`KB group deleted: id=${id}, actor=${actorUserId}`);
     });
-    this.logger.log(`KB group deleted: id=${id}, actor=${actorUserId}`);
   }
 
   // ─── Group membership ────────────────────────────────────────────────────
@@ -646,21 +704,21 @@ export class KnowledgeBasesService {
 
   // ─── Helpers ─────────────────────────────────────────────────────────────
 
-  private async findKb(id: string): Promise<KbBaseRow | null> {
-    const result = await getDbPool().query<KbBaseRow>(
+  private async findKb(id: string, client?: PoolClient): Promise<KbBaseRow | null> {
+    const result = await (client ?? getDbPool()).query<KbBaseRow>(
       `SELECT id, title, description, created_at, updated_at
          FROM knowledge_bases
-        WHERE id = $1`,
+        WHERE id = $1${client ? ' FOR UPDATE' : ''}`,
       [id]
     );
     return result.rows[0] ?? null;
   }
 
-  private async findGroup(id: string): Promise<KbGroupBaseRow | null> {
-    const result = await getDbPool().query<KbGroupBaseRow>(
+  private async findGroup(id: string, client?: PoolClient): Promise<KbGroupBaseRow | null> {
+    const result = await (client ?? getDbPool()).query<KbGroupBaseRow>(
       `SELECT id, title, description, created_at, updated_at
          FROM kb_groups
-        WHERE id = $1`,
+        WHERE id = $1${client ? ' FOR UPDATE' : ''}`,
       [id]
     );
     return result.rows[0] ?? null;
@@ -701,8 +759,8 @@ export class KnowledgeBasesService {
     return result.rows[0] ?? null;
   }
 
-  private async docsForKb(kbId: string): Promise<KbDocumentRow[]> {
-    const result = await getDbPool().query<KbDocumentRow>(
+  private async docsForKb(kbId: string, client?: PoolClient): Promise<KbDocumentRow[]> {
+    const result = await (client ?? getDbPool()).query<KbDocumentRow>(
       `SELECT id, kb_id, storage_key, file_name, mime_type, size_bytes,
               processing_status, processing_error, created_at, updated_at
          FROM kb_documents
@@ -713,8 +771,8 @@ export class KnowledgeBasesService {
     return result.rows;
   }
 
-  private async groupRefsForKb(kbId: string): Promise<KbRefRow[]> {
-    const result = await getDbPool().query<KbRefRow>(
+  private async groupRefsForKb(kbId: string, client?: PoolClient): Promise<KbRefRow[]> {
+    const result = await (client ?? getDbPool()).query<KbRefRow>(
       `SELECT g.id, g.title
          FROM kb_groups g
          JOIN kb_group_members m ON m.group_id = g.id
@@ -725,8 +783,8 @@ export class KnowledgeBasesService {
     return result.rows;
   }
 
-  private async memberCountForGroup(groupId: string): Promise<number> {
-    const result = await getDbPool().query<{ count: number }>(
+  private async memberCountForGroup(groupId: string, client?: PoolClient): Promise<number> {
+    const result = await (client ?? getDbPool()).query<{ count: number }>(
       'SELECT COUNT(*)::int AS count FROM kb_group_members WHERE group_id = $1',
       [groupId]
     );
@@ -794,14 +852,34 @@ export class KnowledgeBasesService {
     );
   }
 
+  private async withTransaction<T>(
+    actorUserId: string,
+    work: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:ai:kb');
+      const result = await work(client);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   private async recordAudit(
     event: string,
     actorUserId: string,
     ip: string,
-    meta: Record<string, unknown>
+    meta: Record<string, unknown>,
+    client?: PoolClient
   ): Promise<void> {
     const auditId = uuidv7();
-    await getDbPool().query(
+    await (client ?? getDbPool()).query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
       [auditId, actorUserId, event, JSON.stringify(meta), uuidv7(), ip, new Date()]
