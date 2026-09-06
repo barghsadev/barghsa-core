@@ -19,7 +19,7 @@ const test = baseTest.extend<{ http: Awaited<ReturnType<typeof startHttpFixture>
 
 test('browser cookies enforce CSRF across login, refresh, step-up, another tab, and logout', async ({ page, context, http }) => {
   const password = 'Browser-test-only-password-123!'
-  const fingerprint = 'browser-test-device'
+  const fingerprint = 'e'.repeat(64)
   await http.pool.query('INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,$3)',
     ['browser-user', 'browser@example.test', await argon2.hash(password)])
   await http.pool.query("INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at) VALUES ($1,$2,$3,NOW()+INTERVAL '1 day')",
@@ -27,6 +27,7 @@ test('browser cookies enforce CSRF across login, refresh, step-up, another tab, 
 
   // Use the API's real origin and the web application's actual header helper.
   // No API response, cookie, authentication guard, or database is mocked.
+  await context.addCookies([{ name: 'barghsa_device', value: fingerprint, url: http.base, httpOnly: true, sameSite: 'Lax' }])
   await page.goto(`${http.base}/api/docs`)
   const helper = ts.transpile(readFileSync(resolve(__dirname, '../../web/src/lib/csrf.ts'), 'utf8'),
     { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext }).replace(/^export /gm, '')
@@ -45,6 +46,7 @@ test('browser cookies enforce CSRF across login, refresh, step-up, another tab, 
   expect(csrfCookie.httpOnly).toBe(false)
   expect(csrfCookie.expires - Date.now() / 1000).toBeGreaterThan(86000)
   expect(await page.evaluate(() => document.cookie)).not.toContain('barghsa_session=')
+  expect(await page.evaluate(() => document.cookie)).not.toContain('barghsa_device=')
 
   const statuses = await page.evaluate(async ({ password, csrfToken }) => {
     const result: number[] = []

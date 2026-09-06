@@ -6,6 +6,7 @@ import { startHttpFixture } from '../test/http-fixture.js'
 let http: Awaited<ReturnType<typeof startHttpFixture>>
 const password = 'Local-login-fixture-123!'
 const username = 'login-limit@example.test'
+const deviceToken = 'a'.repeat(64)
 const failureKey = (name: string) => 'login:failures:' + createHash('sha256')
   .update(JSON.stringify([name, '127.0.0.1'])).digest('hex')
 
@@ -16,13 +17,13 @@ beforeEach(async () => {
     VALUES ('login-limit-user',$1,$2)`, [username, await argon2.hash(password)])
   await http.pool.query(`INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at)
     VALUES (gen_random_uuid(),'login-limit-user',$1,NOW()+INTERVAL '1 day')`,
-    [createHash('sha256').update('known-device').digest('hex')])
+    [createHash('sha256').update(deviceToken).digest('hex')])
 }, 40000)
 afterEach(async () => { await http?.close() }, 15000)
 
 async function login(name = username, secret = 'wrong-password') {
   return fetch(`${http.base}/api/auth/login`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    method: 'POST', headers: { 'Content-Type': 'application/json', Cookie: `barghsa_device=${deviceToken}` },
     body: JSON.stringify({ username: name, password: secret, deviceInfo: { fingerprint: 'known-device' } }),
     signal: AbortSignal.timeout(12000),
   })
@@ -105,7 +106,7 @@ it('enforces destination starts and device spraying independently of the IP coun
   }
   expect((await http.pool.query('SELECT count(*)::int AS count FROM otp_challenges')).rows[0].count).toBe(0)
   await http.pool.query(`INSERT INTO security_rate_limit_counters(key,window_start,window_ms,count)
-    VALUES ($1,$2,900000,50)`, ['login:device:'+createHash('sha256').update('known-device').digest('hex'),Math.floor(Date.now()/900000)*900000])
+    VALUES ($1,$2,900000,50)`, ['login:device:'+createHash('sha256').update(deviceToken).digest('hex'),Math.floor(Date.now()/900000)*900000])
   expect((await login()).status).toBe(429)
   expect(await count('login:ip:127.0.0.1')).toBe(1)
   expect(await count(failureKey(username))).toBe(0)

@@ -8,7 +8,7 @@ let fixture: Awaited<ReturnType<typeof startHttpFixture>> | undefined
 let pool: Pool
 let base: string
 const password = 'Http-test-only-password-123!'
-const fingerprint = 'http-integration-trusted-device'
+const fingerprint = 'd'.repeat(64)
 
 beforeAll(async () => {
   if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run')
@@ -24,7 +24,7 @@ afterAll(async () => { await fixture?.close() }, 15000)
 
 async function login() {
   const response = await fetch(`${base}/api/auth/login`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    method: 'POST', headers: { 'Content-Type': 'application/json', Cookie: `barghsa_device=${fingerprint}` },
     body: JSON.stringify({ username: 'http@example.test', password, deviceInfo: { fingerprint } }),
   })
   const data = await response.json() as { requiresOtp: boolean; csrfToken: string; sessionId: string }

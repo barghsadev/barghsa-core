@@ -18,7 +18,7 @@ function toE164(value: string): string {
  * - Accepts email, Iranian mobile (09...), or international E.164 (+...).
  * - Normalizes Iranian mobile to E.164 on the backend (same as RegisterSchema).
  * - Password is required (no strength re-validation — already enforced at registration).
- * - Device info is optional, for future risk-based OTP enforcement.
+ * - Legacy device info is accepted but ignored for trust; HTTP uses an opaque device cookie.
  */
 export const LoginSchema = z.object({
   username: z

@@ -1,4 +1,5 @@
-import type { Response } from 'express'
+import type { Request, Response } from 'express'
+import { randomBytes } from 'node:crypto'
 
 /**
  * Session cookie name.
@@ -152,4 +153,18 @@ export function clearRefreshCookie(res: Response): void {
     sameSite: SESSION_COOKIE_SAMESITE,
     path: '/api/auth/refresh',
   })
+}
+
+/** Random device possession proof. Public user-agent strings cannot confer trust. */
+export function getOrCreateDeviceCookie(req: Request, res: Response): string {
+  const secure = process.env.NODE_ENV === 'production'
+  // __Host- prevents a sibling subdomain from planting a known trust cookie.
+  const name = secure ? '__Host-barghsa_device' : 'barghsa_device'
+  const existing = req.cookies?.[name]
+  if (typeof existing === 'string' && /^[a-f0-9]{64}$/.test(existing)) return existing
+  const token = randomBytes(32).toString('hex')
+  res.cookie(name, token, {
+    httpOnly: true, secure, sameSite: 'lax', path: '/', maxAge: 30 * 24 * 60 * 60 * 1000,
+  })
+  return token
 }

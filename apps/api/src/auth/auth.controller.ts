@@ -47,6 +47,7 @@ import { SessionService } from '../session/session.service.js'
 import {
   SESSION_COOKIE_NAME,
   REFRESH_COOKIE_NAME,
+  getOrCreateDeviceCookie,
   setSessionCookie,
   setRefreshCookie,
   clearSessionCookie,
@@ -194,7 +195,10 @@ export class AuthController {
 
     // ── Delegate to service ─────────────────────────────────────────
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    const result = await this.authService.login(parsed.data, ip)
+    const deviceToken = getOrCreateDeviceCookie(req, res)
+    const result = await this.authService.login({ ...parsed.data, deviceInfo: {
+      fingerprint: deviceToken, userAgent: req.headers['user-agent'] ?? '',
+    } }, ip)
 
     // If password change is required, return the token without setting a session
     if (result.mustChangePassword) {
@@ -258,7 +262,7 @@ export class AuthController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     const userAgent = req.headers['user-agent'] ?? ''
     const deviceFingerprint = parsed.data.trustDevice
-      ? createHash('sha256').update(userAgent).digest('hex')
+      ? createHash('sha256').update(getOrCreateDeviceCookie(req, res)).digest('hex')
       : undefined
 
     // Perform login OTP verification → session creation

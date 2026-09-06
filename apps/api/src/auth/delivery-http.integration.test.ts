@@ -208,17 +208,17 @@ it('allows only one password reset across two previously issued codes', async ()
 
 it('requires staff OTP even on a trusted device', async () => {
   await fixture.pool.query("UPDATE users SET password_hash=$1,is_staff=true WHERE user_id='provider-admin'", [await argon2.hash(password)])
-  const fingerprint = 'trusted-staff-device'
+  const fingerprint = 'b'.repeat(64)
   await fixture.pool.query(`INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at)
     VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day')`, [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')])
-  const response = await post('auth/login', { username: 'provider@example.test', password, deviceInfo: { fingerprint } })
+  const response = await post('auth/login', { username: 'provider@example.test', password, deviceInfo: { fingerprint: 'ignored-client-input' } }, { Cookie: `barghsa_device=${fingerprint}` })
   expect(response.status).toBe(200)
   expect(await response.json()).toMatchObject({ requiresOtp: true, userIsStaff: true, challengeId: expect.any(String) })
 })
 
 it('rechecks credentials while creating a trusted-device session', async () => {
   await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [await argon2.hash(password)])
-  const fingerprint = 'trusted-customer-device'
+  const fingerprint = 'c'.repeat(64)
   await fixture.pool.query(`INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at)
     VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day')`, [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')])
   const client = await fixture.pool.connect()
@@ -226,7 +226,7 @@ it('rechecks credentials while creating a trusted-device session', async () => {
   try {
     await client.query('BEGIN')
     await client.query("UPDATE users SET password_hash='changed-during-login' WHERE user_id='provider-admin'")
-    loggingIn = post('auth/login', { username: 'provider@example.test', password, deviceInfo: { fingerprint } })
+    loggingIn = post('auth/login', { username: 'provider@example.test', password, deviceInfo: { fingerprint: 'ignored-client-input' } }, { Cookie: `barghsa_device=${fingerprint}` })
     await expect.poll(async () => (await fixture.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
       WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT auth_version,%'`)).rows[0].count).toBe(1)
     await client.query('COMMIT')
@@ -340,3 +340,43 @@ it('changes username only with both codes delivered to the old and new mailboxes
   expect((await fixture.pool.query("SELECT username FROM users WHERE user_id='provider-admin'")).rows[0].username).toBe(pair.destination)
   expect((await fixture.pool.query('SELECT count(*)::int AS count FROM otp_challenges WHERE consumed_at IS NOT NULL')).rows[0].count).toBe(2)
 })
+
+it('trusts only the opaque browser cookie after OTP and rejects public fingerprint imitation, expiry and revocation', async () => {
+  await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'",[await argon2.hash(password)])
+  const userAgent='Common browser string'
+  await fixture.pool.query(`INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at)
+    VALUES ($1,'provider-admin',$2,NOW()+INTERVAL '1 day')`,[randomUUID(),createHash('sha256').update(userAgent).digest('hex')])
+  const credentials={username:'provider@example.test',password,deviceInfo:{fingerprint:userAgent}}
+  const first=await post('auth/login',credentials,{'User-Agent':userAgent})
+  const challenge=await first.json() as {requiresOtp:boolean;challengeId:string}
+  expect(first.status).toBe(200)
+  expect(challenge.requiresOtp).toBe(true)
+  const cookie=first.headers.get('set-cookie')!.split(';')[0]!
+  expect(cookie).toMatch(/^barghsa_device=[a-f0-9]{64}$/)
+  expect(first.headers.get('set-cookie')).toContain('HttpOnly')
+  const token=cookie.split('=')[1]!
+  expect(await deliver()).toBe('sent')
+  const otp=received.at(-1)!.text.match(/\d{6}/)?.[0]
+  const verified=await post('auth/login/verify',{challengeId:challenge.challengeId,otp,trustDevice:true},{Cookie:cookie,'User-Agent':userAgent})
+  expect(verified.status,await verified.clone().text()).toBe(200)
+  expect(await verified.text()).not.toContain(token)
+  const trustedHash=createHash('sha256').update(token).digest('hex')
+  expect((await fixture.pool.query('SELECT count(*)::int AS count FROM device_trusts WHERE device_fingerprint=$1',[trustedHash])).rows[0].count).toBe(1)
+  const returning=await post('auth/login',credentials,{Cookie:cookie,'User-Agent':'Updated browser version'})
+  expect(returning.status).toBe(200)
+  expect(await returning.json()).toMatchObject({requiresOtp:false})
+  // Reset only isolated send quotas between independent new-device/expiry checks.
+  await fixture.pool.query('DELETE FROM security_rate_limit_counters')
+  const imitation=await post('auth/login',{...credentials,deviceInfo:{fingerprint:token}},{'User-Agent':userAgent})
+  expect(imitation.status).toBe(200)
+  expect(await imitation.json()).toMatchObject({requiresOtp:true})
+  expect(imitation.headers.get('set-cookie')).not.toContain(token)
+  await fixture.pool.query("UPDATE device_trusts SET expires_at=NOW()-INTERVAL '1 second' WHERE device_fingerprint=$1",[trustedHash])
+  await fixture.pool.query('DELETE FROM security_rate_limit_counters')
+  const expired=await post('auth/login',credentials,{Cookie:cookie})
+  expect(await expired.json()).toMatchObject({requiresOtp:true})
+  await fixture.pool.query('DELETE FROM device_trusts WHERE device_fingerprint=$1',[trustedHash])
+  await fixture.pool.query('DELETE FROM security_rate_limit_counters')
+  const revoked=await post('auth/login',credentials,{Cookie:cookie})
+  expect(await revoked.json()).toMatchObject({requiresOtp:true})
+},20000)

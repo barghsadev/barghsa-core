@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
 import { createHash } from 'node:crypto'
-import type { Response } from 'express'
-import { SESSION_COOKIE_NAME, setSessionCookie, clearSessionCookie } from './cookie.helper.js'
+import type { Request, Response } from 'express'
+import { SESSION_COOKIE_NAME, setSessionCookie, clearSessionCookie, getOrCreateDeviceCookie } from './cookie.helper.js'
 
 interface MockResponse extends Response {
   _cookies: Record<string, { value: string; options: Record<string, unknown> }>
@@ -96,5 +96,23 @@ describe('clearSessionCookie', () => {
 describe('SESSION_COOKIE_NAME', () => {
   it('is named barghsa_session', () => {
     expect(SESSION_COOKIE_NAME).toBe('barghsa_session')
+  })
+})
+describe('device trust cookie', () => {
+  it('uses a secure host-only HttpOnly cookie in production and ignores unprefixed fixation', () => {
+    vi.stubEnv('NODE_ENV','production')
+    try {
+      const response=mockRes()
+      const planted='a'.repeat(64)
+      const token=getOrCreateDeviceCookie({cookies:{barghsa_device:planted}} as Request,response)
+      expect(token).toMatch(/^[a-f0-9]{64}$/)
+      expect(token).not.toBe(planted)
+      expect(response._cookies['__Host-barghsa_device']?.options).toEqual({
+        httpOnly:true,secure:true,sameSite:'lax',path:'/',maxAge:2592000000,
+      })
+      const returning=mockRes()
+      expect(getOrCreateDeviceCookie({cookies:{'__Host-barghsa_device':token}} as Request,returning)).toBe(token)
+      expect(returning._cookies).toEqual({})
+    } finally { vi.unstubAllEnvs() }
   })
 })

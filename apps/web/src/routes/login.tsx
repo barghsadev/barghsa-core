@@ -209,18 +209,12 @@ function LoginPage() {
     setSubmitting(true)
 
     try {
-      const deviceFingerprint = navigator.userAgent
-
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: normalized.normalized,
           password,
-          deviceInfo: {
-            userAgent: deviceFingerprint,
-            fingerprint: deviceFingerprint,
-          },
         }),
       })
 
