@@ -6,6 +6,12 @@ import {
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
 } from '@barghsa/shared/finance';
 
+import {
+  SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
+  ESCALATION_POLICY_CONFIG_KEY,
+  STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+} from '@barghsa/shared/admin';
+
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 const cases = [
@@ -40,6 +46,57 @@ const cases = [
     stored: { limit_irr: 1_000_000_000 },
     response: { limitIrR: 1_000_000_000, version: 1 },
     grant: 'admin:financial:edit',
+  },
+  {
+    path: 'service-response-targets',
+    key: SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
+    body: { ticket: 48, verification_case: 72 },
+    stored: { ticket: 48, verification_case: 72 },
+    response: { ticket: 48, verification_case: 72 },
+    grant: 'admin:service-targets:edit',
+  },
+  {
+    path: 'escalation-policy',
+    key: ESCALATION_POLICY_CONFIG_KEY,
+    body: {
+      ticket: {
+        level2: { delayHours: 24, channels: ['in_app'] },
+        level3: { delayHours: 48, channels: ['in_app', 'email'] },
+      },
+      verification_case: null,
+    },
+    stored: {
+      ticket: {
+        level2: { delayHours: 24, channels: ['in_app'] },
+        level3: { delayHours: 48, channels: ['in_app', 'email'] },
+      },
+      verification_case: null,
+    },
+    response: {
+      ticket: {
+        level2: { delayHours: 24, channels: ['in_app'] },
+        level3: { delayHours: 48, channels: ['in_app', 'email'] },
+      },
+      verification_case: null,
+    },
+    grant: 'admin:service-escalation:edit',
+  },
+  {
+    path: 'assignment-rules',
+    key: STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+    body: {
+      ticket: { teamId: null, strategy: 'load' },
+      verification_case: { teamId: null, strategy: 'round_robin' },
+    },
+    stored: {
+      ticket: { teamId: null, strategy: 'load' },
+      verification_case: { teamId: null, strategy: 'round_robin' },
+    },
+    response: {
+      ticket: { teamId: null, strategy: 'load' },
+      verification_case: { teamId: null, strategy: 'round_robin' },
+    },
+    grant: 'admin:staff-teams:edit',
   },
 ] as const;
 

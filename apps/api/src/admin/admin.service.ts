@@ -1897,6 +1897,7 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:service-targets:edit');
       await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
         SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
       ]);
@@ -1962,6 +1963,7 @@ export class AdminService {
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to set service response targets config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
@@ -2053,6 +2055,7 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:service-escalation:edit');
       await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
         ESCALATION_POLICY_CONFIG_KEY,
       ]);
@@ -2114,6 +2117,7 @@ export class AdminService {
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to set escalation policy config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
@@ -2216,6 +2220,7 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:staff-teams:edit');
       await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
         STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
       ]);

@@ -1657,3 +1657,9 @@ Review and validation: all five rule fixtures and four report/failure-handling t
 Dual-approval threshold and wallet top-up limit writes now lock and recheck the actor's financial-edit permission inside their transaction. Revoking the grant while a request waits prevents the write and audit. Permission failures retain HTTP 403 rather than becoming a generic server failure.
 
 Review and validation: 49 focused configuration checks passed, including 16 migrated HTTP checks for denial, successful versioned writes, audit-failure rollback and concurrent role revocation across four configuration types. All 13 online top-up integration checks passed after giving their administrative fixture its explicit financial-edit grant; the existing limit-change race remains covered. Root types, lint and contract checks passed. Financial step-up enforcement remains a separate follow-up. No external settings were changed.
+
+### Recheck service configuration authority during writes (F04/F15/F16)
+
+Response targets, escalation policies and staff assignment rules now recheck their distinct current staff capability inside the write transaction, before configuration/team locks. Revoked grants return 403 and leave configuration, versions and audit history unchanged.
+
+Review and validation: all 86 focused checks across seven files passed, including 28 migrated HTTP checks covering seven configuration endpoints. Corrected two new fixture mistakes before the final run: the assignment route name and mandatory in-app escalation channel. Root types, lint and contract checks passed. Team CRUD authority and its account-lock ordering remain the next bounded review.
