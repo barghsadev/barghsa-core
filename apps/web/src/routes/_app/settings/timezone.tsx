@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { toast } from 'sonner';
 import { t } from '@barghsa/i18n';
-import { GlobeIcon, ClockIcon, Loader2Icon, SaveIcon, SearchIcon, CheckIcon } from 'lucide-react';
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { timezoneText } from '@barghsa/i18n/timezone';
+import { GlobeIcon, ClockIcon, Loader2Icon, SaveIcon, SearchIcon } from 'lucide-react';
+import { Alert, AlertDescription, Button, Card, CardContent, Input } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
+import { useTimezone } from '../../../hooks/useTimezone.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 
 export const Route = createFileRoute('/_app/settings/timezone')({
@@ -156,9 +157,9 @@ function formatOffset(tz: string): string {
   }
 }
 
-function getCurrentTimeInTimezone(tz: string): string {
+function getCurrentTimeInTimezone(tz: string, locale: 'en' | 'fa'): string {
   try {
-    return new Intl.DateTimeFormat('en', {
+    return new Intl.DateTimeFormat(locale, {
       timeZone: tz,
       hour: '2-digit',
       minute: '2-digit',
@@ -170,9 +171,9 @@ function getCurrentTimeInTimezone(tz: string): string {
   }
 }
 
-function getCurrentDateInTimezone(tz: string): string {
+function getCurrentDateInTimezone(tz: string, locale: 'en' | 'fa'): string {
   try {
-    return new Intl.DateTimeFormat('en', {
+    return new Intl.DateTimeFormat(locale, {
       timeZone: tz,
       weekday: 'long',
       year: 'numeric',
@@ -188,32 +189,18 @@ function getCurrentDateInTimezone(tz: string): string {
 
 function SettingsTimezonePage() {
   const locale = useLocale();
+  const preference = useTimezone();
 
   const [timezone, setTimezone] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
+  const loading = preference.status === 'loading';
   const [saving, setSaving] = useState(false);
-
-  // ── Fetch current timezone ──────────────────────────────────────────
-
-  const fetchTimezone = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/user/settings/timezone');
-      if (response.ok) {
-        const data: { timezone: string } = await response.json();
-        setTimezone(data.timezone);
-      }
-    } catch {
-      // Silently fail — default timezone will be assumed
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const [saveError, setSaveError] = useState('');
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    fetchTimezone();
-  }, [fetchTimezone]);
+    if (preference.status === 'ready') setTimezone(preference.timezone);
+  }, [preference.status, preference.timezone]);
 
   // ── Filter timezones based on search ────────────────────────────────
 
@@ -240,9 +227,11 @@ function SettingsTimezonePage() {
   // ── Save handler ────────────────────────────────────────────────────
 
   const handleSave = useCallback(async () => {
-    if (!timezone) return;
+    if (!timezone || saving || preference.status !== 'ready') return;
 
     setSaving(true);
+    setSaveError('');
+    setSaved(false);
     try {
       const response = await fetch('/api/user/settings/timezone', {
         method: 'PUT',
@@ -251,43 +240,53 @@ function SettingsTimezonePage() {
       });
 
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        const message = (body as { message?: string }).message;
-        toast.error(message || t('settings.timezone.error.save', locale));
+        const body: unknown = await response.json().catch(() => ({}));
+        const message =
+          body && typeof body === 'object' && 'message' in body && typeof body.message === 'string'
+            ? body.message
+            : '';
+        setSaveError(message || timezoneText('error.save', locale));
         return;
       }
 
+      const saved: unknown = await response.json();
+      if (
+        !saved ||
+        typeof saved !== 'object' ||
+        !('timezone' in saved) ||
+        saved.timezone !== timezone
+      ) {
+        throw new Error('Invalid timezone confirmation');
+      }
       window.dispatchEvent(new Event('barghsa:timezone-changed'));
-      toast.success(t('settings.timezone.success', locale));
+      setSaved(true);
     } catch {
-      toast.error(t('settings.timezone.error.save', locale));
+      setSaveError(timezoneText('error.save', locale));
     } finally {
       setSaving(false);
     }
-  }, [timezone, locale]);
+  }, [timezone, locale, saving, preference.status]);
 
   // ── Preview ─────────────────────────────────────────────────────────
 
-  const currentTime = timezone ? getCurrentTimeInTimezone(timezone) : '';
-  const currentDate = timezone ? getCurrentDateInTimezone(timezone) : '';
+  const currentTime = timezone ? getCurrentTimeInTimezone(timezone, locale) : '';
+  const currentDate = timezone ? getCurrentDateInTimezone(timezone, locale) : '';
   const offset = timezone ? formatOffset(timezone) : '';
 
   // ── Render ──────────────────────────────────────────────────────────
 
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <h1 className="text-2xl font-bold mb-6">{t('settings.timezone.title', locale)}</h1>
+      <h1 className="text-2xl font-bold mb-6">{timezoneText('title', locale)}</h1>
 
       <Card>
         <CardContent className="pt-6 space-y-4">
           <div className="flex items-center gap-2">
             <GlobeIcon className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">{t('settings.timezone.title', locale)}</h2>
+            <h2 className="text-lg font-semibold">{timezoneText('title', locale)}</h2>
           </div>
 
-          <p className="text-sm text-muted-foreground">
-            {t('settings.timezone.description', locale)}
-          </p>
+          <p className="text-sm text-muted-foreground">{timezoneText('description', locale)}</p>
 
           {/* Loading */}
           {loading && (
@@ -298,80 +297,69 @@ function SettingsTimezonePage() {
           )}
 
           {/* Timezone picker */}
-          {!loading && (
+          {preference.status === 'error' && (
+            <div role="alert">
+              {timezoneText('error.load', locale)}{' '}
+              <Button variant="outline" onClick={preference.retry}>
+                {timezoneText('retry', locale)}
+              </Button>
+            </div>
+          )}
+          {preference.status === 'ready' && (
             <div className="space-y-4">
               {/* Search input */}
               <div className="relative">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
+                <SearchIcon className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={t('settings.timezone.searchPlaceholder', locale)}
-                  className="flex w-full rounded-lg border border-input bg-transparent pl-10 pr-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                  role="combobox"
-                  aria-expanded={filteredTimezones.length > 0}
-                  aria-controls="timezone-listbox"
-                  aria-autocomplete="list"
-                  aria-activedescendant={
-                    timezone ? `tz-${timezone.replace(/\//g, '-')}` : undefined
-                  }
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder={timezoneText('searchPlaceholder', locale)}
+                  aria-label={timezoneText('searchPlaceholder', locale)}
+                  className="ps-10"
+                  disabled={saving}
                 />
               </div>
-
-              {/* Timezone list */}
-              <div
-                id="timezone-listbox"
-                role="listbox"
-                aria-label={t('settings.timezone.title', locale)}
-                className="max-h-72 overflow-y-auto border rounded-lg"
+              <select
+                aria-label={timezoneText('title', locale)}
+                size={10}
+                value={timezone}
+                onChange={(event) => {
+                  setTimezone(event.target.value);
+                  setSaved(false);
+                  setSaveError('');
+                }}
+                disabled={saving}
+                className="w-full rounded-lg border border-input bg-background p-2 text-foreground"
+                dir="ltr"
               >
-                {Object.entries(groupedTimezones).map(([region, tzs]) => (
-                  <div key={region}>
-                    <div className="sticky top-0 bg-muted/80 backdrop-blur px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      {region}
-                    </div>
-                    {tzs.map((tz) => {
-                      const isSelected = tz === timezone;
-                      return (
-                        <button
-                          key={tz}
-                          type="button"
-                          role="option"
-                          aria-selected={isSelected}
-                          id={`tz-${tz.replace(/\//g, '-')}`}
-                          onClick={() => setTimezone(tz)}
-                          className={`flex w-full items-center justify-between px-3 py-2 text-sm text-left transition-colors hover:bg-accent hover:text-accent-foreground ${
-                            isSelected ? 'bg-accent font-medium text-accent-foreground' : ''
-                          }`}
-                        >
-                          <span className="flex items-center gap-2">
-                            {isSelected && (
-                              <CheckIcon className="h-3.5 w-3.5 text-primary shrink-0" />
-                            )}
-                            <span className={isSelected ? 'ml-0' : 'ml-5'}>{tz}</span>
-                          </span>
-                          <span className="text-xs text-muted-foreground">{formatOffset(tz)}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                ))}
-
-                {filteredTimezones.length === 0 && (
-                  <div className="py-8 text-center text-sm text-muted-foreground">
-                    {locale === 'fa' ? 'نتیجه‌ای یافت نشد' : 'No results found'}
-                  </div>
+                {!filteredTimezones.includes(timezone) && (
+                  <option value={timezone} hidden>
+                    {timezone}
+                  </option>
                 )}
-              </div>
+                {Object.entries(groupedTimezones).map(([region, zones]) => (
+                  <optgroup key={region} label={region}>
+                    {zones.map((zone) => (
+                      <option key={zone} value={zone}>
+                        {zone} ({formatOffset(zone)})
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              {filteredTimezones.length === 0 && (
+                <p role="status" className="text-sm text-muted-foreground">
+                  {locale === 'fa' ? 'نتیجه‌ای یافت نشد' : 'No results found'}
+                </p>
+              )}
 
               {/* Time preview */}
               {timezone && (
                 <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
                   <div className="flex items-center gap-2 text-sm font-medium">
                     <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                    <span>{t('settings.timezone.preview', locale)}</span>
+                    <span>{timezoneText('preview', locale)}</span>
                   </div>
                   <div className="text-2xl font-mono font-bold tracking-tight">{currentTime}</div>
                   <div className="text-sm text-muted-foreground">{currentDate}</div>
@@ -383,11 +371,17 @@ function SettingsTimezonePage() {
             </div>
           )}
 
+          {saveError && (
+            <Alert variant="destructive">
+              <AlertDescription>{saveError}</AlertDescription>
+            </Alert>
+          )}
+          {saved && <p role="status">{timezoneText('success', locale)}</p>}
           {/* Save button */}
           <div className="flex justify-end">
             <Button
               onClick={handleSave}
-              disabled={saving || loading || !timezone}
+              disabled={saving || preference.status !== 'ready' || !timezone}
               className="gap-2"
             >
               {saving ? (
@@ -395,7 +389,7 @@ function SettingsTimezonePage() {
               ) : (
                 <SaveIcon className="h-4 w-4" />
               )}
-              {saving ? t('settings.timezone.saving', locale) : t('settings.profile.save', locale)}
+              {saving ? timezoneText('saving', locale) : t('settings.profile.save', locale)}
             </Button>
           </div>
         </CardContent>

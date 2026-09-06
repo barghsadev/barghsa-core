@@ -31,6 +31,11 @@
       "types": "./dist/catalogue.d.ts",
       "import": "./dist/catalogue.js",
       "default": "./dist/catalogue.js"
+    },
+    "./timezone": {
+      "types": "./dist/timezone.d.ts",
+      "import": "./dist/timezone.js",
+      "default": "./dist/timezone.js"
     }
   },
   "scripts": {
