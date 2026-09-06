@@ -1071,3 +1071,7 @@ Moving the payment callback suite to full production migrations reproduced a pro
 Added additive migration 0112 to permit the existing service's processing state while retaining the three terminal states. No rows are deleted or rewritten. The migration is journaled after 0111; the baseline test explicitly recreates the old constraint before its populated upgrade check and verifies that processing is restored. The converted callback suite retains signed callbacks, replay binding, crash recovery, provider-return verification, and delayed paid returns after expiry or an earlier unpaid return.
 
 Review and validation: all eight callback tests pass with the full migration chain; fresh install, repeat migration, and populated baseline upgrade test pass; root type checking and lint pass. Provider verification is a local fake in this suite, so this does not certify a real payment-provider deployment. Apply 0112 before expecting deployed callback handling to work. No production migration was run.
+
+### Bank receipt wallet settlement on production migrations (F02/F14)
+
+Converted the wallet bank-receipt confirmation suite to the full production database and real required user fields. Review retained all 15 cases for confirmation/rejection, replay, wallet excess, partial/exact/overdue invoice settlement, concurrent allocations, customer notice amounts, and audit-failure rollback. All 15 pass, along with root type checking and lint. This verifies trusted service transactions; HTTP staff authority remains a separate review item.

@@ -26,11 +26,8 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { v7 as uuidv7 } from 'uuid';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { startHttpFixture } from '../test/http-fixture';
 import {
   BANK_RECEIPT_CONFIRMED_EVENT,
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
@@ -63,39 +60,6 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   };
 });
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
-);
-const ATTACHMENT_UNIQUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0072_wallet_tx_receipt_attachment_unique.sql'
-);
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
-);
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql'
-);
-const PAID_OVERDUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql'
-);
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql'
-);
-const OUTBOX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0025_create_notification_outbox.sql'
-);
-
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 const CUSTOMER_USER_ID = 'customer-bank-receipt-owner';
@@ -112,14 +76,13 @@ function receiptKey(suffix: string): string {
 }
 
 describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   let walletService: WalletService;
   let service: BankReceiptConfirmationService;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 8);
+    ctx = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 8);
     poolHolder.pool = ctx.pool;
-    await ctx.pool.query('CREATE TABLE app_config (key text PRIMARY KEY, value jsonb NOT NULL)');
     walletService = new WalletService();
     service = new BankReceiptConfirmationService(
       walletService,
@@ -127,36 +90,11 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       new InvoiceStateMachineService(new InvoiceAuditRepository())
     );
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-        user_id TEXT NOT NULL REFERENCES users(user_id)
-      )
-    `);
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ATTACHMENT_UNIQUE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TYPE invoice_state AS ENUM (
-        'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-        'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-      )
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS orders (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(OUTBOX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1), ($2)`, [
-      CUSTOMER_USER_ID,
-      ACTOR_USER_ID,
-    ]);
+    await ctx.pool.query(
+      `INSERT INTO users (user_id, username, password_hash) VALUES
+      ($1, 'customer@example.test', 'test-only'), ($2, 'staff@example.test', 'test-only')`,
+      [CUSTOMER_USER_ID, ACTOR_USER_ID]
+    );
     await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2), ($3, $2)`, [
       PROFILE_A,
       CUSTOMER_USER_ID,
@@ -170,8 +108,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   async function insertPending(suffix: string, amount = AMOUNT): Promise<string> {
