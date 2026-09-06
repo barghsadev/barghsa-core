@@ -1,9 +1,11 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   REMINDER_OFFSET_TOGGLE_EVENT,
+  REMINDER_OFFSET_TOGGLE_PERMISSION,
   mergeReminderOffsetToggles,
   parseReminderOffsetToggleBody,
   type ReminderOffsetToggleDto,
@@ -19,7 +21,7 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
  * single-row UPSERT under a transaction and record an audit event.
  *
  * Permission `admin:finance:invoices:reminder-offsets` is enforced at
- * the controller boundary (mapped to platform admin today).
+ * the controller boundary and held with current grants through the write transaction.
  */
 
 const TOGGLE_LOCK_NAMESPACE = 'barghsa.invoice_reminder_offset_toggles';
@@ -87,6 +89,11 @@ export class ReminderOffsetToggleService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(
+        client,
+        input.actorUserId,
+        REMINDER_OFFSET_TOGGLE_PERMISSION
+      );
 
       // SELECT ... FOR UPDATE locks nothing when the toggle row does not
       // exist. Two concurrent first writes would both observe the default

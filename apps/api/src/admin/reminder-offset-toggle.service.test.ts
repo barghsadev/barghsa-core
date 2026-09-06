@@ -7,6 +7,10 @@ import {
   defaultReminderOffsetToggles,
 } from '@barghsa/shared/finance';
 
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 function makeDb() {
   type Handler = (
     values: unknown[],

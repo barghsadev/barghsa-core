@@ -11,10 +11,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db.js';
 import { REMINDER_OFFSET_TOGGLE_EVENT } from '@barghsa/shared/finance';
 import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js';
 
@@ -28,19 +25,6 @@ vi.mock('@barghsa/db', () => ({
     return poolHolder.pool;
   },
 }));
-
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
-);
-const TOGGLES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0062_create_invoice_reminder_offset_toggles.sql'
-);
 
 const ACTOR_A = 'toggle-admin-a';
 const ACTOR_B = 'toggle-admin-b';
@@ -63,35 +47,26 @@ function parseMeta(raw: unknown): AuditMeta {
 }
 
 describe('ReminderOffsetToggleService — real PostgreSQL (T-04.1.04.05)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let service: ReminderOffsetToggleService;
 
   beforeAll(async () => {
-    // 4 connections so two concurrent first-writes can each hold a
-    // transaction while waiting on the per-pair advisory lock.
-    ctx = await createIsolatedTestDb('test_', 4);
+    // Separate actor transactions can contend on the same per-pair lock.
+    ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     service = new ReminderOffsetToggleService({
       getCorrelationId: () => 'corr-toggle-integration',
     } as never);
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (
-      user_id TEXT PRIMARY KEY
-    )`);
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(TOGGLES_MIGRATION, 'utf-8').trim());
-
     await ctx.pool.query(
-      `INSERT INTO users (user_id) VALUES ($1), ($2) ON CONFLICT (user_id) DO NOTHING`,
+      `INSERT INTO users (user_id, username, password_hash, is_admin) VALUES ($1,$1,'test-only',true), ($2,$2,'test-only',true)`,
       [ACTOR_A, ACTOR_B]
     );
   }, 60_000);
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   beforeEach(async () => {

@@ -1447,3 +1447,9 @@ Review and validation: four production-browser checks pass, plus two keyboard-na
 Rebuilt API, worker and web production images from clean checkpoint c60c148, including migrations 0112 through 0116, durable AI-model testing, storage configuration and the repaired administration screens. The disposable-container probe passes non-root/read-only startup, packaged migrations, optional Redis fallback, database loss/recovery, graceful draining and forced-deadline recovery with one eventual delivery/finance commit. All probe containers and their network were removed.
 
 Reviewed the image IDs and source revision in production-image-verification.json. No production environment, registry push or external provider was used. The forced-deadline fixture still terminates disconnected sleeping database sessions and advances only its isolated retry lease. These images cover c60c148; the subsequent reminder-authority repair is outside this image checkpoint.
+
+### Hold reminder-setting authority through commit (F04/F14)
+
+Reminder-offset changes now lock the actor and recheck the current reminder-settings grant inside the write transaction before taking the existing per-offset lock. Converted the concurrent audit-chain test from partial tables to production migrations. Existing scheduling semantics and per-write audits remain unchanged.
+
+Review and validation: all 15 service/controller/migrated-database/HTTP checks pass. New HTTP cases verify permission revocation while waiting, denied access, the 24-entry default matrix and rollback when the actual audit insert fails. The first run caught an extra audit parameter introduced during the edit; removed it and reran all checks. Root types, lint and whitespace checks pass. Production-image evidence remains explicitly bound to the earlier c60c148 checkpoint.
