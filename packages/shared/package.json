@@ -24,7 +24,8 @@
     "./promotions": "./dist/promotions/index.js",
     "./package.json": "./package.json",
     "./auth-delivery": "./dist/auth-delivery/index.js",
-    "./notification-delivery": "./dist/notification-delivery/index.js"
+    "./notification-delivery": "./dist/notification-delivery/index.js",
+    "./ai-models": "./dist/ai-models/index.js"
   },
   "scripts": {
     "build": "tsc",

@@ -1,17 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  AiModelSecretsService,
-  isMaskedAiToken,
-  isEncryptedAiToken,
-} from './ai-model-secrets.service.js';
+import { AiModelSecrets, isMaskedAiToken, isEncryptedAiToken } from './secrets.js';
 
 const TEST_KEY = Buffer.from('0123456789abcdef0123456789abcdef'); // 32 raw bytes
 
-describe('AiModelSecretsService (T-09.11.01)', () => {
-  let service: AiModelSecretsService;
+describe('AiModelSecrets (T-09.11.01)', () => {
+  let service: AiModelSecrets;
 
   beforeEach(() => {
-    service = new AiModelSecretsService(TEST_KEY);
+    service = new AiModelSecrets(TEST_KEY);
   });
 
   it('encrypts and decrypts a token round-trip', () => {
@@ -60,24 +56,24 @@ describe('AiModelSecretsService (T-09.11.01)', () => {
   });
 
   it('encryptToken fails closed when no key is configured', () => {
-    const keyless = new AiModelSecretsService();
+    const keyless = new AiModelSecrets();
     expect(keyless.available).toBe(false);
     expect(() => keyless.encryptToken('sk-any')).toThrow(/AI_MODEL_ENCRYPTION_KEY/);
   });
 
   it('decryptToken fails closed when no key is configured', () => {
-    const keyless = new AiModelSecretsService();
+    const keyless = new AiModelSecrets();
     expect(() => keyless.decryptToken('v1:aa:bb:cc')).toThrow(/AI_MODEL_ENCRYPTION_KEY/);
   });
 
   it('resolves a 64-hex-char string key as 32 raw bytes', () => {
-    const hexKey = new AiModelSecretsService('a'.repeat(64));
+    const hexKey = new AiModelSecrets('a'.repeat(64));
     const stored = hexKey.encryptToken('token');
     expect(hexKey.decryptToken(stored)).toBe('token');
   });
 
   it('derives a 32-byte key from a non-hex string via SHA-256', () => {
-    const derived = new AiModelSecretsService('not-hex-just-a-passphrase-123');
+    const derived = new AiModelSecrets('not-hex-just-a-passphrase-123');
     const stored = derived.encryptToken('token');
     expect(derived.decryptToken(stored)).toBe('token');
   });

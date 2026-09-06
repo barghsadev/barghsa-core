@@ -6,7 +6,7 @@ import { promises as dns, type LookupAddress } from 'node:dns';
 const resolver: {
   lookup(host: string, options: { all: true; verbatim: true }): Promise<LookupAddress[]>;
 } = dns;
-import { AiModelTesterService } from './ai-model-tester.service.js';
+import { AiModelTester } from './tester.js';
 
 async function withProvider(handler: RequestListener, run: (port: number) => Promise<void>) {
   const server = createServer(handler);
@@ -22,7 +22,7 @@ async function withProvider(handler: RequestListener, run: (port: number) => Pro
   }
 }
 function test(baseUrl: string) {
-  return new AiModelTesterService().test({
+  return new AiModelTester().test({
     providerType: 'openai_compatible',
     baseUrl,
     modelName: 'local-test',
