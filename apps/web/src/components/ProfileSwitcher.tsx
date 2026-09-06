@@ -1,3 +1,4 @@
+import { refreshProfileContext } from '../lib/profile-context.js'
 import { withCsrf } from '../lib/csrf.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
@@ -38,7 +39,7 @@ interface ProfileSwitcherProps {
  *
  * - Fetches the profile list from `GET /api/profiles`.
  * - On switch, calls `POST /api/profiles/switch/:profileId` and, on success,
- *   reloads the document to clear all profile-scoped local state.
+ *   remounts the app context to clear profile-scoped state without document navigation.
  * - A single already-active profile is shown read-only.
  *
  * The dropdown uses the native `<select>` for reliable RTL + a11y behavior
@@ -142,9 +143,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
         setError(t('dashboard.profile.switchError', locale))
         return
       }
-      // Pages and the notification bell hold local fetch state outside router
-      // loaders. A document reload clears every old-profile view and draft.
-      window.location.reload()
+      refreshProfileContext()
     } catch {
       setError(t('dashboard.profile.switchError', locale))
     } finally {

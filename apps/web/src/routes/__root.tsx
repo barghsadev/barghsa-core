@@ -1,3 +1,4 @@
+import { useProfileContextRevision } from '../lib/profile-context.js'
 import { createRootRoute, Outlet, useLocation, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { lazy, Suspense, useEffect } from 'react'
@@ -81,6 +82,7 @@ async function runProfileCheck(
 }
 
 function RootComponent() {
+  const profileRevision = useProfileContextRevision()
   const router = useRouter()
   const { pathname } = useLocation()
 
@@ -88,11 +90,11 @@ function RootComponent() {
     const controller = new AbortController()
     void runProfileCheck(pathname, router, controller.signal)
     return () => controller.abort()
-  }, [pathname, router])
+  }, [pathname, router, profileRevision])
 
   return (
     <>
-      <BrandThemeProvider>
+      <BrandThemeProvider key={profileRevision}>
         {!AUTH_ROUTE_PREFIXES.some(prefix => pathname.startsWith(prefix)) && <Suspense fallback={null}><VerificationBanner /></Suspense>}
         {needsProfile(pathname) && <Suspense fallback={null}><DefaultProfileModal /></Suspense>}
         <Outlet />

@@ -1,3 +1,4 @@
+import { refreshProfileContext } from '../lib/profile-context.js'
 import { withCsrf } from '../lib/csrf.js'
 import { useEffect, useState } from 'react'
 import { t } from '@barghsa/i18n'
@@ -41,7 +42,7 @@ interface ProfilesResponse {
  * - Fetches the profile list from `GET /api/profiles`.
  * - If `hasDefault === false && profiles.length > 1`, renders the modal.
  * - Radio-group list of profiles; user selects one and clicks "Set as default".
- * - Calls `POST /api/profiles/switch/:id`, then reloads all profile-scoped state.
+ * - Calls `POST /api/profiles/switch/:id`, then remounts profile-scoped state without reloading the document.
  * - Renders nothing when the user has a default, only one profile, or none.
  */
 export function DefaultProfileModal() {
@@ -120,7 +121,7 @@ export function DefaultProfileModal() {
           setError(t('dashboard.profile.switchError', locale))
           return
         }
-        window.location.reload()
+        refreshProfileContext()
       } else {
         setSetting(false)
         setError(t('dashboard.profile.switchError', locale))
