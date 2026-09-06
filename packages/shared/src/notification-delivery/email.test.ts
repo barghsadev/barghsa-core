@@ -51,3 +51,9 @@ it('does not contact a provider for suppressed addresses, unavailable configurat
   await expect(send({ ...message, signal: AbortSignal.abort() })).rejects.toThrow()
   expect(request).not.toHaveBeenCalled()
 })
+
+it('refuses to replay an occurrence through a replacement provider', async () => {
+  const { send, request } = setup()
+  await expect(send({ ...message, expectedProviderId: 'previous-provider' })).rejects.toThrow('requires reconciliation')
+  expect(request).not.toHaveBeenCalled()
+})

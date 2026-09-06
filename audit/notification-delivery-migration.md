@@ -31,3 +31,7 @@ ORDER BY o.id, j.channel, l.created_at;
 Do not bulk-reset held rows. Reconcile each against the inbox and available provider evidence. A proven existing inbox item must be linked to `outbox:<outbox UUID>` without changing its content or read state. Only a proven undelivered occurrence may be retried. Record the evidence and resulting state change in the audit before releasing a hold. Text/payload resemblance alone is insufficient proof. Provider-specific ambiguous outcomes may require provider records.
 
 This migration does not itself solve recipient quiet hours, per-channel retry scheduling, SMTP exactly-once delivery, or real business-event email/SMS transport registration. Those remain subsequent repair checkpoints.
+
+## Migration 0095
+
+Stop old workers before applying the message-snapshot migration. Attempted, still-pending email jobs without a snapshot are held with outbox error `legacy_email_snapshot_requires_reconciliation`; their jobs and prior evidence remain intact. Reconcile these with provider receipts and the original content/destination before replay. Do not reset them in bulk. New email attempts save rendered content, recipient and provider identity before sending. A changed recipient/provider requires explicit reconciliation rather than sending a changed message with the old provider key.

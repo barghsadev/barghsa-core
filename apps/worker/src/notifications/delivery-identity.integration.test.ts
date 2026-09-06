@@ -15,6 +15,7 @@ import { dispatchOutbox, type OutboxRow } from './outbox-reader.js'
 const name = `test_delivery_${randomUUID().replaceAll('-', '')}`
 const folder = resolve(__dirname, '../../../../packages/db/drizzle/production')
 let management: Pool, pool: Pool, profileId: string
+const legacyEmail = randomUUID()
 const proven = randomUUID(), ambiguous = randomUUID(), untouched = randomUUID(), inbox = randomUUID()
 
 beforeAll(async () => {
@@ -40,7 +41,14 @@ beforeAll(async () => {
   await pool.query(`INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
     VALUES ($1,'in_app','delivered',1,$2)`, [proven, inbox])
   await pool.query(readFileSync(resolve(folder, '0092_notification_delivery_identity.sql'), 'utf8'))
-  for (const entry of journal.entries.filter(entry => entry.tag > '0092_notification_delivery_identity')) await pool.query(readFileSync(resolve(folder, `${entry.tag}.sql`), 'utf8'))
+  for (const entry of journal.entries.filter(entry => entry.tag > '0092_notification_delivery_identity')) {
+    if (entry.tag === '0095_notification_message_snapshot') {
+      await pool.query(`INSERT INTO notification_outbox(id,profile_id,event_key,payload,channels,idempotency_key,status)
+        VALUES ($1::uuid,$2,'wallet.topup_completed','{}',ARRAY['email'],$1::text,'queued')`, [legacyEmail, profileId])
+      await pool.query("INSERT INTO notification_job(outbox_id,channel,status,attempts,last_error) VALUES ($1,'email','retrying',1,'historical-timeout')", [legacyEmail])
+    }
+    await pool.query(readFileSync(resolve(folder, `${entry.tag}.sql`), 'utf8'))
+  }
 }, 30000)
 afterAll(async () => {
   await pool?.end()
@@ -321,6 +329,8 @@ it('delivers a queued email with the recipient locale, template and durable rece
   try {
     expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 })
     responseCode = 200
+    await pool.query("UPDATE notification_templates SET body_template='<p>Changed template</p>' WHERE event_key='wallet.topup_completed' AND channel='email'")
+    await pool.query("UPDATE notification_outbox SET payload='{\"name\":\"Changed person\",\"amount\":\"9000\"}' WHERE id=$1", [id])
     await pool.query("UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1 AND channel='email'", [id])
     await pool.query("UPDATE notification_outbox SET scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1", [id])
     expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, delivered: 1, failed: 0 })
@@ -331,4 +341,23 @@ it('delivers a queued email with the recipient locale, template and durable rece
       .toEqual({ status: 'done', provider_ref: 'queued-email-receipt' })
     expect((await pool.query('SELECT count(*)::int AS count FROM in_app_notifications WHERE delivery_key=$1', [`outbox:${id}`])).rows[0].count).toBe(1)
   } finally { await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())) }
+})
+
+
+it('refuses to retarget a snapshotted email after the recipient changes', async () => {
+  const saved = (await pool.query("SELECT o.id,o.profile_id,j.delivery_payload FROM notification_outbox o JOIN notification_job j ON j.outbox_id=o.id WHERE o.idempotency_key='real-email:test' AND j.channel='email'")).rows[0]
+  const request = vi.fn<typeof fetch>()
+  await pool.query("UPDATE users SET email='new-recipient@example.test' WHERE user_id='delivery-recipient'")
+  try {
+    await expect(new EmailNotificationTransport(pool, request).send({ outboxId: saved.id, profileId: saved.profile_id,
+      eventKey: 'wallet.topup_completed', channel: 'email', recipientId: 'delivery-recipient', payload: {}, idempotencyKey: saved.delivery_payload.idempotencyKey })).rejects.toThrow('requires reconciliation')
+    expect(request).not.toHaveBeenCalled()
+  } finally { await pool.query("UPDATE users SET email=NULL WHERE user_id='delivery-recipient'") }
+})
+
+it('holds an attempted legacy email without deleting its job or retry evidence', async () => {
+  expect((await pool.query('SELECT status,last_error FROM notification_outbox WHERE id=$1', [legacyEmail])).rows[0])
+    .toEqual({ status: 'failed', last_error: 'legacy_email_snapshot_requires_reconciliation' })
+  expect((await pool.query('SELECT status,attempts,last_error,delivery_payload FROM notification_job WHERE outbox_id=$1', [legacyEmail])).rows[0])
+    .toEqual({ status: 'retrying', attempts: 1, last_error: 'historical-timeout', delivery_payload: null })
 })

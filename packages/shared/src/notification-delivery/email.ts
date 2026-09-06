@@ -14,6 +14,7 @@ export interface EmailMessage {
   text?: string
   idempotencyKey: string
   signal?: AbortSignal
+  expectedProviderId?: string
 }
 
 /** Server-only sender shared by queued notifications and staff template tests. */
@@ -28,6 +29,7 @@ export function createEmailSender(pool: DeliveryPool, request: typeof fetch = fe
     const providers = await pool.query("SELECT id,transport,config FROM email_provider_configs WHERE status='active' AND last_test_status='passed' AND degraded=false")
     if (providers.rows.length !== 1) throw new Error('Email provider unavailable')
     const provider = providers.rows[0]!
+    if (message.expectedProviderId && provider.id !== message.expectedProviderId) throw new Error('Email provider changed; delivery requires reconciliation')
     const signal = message.signal ? AbortSignal.any([message.signal, AbortSignal.timeout(25_000)]) : AbortSignal.timeout(25_000)
     if (provider.transport === 'resend') {
       const config = ResendConfigSchema.parse(provider.config)

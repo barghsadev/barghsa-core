@@ -138,6 +138,8 @@ export const notificationJob = pgTable(
 
     /** Window captured when this channel was first deferred. */
     deliveryWindow: jsonb('delivery_window'),
+    /** Immutable external message and destination captured before the first send. */
+    deliveryPayload: jsonb('delivery_payload'),
 
     /** Durable provider acknowledgement for this channel. */
     providerRef: text('provider_ref'),
