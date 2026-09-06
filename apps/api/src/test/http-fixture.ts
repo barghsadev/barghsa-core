@@ -8,7 +8,8 @@ import { runMigrations } from '../../../../packages/db/src/migrate';
 export async function startHttpFixture(
   testDatabaseUrl: string,
   localStorageEndpoint?: string,
-  trustedProxyAddresses = ''
+  trustedProxyAddresses = '',
+  poolMax = 10
 ) {
   const database = `test_http_${randomUUID().replaceAll('-', '')}`;
   const management = new Pool({ connectionString: testDatabaseUrl });
@@ -46,7 +47,7 @@ export async function startHttpFixture(
     url.pathname = `/${database}`;
     const migration = await runMigrations({ connection: { pgdirectUrl: url.toString() } });
     if (!migration.ok) throw new Error(`Production migration failed: ${JSON.stringify(migration)}`);
-    pool = new Pool({ connectionString: url.toString() });
+    pool = new Pool({ connectionString: url.toString(), max: poolMax });
     child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
       silent: true,
       env: {

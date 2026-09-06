@@ -1055,3 +1055,11 @@ The first builds stalled in Docker's stored-credential helper. Stopped those bui
 Moved credit, debit, reserve/release and optimistic-balance integration suites to the full migration chain, preserving concurrency, idempotency, amount/ref binding, insufficient available balance and UUID normalization checks. The old negative-balance setup deliberately wrote data that production constraints now reject. That case now verifies the production constraint rejects the write without changing balance/history; service-level invalid-state checks remain in unit coverage.
 
 Review/validation: 54 real-database cases, typecheck and lint pass. No production wallet implementation changed. Evidence covers the existing `T-04.2.01.03` through `.06` primitive tasks, not new customer payment or contract flows. Reversal/provider-callback suites are the next matrix group.
+
+### Wallet reversals and chargeback handling on the production schema (F02/F14)
+
+Converted the reversal, chargeback detection, and finance alert integration suites to disposable databases running all production migrations. Removed partial schema definitions and seeded actual user-owned profiles and existing finance roles. The initial detection run exposed ownerless test profiles; these fixtures now satisfy the production ownership constraint. No production constraint was relaxed.
+
+Review: retained reversal sign, balance, duplicate/replay, transaction rollback, unmatched alert, and concurrent handler assertions. The shared fixture accepts an explicit pool maximum so the four-handler deadlock regression still runs with exactly four service connections. Finance alert checks now exercise production foreign keys and seeded staff roles. These are service integration tests, not evidence of a live payment provider or externally delivered alerts.
+
+Validation: all 27 tests across the three suites passed; root type checking and lint passed; whitespace review passed. Production application behavior is unchanged in this step. Remaining callback and receipt confirmation suites are still under review.

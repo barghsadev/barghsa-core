@@ -12,10 +12,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { startHttpFixture } from '../test/http-fixture';
 import { WALLET_CHARGEBACK_REASON } from '@barghsa/shared/finance';
 import {
   ChargebackAlertService,
@@ -37,15 +34,6 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   };
 });
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const OUTBOX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0025_create_notification_outbox.sql'
-);
-
 const FINANCE_USER = 'staff-finance-1';
 const ADMIN_USER = 'staff-admin-1';
 const OTHER_USER = 'staff-ops-1';
@@ -55,48 +43,18 @@ const OTHER_PROFILE = '33333333-3333-7333-8333-333333333333';
 const EVENT_ID = 'evt-cb-alert-int-1';
 
 describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   const service = new ChargebackAlertService();
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 2);
+    ctx = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 2);
     poolHolder.pool = ctx.pool;
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        user_id TEXT PRIMARY KEY,
-        is_admin BOOLEAN NOT NULL DEFAULT false
-      )
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-        user_id TEXT NOT NULL REFERENCES users(user_id),
-        is_default BOOLEAN NOT NULL DEFAULT false
-      )
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS user_roles (
-        user_id TEXT NOT NULL,
-        role_id TEXT NOT NULL,
-        PRIMARY KEY (user_id, role_id)
-      )
-    `);
-    await ctx.pool.query(readFileSync(OUTBOX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS wallet_chargeback_events (
-        event_id TEXT PRIMARY KEY,
-        status TEXT NOT NULL,
-        wallet_id UUID,
-        original_transaction_id UUID,
-        raw JSONB,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `);
-
     await ctx.pool.query(
-      `INSERT INTO users (user_id, is_admin) VALUES ($1, false), ($2, true), ($3, false)`,
+      `INSERT INTO users (user_id, username, password_hash, is_admin, is_staff) VALUES
+       ($1, 'finance@example.test', 'test-only', false, true),
+       ($2, 'admin@example.test', 'test-only', true, true),
+       ($3, 'ops@example.test', 'test-only', false, true)`,
       [FINANCE_USER, ADMIN_USER, OTHER_USER]
     );
     await ctx.pool.query(
@@ -110,8 +68,7 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   beforeEach(async () => {

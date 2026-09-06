@@ -22,11 +22,8 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { v7 as uuidv7 } from 'uuid';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { startHttpFixture } from '../test/http-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { WALLET_CHARGEBACK_REASON } from '@barghsa/shared/finance';
 import { WalletService } from './wallet.service.js';
@@ -49,27 +46,6 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   };
 });
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
-);
-const AVAILABLE_CHECK_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0069_wallet_available_balance_check.sql'
-);
-const REVERSAL_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0074_wallet_tx_reverses_transaction.sql'
-);
-const CHARGEBACK_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0075_create_wallet_chargeback_events.sql'
-);
-
 const CONCURRENT_HANDLERS = 4;
 const POOL_DEADLOCK_TIMEOUT_MS = 8_000;
 
@@ -83,14 +59,19 @@ const AUTHORITY = 'auth-chargeback-1';
 const PROVIDER_REF = 'psp-chargeback-ref';
 
 describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   let walletService: WalletService;
   let service: ChargebackDetectionService;
   let pendingId: string;
   let creditId: string;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', CONCURRENT_HANDLERS);
+    ctx = await startHttpFixture(
+      process.env.TEST_DATABASE_URL!,
+      undefined,
+      '',
+      CONCURRENT_HANDLERS
+    );
     poolHolder.pool = ctx.pool;
     walletService = new WalletService();
     service = new ChargebackDetectionService(walletService, {
@@ -98,21 +79,13 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
       merchantId: MERCHANT,
     });
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(AVAILABLE_CHECK_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(REVERSAL_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(CHARGEBACK_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2), ($3)`, [
-      PROFILE_A,
-      PROFILE_B,
-      PROFILE_C,
-    ]);
+    await ctx.pool.query(`INSERT INTO users (user_id, username, password_hash)
+      VALUES ('wallet-test-owner', 'wallet-test@example.test', 'test-only')`);
+    await ctx.pool.query(
+      `INSERT INTO profiles (id, user_id)
+      VALUES ($1, 'wallet-test-owner'), ($2, 'wallet-test-owner'), ($3, 'wallet-test-owner')`,
+      [PROFILE_A, PROFILE_B, PROFILE_C]
+    );
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2), ($3)`, [
       PROFILE_A,
       PROFILE_B,
@@ -140,8 +113,7 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   function signed(body: Record<string, unknown>, eventId: string) {
@@ -411,7 +383,7 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
     authority: string,
     providerRef: string
   ) {
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId]);
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, 'wallet-test-owner')`, [profileId]);
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [profileId]);
     return walletService.credit(
       profileId,
