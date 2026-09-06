@@ -8,6 +8,10 @@ import {
   toFailedNotificationDto,
 } from './failed-notifications.service.js';
 
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {

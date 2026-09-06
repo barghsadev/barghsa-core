@@ -10,10 +10,12 @@ import {
   Query,
   Req,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { SessionAuthGuard } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -26,8 +28,18 @@ import {
 
 /** Strict validation for the list view's limit/offset query params. */
 const ListQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(200).optional(),
-  offset: z.coerce.number().int().min(0).optional(),
+  limit: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number)
+    .pipe(z.number().int().min(1).max(200))
+    .optional(),
+  offset: z
+    .string()
+    .regex(/^\d+$/)
+    .transform(Number)
+    .pipe(z.number().int().min(0).max(1000000))
+    .optional(),
 });
 
 /** Swagger enum values for the dead-letter statuses. */
@@ -55,12 +67,20 @@ const CHANNELS = [...NOTIFICATION_CHANNELS] as const;
  * by `admin:jobs:view`, state transitions by `admin:jobs:retry`.
  */
 @ApiTags('Admin')
-@Controller('api/admin/failed-notifications')
+@Controller(['api/admin/failed-notifications', 'api/admin/notifications/dead-letters'])
 @UseGuards(SessionAuthGuard)
 export class FailedNotificationsController {
   private readonly logger = new Logger(FailedNotificationsController.name);
 
   constructor(private readonly failedNotificationsService: FailedNotificationsService) {}
+
+  @Get('access')
+  access(@Req() req: AuthenticatedRequest) {
+    return {
+      canView: hasStaffPermission(req, 'admin:jobs:view'),
+      canRetry: hasStaffPermission(req, 'admin:jobs:retry'),
+    };
+  }
 
   private assertViewPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:jobs:view')) {
@@ -147,6 +167,8 @@ export class FailedNotificationsController {
    * Re-queue a dead-lettered notification for a fresh delivery attempt.
    */
   @Post(':id/retry')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Retry a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
@@ -156,7 +178,7 @@ export class FailedNotificationsController {
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async retry(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);
@@ -170,6 +192,8 @@ export class FailedNotificationsController {
    * Mark a dead-lettered notification durably resolved (terminal).
    */
   @Post(':id/resolve')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Resolve a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
@@ -179,7 +203,7 @@ export class FailedNotificationsController {
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async resolve(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);
@@ -193,6 +217,8 @@ export class FailedNotificationsController {
    * Acknowledge a dead-lettered notification and remove it from the active view.
    */
   @Post(':id/dismiss')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Dismiss a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
@@ -202,7 +228,7 @@ export class FailedNotificationsController {
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async dismiss(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);

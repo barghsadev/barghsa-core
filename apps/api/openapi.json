@@ -2907,7 +2907,7 @@
     },
     "/api/admin/failed-notifications": {
       "get": {
-        "operationId": "FailedNotificationsController_list",
+        "operationId": "FailedNotificationsController_list[0]",
         "parameters": [
           {
             "in": "query",
@@ -2992,9 +2992,23 @@
         ]
       }
     },
+    "/api/admin/failed-notifications/access": {
+      "get": {
+        "operationId": "FailedNotificationsController_access[0]",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/failed-notifications/{id}/dismiss": {
       "post": {
-        "operationId": "FailedNotificationsController_dismiss",
+        "operationId": "FailedNotificationsController_dismiss[0]",
         "parameters": [
           {
             "description": "Dead-letter notification ID",
@@ -3038,7 +3052,7 @@
     },
     "/api/admin/failed-notifications/{id}/resolve": {
       "post": {
-        "operationId": "FailedNotificationsController_resolve",
+        "operationId": "FailedNotificationsController_resolve[0]",
         "parameters": [
           {
             "description": "Dead-letter notification ID",
@@ -3082,7 +3096,7 @@
     },
     "/api/admin/failed-notifications/{id}/retry": {
       "post": {
-        "operationId": "FailedNotificationsController_retry",
+        "operationId": "FailedNotificationsController_retry[0]",
         "parameters": [
           {
             "description": "Dead-letter notification ID",
@@ -4337,18 +4351,33 @@
     },
     "/api/admin/notifications/dead-letters": {
       "get": {
-        "operationId": "AdminController_listDeadLetters",
+        "operationId": "FailedNotificationsController_list[1]",
         "parameters": [
           {
             "in": "query",
-            "name": "status",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "channel",
             "required": false,
             "schema": {
               "enum": [
-                "open",
-                "retried",
-                "resolved",
-                "dismissed"
+                "in_app",
+                "email",
+                "sms"
               ],
               "type": "string"
             }
@@ -4367,31 +4396,16 @@
           },
           {
             "in": "query",
-            "name": "channel",
+            "name": "status",
             "required": false,
             "schema": {
               "enum": [
-                "in_app",
-                "email",
-                "sms"
+                "open",
+                "retried",
+                "resolved",
+                "dismissed"
               ],
               "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "in": "query",
-            "name": "offset",
-            "required": false,
-            "schema": {
-              "type": "number"
             }
           }
         ],
@@ -4407,13 +4421,30 @@
                 }
               }
             },
-            "description": "List of dead-letter rows."
+            "description": "List of dead-letter notifications"
+          },
+          "401": {
+            "description": "Not authenticated"
           },
           "403": {
             "description": "Admin role required"
           }
         },
-        "summary": "List notification dead-letter records (admin)",
+        "summary": "List dead-letter notifications (admin)",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/notifications/dead-letters/access": {
+      "get": {
+        "operationId": "FailedNotificationsController_access[1]",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
         "tags": [
           "Admin"
         ]
@@ -4421,10 +4452,10 @@
     },
     "/api/admin/notifications/dead-letters/{id}/dismiss": {
       "post": {
-        "operationId": "AdminController_dismissDeadLetter",
+        "operationId": "FailedNotificationsController_dismiss[1]",
         "parameters": [
           {
-            "description": "Dead-letter record UUID",
+            "description": "Dead-letter notification ID",
             "in": "path",
             "name": "id",
             "required": true,
@@ -4442,16 +4473,22 @@
                 }
               }
             },
-            "description": "Dead-letter record dismissed."
+            "description": "Notification dismissed"
+          },
+          "401": {
+            "description": "Not authenticated"
           },
           "403": {
             "description": "Admin role required"
           },
           "404": {
-            "description": "Dead-letter record not found"
+            "description": "Not found"
+          },
+          "409": {
+            "description": "State transition not allowed"
           }
         },
-        "summary": "Dismiss a dead-lettered notification (admin)",
+        "summary": "Dismiss a dead-letter notification (admin)",
         "tags": [
           "Admin"
         ]
@@ -4459,10 +4496,10 @@
     },
     "/api/admin/notifications/dead-letters/{id}/resolve": {
       "post": {
-        "operationId": "AdminController_resolveDeadLetter",
+        "operationId": "FailedNotificationsController_resolve[1]",
         "parameters": [
           {
-            "description": "Dead-letter record UUID",
+            "description": "Dead-letter notification ID",
             "in": "path",
             "name": "id",
             "required": true,
@@ -4480,16 +4517,22 @@
                 }
               }
             },
-            "description": "Dead-letter record resolved."
+            "description": "Notification resolved"
+          },
+          "401": {
+            "description": "Not authenticated"
           },
           "403": {
             "description": "Admin role required"
           },
           "404": {
-            "description": "Dead-letter record not found"
+            "description": "Not found"
+          },
+          "409": {
+            "description": "State transition not allowed"
           }
         },
-        "summary": "Resolve a dead-lettered notification (admin)",
+        "summary": "Resolve a dead-letter notification (admin)",
         "tags": [
           "Admin"
         ]
@@ -4497,10 +4540,10 @@
     },
     "/api/admin/notifications/dead-letters/{id}/retry": {
       "post": {
-        "operationId": "AdminController_retryDeadLetter",
+        "operationId": "FailedNotificationsController_retry[1]",
         "parameters": [
           {
-            "description": "Dead-letter record UUID",
+            "description": "Dead-letter notification ID",
             "in": "path",
             "name": "id",
             "required": true,
@@ -4518,16 +4561,22 @@
                 }
               }
             },
-            "description": "Dead-letter record re-queued."
+            "description": "Notification marked retried"
+          },
+          "401": {
+            "description": "Not authenticated"
           },
           "403": {
             "description": "Admin role required"
           },
           "404": {
-            "description": "Dead-letter record not found"
+            "description": "Not found"
+          },
+          "409": {
+            "description": "State transition not allowed"
           }
         },
-        "summary": "Retry a dead-lettered notification (admin)",
+        "summary": "Retry a dead-letter notification (admin)",
         "tags": [
           "Admin"
         ]

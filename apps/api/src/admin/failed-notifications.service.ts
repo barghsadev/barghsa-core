@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -146,7 +147,7 @@ export class FailedNotificationsService {
   /**
    * Retry a dead-lettered notification: re-queue the outbox row and its
    * channel job so the worker re-attempts delivery, and mark the triage row
-   * `retried`. Delivery remains at-most-once via the provider idempotency key.
+   * `retried`. The existing provider idempotency key is preserved.
    *
    * @throws 404 when the row does not exist, 409 when it is no longer `open`.
    */
@@ -177,15 +178,15 @@ export class FailedNotificationsService {
     return this.transition(id, actorUserId, ip, 'resolved', {
       description: 'Mark a dead-lettered notification as resolved',
       event: 'notification_resolved',
-      allowedFrom: ['open', 'retried'],
+      allowedFrom: ['open'],
       requeue: false,
     });
   }
 
   /**
    * Dismiss a dead-lettered notification, acknowledging it and removing it
-   * from the active view. Allowed from `open` and `retried` (a row that was
-   * retried but failed again, or a retried row the admin rejects outright).
+   * from the active view. Only open failures can be dismissed. A queued
+   * retry must finish before its next failure can be triaged.
    *
    * @throws 404 when the row does not exist, 409 when the row is terminal
    * (`resolved`/`dismissed`).
@@ -198,7 +199,7 @@ export class FailedNotificationsService {
     return this.transition(id, actorUserId, ip, 'dismissed', {
       description: 'Dismiss a dead-lettered notification',
       event: 'notification_dismissed',
-      allowedFrom: ['open', 'retried'],
+      allowedFrom: ['open'],
       requeue: false,
     });
   }
@@ -227,6 +228,7 @@ export class FailedNotificationsService {
       | undefined;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:jobs:retry');
       // All delivery/recovery paths lock the parent before a channel or triage
       // row. Reversing this order can deadlock with worker finalization.
       await client.query(
@@ -344,8 +346,8 @@ export class FailedNotificationsService {
       this.logger.log(`Dead-letter notification ${id} ${toStatus} by ${actorUserId}`);
     } catch (error) {
       if (committed) throw error;
-      if (error instanceof HttpException) throw error;
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to transition dead-letter notification: ${String(error)}`);
       throw new HttpException(
         {
