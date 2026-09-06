@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -254,7 +255,7 @@ export class CatalogueProductsService {
    * electricity — they arrive through `update`.
    */
   create(input: CreateProductInput): Promise<ProductDetailDto> {
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const id = uuidv7();
       this.assertCategorySetForType(input.type, input.categories);
 
@@ -310,8 +311,8 @@ export class CatalogueProductsService {
    * nothing emits no audit (no-op discipline).
    */
   update(id: string, input: UpdateProductInput): Promise<ProductDetailDto> {
-    return this.withTransaction(async (q) => {
-      const current = await this.findProduct(q, id);
+    return this.withTransaction(input.actorUserId, async (q) => {
+      const current = await this.findProduct(q, id, true);
       if (!current) throw this.productNotFound(id);
 
       // Load current aggregate values so the no-op diff is exact.
@@ -487,8 +488,8 @@ export class CatalogueProductsService {
    * Archiving an already-archived product is a no-op (no audit).
    */
   archive(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(async (q) => {
-      const current = await this.findProduct(q, id);
+    return this.withTransaction(actorUserId, async (q) => {
+      const current = await this.findProduct(q, id, true);
       if (!current) throw this.productNotFound(id);
 
       if (current.system_key !== null) {
@@ -533,8 +534,8 @@ export class CatalogueProductsService {
    * product delete (FK race) surfaces as a 409.
    */
   addPrice(input: AddPriceInput): Promise<ProductDetailDto> {
-    return this.withTransaction(async (q) => {
-      const current = await this.findProduct(q, input.productId);
+    return this.withTransaction(input.actorUserId, async (q) => {
+      const current = await this.findProduct(q, input.productId, true);
       if (!current) throw this.productNotFound(input.productId);
 
       let changed: boolean;
@@ -765,11 +766,11 @@ export class CatalogueProductsService {
     return result.rows[0] ?? null;
   }
 
-  private async findProduct(q: DbExecutor, id: string): Promise<ProductRow | null> {
+  private async findProduct(q: DbExecutor, id: string, lock = false): Promise<ProductRow | null> {
     const result = await q.query<ProductRow>(
       `SELECT id, type, system_key, title, description, price, status, created_at, updated_at
          FROM products
-        WHERE id = $1`,
+        WHERE id = $1${lock ? ' FOR UPDATE' : ''}`,
       [id]
     );
     return result.rows[0] ?? null;
@@ -936,11 +937,15 @@ export class CatalogueProductsService {
   }
 
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
-  private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
+  private async withTransaction<T>(
+    actorUserId: string,
+    fn: (q: DbExecutor) => Promise<T>
+  ): Promise<T> {
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:catalogue:edit');
       const result = await fn(client);
       await client.query('COMMIT');
       committed = true;

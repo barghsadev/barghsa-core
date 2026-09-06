@@ -1,6 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { CatalogueProductsService as ServiceType } from './catalogue-products.service.js';
 
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 /**
  * SQL-routing mock for @barghsa/db.
  *
