@@ -574,3 +574,10 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Migration 0105 removes those defaults, and the ORM fields now use ordinary UUID references. Before/after audit snapshots are saved in optional-foreign-key-defaults-before.json and optional-foreign-key-defaults-current.json.
 - Review: six migrated database checks and workspace typechecks passed. An invoice without an order, an unmatched email webhook and a suppression without profile/event links now insert with NULL references; an explicitly nonexistent order still fails its foreign key. Fresh, populated-upgrade, failed-upgrade/retry and repeated-migration paths passed. Final catalog has no nullable foreign-key defaults.
 - This does not claim operational backup/restore or the remaining acceptance matrix is complete.
+
+### F04 follow-up — Seed-side administrator bootstrap
+
+- The seed path now locks initial administrator creation, skips when any administrator exists (including a disabled administrator), and never promotes an existing customer. Account creation and its audit record commit together. Concurrent different identities can create only one administrator.
+- Initial creation requires the explicit secret/key/identity/password configuration named by the task. Identity and password are validated; passwords are hashed and never generated into logs. The environment example documents the seed invocation and required values. No real bootstrap was run.
+- Seed tests now use disposable databases with the complete production migrations instead of handcrafted subsets. Review: all 562 database tests passed (75 files), including 17 seed checks. New cases cover missing/invalid credentials, concurrent identities, stored hashes/forced password change, no secret output, existing-account protection and audit rollback/retry. Workspace typechecks passed.
+- This repairs bootstrap creation only. The remaining first-login/MFA and authentication acceptance work stays under F05; no blanket verification of that broader flow is claimed.

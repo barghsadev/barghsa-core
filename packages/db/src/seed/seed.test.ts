@@ -1,26 +1,12 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { sql, eq } from 'drizzle-orm'
-import { createIsolatedTestDb, dropTestSchema } from '../test/testDb'
-import type { IsolatedTestDb } from '../test/testDb'
+import { createMigratedTestDb } from '../test/migrated-db'
 import { runSeed } from './index'
 import { products } from '../schema/products'
 import { users } from '../schema/users'
 import { notificationTemplates } from '../schema/notification-templates'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
 import { buildSeedTemplates } from './notification-templates'
 import { NOTIFICATION_TYPE_REGISTRY } from '@barghsa/shared/notifications'
-
-const MIGRATION_PATH = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
-const PRODUCTS_MIGRATION_PATH = resolve(__dirname, '../../drizzle/0014_recreate_products_schema.sql')
-const TEMPLATES_MIGRATION_PATH = resolve(
-  __dirname,
-  '../../drizzle/0024_create_notification_templates.sql',
-)
-const TEMPLATES_TEST_SEND_COLUMNS_PATH = resolve(
-  __dirname,
-  '../../drizzle/0029_add_template_test_send_columns.sql',
-)
 
 /**
  * Integration tests for the seed runner (T-02.04.05, updated for T-03.01.01.01).
@@ -30,70 +16,12 @@ const TEMPLATES_TEST_SEND_COLUMNS_PATH = resolve(
  */
 
 describe('seed verification', () => {
-  let ctx: IsolatedTestDb
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>
 
-  beforeAll(async () => {
-    ctx = await createIsolatedTestDb()
-
-    // Apply the uuid_generate_v7() migration — required by base table defaults.
-    const migrationSql = readFileSync(MIGRATION_PATH, 'utf-8').trim()
-    await ctx.pool.query(migrationSql)
-
-    // Create the products table using the new schema migration.
-    const productsMigrationSql = readFileSync(PRODUCTS_MIGRATION_PATH, 'utf-8').trim()
-    await ctx.pool.query(productsMigrationSql)
-
-    // Create the users table matching the schema definition.
-    await ctx.db.execute(sql`
-      CREATE TABLE IF NOT EXISTS users (
-        user_id TEXT PRIMARY KEY,
-        username TEXT NOT NULL UNIQUE,
-        email TEXT,
-        mobile TEXT,
-        password_hash TEXT NOT NULL,
-        auth_version INTEGER NOT NULL DEFAULT 0,
-        locale TEXT NOT NULL DEFAULT 'fa',
-        must_change_password BOOLEAN NOT NULL DEFAULT false,
-        is_admin BOOLEAN NOT NULL DEFAULT false,
-        is_staff BOOLEAN NOT NULL DEFAULT false,
-        password_change_token TEXT,
-        password_change_token_expires_at TIMESTAMPTZ,
-        notification_preferences TEXT NOT NULL DEFAULT 'IN_APP',
-        timezone TEXT NOT NULL DEFAULT 'Asia/Tehran',
-        activation_token TEXT,
-        activation_token_expires_at TIMESTAMPTZ,
-        last_accepted_tos_version TEXT,
-        disabled_at TIMESTAMPTZ,
-        last_login_at TIMESTAMPTZ,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
-
-    // Create the provinces table needed by the geography seeder (T-03.02.02).
-    await ctx.db.execute(sql`
-      CREATE TABLE IF NOT EXISTS provinces (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-        name_fa TEXT NOT NULL,
-        name_en TEXT NOT NULL,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
-
-    // Create the notification_templates table (T-09.04.01 / T-05.04.05).
-    const templatesMigrationSql = readFileSync(TEMPLATES_MIGRATION_PATH, 'utf-8').trim()
-    await ctx.pool.query(templatesMigrationSql)
-    // Test-send tracking columns (T-05.04.04) referenced by the schema.
-    const testSendColumnsSql = readFileSync(
-      TEMPLATES_TEST_SEND_COLUMNS_PATH,
-      'utf-8',
-    ).trim()
-    await ctx.pool.query(testSendColumnsSql)
-  })
+  beforeAll(async () => {ctx=await createMigratedTestDb()},30000)
 
   afterAll(async () => {
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
+    await ctx.close()
   })
 
   it('creates 4 default electricity products with correct systemKey and null price', async () => {
@@ -140,12 +68,14 @@ describe('seed verification', () => {
 
   it('creates an admin user when bootstrap env vars are provided', async () => {
     const originalSecret = process.env['ADMIN_BOOTSTRAP_SECRET']
+    const originalKey = process.env['ADMIN_BOOTSTRAP_KEY']
     const originalEmail = process.env['ADMIN_BOOTSTRAP_EMAIL']
     const originalPassword = process.env['ADMIN_BOOTSTRAP_PASSWORD']
 
     try {
       process.env['ADMIN_BOOTSTRAP_PASSWORD'] = 'Fixture-only-password-123!'
       process.env['ADMIN_BOOTSTRAP_SECRET'] = 'test-secret'
+      process.env['ADMIN_BOOTSTRAP_KEY'] = 'test-key'
       process.env['ADMIN_BOOTSTRAP_EMAIL'] = 'admin@test.example'
 
       const result = await runSeed(false, ctx.db)
@@ -167,6 +97,8 @@ describe('seed verification', () => {
       expect(adminUser[0]!.mustChangePassword).toBe(true)
       expect(adminUser[0]!.locale).toBe('fa')
     } finally {
+      if(originalKey===undefined)delete process.env.ADMIN_BOOTSTRAP_KEY
+      else process.env.ADMIN_BOOTSTRAP_KEY=originalKey
       if(originalPassword===undefined)delete process.env.ADMIN_BOOTSTRAP_PASSWORD
       else process.env.ADMIN_BOOTSTRAP_PASSWORD=originalPassword
       if (originalSecret !== undefined) {
@@ -296,56 +228,12 @@ describe('seed verification', () => {
 // -------------------------------------------------------------------------
 
 describe('notification template seeding', () => {
-  let ctx: IsolatedTestDb
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>
 
-  beforeAll(async () => {
-    ctx = await createIsolatedTestDb()
-
-    const migrationSql = readFileSync(MIGRATION_PATH, 'utf-8').trim()
-    await ctx.pool.query(migrationSql)
-
-    // Tables required by the other registered seeders (they all run together).
-    await ctx.pool.query(readFileSync(PRODUCTS_MIGRATION_PATH, 'utf-8').trim())
-
-    await ctx.db.execute(sql`
-      CREATE TABLE IF NOT EXISTS users (
-        user_id TEXT PRIMARY KEY,
-        username TEXT NOT NULL UNIQUE,
-        email TEXT,
-        mobile TEXT,
-        password_hash TEXT NOT NULL,
-        locale TEXT NOT NULL DEFAULT 'fa',
-        must_change_password BOOLEAN NOT NULL DEFAULT false,
-        is_admin BOOLEAN NOT NULL DEFAULT false,
-        disabled_at TIMESTAMPTZ,
-        last_login_at TIMESTAMPTZ,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
-
-    await ctx.db.execute(sql`
-      CREATE TABLE IF NOT EXISTS provinces (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-        name_fa TEXT NOT NULL,
-        name_en TEXT NOT NULL,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
-
-    const templatesMigrationSql = readFileSync(TEMPLATES_MIGRATION_PATH, 'utf-8').trim()
-    await ctx.pool.query(templatesMigrationSql)
-    // Test-send tracking columns (T-05.04.04) referenced by the schema.
-    const testSendColumnsSql = readFileSync(
-      TEMPLATES_TEST_SEND_COLUMNS_PATH,
-      'utf-8',
-    ).trim()
-    await ctx.pool.query(testSendColumnsSql)
-  })
+  beforeAll(async () => {ctx=await createMigratedTestDb()},30000)
 
   afterAll(async () => {
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
+    await ctx.close()
   })
 
   it('seeds an active version-1 template for every event × channel × locale', async () => {

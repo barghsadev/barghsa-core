@@ -1,6 +1,5 @@
 import { and, eq, sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { randomBytes } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
 import { Pool } from 'pg'
@@ -36,105 +35,40 @@ export type Seeder = (db: DbInstance, force: boolean) => Promise<SeederResult>
 // Seeders
 // ---------------------------------------------------------------------------
 
-/**
- * Admin bootstrap seeder (T-02.04.03).
- *
- * Creates an initial admin user when the following environment variables are
- * set:
- *
- *   ADMIN_BOOTSTRAP_SECRET — authorization secret (must be non-empty)
- *   ADMIN_BOOTSTRAP_EMAIL — email or E.164 phone for the admin account
- *   ADMIN_BOOTSTRAP_PASSWORD — (optional) temporary password; if omitted a
- *     random 32-character password is generated and printed to stderr
- *
- * The bootstrap runs only once: if any admin user already exists in the
- * database (checked by username), subsequent seed runs skip it.
- *
- * The admin user is created with `must_change_password: true` so the first
- * login forces a password change.  MFA enrollment is also enforced on first
- * login (the frontend checks the session state for unenrolled MFA).
- */
-async function seedAdmin(db: DbInstance, _force: boolean): Promise<SeederResult> {
-  const result: SeederResult = {
-    entity: 'admin_bootstrap',
-    created: 0,
-    skipped: 0,
-    errors: [],
-  }
-
-  const secret = process.env['ADMIN_BOOTSTRAP_SECRET']
-  const email = process.env['ADMIN_BOOTSTRAP_EMAIL']
-
-  // Guard: both SECRET and EMAIL must be set for bootstrap to run.
-  if (!secret || !email) {
-    result.skipped++
-    return result
-  }
-
-  // Check if this admin user already exists.
+/** Initial admin creation is explicit, serialized and audited. Credentials never enter seed output. */
+export async function seedAdmin(db: DbInstance, _force: boolean): Promise<SeederResult> {
+  const result: SeederResult = {entity:'admin_bootstrap',created:0,skipped:0,errors:[]}
+  const secret=process.env.ADMIN_BOOTSTRAP_SECRET, key=process.env.ADMIN_BOOTSTRAP_KEY
+  const rawIdentity=process.env.ADMIN_BOOTSTRAP_EMAIL, password=process.env.ADMIN_BOOTSTRAP_PASSWORD
+  if (!secret && !key && !rawIdentity && !password) {result.skipped++;return result}
   try {
-    const existing = await db
-      .select({ id: users.userId })
-      .from(users)
-      .where(eq(users.username, email))
-      .limit(1)
-
-    if (existing.length > 0) {
-      result.skipped++
-      return result
-    }
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
-    result.errors.push(`check_existing: ${message}`)
-    return result
-  }
-
-  // Determine the temporary password.
-  const tempPassword = process.env['ADMIN_BOOTSTRAP_PASSWORD'] ?? randomBytes(16).toString('hex')
-
-  // Hash with the same Argon2id settings used by the API auth service.
-  let passwordHash: string
-  try {
-    passwordHash = await argon2.hash(tempPassword)
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
-    result.errors.push(`hash_password: ${message}`)
-    return result
-  }
-
-  const userId = uuidv7()
-  const now = new Date()
-
-  try {
-    await db.insert(users).values({
-      userId,
-      username: email,
-      passwordHash,
-      locale: 'fa',
-      mustChangePassword: true,
-      isAdmin: true,
-      createdAt: now,
-      updatedAt: now,
+    await db.transaction(async tx=>{
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('barghsa.admin_bootstrap'))`)
+      const admins=await tx.select({id:users.userId}).from(users).where(eq(users.isAdmin,true)).limit(1)
+      if(admins.length){result.skipped++;return}
+      if(!secret?.trim() || !key?.trim() || !rawIdentity?.trim() || !password){
+        result.errors.push('Initial admin creation requires ADMIN_BOOTSTRAP_SECRET, ADMIN_BOOTSTRAP_KEY, ADMIN_BOOTSTRAP_EMAIL and ADMIN_BOOTSTRAP_PASSWORD')
+        return
+      }
+      const username=rawIdentity.trim().toLowerCase()
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username) && !/^\+[1-9]\d{7,14}$/.test(username)){
+        result.errors.push('Bootstrap identity must be an email address or E.164 phone number');return
+      }
+      if(password.length<8||password.length>128||!/[A-Z]/.test(password)||!/[a-z]/.test(password)||!/[0-9]/.test(password)){
+        result.errors.push('Bootstrap password must be 8-128 characters and include uppercase, lowercase and a digit');return
+      }
+      if((await tx.select({id:users.userId}).from(users).where(eq(users.username,username)).limit(1)).length){
+        result.errors.push('Bootstrap identity already belongs to an account');return
+      }
+      const userId=uuidv7(),now=new Date(),passwordHash=await argon2.hash(password)
+      await tx.insert(users).values({userId,username,passwordHash,locale:'fa',mustChangePassword:true,isAdmin:true,isStaff:true,createdAt:now,updatedAt:now})
+      await tx.execute(sql`INSERT INTO audit_log(id,user_id,event,metadata,created_at)
+        VALUES (${uuidv7()},${userId},'admin_bootstrapped',${JSON.stringify({source:'seed',mustChangePassword:true})},${now})`)
+      result.created++
     })
-
-    result.created++
-
-    // Log the temporary password to stderr (visible in seed output but not
-    // in stdout-based CI dashboards).  In production the operator sets a
-    // known ADMIN_BOOTSTRAP_PASSWORD and the temp password is never logged.
-    if (!process.env['ADMIN_BOOTSTRAP_PASSWORD']) {
-      process.stderr.write(
-        `[seed:admin_bootstrap] Temporary admin password for ${email}: ${tempPassword}\n`,
-      )
-    }
-
-    // eslint-disable-next-line no-console
-    console.log(`[seed:admin_bootstrap] Admin user created: ${userId} (${email})`)
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
-    result.errors.push(`insert_admin: ${message}`)
+  } catch {
+    result.created=0;result.errors.push('Bootstrap transaction failed; no administrator was created')
   }
-
   return result
 }
 
