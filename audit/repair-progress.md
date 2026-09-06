@@ -346,3 +346,9 @@ Review/validation: 25 admin/recovery checks pass, including eight concurrent adm
 Reconciled the canonical transition table with its explicit overdue-payability rule. Wallet settlement and both receipt paths now accept Overdue, retaining credit-note/cancelled restrictions, exact wallet debit, receipt allocation caps and audited transitions. Partial receipts become PartiallyFunded and remain eligible for overdue marking/reminders; full settlement reaches Paid. Shared eligibility exposes the existing receipt form for overdue invoices. Cumulative refunds below the paid amount remain strictly partial; exactly the paid amount may reach Refunded after previous partial refunds. The deferred refund module is not implemented.
 
 Review/validation: all 58 invoice/wallet files (870 checks), 360 shared finance checks, nine invoice detail UI checks and all 11 workspace typechecks pass. Real database cases exercise overdue wallet debit and partial/full receipts through both existing services, preserving wallet balances. The backlog generator validates after specification reconciliation. Review discovered the wallet-payment service has no customer HTTP/UI caller; that missing built-task integration remains for F14, so customer end-to-end wallet payment is not yet claimed complete.
+
+### F13.1 Step-up for generic financial approvals
+
+The generic approval controller now requires recent step-up for initiation, approval and rejection, while queue reads retain ordinary authenticated permission checks. It continues to reject self-review and reads current finance capabilities.
+
+Review/validation: 13 controller/production-HTTP checks pass, including absent/expired step-up, valid approval/rejection, repeated decisions, self-review, support-only access and a reviewer whose role was removed. API typecheck passes. Receipt-to-request binding and the missing wallet-receipt threshold gate are the next F13 steps.

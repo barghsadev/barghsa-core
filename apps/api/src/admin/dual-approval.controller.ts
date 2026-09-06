@@ -1,3 +1,4 @@
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
@@ -49,7 +50,7 @@ const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const
  */
 @ApiTags('Admin')
 @Controller('api/admin/approval-requests')
-@UseGuards(SessionAuthGuard)
+@UseGuards(SessionAuthGuard, StepUpGuard)
 export class DualApprovalController {
   private readonly logger = new Logger(DualApprovalController.name)
 
@@ -85,6 +86,7 @@ export class DualApprovalController {
    * workflow can never be triggered for below-threshold actions.
    */
   @Post()
+  @RequiresStepUp()
   @HttpCode(201)
   @ApiOperation({ summary: 'Initiate a dual-approval request (S-09.07)' })
   @ApiBody({
@@ -160,6 +162,7 @@ export class DualApprovalController {
    * the initiator. Repeated resolution attempts are rejected (409).
    */
   @Post(':id/approve')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Approve a pending dual-approval request' })
   @ApiParam({ name: 'id', description: 'Approval request ID' })
@@ -184,6 +187,7 @@ export class DualApprovalController {
    * different user from the initiator.
    */
   @Post(':id/reject')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Reject a pending dual-approval request (reason required)' })
   @ApiParam({ name: 'id', description: 'Approval request ID' })
