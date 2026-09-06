@@ -23,9 +23,9 @@ const VERIFY_TRANSITIONS: Record<
   VerifyAction,
   { targetStatus: string; allowedFrom: string[] }
 > = {
-  verify: { targetStatus: 'VERIFIED', allowedFrom: ['DRAFT', 'ACTIVE'] },
+  verify: { targetStatus: 'VERIFIED', allowedFrom: ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION'] },
   unverify: { targetStatus: 'ACTIVE', allowedFrom: ['VERIFIED'] },
-  reverify: { targetStatus: 'DRAFT', allowedFrom: ['VERIFIED'] },
+  reverify: { targetStatus: 'PENDING_VERIFICATION', allowedFrom: ['VERIFIED'] },
 }
 
 /**
@@ -528,151 +528,46 @@ export class CrmV2Service {
    * Notification context is included in audit metadata for downstream
    * delivery to the profile owner.
    */
-  async verifyProfile(
-    profileId: string,
-    dto: VerifyProfileDto,
-    actorUserId: string,
-    ip: string,
-  ): Promise<CrmVerifyProfileResult> {
-    if (!VERIFY_ACTIONS.includes(dto.action as VerifyAction)) {
-      return { error: `Invalid verification action. Must be one of: ${VERIFY_ACTIONS.join(', ')}` }
-    }
-
-    const action = dto.action as VerifyAction
-    const transition = VERIFY_TRANSITIONS[action]
-
-    const pool = getDbPool()
-
-    // 1. Fetch the profile to verify existence and current status
-    const profileResult = await pool.query(
-      `SELECT id, user_id, status FROM profiles WHERE id = $1`,
-      [profileId],
-    )
-
-    if (profileResult.rows.length === 0) return null
-
-    const profileRow = profileResult.rows[0] as Record<string, unknown>
-    const currentStatus = profileRow.status as string
-    const targetStatus = transition.targetStatus
-
-    // 2. If the profile is already in the target state, return no-op success
-    if (currentStatus === targetStatus) {
-      return {
-        success: true,
-        profileId,
-        previousStatus: currentStatus,
-        newStatus: targetStatus,
-        reason: dto.reason ?? null,
-      }
-    }
-
-    // 3. Validate state transition
-    if (!transition.allowedFrom.includes(currentStatus)) {
-      return {
-        error: `Cannot ${action} a profile with status '${currentStatus}'. ` +
-          `Allowed source statuses: ${transition.allowedFrom.join(', ')}`,
-      }
-    }
-
-    // 4. Reason is required for unverify and reverify
-    if ((action === 'unverify' || action === 'reverify') && (!dto.reason || dto.reason.trim() === '')) {
-      return { error: `Reason is required for '${action}' action` }
-    }
-
-    const now = new Date().toISOString()
-    const correlationId = uuidv7()
-    const client = await pool.connect()
-
+  async verifyProfile(profileId:string,dto:VerifyProfileDto,actorUserId:string,ip:string):Promise<CrmVerifyProfileResult> {
+    if(!VERIFY_ACTIONS.includes(dto.action as VerifyAction))return {error:`Invalid verification action. Must be one of: ${VERIFY_ACTIONS.join(', ')}`}
+    const action=dto.action as VerifyAction, transition=VERIFY_TRANSITIONS[action]
+    const reason=dto.reason?.trim()||null
+    if((action==='unverify'||action==='reverify')&&!reason)return {error:`Reason is required for '${action}' action`}
+    const client=await getDbPool().connect()
     try {
       await client.query('BEGIN')
-
-      // Update profile status
-      await client.query(
-        `UPDATE profiles SET status = $1, updated_at = $2::timestamptz WHERE id = $3`,
-        [targetStatus, now, profileId],
-      )
-
-      // Record audit event
-      const auditId = uuidv7()
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [
-          auditId,
-          actorUserId,
-          'verification_change',
-          JSON.stringify({
-            profileId,
-            previousStatus: currentStatus,
-            newStatus: targetStatus,
-            action,
-            reason: dto.reason ?? null,
-            profileOwnerUserId: profileRow.user_id as string,
-          }),
-          correlationId,
-          ip,
-          now,
-        ],
-      )
-
+      const profile=(await client.query('SELECT id,user_id,status FROM profiles WHERE id=$1 AND archived=false FOR UPDATE',[profileId])).rows[0]
+      if(!profile){await client.query('COMMIT');return null}
+      const currentStatus=profile.status as string,targetStatus=transition.targetStatus
+      const result={success:true as const,profileId,previousStatus:currentStatus,newStatus:targetStatus,reason}
+      if(currentStatus===targetStatus){await client.query('COMMIT');return result}
+      if(!transition.allowedFrom.includes(currentStatus)){
+        await client.query('COMMIT')
+        return {error:`Cannot ${action} a profile with status '${currentStatus}'. Allowed source statuses: ${transition.allowedFrom.join(', ')}`}
+      }
+      const now=new Date(),correlationId=uuidv7()
+      await client.query('UPDATE profiles SET status=$1,updated_at=$2 WHERE id=$3',[targetStatus,now,profileId])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+        VALUES ($1,$2,'verification_change',$3::jsonb,$4,$5,$6)`,[uuidv7(),actorUserId,JSON.stringify({
+          profileId,previousStatus:currentStatus,newStatus:targetStatus,action,reason,profileOwnerUserId:profile.user_id,
+        }),correlationId,ip||null,now])
+      const content=action==='verify'?{
+        fa:{title:'پروفایل شما تأیید شد',body:'پروفایل شما توسط کارشناس تأیید شد.'},
+        en:{title:'Your profile was verified',body:'A staff reviewer verified your profile.'},
+      }:action==='unverify'?{
+        fa:{title:'تأیید پروفایل لغو شد',body:`تأیید پروفایل شما لغو شد. دلیل: ${reason}`},
+        en:{title:'Profile verification revoked',body:`Your profile verification was revoked. Reason: ${reason}`},
+      }:{
+        fa:{title:'پروفایل نیاز به تأیید مجدد دارد',body:`پروفایل شما در انتظار تأیید مجدد است. دلیل: ${reason}`},
+        en:{title:'Profile verification requested again',body:`Your profile is awaiting verification again. Reason: ${reason}`},
+      }
+      await this.notificationsService.create({userId:profile.user_id,profileId,
+        type:action==='verify'?'profile_verified':action==='unverify'?'profile_unverified':'profile_pending',
+        title:content.fa.title,body:content.fa.body,localizedContent:content,link:'/settings/profile'},client)
       await client.query('COMMIT')
-
-      this.logger.debug(
-        `Profile ${profileId} verification changed: ${currentStatus} → ${targetStatus} ` +
-        `(action: ${action}, actor: ${actorUserId})`,
-      )
-
-      // T-07.01.03: Send in-app verification notification
-      const profileOwnerUserId = profileRow.user_id as string
-      if (action === 'verify') {
-        await this.notificationsService.create({
-          userId: profileOwnerUserId,
-          profileId,
-          type: 'profile_verified',
-          title: 'پروفایل شما تأیید شد',
-          body: 'پروفایل شما توسط کارشناس تأیید شد. اکنون می‌توانید از تمام خدمات استفاده کنید.',
-          link: '/app/settings/profile',
-        }).catch((err: Error) => {
-          this.logger.error(`Failed to send verification notification for user ${profileOwnerUserId}: ${String(err)}`)
-        })
-      } else if (action === 'unverify') {
-        await this.notificationsService.create({
-          userId: profileOwnerUserId,
-          profileId,
-          type: 'profile_unverified',
-          title: 'تأیید پروفایل لغو شد',
-          body: `تأیید پروفایل شما لغو شد. دلیل: ${dto.reason ?? 'نامشخص'}`,
-          link: '/app/settings/profile',
-        }).catch((err: Error) => {
-          this.logger.error(`Failed to send unverify notification for user ${profileOwnerUserId}: ${String(err)}`)
-        })
-      } else if (action === 'reverify') {
-        await this.notificationsService.create({
-          userId: profileOwnerUserId,
-          profileId,
-          type: 'profile_pending',
-          title: 'پروفایل نیاز به تأیید مجدد دارد',
-          body: `پروفایل شما نیاز به تأیید مجدد دارد. دلیل: ${dto.reason ?? 'نامشخص'}`,
-          link: '/app/settings/profile',
-        }).catch((err: Error) => {
-          this.logger.error(`Failed to send reverify notification for user ${profileOwnerUserId}: ${String(err)}`)
-        })
-      }
-
-      return {
-        success: true,
-        profileId,
-        previousStatus: currentStatus,
-        newStatus: targetStatus,
-        reason: dto.reason ?? null,
-      }
-    } catch (err) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Failed to verify profile ${profileId}: ${String(err)}`)
-      throw err
-    } finally {
-      client.release()
-    }
+      return result
+    } catch(error){await client.query('ROLLBACK');throw error}
+    finally{client.release()}
   }
 
   /**

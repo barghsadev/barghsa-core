@@ -9,6 +9,7 @@ export interface CreateNotificationParams {
   profileId?: string
   type: 'verification_status' | 'profile_verified' | 'profile_unverified' | 'profile_pending' | 'general'
   title: string
+  localizedContent?: Record<'fa'|'en',{title:string;body:string}>
   body?: string
   link?: string
 }
@@ -64,15 +65,15 @@ export class NotificationsService {
    * @param params - Notification creation parameters.
    * @returns The created notification record.
    */
-  async create(params: CreateNotificationParams): Promise<NotificationResult> {
-    const pool = getDbPool()
+  async create(params: CreateNotificationParams, transaction?: { query: (sql:string,params?:unknown[])=>Promise<unknown> }): Promise<NotificationResult> {
+    const pool = transaction ?? getDbPool()
     const id = uuidv7()
     const now = new Date()
 
     await pool.query(
       `INSERT INTO in_app_notifications (id,recipient_user_id,profile_id,type,title_i18n_key,body_i18n_key,localized_content,link_route,is_read,created_at,delivery_key)
        VALUES ($1::uuid,$2,$3,$4,'notifications.legacy.title','notifications.legacy.body',
-       jsonb_build_object('original',jsonb_build_object('title',$5::text,'body',COALESCE($6::text,''))),$7,false,$8,'direct:'||$1::text)`,
+       COALESCE($9::jsonb,jsonb_build_object('original',jsonb_build_object('title',$5::text,'body',COALESCE($6::text,'')))),$7,false,$8,'direct:'||$1::text)`,
       [
         id,
         params.userId,
@@ -82,6 +83,7 @@ export class NotificationsService {
         params.body ?? null,
         notificationLink(params.link),
         now,
+        params.localizedContent ? JSON.stringify(params.localizedContent) : null,
       ],
     )
 
