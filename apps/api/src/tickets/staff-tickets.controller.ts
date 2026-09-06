@@ -155,7 +155,7 @@ export class StaffTicketsController {
         403,
       )
     }
-    return this.ticketsService.staffUpdateTicketStatus(id, body.status)
+    return this.ticketsService.staffUpdateTicketStatus(id, body?.status, req.session.userId)
   }
 
   /**
@@ -208,7 +208,7 @@ export class StaffTicketsController {
         403,
       )
     }
-    const visibility = body.visibility ?? 'public'
-    return this.ticketsService.staffAddComment(id, req.session.userId, body.body, visibility)
+    const visibility = body?.visibility ?? 'public'
+    return this.ticketsService.staffAddComment(id, req.session.userId, body?.body, visibility)
   }
 }

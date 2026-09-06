@@ -80,3 +80,62 @@ it('rolls back assignment when recording its audit fails', async () => {
   } finally { await http.pool.query('DROP TRIGGER fail_ticket_audit ON audit_log; DROP FUNCTION fail_ticket_audit()') }
   expect((await assign(id)).status).toBe(200)
 })
+function status(id: string, value: unknown, user = 'staff') {
+  const path = user === 'staff' ? 'staff/tickets' : 'tickets'
+  return fetch(`${http.base}/api/${path}/${id}/status`, { method: 'PATCH', headers: headers[user]!, body: JSON.stringify({ status: value }) })
+}
+function comment(id: string, body: unknown, visibility: unknown = 'public', user = 'staff') {
+  const path = user === 'staff' ? 'staff/tickets' : 'tickets'
+  return fetch(`${http.base}/api/${path}/${id}/comments`, { method: 'POST', headers: headers[user]!, body: JSON.stringify({ body, visibility }) })
+}
+it('enforces the support lifecycle, hides internal notes, and resumes work after a customer reply', async () => {
+  const id = await ticket()
+  expect((await status(id,'closed')).status).toBe(409)
+  expect((await status(id,'in_progress')).status).toBe(409)
+  expect((await assign(id)).status).toBe(200)
+  expect((await comment(id,'Private staff reasoning','internal')).status).toBe(201)
+  expect((await comment(id,'Please send the details')).status).toBe(201)
+  expect((await status(id,'waiting_customer')).status).toBe(200)
+  const customerNotes = await fetch(`${http.base}/api/tickets/${id}/comments`,{ headers: headers.customer! })
+  expect(customerNotes.status).toBe(200)
+  expect(await customerNotes.text()).not.toContain('Private staff reasoning')
+  expect((await comment(id,'Trying an internal note','internal','customer')).status).toBe(403)
+  expect((await comment(id,'Here are the details','public','customer')).status).toBe(201)
+  expect((await http.pool.query('SELECT status FROM tickets WHERE id=$1',[id])).rows[0].status).toBe('in_progress')
+  expect((await status(id,'waiting_staff')).status).toBe(200)
+  expect((await status(id,'in_progress')).status).toBe(200)
+  expect((await status(id,'resolved')).status).toBe(200)
+  expect((await comment(id,'Requires reopening','public','customer')).status).toBe(409)
+  expect((await status(id,'closed')).status).toBe(200)
+  expect((await status(id,'open','customer')).status).toBe(200)
+  expect((await status(id,'resolved','customer')).status).toBe(403)
+  expect((await comment(id,{ bad: true })).status).toBe(400)
+  expect((await comment(id,'text','secret')).status).toBe(400)
+  expect((await status(id,{ bad: true })).status).toBe(400)
+})
+it('prevents access to another customer’s ticket and keeps customer endpoints public even for staff owners', async () => {
+  const id = await ticket()
+  await http.pool.query("UPDATE tickets SET user_id='staff' WHERE id=$1",[id])
+  expect((await comment(id,'Private staff reasoning','internal')).status).toBe(201)
+  expect((await comment(id,'Wrong owner','public','customer')).status).toBe(404)
+  expect((await status(id,'open','customer')).status).toBe(404)
+  const ownerResponse = await fetch(`${http.base}/api/tickets/${id}/comments`,{ headers: headers.staff! })
+  expect(ownerResponse.status).toBe(200)
+  expect(await ownerResponse.text()).not.toContain('Private staff reasoning')
+})
+it('rolls back comments and status changes when their audits fail, and serializes competing transitions', async () => {
+  const id = await ticket()
+  await assign(id)
+  await http.pool.query(`CREATE FUNCTION fail_ticket_mutation_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.event IN ('ticket_comment_added','ticket_status_changed') THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_ticket_mutation_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_ticket_mutation_audit()`)
+  try {
+    expect((await status(id,'resolved')).status).toBe(500)
+    expect((await comment(id,'Not committed')).status).toBe(500)
+    expect((await http.pool.query('SELECT status FROM tickets WHERE id=$1',[id])).rows[0].status).toBe('in_progress')
+    expect((await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1',[id])).rows).toHaveLength(0)
+  } finally { await http.pool.query('DROP TRIGGER fail_ticket_mutation_audit ON audit_log; DROP FUNCTION fail_ticket_mutation_audit()') }
+  const responses = await Promise.all([status(id,'resolved'),status(id,'waiting_customer')])
+  expect(responses.map(row=>row.status).sort()).toEqual([200,409])
+  expect((await http.pool.query("SELECT id FROM audit_log WHERE event='ticket_status_changed' AND metadata::jsonb->>'ticketId'=$1",[id])).rows).toHaveLength(1)
+})

@@ -460,3 +460,12 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Assignment and its actor-bound audit commit together. Recording failure rolls back the assignment.
 - Review: 52 ticket checks passed, including four real HTTP/PostgreSQL scenarios for rejected targets, authorization, transition preservation under an actual database lock, and audit rollback. API typecheck and diff whitespace check passed.
 - Remaining F16 work includes the full transition/comment rules, attachments and related-record ownership, assigned-only/team access, and customer/staff screens. This checkpoint does not mark the ticket tasks acceptance-complete.
+
+### F16.2 — Ticket transitions, public conversations and mutation rollback
+
+- Staff status changes now lock the ticket and enforce the documented transition graph. Any state may reopen; resuming Waiting on Staff is supported. Entering In Progress requires an assignee. Repeating the same status is an idempotent read.
+- Customer endpoints allow reopening and public comments only, including when the owner is also staff. Internal notes remain confined to staff endpoints.
+- A customer reply resumes Waiting on Customer to In Progress. Replies on resolved/closed tickets require reopening first. Comments refresh the ticket's update time.
+- Comments/status changes and their actor-bound audit records commit together. List/comment ordering now has an ID tie-breaker.
+- Review: 36 ticket checks passed, including seven real HTTP/PostgreSQL scenarios. Added coverage exercises the full lifecycle, internal-note privacy, cross-owner refusal, malformed input, audit rollback and competing transitions. Earlier SQL-mock mutation tests were replaced by these database checks. API typecheck and diff whitespace check passed.
+- Attachments, related records, team/assigned-only access, notices and screens remain in F16.

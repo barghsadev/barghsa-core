@@ -222,43 +222,7 @@ describe('TicketsService', () => {
     })
   })
 
-  describe('updateTicketStatus', () => {
-    it('updates the ticket status (admin)', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'in_progress' })] })
-
-      const result = await service.updateTicketStatus('tkt-001', 'user-1', 'in_progress', true)
-
-      expect(result.status).toBe('in_progress')
-    })
-
-    it('allows non-admin to reopen (set open)', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'open' })] })
-
-      const result = await service.updateTicketStatus('tkt-001', 'user-1', 'open', false)
-
-      expect(result.status).toBe('open')
-    })
-
-    it('throws 403 when non-admin tries to change status to non-open', async () => {
-      await expect(
-        service.updateTicketStatus('tkt-001', 'user-1', 'resolved'),
-      ).rejects.toThrow(/Only staff can change ticket status/)
-    })
-
-    it('throws 400 for invalid status', async () => {
-      await expect(
-        service.updateTicketStatus('tkt-001', 'user-1', 'invalid_status'),
-      ).rejects.toThrow(/Invalid status/)
-    })
-
-    it('throws 404 when ticket does not exist', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
-
-      await expect(
-        service.updateTicketStatus('tkt-999', 'user-1', 'resolved', true),
-      ).rejects.toThrow(/Ticket not found/)
-    })
-  })
+  // updateTicketStatus: real HTTP/database coverage in tickets-http.integration.test.ts.
 
   describe('listComments', () => {
     it('returns public comments for a customer', async () => {
@@ -313,57 +277,7 @@ describe('TicketsService', () => {
     })
   })
 
-  describe('addComment', () => {
-    it('adds a public comment to a ticket', async () => {
-      // getTicket check
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow()] })
-      // insert
-      mockPool.query.mockResolvedValueOnce({ rows: [makeCommentRow()] })
-
-      const result = await service.addComment('tkt-001', 'user-1', 'This is a comment')
-
-      expect(result.id).toBe('cmt-001')
-      expect(result.body).toBe('Test comment body')
-      expect(result.visibility).toBe('public')
-    })
-
-    it('adds an internal note (admin)', async () => {
-      // getTicket check
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow()] })
-      // insert
-      mockPool.query.mockResolvedValueOnce({ rows: [makeCommentRow({ visibility: 'internal' })] })
-
-      const result = await service.addComment('tkt-001', 'user-1', 'Internal staff note', 'internal', true)
-
-      expect(result.visibility).toBe('internal')
-    })
-
-    it('throws 403 when non-admin adds internal note', async () => {
-      await expect(
-        service.addComment('tkt-001', 'user-1', 'Staff note', 'internal'),
-      ).rejects.toThrow(/Only staff can add internal notes/)
-    })
-
-    it('throws 400 when comment body is empty', async () => {
-      await expect(
-        service.addComment('tkt-001', 'user-1', ''),
-      ).rejects.toThrow(/Comment body is required/)
-    })
-
-    it('throws 400 when comment body exceeds 10000 characters', async () => {
-      await expect(
-        service.addComment('tkt-001', 'user-1', 'x'.repeat(10001)),
-      ).rejects.toThrow(/Comment body must be 10,000 characters or fewer/)
-    })
-
-    it('throws 404 when ticket does not exist', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
-
-      await expect(
-        service.addComment('tkt-999', 'user-1', 'Comment on missing ticket'),
-      ).rejects.toThrow(/Ticket not found/)
-    })
-  })
+  // addComment: real HTTP/database coverage in tickets-http.integration.test.ts.
 
   describe('staffListTickets', () => {
     it('returns all tickets without user_id filter', async () => {
@@ -451,29 +365,7 @@ describe('TicketsService', () => {
 
   // Assignment is covered through real HTTP and PostgreSQL in tickets-http.integration.test.ts.
 
-  describe('staffUpdateTicketStatus', () => {
-    it('updates status of any ticket', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'closed' })] })
-
-      const result = await service.staffUpdateTicketStatus('tkt-001', 'closed')
-
-      expect(result.status).toBe('closed')
-    })
-
-    it('throws 400 for invalid status', async () => {
-      await expect(
-        service.staffUpdateTicketStatus('tkt-001', 'invalid'),
-      ).rejects.toThrow(/Invalid status/)
-    })
-
-    it('throws 404 when ticket does not exist', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
-
-      await expect(
-        service.staffUpdateTicketStatus('tkt-999', 'resolved'),
-      ).rejects.toThrow(/Ticket not found/)
-    })
-  })
+  // staffUpdateTicketStatus: real HTTP/database coverage in tickets-http.integration.test.ts.
 
   describe('staffListComments', () => {
     it('returns all comments including internal', async () => {
@@ -503,48 +395,7 @@ describe('TicketsService', () => {
     })
   })
 
-  describe('staffAddComment', () => {
-    it('adds a public comment to any ticket', async () => {
-      // staffGetTicket check
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ user_id: 'user-other' })] })
-      // insert
-      mockPool.query.mockResolvedValueOnce({ rows: [makeCommentRow({ author_id: 'staff-1' })] })
+  // staffAddComment: real HTTP/database coverage in tickets-http.integration.test.ts.
 
-      const result = await service.staffAddComment('tkt-001', 'staff-1', 'Staff comment')
 
-      expect(result.id).toBe('cmt-001')
-      expect(result.authorId).toBe('staff-1')
-    })
-
-    it('adds an internal note', async () => {
-      // staffGetTicket check
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ user_id: 'user-other' })] })
-      // insert
-      mockPool.query.mockResolvedValueOnce({ rows: [makeCommentRow({ visibility: 'internal', author_id: 'staff-1' })] })
-
-      const result = await service.staffAddComment('tkt-001', 'staff-1', 'Internal note', 'internal')
-
-      expect(result.visibility).toBe('internal')
-    })
-
-    it('throws 400 when comment body is empty', async () => {
-      await expect(
-        service.staffAddComment('tkt-001', 'staff-1', ''),
-      ).rejects.toThrow(/Comment body is required/)
-    })
-
-    it('throws 400 when comment body exceeds 10000 characters', async () => {
-      await expect(
-        service.staffAddComment('tkt-001', 'staff-1', 'x'.repeat(10001)),
-      ).rejects.toThrow(/Comment body must be 10,000 characters or fewer/)
-    })
-
-    it('throws 404 when ticket does not exist', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
-
-      await expect(
-        service.staffAddComment('tkt-999', 'staff-1', 'Comment on missing ticket'),
-      ).rejects.toThrow(/Ticket not found/)
-    })
-  })
 })

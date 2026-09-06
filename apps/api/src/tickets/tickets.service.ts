@@ -222,7 +222,7 @@ export class TicketsService {
     // Fetch page
     const dataResult = await pool.query(
       `SELECT t.* FROM tickets t WHERE ${whereClause}
-       ORDER BY t.${sortBy} ${sortOrder}
+       ORDER BY t.${sortBy} ${sortOrder}, t.id ${sortOrder}
        LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`,
       [...params, limit, offset],
     )
@@ -269,39 +269,38 @@ export class TicketsService {
     status: string,
     isAdmin: boolean = false,
   ): Promise<TicketRow> {
-    const validStatuses = ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed']
-    if (!validStatuses.includes(status)) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: `Invalid status: ${status}. Allowed: ${validStatuses.join(', ')}` },
-        400,
-      )
-    }
-
-    // Non-admin users can only reopen their tickets (any → open)
     if (!isAdmin && status !== 'open') {
-      throw new HttpException(
-        { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can change ticket status' },
-        403,
-      )
+      if (!['in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed'].includes(status)) {
+        throw new HttpException('Invalid status', 400)
+      }
+      throw new HttpException('Only staff can change ticket status', 403)
     }
+    return this.changeStatus(ticketId, status, userId, userId)
+  }
 
-    const pool = getDbPool()
-
-    const result = await pool.query(
-      `UPDATE tickets SET status = $1, updated_at = NOW()
-       WHERE id = $2 AND user_id = $3
-       RETURNING *`,
-      [status, ticketId, userId],
-    )
-
-    if (result.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Ticket not found' },
-        404,
-      )
+  private async changeStatus(ticketId: string, status: string, actorId: string, ownerId?: string): Promise<TicketRow> {
+    const transitions: Record<string, string[]> = {
+      open: ['in_progress'], in_progress: ['waiting_customer', 'waiting_staff', 'resolved'],
+      waiting_customer: ['in_progress'], waiting_staff: ['in_progress'], resolved: ['closed'], closed: [],
     }
-
-    return mapRow(result.rows[0]!)
+    if (!Object.hasOwn(transitions, status)) throw new HttpException('Invalid status', 400)
+    const client = await getDbPool().connect()
+    try {
+      await client.query('BEGIN')
+      const row = (await client.query(`SELECT * FROM tickets WHERE id=$1
+        AND ($2::text IS NULL OR user_id=$2) FOR UPDATE`, [ticketId, ownerId ?? null])).rows[0]
+      if (!row) throw new HttpException('Ticket not found', 404)
+      if (row.status === status) { await client.query('COMMIT'); return mapRow(row) }
+      if (status !== 'open' && (!transitions[row.status]?.includes(status) || (status === 'in_progress' && !row.assigned_to))) {
+        throw new HttpException('Invalid ticket status transition', 409)
+      }
+      const result = await client.query('UPDATE tickets SET status=$1,updated_at=NOW() WHERE id=$2 RETURNING *', [status,ticketId])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_status_changed',$3::jsonb)`,
+        [randomUUID(),actorId,JSON.stringify({ ticketId, from: row.status, to: status })])
+      await client.query('COMMIT')
+      return mapRow(result.rows[0])
+    } catch (error) { await client.query('ROLLBACK'); throw error }
+    finally { client.release() }
   }
 
   /**
@@ -321,12 +320,12 @@ export class TicketsService {
     let result
     if (isAdmin) {
       result = await pool.query(
-        `SELECT * FROM ticket_comments WHERE ticket_id = $1 ORDER BY created_at ASC`,
+        `SELECT * FROM ticket_comments WHERE ticket_id = $1 ORDER BY created_at ASC, id ASC`,
         [ticketId],
       )
     } else {
       result = await pool.query(
-        `SELECT * FROM ticket_comments WHERE ticket_id = $1 AND visibility = 'public' ORDER BY created_at ASC`,
+        `SELECT * FROM ticket_comments WHERE ticket_id = $1 AND visibility = 'public' ORDER BY created_at ASC, id ASC`,
         [ticketId],
       )
     }
@@ -345,40 +344,31 @@ export class TicketsService {
     visibility: 'public' | 'internal' = 'public',
     isAdmin: boolean = false,
   ): Promise<TicketCommentRow> {
-    if (!body?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Comment body is required' },
-        400,
-      )
-    }
-    if (body.trim().length > 10000) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Comment body must be 10,000 characters or fewer' },
-        400,
-      )
-    }
+    if (!isAdmin && visibility !== 'public') throw new HttpException('Only staff can add internal notes', 403)
+    return this.insertComment(ticketId, userId, body, visibility, userId)
+  }
 
-    // Non-admin users cannot add internal notes
-    if (visibility === 'internal' && !isAdmin) {
-      throw new HttpException(
-        { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can add internal notes' },
-        403,
-      )
-    }
-
-    // Verify the ticket exists and belongs to the user
-    await this.getTicket(ticketId, userId)
-
-    const pool = getDbPool()
-
-    const result = await pool.query(
-      `INSERT INTO ticket_comments (ticket_id, author_id, body, visibility)
-       VALUES ($1, $2, $3, $4)
-       RETURNING *`,
-      [ticketId, userId, body.trim(), visibility],
-    )
-
-    return mapCommentRow(result.rows[0]!)
+  private async insertComment(ticketId: string, actorId: string, body: string, visibility: string, ownerId?: string): Promise<TicketCommentRow> {
+    if (typeof body !== 'string' || !body.trim()) throw new HttpException('Comment body is required', 400)
+    if (body.trim().length > 10000) throw new HttpException('Comment body must be 10,000 characters or fewer', 400)
+    if (visibility !== 'public' && visibility !== 'internal') throw new HttpException('Invalid comment visibility', 400)
+    const client = await getDbPool().connect()
+    try {
+      await client.query('BEGIN')
+      const ticket = (await client.query(`SELECT * FROM tickets WHERE id=$1
+        AND ($2::text IS NULL OR user_id=$2) FOR UPDATE`, [ticketId,ownerId ?? null])).rows[0]
+      if (!ticket) throw new HttpException('Ticket not found', 404)
+      if (ticket.status === 'closed' || ticket.status === 'resolved') throw new HttpException('Reopen the ticket before replying', 409)
+      const result = await client.query(`INSERT INTO ticket_comments(ticket_id,author_id,body,visibility)
+        VALUES ($1,$2,$3,$4) RETURNING *`, [ticketId,actorId,body.trim(),visibility])
+      const status = ownerId && visibility === 'public' && ticket.status === 'waiting_customer' ? 'in_progress' : ticket.status
+      await client.query('UPDATE tickets SET status=$1,updated_at=NOW() WHERE id=$2', [status,ticketId])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_comment_added',$3::jsonb)`,
+        [randomUUID(),actorId,JSON.stringify({ ticketId,commentId: result.rows[0].id,visibility,from: ticket.status,to: status })])
+      await client.query('COMMIT')
+      return mapCommentRow(result.rows[0])
+    } catch (error) { await client.query('ROLLBACK'); throw error }
+    finally { client.release() }
   }
 
   // ──────────────────────────────────────────────────────────────────────────────
@@ -445,7 +435,7 @@ export class TicketsService {
     // Fetch page
     const dataResult = await pool.query(
       `SELECT t.* FROM tickets t WHERE ${whereClause}
-       ORDER BY t.${sortBy} ${sortOrder}
+       ORDER BY t.${sortBy} ${sortOrder}, t.id ${sortOrder}
        LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`,
       [...params, limit, offset],
     )
@@ -529,32 +519,9 @@ export class TicketsService {
   async staffUpdateTicketStatus(
     ticketId: string,
     status: string,
+    actorId: string,
   ): Promise<TicketRow> {
-    const validStatuses = ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed']
-    if (!validStatuses.includes(status)) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: `Invalid status: ${status}. Allowed: ${validStatuses.join(', ')}` },
-        400,
-      )
-    }
-
-    const pool = getDbPool()
-
-    const result = await pool.query(
-      `UPDATE tickets SET status = $1, updated_at = NOW()
-       WHERE id = $2
-       RETURNING *`,
-      [status, ticketId],
-    )
-
-    if (result.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Ticket not found' },
-        404,
-      )
-    }
-
-    return mapRow(result.rows[0]!)
+    return this.changeStatus(ticketId, status, actorId)
   }
 
   /**
@@ -568,7 +535,7 @@ export class TicketsService {
     const pool = getDbPool()
 
     const result = await pool.query(
-      `SELECT * FROM ticket_comments WHERE ticket_id = $1 ORDER BY created_at ASC`,
+      `SELECT * FROM ticket_comments WHERE ticket_id = $1 ORDER BY created_at ASC, id ASC`,
       [ticketId],
     )
 
@@ -585,31 +552,6 @@ export class TicketsService {
     body: string,
     visibility: 'public' | 'internal' = 'public',
   ): Promise<TicketCommentRow> {
-    if (!body?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Comment body is required' },
-        400,
-      )
-    }
-    if (body.trim().length > 10000) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Comment body must be 10,000 characters or fewer' },
-        400,
-      )
-    }
-
-    // Verify the ticket exists
-    await this.staffGetTicket(ticketId)
-
-    const pool = getDbPool()
-
-    const result = await pool.query(
-      `INSERT INTO ticket_comments (ticket_id, author_id, body, visibility)
-       VALUES ($1, $2, $3, $4)
-       RETURNING *`,
-      [ticketId, staffUserId, body.trim(), visibility],
-    )
-
-    return mapCommentRow(result.rows[0]!)
+    return this.insertComment(ticketId, staffUserId, body, visibility)
   }
 }
