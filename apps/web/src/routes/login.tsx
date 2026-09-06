@@ -110,7 +110,7 @@ function LoginPage() {
   const [verifying, setVerifying] = useState(false);
   const [resending, setResending] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
-  const [canResend, setCanResend] = useState(false);
+  const canResend = resendTimer === 0;
   const otpRef = useRef<{ reset: () => void } | null>(null);
 
   // ── Password change step state (T-02.01.04) ──────────────
@@ -126,14 +126,7 @@ function LoginPage() {
     if (!otpStep || canResend) return;
 
     const interval = setInterval(() => {
-      setResendTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          setCanResend(true);
-          return 0;
-        }
-        return prev - 1;
-      });
+      setResendTimer((previous) => Math.max(0, previous - 1));
     }, 1000);
 
     return () => clearInterval(interval);
@@ -266,7 +259,6 @@ function LoginPage() {
           setOtpDestination(normalized.formatted ?? normalized.normalized);
           setOtpStep(true);
           setResendTimer(60);
-          setCanResend(false);
           return;
         }
 
@@ -436,14 +428,12 @@ function LoginPage() {
         toast.error(message);
         if (retry) {
           setResendTimer(retryAfterSeconds(response) ?? 60);
-          setCanResend(false);
         }
         return;
       }
 
       // Reset timer
       setResendTimer(60);
-      setCanResend(false);
       setOtpCode('');
       if (otpRef.current?.reset) {
         otpRef.current.reset();

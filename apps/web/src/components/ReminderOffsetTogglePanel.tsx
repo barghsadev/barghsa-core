@@ -218,7 +218,6 @@ export default function ReminderOffsetTogglePanel() {
   const stepUpTriggerRef = useRef<HTMLInputElement | null>(null);
   const restoreTriggerRef = useRef(false);
   const stepUpSubmittingRef = useRef(false);
-  stepUpSubmittingRef.current = stepUpSubmitting;
 
   function markPending(key: string, pending: boolean) {
     if (pending) pendingKeysRef.current.add(key);
@@ -322,6 +321,7 @@ export default function ReminderOffsetTogglePanel() {
   }
 
   function cancelStepUp() {
+    if (stepUpSubmittingRef.current) return;
     const pending = awaitingStepUpRef.current;
     awaitingStepUpRef.current = [];
     for (const item of pending) revertToggle(item);
@@ -333,7 +333,8 @@ export default function ReminderOffsetTogglePanel() {
 
   async function submitStepUp(event: FormEvent) {
     event.preventDefault();
-    if (!stepUpPassword.trim() || stepUpSubmitting) return;
+    if (!stepUpPassword.trim() || stepUpSubmittingRef.current) return;
+    stepUpSubmittingRef.current = true;
     setStepUpSubmitting(true);
     setStepUpError(null);
     try {
@@ -360,6 +361,7 @@ export default function ReminderOffsetTogglePanel() {
         }
       }
     } finally {
+      stepUpSubmittingRef.current = false;
       setStepUpSubmitting(false);
     }
   }

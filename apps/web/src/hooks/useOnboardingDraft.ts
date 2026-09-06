@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { withCsrf } from '../lib/csrf.js';
 
 type DraftStatus = 'loading' | 'saved' | 'saving' | 'error' | 'conflict';
@@ -12,8 +12,10 @@ export function useOnboardingDraft(
   const [reloadCount, setReloadCount] = useState(0);
   const current = useRef(values),
     restoreRef = useRef(restore);
-  current.current = values;
-  restoreRef.current = restore;
+  useLayoutEffect(() => {
+    current.current = values;
+    restoreRef.current = restore;
+  }, [values, restore]);
   const version = useRef(0),
     saved = useRef(''),
     generation = useRef(0);
