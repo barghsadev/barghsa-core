@@ -202,6 +202,18 @@ export class AdminController {
     }
   }
 
+  @Get('staff-access')
+  @ApiOperation({ summary: 'Read current staff-management capabilities' })
+  staffAccess(@Req() req: AuthenticatedRequest) {
+    return {
+      userId: req.session.userId,
+      canView: hasStaffPermission(req, 'admin:staff:view'),
+      canCreate: hasStaffPermission(req, 'admin:users:create'),
+      canEditRoles: hasStaffPermission(req, 'admin:roles:edit'),
+      canDisable: hasStaffPermission(req, 'admin:staff:edit'),
+    };
+  }
+
   @Post('users/:userId/resend-activation')
   @HttpCode(200)
   @UseGuards(StepUpGuard)
@@ -245,8 +257,8 @@ export class AdminController {
         lastName: { type: 'string', description: 'Staff last name' },
         roleIds: {
           type: 'array',
-          items: { type: 'string', format: 'uuid' },
-          description: 'Initial role IDs (optional)',
+          items: { type: 'string' },
+          description: 'Initial named role IDs (optional)',
         },
         activationMethod: {
           type: 'string',

@@ -911,3 +911,9 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Username settings now show verified/unverified status and offer verification for saved but unproven email/mobile values. The form prefills the saved value, explains its login/recovery use, and prevents switching or cancelling a contact request while it is being sent or saved.
 - Both language dictionaries include the new states and actions. Failed verification keeps the code for retry; success reloads authoritative proof flags and removes the action.
 - Review: six production-browser tests pass, covering both-language email/mobile verification, failed-code retry, persisted reload and the existing two-code username-change flow. Workspace build/typecheck, repository lint, formatting, 26 route budgets and diff review pass.
+
+### F04/F17 — Prepare current staff-management permissions and stable list reads
+
+- Added an authenticated capability response for the staff screen, derived from current permissions on every request. It reports list, creation, role-edit and disable access independently.
+- Staff pagination uses a unique secondary sort key for equal creation timestamps. Staff creation checks the shared login namespace before generating credentials, and OpenAPI now documents named role IDs rather than incorrectly requiring UUIDs.
+- Review: 45 staff/service tests pass, including actual HTTP anonymous denial, administrator/no-role access, role addition/removal changing capabilities within the same session, secondary-contact collision and absence of temporary credentials from list readback. API build, workspace typecheck, repository lint, formatting and diff review pass; the generated contract is updated. The staff screen is the next step.

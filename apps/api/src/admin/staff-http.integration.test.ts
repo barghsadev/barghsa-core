@@ -239,3 +239,64 @@ it('reads permission changes on the next request without trusting a cached sessi
   ]);
   expect((await fetch(`${http.base}/api/staff/tickets`, { headers })).status).toBe(403);
 });
+
+it('reports current staff management capabilities without trusting cached session roles', async () => {
+  expect((await fetch(`${http.base}/api/admin/staff-access`)).status).toBe(401);
+  const admin = await fetch(`${http.base}/api/admin/staff-access`, { headers: adminHeaders });
+  expect(await admin.json()).toEqual({
+    userId: 'bootstrap',
+    canView: true,
+    canCreate: true,
+    canEditRoles: true,
+    canDisable: true,
+  });
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ('capability-reader','capability-reader@example.test','test-only',true)"
+  );
+  const headers = await session('capability-reader');
+  const read = async () => (await fetch(`${http.base}/api/admin/staff-access`, { headers })).json();
+  const denied = {
+    userId: 'capability-reader',
+    canView: false,
+    canCreate: false,
+    canEditRoles: false,
+    canDisable: false,
+  };
+  expect(await read()).toEqual(denied);
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES ('capability-reader','role-admin')"
+  );
+  expect(await read()).toEqual({
+    ...denied,
+    canView: true,
+    canCreate: true,
+    canEditRoles: true,
+    canDisable: true,
+  });
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='capability-reader'");
+  expect(await read()).toEqual(denied);
+});
+
+it('does not expose temporary credentials on staff readback and rejects secondary identifier collisions', async () => {
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,email,password_hash) VALUES ('alias-owner','alias-owner@example.test','reserved-staff@example.test','test-only')"
+  );
+  await http.pool.query(
+    "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ('reserved-staff@example.test','alias-owner','email',NOW())"
+  );
+  const response = await fetch(`${http.base}/api/admin/users/create-staff`, {
+    method: 'POST',
+    headers: adminHeaders,
+    body: JSON.stringify({
+      username: 'reserved-staff@example.test',
+      firstName: 'Test',
+      lastName: 'Staff',
+      activationMethod: 'tempPassword',
+    }),
+  });
+  expect(response.status).toBe(409);
+  const list = await (
+    await fetch(`${http.base}/api/admin/staff`, { headers: adminHeaders })
+  ).json();
+  expect(JSON.stringify(list)).not.toMatch(/temporaryPassword|password_hash|activation_token/);
+});

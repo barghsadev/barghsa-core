@@ -518,9 +518,10 @@ export class AdminService {
     const pool = getDbPool();
 
     // ── 1. Optimistic uniqueness pre-check (fast-fail) ────────────────
-    const existing = await pool.query(`SELECT user_id FROM users WHERE username = $1`, [
-      input.username,
-    ]);
+    const existing = await pool.query(
+      `SELECT user_id FROM account_login_identifiers WHERE destination = $1`,
+      [input.username]
+    );
 
     if (existing.rows.length > 0) {
       throw new HttpException(
@@ -2814,7 +2815,7 @@ export class AdminService {
        GROUP BY u.user_id, u.username, u.email, u.mobile, u.is_admin,
                 u.created_at, u.last_login_at, u.disabled_at,
                 p.first_name, p.last_name
-       ORDER BY u.created_at DESC
+       ORDER BY u.created_at DESC, u.user_id DESC
        LIMIT $1 OFFSET $2`,
       [limit, offset]
     );

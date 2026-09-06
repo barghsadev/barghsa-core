@@ -6082,6 +6082,21 @@
         ]
       }
     },
+    "/api/admin/staff-access": {
+      "get": {
+        "operationId": "AdminController_staffAccess",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read current staff-management capabilities",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/staff-teams": {
       "get": {
         "operationId": "AdminController_listStaffTeams",
@@ -7051,9 +7066,8 @@
                     "type": "string"
                   },
                   "roleIds": {
-                    "description": "Initial role IDs (optional)",
+                    "description": "Initial named role IDs (optional)",
                     "items": {
-                      "format": "uuid",
                       "type": "string"
                     },
                     "type": "array"
