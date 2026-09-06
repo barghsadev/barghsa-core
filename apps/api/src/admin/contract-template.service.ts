@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -190,7 +191,7 @@ export class ContractTemplateService {
    */
   async create(input: CreateContractTemplateInput): Promise<ContractTemplateDto> {
     const name = this.assertName(input.name);
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const existing = await q.query('SELECT 1 FROM contract_templates WHERE LOWER(name) = $1', [
         name.toLowerCase(),
       ]);
@@ -236,8 +237,8 @@ export class ContractTemplateService {
    * hard-deleted, so deactivation is how an admin retires them.
    */
   async update(id: string, input: UpdateContractTemplateInput): Promise<ContractTemplateDto> {
-    return this.withTransaction(async (q) => {
-      const current = await this.findById(q, id);
+    return this.withTransaction(input.actorUserId, async (q) => {
+      const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
 
       const name = input.name !== undefined ? this.assertName(input.name) : current.name;
@@ -329,18 +330,11 @@ export class ContractTemplateService {
 
     const fileSize = Buffer.byteLength(content, 'utf8');
     try {
-      return await this.withTransaction(async (q) => {
-        const current = await this.findById(q, id);
+      return await this.withTransaction(input.actorUserId, async (q) => {
+        const current = await this.findById(q, id, true);
         if (!current) throw this.notFound(id);
 
-        // Serialize the version-number sequence per template: lock the
-        // template row FOR UPDATE before reading MAX(version_number), so
-        // two concurrent uploads on the same template cannot compute the
-        // same next number at READ COMMITTED. The
-        // uq_contract_template_versions_template_ver index remains the
-        // hard backstop (mapped to a retryable 409 in translatePgErrors).
-        await q.query('SELECT 1 FROM contract_templates WHERE id = $1 FOR UPDATE', [id]);
-
+        // The locked template read serializes version allocation and metadata changes.
         const maxSeq = await q.query<{ n: number }>(
           'SELECT COALESCE(MAX(version_number), 0)::int AS n FROM contract_template_versions WHERE template_id = $1',
           [id]
@@ -419,8 +413,8 @@ export class ContractTemplateService {
    * deactivate rather than throw where context allows.
    */
   async delete(id: string, actorUserId: string, ip: string): Promise<{ deleted: boolean }> {
-    return this.withTransaction(async (q) => {
-      const current = await this.findById(q, id);
+    return this.withTransaction(actorUserId, async (q) => {
+      const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
 
       const versions = await q.query(
@@ -527,11 +521,11 @@ export class ContractTemplateService {
     return rows.rows.map((r) => this.toVersionDto(r));
   }
 
-  private async findById(q: DbExecutor, id: string): Promise<TemplateRow | null> {
+  private async findById(q: DbExecutor, id: string, lock = false): Promise<TemplateRow | null> {
     const result = await q.query<TemplateRow>(
       `SELECT id, name, description, status, created_by, created_at, updated_at
          FROM contract_templates
-        WHERE id = $1`,
+        WHERE id = $1${lock ? ' FOR UPDATE' : ''}`,
       [id]
     );
     return result.rows[0] ?? null;
@@ -666,11 +660,15 @@ export class ContractTemplateService {
   }
 
   /** Run `fn` inside a single DB transaction; any error rolls back. */
-  private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
+  private async withTransaction<T>(
+    actorUserId: string,
+    fn: (q: DbExecutor) => Promise<T>
+  ): Promise<T> {
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:documents:edit');
       const result = await fn(client);
       await client.query('COMMIT');
       committed = true;
