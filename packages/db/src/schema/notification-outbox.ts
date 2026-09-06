@@ -59,16 +59,13 @@ export const notificationOutbox = pgTable(
       .notNull()
       .default('queued'),
 
-    /**
-     * Row-level idempotency key — defaults to sha256(eventKey:profileId);
-     * callers may override (e.g. invoice reminders keyed by invoice + offset).
-     * Duplicate inserts are skipped with ON CONFLICT DO NOTHING. Per-channel
-     * provider idempotency is derived at dispatch as
-     * sha256(eventKey:channel:profileId) for pre-existing events, and
-     * sha256(eventKey:channel:profileId:outboxIdempotencyKey) for
-     * `payment.invoice_reminder` (T-05.01.04).
+    /** Stable business occurrence key. Duplicate inserts leave the original
+     * occurrence intact; provider keys are versioned separately at dispatch.
      */
     idempotencyKey: text('idempotency_key').notNull(),
+
+    /** Existing rows retain version 1 provider keys; new occurrences use version 2. */
+    idempotencyVersion: integer('idempotency_version').notNull().default(2),
 
     /** Leased window. NULL when unlocked; future timestamp = claimed by a worker. */
     lockedUntil: timestamptz('locked_until'),
@@ -135,6 +132,9 @@ export const notificationJob = pgTable(
 
     /** Earliest time this job may run (backoff / delivery window). */
     runAfter: timestamptz('run_after'),
+
+    /** Durable provider acknowledgement for this channel. */
+    providerRef: text('provider_ref'),
 
     /** Safe error message from the last attempt. */
     lastError: text('last_error'),

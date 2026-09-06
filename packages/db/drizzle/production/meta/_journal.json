@@ -85,6 +85,13 @@
       "when": 1790812800000,
       "tag": "0091_additive_agent_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 92,
+      "version": "7",
+      "when": 1790899200000,
+      "tag": "0092_notification_delivery_identity",
+      "breakpoints": true
     }
   ]
 }

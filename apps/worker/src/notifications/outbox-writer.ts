@@ -32,19 +32,10 @@ export interface EnqueueOutboxInput {
   payload?: Record<string, unknown>
   /** Target channels. In-app is always mandatory for business events. */
   channels: NotificationChannel[]
-  /**
-   * Unique idempotency key. Defaults to sha256(`${eventKey}:${profileId}`).
-   * Override when one (event, profile) may enqueue more than one logical
-   * delivery (e.g. invoice reminders keyed by invoice + offset). For
-   * `payment.invoice_reminder` only, per-channel provider keys at dispatch
-   * also fold this value in so distinct outbox rows never collide at the
-   * transport. The same fold applies to `payment.bank_receipt_rejected`
-   * so two rejected receipts for one profile stay distinct. Pre-existing
-   * events keep the legacy digest
-   * sha256(eventKey:channel:profileId) so in-flight retries after deploy
-   * cannot redeliver (T-05.01.04).
+  /** Stable business occurrence key, reused on retries (e.g. top-up ID).
+   * A type/profile-only default would silently suppress later occurrences.
    */
-  idempotencyKey?: string
+  idempotencyKey: string
   /** 'queued' (immediate) or 'scheduled' (deferred until scheduledFor). */
   status?: 'queued' | 'scheduled'
   /** When the row first becomes eligible for dispatch (delivery window). */
@@ -96,7 +87,14 @@ export function deriveChannelIdempotencyKey(
   channel: NotificationChannel,
   profileId: string,
   outboxIdempotencyKey?: string,
+  version = 1,
+  outboxId?: string,
 ): string {
+  if (version === 2) {
+    if (!outboxId) throw new Error('version 2 delivery requires an outbox occurrence ID')
+    return createHash('sha256').update(JSON.stringify(['notification-v2', outboxId, channel, profileId])).digest('hex')
+  }
+  if (version !== 1) throw new Error('Unsupported delivery identity version')
   const includeOutboxKey =
     outboxIdempotencyKey !== undefined &&
     CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS.has(eventKey)
@@ -117,8 +115,11 @@ export async function enqueueOutbox(
   client: PoolClient,
   input: EnqueueOutboxInput,
 ): Promise<EnqueueOutboxResult> {
-  const idempotencyKey = input.idempotencyKey ?? deriveIdempotencyKey(input.eventKey, input.profileId)
-  const channels = input.channels
+  const idempotencyKey = input.idempotencyKey
+  if (typeof idempotencyKey !== 'string' || !idempotencyKey.trim()) {
+    throw new Error('enqueueOutbox requires a stable business occurrence idempotency key')
+  }
+  const channels = [...new Set(input.channels)]
   const status = input.status ?? 'queued'
   // Per-type config (T-05.01.03): max_attempts and queue priority resolve from
   // the code-defined notification-type registry unless the caller overrides.

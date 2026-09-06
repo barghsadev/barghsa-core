@@ -54,8 +54,10 @@ export class InAppNotificationTransport implements INotificationTransport {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inserted: { rows: Array<{ id: string }> } = await pool.query(
       `INSERT INTO in_app_notifications
-         (profile_id, type, title_i18n_key, body_i18n_key, params, link_route)
-       VALUES ($1, $2, $3, $4, $5, $6)
+         (profile_id, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       ON CONFLICT (delivery_key) DO UPDATE SET delivery_key=EXCLUDED.delivery_key
+       WHERE in_app_notifications.profile_id=EXCLUDED.profile_id AND in_app_notifications.type=EXCLUDED.type
        RETURNING id`,
       [
         payload.profileId,
@@ -64,6 +66,7 @@ export class InAppNotificationTransport implements INotificationTransport {
         `notifications.${payload.eventKey}.body`,
         JSON.stringify(payload.payload ?? {}),
         linkRoute,
+        payload.outboxId ? `outbox:${payload.outboxId}` : `transport:${payload.idempotencyKey}`,
       ],
     )
 

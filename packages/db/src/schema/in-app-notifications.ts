@@ -1,5 +1,5 @@
 import { desc } from 'drizzle-orm'
-import { jsonb, pgTable, text, boolean, index } from 'drizzle-orm/pg-core'
+import { jsonb, pgTable, text, boolean, index, uniqueIndex } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { profiles } from './profiles.js'
 
@@ -48,6 +48,9 @@ export const inAppNotifications = pgTable(
     /** Notification/event type — drives iconography & routing. */
     type: text('type').notNull(),
 
+    /** Stable occurrence identity; NULL only for legacy/unlinked notifications. */
+    deliveryKey: text('delivery_key'),
+
     /** i18n key for the rendered title. */
     titleI18nKey: text('title_i18n_key').notNull(),
 
@@ -75,6 +78,7 @@ export const inAppNotifications = pgTable(
   (table) => [
     // Notification-center list query: a profile's notifications newest-first
     // (matches the SQL migration's (profile_id, created_at DESC) index).
+    uniqueIndex('uq_ian_delivery_key').on(table.deliveryKey),
     index('idx_ian_profile_created').on(table.profileId, desc(table.createdAt)),
   ],
 )

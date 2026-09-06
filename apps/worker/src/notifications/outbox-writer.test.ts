@@ -132,6 +132,7 @@ describe('enqueueOutbox', () => {
     })
 
     const res = await enqueueOutbox(client, {
+      idempotencyKey: 'occurrence-1',
       profileId: 'profile-1',
       userId: 'user-1',
       eventKey: 'profile_verified',
@@ -151,7 +152,7 @@ describe('enqueueOutbox', () => {
     expect(outboxCall!.params[3]).toEqual({ name: 'Ali' })
     expect(outboxCall!.params[4]).toEqual(['in_app', 'email'])
     expect(outboxCall!.params[5]).toBe('queued')
-    expect(outboxCall!.params[6]).toMatch(/^[0-9a-f]{64}$/)
+    expect(outboxCall!.params[6]).toBe('occurrence-1')
     expect(outboxCall!.params[7]).toBe(5)
     expect(outboxCall!.params[8]).toBeNull()
 
@@ -174,6 +175,7 @@ describe('enqueueOutbox', () => {
     })
 
     const res = await enqueueOutbox(client, {
+      idempotencyKey: 'occurrence-1',
       profileId: 'profile-1',
       eventKey: 'profile_verified',
       channels: ['in_app'],
@@ -187,7 +189,8 @@ describe('enqueueOutbox', () => {
     const { client } = makeClient()
     await expect(
       enqueueOutbox(client, {
-        profileId: 'profile-1',
+        idempotencyKey: 'occurrence-1',
+      profileId: 'profile-1',
         eventKey: 'x',
         channels: [],
       }),
@@ -198,7 +201,8 @@ describe('enqueueOutbox', () => {
     const { client } = makeClient()
     await expect(
       enqueueOutbox(client, {
-        profileId: 'profile-1',
+        idempotencyKey: 'occurrence-1',
+      profileId: 'profile-1',
         eventKey: 'x',
         channels: ['email'],
       }),

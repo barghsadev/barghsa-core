@@ -38,6 +38,8 @@ export interface OutboxRow {
   payload: Record<string, unknown>
   channels: NotificationChannel[]
   idempotencyKey: string
+  /** Absent only in legacy callers; persisted new rows use version 2. */
+  idempotencyVersion?: number
   attempts: number
   maxAttempts: number
   scheduledAt: Date | null
@@ -90,7 +92,7 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
           FOR UPDATE SKIP LOCKED
         )
         RETURNING id, profile_id, user_id, event_key, payload, channels,
-                  idempotency_key, attempts, max_attempts, scheduled_for, last_error`,
+                  idempotency_key, idempotency_version, attempts, max_attempts, scheduled_for, last_error`,
     [leaseUntil, now, limit],
   )
   return result.rows.map((row: Record<string, unknown>): OutboxRow => ({
@@ -101,6 +103,7 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
     payload: (row.payload as Record<string, unknown>) ?? {},
     channels: (row.channels as NotificationChannel[]) ?? [],
     idempotencyKey: row.idempotency_key as string,
+    idempotencyVersion: Number(row.idempotency_version ?? 1),
     attempts: (row.attempts as number) ?? 0,
     maxAttempts: (row.max_attempts as number) ?? 5,
     scheduledAt: (row.scheduled_for as Date | null) ?? null,
@@ -123,11 +126,9 @@ export interface DispatchOutcome {
  * individual failed outcomes, preserving successful legs and allowing later
  * channels to run. Required but undelivered channels never count as success.
  *
- * Idempotency (T-05.01.04): each channel receives its OWN per-channel key
- * rather than the row-level key, so delivery to a given transport is
- * at-most-once even across retries. Pre-existing events keep the legacy
- * digest `sha256(eventKey:channel:profileId)`. Invoice reminders fold the
- * outbox row key in so two reminders for the same profile stay distinct.
+ * New occurrences derive provider keys from the durable outbox ID and channel.
+ * Version 1 rows retain their previous formula across deployment. In-app
+ * storage separately deduplicates by outbox ID, including proven legacy rows.
  */
 export async function dispatchOutbox(
   row: OutboxRow,
@@ -142,7 +143,10 @@ export async function dispatchOutbox(
         channel,
         row.profileId,
         row.idempotencyKey,
+        row.idempotencyVersion ?? 1,
+        row.id,
       ),
+      outboxId: row.id,
       channel,
       recipientId: row.userId ?? row.profileId,
       profileId: row.profileId,
