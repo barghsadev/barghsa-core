@@ -64,7 +64,7 @@ it('rejects stale evidence, archived targets, invalid fields and malformed paylo
   await http.pool.query("UPDATE profiles SET first_name='Changed after request' WHERE id=$1",[target])
   expect((await review(data.id,'Approved')).status).toBe(409)
   await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1',[target])
-  expect((await review(data.id,'Approved')).status).toBe(404)
+  expect((await review(data.id,'Approved')).status).toBe(409)
   expect((await create(target)).status).toBe(404)
 })
 it('rolls back the identity change when its review audit fails',async()=>{
@@ -141,4 +141,51 @@ it('automatically assigns a correction to an eligible reviewer other than its cr
     const data=await fallback.json() as {id:string}
     expect((await http.pool.query('SELECT assigned_to FROM verification_cases WHERE id=$1',[data.id])).rows[0].assigned_to).toBeNull()
   }finally{await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='reviewer'")}
+})
+
+async function archive(id: string) {
+  return fetch(`${http.base}/api/crm/profiles/${id}`, { method: 'DELETE', headers: headers.reviewer!, body: JSON.stringify({ reason: 'Closure requested' }) })
+}
+it('blocks archival until outstanding corrections are resolved', async () => {
+  const target = await profile(), response = await create(target), { id } = await response.json() as { id: string }
+  expect((await archive(target)).status).toBe(409)
+  expect((await review(id, 'Under Review')).status).toBe(200)
+  expect((await archive(target)).status).toBe(409)
+  expect((await review(id, 'Rejected')).status).toBe(200)
+  expect((await archive(target)).status, http.logs()).toBe(200)
+  expect((await http.pool.query('SELECT archived,first_name FROM profiles WHERE id=$1', [target])).rows[0]).toEqual({ archived: true, first_name: 'Original' })
+})
+it('allows only independent rejection of legacy cases on archived profiles and keeps it atomic', async () => {
+  const target = await profile(), response = await create(target), { id } = await response.json() as { id: string }
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [target])
+  expect((await review(id, 'Under Review')).status).toBe(409)
+  expect((await review(id, 'Approved')).status).toBe(409)
+  expect((await review(id, 'Rejected', 'creator')).status).toBe(403)
+  await http.pool.query(`CREATE FUNCTION fail_archived_case_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.event='verification_case_reviewed' THEN RAISE EXCEPTION 'test audit failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_archived_case_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_archived_case_audit()`)
+  try {
+    expect((await review(id, 'Rejected')).status).toBe(500)
+    expect((await http.pool.query('SELECT status FROM verification_cases WHERE id=$1', [id])).rows[0].status).toBe('Open')
+  } finally { await http.pool.query('DROP TRIGGER fail_archived_case_audit ON audit_log; DROP FUNCTION fail_archived_case_audit()') }
+  expect((await review(id, 'Rejected')).status).toBe(200)
+  expect((await review(id, 'Rejected')).status).toBe(409)
+  expect((await http.pool.query('SELECT archived,first_name FROM profiles WHERE id=$1', [target])).rows[0]).toEqual({ archived: true, first_name: 'Original' })
+})
+for (const correctionFirst of [false, true]) it(`serializes archival with correction creation (correction first=${correctionFirst})`, async () => {
+  const target = await profile(), client = await http.pool.connect()
+  let operation: Promise<Response> | undefined
+  try {
+    await client.query('BEGIN')
+    await client.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [target])
+    operation = correctionFirst ? archive(target) : create(target)
+    await expect.poll(async () => Number((await http.pool.query(`SELECT count(*) AS count FROM pg_stat_activity
+      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM profiles WHERE id=$1%FOR UPDATE%'`)).rows[0].count)).toBe(1)
+    if (correctionFirst) {
+      await client.query(`INSERT INTO verification_cases(id,profile_id,field_name,requested_value,evidence_urls,reason,status,created_by)
+        VALUES ($1,$2,'first_name','Updated','[]','Concurrent case','Open','creator')`, [randomUUID(), target])
+    } else await client.query('UPDATE profiles SET archived=true WHERE id=$1', [target])
+    await client.query('COMMIT')
+    expect((await operation).status).toBe(correctionFirst ? 409 : 404)
+  } finally { await client.query('ROLLBACK'); client.release(); await operation }
 })

@@ -291,15 +291,16 @@ export class VerificationCaseService {
     try {
       await client.query('BEGIN')
       // Use the same profile-before-case lock order as creation and archival.
-      const profile = (await client.query(`SELECT p.* FROM profiles p JOIN verification_cases v ON v.profile_id=p.id WHERE v.id=$1 AND p.archived=false FOR UPDATE OF p`,[caseId])).rows[0]
+      const profile = (await client.query(`SELECT p.* FROM profiles p JOIN verification_cases v ON v.profile_id=p.id WHERE v.id=$1 FOR UPDATE OF p`,[caseId])).rows[0]
       if (!profile) { await client.query('ROLLBACK'); return null }
       const row = (await client.query('SELECT * FROM verification_cases WHERE id=$1 FOR UPDATE',[caseId])).rows[0]
       if (!row || row.profile_id !== profile.id) throw new ConflictException('Correction target changed')
+      if (profile.archived && dto.decision !== 'Rejected') throw new ConflictException('Archived profiles only allow rejection of outstanding corrections')
       if (row.created_by === reviewerUserId) throw new ForbiddenException('A different staff member must review the correction')
       if (!(ALLOWED_TRANSITIONS[row.status] ?? []).includes(dto.decision)) throw new ConflictException('Invalid correction state transition')
       const field = String(row.field_name)
       const allowed = profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL
-      if (!allowed.includes(field)) throw new BadRequestException('Invalid identity field for this profile type')
+      if (dto.decision !== 'Rejected' && !allowed.includes(field)) throw new BadRequestException('Invalid identity field for this profile type')
       if (dto.decision === 'Approved') {
         const keys = typeof row.evidence_urls === 'string' ? JSON.parse(row.evidence_urls) : row.evidence_urls
         if (!Array.isArray(keys) || !keys.every(key => typeof key === 'string')) throw new ConflictException('Correction evidence is invalid')

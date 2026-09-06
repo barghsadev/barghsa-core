@@ -639,6 +639,16 @@ export class CrmV2Service {
       }
       const profileType = profileRow.profile_type as string
 
+      // Correction creation/review uses the same profile lock, so this cannot
+      // miss a case that commits concurrently with archival.
+      const openCorrections = await client.query(
+        `SELECT EXISTS(SELECT 1 FROM verification_cases WHERE profile_id=$1
+          AND status IN ('Open','Under Review')) AS pending`, [profileId])
+      if (openCorrections.rows[0].pending) {
+        await client.query('ROLLBACK')
+        return { errorCode: 'CRM:PROFILE:DELETION_BLOCKED', error: 'Resolve open identity corrections before archiving this profile.' }
+      }
+
       // 3. Check business constraints
       // Check for active orders (status != 'CANCELLED')
       const activeOrders = await client.query(
