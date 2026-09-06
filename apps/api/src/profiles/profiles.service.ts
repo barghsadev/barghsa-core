@@ -1027,6 +1027,17 @@ export class ProfilesService {
     };
   }
 
+  async canEditIndividualIdentity(userId: string, profile: ProfileRow): Promise<boolean> {
+    if (profile.userId !== userId || profile.profileType !== 'INDIVIDUAL') return false;
+    if (profile.status !== 'VERIFIED') return true;
+    const account = (
+      await getDbPool().query('SELECT is_staff,is_admin,disabled_at FROM users WHERE user_id=$1', [
+        userId,
+      ])
+    ).rows[0];
+    return !!account && !account.disabled_at && !!(account.is_staff || account.is_admin);
+  }
+
   /**
    * Update profile fields (T-03.03.03).
    *
@@ -1136,27 +1147,29 @@ export class ProfilesService {
         data.fullAddress !== undefined ||
         data.postalCode !== undefined
       ) {
-        // Read current main address status
-        const existingMain = await client.query(
-          `SELECT id FROM addresses WHERE profile_id = $1 AND main_address = true LIMIT 1`,
-          [profileId]
-        );
-        const hasMainAddress = existingMain.rows.length > 0;
-
-        if (data.provinceId && data.cityId && data.fullAddress && data.postalCode) {
-          await requireAddressGeography(client, data.provinceId, data.cityId);
-          // If this is the first address, make it main; otherwise add as non-main
+        const existingMain = (
           await client.query(
-            `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
-             VALUES ($1, $2, $3, $4, $5, $6)`,
-            [
-              profileId,
-              data.provinceId,
-              data.cityId,
-              data.fullAddress,
-              data.postalCode,
-              !hasMainAddress,
-            ]
+            `SELECT id,province_id,city_id,full_address,postal_code FROM addresses
+           WHERE profile_id=$1 AND main_address FOR UPDATE`,
+            [profileId]
+          )
+        ).rows[0];
+        const unchanged =
+          existingMain &&
+          existingMain.province_id === data.provinceId &&
+          existingMain.city_id === data.cityId &&
+          existingMain.full_address === data.fullAddress &&
+          existingMain.postal_code === data.postalCode;
+        if (!unchanged && data.provinceId && data.cityId && data.fullAddress && data.postalCode) {
+          await requireAddressGeography(client, data.provinceId, data.cityId);
+          await client.query(
+            'UPDATE addresses SET main_address=false,updated_at=NOW() WHERE profile_id=$1 AND main_address',
+            [profileId]
+          );
+          await client.query(
+            `INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address)
+             VALUES($1,$2,$3,$4,$5,true)`,
+            [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode]
           );
         }
       }

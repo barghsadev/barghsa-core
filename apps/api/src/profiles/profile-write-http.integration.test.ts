@@ -650,3 +650,40 @@ it('binds final legal submission to the saved version and removes its draft on s
   ).toHaveLength(0);
   expect((await save()).status).toBe(404);
 });
+
+it('advertises the own-staff identity exception and switches edited addresses without duplicate history', async () => {
+  await http.pool.query("UPDATE profiles SET status='VERIFIED' WHERE id=$1", [profileId]);
+  const read = async () => {
+    const response = await fetch(`${http.base}/api/profiles/${profileId}`, { headers });
+    expect(response.status).toBe(200);
+    return response.json() as Promise<{
+      canEditIdentity: boolean;
+      addresses: Array<{ id: string; mainAddress: boolean; fullAddress: string }>;
+    }>;
+  };
+  expect((await read()).canEditIdentity).toBe(false);
+  await http.pool.query("UPDATE users SET is_staff=true WHERE user_id='profile-owner'");
+  expect((await read()).canEditIdentity).toBe(true);
+  const old = (
+    await http.pool.query(
+      "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES ($1,$2,$3,'Old Street','1234567890',true) RETURNING id",
+      [profileId, provinceId, cityId]
+    )
+  ).rows[0].id;
+  const body = { provinceId, cityId, fullAddress: 'New Street', postalCode: '1234567890' };
+  expect((await update(body)).status).toBe(200);
+  const first = await read();
+  expect(first.addresses).toHaveLength(2);
+  expect(first.addresses.find((address) => address.mainAddress)?.fullAddress).toBe('New Street');
+  expect(first.addresses.find((address) => address.id === old)).toMatchObject({
+    fullAddress: 'Old Street',
+    mainAddress: false,
+  });
+  expect((await update(body)).status).toBe(200);
+  expect((await read()).addresses).toHaveLength(2);
+  await http.pool.query(
+    "CREATE FUNCTION reject_address_change_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test rollback'; END $$; CREATE TRIGGER reject_address_change_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='profile_self_updated') EXECUTE FUNCTION reject_address_change_audit()"
+  );
+  expect((await update({ ...body, fullAddress: 'Failed Street' })).status).toBe(500);
+  expect((await read()).addresses).toEqual(first.addresses);
+});

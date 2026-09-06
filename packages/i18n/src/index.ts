@@ -5,6 +5,7 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'settings.profile.notProvided': 'وارد نشده',
   'onboarding.complete.finalizing': 'در حال تکمیل پروفایل…',
   'onboarding.complete.failedTitle': 'تکمیل پروفایل انجام نشد',
   'onboarding.complete.missingProfile':
@@ -1466,6 +1467,7 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'settings.profile.notProvided': 'Not provided',
   'onboarding.complete.finalizing': 'Completing profile…',
   'onboarding.complete.failedTitle': 'Profile completion failed',
   'onboarding.complete.missingProfile':

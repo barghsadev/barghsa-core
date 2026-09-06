@@ -697,3 +697,96 @@ test('completion does not guess a profile and rejects mismatched success respons
   await expect(page.getByRole('button', { name: 'Go to dashboard', exact: true })).toHaveCount(0);
   expect(requests).toBe(1);
 });
+
+for (const locale of ['en', 'fa']) {
+  test(`profile settings save changed fields and reset dependent cities (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const bodies: Record<string, unknown>[] = [];
+    let detail = {
+      id: 'profile-one',
+      profileType: 'INDIVIDUAL',
+      status: 'VERIFIED',
+      isDefault: true,
+      title: 'Profile',
+      firstName: 'Original',
+      lastName: 'Owner',
+      nationalId: '1234567891',
+      canEditIdentity: true,
+      addresses: [
+        {
+          id: 'address-one',
+          provinceId: 'province-a',
+          cityId: 'city-a',
+          fullAddress: 'Old Street',
+          postalCode: '1234567890',
+          mainAddress: true,
+        },
+      ],
+    };
+    await page.route('**/api/profiles/profile-one', async (route) => {
+      if (route.request().method() === 'PUT') {
+        const body = route.request().postDataJSON();
+        bodies.push(body);
+        detail = { ...detail, ...body };
+        if (body.provinceId) detail.addresses = [{ ...detail.addresses[0], ...body }];
+      }
+      await route.fulfill({ json: detail });
+    });
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({
+        json: [
+          { id: 'province-a', nameEn: 'Province A', nameFa: 'استان الف' },
+          { id: 'province-b', nameEn: 'Province B', nameFa: 'استان ب' },
+        ],
+      })
+    );
+    await page.route('**/api/geography/provinces/*/cities', (route) =>
+      route.fulfill({
+        json: [
+          route.request().url().includes('province-a')
+            ? { id: 'city-a', nameEn: 'City A', nameFa: 'شهر الف' }
+            : { id: 'city-b', nameEn: 'City B', nameFa: 'شهر ب' },
+        ],
+      })
+    );
+    await page.goto('/settings/profile');
+    const firstName = page.locator('#profile-first-name');
+    await expect(firstName).toBeEnabled();
+    await firstName.fill('Changed');
+    const save = page.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+      exact: true,
+    });
+    await save.click();
+    await expect.poll(() => bodies).toEqual([{ firstName: 'Changed' }]);
+    await expect(firstName).toHaveValue('Changed');
+    const province = page.locator('#profile-province');
+    const city = page.locator('#profile-city');
+    await expect(province.locator('option:checked')).toHaveText(
+      locale === 'fa' ? 'استان الف' : 'Province A'
+    );
+    await province.selectOption('province-b');
+    await expect(city).toHaveValue('');
+    await expect(city).toBeEnabled();
+    await city.selectOption('city-b');
+    await page.locator('#profile-address').fill('New Street');
+    await save.click();
+    await expect
+      .poll(() => bodies[1])
+      .toEqual({
+        provinceId: 'province-b',
+        cityId: 'city-b',
+        fullAddress: 'New Street',
+        postalCode: '1234567890',
+      });
+    await expect(page.locator('#profile-address')).toHaveValue('New Street');
+    await page.reload();
+    await expect(city).toHaveValue('city-b');
+    await expect(page.locator('#profile-address')).toHaveValue('New Street');
+    detail.canEditIdentity = false;
+    await page.reload();
+    await expect(firstName).toBeDisabled();
+  });
+}

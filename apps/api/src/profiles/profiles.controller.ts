@@ -353,6 +353,7 @@ export class ProfilesController {
     }
 
     return {
+      canEditIdentity: await this.profilesService.canEditIndividualIdentity(userId, profile),
       id: profile.id,
       profileType: profile.profileType,
       isDefault: profile.isDefault,
