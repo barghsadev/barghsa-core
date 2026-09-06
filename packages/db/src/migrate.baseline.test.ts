@@ -69,6 +69,7 @@ describe('complete production schema baseline', () => {
         '0108_legal_representative',
         '0109_onboarding_drafts',
         '0110_legal_documents',
+        '0111_account_login_identifiers',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -169,6 +170,9 @@ describe('complete production schema baseline', () => {
       );
       await pool.query(
         'ALTER TABLE legal_profiles DROP COLUMN representative_honorific CASCADE, DROP COLUMN representative_first_name CASCADE, DROP COLUMN representative_last_name CASCADE, DROP COLUMN representative_national_id CASCADE, DROP COLUMN representative_province_id CASCADE, DROP COLUMN representative_city_id CASCADE, DROP COLUMN representative_full_address CASCADE, DROP COLUMN representative_postal_code CASCADE'
+      );
+      await pool.query(
+        'DROP FUNCTION synchronize_account_login_identifiers() CASCADE; DROP FUNCTION validate_account_login_identifier() CASCADE; DROP TABLE account_login_identifiers'
       );
       await pool.query('ALTER TABLE legal_profiles DROP COLUMN documents');
       await pool.query('DROP TABLE profile_onboarding_drafts');
