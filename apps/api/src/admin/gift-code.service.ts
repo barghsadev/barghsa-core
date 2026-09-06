@@ -426,10 +426,18 @@ export class GiftCodeService {
         input.eligibility !== undefined
           ? this.assertEligibility(input.eligibility)
           : current.eligibility;
-      const profileIds =
-        input.profileIds !== undefined
-          ? this.assertProfileScope(eligibility, input.profileIds)
-          : undefined;
+      const profileIds = this.assertProfileScope(
+        eligibility,
+        input.profileIds ??
+          (eligibility === 'profile' && current.eligibility === 'profile'
+            ? (
+                await q.query<{ profile_id: string }>(
+                  'SELECT profile_id FROM gift_code_profiles WHERE gift_code_id = $1 ORDER BY profile_id',
+                  [id]
+                )
+              ).rows.map((row) => row.profile_id)
+            : [])
+      );
       const minOrderAmount =
         input.minOrderAmount !== undefined
           ? this.assertMinOrderAmount(input.minOrderAmount)
@@ -492,7 +500,11 @@ export class GiftCodeService {
       );
       // Replace profile scopes whenever provided (or eligibility changed
       // to public — clear stale scopes).
-      if (input.profileIds !== undefined || eligibility !== current.eligibility) {
+      if (
+        input.profileIds !== undefined ||
+        eligibility !== current.eligibility ||
+        eligibility === 'public'
+      ) {
         await q.query('DELETE FROM gift_code_profiles WHERE gift_code_id = $1', [id]);
         if (profileIds !== undefined && profileIds.length > 0) {
           await this.insertProfiles(q, id, profileIds);
@@ -533,6 +545,16 @@ export class GiftCodeService {
     return this.withAdminTransaction(actorUserId, async (q) => {
       const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
+      if (status === 'active' && current.eligibility === 'profile') {
+        const profiles = await q.query<{ profile_id: string }>(
+          'SELECT profile_id FROM gift_code_profiles WHERE gift_code_id = $1 ORDER BY profile_id',
+          [id]
+        );
+        this.assertProfileScope(
+          'profile',
+          profiles.rows.map((row) => row.profile_id)
+        );
+      }
       if (current.status === status) return this.readDto(q, id);
 
       await q.query('UPDATE gift_codes SET status = $1, updated_at = $2 WHERE id = $3', [
@@ -795,7 +817,7 @@ export class GiftCodeService {
         400
       );
     }
-    return ids;
+    return eligibility === 'public' ? [] : ids;
   }
 
   private assertMinOrderAmount(raw: string): string {

@@ -215,3 +215,67 @@ it('rejects unknown activation fields without changing state', async () => {
   expect(response.status).toBe(400);
   await unchanged();
 });
+
+it('requires selected profiles when restricting a public gift code', async () => {
+  const response = await fetch(`${http.base}/api/admin/promotions/gift-codes/${giftId}`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ eligibility: 'profile' }),
+  });
+  expect(response.status).toBe(400);
+  await unchanged();
+  expect(
+    (await http.pool.query('SELECT eligibility FROM gift_codes WHERE id=$1', [giftId])).rows[0]
+      .eligibility
+  ).toBe('public');
+});
+it('preserves restricted selections on edits and clears them when made public', async () => {
+  const profile = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status,first_name) VALUES ('gift-admin','INDIVIDUAL','VERIFIED','Gift recipient') RETURNING id"
+    )
+  ).rows[0].id;
+  const edit = (body: unknown) =>
+    fetch(`${http.base}/api/admin/promotions/gift-codes/${giftId}`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify(body),
+    });
+  const restricted = await edit({ eligibility: 'profile', profileIds: [profile, profile] });
+  expect(restricted.status).toBe(200);
+  expect(await restricted.json()).toMatchObject({ eligibility: 'profile', profileIds: [profile] });
+  const edited = await edit({ discountValue: '2000' });
+  expect(edited.status).toBe(200);
+  expect(await edited.json()).toMatchObject({ profileIds: [profile], discountValue: '2000' });
+  const publicCode = await edit({ eligibility: 'public', profileIds: [profile] });
+  expect(publicCode.status).toBe(200);
+  expect(await publicCode.json()).toMatchObject({ eligibility: 'public', profileIds: [] });
+  const created = await fetch(`${http.base}/api/admin/promotions/gift-codes`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      code: 'SECOND',
+      discountType: 'fixed_irr',
+      discountValue: '1000',
+      eligibility: 'public',
+      profileIds: [profile],
+    }),
+  });
+  expect(created.status).toBe(201);
+  expect(await created.json()).toMatchObject({ profileIds: [] });
+});
+it('requires repairing a legacy empty restricted scope before activation', async () => {
+  await http.pool.query(
+    "UPDATE gift_codes SET eligibility='profile',status='inactive' WHERE id=$1",
+    [giftId]
+  );
+  const response = await fetch(`${http.base}/api/admin/promotions/gift-codes/${giftId}/toggle`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ status: 'active' }),
+  });
+  expect(response.status).toBe(400);
+  expect(
+    (await http.pool.query('SELECT status FROM gift_codes WHERE id=$1', [giftId])).rows[0].status
+  ).toBe('inactive');
+});

@@ -1405,3 +1405,9 @@ Review and validation: 53 service/controller checks and eight production-migrate
 Gift-code amounts now fit the signed bigint storage range, and usage limits fit the integer columns. The shared payload validator enforces the same bounds for service callers. Admin payloads reject unknown fields and unsupported categories, trim codes before rejecting blank values, and require explicit timezone offsets for supplied dates.
 
 Review and validation: all 83 gift-code service/controller/production-migrated HTTP checks and 27 shared promotion checks pass. Real HTTP coverage rejects each excessive amount/limit and malformed input on create and edit, verifies unchanged state/audits, accepts exact database maxima, normalizes the code and preserves a +03:30 timestamp as its UTC instant. API build, root types, lint, contract and whitespace checks pass. Existing clients sending offset-free dates must include Z or a numeric offset. The profile-eligibility transition and editor remain open.
+
+### Validate gift-code profile eligibility transitions (F17)
+
+Switching a public gift code to profile-restricted now requires explicit profile selections. Edits to an already-restricted code validate and preserve its stored selections when omitted. Public codes clear profile scopes, including when clients submit leftover IDs. Activation rejects a legacy restricted code with no selected profiles.
+
+Review and validation: all 86 gift-code service/controller/production-migrated HTTP checks pass. Added real HTTP cases for missing selections, deduplication, preservation during amount edits, switching back to public, public creation with leftover IDs and blocked activation of an empty legacy scope. Root types, lint and whitespace checks pass. This does not rewrite production legacy records; existing empty scopes need profile selection before activation. The gift-code editor remains open.
