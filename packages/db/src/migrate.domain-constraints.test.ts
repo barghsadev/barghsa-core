@@ -38,6 +38,22 @@ it('rejects invalid notification/approval states and non-positive financial appr
   await expect(pool.query("INSERT INTO approval_requests(action_type,amount_irr,initiator_id,reason,status) VALUES ('refund',1,'constraint-owner','test','invented')")).rejects.toMatchObject({code:'23514',constraint:'chk_ar_status'})
 })
 
+it('leaves omitted optional relationships null while preserving real foreign-key enforcement',async()=>{
+  const profile=(await pool.query("INSERT INTO profiles(user_id) VALUES ('constraint-owner') RETURNING id")).rows[0].id
+  const invoice=(await pool.query("INSERT INTO invoices(profile_id,total_amount) VALUES ($1,100) RETURNING id,order_id",[profile])).rows[0]
+  expect(invoice.order_id).toBeNull()
+  const webhook=(await pool.query("INSERT INTO email_webhook_events(event_token,event_type) VALUES ('unmatched','email.bounced') RETURNING outbox_id")).rows[0]
+  expect(webhook.outbox_id).toBeNull()
+  const suppression=(await pool.query("INSERT INTO email_suppressions(address,reason) VALUES ('blocked@example.test','complaint') RETURNING profile_id,source_event_id")).rows[0]
+  expect(suppression).toEqual({profile_id:null,source_event_id:null})
+  await expect(pool.query('UPDATE invoices SET order_id=$1 WHERE id=$2',[randomUUID(),invoice.id])).rejects.toMatchObject({code:'23503'})
+  const defaults=(await pool.query(`SELECT DISTINCT t.relname,a.attname FROM pg_constraint c JOIN pg_class t ON t.oid=c.conrelid
+    JOIN pg_namespace n ON n.oid=t.relnamespace JOIN pg_attribute a ON a.attrelid=t.oid AND a.attnum=ANY(c.conkey)
+    JOIN pg_attrdef d ON d.adrelid=t.oid AND d.adnum=a.attnum
+    WHERE n.nspname='public' AND c.contype='f' AND NOT a.attnotnull`)).rows
+  expect(defaults).toEqual([])
+})
+
 it('validates upload extensions and prevents overlapping policy windows while allowing adjacent versions',async()=>{
   for(const extensions of [[],['pdf'],['.EXE'],[null],[['.pdf']],[Array(51).fill('.pdf')].flat()]){
     expect((await pool.query('SELECT barghsa_valid_upload_extensions($1::text[]) AS valid',[extensions])).rows[0].valid).toBe(false)
@@ -60,6 +76,7 @@ it('blocks an upgrade with invalid historical data without deleting it, then ret
   const folder=mkdtempSync(resolve(tmpdir(),'barghsa-prior-migrations-'))
   const production=resolve(__dirname,'../drizzle/production')
   const journal=JSON.parse(readFileSync(resolve(production,'meta/_journal.json'),'utf8'))
+  const pending=journal.entries.filter((entry:{tag:string})=>entry.tag>='0104_restore_inline_domain_constraints').map((entry:{tag:string})=>entry.tag)
   journal.entries=journal.entries.filter((entry:{tag:string})=>entry.tag<'0104_restore_inline_domain_constraints')
   mkdirSync(resolve(folder,'meta'))
   writeFileSync(resolve(folder,'meta/_journal.json'),JSON.stringify(journal))
@@ -75,7 +92,7 @@ it('blocks an upgrade with invalid historical data without deleting it, then ret
     expect((await old.query('SELECT amount_irr::text AS amount FROM approval_requests')).rows).toEqual([{amount:'0'}])
     expect((await old.query("SELECT conname FROM pg_constraint WHERE conname='chk_ob_status'")).rows).toEqual([])
     await old.query('UPDATE approval_requests SET amount_irr=1')
-    expect(await runMigrations({connection})).toEqual({ok:true,applied:['0104_restore_inline_domain_constraints']})
+    expect(await runMigrations({connection})).toEqual({ok:true,applied:pending})
     expect(await runMigrations({connection})).toEqual({ok:true,applied:[]})
   } finally {await old.end();await management.query(`DROP DATABASE "${database}"`);rmSync(folder,{recursive:true,force:true})}
 })

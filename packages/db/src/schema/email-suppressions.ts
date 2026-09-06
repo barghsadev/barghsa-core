@@ -1,4 +1,4 @@
-import { pgTable, text, uniqueIndex, index } from 'drizzle-orm/pg-core'
+import { uuid, pgTable, text, uniqueIndex, index } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { profiles } from './profiles.js'
 import { emailWebhookEvents } from './email-webhook-events.js'
@@ -33,12 +33,12 @@ export const emailSuppressions = pgTable(
     reason: text('reason', { enum: ['hard_bounce', 'complaint'] }).notNull(),
 
     /** The receiving profile when the originating outbox row was resolvable. */
-    profileId: uuidv7('profile_id').references(() => profiles.id, {
+    profileId: uuid('profile_id').references(() => profiles.id, {
       onDelete: 'cascade',
     }),
 
     /** The verified webhook event that created this suppression. */
-    sourceEventId: uuidv7('source_event_id').references(() => emailWebhookEvents.id, {
+    sourceEventId: uuid('source_event_id').references(() => emailWebhookEvents.id, {
       onDelete: 'set null',
     }),
 

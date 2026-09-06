@@ -1,4 +1,4 @@
-import { pgTable, text, jsonb, uniqueIndex, index } from 'drizzle-orm/pg-core'
+import { uuid, pgTable, text, jsonb, uniqueIndex, index } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { notificationOutbox } from './notification-outbox.js'
 
@@ -44,7 +44,7 @@ export const emailWebhookEvents = pgTable(
     fromAddress: text('from_address'),
 
     /** The outbox row matched via `message_id` (nullable when unmatched). */
-    outboxId: uuidv7('outbox_id').references(() => notificationOutbox.id, {
+    outboxId: uuid('outbox_id').references(() => notificationOutbox.id, {
       onDelete: 'set null',
     }),
 

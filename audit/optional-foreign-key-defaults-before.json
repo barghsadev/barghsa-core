@@ -1,0 +1,22 @@
+[
+  {
+    "table": "email_suppressions",
+    "column": "profile_id",
+    "default": "uuid_generate_v7()"
+  },
+  {
+    "table": "email_suppressions",
+    "column": "source_event_id",
+    "default": "uuid_generate_v7()"
+  },
+  {
+    "table": "email_webhook_events",
+    "column": "outbox_id",
+    "default": "uuid_generate_v7()"
+  },
+  {
+    "table": "invoices",
+    "column": "order_id",
+    "default": "uuid_generate_v7()"
+  }
+]

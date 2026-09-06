@@ -81,7 +81,7 @@ export const invoices = pgTable(
       .references(() => profiles.id, { onDelete: 'restrict' }),
 
     /** Optional foreign key to the originating order. */
-    orderId: uuidv7('order_id')
+    orderId: uuid('order_id')
       .references(() => orders.id, { onDelete: 'set null' }),
 
     /**

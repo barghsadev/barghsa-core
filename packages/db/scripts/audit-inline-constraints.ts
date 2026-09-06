@@ -14,6 +14,12 @@ async function main() {
     const expected=JSON.parse(readFileSync(path,'utf8')) as Array<{table:string;name:string;definition:string}>
     const actual=(await pool.query(`SELECT t.relname AS "table",c.conname AS name,pg_get_constraintdef(c.oid) AS definition
       FROM pg_constraint c JOIN pg_class t ON t.oid=c.conrelid JOIN pg_namespace n ON n.oid=t.relnamespace WHERE n.nspname='public'`)).rows
+    const optionalDefaults=(await pool.query(`SELECT DISTINCT t.relname AS "table",a.attname AS "column",pg_get_expr(d.adbin,d.adrelid) AS "default"
+      FROM pg_constraint c JOIN pg_class t ON t.oid=c.conrelid JOIN pg_namespace n ON n.oid=t.relnamespace
+      JOIN pg_attribute a ON a.attrelid=t.oid AND a.attnum=ANY(c.conkey)
+      JOIN pg_attrdef d ON d.adrelid=t.oid AND d.adnum=a.attnum
+      WHERE n.nspname='public' AND c.contype='f' AND NOT a.attnotnull ORDER BY 1,2`)).rows
+    writeFileSync(resolve(__dirname,'../../../audit/optional-foreign-key-defaults-current.json'),JSON.stringify(optionalDefaults,null,2)+'\n')
     writeFileSync(resolve(__dirname,'../../../audit/production-constraints.json'),JSON.stringify(actual,null,2)+'\n')
     const indexes=(await pool.query(`SELECT t.relname AS "table",i.relname AS name,pg_get_indexdef(i.oid) AS definition
       FROM pg_index x JOIN pg_class t ON t.oid=x.indrelid JOIN pg_class i ON i.oid=x.indexrelid

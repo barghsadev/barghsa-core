@@ -567,3 +567,10 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Review: all 2,497 API tests and 310 worker tests passed, plus populated baseline/rerun and four dedicated database scenarios. Those prove actual invalid-write rejection, adjacent-versus-overlapping policy windows, concurrent due-period exclusion, complete catalog/ORM coverage, and failed upgrade rollback followed by retry after correcting historical data. Final catalog: 80 checked, zero missing. Workspace and database typechecks passed.
 - Broader database run: 556 checks passed and one old seed fixture failed because it omitted auth_version. The fixture now includes that existing column, uses an explicit test-only password, and all 13 seed tests pass. This was a fixture repair, not a production bootstrap execution.
 - Scope: this inventory covers named inline constraints in 0081, not a blanket claim that all database/business invariants or operational restore requirements are verified. Optional foreign-key defaults and remaining F02 acceptance work continue next.
+
+### F02 follow-up — Optional relationship defaults
+
+- Catalog review found four remaining nullable foreign keys generating random IDs by default: invoices.order_id, email_webhook_events.outbox_id, and email_suppressions.profile_id/source_event_id. These generated nonexistent targets when a legitimate optional relationship was omitted.
+- Migration 0105 removes those defaults, and the ORM fields now use ordinary UUID references. Before/after audit snapshots are saved in optional-foreign-key-defaults-before.json and optional-foreign-key-defaults-current.json.
+- Review: six migrated database checks and workspace typechecks passed. An invoice without an order, an unmatched email webhook and a suppression without profile/event links now insert with NULL references; an explicitly nonexistent order still fails its foreign key. Fresh, populated-upgrade, failed-upgrade/retry and repeated-migration paths passed. Final catalog has no nullable foreign-key defaults.
+- This does not claim operational backup/restore or the remaining acceptance matrix is complete.
