@@ -16,7 +16,6 @@ export default createVitestConfig({
         'src/**/*.spec.ts',
         'src/**/__tests__/**',
         'src/generated/**',
-        'src/**/index.ts',
         'src/**/*.d.ts',
       ],
       // Measured whole-package floor; required changed-code/critical gates remain separate.

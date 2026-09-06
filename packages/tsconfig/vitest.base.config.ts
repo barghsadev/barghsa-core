@@ -23,8 +23,8 @@ function mergeThresholds(
  * All packages/apps extend this config and may override specific fields.
  *
  * Package-wide baseline thresholds are set by each package. The zero defaults
- * below do not enforce the required changed-code 80/75 or critical-domain
- * 90/85 policy; those requirements must be checked separately.
+ * below are supplemented in CI by scripts/check-changed-coverage.py for
+ * changed-code 80/75 and modified critical-file 90/85 enforcement.
  *
  * Overrides are deep-merged: `overrides.test` extends the base test config
  * rather than replacing it, preserving coverage thresholds and other defaults.
@@ -45,7 +45,6 @@ export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
       'src/**/*.spec.ts',
       'src/**/__tests__/**',
       'src/generated/**',
-      'src/**/index.ts',
       'src/**/*.d.ts',
     ],
     thresholds: {

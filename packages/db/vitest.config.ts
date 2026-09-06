@@ -15,7 +15,6 @@ export default createVitestConfig({
         'src/**/__tests__/**',
         'src/test/**',
         'src/generated/**',
-        'src/**/index.ts',
         'src/**/*.d.ts',
       ],
     },

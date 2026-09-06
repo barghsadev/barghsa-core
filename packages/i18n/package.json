@@ -69,5 +69,8 @@
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@barghsa/tsconfig": "workspace:*"
   }
 }
