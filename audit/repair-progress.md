@@ -1701,3 +1701,5 @@ Review and validation: all eight ordering browser checks passed in Persian and E
 Corrected the coverage upload paths from a root-only directory to apps/*/coverage and packages/*/coverage. The shared Vitest configuration uses package-local default report directories; the old artifact step missed those reports.
 
 Review and validation: confirmed the configured output behavior and matched five existing local coverage-final.json reports under the corrected paths. Workflow formatting and whitespace checks pass. Existing reports are path evidence only, not new coverage measurements. This correction does not implement the still-open changed-code/critical-domain threshold policy or claim a remote CI run.
+
+Full browser checkpoint after 64b2260: all 240 Chromium checks passed in 2.6 minutes, including the migrated-API administration flows. All 114 web unit tests also passed. These are regression results, not complete per-task acceptance or operational certification.
