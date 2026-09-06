@@ -4,7 +4,6 @@ import {
   Patch,
   Param,
   HttpCode,
-  NotFoundException,
   BadRequestException,
   Query,
   Req,
@@ -53,18 +52,8 @@ import type {
 export class NotificationCenterController {
   constructor(private readonly notificationCenterService: NotificationCenterService) {}
 
-  private async requireActiveProfile(req: AuthenticatedRequest): Promise<string> {
-    const profileId = await this.notificationCenterService.resolveActiveProfileId(
-      req.session.userId,
-    )
-    if (!profileId) {
-      throw new NotFoundException({
-        statusCode: 404,
-        error: 'NOT_FOUND:RESOURCE',
-        message: 'No active profile',
-      })
-    }
-    return profileId
+  private async requireActiveProfile(req: AuthenticatedRequest): Promise<string | null> {
+    return this.notificationCenterService.resolveActiveProfileId(req.session.userId)
   }
 
   /**
@@ -118,7 +107,7 @@ export class NotificationCenterController {
     if (cursor) options.cursor = cursor
     if (parsedLimit !== undefined) options.limit = parsedLimit
 
-    return this.notificationCenterService.list(profileId, options)
+    return this.notificationCenterService.list(profileId, options, req.session.userId)
   }
 
   /**
@@ -133,7 +122,7 @@ export class NotificationCenterController {
   @ApiResponse({ status: 200, description: '{ unread_count }' })
   async unreadCount(@Req() req: AuthenticatedRequest) {
     const profileId = await this.requireActiveProfile(req)
-    const unread_count = await this.notificationCenterService.countUnread(profileId)
+    const unread_count = await this.notificationCenterService.countUnread(profileId, req.session.userId)
     return { unread_count }
   }
 
@@ -148,10 +137,10 @@ export class NotificationCenterController {
   @ApiResponse({ status: 200, description: '{ marked, unread_count }' })
   async markAllRead(@Req() req: AuthenticatedRequest) {
     const profileId = await this.requireActiveProfile(req)
-    const marked = await this.notificationCenterService.markAllRead(profileId)
+    const marked = await this.notificationCenterService.markAllRead(profileId, req.session.userId)
     // Re-query after the update so the reported count is accurate even if a
     // new notification arrives concurrently between the UPDATE and the reply.
-    const unread_count = await this.notificationCenterService.countUnread(profileId)
+    const unread_count = await this.notificationCenterService.countUnread(profileId, req.session.userId)
     return { marked, unread_count }
   }
 
@@ -168,8 +157,8 @@ export class NotificationCenterController {
   @ApiResponse({ status: 404, description: 'Notification not found' })
   async markRead(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     const profileId = await this.requireActiveProfile(req)
-    await this.notificationCenterService.markRead(profileId, id)
-    const unreadCount = await this.notificationCenterService.countUnread(profileId)
+    await this.notificationCenterService.markRead(profileId, id, req.session.userId)
+    const unreadCount = await this.notificationCenterService.countUnread(profileId, req.session.userId)
     return { id, is_read: true, unread_count: unreadCount }
   }
 }

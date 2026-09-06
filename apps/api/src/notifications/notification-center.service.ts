@@ -26,6 +26,7 @@ export type CursorDirection = 'older' | 'newer'
 export interface NotificationCenterItem {
   id: string
   type: string
+  localizedContent?: Record<string, { title: string; body: string }> | null
   titleI18nKey: string
   bodyI18nKey: string
   /** JSON interpolation variables for rendering title/body placeholders. */
@@ -74,6 +75,7 @@ export const NOTIFICATION_CENTER_POOL = Symbol('NOTIFICATION_CENTER_POOL')
 // Column list used by the list query — snake_case DB columns aliased to the
 // camelCase NotificationCenterItem shape (the `pg` driver does not auto-convert).
 const SELECT_COLUMNS = `id,
+  localized_content AS "localizedContent",
   type,
   title_i18n_key AS "titleI18nKey",
   body_i18n_key AS "bodyI18nKey",
@@ -195,8 +197,9 @@ export class NotificationCenterService {
    * `next_cursor` for it. `unread_count` is the profile's total unread always.
    */
   async list(
-    profileId: string,
+    profileId: string | null,
     options: ListNotificationsOptions = {},
+    userId?: string,
   ): Promise<NotificationCenterPage> {
     const db = this.db
     const limit = Math.min(
@@ -206,9 +209,9 @@ export class NotificationCenterService {
     const filter: NotificationFilter = options.filter ?? 'all'
     const direction: CursorDirection = options.direction ?? 'older'
 
-    const conditions: string[] = ['profile_id = $1']
-    const params: unknown[] = [profileId]
-    let paramIndex = 1
+    const conditions: string[] = [notificationScope]
+    const params: unknown[] = [profileId, userId ?? null]
+    let paramIndex = 2
 
     if (filter === 'unread') {
       conditions.push('is_read = false')
@@ -249,17 +252,17 @@ export class NotificationCenterService {
         ? encodeCursor(boundaryRow.createdAt, boundaryRow.id)
         : null
 
-    const unread_count = await this.countUnread(profileId)
+    const unread_count = await this.countUnread(profileId, userId)
 
     return { data: page, next_cursor, unread_count }
   }
 
   /** Total unread count for a profile (used for the badge & response). */
-  async countUnread(profileId: string): Promise<number> {
+  async countUnread(profileId: string | null, userId?: string): Promise<number> {
     const result = await this.db.query(
       `SELECT COUNT(*) AS n FROM in_app_notifications
-        WHERE profile_id = $1 AND is_read = false`,
-      [profileId],
+        WHERE ${notificationScope} AND is_read = false`,
+      [profileId, userId ?? null],
     )
     return parseInt(
       (result.rows[0] as { n: string } | undefined)?.n ?? '0',
@@ -271,12 +274,12 @@ export class NotificationCenterService {
    * Mark one notification read. Profile-scoped so a user can only affect their
    * own rows; throws 404 when the row does not exist for the given profile.
    */
-  async markRead(profileId: string, notificationId: string): Promise<void> {
+  async markRead(profileId: string | null, notificationId: string, userId?: string): Promise<void> {
     const result = await this.db.query(
       `UPDATE in_app_notifications
-          SET is_read = true, read_at = NOW()
-        WHERE id = $1 AND profile_id = $2`,
-      [notificationId, profileId],
+          SET is_read = true, read_at = COALESCE(read_at,NOW())
+        WHERE id = $3 AND ${notificationScope}`,
+      [profileId, userId ?? null, notificationId],
     )
     if (result.rowCount === 0) {
       throw new HttpException(
@@ -291,13 +294,17 @@ export class NotificationCenterService {
   }
 
   /** Mark every unread notification for the profile as read. */
-  async markAllRead(profileId: string): Promise<number> {
+  async markAllRead(profileId: string | null, userId?: string): Promise<number> {
     const result = await this.db.query(
       `UPDATE in_app_notifications
-          SET is_read = true, read_at = NOW()
-        WHERE profile_id = $1 AND is_read = false`,
-      [profileId],
+          SET is_read = true, read_at = COALESCE(read_at,NOW())
+        WHERE ${notificationScope} AND is_read = false`,
+      [profileId, userId ?? null],
     )
     return result.rowCount ?? 0
   }
 }
+
+/** Account notices are private; profile notices require the current profile. */
+export const notificationScope = `((profile_id=$1 AND recipient_user_id IS NULL)
+  OR (recipient_user_id=$2 AND (profile_id IS NULL OR profile_id=$1)))`

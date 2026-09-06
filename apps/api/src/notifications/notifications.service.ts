@@ -1,3 +1,5 @@
+import { notificationLink } from '@barghsa/shared/notifications'
+import { NotificationCenterService, notificationScope } from './notification-center.service.js'
 import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
@@ -55,7 +57,7 @@ export class NotificationsService {
   /**
    * Create a new in-app notification for a user.
    *
-   * Inserts a notification record into the `notifications` table.
+   * Writes to the canonical notification center, including private account notices.
    * Future E-05 infrastructure will handle out-of-app delivery
    * (email/SMS) based on user preferences.
    *
@@ -68,8 +70,9 @@ export class NotificationsService {
     const now = new Date()
 
     await pool.query(
-      `INSERT INTO notifications (id, user_id, profile_id, type, title, body, link, read, created_at, updated_at)
-       VALUES ($1, $2, $3, $4::notification_type, $5, $6, $7, false, $8, $8)`,
+      `INSERT INTO in_app_notifications (id,recipient_user_id,profile_id,type,title_i18n_key,body_i18n_key,localized_content,link_route,is_read,created_at,delivery_key)
+       VALUES ($1::uuid,$2,$3,$4,'notifications.legacy.title','notifications.legacy.body',
+       jsonb_build_object('original',jsonb_build_object('title',$5::text,'body',COALESCE($6::text,''))),$7,false,$8,'direct:'||$1::text)`,
       [
         id,
         params.userId,
@@ -77,7 +80,7 @@ export class NotificationsService {
         params.type,
         params.title,
         params.body ?? null,
-        params.link ?? null,
+        notificationLink(params.link),
         now,
       ],
     )
@@ -91,7 +94,7 @@ export class NotificationsService {
       type: params.type,
       title: params.title,
       body: params.body ?? null,
-      link: params.link ?? null,
+      link: notificationLink(params.link),
       read: false,
       readAt: null,
       createdAt: now,
@@ -114,74 +117,33 @@ export class NotificationsService {
   ): Promise<{ notifications: NotificationResult[]; total: number; unreadCount: number }> {
     const pool = getDbPool()
 
-    const countResult = await pool.query<{ total: string }>(
-      `SELECT COUNT(*) AS total FROM notifications WHERE user_id = $1`,
-      [userId],
-    )
-
-    const unreadResult = await pool.query<{ unread: string }>(
-      `SELECT COUNT(*) AS unread FROM notifications WHERE user_id = $1 AND read = false`,
-      [userId],
-    )
-
-    const rowsResult = await pool.query<NotificationResult>(
-      `SELECT id, user_id, profile_id, type, title, body, link, read, read_at, created_at, updated_at
-       FROM notifications
-       WHERE user_id = $1
-       ORDER BY created_at DESC
-       LIMIT $2 OFFSET $3`,
-      [userId, limit, offset],
-    )
-
-    return {
-      notifications: rowsResult.rows,
-      total: parseInt(countResult.rows[0]?.total ?? '0', 10),
-      unreadCount: parseInt(unreadResult.rows[0]?.unread ?? '0', 10),
-    }
+    const center = new NotificationCenterService(pool)
+    const profileId = await center.resolveActiveProfileId(userId)
+    const safeLimit = Number.isFinite(limit) ? Math.min(Math.max(Math.trunc(limit), 1), 100) : 50
+    const safeOffset = Number.isFinite(offset) ? Math.max(Math.trunc(offset), 0) : 0
+    const counts = (await pool.query(`SELECT count(*)::int AS total,
+      count(*) FILTER (WHERE NOT is_read)::int AS unread FROM in_app_notifications WHERE ${notificationScope}`, [profileId, userId])).rows[0]
+    const rows = await pool.query(`SELECT id,profile_id AS "profileId",type,
+      COALESCE(localized_content->'original'->>'title',localized_content->'fa'->>'title',title_i18n_key) AS title,
+      COALESCE(localized_content->'original'->>'body',localized_content->'fa'->>'body',body_i18n_key) AS body,
+      link_route AS link,is_read AS read,read_at AS "readAt",created_at AS "createdAt",created_at AS "updatedAt"
+      FROM in_app_notifications WHERE ${notificationScope} ORDER BY created_at DESC,id DESC LIMIT $3 OFFSET $4`, [profileId,userId,safeLimit,safeOffset])
+    return { notifications: rows.rows.map(row => ({ ...row, userId })), total: counts?.total ?? 0, unreadCount: counts?.unread ?? 0 }
   }
 
-  /**
-   * Get count of unread notifications for a user.
-   *
-   * @param userId - The user's UUID.
-   */
   async countUnread(userId: string): Promise<number> {
-    const pool = getDbPool()
-    const result = await pool.query<{ unread: string }>(
-      `SELECT COUNT(*) AS unread FROM notifications WHERE user_id = $1 AND read = false`,
-      [userId],
-    )
-    return parseInt(result.rows[0]?.unread ?? '0', 10)
+    const center = new NotificationCenterService(getDbPool())
+    return center.countUnread(await center.resolveActiveProfileId(userId), userId)
   }
 
-  /**
-   * Mark a single notification as read.
-   *
-   * @param notificationId - The notification UUID.
-   * @param userId - The user's UUID (for authorization check).
-   */
   async markAsRead(notificationId: string, userId: string): Promise<void> {
-    const pool = getDbPool()
-    await pool.query(
-      `UPDATE notifications SET read = true, read_at = $1, updated_at = $1
-       WHERE id = $2 AND user_id = $3`,
-      [new Date(), notificationId, userId],
-    )
+    const center = new NotificationCenterService(getDbPool())
+    await center.markRead(await center.resolveActiveProfileId(userId), notificationId, userId)
   }
 
-  /**
-   * Mark all notifications as read for a user.
-   *
-   * @param userId - The user's UUID.
-   */
   async markAllAsRead(userId: string): Promise<void> {
-    const pool = getDbPool()
-    const now = new Date()
-    await pool.query(
-      `UPDATE notifications SET read = true, read_at = $1, updated_at = $1
-       WHERE user_id = $2 AND read = false`,
-      [now, userId],
-    )
+    const center = new NotificationCenterService(getDbPool())
+    await center.markAllRead(await center.resolveActiveProfileId(userId), userId)
   }
 
   /**

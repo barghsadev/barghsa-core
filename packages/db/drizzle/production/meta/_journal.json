@@ -113,6 +113,13 @@
       "when": 1791158400000,
       "tag": "0095_notification_message_snapshot",
       "breakpoints": true
+    },
+    {
+      "idx": 96,
+      "version": "7",
+      "when": 1791244800000,
+      "tag": "0096_unified_notification_inbox",
+      "breakpoints": true
     }
   ]
 }

@@ -17,6 +17,7 @@ import { dispatchOutbox, type OutboxRow } from './outbox-reader.js'
 const name = `test_delivery_${randomUUID().replaceAll('-', '')}`
 const folder = resolve(__dirname, '../../../../packages/db/drizzle/production')
 let management: Pool, pool: Pool, profileId: string
+const legacyNotice = randomUUID()
 const legacyEmail = randomUUID()
 const proven = randomUUID(), ambiguous = randomUUID(), untouched = randomUUID(), inbox = randomUUID()
 
@@ -48,6 +49,10 @@ beforeAll(async () => {
       await pool.query(`INSERT INTO notification_outbox(id,profile_id,event_key,payload,channels,idempotency_key,status)
         VALUES ($1::uuid,$2,'wallet.topup_completed','{}',ARRAY['email'],$1::text,'queued')`, [legacyEmail, profileId])
       await pool.query("INSERT INTO notification_job(outbox_id,channel,status,attempts,last_error) VALUES ($1,'email','retrying',1,'historical-timeout')", [legacyEmail])
+    }
+    if (entry.tag === '0096_unified_notification_inbox') {
+      await pool.query(`INSERT INTO notifications(id,user_id,profile_id,type,title,body,link,read,read_at,created_at)
+        VALUES ($1,'delivery-owner',$2,'profile_verified','Legacy verified','Original body','/app/settings/profile',true,'2026-01-02','2026-01-01')`, [legacyNotice,profileId])
     }
     await pool.query(readFileSync(resolve(folder, `${entry.tag}.sql`), 'utf8'))
   }
@@ -404,4 +409,11 @@ it('sends stable mapped SMS parameters across a retry and shares the provider qu
     await expect(createAuthSender(pool, request)({ id: 'quota-check', destination: '+989121234567', code: '123456', purpose: 'login' })).rejects.toThrow('quota')
     expect(request).toHaveBeenCalledTimes(2)
   } finally { await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())) }
+})
+
+it('migrates legacy inbox text and read history without deleting its source', async()=>{
+  expect((await pool.query('SELECT recipient_user_id,localized_content,is_read,read_at,created_at,link_route,delivery_key FROM in_app_notifications WHERE id=$1',[legacyNotice])).rows[0])
+    .toEqual({recipient_user_id:'delivery-owner',localized_content:{original:{title:'Legacy verified',body:'Original body'}},is_read:true,
+      read_at:new Date('2026-01-02T00:00:00Z'),created_at:new Date('2026-01-01T00:00:00Z'),link_route:'/settings/profile',delivery_key:`legacy:${legacyNotice}`})
+  expect((await pool.query('SELECT count(*)::int AS count FROM notifications WHERE id=$1',[legacyNotice])).rows[0].count).toBe(1)
 })

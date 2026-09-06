@@ -68,7 +68,7 @@ describe('list', () => {
     expect(pool.query).toHaveBeenCalledTimes(2)
     const [, params] = pool.query.mock.calls[0] as [string, unknown[]]
     // The list query (first call) is scoped to the profile.
-    expect(params).toEqual(['profile-1', 51])
+    expect(params).toEqual(['profile-1', null, 51])
     expect(page.data).toHaveLength(2)
     expect(page.next_cursor).toBeNull()
     expect(page.unread_count).toBe(3)
@@ -138,7 +138,7 @@ describe('list', () => {
 
     const [, params] = pool.query.mock.calls[0] as [string, unknown[]]
     // limit+1 = 101 after clamping to MAX_LIMIT (100).
-    expect(params).toEqual(['profile-1', 101])
+    expect(params).toEqual(['profile-1', null, 101])
   })
 
   it('filters unread rows and scopes to the profile', async () => {
@@ -165,7 +165,7 @@ describe('markRead', () => {
     await svc.markRead('profile-1', 'notif-1')
 
     const [, params] = pool.query.mock.calls[0] as [string, unknown[]]
-    expect(params).toEqual(['notif-1', 'profile-1'])
+    expect(params).toEqual(['profile-1', null, 'notif-1'])
   })
 
   it('throws 404 when the row does not belong to the profile', async () => {
@@ -187,7 +187,7 @@ describe('markAllRead', () => {
 
     const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]]
     expect(sql).toContain('is_read = false')
-    expect(params).toEqual(['profile-1'])
+    expect(params).toEqual(['profile-1', null])
     expect(n).toBe(5)
   })
 })
@@ -203,7 +203,7 @@ describe('countUnread', () => {
     const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]]
     expect(sql).toContain('COUNT(*)')
     expect(sql).toContain('is_read = false')
-    expect(params).toEqual(['profile-1'])
+    expect(params).toEqual(['profile-1', null])
     expect(n).toBe(3)
   })
 

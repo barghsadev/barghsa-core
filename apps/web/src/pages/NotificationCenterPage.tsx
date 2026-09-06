@@ -1,3 +1,4 @@
+import { notificationContent } from '../lib/notifications.js'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, type NavigateOptions } from '@tanstack/react-router'
 import { t } from '@barghsa/i18n'
@@ -206,10 +207,7 @@ export function NotificationCenterPage() {
                 onClick={() => handleItemClick(item)}
                 className="flex w-full items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
                 dir={isRtl ? 'rtl' : 'ltr'}
-                aria-label={`${t('notifications.markReadAria', locale)} — ${t(
-                  item.titleI18nKey,
-                  locale,
-                )}`}
+                aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
               >
                 <span className={item.isRead ? 'opacity-70' : ''}>
                   <NotificationRow

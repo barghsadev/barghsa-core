@@ -1,7 +1,8 @@
-import { desc } from 'drizzle-orm'
-import { jsonb, pgTable, text, boolean, index, uniqueIndex } from 'drizzle-orm/pg-core'
+import { desc, sql } from 'drizzle-orm'
+import { jsonb, pgTable, text, boolean, index, uniqueIndex, uuid, check } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { profiles } from './profiles.js'
+import { users } from './users.js'
 
 /**
  * In-app notification center storage (E-05, T-05.02.01).
@@ -41,9 +42,11 @@ export const inAppNotifications = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** FK to the recipient profile (owner of the notification center). */
-    profileId: uuidv7('profile_id')
-      .notNull()
+    profileId: uuid('profile_id')
       .references(() => profiles.id, { onDelete: 'cascade' }),
+
+    recipientUserId: text('recipient_user_id').references(() => users.userId, { onDelete: 'cascade' }),
+    localizedContent: jsonb('localized_content'),
 
     /** Notification/event type — drives iconography & routing. */
     type: text('type').notNull(),
@@ -78,6 +81,8 @@ export const inAppNotifications = pgTable(
   (table) => [
     // Notification-center list query: a profile's notifications newest-first
     // (matches the SQL migration's (profile_id, created_at DESC) index).
+    check('chk_ian_recipient', sql`${table.profileId} IS NOT NULL OR ${table.recipientUserId} IS NOT NULL`),
+    index('idx_ian_user_created').on(table.recipientUserId, desc(table.createdAt)),
     uniqueIndex('uq_ian_delivery_key').on(table.deliveryKey),
     index('idx_ian_profile_created').on(table.profileId, desc(table.createdAt)),
   ],

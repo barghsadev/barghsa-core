@@ -8,7 +8,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import {
-  interpolate,
+  notificationContent,
   formatRelativeTime,
   notificationTypeLabelKey,
   type NotificationItem,
@@ -44,8 +44,7 @@ export function NotificationRow({
   muted?: boolean
 }) {
   const Icon = TYPE_ICONS[item.type] ?? InfoIcon
-  const title = interpolate(t(item.titleI18nKey, locale), item.params)
-  const body = interpolate(t(item.bodyI18nKey, locale), item.params)
+  const { title, body } = notificationContent(item, locale)
   const typeLabel = t(notificationTypeLabelKey(item.type), locale)
   const timeLabel = formatRelativeTime(item.createdAt, locale)
   const isRtl = locale === 'fa'
