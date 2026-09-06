@@ -5,6 +5,7 @@ import type {
   NotificationSendPayload,
   NotificationSendResult,
 } from '@barghsa/shared/notifications'
+import { sanitizeError } from './error-redact.js'
 import { deriveChannelIdempotencyKey } from './outbox-writer.js'
 
 /**
@@ -22,8 +23,8 @@ import { deriveChannelIdempotencyKey } from './outbox-writer.js'
  *     registered transports (in-app is mandatory).
  *
  * Retry scheduling with backoff+jitter and idempotency enforcement land in
- * T-05.01.03/T-05.01.04. A channel with no registered transport is skipped
- * (except `in_app`, which must always be present).
+ * T-05.01.03/T-05.01.04. A missing transport produces a failed channel
+ * outcome; it cannot make an undelivered external leg count as success.
  */
 
 const DEFAULT_LEASE_SIZE = 20
@@ -112,13 +113,15 @@ export interface DispatchOutcome {
   result: NotificationSendResult
   /** Provider round-trip latency in milliseconds for this attempt. */
   latencyMs: number
+  /** Sanitized failure detail for this channel only. */
+  error?: string
 }
 
 /**
  * Dispatch a claimed outbox row out to each of its channels through the
- * registered transports. In-app is mandatory: if a row requests in_app but no
- * in_app transport is registered, this throws. Unregistered external channels
- * are skipped so a missing adapter never blocks in-app delivery.
+ * registered transports. Missing adapters and thrown provider errors become
+ * individual failed outcomes, preserving successful legs and allowing later
+ * channels to run. Required but undelivered channels never count as success.
  *
  * Idempotency (T-05.01.04): each channel receives its OWN per-channel key
  * rather than the row-level key, so delivery to a given transport is
@@ -131,7 +134,7 @@ export async function dispatchOutbox(
   transports: Partial<Record<NotificationChannel, INotificationTransport>>,
 ): Promise<DispatchOutcome[]> {
   const outcomes: DispatchOutcome[] = []
-  for (const channel of row.channels) {
+  for (const channel of new Set(row.channels)) {
     const transport = transports[channel]
     const payload: NotificationSendPayload = {
       idempotencyKey: deriveChannelIdempotencyKey(
@@ -146,15 +149,19 @@ export async function dispatchOutbox(
       eventKey: row.eventKey,
       payload: row.payload,
     }
-    if (!transport) {
-      if (channel === 'in_app') {
-        throw new Error('in_app transport is mandatory but not registered')
-      }
-      continue
-    }
     const startedAt = performance.now()
-    const result = await transport.send(payload)
-    outcomes.push({ channel, result, latencyMs: Math.round(performance.now() - startedAt) })
+    try {
+      if (!transport || transport.channel !== channel) throw new Error(`${channel} transport unavailable`)
+      const result = await transport.send(payload)
+      if (!result || !['delivered', 'failed'].includes(result.status) || (result.status === 'delivered' && !result.providerRef)) {
+        throw new Error(`${channel} transport returned an invalid delivery result`)
+      }
+      outcomes.push({ channel, result, latencyMs: Math.round(performance.now() - startedAt) })
+    } catch (error) {
+      outcomes.push({ channel, result: { providerRef: '', status: 'failed' },
+        latencyMs: Math.round(performance.now() - startedAt),
+        error: sanitizeError(error instanceof Error ? error.message : String(error)) })
+    }
   }
   return outcomes
 }

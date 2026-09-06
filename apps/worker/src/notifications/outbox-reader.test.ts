@@ -146,16 +146,24 @@ describe('dispatchOutbox', () => {
     expect(email.reads[1]!.idempotencyKey).toBe(expectedEmail)
   })
 
-  it('throws when in_app transport is required but missing', async () => {
+  it('records missing adapters as failures while delivering available channels', async () => {
     const email = new FakeTransport('email')
-    await expect(dispatchOutbox(row, { email })).rejects.toThrow(/in_app transport is mandatory/)
+    const missingInApp = await dispatchOutbox(row, { email })
+    expect(missingInApp.map(o => o.result.status)).toEqual(['failed', 'delivered'])
+    expect(missingInApp[0]?.error).toBe('in_app transport unavailable')
+    const inApp = new FakeTransport('in_app')
+    const missingEmail = await dispatchOutbox(row, { in_app: inApp })
+    expect(missingEmail.map(o => o.result.status)).toEqual(['delivered', 'failed'])
+    expect(missingEmail[1]?.error).toBe('email transport unavailable')
   })
 
-  it('skips an unregistered external channel without error', async () => {
-    const inApp = new FakeTransport('in_app')
-    const outcomes = await dispatchOutbox(row, { in_app: inApp })
-    expect(outcomes).toHaveLength(1)
-    expect(outcomes[0]!.channel).toBe('in_app')
+  it('preserves successful legs around a thrown provider failure without leaking credentials', async () => {
+    const inApp = new FakeTransport('in_app'), sms = new FakeTransport('sms')
+    const email: INotificationTransport = { channel: 'email', async send() { throw new Error('timeout api_key=secret456') } }
+    const outcomes = await dispatchOutbox({ ...row, channels: ['in_app', 'email', 'sms'] }, { in_app: inApp, email, sms })
+    expect(outcomes.map(o => o.result.status)).toEqual(['delivered', 'failed', 'delivered'])
+    expect(outcomes[1]?.error).toContain('timeout')
+    expect(JSON.stringify(outcomes)).not.toContain('secret456')
   })
 
   it('sends exactly one send call per registered channel (no duplicates)', async () => {

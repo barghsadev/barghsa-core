@@ -136,6 +136,7 @@ interface DispatchOutcome {
   result: { providerRef: string; status: 'delivered' | 'failed' }
   /** Provider round-trip latency in milliseconds for this attempt. */
   latencyMs: number
+  error?: string
 }
 
 /**
@@ -250,7 +251,7 @@ async function persistOutcomes(
           ok ? 'done' : exhausted ? 'dead_letter' : 'retrying',
           ok ? outcome.result.providerRef : null,
           attempts,
-          ok ? null : 'delivery failed',
+          ok ? null : outcome.error ?? 'delivery failed',
           outcome.channel,
           runAfter,
         ],
@@ -265,7 +266,7 @@ async function persistOutcomes(
           // Prefer the outbox row's last sanitized error (set by failRow on a
           // prior attempt) for triage; fall back to a generic description when
           // the transport reported failure without an error message.
-          const cause = row.lastError ?? 'delivery failed'
+          const cause = outcome.error ?? row.lastError ?? 'delivery failed'
           await writeDeadLetter(qpool, {
             outboxId: row.id,
             jobId,
@@ -290,7 +291,7 @@ async function persistOutcomes(
         attemptNumber: attempts,
         providerRef: ok ? outcome.result.providerRef : null,
         latencyMs: outcome.latencyMs ?? null,
-        error: ok ? null : 'delivery failed',
+        error: ok ? null : outcome.error ?? 'delivery failed',
       })
     }
 
