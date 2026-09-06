@@ -266,3 +266,11 @@ describe('connection-test response limits and token boundaries', () => {
     expect(client.request).not.toHaveBeenCalled();
   });
 });
+
+it('uses an integer timeout when the database supplies a fractional remaining budget', async () => {
+  const client = okClient(200, 'pong');
+  expect(await new AiModelTester(client).test(input(), 500.75)).toMatchObject({ ok: true });
+  const budget = vi.mocked(client.request).mock.calls[0]![1];
+  expect(Number.isInteger(budget)).toBe(true);
+  expect(budget).toBeLessThanOrEqual(500);
+});

@@ -3,7 +3,7 @@ import { SessionModule } from '../session/index.js';
 import { AiModelsController } from './ai-models.controller.js';
 import { AiModelsService } from './ai-models.service.js';
 import { AiModelSecretsService } from './ai-model-secrets.service.js';
-import { AiModelTesterService } from './ai-model-tester.service.js';
+import { AiModelTestQueueService } from './ai-model-test-queue.service.js';
 
 /**
  * AI model administration module (S-09.11, T-09.11.01).
@@ -15,7 +15,7 @@ import { AiModelTesterService } from './ai-model-tester.service.js';
 @Module({
   imports: [SessionModule],
   controllers: [AiModelsController],
-  providers: [AiModelsService, AiModelSecretsService, AiModelTesterService],
-  exports: [AiModelsService, AiModelSecretsService, AiModelTesterService],
+  providers: [AiModelsService, AiModelSecretsService, AiModelTestQueueService],
+  exports: [AiModelsService, AiModelSecretsService, AiModelTestQueueService],
 })
 export class AiModelsModule {}

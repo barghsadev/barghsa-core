@@ -16,7 +16,14 @@ beforeAll(async () => {
   const address = provider.address();
   if (!address || typeof address === 'string') throw new Error('Missing local provider port');
   providerBase = `http://127.0.0.1:${address.port}/v1`;
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 10, '127.0.0.1');
+  http = await startHttpFixture(
+    process.env.TEST_DATABASE_URL!,
+    undefined,
+    '',
+    10,
+    '127.0.0.1',
+    true
+  );
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('test-ai-model','Jobs','Test role','["admin:ai:models","admin:ai:models"]'),('test-ai-model-view','View jobs','Test role','["admin:ai:models"]')`
   );
@@ -59,7 +66,7 @@ const input = {
   apiToken: 'local-secret-never-returned',
 };
 beforeEach(async () => {
-  await http.pool.query('DELETE FROM ai_models');
+  await http.pool.query('DELETE FROM ai_model_test_jobs; DELETE FROM ai_models');
   await http.pool.query("DELETE FROM audit_log WHERE event LIKE 'ai_model_%'");
 });
 function request(suffix = '', method = 'GET', body?: unknown) {

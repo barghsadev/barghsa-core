@@ -269,7 +269,7 @@ export class AiModelTester {
    * truncated preview on success. The request is only attempted after the
    * SSRF guard accepts the base-URL host.
    */
-  async test(input: AiModelTestInput): Promise<AiModelTestResult> {
+  async test(input: AiModelTestInput, budgetMs?: number): Promise<AiModelTestResult> {
     const started = Date.now();
 
     // 1. Structural integrity.
@@ -298,7 +298,7 @@ export class AiModelTester {
         latencyMs: 0,
       };
     }
-    const timeoutMs = this.timeoutMs();
+    const timeoutMs = Math.max(1, Math.floor(Math.min(this.timeoutMs(), budgetMs ?? Infinity)));
     let timer: ReturnType<typeof setTimeout> | undefined;
     let blocked: string | null;
     try {

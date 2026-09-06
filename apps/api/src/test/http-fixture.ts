@@ -10,12 +10,14 @@ export async function startHttpFixture(
   localStorageEndpoint?: string,
   trustedProxyAddresses = '',
   poolMax = 10,
-  aiModelAllowedHosts = ''
+  aiModelAllowedHosts = '',
+  startAiModelWorker = false
 ) {
   const database = `test_http_${randomUUID().replaceAll('-', '')}`;
   const management = new Pool({ connectionString: testDatabaseUrl });
   let created = false;
   let child: ChildProcess | undefined;
+  let aiWorker: ChildProcess | undefined;
   let pool: Pool | undefined;
   let output = '';
 
@@ -29,6 +31,17 @@ export async function startHttpFixture(
         });
         if (child!.connected) child!.send('stop');
         else child!.kill('SIGTERM');
+      });
+    }
+    if (aiWorker && aiWorker.exitCode === null && aiWorker.signalCode === null) {
+      await new Promise<void>((done) => {
+        const timeout = setTimeout(() => aiWorker!.kill('SIGKILL'), 5000);
+        aiWorker!.once('exit', () => {
+          clearTimeout(timeout);
+          done();
+        });
+        if (aiWorker!.connected) aiWorker!.send('stop');
+        else aiWorker!.kill('SIGTERM');
       });
     }
     await pool?.end();
@@ -65,6 +78,7 @@ export async function startHttpFixture(
         STORAGE_CONFIG_ENCRYPTION_KEY: 'http-fixture-storage-key-only',
         AI_MODEL_ENCRYPTION_KEY: 'http-fixture-ai-key-only',
         AI_MODEL_BASE_URL_ALLOWLIST: aiModelAllowedHosts,
+        AI_MODEL_TEST_WAIT_MS: startAiModelWorker ? '10000' : '1000',
         REDIS_URL: '',
         REDIS_HOST: '',
         S3_BUCKET: localStorageEndpoint ? 'test-evidence' : '',
@@ -103,6 +117,38 @@ export async function startHttpFixture(
         resolvePort(`http://127.0.0.1:${message.port}`);
       });
     });
+    if (startAiModelWorker) {
+      aiWorker = fork(resolve(__dirname, '../../../worker/scripts/ai-model-http-worker.cjs'), [], {
+        silent: true,
+        env: {
+          ...process.env,
+          DATABASE_URL: url.toString(),
+          PGDIRECT_URL: url.toString(),
+          NODE_ENV: 'test',
+          AI_MODEL_ENCRYPTION_KEY: 'http-fixture-ai-key-only',
+          AI_MODEL_BASE_URL_ALLOWLIST: aiModelAllowedHosts,
+        },
+      });
+      for (const stream of [aiWorker.stdout, aiWorker.stderr])
+        stream?.on('data', (data) => {
+          output = (output + String(data)).slice(-20000);
+        });
+      await new Promise<void>((done, reject) => {
+        const timeout = setTimeout(() => reject(new Error('AI worker startup timed out')), 10000);
+        aiWorker!.once('message', () => {
+          clearTimeout(timeout);
+          done();
+        });
+        aiWorker!.once('error', (error) => {
+          clearTimeout(timeout);
+          reject(error);
+        });
+        aiWorker!.once('exit', () => {
+          clearTimeout(timeout);
+          reject(new Error('AI worker exited'));
+        });
+      });
+    }
     return { base, pool, close, logs: () => output };
   } catch (error) {
     await close();

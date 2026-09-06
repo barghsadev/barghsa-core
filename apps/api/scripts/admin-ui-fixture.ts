@@ -14,7 +14,11 @@ async function main() {
   await new Promise<void>((done) => storage.listen(0, '127.0.0.1', done));
   const http = await startHttpFixture(
     process.env.TEST_DATABASE_URL!,
-    `http://127.0.0.1:${(storage.address() as { port: number }).port}`
+    `http://127.0.0.1:${(storage.address() as { port: number }).port}`,
+    '',
+    10,
+    '',
+    true
   );
   const session = randomUUID(),
     csrf = randomUUID();

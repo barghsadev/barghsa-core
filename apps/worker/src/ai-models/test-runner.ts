@@ -100,11 +100,20 @@ export async function runAiModelTest(
       null
     );
   }
-  const result = await tester.test({
-    providerType: model.provider_type,
-    baseUrl: model.base_url,
-    modelName: model.model_name,
-    apiToken,
-  });
+  const lease = await pool.query<{ remaining_ms: number }>(
+    `SELECT EXTRACT(EPOCH FROM (LEAST(deadline_at,lease_until)-NOW()))*1000 AS remaining_ms
+    FROM ai_model_test_jobs WHERE id=$1 AND lease_token=$2 AND status='leased' AND lease_until>NOW() AND deadline_at>NOW()`,
+    [job.id, token]
+  );
+  if (!lease.rows[0]) return 'stale';
+  const result = await tester.test(
+    {
+      providerType: model.provider_type,
+      baseUrl: model.base_url,
+      modelName: model.model_name,
+      apiToken,
+    },
+    Number(lease.rows[0].remaining_ms)
+  );
   return finish(result, null);
 }

@@ -1,3 +1,4 @@
+import { runAiModelTest } from './ai-models/test-runner.js';
 import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
 import { SmsNotificationTransport } from './notifications/sms-transport.js';
 import { EmailNotificationTransport } from './notifications/email-transport.js';
@@ -178,6 +179,19 @@ async function main(): Promise<void> {
   process.on('unhandledRejection', (reason) => {
     logger.error(`Unhandled rejection: ${String(reason)}`);
   });
+
+  pollers.every(async () => {
+    try {
+      await runAiModelTest(getDbPool());
+      await recordJobSuccess('ai_model_test');
+    } catch {
+      await recordJobFailure({
+        jobType: 'ai_model_test',
+        error: 'ai_model_test_queue_unavailable',
+        errorCategory: 'transient',
+      });
+    }
+  }, 1000);
 
   let cleanupProvider: ReturnType<typeof cleanupStorageProvider> | null = null;
   try {

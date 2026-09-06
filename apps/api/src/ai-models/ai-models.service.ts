@@ -1,15 +1,15 @@
 import type { PoolClient } from 'pg';
+import { AiModelTestQueueService } from './ai-model-test-queue.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { AiModelSecretsService, isMaskedAiToken } from './ai-model-secrets.service.js';
 import {
-  AiModelTesterService,
   AI_MODEL_PROVIDER_TYPES,
   type AiModelProviderType,
   type AiModelTestResult,
-} from './ai-model-tester.service.js';
+} from '@barghsa/shared/ai-models';
 
 /**
  * AI model management service (S-09.11, T-09.11.01).
@@ -21,8 +21,8 @@ import {
  *   display value (`********1234`). The update path accepts a masked value
  *   echoed back from the UI and preserves the stored token instead of
  *   re-encrypting the placeholder.
- * - The connection test decrypts the token in-process, runs the provider
- *   ping (SSRF-guarded), persists `last_test_status/at/error`, and returns
+ * - The worker decrypts the token and runs the guarded provider request.
+ *   The API persists `last_test_status/at/error`, and returns
  *   the outcome + response preview. Safe, non-secret diagnostics only.
  * - Every mutation records an `audit_log` event with actor, ip, and a
  *   masked-target summary.
@@ -98,7 +98,7 @@ export class AiModelsService {
 
   constructor(
     private readonly secrets: AiModelSecretsService,
-    private readonly tester: AiModelTesterService
+    private readonly queue: AiModelTestQueueService
   ) {}
 
   // ─── Read ───────────────────────────────────────────────────────────────
@@ -286,36 +286,18 @@ export class AiModelsService {
   }
 
   /**
-   * Test-button run: decrypt the stored token, ping the provider, persist
+   * Test-button run: queue the worker request, await its safe result, persist
    * the outcome, and return the refreshed model + safe result.
    */
   async test(id: string, actorUserId: string, ip: string): Promise<TestAiModelResult> {
-    const existing = await this.withTransaction(actorUserId, async (client) => {
+    const { existing, jobId } = await this.withTransaction(actorUserId, async (client) => {
       const row = await this.findRow(id, client);
       if (!row) throw this.notFound(id);
-      return row;
+      const jobId = await this.queue.enqueue(client, row.id, row.revision, actorUserId);
+      return { existing: row, jobId };
     });
-
-    let apiToken: string | null | undefined;
-    try {
-      apiToken = existing.api_token === null ? null : this.secrets.decryptToken(existing.api_token);
-    } catch {
-      this.logger.warn(`AI model test skipped (token undecryptable): id=${id}`);
-    }
-    // No database locks or pool connections are held during the network call.
-    const result: AiModelTestResult =
-      apiToken === undefined
-        ? {
-            ok: false,
-            error: 'Stored API token could not be decrypted (check AI_MODEL_ENCRYPTION_KEY)',
-            latencyMs: 0,
-          }
-        : await this.tester.test({
-            providerType: existing.provider_type,
-            baseUrl: existing.base_url,
-            modelName: existing.model_name,
-            apiToken,
-          });
+    // The API releases its transaction while the separate worker makes the request.
+    const result = await this.queue.wait(jobId);
 
     return this.withTransaction(actorUserId, async (client) => {
       const current = await this.findRow(id, client);

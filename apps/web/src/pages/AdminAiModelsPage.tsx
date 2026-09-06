@@ -75,6 +75,8 @@ export default function AdminAiModelsPage() {
     AI_MODEL_ENCRYPTION_UNAVAILABLE: label('encryption'),
     AI_MODEL_IN_USE: label('inUse'),
     AI_MODEL_CHANGED: label('changed'),
+    AI_MODEL_TEST_UNAVAILABLE: label('workerUnavailable'),
+    AI_MODEL_TEST_EXPIRED: label('workerUnavailable'),
     'VALIDATION:PARSE_ZOD': label('invalid'),
   };
   function submit(event: FormEvent) {

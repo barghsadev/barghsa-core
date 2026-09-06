@@ -21,9 +21,12 @@ async function withProvider(handler: RequestListener, run: (port: number) => Pro
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
 }
-function test(baseUrl: string) {
+function test(
+  baseUrl: string,
+  providerType: 'openai_compatible' | 'anthropic' = 'openai_compatible'
+) {
   return new AiModelTester().test({
-    providerType: 'openai_compatible',
+    providerType,
     baseUrl,
     modelName: 'local-test',
     apiToken: 'local-only-token',
@@ -51,41 +54,58 @@ describe('AI provider socket transport', () => {
     });
   });
 
-  it('uses an explicitly allowed host while retaining the original Host header and request shape', async () => {
-    let received: unknown;
-    await withProvider(
-      (request, response) => {
-        const chunks: Buffer[] = [];
-        request.on('data', (chunk: Buffer) => chunks.push(chunk));
-        request.on('end', () => {
-          received = {
-            host: request.headers.host,
-            authorization: request.headers.authorization,
-            path: request.url,
-            body: JSON.parse(Buffer.concat(chunks).toString()),
-          };
-          response.end(JSON.stringify({ choices: [{ message: { content: 'pong' } }] }));
-        });
-      },
-      async (port) => {
-        vi.stubEnv('AI_MODEL_BASE_URL_ALLOWLIST', 'local-provider.example.test');
-        const resolve = vi
-          .spyOn(resolver, 'lookup')
-          .mockResolvedValue([{ address: '127.0.0.1', family: 4 }]);
-        expect(await test(`http://local-provider.example.test:${port}/v1`)).toMatchObject({
-          ok: true,
-          responsePreview: 'pong',
-        });
-        expect(resolve).toHaveBeenCalledOnce();
-        expect(received).toMatchObject({
-          host: `local-provider.example.test:${port}`,
-          authorization: 'Bearer local-only-token',
-          path: '/v1/chat/completions',
-          body: { model: 'local-test', max_tokens: 1 },
-        });
-      }
-    );
-  });
+  it.each(['openai_compatible', 'anthropic'] as const)(
+    'preserves the allowed host and %s request shape',
+    async (providerType) => {
+      let received: unknown;
+      await withProvider(
+        (request, response) => {
+          const chunks: Buffer[] = [];
+          request.on('data', (chunk: Buffer) => chunks.push(chunk));
+          request.on('end', () => {
+            received = {
+              host: request.headers.host,
+              authorization: request.headers.authorization,
+              apiKey: request.headers['x-api-key'],
+              path: request.url,
+              body: JSON.parse(Buffer.concat(chunks).toString()),
+            };
+            response.end(
+              JSON.stringify(
+                providerType === 'anthropic'
+                  ? { content: [{ text: 'pong' }] }
+                  : { choices: [{ message: { content: 'pong' } }] }
+              )
+            );
+          });
+        },
+        async (port) => {
+          vi.stubEnv('AI_MODEL_BASE_URL_ALLOWLIST', 'local-provider.example.test');
+          const resolve = vi
+            .spyOn(resolver, 'lookup')
+            .mockResolvedValue([{ address: '127.0.0.1', family: 4 }]);
+          expect(
+            await test(`http://local-provider.example.test:${port}/v1`, providerType)
+          ).toMatchObject({
+            ok: true,
+            responsePreview: 'pong',
+          });
+          expect(resolve).toHaveBeenCalledOnce();
+          expect(received).toMatchObject({
+            host: `local-provider.example.test:${port}`,
+            ...(providerType === 'anthropic'
+              ? { apiKey: 'local-only-token', authorization: undefined, path: '/v1/messages' }
+              : {
+                  authorization: 'Bearer local-only-token',
+                  apiKey: undefined,
+                  path: '/v1/chat/completions',
+                }),
+            body: { model: 'local-test', max_tokens: 1 },
+          });
+        }
+      );
+    }
+  );
 
   it('rejects oversized responses and closes the provider connection', async () => {
     let closed = false;

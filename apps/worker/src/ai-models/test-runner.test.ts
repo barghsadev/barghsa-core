@@ -47,7 +47,8 @@ it('claims once across competing workers and stores only a safe result', async (
   ).toEqual(['completed', 'idle']);
   expect(client.test).toHaveBeenCalledOnce();
   expect(client.test).toHaveBeenCalledWith(
-    expect.objectContaining({ apiToken: 'local-queue-token' })
+    expect.objectContaining({ apiToken: 'local-queue-token' }),
+    expect.any(Number)
   );
   const row = (await fixture.pool.query('SELECT * FROM ai_model_test_jobs WHERE id=$1', [id]))
     .rows[0];

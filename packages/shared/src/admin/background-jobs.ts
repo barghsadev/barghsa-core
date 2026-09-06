@@ -39,6 +39,7 @@ export function isBackgroundJobStatus(raw: unknown): raw is BackgroundJobStatus 
  * stable worker task key with the human-readable label the dashboard shows.
  */
 export const BACKGROUND_JOB_TYPES = [
+  { key: 'ai_model_test', label: 'AI model connection tests' },
   { key: 'storage_cleanup', label: 'Storage deletion requests' },
   { key: 'auth_delivery', label: 'Authentication code delivery' },
   { key: 'service_breach_scan', label: 'Service response-target breach scan' },

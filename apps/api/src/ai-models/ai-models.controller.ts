@@ -205,9 +205,9 @@ export class AiModelsController {
   @ApiOperation({
     summary: 'Test the connection to an AI model endpoint (admin)',
     description:
-      'Runs a minimal request against the configured provider (SSRF-guarded), ' +
+      'Queues a minimal worker request against the configured provider (SSRF-guarded), ' +
       'persists the outcome as the model status, and returns a truncated ' +
-      'response preview. The API token is never returned.',
+      'response preview. The API token is never returned. An unavailable worker returns 504 after the configured wait budget.',
   })
   @ApiResponse({ status: 200, description: 'Test outcome + refreshed model.' })
   async test(

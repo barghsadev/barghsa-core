@@ -5,6 +5,9 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'admin.jobs.type.ai_model_test': 'آزمایش اتصال مدل هوش مصنوعی',
+  'admin.aiModels.workerUnavailable':
+    'آزمایش کامل نشد. وضعیت سرویس پردازش را بررسی و دوباره تلاش کنید.',
   'admin.aiModels.status': 'وضعیت',
   'admin.aiModels.actions': 'عملیات',
   'admin.aiModels.title': 'مدل‌های هوش مصنوعی',
@@ -1887,6 +1890,9 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'admin.jobs.type.ai_model_test': 'AI model connection tests',
+  'admin.aiModels.workerUnavailable':
+    'The test could not complete. Check the worker service and retry.',
   'admin.aiModels.status': 'Status',
   'admin.aiModels.actions': 'Actions',
   'admin.aiModels.title': 'AI models',

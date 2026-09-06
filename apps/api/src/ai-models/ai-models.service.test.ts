@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import type { AiModelsService as AiModelsServiceType } from './ai-models.service.js';
 import { AiModelSecretsService } from './ai-model-secrets.service.js';
-import type { AiModelApiClientLike } from './ai-model-tester.service.js';
+import { AiModelTestQueueService } from './ai-model-test-queue.service.js';
 
 const TEST_KEY = Buffer.from('0123456789abcdef0123456789abcdef');
 
@@ -37,13 +37,11 @@ function makeRow(over: Record<string, unknown> = {}) {
   };
 }
 
-function okClient(): AiModelApiClientLike {
-  return {
-    request: vi.fn().mockResolvedValue({
-      status: 200,
-      bodyText: JSON.stringify({ choices: [{ message: { content: 'pong' } }] }),
-    }),
-  };
+function mockQueue() {
+  const queue = new AiModelTestQueueService();
+  vi.spyOn(queue, 'enqueue').mockResolvedValue('job-id');
+  vi.spyOn(queue, 'wait').mockResolvedValue({ ok: true, latencyMs: 1, responsePreview: 'pong' });
+  return queue;
 }
 
 let service: AiModelsServiceType;
@@ -69,9 +67,7 @@ async function loadService(pool: { query: ReturnType<typeof mockPool>['mockQuery
   }));
   const { AiModelsService: Svc } = await import('./ai-models.service.js');
   const secrets = new AiModelSecretsService(TEST_KEY);
-  const tester = new (await import('./ai-model-tester.service.js')).AiModelTesterService(
-    okClient()
-  );
+  const tester = mockQueue();
   service = new Svc(secrets, tester);
   return { secrets, tester };
 }
@@ -120,9 +116,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       // Import fresh (beforeEach reset modules): KEYLESS secrets instance.
       const { AiModelsService: Svc } = await import('./ai-models.service.js');
       const keylessSecrets = new AiModelSecretsService(); // no key
-      const tester = new (await import('./ai-model-tester.service.js')).AiModelTesterService(
-        okClient()
-      );
+      const tester = mockQueue();
       const keyless = new Svc(keylessSecrets, tester);
 
       try {
@@ -311,7 +305,12 @@ describe('AiModelsService (T-09.11.01)', () => {
   describe('test', () => {
     it('reports an undecryptable stored token without pinging the provider', async () => {
       const { mockQuery } = mockPool();
-      await loadService({ query: mockQuery });
+      const { tester } = await loadService({ query: mockQuery });
+      vi.mocked(tester.wait).mockResolvedValueOnce({
+        ok: false,
+        error: 'Stored API token could not be decrypted (check AI_MODEL_ENCRYPTION_KEY)',
+        latencyMs: 0,
+      });
       // Tampered/foreign-key blob that will not decrypt with TEST_KEY.
       mockQuery.mockResolvedValueOnce({
         rows: [makeRow({ api_token: 'v1:AAAAAAAA:BBBBBBBB:CCCCCCCC' })],
