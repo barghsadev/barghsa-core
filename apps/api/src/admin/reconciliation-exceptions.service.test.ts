@@ -6,6 +6,10 @@ import {
   validateResolutionNote,
 } from './reconciliation-exceptions.service.js';
 
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
@@ -15,7 +19,7 @@ function mockPool() {
 }
 
 function mockClient() {
-  const mockClientQuery = vi.fn();
+  const mockClientQuery = vi.fn().mockResolvedValue({ rows: [] });
   const mockRelease = vi.fn();
   return { mockClientQuery, mockRelease, client: { query: mockClientQuery, release: mockRelease } };
 }

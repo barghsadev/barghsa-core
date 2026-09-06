@@ -1,6 +1,7 @@
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   isReconciliationStatus,
@@ -231,6 +232,7 @@ export class ReconciliationExceptionsService {
     let committed = false;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:reconciliation:resolve');
 
       const result = await client.query(
         `SELECT exc.*, assignee.username AS assigned_to_username, resolver.username AS resolved_by_username
@@ -246,7 +248,6 @@ export class ReconciliationExceptionsService {
         (Record<string, unknown> & { status: string; exception_type: string }) | undefined;
 
       if (!row) {
-        await client.query('ROLLBACK');
         throw new HttpException(
           {
             statusCode: 404,
@@ -258,7 +259,6 @@ export class ReconciliationExceptionsService {
       }
 
       if (!opts.allowedFrom.includes(row.status as ReconciliationStatus)) {
-        await client.query('ROLLBACK');
         throw new HttpException(
           {
             statusCode: 409,
@@ -326,8 +326,8 @@ export class ReconciliationExceptionsService {
       this.logger.log(`Reconciliation exception ${exceptionId} ${toStatus} by ${actorUserId}`);
     } catch (error) {
       if (committed) throw error;
-      if (error instanceof HttpException) throw error;
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to resolve reconciliation exception: ${String(error)}`);
       throw new HttpException(
         {
