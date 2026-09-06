@@ -8,6 +8,7 @@ import {
   HttpException,
   Logger,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -2380,6 +2381,8 @@ export class AdminController {
    * must reference existing users.
    */
   @Post('staff-teams')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Create a staff team (admin)' })
   @ApiBody({
     schema: {
@@ -2429,6 +2432,8 @@ export class AdminController {
    * provided.
    */
   @Put('staff-teams/:id')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update a staff team (admin)' })
   @ApiParam({ name: 'id', description: 'Staff team UUID', type: 'string' })
   @ApiBody({
@@ -2464,7 +2469,7 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Team not found' })
   @ApiResponse({ status: 409, description: 'Team name already taken' })
-  async updateStaffTeam(@Param('id') id: string, @Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+  async updateStaffTeam(@Param('id', new ParseUUIDPipe()) id: string, @Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertStaffTeamsEditPermission(req)
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.adminService.updateStaffTeam(id, rawBody, req.session.userId, ip)
@@ -2478,13 +2483,15 @@ export class AdminController {
    * manual assignment.
    */
   @Delete('staff-teams/:id')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a staff team (admin)' })
   @ApiParam({ name: 'id', description: 'Staff team UUID', type: 'string' })
   @ApiResponse({ status: 200, description: 'Team deleted.', schema: { type: 'object', properties: { deleted: { type: 'boolean' } } } })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Team not found' })
-  async deleteStaffTeam(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+  async deleteStaffTeam(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.assertStaffTeamsEditPermission(req)
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.adminService.deleteStaffTeam(id, req.session.userId, ip)
@@ -2535,6 +2542,8 @@ export class AdminController {
    * reassign existing items.
    */
   @Put('config/assignment-rules')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update the staff assignment rules configuration (admin)' })
   @ApiBody({
     schema: {

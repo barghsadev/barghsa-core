@@ -2106,6 +2106,13 @@ export class AdminService {
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[STAFF_ASSIGNMENT_RULES_CONFIG_KEY])
+      const teamIds = [...new Set(Object.values(config).map(rule=>rule.teamId).filter((id): id is string=>id!==null))].sort()
+      if (teamIds.some(id=>!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id))) throw new HttpException('Invalid assignment team',400)
+      if (teamIds.length) {
+        const teams = await client.query('SELECT id FROM staff_teams WHERE id=ANY($1::uuid[]) AND is_active ORDER BY id FOR SHARE',[teamIds])
+        if (teams.rows.length!==teamIds.length) throw new HttpException('Assignment teams must exist and be active',400)
+      }
 
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
@@ -2161,6 +2168,7 @@ export class AdminService {
       return config
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
+      if (error instanceof HttpException) throw error
       this.logger.error(`Failed to set staff assignment rules config: ${String(error)}`)
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
@@ -2324,6 +2332,7 @@ export class AdminService {
     actorUserId: string,
     ip: string,
   ): Promise<StaffTeamRecord> {
+    if (!input || typeof input !== 'object' || Array.isArray(input)) throw new HttpException('Staff team update must be an object',400)
     const pool = getDbPool()
     const client = await pool.connect()
     const now = new Date()
@@ -2501,7 +2510,8 @@ export class AdminService {
   ): Promise<void> {
     if (memberUserIds.length === 0) return
     const result = await client.query(
-      `SELECT user_id FROM users WHERE user_id = ANY($1::text[])`,
+      `SELECT u.user_id FROM users u WHERE u.user_id = ANY($1::text[]) AND u.disabled_at IS NULL AND u.activation_token IS NULL
+        AND (u.is_admin OR u.is_staff OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id)) ORDER BY u.user_id FOR NO KEY UPDATE OF u`,
       [memberUserIds],
     )
     const found = new Set((result.rows as { user_id: string }[]).map((r) => r.user_id))

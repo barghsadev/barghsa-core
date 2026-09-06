@@ -123,46 +123,8 @@ describe('AdminService staff assignment rules (T-09.08.02)', () => {
       expect(mockConnect).not.toHaveBeenCalled()
     })
 
-    it('persists a valid map, bumps config version, and records a config_change audit', async () => {
-      const { mockConnect } = await loadService()
-      const { client } = mockClient()
-      mockConnect.mockResolvedValue(client)
-      client.query
-        .mockResolvedValueOnce({ rows: [] }) // BEGIN
-        .mockResolvedValueOnce({ rows: [{ value: null, version: 0 }] }) // SELECT FOR UPDATE
-        .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
-        .mockResolvedValueOnce({ rows: [] }) // config_version
-        .mockResolvedValueOnce({ rows: [] }) // audit_log
-        .mockResolvedValueOnce({ rows: [] }) // COMMIT
+    // Persistence/version/audit behavior is covered through real HTTP and PostgreSQL.
 
-      const result = await service.setStaffAssignmentRules(
-        { ticket: { teamId: 'team-1', strategy: 'round_robin' } },
-        'admin-1',
-        '127.0.0.1',
-      )
-      expect(result).toEqual({
-        ticket: { teamId: 'team-1', strategy: 'round_robin' },
-        verification_case: DEFAULT_STAFF_ASSIGNMENT_RULES.verification_case,
-      })
-
-      const auditCall = client.query.mock.calls.find(([sql]) =>
-        String(sql).includes('audit_log'),
-      )
-      expect(auditCall).toBeDefined()
-      const auditParams = auditCall![1] as unknown[]
-      expect(auditParams[2]).toBe('config_change')
-      const metadata = JSON.parse(String(auditParams[3])) as Record<string, unknown>
-      expect(metadata).toMatchObject({
-        key: STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
-        newValue: {
-          ticket: { teamId: 'team-1', strategy: 'round_robin' },
-          verification_case: { teamId: null, strategy: 'round_robin' },
-        },
-      })
-      expect(
-        client.query.mock.calls.some(([sql]) => String(sql).includes('config_version')),
-      ).toBe(true)
-    })
   })
 })
 

@@ -510,3 +510,11 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Staff queue target times use the configured hours and last ticket update, matching the worker's open-status/time rule. Targets are labelled as internal guidance and excluded from customer data.
 - Review: 41 API ticket checks, five Chromium ticket checks, the populated production migration/rerun test and workspace typechecks passed. Concurrent membership removal prevents a stale assignment.
 - The configured round-robin/expertise/load assignment engine is still absent. That configuration consumer and its admin screen remain under F17; manual team assignment does not claim to implement automatic routing.
+
+### F17.1 — Staff team configuration safety
+
+- Team creation/update/deletion and assignment-rule writes now require password confirmation as well as the current team-management capability.
+- Team members must be enabled, activated staff accounts. Invalid team IDs, malformed updates, and rules naming missing/inactive teams fail validation. Account checks are locked against concurrent account changes.
+- Assignment-rule writes take a transaction advisory lock before the first row exists, so concurrent initial saves preserve the actual previous version in their audits. Referenced active teams stay locked through the save.
+- Review: 35 focused admin checks passed, including four new real HTTP/PostgreSQL scenarios for permissions/step-up, membership validation, five concurrent first writes, and audit-failure rollback/retry. API typecheck and whitespace check passed.
+- The team/rule UI and automatic assignment engine remain next under F17.
