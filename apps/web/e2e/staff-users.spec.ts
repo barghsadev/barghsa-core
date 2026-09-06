@@ -200,6 +200,16 @@ for (const locale of ['en', 'fa'] as const) {
     await history.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
     await page.locator('#staff-audit-from').click();
+    const calendar = page.locator('[data-slot="calendar"]');
+    await expect(
+      calendar.getByRole('button', { name: fa ? 'رفتن به ماه بعد' : 'Go to the Next Month' })
+    ).toBeVisible();
+    await expect(
+      calendar.getByRole('button', { name: fa ? 'رفتن به ماه قبل' : 'Go to the Previous Month' })
+    ).toBeVisible();
+    await expect(calendar.locator('.rdp-today button')).toHaveAccessibleName(
+      fa ? /^امروز،.*فروردین.*۱۴۰۵/ : /^Today,.*March.*2026/
+    );
     await page.locator('[data-slot="calendar"] .rdp-today button').click();
     await expect(page.locator('[data-slot="calendar"]')).toHaveCount(0);
     await page.locator('#staff-audit-to').click();
@@ -220,6 +230,9 @@ for (const locale of ['en', 'fa'] as const) {
     expect(queries.at(-1)?.get('to')).toBe(expected.to);
     expect(queries.at(-1)?.get('offset')).toBe('0');
     await page.locator('#staff-audit-from').click();
+    await expect(calendar.locator('.rdp-today button')).toHaveAccessibleName(
+      fa ? /انتخاب شده$/ : /selected$/
+    );
     await page.locator('[data-slot="calendar"] .rdp-today button').press('ArrowDown');
     await page.keyboard.press('Enter');
     await expect(page.locator('[data-slot="calendar"]')).toHaveCount(0);

@@ -7,6 +7,7 @@ import { format as jalaliFormat } from 'date-fns-jalali';
 import { faIR as jalaliLocale } from 'date-fns-jalali/locale';
 import { CalendarIcon } from 'lucide-react';
 import { type DateRange, type Locale } from 'react-day-picker';
+import { faIR as dayPickerPersian } from 'react-day-picker/locale/fa-IR';
 
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/button';
@@ -50,6 +51,15 @@ function DatePicker({
   ...props
 }: DatePickerProps & Omit<React.ComponentProps<typeof Popover>, 'children'>) {
   const [open, setOpen] = React.useState(false);
+  // Keep calendar initialization inside its component so importing other UI
+  // controls does not retain the date libraries in unrelated route bundles.
+  const calendarLocale = React.useMemo(
+    () =>
+      jalali
+        ? ({ ...jalaliLocale, labels: dayPickerPersian.labels } as unknown as Locale)
+        : undefined,
+    [jalali]
+  );
 
   const formatDate = React.useCallback(
     (date: Date) => {
@@ -112,7 +122,7 @@ function DatePicker({
             dateLib={jalali ? jalaliCalendar : undefined}
             dir={jalali ? 'rtl' : 'ltr'}
             numerals={jalali ? 'arabext' : 'latn'}
-            locale={jalali ? (jalaliLocale as unknown as Locale) : undefined}
+            locale={calendarLocale}
             defaultMonth={value ? (value as DateRange).from : undefined}
           />
         ) : (
@@ -126,7 +136,7 @@ function DatePicker({
             dateLib={jalali ? jalaliCalendar : undefined}
             dir={jalali ? 'rtl' : 'ltr'}
             numerals={jalali ? 'arabext' : 'latn'}
-            locale={jalali ? (jalaliLocale as unknown as Locale) : undefined}
+            locale={calendarLocale}
             defaultMonth={value as Date | undefined}
           />
         )}

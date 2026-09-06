@@ -974,3 +974,9 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Individual onboarding and final completion now resolve their cached verification settings before acquiring a transaction connection. Individual saves, completion and profile edits read their result using that same connection before commit, avoiding a second pool acquisition while holding the first.
 - Review: three actual HTTP cases run against fully migrated databases with DB_POOL_MAX=1 and a 2.5-second request deadline. All return the saved state with exactly one business audit. Another 67 service/profile-write tests pass, including verification modes, ownership/archive races, idempotency and failed-audit rollback. Existing completion unit fixtures were corrected to include their audit and transaction-bound readback.
 - API build, workspace typecheck, lint, formatting, generated-contract check and diff review pass. The verification setting keeps the existing cache semantics; this change does not claim immediate cross-process configuration consistency.
+
+### F20 — Localize calendar accessibility labels without loading calendars on login
+
+- Date pickers now combine Jalali date formatting with the installed DayPicker Persian translations for day state, navigation and other calendar accessibility labels. The existing Gregorian labels remain English.
+- Review: all six staff-screen production-browser tests pass, including both-language month navigation labels, the Nowruz date announcement, selected-day announcements and keyboard filtering. Workspace build/typecheck, lint, formatting and diff review pass.
+- The first size check caught calendar libraries entering unrelated route bundles through module-level locale initialization. Moving initialization inside the date picker removed that dependency from login; all 26 route budgets pass again. These checks do not certify account-timezone preferences or every remaining calendar/range boundary.
