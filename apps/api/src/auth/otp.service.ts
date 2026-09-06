@@ -47,9 +47,9 @@ export class OtpService {
     }
   }
 
-  private static throwRateLimited(): never {
+  private static throwRateLimited(retryAfterMs: number): never {
     throw new HttpException(
-      { statusCode: 429, error: ErrorCodes.AUTH_OTP_RATE_LIMITED.code },
+      { statusCode: 429, error: ErrorCodes.AUTH_OTP_RATE_LIMITED.code, retryAfterMs },
       429,
     )
   }
@@ -196,7 +196,7 @@ export class OtpService {
       3_600_000,
     )
     if (!perChallenge.allowed) {
-      OtpService.throwRateLimited()
+      OtpService.throwRateLimited(perChallenge.resetMs)
     }
 
     await this.enforceSendRateLimits(destination, ip)
@@ -333,7 +333,7 @@ export class OtpService {
       60_000,
     )
     if (!perMinute.allowed) {
-      OtpService.throwRateLimited()
+      OtpService.throwRateLimited(perMinute.resetMs)
     }
 
     const perHour = await this.rateLimitService.checkSecurityRateLimit(
@@ -342,7 +342,7 @@ export class OtpService {
       3_600_000,
     )
     if (!perHour.allowed) {
-      OtpService.throwRateLimited()
+      OtpService.throwRateLimited(perHour.resetMs)
     }
 
     const perDay = await this.rateLimitService.checkSecurityRateLimit(
@@ -351,7 +351,7 @@ export class OtpService {
       86_400_000,
     )
     if (!perDay.allowed) {
-      OtpService.throwRateLimited()
+      OtpService.throwRateLimited(perDay.resetMs)
     }
 
     const ipLimit = await this.rateLimitService.checkSecurityRateLimit(
@@ -360,7 +360,7 @@ export class OtpService {
       3_600_000,
     )
     if (!ipLimit.allowed) {
-      OtpService.throwRateLimited()
+      OtpService.throwRateLimited(ipLimit.resetMs)
     }
   }
 }

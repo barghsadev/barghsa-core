@@ -86,6 +86,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
+    if (httpStatus === 429 && exception instanceof HttpException) {
+      const details = exception.getResponse();
+      const error = body.error as Record<string, unknown>;
+      error.message = t('error.rate_limit.exceeded', locale);
+      if (typeof details === 'object' && details !== null && 'retryAfterMs' in details
+          && typeof details.retryAfterMs === 'number' && Number.isFinite(details.retryAfterMs)
+          && details.retryAfterMs >= 0) {
+        const seconds = Math.max(1, Math.ceil(details.retryAfterMs / 1000));
+        response.setHeader('Retry-After', String(seconds));
+        error.retryAfterMs = seconds * 1000;
+        error.retryAfterSeconds = seconds;
+        error.message = t('error.rate_limit.retry_after', locale).replace('{seconds}',
+          new Intl.NumberFormat(locale, { useGrouping: false }).format(seconds));
+      }
+    }
+
     response.status(httpStatus).json(body);
   }
 

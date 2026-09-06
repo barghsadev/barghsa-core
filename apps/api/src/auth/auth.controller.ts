@@ -148,7 +148,7 @@ export class AuthController {
    * - If OTP is required → returns `{ requiresOtp: true, challengeId }` for step-up.
    *
    * Rate limits (security-critical, PostgreSQL-backend):
-   * - 5 attempts per account-and-IP per 15 minutes
+   * - Progressive delay after 5 failed credentials per account-and-IP in 15 minutes
    * - 50 attempts per IP per 15 minutes (broad spraying mitigation)
    *
    * Error response is always generic ("Invalid username or password")
@@ -158,7 +158,6 @@ export class AuthController {
   @ApiZodBody(LoginSchema)
   @Post('login')
   @HttpCode(200)
-  @RateLimit({ namespace: 'login:account-ip', limit: 5, windowMs: 900_000, security: true })
   @RateLimit({ namespace: 'login:ip', limit: 50, windowMs: 900_000, security: true })
   @ApiOperation({ summary: 'Authenticate a user' })
   @ApiResponse({

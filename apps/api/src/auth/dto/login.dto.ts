@@ -23,6 +23,8 @@ function toE164(value: string): string {
 export const LoginSchema = z.object({
   username: z
     .string()
+    .trim()
+    .toLowerCase()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(255)
     .transform(toE164)

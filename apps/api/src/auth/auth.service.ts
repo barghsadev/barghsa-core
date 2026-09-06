@@ -137,25 +137,14 @@ export class AuthService {
     // by the time the client types a password on the next request it's ready)
     this.ensureDummyHash()
 
-    // ── Progressive delay: slow down repeated failed attempts ─────────
-    // Before checking credentials, peek at the current rate-limit counter
-    // for this IP in the 15-minute login window.  The guard has already
-    // incremented the counter for the current request, so subtract 1 to
-    // get the number of *prior* failed attempts.  If there have been prior
-    // failures, apply an exponential back-off delay to frustrate automated
-    // brute-force scripts while keeping the UX tolerable for legitimate
-    // users who mistype their password a few times.
-    const rateLimitKeyStr = rateLimitKey('login:account-ip', ip)
-    const currentCount = await this.rateLimitService.getSecurityCount(rateLimitKeyStr, 900_000)
-    const priorAttempts = Math.max(0, currentCount - 1)
-    if (priorAttempts >= 1) {
-      // Progressive delay: 2^(priorAttempts - 1) * 500ms, capped at 5_000ms
-      // attempt 1: 500ms, 2: 1000ms, 3: 2000ms, 4: 4000ms, 5+: 5000ms
-      const delayMs = Math.min(Math.pow(2, priorAttempts - 1) * 500, 5_000)
-      this.logger.debug(
-        `Progressive delay for login: ${rateLimitKeyStr} (${priorAttempts} prior attempts, ${delayMs}ms)`,
-      )
-      await new Promise((resolve) => setTimeout(resolve, delayMs))
+    // Keep account-specific failures separate from the broad IP request guard.
+    // Hash the tuple so delimiters cannot collide and account names are not logged.
+    const rateLimitKeyStr = rateLimitKey('login:failures', createHash('sha256')
+      .update(JSON.stringify([input.username, ip])).digest('hex'))
+    const delayForFailures = async (previousFailures: number) => {
+      if (previousFailures < 5) return
+      const delayMs = Math.min(500 * 2 ** Math.min(previousFailures - 5, 4), 5000)
+      await new Promise(resolve => setTimeout(resolve, delayMs))
     }
 
     try {
@@ -195,11 +184,18 @@ export class AuthService {
       }
 
       if (!userFound || !passwordValid) {
+        // Atomic increment counts only credential failures, including simultaneous
+        // failures. The sixth failure waits even when all six started together.
+        const ceiling = 2_147_483_647
+        const counter = await this.rateLimitService.checkSecurityRateLimit(rateLimitKeyStr, ceiling, 900_000)
+        await delayForFailures(ceiling - counter.remaining - 1)
         throw new HttpException(
           { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
           401,
         )
       }
+
+      await delayForFailures(await this.rateLimitService.getSecurityCount(rateLimitKeyStr, 900_000))
 
       // 3b. Extract user properties
       const userId = userResult.rows[0].user_id
