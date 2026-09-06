@@ -37,6 +37,7 @@ import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
+import { Route as AdminStaffTeamsRouteImport } from './routes/admin/staff-teams'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
 import { Route as AdminTosRouteImport } from './routes/admin/tos'
@@ -202,6 +203,11 @@ const AdminRolesRoute = AdminRolesRouteImport.update({
   path: '/roles',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminStaffTeamsRoute = AdminStaffTeamsRouteImport.update({
+  id: '/staff-teams',
+  path: '/staff-teams',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminStorageRoute = AdminStorageRouteImport.update({
   id: '/storage',
   path: '/storage',
@@ -358,6 +364,7 @@ export interface FileRoutesByFullPath {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
@@ -409,6 +416,7 @@ export interface FileRoutesByTo {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
@@ -465,6 +473,7 @@ export interface FileRoutesById {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
@@ -521,6 +530,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
+    | '/admin/staff-teams'
     | '/admin/storage'
     | '/admin/tickets'
     | '/admin/tos'
@@ -572,6 +582,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
+    | '/admin/staff-teams'
     | '/admin/storage'
     | '/admin/tickets'
     | '/admin/tos'
@@ -627,6 +638,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
+    | '/admin/staff-teams'
     | '/admin/storage'
     | '/admin/tickets'
     | '/admin/tos'
@@ -864,6 +876,13 @@ declare module '@tanstack/react-router' {
       path: '/roles'
       fullPath: '/admin/roles'
       preLoaderRoute: typeof AdminRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/staff-teams': {
+      id: '/admin/staff-teams'
+      path: '/staff-teams'
+      fullPath: '/admin/staff-teams'
+      preLoaderRoute: typeof AdminStaffTeamsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/storage': {
@@ -1117,6 +1136,7 @@ interface AdminRouteChildren {
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
   AdminRolesRoute: typeof AdminRolesRoute
+  AdminStaffTeamsRoute: typeof AdminStaffTeamsRoute
   AdminStorageRoute: typeof AdminStorageRoute
   AdminTicketsRoute: typeof AdminTicketsRoute
   AdminTosRoute: typeof AdminTosRoute
@@ -1135,6 +1155,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminProvidersRoute: AdminProvidersRoute,
   AdminRolesRoute: AdminRolesRoute,
+  AdminStaffTeamsRoute: AdminStaffTeamsRoute,
   AdminStorageRoute: AdminStorageRoute,
   AdminTicketsRoute: AdminTicketsRoute,
   AdminTosRoute: AdminTosRoute,

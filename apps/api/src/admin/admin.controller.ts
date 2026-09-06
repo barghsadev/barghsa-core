@@ -1,6 +1,7 @@
 import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
+  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -2344,6 +2345,13 @@ export class AdminController {
    * Lists all staff teams (S-09.08, T-09.08.02), each with its member user
    * ids, ordered by name.
    */
+  @Get('staff-teams/members')
+  async staffTeamCandidates(@Req() req: AuthenticatedRequest, @Query('q') q?: string, @Query('teamId') teamId?: string) {
+    this.assertStaffTeamsEditPermission(req)
+    if ((q !== undefined && typeof q !== 'string') || (teamId !== undefined && typeof teamId !== 'string')) throw new BadRequestException('Invalid staff search')
+    return this.adminService.staffTeamCandidates(q ?? '',teamId)
+  }
+
   @Get('staff-teams')
   @ApiOperation({ summary: 'List staff teams (admin)' })
   @ApiResponse({

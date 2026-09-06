@@ -74,3 +74,17 @@ it('preserves team membership when its audit fails and permits a successful retr
   expect((await call(`staff-teams/${created.id}`,'DELETE')).status).toBe(200)
   expect((await http.pool.query('SELECT id FROM staff_teams WHERE id=$1',[created.id])).rows).toHaveLength(0)
 })
+
+it('searches eligible members and retains named existing members after disablement',async()=>{
+  const created=await team()
+  expect((await call('staff-teams/members', 'GET',undefined,'customer')).status).toBe(403)
+  expect((await call('staff-teams/members?teamId=bad')).status).toBe(400)
+  const response=await call(`staff-teams/members?q=member&teamId=${created.id}`)
+  expect(await response.json()).toMatchObject({items:[{id:'member',name:'member@example.test'}],hasMore:false,selected:[{id:'member',eligible:true}]})
+  await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='member'")
+  try {
+    const data=await (await call(`staff-teams/members?q=member&teamId=${created.id}`)).json() as {items:unknown[];selected:unknown[]}
+    expect(data.items).toEqual([])
+    expect(data.selected).toEqual([{id:'member',name:'member@example.test',eligible:false}])
+  } finally { await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='member'") }
+})

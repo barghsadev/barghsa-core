@@ -1,6 +1,6 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto'
 import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery'
-import { Injectable, Logger, HttpException, Optional } from '@nestjs/common'
+import { Injectable, Logger, HttpException, Optional, BadRequestException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
 import { getDbPool, PREDEFINED_ROLES } from '@barghsa/db'
@@ -2186,6 +2186,18 @@ export class AdminService {
    * users currently in the team, ordered by membership created_at) so the
    * admin surface can render member management without a second call.
    */
+  async staffTeamCandidates(query: string, teamId?: string) {
+    if (query.length > 100 || (teamId && !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(teamId))) throw new BadRequestException('Invalid staff search')
+    const pool = getDbPool()
+    const eligible = `u.disabled_at IS NULL AND u.activation_token IS NULL AND
+      (u.is_admin OR u.is_staff OR EXISTS (SELECT 1 FROM user_roles r WHERE r.user_id=u.user_id))`
+    const items = await pool.query(`SELECT u.user_id AS id,u.username AS name FROM users u
+      WHERE ${eligible} AND strpos(lower(u.username),lower($1))>0 ORDER BY u.username,u.user_id LIMIT 51`,[query.trim()])
+    const selected = teamId ? await pool.query(`SELECT u.user_id AS id,u.username AS name,(${eligible}) AS eligible
+      FROM users u JOIN staff_team_members m ON m.user_id=u.user_id WHERE m.team_id=$1 ORDER BY u.username,u.user_id`,[teamId]) : {rows:[]}
+    return {items:items.rows.slice(0,50),hasMore:items.rows.length>50,selected:selected.rows}
+  }
+
   async listStaffTeams(): Promise<StaffTeamRecord[]> {
     const pool = getDbPool()
     const teamsResult = await pool.query(
