@@ -12,6 +12,9 @@ for (const locale of ['en', 'fa'])
       denied = false;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
     await page.route('**/api/admin/catalogue/products*', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
@@ -79,6 +82,9 @@ for (const locale of ['en', 'fa'])
       }).observe(document, { childList: true });
     }, locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
     await page.route('**/api/admin/catalogue/products*', (route) => route.fulfill({ json: [] }));
     await page.goto('/admin/catalogue');
     const consultation = page.getByRole('tab', {

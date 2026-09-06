@@ -52,7 +52,7 @@ const en: Record<string, string> = {
   date: 'Effective date',
   time: 'Effective time',
   chooseDate: 'Choose a date',
-  timezone: 'This device’s timezone',
+  timezone: 'Account timezone',
   immediate:
     'Takes effect after confirmation. A new version must follow the latest scheduled version.',
   from: 'From',
@@ -129,7 +129,7 @@ const fa: Record<string, string> = {
   date: 'تاریخ اجرا',
   time: 'ساعت اجرا',
   chooseDate: 'انتخاب تاریخ',
-  timezone: 'منطقه زمانی این دستگاه',
+  timezone: 'منطقه زمانی حساب',
   immediate: 'پس از تأیید اعمال می‌شود. نسخه جدید باید پس از آخرین نسخه زمان‌بندی‌شده باشد.',
   from: 'از',
   until: 'تا',

@@ -1523,3 +1523,9 @@ Review and validation: both Persian and English production-browser checks pass f
 VAT uses the saved account timezone for its date picker, timestamps and scheduled rate/override changes. The editor waits for a valid preference and refresh retries that read. Wall-clock conversion rejects invalid fields and nonexistent local times during spring DST. Existing immediate changes and captured step-up submissions retain their behavior.
 
 Review and validation: three date-helper checks, four controlled VAT browser checks and both production-migrated API/browser VAT checks pass. Coverage includes exact Tehran conversion, skipped New York time, a 25-hour fall day, failed preference loading, permission revocation and percentage retry. Root build, types, lint and bundle checks pass. Gift windows, catalogue scheduling and CRM filters remain separate timezone consumers to repair.
+
+### Apply account timezone to catalogue prices (F20)
+
+Catalogue timestamps and scheduled prices now use the saved account timezone. The editor waits for a valid preference and refresh can recover a failed preference read. Scheduling uses the same validated wall-clock conversion as VAT, including rejection of skipped local times.
+
+Review and validation: four controlled catalogue checks and both production-migrated API/browser catalogue checks pass. The live checks now assert that a midnight Tehran schedule persists as 20:30 UTC on the previous day, while the current price remains unchanged. Product creation, editing, archival/restoration, exact large prices, system limits, rule warnings and keyboard tabs remain covered. Root build/types/lint and bundle checks pass.

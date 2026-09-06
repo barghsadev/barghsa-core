@@ -2048,6 +2048,7 @@ for (const locale of ['en', 'fa'])
       expect(priced.priceHistory).toHaveLength(2);
       expect(priced.priceHistory[1].price).toBe('9007199254740995');
       expect(Date.parse(priced.priceHistory[1].effectiveFrom)).toBeGreaterThan(Date.now());
+      expect(new Date(priced.priceHistory[1].effectiveFrom).toISOString()).toMatch(/T20:30:00\.000Z$/);
       await page
         .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
         .click();

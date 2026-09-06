@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, DatePicker, Input, Label, Textarea } from '@barghsa/ui';
+import { Button, DatePicker, datePickerAtTime, Input, Label, Textarea } from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
+import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 const types = ['consultation', 'electricity', 'hardware', 'saving_plan'] as const;
@@ -52,6 +53,7 @@ const categoryOptions: Record<ProductType, string[]> = {
 };
 const base = '/api/admin/catalogue/products';
 export default function AdminCataloguePage() {
+  const preference = useTimezone();
   const locale = useLocale(),
     label = (key: string) => tCatalogue(key, locale);
   const [type, setType] = useState<ProductType>('consultation'),
@@ -77,7 +79,7 @@ export default function AdminCataloguePage() {
     setEditor(null);
     setType(value);
   }
-  const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const zone = preference.timezone;
   const title = (row: Product) => row.title[locale] || row.title.en || row.title.fa;
   const money = (value: string | null) =>
     value === null ? label('unset') : `${BigInt(value).toLocaleString(locale)} ${label('irr')}`;
@@ -133,6 +135,7 @@ export default function AdminCataloguePage() {
     return () => abort.abort();
   }, [type, editor, revision]);
   function choose(value: string | null) {
+    if (preference.status === 'error') preference.retry();
     setState('loading');
     setEditor(value);
     setRevision((value) => value + 1);
@@ -189,7 +192,7 @@ export default function AdminCataloguePage() {
   }
   function savePrice(event: FormEvent) {
     event.preventDefault();
-    if (!detail) return;
+    if (!detail || preference.status !== 'ready') return;
     let effectiveFrom: string | undefined;
     if (scheduled) {
       const match = /^(\d{2}):(\d{2})$/.exec(time);
@@ -197,16 +200,8 @@ export default function AdminCataloguePage() {
         setInvalidDate(true);
         return;
       }
-      const value = new Date(date),
-        hours = Number(match[1]),
-        minutes = Number(match[2]);
-      value.setHours(hours, minutes, 0, 0);
-      if (
-        hours > 23 ||
-        minutes > 59 ||
-        value.getHours() !== hours ||
-        value.getMinutes() !== minutes
-      ) {
+      const value = datePickerAtTime(date, Number(match[1]), Number(match[2]), zone);
+      if (!value) {
         setInvalidDate(true);
         return;
       }
@@ -288,10 +283,14 @@ export default function AdminCataloguePage() {
               tabIndex={0}
               className="flex flex-col gap-5"
             >
-              {state === 'loading' && <p role="status">{label('loading')}</p>}
-              {state === 'error' && <p role="alert">{label('error')}</p>}
+              {(state === 'loading' || preference.status === 'loading') && (
+                <p role="status">{label('loading')}</p>
+              )}
+              {(state === 'error' || preference.status === 'error') && (
+                <p role="alert">{label('error')}</p>
+              )}
               {state === 'denied' && <p role="alert">{label('denied')}</p>}
-              {state === 'ready' && (
+              {state === 'ready' && preference.status === 'ready' && (
                 <>
                   {type !== 'electricity' && (
                     <div>
@@ -548,7 +547,8 @@ export default function AdminCataloguePage() {
                                   <DatePicker
                                     label={label('date')}
                                     placeholder={label('chooseDate')}
-                                    jalali={locale === 'fa'}
+                                    locale={locale}
+                                    timezone={zone}
                                     {...(date ? { value: date } : {})}
                                     onChange={setDate}
                                   />
