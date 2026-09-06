@@ -85,7 +85,9 @@ describe('AuthService', () => {
       return { rows: [] };
     });
     mockClient.release.mockReset();
-    service = new AuthService(mockOtpService, mockSessionService);
+    service = new AuthService(mockOtpService, mockSessionService,
+      { enforceSecurityRateLimit: vi.fn().mockResolvedValue(undefined) } as unknown as import('../src/rate-limit/rate-limit.service.js').RateLimitService,
+      {} as import('../src/tos/tos.service.js').TosService);
   });
 
   describe('register', () => {

@@ -1,4 +1,4 @@
-import { SetMetadata } from '@nestjs/common';
+import 'reflect-metadata';
 
 /**
  * Decorator arguments that configure rate-limiting for a controller or route.
@@ -6,6 +6,8 @@ import { SetMetadata } from '@nestjs/common';
 export interface RateLimitOptions {
   /** Namespace (e.g., 'api', 'endpoint', 'login'). */
   namespace: string;
+  /** Only server-resolved session identity may select a user quota. */
+  scope?: 'ip' | 'user';
   /** Maximum requests in the window. */
   limit: number;
   /** Window duration in milliseconds. */
@@ -33,4 +35,9 @@ export const RATE_LIMIT_KEY = 'rate_limit:config';
  * login() { ... }
  * ```
  */
-export const RateLimit = (options: RateLimitOptions) => SetMetadata(RATE_LIMIT_KEY, options);
+export const RateLimit = (...options: RateLimitOptions[]): MethodDecorator & ClassDecorator =>
+  (target: object, _key?: string | symbol, descriptor?: PropertyDescriptor): void => {
+    const subject = descriptor?.value ?? target;
+    const existing = Reflect.getOwnMetadata(RATE_LIMIT_KEY, subject) as RateLimitOptions[] | undefined;
+    Reflect.defineMetadata(RATE_LIMIT_KEY, [...(existing ?? []), ...options], subject);
+  };

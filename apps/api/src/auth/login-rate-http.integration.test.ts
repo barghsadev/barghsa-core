@@ -86,3 +86,27 @@ it('preserves service-level OTP retry timing and localizes it for Persian client
   expect(body.error.message).toContain('ثانیه')
   expect(body.error.message).not.toContain('{seconds}')
 })
+
+it('enforces destination starts and device spraying independently of the IP counter', async () => {
+  const hourly = Math.floor(Date.now()/3600000)*3600000
+  const destination = createHash('sha256').update(username).digest('hex')
+  await http.pool.query(`INSERT INTO security_rate_limit_counters(key,window_start,window_ms,count)
+    VALUES ($1,$3,3600000,5),($2,$3,3600000,10)`,
+    [`password-reset:destination:${destination}`,`registration:destination:${destination}`,hourly])
+  for (const [route,body] of [
+    ['forgot-password',{username}],
+    ['register',{username,password,tosVersionId:'unpublished-test-terms'}],
+  ] as const) {
+    const response=await fetch(`${http.base}/api/auth/${route}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),
+    })
+    expect(response.status,await response.clone().text()).toBe(429)
+    expect(Number(response.headers.get('retry-after'))).toBeGreaterThan(0)
+  }
+  expect((await http.pool.query('SELECT count(*)::int AS count FROM otp_challenges')).rows[0].count).toBe(0)
+  await http.pool.query(`INSERT INTO security_rate_limit_counters(key,window_start,window_ms,count)
+    VALUES ($1,$2,900000,50)`, ['login:device:'+createHash('sha256').update('known-device').digest('hex'),Math.floor(Date.now()/900000)*900000])
+  expect((await login()).status).toBe(429)
+  expect(await count('login:ip:127.0.0.1')).toBe(1)
+  expect(await count(failureKey(username))).toBe(0)
+})

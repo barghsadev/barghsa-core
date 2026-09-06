@@ -189,3 +189,22 @@ it('rolls back both issued challenges and delivery rows if the new destination c
   expect((await http.pool.query('SELECT count(*)::int AS count FROM otp_challenges')).rows[0].count).toBe(0)
   expect((await http.pool.query('SELECT count(*)::int AS count FROM auth_delivery_outbox')).rows[0].count).toBe(0)
 })
+
+it('enforces both stacked IP and authenticated-user limits without accepting a body user ID', async () => {
+  await http.pool.query(`INSERT INTO security_rate_limit_counters(key,window_start,window_ms,count)
+    VALUES ('add-contact:user:otp-user',$1,300000,3)`, [Math.floor(Date.now()/300000)*300000])
+  expect((await post('add-contact/send-otp', { userId: 'other-user' })).status).toBe(429)
+  await http.pool.query("INSERT INTO users(user_id,username,password_hash) VALUES ('other-user','other-limit@example.test','test-only')")
+  const id=randomUUID(), csrf=randomUUID()
+  await http.pool.query(`INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+    VALUES ($1,'other-user',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`, [id,csrf,randomUUID()])
+  headers={...headers,Cookie:`barghsa_session=${id}`,'X-CSRF-Token':csrf}
+  // An invalid form still reaches validation for the other authenticated user.
+  expect((await post('add-contact/send-otp', {})).status).toBe(400)
+  expect((await http.pool.query("SELECT key,count FROM security_rate_limit_counters WHERE key LIKE 'add-contact:%' ORDER BY key")).rows)
+    .toEqual([
+      {key:'add-contact:ip:127.0.0.1',count:2},
+      {key:'add-contact:user:other-user',count:1},
+      {key:'add-contact:user:otp-user',count:4},
+    ])
+})

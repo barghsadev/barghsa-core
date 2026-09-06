@@ -42,12 +42,12 @@ export class RateLimitGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Read the rate-limit config from the handler (method) or controller (class)
-    const config: RateLimitOptions | undefined =
-      this.reflector.get<RateLimitOptions>(RATE_LIMIT_KEY, context.getHandler()) ??
-      this.reflector.get<RateLimitOptions>(RATE_LIMIT_KEY, context.getClass())
+    const configs: RateLimitOptions[] | undefined =
+      this.reflector.get<RateLimitOptions[]>(RATE_LIMIT_KEY, context.getHandler()) ??
+      this.reflector.get<RateLimitOptions[]>(RATE_LIMIT_KEY, context.getClass())
 
     // No rate-limit configured for this route — allow
-    if (!config) {
+    if (!configs?.length) {
       return true
     }
 
@@ -56,40 +56,45 @@ export class RateLimitGuard implements CanActivate {
     const response = http.getResponse()
     const ip = request.ip ?? request.socket?.remoteAddress ?? 'unknown'
 
-    // Build key: namespace:ip (or namespace:userId when available)
-    const key = rateLimitKey(config.namespace, ip)
+    for (const config of configs) {
+      // SessionContextMiddleware resolves this before global guards. Never trust
+      // a user ID supplied in a request body/header. SessionGuard rejects guests.
+      const identity = config.scope === 'user' ? request.session?.userId : ip
+      if (!identity) continue
+      const key = rateLimitKey(config.namespace, identity)
 
-    this.logger.debug(`Rate-limit check: ${key} (${config.limit}/${config.windowMs}ms)`)
+      this.logger.debug(`Rate-limit check: ${key} (${config.limit}/${config.windowMs}ms)`)
 
-    const result = config.security
-      ? await this.rateLimitService.checkSecurityRateLimit(key, config.limit, config.windowMs)
-      : await this.rateLimitService.checkRateLimit(key, config.limit, config.windowMs)
+      const result = config.security
+        ? await this.rateLimitService.checkSecurityRateLimit(key, config.limit, config.windowMs)
+        : await this.rateLimitService.checkRateLimit(key, config.limit, config.windowMs)
 
-    if (!result.allowed) {
-      this.logger.warn(`Rate limit exceeded: ${key} (${result.limit}/${config.windowMs}ms)`)
+      if (!result.allowed) {
+        this.logger.warn(`Rate limit exceeded: ${key} (${result.limit}/${config.windowMs}ms)`)
 
-      // Compute seconds remaining for Retry-After header
-      const retryAfterSeconds = Math.ceil(result.resetMs / 1000)
-      const retryAfterHeader = String(retryAfterSeconds)
+        // Compute seconds remaining for Retry-After header
+        const retryAfterSeconds = Math.ceil(result.resetMs / 1000)
+        const retryAfterHeader = String(retryAfterSeconds)
 
-      // Set Retry-After HTTP header (RFC 7231 §7.1.3)
-      if (typeof response?.setHeader === 'function') {
-        response.setHeader('Retry-After', retryAfterHeader)
+        // Set Retry-After HTTP header (RFC 7231 §7.1.3)
+        if (typeof response?.setHeader === 'function') {
+          response.setHeader('Retry-After', retryAfterHeader)
+        }
+
+        throw new HttpException(
+          {
+            statusCode: HttpStatus.TOO_MANY_REQUESTS,
+            error: ErrorCodes.RATE_LIMIT_EXCEEDED.code,
+            message: retryAfterSeconds > 0 ? RATE_LIMIT_RETRY_AFTER_I18N_KEY : RATE_LIMIT_EXCEEDED_I18N_KEY,
+            retryAfterMs: result.resetMs,
+            retryAfterSeconds: retryAfterSeconds,
+            namespace: config.namespace,
+          },
+          HttpStatus.TOO_MANY_REQUESTS,
+        )
       }
 
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.TOO_MANY_REQUESTS,
-          error: ErrorCodes.RATE_LIMIT_EXCEEDED.code,
-          message: retryAfterSeconds > 0 ? RATE_LIMIT_RETRY_AFTER_I18N_KEY : RATE_LIMIT_EXCEEDED_I18N_KEY,
-          retryAfterMs: result.resetMs,
-          retryAfterSeconds: retryAfterSeconds,
-          namespace: config.namespace,
-        },
-        HttpStatus.TOO_MANY_REQUESTS,
-      )
     }
-
     return true
   }
 }

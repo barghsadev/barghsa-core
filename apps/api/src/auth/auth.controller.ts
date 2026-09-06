@@ -77,14 +77,13 @@ export class AuthController {
    *
    * Rate limits:
    * - 3 attempts per IP per 60s
-   * - 10 attempts per IP per 3600s (1h)
+   * - 10 starts per normalized destination per hour in the service
    */
   @SkipCsrf()
   @ApiZodBody(RegisterSchema)
   @Post('register')
   @HttpCode(200)
   @RateLimit({ namespace: 'registration:ip', limit: 3, windowMs: 60_000, security: true })
-  @RateLimit({ namespace: 'registration:ip-hourly', limit: 10, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
     status: 200,
@@ -399,7 +398,6 @@ export class AuthController {
   @ApiZodBody(ForgotPasswordSchema)
   @Post('forgot-password')
   @HttpCode(200)
-  @RateLimit({ namespace: 'forgot-password:dest', limit: 5, windowMs: 3_600_000, security: true })
   @RateLimit({ namespace: 'forgot-password:ip', limit: 5, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Initiate forgot-password OTP flow' })
   @ApiResponse({
@@ -453,7 +451,6 @@ export class AuthController {
   @ApiZodBody(ResetPasswordSchema)
   @Post('reset-password')
   @HttpCode(200)
-  @RateLimit({ namespace: 'reset-password:dest', limit: 5, windowMs: 3_600_000, security: true })
   @RateLimit({ namespace: 'reset-password:ip', limit: 5, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Reset password after OTP verification' })
   @ApiResponse({
@@ -822,7 +819,7 @@ export class AuthController {
   @ApiZodBody(ChangeUsernameSendOtpSchema)
   @Post('change-username/send-otp')
   @HttpCode(200)
-  @RateLimit({ namespace: 'change-username:user', limit: 3, windowMs: 300_000, security: true })
+  @RateLimit({ namespace: 'change-username:user', scope: 'user', limit: 3, windowMs: 300_000, security: true })
   @RateLimit({ namespace: 'change-username:ip', limit: 5, windowMs: 300_000, security: true })
   @ApiOperation({ summary: 'Send OTP to initiate username change' })
   @ApiResponse({ status: 200, description: 'OTP sent. Returns challengeId.' })
@@ -911,7 +908,7 @@ export class AuthController {
   @ApiZodBody(AddContactSendOtpSchema)
   @Post('add-contact/send-otp')
   @HttpCode(200)
-  @RateLimit({ namespace: 'add-contact:user', limit: 3, windowMs: 300_000, security: true })
+  @RateLimit({ namespace: 'add-contact:user', scope: 'user', limit: 3, windowMs: 300_000, security: true })
   @RateLimit({ namespace: 'add-contact:ip', limit: 5, windowMs: 300_000, security: true })
   @ApiOperation({ summary: 'Send OTP to add a new contact' })
   @ApiResponse({ status: 200, description: 'OTP sent. Returns challengeId.' })

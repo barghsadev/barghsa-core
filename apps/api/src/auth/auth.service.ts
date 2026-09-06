@@ -75,6 +75,8 @@ export class AuthService {
     input: RegisterInput,
     ip: string,
   ): Promise<RegisterResponse> {
+    await this.rateLimitService.enforceSecurityRateLimit(
+      rateLimitKey('registration:destination', createHash('sha256').update(input.username).digest('hex')), 10, 3_600_000)
     const pool = getDbPool()
     const existing = await pool.query('SELECT 1 FROM users WHERE username=$1', [input.username])
     if (existing.rows.length) {
@@ -132,6 +134,11 @@ export class AuthService {
    */
   async login(input: LoginInput, ip: string): Promise<LoginResponse> {
     const pool = getDbPool()
+
+    if (input.deviceInfo?.fingerprint) {
+      await this.rateLimitService.enforceSecurityRateLimit(
+        rateLimitKey('login:device', createHash('sha256').update(input.deviceInfo.fingerprint).digest('hex')), 50, 900_000)
+    }
 
     // Kick off dummy hash computation if not yet ready (settles in ~200ms;
     // by the time the client types a password on the next request it's ready)
@@ -503,6 +510,8 @@ export class AuthService {
     input: ForgotPasswordInput,
     ip: string,
   ): Promise<ForgotPasswordResponse> {
+    await this.rateLimitService.enforceSecurityRateLimit(
+      rateLimitKey('password-reset:destination', createHash('sha256').update(input.username).digest('hex')), 5, 3_600_000)
     const { challengeId } = await this.otpService.createPasswordResetChallenge(input.username, ip)
     return {
       challengeId,
