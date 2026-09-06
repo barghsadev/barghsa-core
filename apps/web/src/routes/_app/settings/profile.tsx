@@ -1,3 +1,4 @@
+import { LegalProfileDocuments } from '../../../components/LegalProfileDocuments.js';
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
@@ -326,6 +327,8 @@ function SettingsProfilePage() {
               </div>
             </div>
           )}
+
+          {isLegal && <LegalProfileDocuments profileId={profile.id} />}
 
           {/* Identity section */}
           <div className="rounded-lg border p-4 space-y-4">

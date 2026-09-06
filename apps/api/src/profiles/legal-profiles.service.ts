@@ -1,3 +1,4 @@
+import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { z } from 'zod';
 import { requireAddressGeography } from './address-geography.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
@@ -72,7 +73,36 @@ function mapLegalProfileRow(row: Record<string, unknown>): LegalProfileRow {
 export class LegalProfilesService {
   private readonly logger = new Logger(LegalProfilesService.name);
 
-  constructor(private readonly profilesService: ProfilesService) {}
+  constructor(
+    private readonly profilesService: ProfilesService,
+    private readonly attachments: VerifiedAttachmentsService
+  ) {}
+
+  async getDocuments(userId: string, profileId: string) {
+    const profile = await this.profilesService.getProfileById(profileId);
+    if (!profile || profile.userId !== userId || profile.profileType !== 'LEGAL')
+      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    const result = await getDbPool().query('SELECT documents FROM legal_profiles WHERE id=$1', [
+      profileId,
+    ]);
+    const keys = (result.rows[0]?.documents ?? []) as string[];
+    const urls = await this.attachments.downloadUrls(keys, 'legal_profile_document');
+    if (keys.length && urls.length !== keys.length)
+      throw new HttpException({ error: 'STORAGE:UNAVAILABLE' }, 503);
+    const records = keys.length
+      ? await getDbPool().query(
+          'SELECT storage_key,file_name FROM storage_records WHERE storage_key=ANY($1::text[])',
+          [keys]
+        )
+      : { rows: [] };
+    return {
+      documents: keys.map((key, index) => ({
+        key,
+        name: records.rows.find((row) => row.storage_key === key)?.file_name ?? 'Document',
+        url: urls[index],
+      })),
+    };
+  }
 
   /**
    * Save legal profile data during onboarding (T-03.02.03).
@@ -115,6 +145,7 @@ export class LegalProfilesService {
 
     const parsed = z
       .object({
+        documents: z.array(z.string().min(1).max(512)).max(5).optional(),
         draftVersion: z.number().int().min(0).max(2147483647).optional(),
         legalName: z.string().trim().min(1).max(200),
         nationalIdentifier: z
@@ -218,6 +249,16 @@ export class LegalProfilesService {
         data.representativeCityId
       );
 
+      const documents = data.documents?.length
+        ? await this.attachments.seal(
+            client,
+            data.documents,
+            userId,
+            profileId,
+            'legal_profile_document'
+          )
+        : [];
+
       // Create the legal profile record
       await client.query(
         `INSERT INTO legal_profiles (
@@ -225,9 +266,9 @@ export class LegalProfilesService {
           company_type_id, registration_date, economic_code,
           official_phone, official_email,
           official_province_id, official_city_id, official_full_address, official_postal_code,
-          representative_title, representative_relationship,
+          documents, representative_title, representative_relationship,
           representative_honorific, representative_first_name, representative_last_name, representative_national_id, representative_province_id, representative_city_id, representative_full_address, representative_postal_code
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)`,
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $24::jsonb, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)`,
         [
           profileId,
           data.legalName,
@@ -252,6 +293,7 @@ export class LegalProfilesService {
           data.representativeCityId ?? null,
           data.representativeFullAddress ?? null,
           data.representativePostalCode ?? null,
+          JSON.stringify(documents),
         ]
       );
 

@@ -10209,6 +10209,30 @@
         ]
       }
     },
+    "/api/onboarding/documents/{profileId}": {
+      "get": {
+        "operationId": "OnboardingController_getDocuments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Download the owned legal profile documents",
+        "tags": [
+          "Onboarding"
+        ]
+      }
+    },
     "/api/onboarding/draft/{profileId}": {
       "get": {
         "operationId": "OnboardingController_getDraft",
@@ -10255,6 +10279,10 @@
                     "properties": {
                       "companyTypeId": {
                         "maxLength": 100,
+                        "type": "string"
+                      },
+                      "documentKeys": {
+                        "maxLength": 4096,
                         "type": "string"
                       },
                       "economicCode": {

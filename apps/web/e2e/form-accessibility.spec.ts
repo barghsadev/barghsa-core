@@ -278,10 +278,26 @@ for (const locale of ['en', 'fa']) {
         ],
       })
     );
+    const documentKey = 'uploads/document/11111111-1111-4111-8111-111111111111.pdf';
+    await page.route('**/api/upload/presigned-url', (route) =>
+      route.fulfill({ json: { key: documentKey, presignedUrl: '/test-legal-upload' } })
+    );
+    await page.route('**/test-legal-upload', (route) => route.fulfill({ status: 200 }));
+    await page.route('**/api/upload/*/verify', (route) =>
+      route.fulfill({ json: { status: 'confirmed' } })
+    );
+    await page.route('**/api/upload/*/record', (route) => {
+      expect(route.request().postDataJSON()).toMatchObject({
+        purpose: 'legal_profile_document',
+        profileId: 'profile-one',
+      });
+      return route.fulfill({ json: { status: 'recorded' } });
+    });
     let submissions = 0;
     await page.route('**/api/onboarding/legal/*', (route) => {
       submissions++;
       expect(route.request().postDataJSON().draftVersion).toBeGreaterThan(0);
+      expect(route.request().postDataJSON().documents).toEqual([documentKey]);
       return route.fulfill({ status: 400, json: { message: 'Test response' } });
     });
     await page.goto('/onboarding/legal/profile-one');
@@ -313,6 +329,12 @@ for (const locale of ['en', 'fa']) {
     await page.locator('#officialCityId').selectOption('city-b');
     await page.locator('#officialFullAddress').fill('Street');
     await page.locator('#officialPostalCode').fill('1234567890');
+    await page.locator('#document-upload').setInputFiles({
+      name: 'registration.pdf',
+      mimeType: 'application/pdf',
+      buffer: Buffer.from('%PDF-1.7 test document'),
+    });
+    await expect(page.getByText('registration.pdf', { exact: true })).toBeVisible();
     await page.locator('button[type="submit"]').click();
     await expect.poll(() => submissions).toBe(1);
   });
@@ -504,4 +526,98 @@ test('failed draft load leaves fields untouched until retry succeeds', async ({ 
   await page.getByRole('button', { name: 'Reload saved draft', exact: true }).click();
   await expect(page.locator('#legalName')).toBeEnabled();
   await expect(page.locator('#legalName')).toHaveValue('Recovered draft');
+});
+
+test('legal document upload reports record failures and keeps successful files across reload', async ({
+  page,
+}) => {
+  await shell(page);
+  let stored = { version: 0, data: {} as Record<string, string> };
+  await page.route('**/api/onboarding/draft/*', (route) => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: stored });
+    const input = route.request().postDataJSON();
+    stored = { version: stored.version + 1, data: input.data };
+    return route.fulfill({ json: stored });
+  });
+  await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+  await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
+  const key = 'uploads/document/11111111-1111-4111-8111-111111111111.pdf';
+  await page.route('**/api/upload/presigned-url', (route) =>
+    route.fulfill({ json: { key, presignedUrl: '/test-document-put' } })
+  );
+  await page.route('**/test-document-put', (route) => route.fulfill({ status: 200 }));
+  await page.route('**/api/upload/*/verify', (route) =>
+    route.fulfill({ json: { status: 'confirmed' } })
+  );
+  let fail = true;
+  await page.route('**/api/upload/*/record', (route) =>
+    route.fulfill(fail ? { status: 503, json: {} } : { json: { status: 'recorded' } })
+  );
+  await page.goto('/onboarding/legal/profile-one');
+  await expect(page.locator('#document-upload')).toBeEnabled();
+  const file = {
+    name: 'gazette.pdf',
+    mimeType: 'application/pdf',
+    buffer: Buffer.from('%PDF-1.7 test document'),
+  };
+  await page.locator('#document-upload').setInputFiles(file);
+  await expect(
+    page.getByText('Upload failed. Select a valid file and retry.', { exact: true })
+  ).toBeVisible();
+  await expect(page.getByText('gazette.pdf', { exact: true })).toHaveCount(0);
+  fail = false;
+  await page.locator('#document-upload').setInputFiles(file);
+  await expect(page.getByText('gazette.pdf', { exact: true })).toBeVisible();
+  await expect.poll(() => stored.data.documentKeys).toContain('gazette.pdf');
+  await expect(page.getByText('Draft saved', { exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByText('gazette.pdf', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Remove gazette.pdf', exact: true }).click();
+  await expect.poll(() => stored.data.documentKeys).toBe('[]');
+});
+
+test('legal profile settings show attachment names and refresh expiring download links', async ({
+  page,
+}) => {
+  await shell(page);
+  await page.route('**/api/profiles/profile-one', (route) =>
+    route.fulfill({
+      json: {
+        id: 'profile-one',
+        profileType: 'LEGAL',
+        status: 'ACTIVE',
+        title: 'Company',
+        isDefault: true,
+        firstName: null,
+        lastName: null,
+        nationalId: null,
+        addresses: [],
+        legalInfo: {
+          legalName: 'Company',
+          nationalIdentifier: '12345678901',
+          registrationNumber: '123',
+        },
+      },
+    })
+  );
+  let reads = 0;
+  await page.route('**/api/onboarding/documents/profile-one', (route) => {
+    reads++;
+    return route.fulfill({
+      json: {
+        documents: [
+          {
+            key: 'legal-profile-documents/test/hash',
+            name: 'registration.pdf',
+            url: `https://storage.example.test/document?version=${reads}`,
+          },
+        ],
+      },
+    });
+  });
+  await page.goto('/settings/profile');
+  const link = page.getByRole('link', { name: 'registration.pdf', exact: true });
+  await expect(link).toHaveAttribute('href', 'https://storage.example.test/document?version=1');
+  await page.getByRole('button', { name: 'Refresh download links', exact: true }).click();
+  await expect(link).toHaveAttribute('href', 'https://storage.example.test/document?version=2');
 });

@@ -1,7 +1,8 @@
+import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-upload.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n';
 import { withCsrf } from '../../../lib/csrf.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { useLocale } from '../../../hooks/useLocale.js';
@@ -144,7 +145,36 @@ function LegalProfileFormPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const [documents, setDocuments] = useState<Array<{ key: string; name: string }>>([]);
+  const [uploading, setUploading] = useState(false);
+  const uploadInFlight = useRef(false);
+  useEffect(() => {
+    if (!uploading) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [uploading]);
+  const [uploadError, setUploadError] = useState(false);
   const restoreDraft = useCallback((data: Record<string, string>) => {
+    try {
+      const parsed: unknown = JSON.parse(data.documentKeys || '[]');
+      setDocuments(
+        Array.isArray(parsed)
+          ? parsed
+              .filter(
+                (item): item is { key: string; name: string } =>
+                  !!item && typeof item.key === 'string' && typeof item.name === 'string'
+              )
+              .slice(0, 5)
+          : []
+      );
+    } catch {
+      setDocuments([]);
+    }
+
     setLegalName(data.legalName ?? '');
     setNationalIdentifier(data.nationalIdentifier ?? '');
     setRegistrationNumber(data.registrationNumber ?? '');
@@ -174,6 +204,7 @@ function LegalProfileFormPage() {
     profileId,
     {
       ...representative,
+      documentKeys: JSON.stringify(documents),
       legalName,
       nationalIdentifier,
       registrationNumber,
@@ -191,9 +222,6 @@ function LegalProfileFormPage() {
     },
     restoreDraft
   );
-
-  // ── Document upload (simplified: placeholder for drag & drop) ──
-  const [documents, setDocuments] = useState<File[]>([]);
 
   // Fetch provinces on mount
   useEffect(() => {
@@ -476,7 +504,7 @@ function LegalProfileFormPage() {
       e.preventDefault();
       setSubmitError(null);
 
-      if (!draft.ready || !validateForm()) return;
+      if (!draft.ready || uploading || !validateForm()) return;
 
       setSubmitting(true);
 
@@ -489,6 +517,7 @@ function LegalProfileFormPage() {
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({
             draftVersion,
+            documents: documents.map((document) => document.key),
             ...Object.fromEntries(
               Object.entries(representative).map(([key, value]) => [key, value.trim()])
             ),
@@ -556,6 +585,8 @@ function LegalProfileFormPage() {
     },
     [
       profileId,
+      documents,
+      uploading,
       draft.ready,
       draft.flush,
       draft.markConflict,
@@ -581,15 +612,38 @@ function LegalProfileFormPage() {
     ]
   );
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files;
-    if (files) {
-      setDocuments((prev) => [...prev, ...Array.from(files)]);
+  async function uploadDocuments(files: File[]) {
+    if (uploadInFlight.current || submitting || !draft.ready || !files.length) return;
+    if (documents.length + files.length > 5) {
+      setUploadError(true);
+      return;
+    }
+    uploadInFlight.current = true;
+    setUploading(true);
+    setUploadError(false);
+    try {
+      for (const file of files) {
+        const key = await uploadLegalProfileDocument(file, profileId);
+        if (!key) {
+          setUploadError(true);
+          continue;
+        }
+        setDocuments((previous) => [...previous, { key, name: file.name }]);
+      }
+    } catch {
+      setUploadError(true);
+    } finally {
+      uploadInFlight.current = false;
+      setUploading(false);
     }
   }
-
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []);
+    event.target.value = '';
+    void uploadDocuments(files);
+  }
   function removeDocument(index: number) {
-    setDocuments((prev) => prev.filter((_, i) => i !== index));
+    setDocuments((previous) => previous.filter((_, i) => i !== index));
   }
 
   // ── Render helpers ──────────────────────────────────────
@@ -665,6 +719,7 @@ function LegalProfileFormPage() {
           to="/onboarding"
           onClick={async (event) => {
             event.preventDefault();
+            if (uploading) return;
             if (!draft.ready || (await draft.flush()) !== undefined)
               await router.navigate({ to: '/onboarding' });
           }}
@@ -1138,9 +1193,23 @@ function LegalProfileFormPage() {
                 : 'Official gazette or registration documents (optional)'}
             </p>
 
+            {uploading && <p role="status">{t('onboarding.documents.uploading', locale)}</p>}
+            {uploadError && (
+              <p role="alert" className="text-destructive">
+                {t('onboarding.documents.error', locale)}
+              </p>
+            )}
+            <p className="mb-2 text-sm text-muted-foreground">
+              {t('onboarding.documents.limit', locale)}
+            </p>
             <div className="flex items-center justify-center w-full">
               <label
                 htmlFor="document-upload"
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  void uploadDocuments(Array.from(event.dataTransfer.files));
+                }}
                 className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-background hover:bg-muted/50 transition-colors"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -1156,9 +1225,9 @@ function LegalProfileFormPage() {
                   type="file"
                   multiple
                   accept=".pdf,.jpg,.jpeg,.png"
-                  className="hidden"
+                  className="sr-only"
                   onChange={handleFileChange}
-                  disabled={submitting}
+                  disabled={submitting || uploading}
                 />
               </label>
             </div>
@@ -1174,6 +1243,7 @@ function LegalProfileFormPage() {
                     <button
                       type="button"
                       onClick={() => removeDocument(idx)}
+                      disabled={submitting || uploading}
                       className="text-destructive hover:text-destructive/80 text-xs ml-2"
                       aria-label={isRtl ? `حذف ${doc.name}` : `Remove ${doc.name}`}
                     >
@@ -1186,7 +1256,11 @@ function LegalProfileFormPage() {
           </fieldset>
 
           {/* ── Submit ──────────────────────────────────────── */}
-          <Button type="submit" className="w-full" disabled={submitting}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={submitting || uploading || !draft.ready}
+          >
             {submitting ? (
               <>
                 <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />

@@ -1,3 +1,4 @@
+import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { LegalProfilesService } from './legal-profiles.service.js';
 import { ProfilesService } from './profiles.service.js';
@@ -45,7 +46,7 @@ describe('LegalProfilesService', () => {
     profilesService = new ProfilesService(configCache, {
       create: vi.fn().mockResolvedValue(undefined),
     } as unknown as NotificationsService);
-    service = new LegalProfilesService(profilesService);
+    service = new LegalProfilesService(profilesService, new VerifiedAttachmentsService());
     mockPool.query.mockReset();
     mockPool.connect.mockReset();
     mockClient.query.mockReset();

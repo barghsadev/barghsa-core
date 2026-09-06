@@ -5,6 +5,15 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'onboarding.documents.title': 'مدارک ثبتی',
+  'onboarding.documents.loadError': 'مدارک دریافت نشد. دوباره تلاش کنید.',
+  'onboarding.documents.empty': 'مدرکی پیوست نشده است.',
+  'onboarding.documents.refresh': 'دریافت پیوندهای جدید',
+
+  'onboarding.documents.uploading': 'در حال بارگذاری مدارک…',
+  'onboarding.documents.error': 'بارگذاری انجام نشد. فایل معتبر را دوباره انتخاب کنید.',
+  'onboarding.documents.limit': 'حداکثر ۵ فایل PDF یا تصویر، هر کدام تا ۱۰ مگابایت.',
+
   'onboarding.draft.editing': 'تغییرات ذخیره نشده',
   'onboarding.draft.loading': 'در حال دریافت پیش‌نویس…',
   'onboarding.draft.saved': 'پیش‌نویس ذخیره شد',
@@ -1451,6 +1460,15 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'onboarding.documents.title': 'Registration documents',
+  'onboarding.documents.loadError': 'Documents could not be loaded. Retry.',
+  'onboarding.documents.empty': 'No documents attached.',
+  'onboarding.documents.refresh': 'Refresh download links',
+
+  'onboarding.documents.uploading': 'Uploading documents…',
+  'onboarding.documents.error': 'Upload failed. Select a valid file and retry.',
+  'onboarding.documents.limit': 'Up to 5 PDF or image files, 10 MB each.',
+
   'onboarding.draft.editing': 'Unsaved changes',
   'onboarding.draft.loading': 'Loading draft…',
   'onboarding.draft.saved': 'Draft saved',

@@ -1,6 +1,6 @@
 import { provinces, cities } from './geography';
 import { sql } from 'drizzle-orm';
-import { text, uuid, pgTable, timestamp } from 'drizzle-orm/pg-core';
+import { text, uuid, jsonb, pgTable, timestamp } from 'drizzle-orm/pg-core';
 import { uuidv7 } from '../types';
 
 /**
@@ -99,6 +99,11 @@ export const legalProfiles = pgTable('legal_profiles', {
   }),
   representativeFullAddress: text('representative_full_address'),
   representativePostalCode: text('representative_postal_code'),
+
+  documents: jsonb('documents')
+    .$type<string[]>()
+    .notNull()
+    .default(sql`'[]'::jsonb`),
 
   /** Authorized representative's title/position. */
   representativeTitle: text('representative_title').notNull(),

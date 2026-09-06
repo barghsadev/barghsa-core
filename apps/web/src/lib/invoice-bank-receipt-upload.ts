@@ -96,6 +96,13 @@ export async function uploadTicketAttachment(
   return uploadVerifiedAttachment(file, profileId, 'ticket_attachment');
 }
 
+export async function uploadLegalProfileDocument(
+  file: File,
+  profileId: string
+): Promise<string | null> {
+  return uploadVerifiedAttachment(file, profileId, 'legal_profile_document');
+}
+
 async function uploadVerifiedAttachment(
   file: File,
   profileId: string | null,

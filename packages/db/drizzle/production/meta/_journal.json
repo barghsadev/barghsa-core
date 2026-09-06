@@ -211,6 +211,13 @@
       "when": 1791331200012,
       "tag": "0109_onboarding_drafts",
       "breakpoints": true
+    },
+    {
+      "idx": 110,
+      "version": "7",
+      "when": 1791331200013,
+      "tag": "0110_legal_documents",
+      "breakpoints": true
     }
   ]
 }

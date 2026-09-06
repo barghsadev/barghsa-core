@@ -4,6 +4,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { z } from 'zod';
 
 const limits: Record<string, number> = {
+  documentKeys: 4096,
   legalName: 200,
   nationalIdentifier: 11,
   registrationNumber: 50,
@@ -37,7 +38,11 @@ export const legalDraftInputSchema = z
           Object.entries(limits).map(([key, max]) => [key, z.string().max(max).optional()])
         )
       )
-      .strict(),
+      .strict()
+      .refine(
+        (data) => Buffer.byteLength(JSON.stringify(data), 'utf8') <= 16384,
+        'Draft is too large'
+      ),
   })
   .strict();
 

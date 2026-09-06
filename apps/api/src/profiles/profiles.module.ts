@@ -1,3 +1,4 @@
+import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { OnboardingDraftsService } from './onboarding-drafts.service.js';
 import { Module } from '@nestjs/common';
 import { ProfilesController } from './profiles.controller.js';
@@ -16,6 +17,7 @@ import { NotificationsModule } from '../notifications/index.js';
   imports: [SessionModule, NotificationsModule],
   controllers: [ProfilesController, OnboardingController, AgentsController, InvitationsController],
   providers: [
+    VerifiedAttachmentsService,
     OnboardingDraftsService,
     ProfilesService,
     LegalProfilesService,

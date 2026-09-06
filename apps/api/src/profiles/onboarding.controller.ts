@@ -35,6 +35,16 @@ export class OnboardingController {
     private readonly drafts: OnboardingDraftsService
   ) {}
 
+  @Get('documents/:profileId')
+  @RateLimit({ namespace: 'onboarding:documents:user', limit: 30, windowMs: 60000 })
+  @ApiOperation({ summary: 'Download the owned legal profile documents' })
+  getDocuments(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.legalProfilesService.getDocuments(req.session.userId, profileId);
+  }
+
   @Get('draft/:profileId')
   @RateLimit({ namespace: 'onboarding:draft:get:user', limit: 60, windowMs: 60000 })
   @ApiOperation({ summary: 'Read the current owned legal onboarding draft' })
