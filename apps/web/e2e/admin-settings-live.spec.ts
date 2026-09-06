@@ -270,6 +270,19 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(row).toContainText(fa ? 'مالی' : 'Finance');
     await row
+      .getByRole('button', { name: fa ? 'تاریخچه مجوزها' : 'Permission history', exact: true })
+      .click();
+    const history = page.getByRole('region', {
+      name: fa ? 'تاریخچه مجوزها' : 'Permission history',
+      exact: true,
+    });
+    await expect(history).toContainText('Assign finance duties');
+    await expect(history).toContainText('admin-ui@example.test');
+    await expect(history).toContainText(fa ? 'نقش‌های افزوده: مالی' : 'Roles added: Finance');
+    await history
+      .getByRole('button', { name: fa ? 'بستن تاریخچه' : 'Close history', exact: true })
+      .click();
+    await row
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی حساب' : 'Disable account', exact: true })
       .click();
     await page

@@ -110,3 +110,127 @@ for (const locale of ['en', 'fa'] as const) {
     ).toHaveCount(0);
   });
 }
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`permission history filters full calendar days and preserves retry (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.setFixedTime(new Date('2026-03-21T12:00:00Z'));
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const fa = locale === 'fa',
+      target = '10000000-0000-4000-8000-000000000003';
+    let fail = true;
+    const queries: URLSearchParams[] = [];
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/admin/staff-access', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'viewer',
+          canView: true,
+          canCreate: false,
+          canEditRoles: false,
+          canDisable: false,
+        },
+      })
+    );
+    await page.route('**/api/admin/staff?*', (route) =>
+      route.fulfill({
+        json: {
+          items: [
+            {
+              userId: target,
+              username: 'history@example.test',
+              firstName: 'History',
+              lastName: 'User',
+              roles: [],
+              status: 'active',
+              isAdmin: false,
+              lastLoginAt: null,
+            },
+          ],
+          total: 1,
+        },
+      })
+    );
+    await page.route('**/api/admin/staff/audit?*', (route) => {
+      const query = new URL(route.request().url()).searchParams;
+      queries.push(query);
+      if (fail) return route.fulfill({ status: 503, json: {} });
+      return route.fulfill({
+        json: {
+          items: [
+            {
+              id: query.get('offset') || '0',
+              targetUserId: target,
+              targetUsername: 'history@example.test',
+              actorUserId: 'admin',
+              actorUsername: 'actor@example.test',
+              addedRoles: [{ roleId: 'role-finance', roleName: 'Finance' }],
+              removedRoles: [{ roleId: 'role-customer-support', roleName: 'Customer Support' }],
+              reason: 'New duties',
+              createdAt: '2026-03-21T12:00:00Z',
+            },
+          ],
+          total: 26,
+        },
+      });
+    });
+    await page.goto('/admin/users');
+    await page
+      .getByRole('row')
+      .filter({ hasText: 'history@example.test' })
+      .getByRole('button', { name: fa ? 'تاریخچه مجوزها' : 'Permission history', exact: true })
+      .click();
+    const history = page.getByRole('region', {
+      name: fa ? 'تاریخچه مجوزها' : 'Permission history',
+      exact: true,
+    });
+    await expect(history.getByRole('alert')).toBeVisible();
+    fail = false;
+    await history.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Retry', exact: true }).click();
+    await expect(history).toContainText('New duties');
+    expect(queries.at(-1)?.get('userId')).toBe(target);
+    await expect(history).toContainText(
+      fa ? 'نقش‌های حذف‌شده: پشتیبانی مشتریان' : 'Roles removed: Customer Support'
+    );
+    await history.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
+    await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
+    await page.locator('#staff-audit-from').click();
+    await page.locator('[data-slot="calendar"] .rdp-today button').click();
+    await expect(page.locator('[data-slot="calendar"]')).toHaveCount(0);
+    await page.locator('#staff-audit-to').click();
+    await page.locator('[data-slot="calendar"] .rdp-today button').click();
+    await expect(page.locator('[data-slot="calendar"]')).toHaveCount(0);
+    await history
+      .getByRole('button', { name: fa ? 'اعمال فیلتر' : 'Apply filters', exact: true })
+      .click();
+    await expect.poll(() => queries.at(-1)?.get('from')).not.toBeNull();
+    const expected = await page.evaluate(() => {
+      const start = new Date('2026-03-21T12:00:00Z'),
+        end = new Date(start);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+      return { from: start.toISOString(), to: end.toISOString() };
+    });
+    expect(queries.at(-1)?.get('from')).toBe(expected.from);
+    expect(queries.at(-1)?.get('to')).toBe(expected.to);
+    expect(queries.at(-1)?.get('offset')).toBe('0');
+    await page.locator('#staff-audit-from').click();
+    await page.locator('[data-slot="calendar"] .rdp-today button').press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-slot="calendar"]')).toHaveCount(0);
+    await expect(
+      history.getByRole('button', { name: fa ? 'اعمال فیلتر' : 'Apply filters', exact: true })
+    ).toBeDisabled();
+    await expect(history.getByRole('alert')).toBeVisible();
+    await history
+      .getByRole('button', { name: fa ? 'پاک کردن تاریخ‌ها' : 'Clear dates', exact: true })
+      .click();
+    await expect.poll(() => queries.at(-1)?.get('from')).toBeNull();
+    await expect.poll(() => queries.at(-1)?.get('to')).toBeNull();
+  });
+}

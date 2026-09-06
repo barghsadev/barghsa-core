@@ -1,3 +1,4 @@
+import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n';
 import { Button, Input, Label } from '@barghsa/ui';
@@ -55,6 +56,7 @@ export default function AdminStaffUsersPage() {
   const [action, setAction] = useState<TeamAction | null>(null);
   const [created, setCreated] = useState<{ username: string; password?: string } | null>(null);
   const [saved, setSaved] = useState(false);
+  const [history, setHistory] = useState<{ userId: string; username: string } | 'all' | null>(null);
   const generation = useRef(0);
   const load = useCallback(async () => {
     const current = ++generation.current;
@@ -136,6 +138,11 @@ export default function AdminStaffUsersPage() {
           <h1 className="text-2xl font-semibold">{label('title')}</h1>
           <p className="mt-2 text-sm text-gray-600">{label('description')}</p>
         </div>
+        {access?.canView && (
+          <Button variant="outline" disabled={disabled} onClick={() => setHistory('all')}>
+            {label('audit.title')}
+          </Button>
+        )}
         {access?.canCreate && (
           <Button
             disabled={disabled}
@@ -238,6 +245,15 @@ export default function AdminStaffUsersPage() {
                         </td>
                         <td className="p-3">
                           <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              disabled={disabled}
+                              onClick={() =>
+                                setHistory({ userId: staff.userId, username: staff.username })
+                              }
+                            >
+                              {label('audit.title')}
+                            </Button>
                             {access.canEditRoles && (
                               <Button
                                 variant="outline"
@@ -303,6 +319,13 @@ export default function AdminStaffUsersPage() {
                 </Button>
               </nav>
             </>
+          )}
+          {history && access?.canView && (
+            <StaffPermissionHistory
+              key={history === 'all' ? 'all' : history.userId}
+              target={history === 'all' ? null : history}
+              onClose={() => setHistory(null)}
+            />
           )}
           {showCreate && access?.canCreate && (
             <form
