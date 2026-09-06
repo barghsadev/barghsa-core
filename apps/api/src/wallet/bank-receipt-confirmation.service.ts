@@ -1,3 +1,4 @@
+import { gateWalletReceiptApproval, walletReceiptApproval, type WalletReceiptApproval } from './bank-receipt-approval.js'
 import { createHash } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import {
@@ -90,6 +91,7 @@ export interface BankReceiptReviewDto {
   walletId: string
   amount: string
   currency: 'IRR'
+  dualApproval?: WalletReceiptApproval | null
   state: string
   paymentDate: string | null
   payerReference: string | null
@@ -328,6 +330,15 @@ export class BankReceiptConfirmationService {
 
         const receipt = readReceiptDetails(pending.metadata)
         const invoiceId = input.invoiceId ?? null
+        const approval = await gateWalletReceiptApproval(client, {
+          id: pending.id, walletId: pending.walletId, amount: pending.amount, metadata: pending.metadata,
+          attachmentKey: pending.receipt_attachment_key ?? receipt?.attachmentKey ?? null,
+          invoiceId, actorUserId: input.actorUserId, ip: input.ip, now,
+        })
+        if (approval) {
+          await client.query('COMMIT')
+          return this.toDto(pending, { dualApproval: approval })
+        }
         let creditId: string | null = null
         let overpayment: BankReceiptOverpaymentSnapshot | null = null
 
@@ -967,6 +978,7 @@ export class BankReceiptConfirmationService {
   private async toDto(
     row: LedgerRow,
     extra: {
+      dualApproval?: WalletReceiptApproval | null
       creditTransactionId?: string | null
       overpayment?: BankReceiptOverpaymentSnapshot | null
       auditId?: string
@@ -989,6 +1001,7 @@ export class BankReceiptConfirmationService {
       walletId: row.wallet_id,
       amount: BigInt(row.amount).toString(),
       currency: 'IRR',
+      dualApproval: extra.dualApproval ?? walletReceiptApproval(row.metadata),
       state: row.state,
       paymentDate: receipt?.paymentDate ?? null,
       payerReference: receipt?.payerReference ?? null,

@@ -117,6 +117,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
   beforeAll(async () => {
     ctx = await createIsolatedTestDb('test_', 8)
     poolHolder.pool = ctx.pool
+    await ctx.pool.query('CREATE TABLE app_config (key text PRIMARY KEY, value jsonb NOT NULL)')
     walletService = new WalletService()
     service = new BankReceiptConfirmationService(
       walletService,

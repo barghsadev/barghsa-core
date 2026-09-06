@@ -352,3 +352,9 @@ Review/validation: all 58 invoice/wallet files (870 checks), 360 shared finance 
 The generic approval controller now requires recent step-up for initiation, approval and rejection, while queue reads retain ordinary authenticated permission checks. It continues to reject self-review and reads current finance capabilities.
 
 Review/validation: 13 controller/production-HTTP checks pass, including absent/expired step-up, valid approval/rejection, repeated decisions, self-review, support-only access and a reviewer whose role was removed. API typecheck passes. Receipt-to-request binding and the missing wallet-receipt threshold gate are the next F13 steps.
+
+### F13.2 Wallet receipt threshold and immutable approval binding
+
+Wallet receipt confirmation now uses the shared at-or-above bank-payment threshold. The first finance confirmation saves an approval request and receipt-owned binding to the amount, evidence, wallet and intended invoice. It leaves funds untouched. A second currently eligible finance actor resolves and settles atomically; generic approval is accepted only when the bound request, both actors and receipt still match. Rejection, changed evidence/destination and revoked reviewer access block settlement. Lowering/disabling the threshold does not bypass a saved request. Pending details are returned to the staff caller.
+
+Review/validation: 41 wallet/controller/production-HTTP checks and API typecheck pass, including five simultaneous second confirmations with one credit, same-actor retry, support denial, below/exact threshold, disabled/corrupt configuration and preserved pending funds. Existing isolated wallet tests gained the configuration table needed by this new gate. Invoice approval binding, exact audit amounts, rejection synchronization and the required approval UI remain next.
