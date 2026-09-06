@@ -456,6 +456,7 @@ export const fa: I18nDictionary = {
 
   // ── Dashboard — Profile Switcher (T-03.03.01) ─────────────────
   'dashboard.profile.unnamed': 'پروفایل بدون نام',
+  'dashboard.profile.choose': 'انتخاب پروفایل',
   'dashboard.profile.typeIndividual': 'حقیقی',
   'dashboard.profile.typeLegal': 'حقوقی',
   'dashboard.profile.switchLabel': 'تغییر پروفایل فعال',
@@ -1662,6 +1663,7 @@ export const en: I18nDictionary = {
 
   // ── Dashboard — Profile Switcher (T-03.03.01) ─────────────────
   'dashboard.profile.unnamed': 'Unnamed profile',
+  'dashboard.profile.choose': 'Choose a profile',
   'dashboard.profile.typeIndividual': 'Individual',
   'dashboard.profile.typeLegal': 'Legal',
   'dashboard.profile.switchLabel': 'Switch active profile',

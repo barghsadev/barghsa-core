@@ -1,4 +1,3 @@
-import { withCsrf } from '../lib/csrf.js'
 import { createRootRoute, Outlet, useLocation, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { useEffect } from 'react'
@@ -30,7 +29,7 @@ const EXCLUDED_ROUTES = new Set(['/', '/onboarding'])
  * Routes the three cases:
  *
  * 1. No profiles → redirect to /onboarding
- * 2. One profile with no default → auto-set as default
+ * 2. Available profiles with no active context → let the user select one
  * 3. Multiple → proceed (selector shown in a separate component if needed)
  */
 async function runProfileCheck(
@@ -67,21 +66,8 @@ async function runProfileCheck(
       return
     }
 
-    // One profile but no default — set it as default
-    if (data.profiles.length === 1 && !data.hasDefault) {
-      const profile = data.profiles[0]!
-      try {
-        await fetch(`/api/profiles/${profile.id}/set-default`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-        })
-      } catch {
-        // Non-critical — silently fall through
-      }
-      return
-    }
-
+    // An unavailable explicit context must be selected again by the user.
+    // Profile creation already establishes the initial default on the server.
     // Multiple profiles — proceed normally
   } catch (error) {
     console.warn('[profile guard] network error', error)

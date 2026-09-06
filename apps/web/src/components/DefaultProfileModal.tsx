@@ -1,6 +1,5 @@
 import { withCsrf } from '../lib/csrf.js'
 import { useEffect, useState } from 'react'
-import { useRouter } from '@tanstack/react-router'
 import { t } from '@barghsa/i18n'
 import { useLocale } from '../hooks/useLocale.js'
 import {
@@ -42,12 +41,10 @@ interface ProfilesResponse {
  * - Fetches the profile list from `GET /api/profiles`.
  * - If `hasDefault === false && profiles.length > 1`, renders the modal.
  * - Radio-group list of profiles; user selects one and clicks "Set as default".
- * - Calls `POST /api/profiles/:id/set-default`, then invalidates the router so
- *   the app-level profile check (T-03.01.01) re-evaluates and proceeds.
+ * - Calls `POST /api/profiles/switch/:id`, then reloads all profile-scoped state.
  * - Renders nothing when the user has a default, only one profile, or none.
  */
 export function DefaultProfileModal() {
-  const router = useRouter()
   const [profiles, setProfiles] = useState<ProfileBrief[] | null>(null)
   const [hasDefault, setHasDefault] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -105,24 +102,25 @@ export function DefaultProfileModal() {
   if (hasDefault || profiles.length <= 1) return null
 
   async function handleSetDefault() {
-    if (!selectedId || setting) return
+    if (!resolvedSelected || setting) return
     setSetting(true)
     setError(null)
 
     try {
-      const response = await fetch(`/api/profiles/${selectedId}/set-default`, {
+      const response = await fetch(`/api/profiles/switch/${resolvedSelected}`, {
         method: 'POST',
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
       })
 
       if (response.ok) {
-        // Update local state so the modal hides immediately, then
-        // invalidate the router so the app-level profile check
-        // (T-03.01.01) re-evaluates and proceeds to the dashboard.
-        setHasDefault(true)
-        setSetting(false)
-        router.invalidate()
+        const result: { activeProfileId: string | null } = await response.json()
+        if (result.activeProfileId !== resolvedSelected) {
+          setSetting(false)
+          setError(t('dashboard.profile.switchError', locale))
+          return
+        }
+        window.location.reload()
       } else {
         setSetting(false)
         setError(t('dashboard.profile.switchError', locale))

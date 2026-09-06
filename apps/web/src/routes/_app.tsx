@@ -7,7 +7,7 @@ import { RouteErrorBoundary } from '../components/RouteErrorBoundary.js'
  * switcher) around all authenticated customer pages (T-03.03.01).
  */
 export const Route = createFileRoute('/_app')({
-  component: lazyRouteComponent(() => import('../pages/DashboardLayout.js')),
+  component: lazyRouteComponent(() => import('../pages/DashboardLayout.js'), 'DashboardLayout'),
   pendingComponent: () => <RouteSkeleton />,
   errorComponent: RouteErrorBoundary,
 })

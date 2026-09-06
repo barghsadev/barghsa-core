@@ -1,5 +1,6 @@
 import { Link, Outlet } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
+import { useLocale } from '../hooks/useLocale.js'
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js'
 import { TosBanner } from '../components/TosBanner.js'
 import { InvitationBanner } from '../components/InvitationBanner.js'
@@ -19,7 +20,9 @@ interface DashboardLayoutProps {
  * Nav links are intentionally spread across the app's customer areas. When
  * mobile the sidebar collapses to a horizontal strip via flex wrapping.
  */
-export function DashboardLayout({ locale = 'fa' }: DashboardLayoutProps) {
+export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps) {
+  const currentLocale = useLocale()
+  const locale = localeOverride ?? currentLocale
   const isRtl = locale === 'fa'
 
   const navItems: Array<{ to: string; label: string }> = [

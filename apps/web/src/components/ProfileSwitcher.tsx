@@ -9,7 +9,7 @@ export interface SwitcherProfile {
   id: string
   profileType: 'INDIVIDUAL' | 'LEGAL'
   isDefault: boolean
-  status: 'DRAFT' | 'ACTIVE' | 'VERIFIED' | 'SUSPENDED'
+  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED'
   title: string | null
   firstName: string | null
   lastName: string | null
@@ -38,9 +38,8 @@ interface ProfileSwitcherProps {
  *
  * - Fetches the profile list from `GET /api/profiles`.
  * - On switch, calls `POST /api/profiles/switch/:profileId` and, on success,
- *   re-fetches the list so `activeProfileId` reflects the change, then
- *   invalidates the router so all profile-scoped page data refreshes.
- * - When the user has a single profile, renders it read-only (no dropdown).
+ *   reloads the document to clear all profile-scoped local state.
+ * - A single already-active profile is shown read-only.
  *
  * The dropdown uses the native `<select>` for reliable RTL + a11y behavior
  * with minimal JS; the current profile is shown as a labeled badge row above
@@ -82,7 +81,9 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
   }
 
   useEffect(() => {
-    loadProfiles()
+    const refresh = () => { void loadProfiles() }
+    window.addEventListener('barghsa:profiles-changed', refresh)
+    return () => window.removeEventListener('barghsa:profiles-changed', refresh)
   }, [])
 
   // Re-run whenever the active profile may have changed externally (e.g.
@@ -107,7 +108,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
 
   // Single profile (or none renderable) — no switching needed.
   if (loading || !profiles || profiles.length === 0) return null
-  if (profiles.length === 1) {
+  if (profiles.length === 1 && activeProfile) {
     return (
       <div
         className="flex items-center gap-2 px-1 py-2"
@@ -122,7 +123,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
   }
 
   async function handleSwitch(profileId: string) {
-    if (profileId === activeProfileId || switching) return
+    if (!profileId || profileId === activeProfileId || switching) return
     setSwitching(true)
     setError(null)
     try {
@@ -137,9 +138,13 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
         return
       }
       const data: ProfileSwitchResponse = await response.json()
-      setActiveProfileId(data.activeProfileId)
-      // Refresh profile-scoped page data after switching.
-      router.invalidate()
+      if (data.activeProfileId !== profileId) {
+        setError(t('dashboard.profile.switchError', locale))
+        return
+      }
+      // Pages and the notification bell hold local fetch state outside router
+      // loaders. A document reload clears every old-profile view and draft.
+      window.location.reload()
     } catch {
       setError(t('dashboard.profile.switchError', locale))
     } finally {
@@ -165,6 +170,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
         className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none disabled:opacity-50"
         aria-label={t('dashboard.profile.switchLabel', locale)}
       >
+        {!activeProfile && <option value="" disabled>{t('dashboard.profile.choose', locale)}</option>}
         {profiles.map((profile) => (
           <option key={profile.id} value={profile.id}>
             {formatProfileOption(profile, locale)}

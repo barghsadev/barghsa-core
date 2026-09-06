@@ -123,10 +123,8 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
         return { ...prev, [inviteId]: { ...current, accepting: false, done: true, doneAction: 'accept' } }
       })
 
-      // Refresh the page after a brief delay
-      setTimeout(() => {
-        router.invalidate()
-      }, 1500)
+      window.dispatchEvent(new Event('barghsa:profiles-changed'))
+      void router.invalidate()
     } catch {
       setError(t('invitation.banner.error', locale))
       setActionStates((prev) => {
@@ -166,10 +164,8 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
         return { ...prev, [inviteId]: { ...current, declining: false, done: true, doneAction: 'decline' } }
       })
 
-      // Refresh the page after a brief delay
-      setTimeout(() => {
-        router.invalidate()
-      }, 1500)
+      window.dispatchEvent(new Event('barghsa:profiles-changed'))
+      void router.invalidate()
     } catch {
       setError(t('invitation.banner.error', locale))
       setActionStates((prev) => {
