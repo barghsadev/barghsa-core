@@ -105,6 +105,12 @@ function isBlockedIpv6(ip: string): boolean {
   }
   const value = ipv6ToBigInt(lower);
   if (value === null) return true;
+  // URL parsers normalize mapped IPv4 to hex, e.g. ::ffff:7f00:1.
+  // Check the embedded address regardless of dotted or expanded spelling.
+  if (value >> 32n === 0xffffn) {
+    const embedded = Number(value & 0xffffffffn);
+    return isBlockedIpv4([24, 16, 8, 0].map((shift) => (embedded >>> shift) & 255).join('.'));
+  }
   return [
     '::1/128', // loopback
     '::/128', // unspecified

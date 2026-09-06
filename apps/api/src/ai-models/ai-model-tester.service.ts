@@ -1,6 +1,8 @@
 import { Injectable, Inject, Optional } from '@nestjs/common';
 import { isBlockedIp } from '../provider-config/smtp-network-guard.js';
-import { isIP } from 'node:net';
+import { isIP, type LookupFunction } from 'node:net';
+import { request as httpRequest } from 'node:http';
+import { request as httpsRequest } from 'node:https';
 import { promises as dns } from 'node:dns';
 
 /**
@@ -28,10 +30,8 @@ import { promises as dns } from 'node:dns';
  * - A hard timeout aborts the ping (default 15s,
  *   `AI_MODEL_TEST_TIMEOUT_MS`).
  *
- * The tester is a plain class usable by either process: the API runs it
- * synchronously for the admin test button today (same as the provider
- * connection testers), and the worker can call the same `ping()` when a
- * background reachability sweep is added.
+ * The API currently invokes this Nest service synchronously. Moving the
+ * administration test to the worker remains separate integration work.
  */
 
 export const AI_MODEL_PROVIDER_TYPES = ['openai_compatible', 'anthropic'] as const;
@@ -81,38 +81,72 @@ const PREVIEW_MAX_CHARS = 300;
 const ERROR_MAX_CHARS = 300;
 const RESPONSE_MAX_BYTES = 64 * 1024;
 
+// Validate the addresses returned to the socket itself. A separate preflight
+// lookup cannot prevent DNS from changing between validation and connection.
+const guardedLookup: LookupFunction = (hostname, options, callback) => {
+  void dns.lookup(hostname, { all: true, verbatim: true }).then(
+    (addresses) => {
+      const allowed = (process.env[AI_MODEL_ALLOWLIST_ENV] ?? '')
+        .split(',')
+        .some(
+          (host) =>
+            host.trim().toLowerCase().replace(/\.$/, '') ===
+            hostname.toLowerCase().replace(/\.$/, '')
+        );
+      if (
+        !addresses.length ||
+        (!allowed && addresses.some(({ address }) => isBlockedIp(address)))
+      ) {
+        callback(new Error('Provider destination is not allowed'), '', 4);
+        return;
+      }
+      if (options.all) callback(null, addresses);
+      else callback(null, addresses[0]!.address, addresses[0]!.family);
+    },
+    () => callback(new Error('Provider host could not be resolved'), '', 4)
+  );
+};
+
 const defaultApiClient: AiModelApiClientLike = {
   async request(input, timeoutMs) {
     const { url, headers, body } = buildRequest(input);
-    const res = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(timeoutMs),
-      // SSRF guard: the host is validated up front, so redirects must not be
-      // followed — a public host could 30x to a private/metadata endpoint and
-      // the response (up to the preview cap) would come back to the admin.
-      redirect: 'manual',
-    });
-    if (!res.body) return { status: res.status, bodyText: '' };
-    const reader = res.body.getReader();
-    const chunks: Uint8Array[] = [];
-    let size = 0;
-    try {
-      while (true) {
-        const next = await reader.read();
-        if (next.done) break;
-        size += next.value.byteLength;
-        if (size > RESPONSE_MAX_BYTES) {
-          await reader.cancel();
-          throw new Error('Provider response exceeds size limit');
+    return new Promise<WireResponse>((resolve, reject) => {
+      const send = new URL(url).protocol === 'https:' ? httpsRequest : httpRequest;
+      const request = send(
+        url,
+        {
+          method: 'POST',
+          headers,
+          lookup: guardedLookup,
+          agent: false,
+          signal: AbortSignal.timeout(timeoutMs),
+        },
+        (response) => {
+          const chunks: Buffer[] = [];
+          let size = 0;
+          response.on('data', (chunk: Buffer) => {
+            size += chunk.byteLength;
+            if (size > RESPONSE_MAX_BYTES) {
+              const error = new Error('Provider response exceeds size limit');
+              response.destroy(error);
+              request.destroy(error);
+              reject(error);
+              return;
+            }
+            chunks.push(chunk);
+          });
+          response.on('error', reject);
+          response.on('end', () =>
+            resolve({
+              status: response.statusCode ?? 0,
+              bodyText: Buffer.concat(chunks).toString('utf8'),
+            })
+          );
         }
-        chunks.push(next.value);
-      }
-      return { status: res.status, bodyText: Buffer.concat(chunks).toString('utf8') };
-    } finally {
-      reader.releaseLock();
-    }
+      );
+      request.on('error', reject);
+      request.end(JSON.stringify(body));
+    });
   },
 };
 
@@ -156,8 +190,8 @@ function buildRequest(input: AiModelTestInput): {
 }
 
 /**
- * Extract a short human-readable preview from a successful provider
- * response. Returns undefined when the body carries no usable text.
+ * Extract preview text before secret redaction and truncation. Returns
+ * undefined when the body carries no usable text.
  */
 function extractPreview(providerType: AiModelProviderType, bodyText: string): string | undefined {
   if (!bodyText) return undefined;
@@ -181,7 +215,7 @@ function extractPreview(providerType: AiModelProviderType, bodyText: string): st
 }
 
 /**
- * Extract a safe, truncated provider error message from a failure body.
+ * Extract a provider error message before secret redaction and truncation.
  * Only JSON `error.message` / `message` fields are trusted; raw non-JSON
  * bodies are NOT echoed (a misbehaving provider could echo the token back
  * in a plain-text body).
@@ -271,14 +305,30 @@ export class AiModelTesterService {
         latencyMs: 0,
       };
     }
-    const blocked = await this.guardHost(url.hostname);
+    const timeoutMs = this.timeoutMs();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let blocked: string | null;
+    try {
+      blocked = await Promise.race([
+        this.guardHost(url.hostname),
+        new Promise<string>((resolve) => {
+          timer = setTimeout(() => resolve('host lookup timed out'), timeoutMs);
+          timer.unref();
+        }),
+      ]);
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
     if (blocked) {
       return { ok: false, error: `Base URL host is not allowed: ${blocked}`, latencyMs: 0 };
     }
 
     // 3. Fire the ping.
     try {
-      const wire = await this.client.request(input, this.timeoutMs());
+      const wire = await this.client.request(
+        input,
+        Math.max(1, timeoutMs - (Date.now() - started))
+      );
       const latencyMs = Date.now() - started;
       if (wire.status >= 200 && wire.status < 300) {
         // Defense in depth: even a successful body could echo the token.
@@ -290,9 +340,8 @@ export class AiModelTesterService {
         if (preview) result.responsePreview = preview;
         return result;
       }
-      // `redirect: 'manual'` makes undici return an opaque-redirect response
-      // whose status is 0 with an empty body (Fetch spec), so a redirect is
-      // observed as status 0 — not the real 3xx. Treat both as "redirect".
+      // The native HTTP transport never follows redirects. Also reject an
+      // opaque redirect reported by an injected client.
       if (wire.status === 0 || (wire.status >= 300 && wire.status < 400)) {
         return {
           ok: false,
@@ -330,7 +379,11 @@ export class AiModelTesterService {
    * private-range check.
    */
   private async guardHost(host: string): Promise<string | null> {
-    const h = host.trim().toLowerCase().replace(/\.$/, '');
+    const h = host
+      .trim()
+      .toLowerCase()
+      .replace(/^\[|\]$/g, '')
+      .replace(/\.$/, '');
     if (!h) return 'empty host';
     const allowlist = this.allowlist();
     if (allowlist.includes(h)) return null;

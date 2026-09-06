@@ -108,3 +108,13 @@ describe('SmtpNetworkGuard — assertHostAllowed', () => {
     );
   });
 });
+
+it.each(['::ffff:7f00:1', '::ffff:a00:1', '0:0:0:0:0:ffff:a9fe:a9fe', '::ffff:c0a8:101'])(
+  'blocks hexadecimal IPv4-mapped private addresses: %s',
+  (address) => {
+    expect(isBlockedIp(address)).toBe(true);
+  }
+);
+it('accepts a hexadecimal IPv4-mapped public address', () => {
+  expect(isBlockedIp('::ffff:808:808')).toBe(false);
+});
