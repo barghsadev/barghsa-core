@@ -29,6 +29,8 @@ interface UserInfo {
   username: string;
   email: string | null;
   mobile: string | null;
+  emailVerified: boolean;
+  mobileVerified: boolean;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────
@@ -41,13 +43,6 @@ function maskUsername(username: string): string {
     return username.slice(0, 3) + '***' + username.slice(-3);
   }
   return username.slice(0, 3) + '...' + username.slice(-3);
-}
-
-/**
- * Determine if a username is an email.
- */
-function isEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 // ─── Page Component ────────────────────────────────────────────────────
@@ -309,8 +304,6 @@ function SettingsUsernamePage() {
 
   // ── Render ──────────────────────────────────────────────────────────
 
-  const usernameType = userInfo ? (isEmail(userInfo.username) ? 'email' : 'mobile') : null;
-
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {/* Title */}
@@ -487,6 +480,9 @@ function SettingsUsernamePage() {
               <MailIcon className="h-4 w-4 text-muted-foreground" />
               <h2 className="text-base font-semibold">{t('settings.contact.title', locale)}</h2>
             </div>
+            <p className="text-sm text-muted-foreground">
+              {t('settings.contact.loginHelp', locale)}
+            </p>
 
             {/* Email */}
             <div className="flex items-center justify-between">
@@ -498,15 +494,32 @@ function SettingsUsernamePage() {
                 <span className="text-sm font-mono text-muted-foreground">
                   {userInfo.email ?? (locale === 'fa' ? 'ثبت نشده' : 'Not set')}
                 </span>
-                {!userInfo.email && usernameType !== 'email' && (
+                {userInfo.email && (
+                  <span className="text-xs text-muted-foreground">
+                    {t(
+                      userInfo.emailVerified
+                        ? 'settings.contact.verified'
+                        : 'settings.contact.unverified',
+                      locale
+                    )}
+                  </span>
+                )}
+                {!userInfo.emailVerified && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowAddContact('email')}
+                    disabled={showAddContact !== null}
+                    onClick={() => {
+                      setShowAddContact('email');
+                      setNewContactValue(userInfo.email ?? '');
+                    }}
                     className="gap-1 text-xs"
                   >
                     <PlusIcon className="h-3 w-3" />
-                    {t('settings.contact.addEmail', locale)}
+                    {t(
+                      userInfo.email ? 'settings.contact.verifyEmail' : 'settings.contact.addEmail',
+                      locale
+                    )}
                   </Button>
                 )}
               </div>
@@ -522,15 +535,34 @@ function SettingsUsernamePage() {
                 <span className="text-sm font-mono text-muted-foreground">
                   {userInfo.mobile ?? (locale === 'fa' ? 'ثبت نشده' : 'Not set')}
                 </span>
-                {!userInfo.mobile && usernameType !== 'mobile' && (
+                {userInfo.mobile && (
+                  <span className="text-xs text-muted-foreground">
+                    {t(
+                      userInfo.mobileVerified
+                        ? 'settings.contact.verified'
+                        : 'settings.contact.unverified',
+                      locale
+                    )}
+                  </span>
+                )}
+                {!userInfo.mobileVerified && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowAddContact('mobile')}
+                    disabled={showAddContact !== null}
+                    onClick={() => {
+                      setShowAddContact('mobile');
+                      setNewContactValue(userInfo.mobile ?? '');
+                    }}
                     className="gap-1 text-xs"
                   >
                     <PlusIcon className="h-3 w-3" />
-                    {t('settings.contact.addMobile', locale)}
+                    {t(
+                      userInfo.mobile
+                        ? 'settings.contact.verifyMobile'
+                        : 'settings.contact.addMobile',
+                      locale
+                    )}
                   </Button>
                 )}
               </div>
@@ -549,6 +581,8 @@ function SettingsUsernamePage() {
                       </Label>
                       <Input
                         id="new-contact"
+                        type={showAddContact === 'email' ? 'email' : 'tel'}
+                        disabled={sendingContactOtp}
                         placeholder={
                           showAddContact === 'email'
                             ? t('settings.contact.newEmailPlaceholder', locale)
@@ -565,6 +599,7 @@ function SettingsUsernamePage() {
                         variant="outline"
                         size="sm"
                         onClick={handleCancelContact}
+                        disabled={sendingContactOtp || verifyingContact}
                         className="gap-1"
                       >
                         <XIcon className="h-3.5 w-3.5" />
@@ -612,6 +647,7 @@ function SettingsUsernamePage() {
                         variant="outline"
                         size="sm"
                         onClick={handleCancelContact}
+                        disabled={sendingContactOtp || verifyingContact}
                         className="gap-1"
                       >
                         <XIcon className="h-3.5 w-3.5" />
