@@ -30,6 +30,7 @@ import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAgentSlotsRouteImport } from './routes/admin/agent-slots'
+import { Route as AdminAgentsRouteImport } from './routes/admin/agents'
 import { Route as AdminAiModelsRouteImport } from './routes/admin/ai-models'
 import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
@@ -178,6 +179,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminAgentSlotsRoute = AdminAgentSlotsRouteImport.update({
   id: '/agent-slots',
   path: '/agent-slots',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAgentsRoute = AdminAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAiModelsRoute = AdminAiModelsRouteImport.update({
@@ -430,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
   '/admin/agent-slots': typeof AdminAgentSlotsRoute
+  '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
@@ -494,6 +501,7 @@ export interface FileRoutesByTo {
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
   '/admin/agent-slots': typeof AdminAgentSlotsRoute
+  '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
@@ -562,6 +570,7 @@ export interface FileRoutesById {
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
   '/admin/agent-slots': typeof AdminAgentSlotsRoute
+  '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
@@ -631,6 +640,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/wallet'
     | '/admin/agent-slots'
+    | '/admin/agents'
     | '/admin/ai-models'
     | '/admin/approval-requests'
     | '/admin/branding'
@@ -695,6 +705,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/wallet'
     | '/admin/agent-slots'
+    | '/admin/agents'
     | '/admin/ai-models'
     | '/admin/approval-requests'
     | '/admin/branding'
@@ -762,6 +773,7 @@ export interface FileRouteTypes {
     | '/_app/videos'
     | '/_app/wallet'
     | '/admin/agent-slots'
+    | '/admin/agents'
     | '/admin/ai-models'
     | '/admin/approval-requests'
     | '/admin/branding'
@@ -970,6 +982,13 @@ declare module '@tanstack/react-router' {
       path: '/agent-slots'
       fullPath: '/admin/agent-slots'
       preLoaderRoute: typeof AdminAgentSlotsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/agents': {
+      id: '/admin/agents'
+      path: '/agents'
+      fullPath: '/admin/agents'
+      preLoaderRoute: typeof AdminAgentsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/ai-models': {
@@ -1356,6 +1375,7 @@ const AdminCrmRouteWithChildren = AdminCrmRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAgentSlotsRoute: typeof AdminAgentSlotsRoute
+  AdminAgentsRoute: typeof AdminAgentsRoute
   AdminAiModelsRoute: typeof AdminAiModelsRoute
   AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
@@ -1386,6 +1406,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAgentSlotsRoute: AdminAgentSlotsRoute,
+  AdminAgentsRoute: AdminAgentsRoute,
   AdminAiModelsRoute: AdminAiModelsRoute,
   AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
   AdminBrandingRoute: AdminBrandingRoute,

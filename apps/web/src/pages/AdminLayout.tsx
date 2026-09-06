@@ -50,6 +50,11 @@ export default function AdminLayout() {
                 </a>
               </li>
               <li>
+                <a href="/admin/agents" className="text-blue-600 hover:underline">
+                  {t('admin.agents.title', locale)}
+                </a>
+              </li>
+              <li>
                 <a href="/admin/ai-models" className="text-blue-600 hover:underline">
                   {t('admin.aiModels.title', locale)}
                 </a>

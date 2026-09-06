@@ -1413,3 +1413,126 @@ for (const locale of ['en', 'fa'])
     await page.request.delete(`${http.base}/api/admin/agents/${agent.id}`, { headers });
     await page.request.delete(`${http.base}/api/admin/ai-models/${model.id}`, { headers });
   });
+
+for (const locale of ['en', 'fa'])
+  test(`agent editor persists all link types through the migrated API (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const headers = {
+      cookie: `barghsa_session=${http.session}`,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    const create = async (path: string, data: unknown) => {
+      const response = await page.request.post(`${http.base}/api/admin/${path}`, { headers, data });
+      expect(response.status()).toBe(201);
+      return (await response.json()) as { id: string; title: string };
+    };
+    const model = await create('ai-models', {
+      title: `Editor model ${locale}`,
+      providerType: 'openai_compatible',
+      baseUrl: 'https://example.test',
+      modelName: 'test',
+    });
+    const kb = await create('knowledge-bases', {
+      title: `Editor knowledge ${locale}`,
+      description: '',
+    });
+    const policy = await create('policies', {
+      title: `Editor policy ${locale}`,
+      policyType: 'allowed_topics',
+      rules: { topics: ['energy'] },
+    });
+    const kbGroup = await create('kb-groups', { title: `Editor knowledge group ${locale}` });
+    const policyGroup = await create('policy-groups', { title: `Editor policy group ${locale}` });
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
+      });
+      await route.fulfill({ response });
+    });
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    const title = `Editor assistant ${locale}`,
+      renamed = `${title} revised`;
+    await page.goto('/admin/agents');
+    await page.getByRole('button', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
+    await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(title);
+    await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).selectOption(model.id);
+    for (const item of [kb, policy, kbGroup, policyGroup])
+      await page.getByLabel(item.title, { exact: true }).check();
+    await page.getByRole('button', { name: fa ? 'ذخیره عامل' : 'Save agent', exact: true }).click();
+    await confirm();
+    const agents = (await (
+      await page.request.get(`${http.base}/api/admin/agents`, { headers })
+    ).json()) as Array<{ id: string; title: string }>;
+    const agent = agents.find((row) => row.title === title)!;
+    const detail = async () =>
+      await (
+        await page.request.get(`${http.base}/api/admin/agents/${agent.id}`, { headers })
+      ).json();
+    expect(await detail()).toMatchObject({
+      modelId: model.id,
+      enabled: true,
+      kbs: [{ id: kb.id }],
+      policies: [{ id: policy.id }],
+      kbGroups: [{ id: kbGroup.id }],
+      policyGroups: [{ id: policyGroup.id }],
+    });
+    await page.reload();
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${title}`, exact: true })
+      .click();
+    for (const item of [kb, policy, kbGroup, policyGroup])
+      await expect(page.getByLabel(item.title, { exact: true })).toBeChecked();
+    await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(renamed);
+    await page.getByLabel(fa ? 'فعال' : 'Enabled', { exact: true }).uncheck();
+    await page.getByLabel(kb.title, { exact: true }).uncheck();
+    await page.getByLabel(policyGroup.title, { exact: true }).uncheck();
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await page.screenshot({ path: `/tmp/ai-agents-${locale}.png`, fullPage: true });
+    await page.getByRole('button', { name: fa ? 'ذخیره عامل' : 'Save agent', exact: true }).click();
+    await confirm();
+    expect(await detail()).toMatchObject({
+      title: renamed,
+      enabled: false,
+      kbs: [],
+      policies: [{ id: policy.id }],
+      kbGroups: [{ id: kbGroup.id }],
+      policyGroups: [],
+    });
+    await page
+      .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
+      .click();
+    await confirm();
+    expect(
+      (await page.request.get(`${http.base}/api/admin/agents/${agent.id}`, { headers })).status()
+    ).toBe(404);
+    for (const [path, item] of [
+      ['kb-groups', kbGroup],
+      ['policy-groups', policyGroup],
+      ['knowledge-bases', kb],
+      ['policies', policy],
+      ['ai-models', model],
+    ] as const)
+      expect(
+        (await page.request.delete(`${http.base}/api/admin/${path}/${item.id}`, { headers })).ok()
+      ).toBe(true);
+  });
