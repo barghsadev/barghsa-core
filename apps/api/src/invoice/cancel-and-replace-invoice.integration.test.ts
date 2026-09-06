@@ -50,10 +50,13 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
     );
 
     await ctx.pool.query(
-      `INSERT INTO users (user_id, username, password_hash)
-      VALUES ($1, 'invoice-staff@example.test', 'test-only')`,
+      `INSERT INTO users (user_id, username, password_hash, is_staff)
+      VALUES ($1, 'invoice-staff@example.test', 'test-only', true)`,
       [ACTOR_USER_ID]
     );
+    await ctx.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance')", [
+      ACTOR_USER_ID,
+    ]);
     await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
       PROFILE_ID,
       ACTOR_USER_ID,
@@ -285,32 +288,103 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
     expect(original.rows[0]!.state).toBe('Unpaid');
   });
 
-  it('rolls back the cancel when the audit actor is missing', async () => {
+  it('rolls back cancellation, replacement and audits when issuing the replacement fails', async () => {
     const originalId = await insertInvoice({ state: 'Unpaid' });
-    await expect(
-      service.cancelAndReplaceInvoice({
-        invoiceId: originalId,
-        reason: 'Corrected lines',
-        newLines: [
-          { description: 'x', quantity: 1, unitPrice: 1000n, vatRate: 0, isTaxable: false },
-        ],
-        actorUserId: 'missing-staff',
-        now: NOW,
-      })
-    ).rejects.toThrow();
-
-    const original = await ctx.pool.query<{
-      state: string;
-      cancelled_at: Date | null;
-    }>(`SELECT state, cancelled_at FROM invoices WHERE id = $1`, [originalId]);
-    expect(original.rows[0]!.state).toBe('Unpaid');
-    expect(original.rows[0]!.cancelled_at).toBeNull();
-
-    const extras = await ctx.pool.query<{ n: number }>(
-      `SELECT COUNT(*)::int AS n FROM invoices WHERE replaces_invoice_id = $1`,
-      [originalId]
+    await ctx.pool.query(
+      "CREATE FUNCTION reject_replacement_issue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test replacement issue audit failure'; END $$; CREATE TRIGGER reject_replacement_issue BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_replacement_issue()"
     );
-    expect(extras.rows[0]!.n).toBe(0);
+    try {
+      await expect(
+        service.cancelAndReplaceInvoice({
+          invoiceId: originalId,
+          reason: 'Corrected lines',
+          newLines: [
+            { description: 'x', quantity: 1, unitPrice: 1000n, vatRate: 0, isTaxable: false },
+          ],
+          actorUserId: ACTOR_USER_ID,
+          now: NOW,
+        })
+      ).rejects.toThrow('test replacement issue audit failure');
+      expect(
+        (
+          await ctx.pool.query('SELECT state,cancelled_at,metadata FROM invoices WHERE id=$1', [
+            originalId,
+          ])
+        ).rows[0]
+      ).toMatchObject({ state: 'Unpaid', cancelled_at: null, metadata: { source: 'auto' } });
+      expect(
+        (await ctx.pool.query('SELECT id FROM invoices WHERE replaces_invoice_id=$1', [originalId]))
+          .rows
+      ).toHaveLength(0);
+      expect(
+        (
+          await ctx.pool.query("SELECT id FROM audit_log WHERE metadata::jsonb->>'invoiceId'=$1", [
+            originalId,
+          ])
+        ).rows
+      ).toHaveLength(0);
+    } finally {
+      await ctx.pool.query('DROP TRIGGER reject_replacement_issue ON audit_log');
+    }
+  });
+
+  it('rejects revoked invoice authority after waiting and leaves the correction chain unchanged', async () => {
+    const originalId = await insertInvoice({ state: 'Unpaid' });
+    const client = await ctx.pool.connect();
+    let pending: Promise<unknown> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [ACTOR_USER_ID]);
+      pending = service
+        .cancelAndReplaceInvoice({
+          invoiceId: originalId,
+          reason: 'Corrected lines',
+          newLines: [{ description: 'x', quantity: 1, unitPrice: 1000n, vatRate: 0 }],
+          actorUserId: ACTOR_USER_ID,
+          now: NOW,
+        })
+        .then(
+          (value) => value,
+          (error) => error
+        );
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await ctx.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await client.query('DELETE FROM user_roles WHERE user_id=$1', [ACTOR_USER_ID]);
+      await client.query('COMMIT');
+      expect(await pending).toMatchObject({ status: 403 });
+      expect(
+        (await ctx.pool.query('SELECT state,cancelled_at FROM invoices WHERE id=$1', [originalId]))
+          .rows[0]
+      ).toEqual({ state: 'Unpaid', cancelled_at: null });
+      expect(
+        (await ctx.pool.query('SELECT id FROM invoices WHERE replaces_invoice_id=$1', [originalId]))
+          .rows
+      ).toHaveLength(0);
+      expect(
+        (
+          await ctx.pool.query("SELECT id FROM audit_log WHERE metadata::jsonb->>'invoiceId'=$1", [
+            originalId,
+          ])
+        ).rows
+      ).toHaveLength(0);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+      await ctx.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance') ON CONFLICT DO NOTHING",
+        [ACTOR_USER_ID]
+      );
+    }
   });
 
   it('replaces an order-linked original of type manual without unique-index collision', async () => {

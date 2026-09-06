@@ -1453,3 +1453,9 @@ Reviewed the image IDs and source revision in production-image-verification.json
 Reminder-offset changes now lock the actor and recheck the current reminder-settings grant inside the write transaction before taking the existing per-offset lock. Converted the concurrent audit-chain test from partial tables to production migrations. Existing scheduling semantics and per-write audits remain unchanged.
 
 Review and validation: all 15 service/controller/migrated-database/HTTP checks pass. New HTTP cases verify permission revocation while waiting, denied access, the 24-entry default matrix and rollback when the actual audit insert fails. The first run caught an extra audit parameter introduced during the edit; removed it and reran all checks. Root types, lint and whitespace checks pass. Production-image evidence remains explicitly bound to the earlier c60c148 checkpoint.
+
+### Require current invoice authority for cancel-and-replace (F04/F14)
+
+The staff cancel-and-replace service now holds current invoices:write authority before locking or changing the original invoice. Its production-migrated fixture uses the actual Finance role. Review confirms the actor lock precedes invoice locks and remains held through both state changes and commit.
+
+All 17 unit and migrated-service checks pass. Added a grant-revocation race proving no cancellation, replacement or audit survives denial. Replaced the old missing-actor rollback shortcut with a failure of the replacement issue audit after the original cancellation; the whole correction chain rolls back. Root types, lint and whitespace checks pass. This service has no staff HTTP caller yet, so these checks certify its existing service contract rather than a new API/UI workflow.

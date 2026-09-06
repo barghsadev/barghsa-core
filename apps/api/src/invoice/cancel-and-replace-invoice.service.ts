@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 /**
  * CancelAndReplaceInvoiceService — pre-payment cancel+replace (T-04.1.05.02).
  *
@@ -212,6 +213,7 @@ export class CancelAndReplaceInvoiceService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
 
       const locked = (await client.query(
         `SELECT id, profile_id, order_id, contract_id, consultation_id, type,
