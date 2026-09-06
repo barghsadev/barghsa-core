@@ -142,7 +142,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports
-          path: coverage/
+          path: |
+            apps/*/coverage/
+            packages/*/coverage/
           retention-days: 14
       - name: Report flaky test count
         id: flaky-check

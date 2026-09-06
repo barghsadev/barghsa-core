@@ -1695,3 +1695,9 @@ Review and validation: six ordering browser checks passed, including delayed sav
 Ordering now clears stale address selection while loading, validates the returned address list and displays a retryable error for failed or malformed reads. The form and mutation handlers cannot proceed with an unavailable address list. Obsolete responses after profile changes or unmount are ignored. A valid retry restores the main-address selection.
 
 Review and validation: all eight ordering browser checks passed in Persian and English, including 503, malformed address entries, retry and main-address recovery. Root build, types, lint, formatting and bundle checks passed; ordering is 249.90 KB against 250 KB. Product/province/city failure feedback and complete commercial submission remain separate work.
+
+### Retain package coverage reports in CI (F19)
+
+Corrected the coverage upload paths from a root-only directory to apps/*/coverage and packages/*/coverage. The shared Vitest configuration uses package-local default report directories; the old artifact step missed those reports.
+
+Review and validation: confirmed the configured output behavior and matched five existing local coverage-final.json reports under the corrected paths. Workflow formatting and whitespace checks pass. Existing reports are path evidence only, not new coverage measurements. This correction does not implement the still-open changed-code/critical-domain threshold policy or claim a remote CI run.
