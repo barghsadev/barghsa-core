@@ -212,3 +212,29 @@ it('requires a current team member as lead, preserves it on partial updates and 
       .rows[0].lead_user_id
   ).toBeNull();
 });
+
+it('persists fallback priority and validates every fallback team', async () => {
+  const first = await team(),
+    second = await team();
+  const config = {
+    ticket: {
+      teamId: first.id,
+      strategy: 'expertise',
+      fallbacks: [{ teamId: second.id, strategy: 'round_robin' }],
+    },
+  };
+  const response = await call('config/assignment-rules', 'PUT', config);
+  expect(response.status, http.logs()).toBe(200);
+  expect(await (await call('config/assignment-rules')).json()).toMatchObject(config);
+  for (const invalid of [randomUUID(), 'not-an-id', first.id, first.id.toUpperCase()])
+    expect(
+      (
+        await call('config/assignment-rules', 'PUT', {
+          ticket: { ...config.ticket, fallbacks: [{ teamId: invalid, strategy: 'load' }] },
+        })
+      ).status
+    ).toBe(400);
+  await http.pool.query('UPDATE staff_teams SET is_active=false WHERE id=$1', [second.id]);
+  expect((await call('config/assignment-rules', 'PUT', config)).status).toBe(400);
+  expect(await (await call('config/assignment-rules')).json()).toMatchObject(config);
+});

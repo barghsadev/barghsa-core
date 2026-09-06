@@ -2151,9 +2151,8 @@ export class AdminService {
    * records a `config_change` audit event with the previous value and both
    * version numbers.
    *
-   * The teamId reference is not resolved here — a rule may name a team that
-   * is created later, and the assignment engine (future slice) resolves it
-   * at assignment time, skipping auto-assignment for unknown/disabled teams.
+   * Every primary/fallback team must exist and be active at configuration time.
+   * Selection skips teams that later become unavailable or have no eligible member.
    *
    * @param input - raw request body (flat map, e.g. `{ ticket: { teamId: '…', strategy: 'round_robin' } }`)
    * @param actorUserId - admin user performing the change (for audit)
@@ -2190,7 +2189,10 @@ export class AdminService {
       const teamIds = [
         ...new Set(
           Object.values(config)
-            .map((rule) => rule.teamId)
+            .flatMap((rule) => [
+              rule.teamId,
+              ...(rule.fallbacks ?? []).map((choice) => choice.teamId),
+            ])
             .filter((id): id is string => id !== null)
         ),
       ].sort();

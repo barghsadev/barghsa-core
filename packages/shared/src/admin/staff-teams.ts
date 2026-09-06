@@ -12,7 +12,7 @@
  *   (`staff_teams` + `staff_team_members` in @barghsa/db) because members
  *   are first-class rows referenced elsewhere (assignment outcomes).
  * - **Assignment rules** are the `app_config` key `admin.staff_assignment_rules`:
- *   a flat map work-type → rule. A rule names the team new work of that
+ *   a map work-type → primary rule and ordered fallback teams. A rule names the team new work of that
  *   type auto-assigns to and the strategy used to pick the member
  *   (`round_robin` | `expertise` | `load`). A `null` team means *fallback
  *   to manual assignment* — no auto-assignment happens for that work type.
@@ -46,10 +46,17 @@ export type StaffAssignmentStrategy = (typeof STAFF_ASSIGNMENT_STRATEGIES)[numbe
  * - `strategy` — member-selection strategy within the team. Meaningless
  *   while `teamId` is `null` but persisted so the admin can pre-configure.
  */
+export interface StaffAssignmentChoice {
+  teamId: string;
+  strategy: StaffAssignmentStrategy;
+}
 export interface StaffAssignmentRule {
   teamId: string | null;
   strategy: StaffAssignmentStrategy;
+  /** Ordered alternatives tried when the primary team cannot accept the work. */
+  fallbacks?: StaffAssignmentChoice[];
 }
+export const STAFF_ASSIGNMENT_MAX_FALLBACKS = 9;
 
 /** Admin-configured assignment rules, keyed by work type. */
 export type StaffAssignmentRules = Record<StaffAssignmentWorkType, StaffAssignmentRule>;
@@ -135,6 +142,42 @@ export function validateStaffAssignmentRules(input: unknown): StaffAssignmentRul
     if (rule.strategy !== undefined && !isValidStaffAssignmentStrategy(rule.strategy)) {
       issues.push(`${workType} strategy must be one of: ${STAFF_ASSIGNMENT_STRATEGIES.join(', ')}`);
     }
+    if (rule.fallbacks !== undefined) {
+      if (
+        !Array.isArray(rule.fallbacks) ||
+        rule.fallbacks.length > STAFF_ASSIGNMENT_MAX_FALLBACKS
+      ) {
+        issues.push(
+          `${workType} fallbacks must be an array of at most ${STAFF_ASSIGNMENT_MAX_FALLBACKS} teams`
+        );
+      } else {
+        if (rule.fallbacks.length && (typeof rule.teamId !== 'string' || !rule.teamId.trim()))
+          issues.push(`${workType} fallbacks require a primary team`);
+        const seen = new Set([
+          typeof rule.teamId === 'string' ? rule.teamId.toLowerCase() : rule.teamId,
+        ]);
+        for (const entry of rule.fallbacks) {
+          if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+            issues.push(`${workType} fallback must contain teamId and strategy`);
+            continue;
+          }
+          const choice = entry as Record<string, unknown>;
+          if (
+            typeof choice.teamId !== 'string' ||
+            !choice.teamId.trim() ||
+            !isValidStaffAssignmentStrategy(choice.strategy)
+          )
+            issues.push(`${workType} fallback must contain a team and valid strategy`);
+          if (
+            seen.has(
+              typeof choice.teamId === 'string' ? choice.teamId.toLowerCase() : choice.teamId
+            )
+          )
+            issues.push(`${workType} teams must not repeat`);
+          seen.add(typeof choice.teamId === 'string' ? choice.teamId.toLowerCase() : choice.teamId);
+        }
+      }
+    }
   }
 
   return { ok: issues.length === 0, issues };
@@ -160,12 +203,18 @@ export function toStaffAssignmentRules(input: unknown): StaffAssignmentRules {
     const raw = o[workType];
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) continue;
     const rule = raw as Record<string, unknown>;
+    if (!validateStaffAssignmentRules({ [workType]: raw }).ok) continue;
     const next: StaffAssignmentRule = {
-      teamId: typeof rule.teamId === 'string' ? rule.teamId : null,
+      teamId: typeof rule.teamId === 'string' ? rule.teamId.toLowerCase() : null,
       strategy: isValidStaffAssignmentStrategy(rule.strategy)
         ? rule.strategy
         : DEFAULT_STAFF_ASSIGNMENT_RULES[workType].strategy,
     };
+    if (Array.isArray(rule.fallbacks) && rule.fallbacks.length)
+      next.fallbacks = rule.fallbacks.map((choice) => ({
+        teamId: choice.teamId.toLowerCase(),
+        strategy: choice.strategy,
+      }));
     result[workType] = next;
   }
   return result;

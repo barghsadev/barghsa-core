@@ -1,3 +1,4 @@
+import { StaffAssignmentService } from './staff-assignment.service.js';
 import { randomUUID } from 'node:crypto';
 import { beforeAll, beforeEach, afterAll, it, expect } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -139,4 +140,102 @@ it('falls back to manual assignment for malformed rules, missing or inactive tea
   await http.pool.query('UPDATE staff_teams SET is_active=true WHERE id=$1', [teamId]);
   await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id IN ('alpha','beta')");
   expect(((await (await create()).json()) as { assignedTo: string | null }).assignedTo).toBeNull();
+});
+
+it('tries ordered fallback teams and records the chosen priority without advancing skipped cursors', async () => {
+  const backup = randomUUID();
+  await http.pool.query("INSERT INTO staff_teams(id,name) VALUES ($1,'Fallback team')", [backup]);
+  await http.pool.query("INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,'beta')", [
+    backup,
+  ]);
+  await http.pool.query(
+    `INSERT INTO app_config(key,value) VALUES ('admin.staff_assignment_rules',$1::jsonb)`,
+    [
+      JSON.stringify({
+        ticket: {
+          teamId,
+          strategy: 'expertise',
+          fallbacks: [{ teamId: backup, strategy: 'round_robin' }],
+        },
+      }),
+    ]
+  );
+  const response = await create();
+  expect(response.status, http.logs()).toBe(201);
+  const ticket = (await response.json()) as {
+    id: string;
+    assignedTo: string;
+    assignedTeamId: string;
+  };
+  expect(ticket).toMatchObject({ assignedTo: 'beta', assignedTeamId: backup });
+  expect((await http.pool.query('SELECT team_id FROM staff_assignment_cursors')).rows).toEqual([
+    { team_id: backup },
+  ]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='work_auto_assigned' AND metadata::jsonb->>'itemId'=$1",
+        [ticket.id]
+      )
+    ).rows[0].metadata
+  ).toMatchObject({ priorityIndex: 1, teamId: backup });
+  await http.pool.query('UPDATE staff_teams SET is_active=false WHERE id=$1', [backup]);
+  expect(await (await create()).json()).toMatchObject({ assignedTo: null });
+});
+it('honors reversed priorities without deadlocking teams or shared members', async () => {
+  const backup = randomUUID();
+  await http.pool.query("INSERT INTO staff_teams(id,name) VALUES ($1,'Shared fallback team')", [
+    backup,
+  ]);
+  for (const user of ['alpha', 'beta'])
+    await http.pool.query('INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,$2)', [
+      backup,
+      user,
+    ]);
+  await http.pool.query(
+    `INSERT INTO app_config(key,value) VALUES ('admin.staff_assignment_rules',$1::jsonb)`,
+    [
+      JSON.stringify({
+        ticket: {
+          teamId,
+          strategy: 'round_robin',
+          fallbacks: [{ teamId: backup, strategy: 'round_robin' }],
+        },
+        verification_case: {
+          teamId: backup,
+          strategy: 'round_robin',
+          fallbacks: [{ teamId, strategy: 'round_robin' }],
+        },
+      }),
+    ]
+  );
+  const service = new StaffAssignmentService();
+  const assignments = await Promise.all(
+    Array.from({ length: 12 }, async (_, index) => {
+      const client = await http.pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query("SET LOCAL lock_timeout='5s'");
+        const result = await service.choose(
+          client,
+          index % 2 ? 'ticket' : 'verification_case',
+          randomUUID(),
+          'customer',
+          []
+        );
+        await client.query('COMMIT');
+        return result;
+      } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+      } finally {
+        client.release();
+      }
+    })
+  );
+  assignments.forEach((assignment, index) =>
+    expect(assignment?.teamId).toBe(index % 2 ? teamId : backup)
+  );
+  expect(assignments.filter((assignment) => assignment?.userId === 'alpha')).toHaveLength(6);
+  expect(assignments.filter((assignment) => assignment?.userId === 'beta')).toHaveLength(6);
 });

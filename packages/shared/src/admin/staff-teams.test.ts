@@ -87,8 +87,8 @@ describe('staff assignment rules contract (T-09.08.02)', () => {
         verification_case: { teamId: 't-2', strategy: 'garbage' },
       });
       expect(result.ticket).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.ticket);
-      // teamId survives; strategy degrades to the default
-      expect(result.verification_case.teamId).toBe('t-2');
+      // Corrupt strategies disable this work type instead of changing its policy.
+      expect(result.verification_case.teamId).toBeNull();
       expect(result.verification_case.strategy).toBe('round_robin');
     });
 
@@ -164,5 +164,45 @@ describe('staff team input validation (T-09.08.02)', () => {
     expect(
       validateStaffTeamInput({ name: 'Team', description: 42, skillTags: [], memberUserIds: [] }).ok
     ).toBe(false);
+  });
+});
+
+describe('ordered assignment fallbacks', () => {
+  it('preserves priority and strategy while retaining the legacy single-team shape', () => {
+    const input = {
+      ticket: {
+        teamId: 'first',
+        strategy: 'expertise',
+        fallbacks: [
+          { teamId: 'second', strategy: 'load' },
+          { teamId: 'third', strategy: 'round_robin' },
+        ],
+      },
+    };
+    expect(validateStaffAssignmentRules(input).ok).toBe(true);
+    expect(toStaffAssignmentRules(input).ticket).toEqual(input.ticket);
+    expect(
+      toStaffAssignmentRules({ ticket: { teamId: 'first', strategy: 'load' } }).ticket
+    ).toEqual({ teamId: 'first', strategy: 'load' });
+  });
+  it('rejects duplicate, malformed, unbounded or primary-less alternatives', () => {
+    for (const rule of [
+      { teamId: 'first', strategy: 'load', fallbacks: [{ teamId: 'first', strategy: 'load' }] },
+      { teamId: 'first', strategy: 'load', fallbacks: [{ teamId: 'second', strategy: 'unknown' }] },
+      { teamId: 'first', strategy: 'load', fallbacks: [null] },
+      { teamId: 'first', strategy: 'load', fallbacks: 'second' },
+      { teamId: null, strategy: 'load', fallbacks: [{ teamId: 'second', strategy: 'load' }] },
+      {
+        teamId: 'first',
+        strategy: 'load',
+        fallbacks: Array.from({ length: 10 }, (_, index) => ({
+          teamId: `extra-${index}`,
+          strategy: 'load',
+        })),
+      },
+    ]) {
+      expect(validateStaffAssignmentRules({ ticket: rule }).ok).toBe(false);
+      expect(toStaffAssignmentRules({ ticket: rule }).ticket.teamId).toBeNull();
+    }
   });
 });

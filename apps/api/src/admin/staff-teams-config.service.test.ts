@@ -100,7 +100,7 @@ describe('AdminService staff assignment rules (T-09.08.02)', () => {
 
       const result = await service.getStaffAssignmentRules();
       expect(result.ticket).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.ticket);
-      expect(result.verification_case.teamId).toBe('t-2');
+      expect(result.verification_case.teamId).toBeNull();
       expect(result.verification_case.strategy).toBe('round_robin');
     });
 
