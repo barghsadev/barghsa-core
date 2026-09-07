@@ -10,6 +10,12 @@ Repairs are in progress on the local `codex/audit-fixes` branch. [Repair progres
 
 No identity-verification provider has been selected. Automatic approval stays unavailable; manual verification remains supported. The dependency license restriction was waived by the user. Production data reconciliation, deployment and the other machine's scheduler are not certified by local tests.
 
+## Current requirement bindings
+
+Use [current task requirements](current-task-requirements.json) when continuing acceptance review. The historical report generator selected only third-level headings, so 98 infrastructure tasks inherited the wrong story and 22 original extracts included the next fourth-level story. The overlay uses the same canonical context parser as dispatch and binds every original qualified task key to source-file and context hashes. It also includes the approved Vite requirements change. Historical task-review files remain baseline evidence; their context fields are superseded by this overlay. No completion or acceptance status changes follow from regenerating requirements.
+
+Run `python3 audit/current_requirements.py` to reject stale bindings, or add `--write` after reviewing canonical requirements changes. The historical report generator now uses that same parser for future generation. It has not been rerun over the old findings.
+
 ## Scope and limits
 
 - 263 distinct current tasks have merged PR evidence: infrastructure 72, auth/admin 99, core business 4, finance 56, notifications 29, UI foundations 3.
@@ -62,6 +68,7 @@ The initial review made no product, kanban, GitHub or scheduler changes. Its gen
 
 - [Repair plan](fix-plan.md)
 - [Current acceptance evidence](acceptance-closure.json)
+- [Current canonical task requirements](current-task-requirements.json)
 - [Readable task-by-task review](task-review.md)
 - [Task register CSV](task-review.csv) and [JSON with requirements and source evidence](task-review.json)
 - [History-confirmed skipped tasks](skipped-tasks.md), [CSV](skipped-tasks.csv), [JSON](skipped-tasks.json)

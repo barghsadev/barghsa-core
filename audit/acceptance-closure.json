@@ -2636,5 +2636,6 @@
       ],
       "historically_skipped": false
     }
-  ]
+  ],
+  "current_requirements_register": "audit/current-task-requirements.json"
 }

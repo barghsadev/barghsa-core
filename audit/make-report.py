@@ -1,4 +1,5 @@
 from pathlib import Path
+from current_requirements import requirement_record
 import json,csv,re,collections,subprocess,shutil
 ROOT=Path('/Users/majid/www/barghsa/barghsa-core')
 OUT=Path('/tmp/barghsa-full-audit')
@@ -227,15 +228,9 @@ for q in Q:
  elif not prs:assessment='legacy_claim_requires_acceptance_evidence'
  elif direct:assessment='affected_by_identified_gap'
  else:assessment='merged_source_evidence_acceptance_retest_required'
- lines=(ROOT/'kanban/epics'/q['fname']).read_text().splitlines()
- start=q['source_line']-1
- headings=[i for i in range(start) if re.match(r'^### ',lines[i])]
- h=headings[-1] if headings else 0
- context='\n'.join(lines[h:start])
- # Keep parent story introductory requirements, not all prior sibling task blocks.
- first_task=next((i for i,l in enumerate(context.splitlines()) if re.search(r'(\*\*T-\d|\| T-\d)',l)),None)
- if first_task is not None:context='\n'.join(context.splitlines()[:first_task])
- MATRIX.append(dict(task_key=k,title=q['title'],requirement_file='kanban/epics/'+q['fname'],requirement_line=q['source_line'],story_context=context,requirement_extract=re.split(r'\n#{2,3} ',REQ.get(k,''))[0].rstrip(),assessment=assessment,historically_skipped=k in SKIPSET,claimed_complete_in_state=k in claimed,merged_prs=[p['number'] for p in prs],merged_pr_urls=[p['html_url'] for p in prs],pr_changed_files_still_present=[f for f in changed if (ROOT/f).is_file()],historical_files_no_longer_present=[f for f in changed if not (ROOT/f).is_file()],repair_groups=direct,acceptance_groups=closure,review_limit='Static requirements/source/provenance review and available checks; not individually certified end-to-end. See fix-plan acceptance checks.'))
+ bound=requirement_record(q, ROOT)
+ context=bound['story_context']
+ MATRIX.append(dict(task_key=k,title=q['title'],requirement_file='kanban/epics/'+q['fname'],requirement_line=bound['requirement_line'],story_context=context,requirement_extract=bound['requirement_extract'],assessment=assessment,historically_skipped=k in SKIPSET,claimed_complete_in_state=k in claimed,merged_prs=[p['number'] for p in prs],merged_pr_urls=[p['html_url'] for p in prs],pr_changed_files_still_present=[f for f in changed if (ROOT/f).is_file()],historical_files_no_longer_present=[f for f in changed if not (ROOT/f).is_file()],repair_groups=direct,acceptance_groups=closure,review_limit='Static requirements/source/provenance review and available checks; not individually certified end-to-end. See fix-plan acceptance checks.'))
 assert len(MATRIX)==322
 (OUT/'task-review.json').write_text(json.dumps(dict(head=HEAD,scope='All 263 current PR-backed task keys plus 59 other current state completion claims',tasks=MATRIX),indent=2,ensure_ascii=False)+'\n')
 csvwrite(OUT/'task-review.csv',[dict(task_key=r['task_key'],title=r['title'],assessment=r['assessment'],merged_prs=','.join(map(str,r['merged_prs'])),historically_skipped=r['historically_skipped'],repair_groups=','.join(r['repair_groups']),acceptance_groups=','.join(r['acceptance_groups']),requirement=r['requirement_file']+':'+str(r['requirement_line']),current_source_files=';'.join(r['pr_changed_files_still_present'])) for r in MATRIX],['task_key','title','assessment','merged_prs','historically_skipped','repair_groups','acceptance_groups','requirement','current_source_files'])

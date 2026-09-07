@@ -2676,3 +2676,12 @@ Review: all 19 UI tests and 50 translation tests passed. UI typechecking and exp
 Added 24 focused cases for malformed date-only filters, invalid calendar dates, Gregorian leap-century rules, the 23-hour spring DST interval, invalid numeric wall-clock fields, midnight and the last minute of a Tehran day. Existing tests retain the 25-hour fall interval and skipped New York local-time checks. The date helpers passed without a product change; the original Date remains unchanged.
 
 Review: all 43 UI unit tests passed, including these cases; UI typechecking and explicit ESLint passed. This extends boundary evidence without claiming full date-picker interaction coverage or refreshing the combined coverage checkpoint.
+
+
+### Correct audit requirement context binding
+
+Reviewing the next database task exposed a reporting defect: make-report.py selected only third-level headings. Infrastructure stories are fourth-level headings, so 98 tasks inherited an earlier story's acceptance context. Its task-block splitter also stopped only at second/third-level headings, leaving the next story inside 22 original extracts. The live supervisor's canonical context parser already handles these boundaries correctly; this defect was in the audit generator.
+
+Added current-task-requirements.json as a source-hashed overlay for the same 322 historical keys in the same order. It uses the canonical parser, preserves multiline table tasks, rejects ambiguous/escaping identities, includes the approved Vite requirements changes and rejects stale output. The historical baseline report and its PR/completion evidence remain unchanged. The report generator now delegates to the same helper; it was not rerun over old findings. The acceptance ledger points to the current overlay and retains all 47 reviewed records, 34 verified, 13 partial and 275 pending. None of those 47 saved task extracts contains a following heading; their existing evidence is not replaced by this metadata repair.
+
+Review: six new requirement-binding tests pass, including repeated unqualified IDs across epics and all 322 keys. All six existing canonical backlog tests pass across every current task; backlog validation passes 1355 tasks and 116 traceability entries. The overlay check passes. Twenty-eight task extracts differ from the historical report in total; this includes boundary corrections and subsequent approved requirements edits, not 28 newly implemented tasks.
