@@ -69,6 +69,8 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 - Notification-template boundaries: 48 new checks cover separate capabilities, admin revocation, malformed creation/edit/preview/test-send requests, authenticated actor binding and partial updates without clearing omitted fields. Together with existing admin permission cases, 192 tests pass. API types and explicit lint pass. Initial empty-permission table fixture was corrected before the passing run. No production change or external delivery occurred. Log `/tmp/barghsa-template-boundaries.log`; API coverage awaits the next batch refresh.
 
+- Password recovery repair after the full checkpoint: eight browser regressions reproduced empty reset acknowledgements reporting success, null recovery responses silently doing nothing, blank challenge identifiers and null 429 bodies bypassing cooldown. Reused auth response guards, preserved retry input and honored rate-limit headers independently of body shape. All 55 recovery cases across five profiles pass; web types, explicit lint, build and 41 route budgets pass. Logs `/tmp/barghsa-password-reset-red.log`, `/tmp/barghsa-password-reset-green.log`, `/tmp/barghsa-password-reset-budgets.log`. The full browser/coverage checkpoint below predates this source change and will need affected coverage refresh in the next batch.
+
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
 - **5,815 unit/integration tests across 461 files pass** at `0494ad4`, with affected web/i18n coverage refreshed at `eb19ed5`. All 11 workspace typechecks and root lint pass, with subsequent label changes checked separately.

@@ -58,3 +58,66 @@ test('rejected reset leaves the form usable and does not claim success', async (
   await expect(page.getByRole('alert')).toContainText('نامعتبر');
   await expect(page.locator('#reset-otp')).toBeEnabled();
 });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`reset needs acknowledgement before clearing input (${locale})`, async ({ page }) => {
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/forgot-password', (route) =>
+      route.fulfill({ json: { sent: true, challengeId: 'reset-challenge' } })
+    );
+    let attempts = 0;
+    await page.route('**/api/auth/reset-password', (route) => {
+      attempts++;
+      return route.fulfill({ json: attempts === 1 ? {} : { message: 'Password changed' } });
+    });
+    await page.goto('/forgot-password');
+    await page.evaluate((lang) => {
+      document.documentElement.lang = lang;
+    }, locale);
+    await page.locator('#username').fill('retry@example.test');
+    await page.locator('button[type="submit"]').click();
+    await page.locator('#reset-otp').fill('123456');
+    await page.locator('#new-password').fill('New-browser-password-123!');
+    await page.locator('#confirm-password').fill('New-browser-password-123!');
+    await page.locator('button[type="submit"]').click();
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.locator('#new-password')).toHaveValue('New-browser-password-123!');
+    await expect(page.locator('#reset-otp')).toHaveValue('123456');
+    await page.locator('button[type="submit"]').click();
+    await expect(page.getByRole('status')).toContainText(locale === 'fa' ? 'وارد شوید' : 'Sign in');
+    await expect(page.locator('#new-password')).toHaveCount(0);
+    expect(attempts).toBe(2);
+  });
+  for (const result of [null, { challengeId: '   ' }]) {
+    test(`recovery rejects malformed acknowledgement ${JSON.stringify(result)} (${locale})`, async ({
+      page,
+    }) => {
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/forgot-password', (route) => route.fulfill({ json: result }));
+      await page.goto('/forgot-password');
+      await page.evaluate((lang) => {
+        document.documentElement.lang = lang;
+      }, locale);
+      await page.locator('#username').fill('retry@example.test');
+      await page.locator('button[type="submit"]').click();
+      await expect(page.getByRole('alert')).toBeVisible();
+      await expect(page.locator('#username')).toHaveValue('retry@example.test');
+      await expect(page.locator('button[type="submit"]')).toBeEnabled();
+      await expect(page.locator('#reset-otp')).toHaveCount(0);
+    });
+  }
+  test(`recovery honors rate limiting with an empty response (${locale})`, async ({ page }) => {
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/forgot-password', (route) =>
+      route.fulfill({ status: 429, headers: { 'Retry-After': '30' }, json: null })
+    );
+    await page.goto('/forgot-password');
+    await page.evaluate((lang) => {
+      document.documentElement.lang = lang;
+    }, locale);
+    await page.locator('#username').fill('retry@example.test');
+    await page.locator('button[type="submit"]').click();
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.locator('button[type="submit"]')).toBeDisabled();
+  });
+}

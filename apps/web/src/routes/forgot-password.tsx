@@ -1,3 +1,4 @@
+import { authResponseRecord, hasPasswordChangeAcknowledgement } from '../lib/auth-responses.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js';
 import { useEffect, useState, type FormEvent } from 'react';
@@ -107,9 +108,12 @@ function ForgotPasswordPage() {
       headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
       body: JSON.stringify(payload),
     });
-    const body = (await response.json().catch(() => ({}))) as Record<string, unknown>;
-    if (response.ok) return body;
-    const raw = body.error;
+    const body = authResponseRecord(await response.json().catch(() => null));
+    if (response.ok) {
+      if (!body) throw new Error('Invalid recovery acknowledgement');
+      return body;
+    }
+    const raw = body?.error;
     const code = typeof raw === 'string' ? raw : (raw as { code?: string } | undefined)?.code;
     const messages: Record<string, string> = {
       'AUTH:OTP:INVALID': 'auth.otp.error.invalid',
@@ -137,7 +141,7 @@ function ForgotPasswordPage() {
     try {
       const body = await request('forgot-password', { username: normalized.normalized });
       if (!body) return;
-      if (typeof body.challengeId !== 'string' || !body.challengeId)
+      if (typeof body.challengeId !== 'string' || !body.challengeId.trim())
         throw new Error('Missing challenge');
       setChallengeId(body.challengeId);
       setOtp('');
@@ -161,6 +165,7 @@ function ForgotPasswordPage() {
     try {
       const body = await request('reset-password', { challengeId, otp, newPassword: password });
       if (!body) return;
+      if (!hasPasswordChangeAcknowledgement(body)) throw new Error('Invalid reset acknowledgement');
       setOtp('');
       setPassword('');
       setConfirmation('');
