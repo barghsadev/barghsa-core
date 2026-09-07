@@ -1,3 +1,4 @@
+import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
   'admin.walletReceipts.nav': 'رسیدهای کیف پول',
   'admin.walletReceipts.title': 'بررسی رسید شارژ کیف پول',
@@ -114,5 +115,5 @@ const en: Record<string, string> = {
     'Wait for the invoice remaining preview before confirming',
 };
 export function tWalletReceipts(key: string, locale: 'fa' | 'en'): string {
-  return (locale === 'fa' ? fa : en)[key] ?? key;
+  return lookup(locale === 'fa' ? fa : en, key) ?? key;
 }

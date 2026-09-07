@@ -1,3 +1,4 @@
+import { lookup } from './lookup.js';
 /** Authentication dictionaries are independent of the full application dictionary. */
 import type { I18nDictionary, Locale } from './index.js';
 export type { Locale } from './index.js';
@@ -364,7 +365,6 @@ export const en: I18nDictionary = {
   'auth.changeUsername.error.alreadyHasEmail': 'This account already has an email',
   'auth.changeUsername.error.alreadyHasMobile': 'This account already has a mobile number',
 };
-const dictionaries = { fa, en };
 export function t(key: string, locale: Locale = 'fa'): string {
-  return dictionaries[locale]?.[key] ?? en[key] ?? key;
+  return lookup(locale === 'fa' ? fa : en, key) ?? lookup(en, key) ?? key;
 }

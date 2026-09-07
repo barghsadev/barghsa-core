@@ -1,3 +1,4 @@
+import { lookup } from './lookup.js';
 import { fa as authFA, en as authEN } from './auth.js';
 export interface I18nDictionary {
   [key: string]: string;
@@ -5,6 +6,7 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'onboarding.legal.titleEn': 'Legal Profile',
   'admin.catalogue.title': 'فهرست محصولات',
   'admin.gifts.title': 'کدهای تخفیف',
   'admin.vat.title': 'تنظیمات مالیات بر ارزش افزوده',
@@ -2012,6 +2014,30 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'onboarding.welcome.subtitleEn': 'Please create your profile to get started.',
+  'onboarding.profile.individualDescEn': 'Individual registration',
+  'onboarding.profile.legalDescEn': 'Legal entity registration',
+  'onboarding.type.promptEn': 'Please select your profile type',
+  'onboarding.type.continueEn': 'Continue',
+  'onboarding.type.individualHintEn': 'For personal use',
+  'onboarding.type.legalHintEn': 'For companies and organizations',
+  'onboarding.type.error.requiredEn': 'Please select a profile type',
+  'verification.notify.verified': 'Your profile was verified successfully',
+  'verification.notify.unverified': 'Your profile verification status changed to unverified',
+  'verification.notify.reverified': 'Your profile was marked for verification again',
+  'verification.notify.reason': 'Reason: {reason}',
+  'crm.profile.statusVerified': 'Verified',
+  'crm.profile.statusActive': 'Active',
+  'crm.profile.verified': 'Verified',
+  'crm.profile.label.admin': 'Administrator',
+  'crm.profile.label.created': 'Created',
+  'crm.profile.label.lastActive': 'Last active',
+  'crm.profile.label.expires': 'Expires',
+  'crm.profile.label.status': 'Status',
+  'crm.profile.label.device': 'Device',
+  'crm.profile.label.main': 'Main',
+  'crm.profile.label.view': 'View',
+
   'admin.catalogue.title': 'Product catalogue',
   'admin.gifts.title': 'Gift codes',
   'admin.vat.title': 'VAT configuration',
@@ -4014,5 +4040,5 @@ export const dictionaries: Record<Locale, I18nDictionary> = { fa, en };
 
 /** Resolve a message key for the given locale. Falls back to English then the key itself. */
 export function t(key: string, locale: Locale = 'fa'): string {
-  return dictionaries[locale]?.[key] ?? dictionaries.en?.[key] ?? key;
+  return lookup(locale === 'fa' ? fa : en, key) ?? lookup(dictionaries.en, key) ?? key;
 }

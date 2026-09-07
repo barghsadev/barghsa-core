@@ -1,3 +1,4 @@
+import { lookup } from './lookup.js';
 const en: Record<string, string> = {
   title: 'Product catalogue',
   refresh: 'Refresh',
@@ -152,5 +153,5 @@ const fa: Record<string, string> = {
   conflict: 'محصول یا تاریخچه قیمت تغییر کرده است. تازه‌سازی کنید.',
 };
 export function tCatalogue(key: string, locale: 'fa' | 'en'): string {
-  return (locale === 'fa' ? fa : en)[key] ?? key;
+  return lookup(locale === 'fa' ? fa : en, key) ?? key;
 }

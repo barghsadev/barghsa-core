@@ -1,3 +1,4 @@
+import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
   'admin.gifts.title': 'کدهای تخفیف',
   'admin.gifts.filters': 'فیلتر کدها',
@@ -154,5 +155,5 @@ const en: Record<string, string> = {
   'admin.gifts.duplicate': 'This code already exists.',
 };
 export function tGift(key: string, locale: 'fa' | 'en'): string {
-  return (locale === 'fa' ? fa : en)[key] ?? key;
+  return lookup(locale === 'fa' ? fa : en, key) ?? key;
 }

@@ -1,3 +1,4 @@
+import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
   'admin.vat.title': 'تنظیمات مالیات بر ارزش افزوده',
   'admin.vat.precedence':
@@ -119,5 +120,5 @@ const en: Record<string, string> = {
   'admin.vat.category.product_override': 'Product-specific rate',
 };
 export function tVat(key: string, locale: 'fa' | 'en'): string {
-  return (locale === 'fa' ? fa : en)[key] ?? key;
+  return lookup(locale === 'fa' ? fa : en, key) ?? key;
 }

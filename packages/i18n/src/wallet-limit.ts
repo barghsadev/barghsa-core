@@ -1,3 +1,4 @@
+import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
   'admin.walletLimit.title': 'سقف شارژ آنلاین کیف پول',
   'admin.walletLimit.description':
@@ -41,5 +42,5 @@ const en: Record<string, string> = {
     'The limit was updated by another admin. Cancel, reload the current value and review your change before saving.',
 };
 export function tWalletLimit(key: string, locale: 'fa' | 'en'): string {
-  return (locale === 'fa' ? fa : en)[key] ?? key;
+  return lookup(locale === 'fa' ? fa : en, key) ?? key;
 }
