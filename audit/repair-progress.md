@@ -2642,3 +2642,7 @@ Pool configuration remains partial because distinct 10-second read/30-second wri
 The five-second health response previously left a query queued behind an exhausted pool. The probe now skips saturated pools, shares concurrent work, cancels an active query at its deadline and releases a late checkout without executing expired SQL. Four real-pool cases cover these paths; twenty concurrent HTTP readiness requests return real PostgreSQL statistics.
 
 Review: full database suite 84 files / 627 tests passed; both telemetry/readiness HTTP tests passed. Database/API types, targeted lint, formatting and diff review pass. Test-only typing corrections and the original reproduction are recorded in `audit/database-foundation-review.md`. Network cancellation failure still uses server/acquisition timeouts as fallback, while one in-flight probe prevents repeated accumulation.
+
+### Close database health acceptance after resource verification
+
+At 9392159, T-02.01.04 is acceptance_verified, with its prior partial assessment preserved. The task ledger now has 47 reviewed records: 34 verified, 13 partial, and 275 pending. Source hashes and HTTP/database checks bind the updated status to the reviewed local revision.
