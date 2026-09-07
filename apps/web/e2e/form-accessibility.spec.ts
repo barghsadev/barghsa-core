@@ -2303,3 +2303,110 @@ for (const failure of ['unavailable', 'malformed']) {
     await expect(page.getByRole('alert')).toHaveCount(0);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`TOS rich text saves formatting and freezes content while saving (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
+    const writes: Record<string, string>[] = [];
+    let release!: () => void;
+    const pending = new Promise<void>((done) => {
+      release = done;
+    });
+    await page.route('**/api/admin/tos/versions', async (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: [] });
+      writes.push(route.request().postDataJSON());
+      await pending;
+      return route.fulfill({ status: 503, json: {} });
+    });
+    await page.goto('/admin/tos');
+    await page.getByRole('button', { name: 'New Draft', exact: true }).click();
+    await page.getByLabel('Version ID').fill('rich-v1');
+    const persian = page.getByRole('textbox', {
+      name: locale === 'fa' ? 'محتوای فارسی' : 'Persian content',
+      exact: true,
+    });
+    const english = page.getByRole('textbox', {
+      name: locale === 'fa' ? 'محتوای انگلیسی' : 'English content',
+      exact: true,
+    });
+    await expect(persian).toHaveAttribute('dir', 'rtl');
+    await expect(english).toHaveAttribute('dir', 'ltr');
+    await persian.fill('شرایط جدید');
+    await english.fill('Important terms');
+    await english.press('ControlOrMeta+a');
+    await page
+      .getByRole('group', {
+        name: locale === 'fa' ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',
+      })
+      .getByRole('button', { name: locale === 'fa' ? 'پررنگ' : 'Bold', exact: true })
+      .click();
+    await expect(english.locator('strong')).toHaveText('Important terms');
+    try {
+      await page
+        .getByRole('button', { name: 'Create Draft', exact: true })
+        .evaluate((button: HTMLButtonElement) => {
+          button.click();
+          button.click();
+        });
+      await expect.poll(() => writes.length).toBe(1);
+      expect(writes[0]).toMatchObject({
+        versionId: 'rich-v1',
+        contentFa: 'شرایط جدید',
+        contentEn: '**Important terms**',
+      });
+      await expect(page.getByLabel('Version ID')).toBeDisabled();
+      await expect(english).toHaveAttribute('contenteditable', 'false');
+      await expect(persian).toHaveAttribute('contenteditable', 'false');
+      await expect(page.getByRole('button', { name: 'Cancel', exact: true })).toBeDisabled();
+    } finally {
+      release();
+    }
+    await expect(english).toHaveAttribute('contenteditable', 'true');
+    await expect(english.locator('strong')).toHaveText('Important terms');
+  });
+}
+
+test('TOS editor preserves unsupported existing formatting when editing another language', async ({
+  page,
+}) => {
+  await shell(page);
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  const original = '| Name | Value |\n| --- | --- |\n| Fee | 10 |';
+  const version = {
+    id: 'table-draft',
+    versionId: 'table-v1',
+    contentFa: 'شرایط',
+    contentEn: original,
+    changeType: 'minor',
+    status: 'draft',
+    isActive: false,
+    publishedAt: null,
+    createdBy: null,
+    createdAt: '2026-09-01T00:00:00Z',
+    updatedAt: '2026-09-01T00:00:00Z',
+  };
+  await page.route('**/api/admin/tos/versions', (route) => route.fulfill({ json: [version] }));
+  let saved: Record<string, string> | undefined;
+  await page.route('**/api/admin/tos/versions/table-draft', (route) => {
+    saved = route.request().postDataJSON();
+    return route.fulfill({ status: 503, json: {} });
+  });
+  await page.goto('/admin/tos');
+  await page.getByRole('button', { name: 'Edit', exact: true }).click();
+  await expect(page.getByRole('textbox', { name: 'English content', exact: true })).toHaveValue(
+    original
+  );
+  await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('شرایط جدید');
+  await page.getByRole('button', { name: 'Update Draft', exact: true }).click();
+  await expect.poll(() => saved?.contentEn).toBe(original);
+  await expect(page.getByRole('textbox', { name: 'English content', exact: true })).toHaveValue(
+    original
+  );
+});

@@ -4,8 +4,10 @@ import { adminControlsText } from '@barghsa/i18n/admin-controls';
 import { useLocale } from '../hooks/useLocale.js';
 import { Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
 import { withCsrf } from '../lib/csrf.js';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import type { FormEvent } from 'react';
+
+const TosRichText = lazy(() => import('./TosRichText.js'));
 
 interface TosVersion {
   id: string;
@@ -54,6 +56,7 @@ export default function AdminTosPage() {
   const locale = useLocale();
   const text = adminTosText(locale);
   const historyRequest = useRef(0);
+  const saveInFlight = useRef(false);
   const [versions, setVersions] = useState<TosVersion[]>([]);
   const [loading, setLoading] = useState(true);
   const [historyReady, setHistoryReady] = useState(false);
@@ -144,7 +147,12 @@ export default function AdminTosPage() {
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
-    if (!historyReady || loading) return;
+    if (saveInFlight.current || !historyReady || loading) return;
+    if (!contentFa.trim() || !contentEn.trim()) {
+      setError(text.requiredContent);
+      return;
+    }
+    saveInFlight.current = true;
     setSaving(true);
 
     try {
@@ -182,6 +190,7 @@ export default function AdminTosPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save');
     } finally {
+      saveInFlight.current = false;
       setSaving(false);
     }
   }
@@ -294,44 +303,36 @@ export default function AdminTosPage() {
               className="w-full border border-gray-300 rounded px-3 py-2"
               placeholder="e.g. v2"
               required
-              disabled={!!editId}
+              disabled={!!editId || saving}
             />
           </div>
 
-          <div>
-            <label
-              htmlFor="admintospage-field-2"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Persian Content (Markdown) <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              id="admintospage-field-2"
-              value={contentFa}
-              onChange={(e) => setContentFa(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
-              rows={10}
-              required
-              dir="rtl"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="admintospage-field-3"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              English Content (Markdown) <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              id="admintospage-field-3"
-              value={contentEn}
-              onChange={(e) => setContentEn(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
-              rows={10}
-              required
-            />
-          </div>
+          <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
+            <div className="space-y-2">
+              <p className="font-medium">{text.persian} *</p>
+              <TosRichText
+                key={`${editId ?? 'new'}-fa`}
+                value={contentFa}
+                onChange={setContentFa}
+                label={text.persian}
+                language="fa"
+                locale={locale}
+                disabled={saving || !historyReady || loading}
+              />
+            </div>
+            <div className="space-y-2">
+              <p className="font-medium">{text.english} *</p>
+              <TosRichText
+                key={`${editId ?? 'new'}-en`}
+                value={contentEn}
+                onChange={setContentEn}
+                label={text.english}
+                language="en"
+                locale={locale}
+                disabled={saving || !historyReady || loading}
+              />
+            </div>
+          </Suspense>
 
           <div className="flex gap-3">
             <button
@@ -344,6 +345,7 @@ export default function AdminTosPage() {
             <button
               type="button"
               onClick={() => setShowEditor(false)}
+              disabled={saving}
               className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
             >
               Cancel
@@ -595,21 +597,21 @@ export default function AdminTosPage() {
                     <>
                       <button
                         onClick={() => openEdit(v)}
-                        disabled={!historyReady || loading}
+                        disabled={!historyReady || loading || showEditor}
                         className="text-blue-600 hover:text-blue-800"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => setPublishId(v.id)}
-                        disabled={!historyReady || loading}
+                        disabled={!historyReady || loading || showEditor}
                         className="text-green-600 hover:text-green-800"
                       >
                         Publish
                       </button>
                       <button
                         onClick={() => handleDiscard(v.id)}
-                        disabled={!historyReady || loading}
+                        disabled={!historyReady || loading || showEditor}
                         className="text-red-600 hover:text-red-800"
                       >
                         Discard
