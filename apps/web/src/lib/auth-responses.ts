@@ -17,6 +17,14 @@ export function hasSessionAcknowledgement(value: unknown): boolean {
   );
 }
 
+export function hasPasswordChangeAcknowledgement(value: unknown): boolean {
+  return nonEmptyString(authResponseRecord(value)?.message);
+}
+
+export function hasResendAcknowledgement(value: unknown, challengeId: string): boolean {
+  return nonEmptyString(challengeId) && authResponseRecord(value)?.challengeId === challengeId;
+}
+
 type LoginAcknowledgement =
   | { kind: 'password-change'; token: string }
   | { kind: 'otp'; challengeId: string }

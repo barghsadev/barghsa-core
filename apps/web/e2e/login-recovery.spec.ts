@@ -19,6 +19,71 @@ async function openLogin(page: Page, locale: 'fa' | 'en') {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`password change needs acknowledgement and preserves retry input (${locale})`, async ({
+    page,
+  }) => {
+    await page.route('**/api/auth/login', (route) =>
+      route.fulfill({
+        json: {
+          requiresOtp: false,
+          mustChangePassword: true,
+          passwordChangeToken: 'change-token',
+        },
+      })
+    );
+    const attempts: unknown[] = [];
+    await page.route('**/api/auth/force-change-password', (route) => {
+      attempts.push(route.request().postDataJSON());
+      return route.fulfill({
+        json: attempts.length === 1 ? null : { message: 'Password changed' },
+      });
+    });
+    await openLogin(page, locale);
+    await page.locator('button[type="submit"]').click();
+    await page.locator('#new-password').fill('New-browser-password-123!');
+    await page.locator('#confirm-password').fill('New-browser-password-123!');
+    await page.locator('button[type="submit"]').click();
+    await expect(page.getByRole('alert').first()).toContainText(generic[locale]);
+    await expect(page.locator('#new-password')).toHaveValue('New-browser-password-123!');
+    await expect(page.locator('#confirm-password')).toHaveValue('New-browser-password-123!');
+    await page.locator('button[type="submit"]').click();
+    await expect(page.locator('#password')).toHaveValue('');
+    expect(attempts).toEqual(
+      Array(2).fill({
+        passwordChangeToken: 'change-token',
+        newPassword: 'New-browser-password-123!',
+      })
+    );
+    await expect(page.locator('[data-sonner-toast]')).toHaveCount(1);
+  });
+  test(`resend requires the same challenge acknowledgement (${locale})`, async ({ page }) => {
+    await page.clock.install();
+    await page.route('**/api/auth/login', (route) =>
+      route.fulfill({ json: { requiresOtp: true, challengeId } })
+    );
+    let attempts = 0;
+    await page.route('**/api/auth/login/resend', (route) => {
+      expect(route.request().postDataJSON()).toEqual({ challengeId });
+      attempts++;
+      return route.fulfill({ json: { challengeId: attempts === 1 ? 'unrelated' : challengeId } });
+    });
+    await openLogin(page, locale);
+    await page.locator('button[type="submit"]').click();
+    await expect(page.locator('input[inputmode="numeric"]')).toHaveCount(6);
+    await page.clock.runFor(61000);
+    const resend = page.getByRole('button', {
+      name: locale === 'fa' ? 'ارسال مجدد' : 'Resend code',
+      exact: true,
+    });
+    await resend.click();
+    await expect(page.getByRole('alert').first()).toBeVisible();
+    await expect(resend).toBeEnabled();
+    await expect(page.locator('[data-sonner-toast]')).toHaveCount(0);
+    await resend.click();
+    await expect(resend).toHaveCount(0);
+    await expect(page.locator('[data-sonner-toast]')).toHaveCount(1);
+    expect(attempts).toBe(2);
+  });
   test(`login accepts a complete session acknowledgement (${locale})`, async ({ page }) => {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/login', (route) =>

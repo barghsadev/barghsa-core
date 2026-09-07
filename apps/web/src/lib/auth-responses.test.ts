@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { hasSessionAcknowledgement, parseLoginAcknowledgement } from './auth-responses.js';
+import {
+  hasSessionAcknowledgement,
+  hasPasswordChangeAcknowledgement,
+  hasResendAcknowledgement,
+  parseLoginAcknowledgement,
+} from './auth-responses.js';
 
 const session = {
   requiresOtp: false,
@@ -9,6 +14,16 @@ const session = {
   expiresAt: '2030-01-01T00:00:00.000Z',
 };
 describe('authentication acknowledgement contract', () => {
+  it('requires password-change confirmation and an exact resend challenge', () => {
+    expect(hasPasswordChangeAcknowledgement({ message: 'Password changed' })).toBe(true);
+    expect(hasResendAcknowledgement({ challengeId: 'challenge' }, 'challenge')).toBe(true);
+    for (const value of [null, undefined, {}, [], 200, { message: '' }, { message: 1 }]) {
+      expect(hasPasswordChangeAcknowledgement(value)).toBe(false);
+      expect(hasResendAcknowledgement(value, 'challenge')).toBe(false);
+    }
+    expect(hasResendAcknowledgement({ challengeId: 'other' }, 'challenge')).toBe(false);
+    expect(hasResendAcknowledgement({ challengeId: '' }, '')).toBe(false);
+  });
   it.each([null, undefined, false, 1, 'ok', [], {}, { requiresOtp: false }])(
     'rejects incomplete response %j',
     (body) => {

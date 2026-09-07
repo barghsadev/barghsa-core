@@ -1,7 +1,12 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { rateLimitMessage, retryAfterSeconds, authErrorCode } from '../lib/auth-errors.js';
-import { hasSessionAcknowledgement, parseLoginAcknowledgement } from '../lib/auth-responses.js';
+import {
+  hasSessionAcknowledgement,
+  hasPasswordChangeAcknowledgement,
+  hasResendAcknowledgement,
+  parseLoginAcknowledgement,
+} from '../lib/auth-responses.js';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
@@ -321,6 +326,10 @@ function LoginPage() {
         }
 
         // Success — redirect back to login with message
+        if (!hasPasswordChangeAcknowledgement(await response.json().catch(() => null))) {
+          setChangeError(t('auth.login.error.generic', locale));
+          return;
+        }
         toast.success(t('auth.login.passwordChanged', locale));
         setPasswordChangeStep(false);
         setPassword('');
@@ -432,6 +441,10 @@ function LoginPage() {
       }
 
       // Reset timer
+      if (!hasResendAcknowledgement(await response.json().catch(() => null), challengeId)) {
+        setOtpError(t('auth.otp.error.resend', locale));
+        return;
+      }
       setResendTimer(60);
       setOtpCode('');
       if (otpRef.current?.reset) {
