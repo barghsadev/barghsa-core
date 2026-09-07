@@ -1,24 +1,17 @@
 # Repair handoff
 
-Updated 2026-09-08. Repairs resumed at user request; the prior checkpoint is historical. Read this file first; do not reload the full repair-progress archive.
+Updated 2026-09-08. Read this file first; do not reload the repair-progress archive.
 
-## Workspace and authority
+## Workspace, authority and scope
 
-- Repository `/Users/majid/www/barghsa/barghsa-core`, existing branch `codex/audit-fixes`.
-- Prior checkpoint runtime: `9898b4fb07140607d79cddb1c2c079a5e9aacc49`; resumed shared-build revision: `e76c901`. See follow-up evidence below for subsequent UI work.
+- Repository `/Users/majid/www/barghsa/barghsa-core`; existing branch `codex/audit-fixes`.
+- Latest implementation/test checkpoint: `a4e5fa99dfec2279a135fdbd9037e99fdcbeb424`. Production source/build revision: `469641a73df7f8cbd7789bd2a2b05b9069e306ad`; subsequent commits add tests only.
 - Original audit baseline: `2f80d92df51556d47f778b5230e5eea577e2a8d4`.
-- Local edits and commits only. No push, PR, merge, deployment, remote state/scheduler change or PR304 action was performed. Those actions remain outside authority.
-- User authorized Codex to build and review these repairs directly, overriding the Cursor/Codex role split for this pass.
-- Read AGENTS.md and `/Users/majid/.codex/RTK.md`; prefix commands with `rtk`, stage explicit paths. Codebase-memory MCP works with project `Users-majid-www-barghsa-barghsa-core`.
-
-## Scope and decisions
-
-The bounded pass addressed the concrete carry-forward authentication-window and database-timeout defects, with review after each change and a final regression checkpoint. It does not certify the complete original fix plan or 322 historical tasks. Keep replies/tool output short and reuse evidence for unchanged sources.
-
-- Automatic identity verification remains unavailable/fail closed; manual verification is supported. No provider contract was invented.
-- Retain Vite SPA under ADR004. User waived the dependency license allowlist restriction.
-- Exhaustive historical acceptance and newly discovered noncritical improvements remain deferred. Do not turn pending acceptance into missing implementation or blanket sign-off.
-- Historical ledger is unchanged: 35 verified, 13 partial, 274 pending. Of 58 historical skips, 3 were verified and must not be rebuilt; 55 await acceptance review. Use qualified `<epic filename>#<task ID>` identities.
+- Local edits/commits only. No push, PR, merge, deployment, remote scheduler/state or PR304 action. User authorized direct Codex building and review, overriding the Cursor/Codex split.
+- AGENTS.md and `/Users/majid/.codex/RTK.md` were read. Prefix commands with `rtk`; stage explicit paths. Prefer codebase-memory project `Users-majid-www-barghsa-barghsa-core`; transport later closed, requiring file-search fallback.
+- The bounded runtime/build repair pass and regression checkpoint are complete. This is not full original-plan acceptance: two coverage gates and the deferred work below remain open. Do not restart exhaustive historical acceptance or claim unavailable external checks passed.
+- Automatic identity verification remains unavailable/fail closed; manual verification is supported. Retain Vite SPA under ADR004. User waived the dependency license allowlist restriction.
+- Historical ledger unchanged: 35 verified, 13 partial, 274 pending. Of 58 historical skips, 3 were verified and must not be rebuilt; 55 await acceptance. Use qualified `<epic filename>#<task ID>` identities.
 
 ## Completed runtime repairs
 
@@ -40,93 +33,54 @@ Final review reproduced COMMIT inheriting a read deadline and corrected it. Broa
 
 Live PgBouncer/proxy behavior remains unverified. Session SET requires session-affine routing; do not claim transaction-pooling compatibility or production cancellation-transport certification.
 
-## Final validation evidence
+## Additional repairs and review
 
-See `audit/final-repair-checkpoint.json` for revision bindings and log paths.
+- **Database TLS/startup (`3bf1e3a`, `1441f31`):** reproduced URL `sslmode=disable` overriding explicit TLS. Explicit application/environment TLS now removes competing URL parameters. Missing, empty or malformed configured CA certificates fail startup; invalid timeout configuration cannot poison the pool singleton. Eighteen security tests plus existing connection checks pass.
+- **Permissions (`9770ffb`):** 144 controller-boundary checks across 22 operations cover denial, unrelated/explicit/wildcard capabilities, admin access, revocation and malformed privileged input. Denied requests never invoke services. This supplements existing HTTP/step-up coverage; the complete historical role matrix remains unaccepted.
+- **Money/order boundaries (`71da3fd`, `de0e14f`):** 39 added payment-adapter cases cover exact server amount/order binding, malformed responses, unsafe IRR, uncertain HTTP failures and recovery/idempotency; no external PSP contacted. Thirty-one order cases cover duplicate submission, exact acknowledgement, address persistence and safe retry.
+- **Receipt responses (`081eccd`, `799cc66`, `a4e5fa9`):** reproduced four null-JSON crashes in profile lookup, presigning, verification and receipt acknowledgement. Responses are narrowed to objects before field access and malformed acknowledgements cannot confirm success. Tests cover exact int8 IRR, Persian/Arabic-Indic input, failed upload stages, HTTP outages and invalid amount display.
+- **Shared formats (`e76c901`):** ESM/CommonJS NodeNext output and conditional types/runtime exports for all 16 public entries. Eighteen build checks verify exports, module identity and strict consumers.
+- **Shared UI (`da37b52`):** EmptyState, PageLoading, ErrorState and ErrorBoundary, localized route recovery/support links, live loading announcements, reduced-motion and RTL fixes. Explicit retry/resource-key recovery avoids retry loops and raw exception disclosure. Fourteen focused UI/web checks pass.
+- **UI distribution (`427f315`, `5ae5457`):** TSUP ESM/CommonJS with paired declarations and external React. Component entries preserve tree shaking; the initial single-module bundle regression was corrected. Five distribution checks verify runtime identity, consumer rendering and strict types under TS5.9 and workspace TS7. UI-local TS5.9.3 is required for TSUP's compiler API.
+- **Clean production builds (`c74ecc5`, `469641a`):** packaged CSS now includes its referenced Tailwind config; pnpm refreshes injected workspace copies after builds. These fix two independently reproduced clean web-image failures.
+- **Route experiment:** eager purchase loading exceeded authentication's unchanged 150 KB budget. A dictionary split also pushed ordering above 250 KB and was reverted (`0aa4c97`). Final ordering is 249.62 KB; all 41 budgets pass. Eager loading remains open, and no threshold was weakened.
 
-- 5,366 passing unit/integration tests across 448 files. Latest shared-pool revision was followed by full database/API/worker refreshes: 642 database tests, 3,172 API tests and 367 worker tests. Other package results remain valid for unchanged sources.
-- 350 production Chromium cases passed at `d27d351c506ba6266ccb28ae05bc15c6787720f8`, before the final database-only deadline corrections. No skipped/flaky/failed cases. Collector validated 350 records and mapped 230 source files; coverage merged into web/shared/i18n/UI. Those frontend sources remain unchanged. This is not a full five-browser run or browser testing of later backend revisions.
-- Root lint and all 11 workspace typechecks pass after the final correction.
-- Backlog validation and 55 loop-script tests pass; loop code remained unchanged.
-- OpenAPI contract check passes. All 41 route budgets pass on the existing unchanged frontend production build. Migration snapshot validation passes; full database refresh includes clean/upgrade checks through 0120.
-- Coverage gate remains **failed**, 9 of 13 groups passing, with no missing/invalid reports. Thresholds were not weakened and no exception was granted.
+## Final checkpoint
 
-| Failing group | Lines | Branches | Required lines/branches |
+Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
+
+- **5,634 unit/integration tests across 455 files pass**, using the full regression and affected refreshes: API3355, DB660, worker367, shared934, UI49, i18n50, web216, tsconfig3. The last two invoice checks were a targeted refresh of an existing test file; other source/test evidence remains valid.
+- **350/350 production Chromium cases pass at `469641a`**, with no skips/flakes/failures. Collector accepted 350 records mapping 218 source files. Later changes are tests only. This is not a five-browser run.
+- Browser coverage was merged at its exact revision before subsequent test commits. The last invoice-helper unit coverage was accumulated only for that unchanged production file after byte comparison with `469641a`; the browser revision was not rewritten and the merger guard was not weakened.
+- Root lint and all 11 workspace typechecks pass; later tests pass targeted lint/type checks. Backlog (1355 tasks/116 traceability entries), 55 loop tests, OpenAPI, migration snapshot and clean/upgrade/repeat migration checks through 0120 pass.
+- Local API, worker and web production images build. Network-isolated API/worker package/money-parser smoke checks and web health check pass. Temporary smoke containers were removed. No image push/deployment occurred.
+- Coverage: **11/13 groups pass**, no report errors. Web critical now passes at **90.12% lines / 88.15% branches**. Database general also passes. Thresholds unchanged; no exception granted.
+
+| Remaining coverage gap | Lines | Branches | Required lines/branches |
 | --- | ---: | ---: | --- |
-| API critical | 90.40% | 76.65% | 90% / 85% |
-| Web general | 64.94% | 62.54% | 80% / 75% |
-| Web critical | 77.04% | 74.24% | 90% / 85% |
-| Database general | 86.92% | 71.93% | 80% / 75% |
+| API critical | 90.93% | 77.86% | 90% / 85% |
+| Web general | 65.00% | 62.65% | 80% / 75% |
 
-## Carry-forward concerns by original group
+Full-run log: `/tmp/barghsa-repair-final-regression.log`; affected frontend `/tmp/barghsa-final-frontend-current.log`, `/tmp/barghsa-receipt-followup-coverage.log`, `/tmp/barghsa-invoice-final-tests.log`. Current browser logs use `/tmp/barghsa-current-*`. The older `/tmp/barghsa-final-browser.log` was stale after a failed command chain and is not credited as new evidence.
 
-These are remaining limits and acceptance/dependency concerns, not a fresh audit or proof that the historical work is absent.
+## External blockers
 
-| Group | Remaining concern |
-| --- | --- |
-| F01 loop identity/state | Local protocol and completion-correction protections built/tested. Generic recovery and remote operations/PR304 reconciliation remain unverified; remote actions outside current authority. |
-| F02 migrations/database | Clean/upgrade paths through migration 0120 tested. Distinct 10-second read / 30-second write server deadlines repaired. Production restore and live proxy evidence remain external. |
-| F03 sessions/CSRF | Core repair exists; remaining legacy rotation/session edge acceptance. |
-| F04 staff permissions | Core repair exists; full privileged-role matrix and real staff-data review remain. |
-| F05 registration/OTP | Delivery/consent repairs exist; external delivery and crash/operations acceptance remain. |
-| F06 verification | Unsafe unconditional success removed. Real-provider approval unavailable by explicit user decision. |
-| F07 agents/ownership | Implemented repairs need remaining role/dependency acceptance; future contracts/profile credentials are dependencies. |
-| F08 addresses | Schema/deletion repair exists; historical production address/order evidence remains. |
-| F09 external notifications | Delivery repair exists; legacy secret rotation and external attempt reconciliation remain. |
-| F10 retries/quiet hours | Significant repairs/tests exist; consult targeted records before claiming complete acceptance. |
-| F11 notification center | Active-context/toast/title repairs exist; broader notification acceptance remains. |
-| F12 overdue/refunds | Existing transitions repaired; future refunds remain a dependency. |
-| F13 dual approval | Repair exists; legacy requests without trusted fingerprints fail closed and require external manual reconciliation. |
-| F14 invoices | Extensive regression work; four calculation tasks verified. Broader finance acceptance remains. |
-| F15 CRM | Repair exists; future invoice/contract ownership tables remain dependencies. |
-| F16 tickets/uploads | Workflow repairs exist; legacy orphan-upload inventory remains. |
-| F17 administration | Broad screens/consumers repaired; AI chat backend/KB and policy-test task `02...#T-09.11.04` remain, plus future document processing. Verify exact qualified key before dispatch. Branding email/CDN/other consumers remain partial. |
-| F18 production/workers | Image evidence is older, at 11d46d5. Real TLS/DNS/backups/production operations remain unverified. |
-| F19 quality/architecture | Four coverage failures above; previously reported 144 upstream Drizzle declaration errors/DB skipLibCheck remain; eager purchase-route requirement remains. Vite decision closed. Nightly work tested locally, not a claim of remote CI execution. |
-| F20 localization/UI | Many repairs and focused browser tests; broader translation/a11y acceptance remains. Shared package dual ESM/CJS TSUP output and required shared EmptyState/PageLoading/ErrorBoundary were noted as missing, not newly implemented. DatePicker task verified. |
-| F21 duplicates/drift | Mostly reviewed/consolidated; public toast manager/renderer mismatch fixed. Do not rebuild repeated task IDs without qualified identity. |
-| F22 acceptance | 274 pending, 13 partial. Exhaustive review now explicitly deferred. Continue critical-path evidence needed for the bounded repair pass; no blanket completion from test counts. |
-| F23 auth limits | Account+IP failure identity, threshold and PostgreSQL fallback repaired. Rolling histories repaired in migration 0120. Concurrency, expiry, reset, HTTP and Redis-loss checks pass. |
+Provider delivery and real identity-provider availability; real TLS/DNS/backups and production restore/proxy/cancellation behavior; legacy notification secret rotation and attempt reconciliation; historical address/order/orphan-upload inventories; legacy receipt-approval reconciliation; remote loop recovery/PR304/scheduler/state operations. F13 legacy requests without trusted initiation fingerprints fail closed and require manual reconciliation with history preserved. These cannot be certified by local builds/tests.
 
+## Deferred local work and dependencies
 
-## External blockers and deferred work
-
-External: provider delivery/identity-provider availability; real TLS/DNS/backups and production restore/proxy/cancellation behavior; legacy notification secret rotation and attempt reconciliation; historical address/order/upload inventories; legacy receipt-approval reconciliation; remote loop recovery, PR304 and scheduler/state operations. F13 legacy requests without trusted initiation fingerprints already fail closed; preserve their history for manual reconciliation.
-
-Outstanding original-plan work: the four coverage deficits above, upstream Drizzle declaration debt/skipLibCheck, remaining shared UI/build-format and eager-route requirements, broader role/localization/accessibility acceptance, AI chat/KB and policy-test acceptance, remaining branding consumers, and future refund/contract/document-processing dependencies. No blanket acceptance or coverage sign-off was issued. Exhaustive historical task/skip review remains deferred under the approved finish scope.
-
-User requested continued local blocker repair and building on 2026-09-08. Work is active: close locally fixable blockers and failed coverage gates, then remaining known build gaps. External/remote restrictions still apply. Do not restart exhaustive historical acceptance.
-
-Current step: permission-boundary evidence. Connection-security repair committed at `3bf1e3a`: real pg configuration proved URL sslmode=disable overrode explicit TLS enablement. Explicit application/environment TLS now removes competing URL TLS parameters. Missing/empty/malformed CA files fail startup, and timeout validation precedes singleton creation. Added certificate-verification opt-out and pool-ownership checks; 18 security tests pass. Full database coverage refresh passes and the database general gate now passes (10/13 groups pass; API/web deficits remain). Logs: `/tmp/barghsa-db-followup-coverage.log`, `/tmp/barghsa-current-gates.json`. Broader affected regression will follow shared changes.
+- API critical branch and general web coverage remain below policy; broader test expansion remains open. Do not equate test counts with acceptance.
+- Strict DB dependency declarations still fail: 146 errors, comprising 144 upstream Drizzle cross-dialect declarations and two Vite test-tool declarations. DB `skipLibCheck` remains; UI strict consumer declarations pass. Log `/tmp/barghsa-drizzle-current.log`.
+- Eager purchase-route loading needs further architecture work within existing budgets.
+- Remaining historical role, session/rotation, notification, finance, localization/accessibility and operations acceptance; exhaustive 322-task/55-skip review explicitly deferred.
+- AI chat/KB and policy-test acceptance (verify exact qualified identity before dispatch), remaining branding consumers, and future refund/contract/profile-credential/document-processing dependencies.
 
 ## Evidence map
 
-- Clean web image review found missing UI output in pnpm's injected dependency copy after TSUP created new files. Added `syncInjectedDepsAfterScripts: [build]`; the clean web production image now builds successfully (`/tmp/barghsa-web-image-synced.log`). UI CSS's required Tailwind config is included in package files. Frontend package refresh and all 11 types pass after the dictionary rollback. Final current browser rerun and image smoke checks are next.
-
-- Final budget review: purchase dictionary extraction was reverted after the complete route payload measured 250.84 KB against the 250 KB ordering budget. All 41 budgets now pass again (ordering249.62 KB). Eager purchase loading remains deferred; no threshold change. The final browser command stopped at this failed budget gate, so its stale pre-existing log is not new browser evidence. A fresh run is required after this correction.
-- Local production API and worker images built at `081eccd`. The web image exposed a missing packaged Tailwind config referenced by UI CSS; it is being added to the package files and rebuilt. Logs `/tmp/barghsa-final-api-image.log`, `/tmp/barghsa-final-worker-image.log`, `/tmp/barghsa-final-web-image.log`.
-
-- Receipt-response repair: reproduced four null-JSON crashes in receipt acknowledgement, profile lookup, presigning and upload verification. Each response is now narrowed to a JSON object before reading fields; malformed responses return the existing failure result and never confirm money/upload success. Four regression failures now pass; 62 receipt/order checks, web types and lint pass. Exact int8 IRR request/acknowledgement matching is also covered. Logs `/tmp/barghsa-receipt-before.log`, `/tmp/barghsa-receipt-after.log`. This frontend change requires affected browser refresh; prior 350-case result remains bound to `3f1c318`.
-
-- Order follow-up: 31 focused component tests pass, covering duplicate-click suppression, exact saved order identity/address/status, retry after failed or malformed responses, profile/catalogue/address gates, and new-address confirmation/retained edits. Web types and explicit lint pass. Log `/tmp/barghsa-order-tests.log`. Full frontend coverage refresh remains pending.
-
-- Current production browser checkpoint at `3f1c318`: 350/350 Chromium cases pass, no skips/flakes/failures; 350 coverage records mapped to 219 sources and merged into web/shared/i18n/UI. Logs `/tmp/barghsa-resumed-browser.log`, `/tmp/barghsa-resumed-collect.log`, `/tmp/barghsa-resumed-merge.log`. Frontend package refresh also passes (`/tmp/barghsa-frontend-refresh.log`). Current gate is 10/13, no report errors: API critical90.66/77.25%, web general64.54/61.74%, web critical76.87/74.24% (lines/branches). This supersedes the old browser checkpoint; subsequent API-only tests do not alter these browser sources.
-- Payment adapter follow-up: 108 checks across existing/new HTTP adapter suites pass. New checks cover exact server-side verification binding, malformed success responses, unsafe money values, definite versus uncertain HTTP failure, invalid JSON, unavailable inquiry, recovery cache/idempotency, and required HTTPS/verification configuration. No external PSP was contacted. API types/lint pass; updated full API coverage remains pending.
-
-- Resumed full package regression at `e76c901`: all 12 Turbo tasks pass, 5,528 unit/integration tests (DB660, API3316, worker367, shared934, web155, UI43, i18n50, tsconfig3). Log `/tmp/barghsa-resumed-regression.log`. This predates the UI changes below; backend evidence remains reusable. All 11 workspace types also pass (`/tmp/barghsa-states-all-types.log`).
-- Shared UI follow-up (`T-06.03.06`): exports `EmptyState`, `PageLoading`, `ErrorState`, and render-catching `ErrorBoundary`. Added localized route recovery with support/home links and live loading announcements; removed raw exception details and visible reduced-motion loading text. Skeleton animation now uses motion-safe CSS; alert layout uses RTL logical properties. Fourteen focused UI/web tests pass, including explicit retry, resource-key recovery, persistent-failure loop safety, no private exception leakage, and live Persian/English changes. Explicit lint passes. Production browser and refreshed frontend coverage are pending.
-
-- Permission follow-up: `apps/api/src/admin/admin-permission-boundaries.test.ts` adds 144 passing checks across 22 operations, covering denied/unrelated capabilities, explicit grants, wildcard/admin access, capability revocation and malformed privileged inputs. API typecheck and explicit lint pass. These controller checks supplement existing HTTP/step-up tests; they do not certify the complete historical role matrix. Full API coverage refresh remains pending.
-- Shared build follow-up (`T-06.01.01`): `packages/shared` now emits ESM and CommonJS through TypeScript NodeNext compilation, conditional runtime/type exports, preserved module boundaries and no test files in the output. All 16 public module entry points load in both formats; root/subpath identity and strict `.mts`/`.cts` consumer checks pass (18 build checks). No added build dependency. UI package TSUP format requirement is separate and remains open. Broader shared-dependent regression is next.
-- UI distribution follow-up (`T-06.03.01`): TSUP now emits ESM/CommonJS and paired declaration files with conditional exports; React/dependencies remain external and CSS is marked as a side effect. CSS scans built classes for packaged consumers. Five distribution checks pass: both entries load in each format, components render with consumer React, strict ESM/CommonJS declarations pass under TypeScript 5.9 and workspace 7. TSUP needs its UI-local TypeScript 5.9.3 compiler API; wildcard development aliases are disabled only during declaration generation to avoid malformed external React types. Root lint and all 11 types pass. Build smoke filenames avoid Vitest double-discovery. Log `/tmp/barghsa-ui-distribution.log`; production browser/route budgets are next.
-- Distribution review caught a real bundle regression in the initial single-module UI output. Emitting component entries with shared chunks restores consumer tree shaking. All five distribution checks and all 41 production route budgets pass (`/tmp/barghsa-ui-budget.log`). Eager purchase-route experiment remains uncommitted: authentication grows to 165–176 KB against the unchanged 150 KB limit; next step is isolating purchase dictionaries instead of loading all application translations.
-- Purchase dictionary follow-up: isolated 109 messages per locale for wallet/order pages while preserving all 737 messages per locale in the complete application dictionaries (AST comparison against prior revision). Focused dictionary suite, web types and explicit lint pass. Eager purchase components were tested but not retained: even after the split, login/registration/recovery measured 156.47/159.08/153.82 KB against 150 KB. This requirement remains open for a larger route-loading/budget change; no budget was weakened. The useful dictionary split is retained. Final frontend coverage/browser refresh is next.
-
-- `audit/final-repair-checkpoint.json`: final test/gate results with source revisions.
-- `audit/combined-coverage-checkpoint.json`: failed coverage gate details at the latest runtime revision.
-- `audit/authentication-window-review.md`: original rolling-window constraints, historical analysis before implementation.
-- `audit/database-foundation-review.md`: database repair evidence and operational limits.
+- `audit/final-repair-checkpoint.json`: current tests, checks, image identities and revision bindings.
+- `audit/combined-coverage-checkpoint.json`: current failed gate details; 11/13 pass.
+- `audit/authentication-window-review.md`, `audit/database-foundation-review.md`: targeted original constraints and operational limits.
 - `audit/fix-plan.md`: original 23 groups; read only the relevant section.
-- `audit/current-task-requirements.json`: canonical requirements overlay; historical task-review extracts had context errors and are provenance only.
-- `audit/acceptance-closure.json` and `audit/current-skipped-tasks.*`: unchanged acceptance/skip dispositions.
-- `audit/repair-progress.md`: large archive; search only a relevant heading when needed.
+- `audit/current-task-requirements.json`: canonical requirements overlay; historical extracts are provenance only.
+- `audit/acceptance-closure.json`, `audit/current-skipped-tasks.*`: unchanged dispositions.
+- `audit/repair-progress.md`: large archive; search only a relevant heading if needed.

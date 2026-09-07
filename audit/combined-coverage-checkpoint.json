@@ -137,9 +137,9 @@
         "apps/api/src/wallet/wallet.service.ts"
       ],
       "lines": 9098,
-      "covered_lines": 8225,
+      "covered_lines": 8273,
       "branches": 6142,
-      "covered_branches": 4708,
+      "covered_branches": 4782,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -293,9 +293,9 @@
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
       "lines": 4481,
-      "covered_lines": 4195,
+      "covered_lines": 4194,
       "branches": 3505,
-      "covered_branches": 2833,
+      "covered_branches": 2835,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -437,10 +437,10 @@
         "apps/web/src/routes/support.tsx",
         "apps/web/src/routes/terms.tsx"
       ],
-      "lines": 6775,
-      "covered_lines": 4400,
-      "branches": 8345,
-      "covered_branches": 5219,
+      "lines": 6766,
+      "covered_lines": 4398,
+      "branches": 8341,
+      "covered_branches": 5226,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -495,13 +495,13 @@
         "apps/web/src/routes/admin/verification.tsx",
         "apps/web/src/routes/admin/wallet-receipts.tsx"
       ],
-      "lines": 575,
-      "covered_lines": 443,
-      "branches": 493,
-      "covered_branches": 366,
+      "lines": 577,
+      "covered_lines": 520,
+      "branches": 498,
+      "covered_branches": 439,
       "required_lines": 90,
       "required_branches": 85,
-      "passed": false
+      "passed": true
     },
     {
       "package": "apps/worker",
@@ -629,13 +629,13 @@
         "packages/db/src/seed/notification-templates.ts",
         "packages/db/src/types.ts"
       ],
-      "lines": 520,
-      "covered_lines": 452,
-      "branches": 367,
-      "covered_branches": 264,
+      "lines": 530,
+      "covered_lines": 468,
+      "branches": 371,
+      "covered_branches": 279,
       "required_lines": 80,
       "required_branches": 75,
-      "passed": false
+      "passed": true
     },
     {
       "package": "packages/db",
@@ -847,9 +847,11 @@
         "packages/ui/src/components/ui/command.tsx",
         "packages/ui/src/components/ui/dialog.tsx",
         "packages/ui/src/components/ui/dropdown-menu.tsx",
+        "packages/ui/src/components/ui/empty.tsx",
         "packages/ui/src/components/ui/input-group.tsx",
         "packages/ui/src/components/ui/input.tsx",
         "packages/ui/src/components/ui/label.tsx",
+        "packages/ui/src/components/ui/page-states.tsx",
         "packages/ui/src/components/ui/popover.tsx",
         "packages/ui/src/components/ui/progress.tsx",
         "packages/ui/src/components/ui/radio-group.tsx",
@@ -869,10 +871,10 @@
         "packages/ui/src/index.ts",
         "packages/ui/src/lib/utils.ts"
       ],
-      "lines": 215,
-      "covered_lines": 185,
-      "branches": 355,
-      "covered_branches": 279,
+      "lines": 236,
+      "covered_lines": 199,
+      "branches": 366,
+      "covered_branches": 276,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -880,5 +882,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "9898b4fb07140607d79cddb1c2c079a5e9aacc49"
+  "head_sha": "a4e5fa99dfec2279a135fdbd9037e99fdcbeb424"
 }
