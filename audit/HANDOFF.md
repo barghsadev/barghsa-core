@@ -67,6 +67,8 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 - Resumed full checkpoint at `0494ad4`: all 5,815 unit/integration tests in 461 files, all 11 workspace typechecks and root lint pass. Initial build stopped on a missing local injected UI copy; frozen-lockfile installation repaired it without tracked dependency changes. Log `/tmp/barghsa-resumed-full-coverage.log`. Browser run passed 376/378; two cases exposed a changed geography filter accessible name. Restored the existing distinct filter label in both languages; all 15 focused checks across five profiles now pass (`/tmp/barghsa-geography-label-green.log`). The failed browser run was not merged or credited as a full pass; refresh browser coverage on the corrected revision.
 
+- Notification-template boundaries: 48 new checks cover separate capabilities, admin revocation, malformed creation/edit/preview/test-send requests, authenticated actor binding and partial updates without clearing omitted fields. Together with existing admin permission cases, 192 tests pass. API types and explicit lint pass. Initial empty-permission table fixture was corrected before the passing run. No production change or external delivery occurred. Log `/tmp/barghsa-template-boundaries.log`; API coverage awaits the next batch refresh.
+
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
 - **5,815 unit/integration tests across 461 files pass** at `0494ad4`, with affected web/i18n coverage refreshed at `eb19ed5`. All 11 workspace typechecks and root lint pass, with subsequent label changes checked separately.
