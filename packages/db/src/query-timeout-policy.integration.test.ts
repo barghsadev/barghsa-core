@@ -54,7 +54,10 @@ it('cancels reads at their shorter server deadline and allows a longer write', a
   try {
     await client.query('CREATE TEMP TABLE timeout_policy(value integer)');
     client.query = wrapClientQuery(client, { read: 100, write: 1000 });
-    await expect(client.query('SELECT pg_sleep(0.5)')).rejects.toMatchObject({ code: '57014' });
+    await expect(client.query('SELECT pg_sleep(0.5)')).rejects.toMatchObject({
+      code: '57014',
+      message: 'canceling statement due to statement timeout',
+    });
     await client.query('INSERT INTO timeout_policy SELECT 1 FROM pg_sleep(0.2)');
     expect((await client.query('TABLE timeout_policy')).rows).toEqual([{ value: 1 }]);
     await client.query('BEGIN');

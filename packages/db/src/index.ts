@@ -219,7 +219,10 @@ export function wrapClientQuery(
             Object.assign(new Error('Query timed out before execution'), { code: '57014' }),
             client.connection
           );
-        } else if (target._activeQuery === capturedQuery) {
+        } else if (target._activeQuery === capturedQuery && typeof timeoutPolicy === 'number') {
+          // Automatic policies already install the server deadline. Sending a
+          // second CancelRequest at that same deadline can arrive after PostgreSQL
+          // has timed out this query and accidentally cancel its successor.
           disposeCancellation = cancelRunningQuery(target, capturedQuery);
         }
       }, queryTimeoutMs);
