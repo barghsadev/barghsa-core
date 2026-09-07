@@ -26,6 +26,20 @@ function displayError(error: unknown, fallback: MessageKey): { key: MessageKey; 
     : { key: fallback };
 }
 
+async function responseCode(response: Response): Promise<string | undefined> {
+  const body: unknown = await response.json().catch(() => null);
+  if (!body || typeof body !== 'object' || !('error' in body)) return;
+  if (typeof body.error === 'string') return body.error;
+  if (
+    body.error &&
+    typeof body.error === 'object' &&
+    'code' in body.error &&
+    typeof body.error.code === 'string'
+  )
+    return body.error.code;
+  return undefined;
+}
+
 interface TosVersion {
   revision?: string;
   id: string;
@@ -146,7 +160,8 @@ export default function AdminTosPage() {
   }, [fetchVersions]);
 
   // Check if a draft already exists
-  const hasDraft = versions.some((v) => v.status === 'draft');
+  const savedDraft = versions.find((v) => v.status === 'draft');
+  const hasDraft = !!savedDraft;
 
   function openCreate() {
     if (!historyReady || loading) return;
@@ -185,7 +200,8 @@ export default function AdminTosPage() {
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
-    if (saveInFlight.current || !historyReady || loading || editConflict) return;
+    if (saveInFlight.current || !historyReady || loading || editConflict || (!editId && hasDraft))
+      return;
     if (!contentFa.trim() || !contentEn.trim()) {
       setError({ key: 'requiredContent' });
       return;
@@ -235,8 +251,11 @@ export default function AdminTosPage() {
           body: JSON.stringify({ versionId, contentFa, contentEn }),
         });
         if (res.status === 409) {
-          setEditConflict(true);
-          throw new TosUiError('draftChanged');
+          if ((await responseCode(res)) === 'TOS_VERSION_ID_TAKEN') {
+            throw new TosUiError('versionIdTaken');
+          }
+          setHistoryReady(false);
+          throw new TosUiError('createConflict');
         }
         if (!res.ok) {
           throw new TosUiError('saveFailed', res.status);
@@ -470,7 +489,23 @@ export default function AdminTosPage() {
             </div>
           </Suspense>
 
-          {editConflict && (
+          {!editId && savedDraft && historyReady && (
+            <div className="space-y-2">
+              <p role="status">{text.createConflict}</p>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => {
+                  openEdit(savedDraft);
+                  setError(null);
+                }}
+                className="rounded border px-4 py-2"
+              >
+                {text.openSavedDraft}
+              </button>
+            </div>
+          )}
+          {editConflict && editId && (
             <button
               type="button"
               onClick={reloadDraft}
@@ -483,7 +518,7 @@ export default function AdminTosPage() {
           <div className="flex gap-3">
             <button
               type="submit"
-              disabled={saving || !historyReady || loading || editConflict}
+              disabled={saving || !historyReady || loading || editConflict || (!editId && hasDraft)}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {saving ? text.saving : editId ? text.updateDraft : text.createDraft}

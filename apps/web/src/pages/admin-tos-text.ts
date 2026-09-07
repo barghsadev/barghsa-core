@@ -44,6 +44,10 @@ const en = {
   draftChanged:
     'Another editor changed this draft. Your text is preserved. Reload the saved draft before continuing.',
   reloadDraft: 'Reload saved draft',
+  versionIdTaken: 'This version ID is already used. Choose a new ID; your content is preserved.',
+  createConflict:
+    'A saved draft may already exist. Reload history. Your local text stays until you choose to replace it.',
+  openSavedDraft: 'Replace local text with saved draft',
   unconfirmedWrite: 'The saved result could not be confirmed. Reload history before continuing.',
   currentVersion: 'Current published version',
   proposedVersion: 'Draft preview',
@@ -117,6 +121,10 @@ const fa: Record<keyof typeof en, string> = {
   draftChanged:
     'ویرایشگر دیگری این پیش‌نویس را تغییر داده است. متن شما حفظ شده است. برای ادامه، پیش‌نویس ذخیره‌شده را دوباره بارگذاری کنید.',
   reloadDraft: 'بارگذاری پیش‌نویس ذخیره‌شده',
+  versionIdTaken: 'شناسه نسخه قبلاً استفاده شده است. شناسه جدیدی انتخاب کنید؛ متن شما حفظ شده است.',
+  createConflict:
+    'ممکن است پیش‌نویسی ذخیره شده باشد. تاریخچه را دوباره بارگذاری کنید. متن شما تا انتخاب جایگزینی حفظ می‌شود.',
+  openSavedDraft: 'جایگزینی متن محلی با پیش‌نویس ذخیره‌شده',
   unconfirmedWrite: 'نتیجه ذخیره تأیید نشد. پیش از ادامه، تاریخچه را دوباره بارگذاری کنید.',
   currentVersion: 'نسخه منتشرشده فعلی',
   proposedVersion: 'پیش‌نمایش پیش‌نویس',

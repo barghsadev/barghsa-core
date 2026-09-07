@@ -2480,13 +2480,23 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true })
       .click();
-    await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(`discard-${locale}`);
+    await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(versionId);
     await page
       .getByRole('textbox', { name: fa ? 'محتوای فارسی' : 'Persian content', exact: true })
       .fill('پیش‌نویس موقت');
     await page
       .getByRole('textbox', { name: fa ? 'محتوای انگلیسی' : 'English content', exact: true })
       .fill('Temporary draft');
+    await page
+      .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
+      .click();
+    await expect(page.getByRole('alert')).toContainText(
+      fa ? 'شناسه نسخه قبلاً استفاده شده است' : 'This version ID is already used'
+    );
+    await expect(
+      page.getByRole('textbox', { name: fa ? 'محتوای انگلیسی' : 'English content', exact: true })
+    ).toHaveText('Temporary draft');
+    await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(`discard-${locale}`);
     await page
       .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
       .click();

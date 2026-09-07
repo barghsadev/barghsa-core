@@ -2572,3 +2572,51 @@ test('TOS creation does not report malformed success as a saved draft', async ({
   );
   await expect(page.getByRole('button', { name: 'Create Draft', exact: true })).toBeDisabled();
 });
+
+test('TOS draft creation conflicts retain local content until explicit replacement', async ({
+  page,
+}) => {
+  await shell(page);
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  let exists = false;
+  let writes = 0;
+  const saved = {
+    id: 'other-draft',
+    versionId: 'other-v1',
+    contentFa: 'شرایط',
+    contentEn: 'Other saved draft',
+    revision: 'a'.repeat(64),
+    status: 'draft',
+    isActive: false,
+    publishedAt: null,
+    changeType: 'minor',
+    createdBy: null,
+    createdAt: '2026-09-01T00:00:00Z',
+    updatedAt: '2026-09-01T00:00:00Z',
+  };
+  await page.route('**/api/admin/tos/versions', (route) => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: exists ? [saved] : [] });
+    writes++;
+    exists = true;
+    return route.fulfill({ status: 409, json: { error: { code: 'TOS_DRAFT_EXISTS' } } });
+  });
+  await page.goto('/admin/tos');
+  await page.getByRole('button', { name: 'New Draft', exact: true }).click();
+  await page.getByLabel('Version ID').fill('local-v1');
+  await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('شرایط من');
+  const english = page.getByRole('textbox', { name: 'English content', exact: true });
+  await english.fill('Keep my local text');
+  await page.getByRole('button', { name: 'Create Draft', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Create Draft', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: 'Retry', exact: true }).click();
+  await expect(english).toHaveText('Keep my local text');
+  await expect(page.getByRole('button', { name: 'Create Draft', exact: true })).toBeDisabled();
+  await page
+    .getByRole('button', { name: 'Replace local text with saved draft', exact: true })
+    .click();
+  await expect(english).toHaveText('Other saved draft');
+  await expect(page.getByRole('button', { name: 'Update Draft', exact: true })).toBeEnabled();
+  expect(writes).toBe(1);
+});

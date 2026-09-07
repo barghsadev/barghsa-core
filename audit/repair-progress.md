@@ -2334,3 +2334,9 @@ Both malformed-content browser cases failed before repair; the language-switch r
 Additional real HTTP evidence confirms registration stores the exact version, account, timestamp, IP and request user-agent. An injected account-update failure rolls back the new acceptance row, preserves the old record byte-for-byte at the returned-field level and leaves re-acceptance required. Removing the failure permits a second append without altering the first record. All 29 focused API checks pass. An inaccurate controller comment claiming an unenforced acceptance rate limit was removed; no new rate-limit behavior is claimed.
 
 Both live administrator flows now clear authentication and read the actual published document through the public page in Persian/English. Both pass, and the Persian public screenshot was visually reviewed. API types, targeted API/browser lint, formatting and diff review pass. Final editor review found a separate create-conflict recovery issue, so editor acceptance remains open until that repair is checked.
+
+### Recover duplicate TOS identifiers and competing draft creation
+
+Create conflicts now distinguish a used version identifier from another saved draft. A used identifier leaves content editable so the user can rename and retry. Other create conflicts require a valid history reload; the local draft stays visible, creation remains disabled while a saved draft exists, and only an explicit replacement control opens that saved draft. New drafts no longer display a reload button that requires a nonexistent edit ID. This also provides a recovery path after an unconfirmed create response.
+
+All three new conflict cases failed before repair. All 16 focused production Chromium checks pass afterward, including duplicate-ID recovery against the real migrated API in both languages and explicit replacement after a competing creation. Web types, lint, formatting, bundle limits and diff review pass.
