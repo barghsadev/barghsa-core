@@ -1,3 +1,5 @@
+import { formatInTimezone } from '@barghsa/i18n/date-time';
+import { timezoneText } from '@barghsa/i18n/timezone';
 import { createFileRoute, Link, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { t, type Locale } from '@barghsa/i18n';
@@ -60,13 +62,15 @@ function TermsPage() {
     };
   }, [locale]);
 
-  const formattedDate = tos?.updatedAt
-    ? new Date(tos.updatedAt).toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    : null;
+  let formattedDate: string | null = null;
+  if (tos?.updatedAt) {
+    try {
+      // Public terms are unauthenticated and use the product's default timezone.
+      formattedDate = formatInTimezone(tos.updatedAt, 'Asia/Tehran', locale, { dateStyle: 'long' });
+    } catch {
+      formattedDate = timezoneText('display.invalid', locale);
+    }
+  }
 
   return (
     <div className="flex min-h-dvh flex-col" dir={isRtl ? 'rtl' : 'ltr'}>

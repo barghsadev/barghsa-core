@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback } from 'react';
 import { t, type Locale } from '@barghsa/i18n';
 import { Button } from '@barghsa/ui';
@@ -53,6 +54,7 @@ interface TosBannerProps {
  * inside DashboardLayout and AdminLayout those are already authenticated pages.
  */
 export function TosBanner({ locale = 'fa' }: TosBannerProps) {
+  const time = useAccountTime(locale);
   const [requiresAcceptance, setRequiresAcceptance] = useState(false);
   const [checking, setChecking] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -193,14 +195,13 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
               <DialogDescription>
                 {t('tos.page.lastUpdated', locale).replace(
                   '{date}',
-                  new Date(currentTos.updatedAt).toLocaleDateString(
-                    locale === 'fa' ? 'fa-IR' : 'en-US'
-                  )
+                  time.format(currentTos.updatedAt, { dateStyle: 'long' })
                 )}
               </DialogDescription>
             )}
           </DialogHeader>
 
+          {time.notice}
           {/* TOS content area */}
           <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[50vh] border rounded-md p-4 bg-white">
             {loadingTos && (

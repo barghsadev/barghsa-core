@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n';
@@ -52,6 +53,7 @@ interface InvitationBannerProps {
  * with Accept and Decline buttons.
  */
 export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
+  const time = useAccountTime(locale);
   const [invitations, setInvitations] = useState<PendingInvitation[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionStates, setActionStates] = useState<Record<string, ActionState>>({});
@@ -195,6 +197,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
 
   return (
     <div dir={isRtl ? 'rtl' : 'ltr'}>
+      {time.notice}
       {error && (
         <div
           className="bg-red-50 border border-red-200 shadow-sm rounded-lg px-4 py-2 text-sm text-red-700 mb-2"
@@ -221,9 +224,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
           );
         }
 
-        const displayDate = new Date(inv.createdAt).toLocaleDateString(
-          locale === 'fa' ? 'fa-IR' : 'en-US'
-        );
+        const displayDate = time.format(inv.createdAt, { dateStyle: 'medium' });
 
         return (
           <div

@@ -2178,3 +2178,9 @@ Review and validation: seven helper/component checks and six finance production 
 CRM profile/address/account/session dates, failed-notification history and email-provider test/activation times now use the shared account formatter. Embedded panels can explicitly select their display locale while retaining the saved account timezone. Preference-read failures remain visible and retryable.
 
 Review and validation: three formatter-hook checks and ten production browser checks pass. Both languages assert CRM, failure-history and provider timestamps across a date boundary while retaining permission, paging, step-up, edit failure and field-label checks. Root build, types, targeted lint, formatting and bundle checks pass. Broader CRM translation and TOS/invitation timestamps remain open.
+
+### Make terms and invitation dates deterministic
+
+Signed-in invitation and terms-review banners now use the account timezone and their explicit locale. Administrator terms history/detail uses the same account formatter. The unauthenticated public terms page uses the product's Tehran default without requiring a private settings request; malformed timestamps display a localized invalid-time message instead of crashing the content.
+
+Review and validation: seven production browser checks pass for both public/signed-in language flows, date-boundary conversion, registration consent binding and terms-detail keyboard focus. Root build, types, targeted lint, formatting and bundle checks pass. Existing scoped formatters that already supplied an account timezone remain in place. Administrator terms text still contains untranslated controls and requires a separate localization repair.

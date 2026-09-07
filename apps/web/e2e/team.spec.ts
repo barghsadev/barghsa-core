@@ -268,3 +268,61 @@ for (const action of [
     await expect(page.getByRole('status')).toContainText('Change saved');
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`invitation and terms review show account-local calendar dates (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const stamp = '2026-09-01T01:00:00Z';
+    await page.route('**/api/invitations/pending', (route) =>
+      route.fulfill({
+        json: {
+          invitations: [
+            {
+              id: 'invitation-date',
+              profileId,
+              profileName: 'Inviting company',
+              role: 'Manager',
+              invitedBy: 'owner',
+              inviterName: 'Owner',
+              createdAt: stamp,
+              expiresAt: null,
+            },
+          ],
+        },
+      })
+    );
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({ json: { userId: 'user', requiresTosAcceptance: true } })
+    );
+    await page.route('**/api/tos/current?*', (route) =>
+      route.fulfill({
+        json: {
+          id: 'terms-date',
+          versionId: 'v1',
+          content: 'Published terms',
+          updatedAt: stamp,
+          publishedAt: stamp,
+        },
+      })
+    );
+    await page.goto('/settings/team');
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'long',
+      }).format(new Date(stamp))
+    );
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+    const banner = page.getByRole('alert').filter({ hasText: 'Inviting company' });
+    await expect(banner).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+      }).format(new Date(stamp))
+    );
+  });
+}

@@ -181,6 +181,9 @@ test('TOS detail has a name, contains keyboard focus and restores its trigger', 
   page,
 }) => {
   await shell(page);
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+  );
   await page.route('**/api/admin/tos/versions', (route) =>
     route.fulfill({
       json: [
@@ -206,6 +209,7 @@ test('TOS detail has a name, contains keyboard focus and restores its trigger', 
   await page.keyboard.press('Enter');
   const dialog = page.getByRole('dialog', { name: 'TOS Version: v1' });
   await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('Aug 31, 2026, 5:00 PM');
   await dialog.getByRole('button', { name: 'English', exact: true }).click();
   await expect(dialog.getByText('Terms', { exact: true })).toBeVisible();
   for (let index = 0; index < 5; index++) {

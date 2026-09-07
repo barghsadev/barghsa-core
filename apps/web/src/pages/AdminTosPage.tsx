@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { adminControlsText } from '@barghsa/i18n/admin-controls';
 import { useLocale } from '../hooks/useLocale.js';
 import { Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
@@ -26,6 +27,7 @@ interface TosVersion {
  * Read-only version detail view shows full Persian and English content.
  */
 export default function AdminTosPage() {
+  const time = useAccountTime();
   const locale = useLocale();
   const [versions, setVersions] = useState<TosVersion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -185,6 +187,7 @@ export default function AdminTosPage() {
 
   return (
     <div className="space-y-6">
+      {time.notice}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Terms of Service Editor</h1>
         {!hasDraft && !showEditor && (
@@ -353,6 +356,7 @@ export default function AdminTosPage() {
             showCloseButton={false}
             className="bg-white rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
           >
+            {time.notice}
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <div>
@@ -398,25 +402,11 @@ export default function AdminTosPage() {
               </div>
               <div>
                 <span className="text-gray-500">Published:</span>{' '}
-                <span className="font-medium">
-                  {viewVersion.publishedAt
-                    ? new Date(viewVersion.publishedAt).toLocaleDateString('fa-IR', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })
-                    : '—'}
-                </span>
+                <span className="font-medium">{time.format(viewVersion.publishedAt)}</span>
               </div>
               <div>
                 <span className="text-gray-500">Created:</span>{' '}
-                <span className="font-medium">
-                  {new Date(viewVersion.createdAt).toLocaleDateString('fa-IR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </span>
+                <span className="font-medium">{time.format(viewVersion.createdAt)}</span>
               </div>
             </div>
 
@@ -529,9 +519,7 @@ export default function AdminTosPage() {
                     <span className="text-gray-400 text-sm">—</span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-500">
-                  {v.publishedAt ? new Date(v.publishedAt).toLocaleDateString() : '—'}
-                </td>
+                <td className="px-4 py-3 text-sm text-gray-500">{time.format(v.publishedAt)}</td>
                 <td className="px-4 py-3 text-sm text-gray-500">
                   {v.createdBy ? (
                     <span className="font-mono text-xs" title={v.createdBy}>

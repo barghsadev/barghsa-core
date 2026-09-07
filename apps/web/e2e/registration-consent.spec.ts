@@ -39,3 +39,28 @@ test('unavailable terms prevent consent and registration', async ({ page }) => {
   await expect(page.locator('button[type="submit"]')).toBeDisabled();
   await expect(page.getByRole('alert')).toBeVisible();
 });
+
+for (const locale of ['en', 'fa']) {
+  test(`public terms use Tehran dates without requiring an account (${locale})`, async ({
+    page,
+  }) => {
+    const stamp = '2026-08-31T22:00:00Z';
+    let timezoneReads = 0;
+    await page.route('**/api/user/settings/timezone', (route) => {
+      timezoneReads++;
+      return route.fulfill({ status: 401, json: {} });
+    });
+    await page.route('**/api/tos/current?*', (route) =>
+      route.fulfill({
+        json: { versionId: 'v1', content: 'Public terms', updatedAt: stamp, publishedAt: stamp },
+      })
+    );
+    await page.goto(`/terms?lang=${locale}`);
+    await expect(page.getByRole('article')).toContainText(
+      new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Tehran', dateStyle: 'long' }).format(
+        new Date(stamp)
+      )
+    );
+    expect(timezoneReads).toBe(0);
+  });
+}
