@@ -1,3 +1,4 @@
+import { hasSessionAcknowledgement, hasResendAcknowledgement } from '../../lib/auth-responses.js';
 import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js';
@@ -103,6 +104,8 @@ function OtpVerifyPage() {
           return;
         }
 
+        if (!hasSessionAcknowledgement(body)) throw new Error('Invalid session acknowledgement');
+
         // ── Success — user created, session set ────────────────────
         toast.success(t('auth.register.success', locale));
         // Redirect to app root (profile check middleware handles redirects)
@@ -140,6 +143,11 @@ function OtpVerifyPage() {
         if (retry) {
           setResendTimer(retryAfterSeconds(response) ?? 60);
         }
+        return;
+      }
+
+      if (!hasResendAcknowledgement(await response.json(), challengeId)) {
+        setOtpError(t('auth.otp.error.resend', locale));
         return;
       }
 

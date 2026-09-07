@@ -33,7 +33,14 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route('**/api/auth/register/verify', (route) => {
         expect(route.request().postDataJSON()).toEqual({ challengeId, otp: '123456' });
         verified++;
-        return route.fulfill({ json: {} });
+        return route.fulfill({
+          json: {
+            userId: 'feedback-user',
+            sessionId: 'feedback-session',
+            csrfToken: 'feedback-csrf',
+            expiresAt: '2030-01-01T00:00:00.000Z',
+          },
+        });
       });
       await page.goto(
         `/register/verify?challengeId=${challengeId}&destination=feedback@example.test`
