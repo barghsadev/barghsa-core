@@ -1001,6 +1001,7 @@ export class AdminController {
    */
   @Get('tos/versions/:id')
   @ApiOperation({ summary: 'Get a TOS version by ID' })
+  @ApiResponse({ status: 400, description: 'Invalid version UUID' })
   @ApiParam({ name: 'id', description: 'TOS version UUID' })
   @ApiResponse({ status: 200, description: 'TOS version details.' })
   @ApiResponse({ status: 404, description: 'Version not found' })
@@ -1014,6 +1015,8 @@ export class AdminController {
         403
       );
     }
+    if (!z.string().uuid().safeParse(id).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     return this.tosService.getVersion(id);
   }
 

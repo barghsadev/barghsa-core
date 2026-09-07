@@ -2340,3 +2340,7 @@ Both live administrator flows now clear authentication and read the actual publi
 Create conflicts now distinguish a used version identifier from another saved draft. A used identifier leaves content editable so the user can rename and retry. Other create conflicts require a valid history reload; the local draft stays visible, creation remains disabled while a saved draft exists, and only an explicit replacement control opens that saved draft. New drafts no longer display a reload button that requires a nonexistent edit ID. This also provides a recovery path after an unconfirmed create response.
 
 All three new conflict cases failed before repair. All 16 focused production Chromium checks pass afterward, including duplicate-ID recovery against the real migrated API in both languages and explicit replacement after a competing creation. Web types, lint, formatting, bundle limits and diff review pass.
+
+### Reject malformed TOS history identifiers before querying PostgreSQL
+
+Authorized history reads now validate the version UUID and return 400 for malformed input. Valid unknown IDs return 404; missing sessions and missing TOS capability remain rejected. The generated contract documents the validation response. The malformed-ID regression returned 500 before repair. All 30 focused TOS/registration API checks pass afterward, as do API types, targeted lint, formatting, contract comparison and diff review.

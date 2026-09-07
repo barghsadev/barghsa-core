@@ -347,3 +347,18 @@ it('keeps earlier consent immutable and rolls back a new record when account upd
   expect(history[0]).toEqual(original[0]);
   expect(history[1].version_id).toBe(second);
 });
+
+it('validates history IDs and enforces read permissions', async () => {
+  const { id } = await create();
+  expect((await request(`/${id}`, 'GET', undefined, 'other')).status).toBe(403);
+  expect((await fetch(`${http.base}/api/admin/tos/versions/${id}`)).status).toBe(401);
+  expect((await request('/invalid-id')).status).toBe(400);
+  expect((await request(`/${randomUUID()}`)).status).toBe(404);
+  const readable = await request(`/${id}`);
+  expect(readable.status).toBe(200);
+  expect(await readable.json()).toMatchObject({
+    id,
+    versionId: draft.versionId,
+    contentEn: draft.contentEn,
+  });
+});

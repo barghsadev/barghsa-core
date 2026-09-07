@@ -7152,6 +7152,9 @@
           "200": {
             "description": "TOS version details."
           },
+          "400": {
+            "description": "Invalid version UUID"
+          },
           "404": {
             "description": "Version not found"
           }
