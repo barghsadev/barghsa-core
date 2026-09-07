@@ -475,105 +475,78 @@ export class NotificationTemplateService {
     destination: TemplateChannel;
     lastTestStatus: 'delivered' | 'failed';
   }> {
-    const pool = getDbPool();
-    const tpl = await this.getById(id);
-    const data = this.buildSampleData(tpl.variables);
-    const renderedBody = this.render(
-      tpl.bodyTemplate,
-      tpl.variables,
-      data,
-      tpl.channel === 'email'
-    );
-    const renderedSubject =
-      tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data, false) : null;
-
-    const destination = options?.destination?.trim() || null;
-    await this.assertAllowedTestDestination(actorUserId, destination);
-    const destinationKind = tpl.channel;
-
-    try {
+    const outcome = await this.mutate(actorUserId, async (client) => {
+      const tpl = this.mapRow(await this.lockTemplate(client, id));
+      const data = this.buildSampleData(tpl.variables);
+      const renderedBody = this.render(
+        tpl.bodyTemplate,
+        tpl.variables,
+        data,
+        tpl.channel === 'email'
+      );
+      const renderedSubject =
+        tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data, false) : null;
+      const destination = options?.destination?.trim() || null;
+      await this.assertAllowedTestDestination(client, actorUserId, destination);
       let providerRef: string | undefined;
-      if (tpl.channel === 'email') {
-        if (!destination)
-          throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DESTINATION_REQUIRED' }, 400);
-        try {
-          providerRef = await createEmailSender(pool)({
-            destination,
-            subject: renderedSubject ?? `Test: ${tpl.eventKey}`,
-            html: renderedBody,
-            idempotencyKey: `template-test:${id}:${uuidv7()}`,
-          });
-        } catch {
-          throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DELIVERY_FAILED' }, 503);
-        }
-      } else if (tpl.channel === 'sms') {
-        if (!destination)
-          throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DESTINATION_REQUIRED' }, 400);
-        try {
-          const message = await prepareSmsMessage(
-            pool,
-            destination,
-            tpl.eventKey,
-            tpl.variables.map((item) => item.name),
-            data
-          );
-          providerRef = await createSmsSender(pool)(message);
-        } catch {
-          throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DELIVERY_FAILED' }, 503);
-        }
-      } else {
-        if (destination) {
-          throw new HttpException(
+      let deliveryError: { cause: unknown } | undefined;
+      try {
+        const pool = client;
+        if (tpl.channel === 'email') {
+          if (!destination)
+            throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DESTINATION_REQUIRED' }, 400);
+          try {
+            providerRef = await createEmailSender(pool)({
+              destination,
+              subject: renderedSubject ?? `Test: ${tpl.eventKey}`,
+              html: renderedBody,
+              idempotencyKey: `template-test:${id}:${uuidv7()}`,
+            });
+          } catch {
+            throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DELIVERY_FAILED' }, 503);
+          }
+        } else if (tpl.channel === 'sms') {
+          if (!destination)
+            throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DESTINATION_REQUIRED' }, 400);
+          try {
+            const message = await prepareSmsMessage(
+              pool,
+              destination,
+              tpl.eventKey,
+              tpl.variables.map((item) => item.name),
+              data
+            );
+            providerRef = await createSmsSender(pool)(message);
+          } catch {
+            throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DELIVERY_FAILED' }, 503);
+          }
+        } else {
+          if (destination)
+            throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_CHANNEL_MISMATCH' }, 400);
+          await this.notificationsService.create(
             {
-              statusCode: 400,
-              error: 'NOTIFICATION_TEMPLATE_CHANNEL_MISMATCH',
-              message: 'In-app tests use your own inbox',
+              userId: actorUserId,
+              type: 'general',
+              title: renderedSubject ?? `Test: ${tpl.eventKey}`,
+              body: renderedBody,
             },
-            400
+            client
           );
         }
-        await this.notificationsService.create({
-          userId: actorUserId,
-          type: 'general',
-          title: renderedSubject ?? `Test: ${tpl.eventKey}`,
-          body: renderedBody,
-        });
+      } catch (error) {
+        deliveryError = { cause: error };
       }
-
-      await pool.query(
-        `UPDATE notification_templates
-         SET last_test_sent_at = $1, last_test_status = 'delivered', updated_at = $1
-         WHERE id = $2`,
-        [new Date(), id]
+      const status = deliveryError ? 'failed' : 'delivered';
+      await client.query(
+        `UPDATE notification_templates SET last_test_sent_at=NOW(),last_test_status=$2,updated_at=NOW() WHERE id=$1`,
+        [id, status]
       );
-      await this.writeTestAudit(
-        id,
-        tpl.eventKey,
-        actorUserId,
-        destinationKind,
-        'delivered',
-        providerRef
-      );
-
-      this.logger.log(
-        `Notification template test-sent: id=${id} event=${tpl.eventKey} by ${actorUserId}`
-      );
-
-      return { ok: true, destination: tpl.channel, lastTestStatus: 'delivered' };
-    } catch (err) {
-      // Record the failed attempt even when delivery errored so the admin's
-      // template list shows test history accurately.
-      await pool
-        .query(
-          `UPDATE notification_templates
-           SET last_test_sent_at = $1, last_test_status = 'failed', updated_at = $1
-           WHERE id = $2`,
-          [new Date(), id]
-        )
-        .catch(() => {});
-      await this.writeTestAudit(id, tpl.eventKey, actorUserId, destinationKind, 'failed');
-      throw err;
-    }
+      await this.writeTestAudit(client, tpl, actorUserId, status, providerRef);
+      return { deliveryError, channel: tpl.channel };
+    });
+    if (outcome.deliveryError) throw outcome.deliveryError.cause;
+    this.logger.log(`Notification template test-sent: id=${id} by ${actorUserId}`);
+    return { ok: true, destination: outcome.channel, lastTestStatus: 'delivered' };
   }
 
   /**
@@ -616,13 +589,13 @@ export class NotificationTemplateService {
    * accepted the in-app default (their own inbox), which is always allowed.
    */
   private async assertAllowedTestDestination(
+    client: PoolClient,
     actorUserId: string,
     destination: string | null
   ): Promise<void> {
     if (!destination) return;
 
-    const pool = getDbPool();
-    const user = await pool.query<{
+    const user = await client.query<{
       username: string;
       email: string | null;
       mobile: string | null;
@@ -655,43 +628,33 @@ export class NotificationTemplateService {
 
   /** Append a test-send audit record (no customer data — template only). */
   private async writeTestAudit(
-    templateId: string,
-    eventKey: string,
+    client: PoolClient,
+    template: NotificationTemplateResult,
     actorUserId: string,
-    destinationKind: string,
     status: 'delivered' | 'failed',
     providerRef?: string
   ): Promise<void> {
-    const pool = getDbPool();
-    await pool
-      .query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [
-          uuidv7(),
-          actorUserId,
-          'notification_template_test_sent',
-          JSON.stringify({
-            templateId,
-            eventKey,
-            destinationKind,
-            providerRef: providerRef ?? null,
-            deliveredTo: status === 'delivered' ? destinationKind : null,
-            status,
-            isTest: true,
-          }),
-          uuidv7(),
-          null, // no request IP in this service layer — avoid a fake 'admin' literal
-          new Date(),
-        ]
-      )
-      .catch((err) => {
-        // Never fail the test-send because the audit write failed, but surface
-        // it so a broken audit pipeline is detectable rather than silent.
-        this.logger.warn(
-          `Failed to write test-send audit for template ${templateId}: ${String(err)}`
-        );
-      });
+    await client.query(
+      `INSERT INTO audit_log (id,user_id,event,metadata,correlation_id,created_at)
+       VALUES ($1,$2,$3,$4::jsonb,$5,NOW())`,
+      [
+        uuidv7(),
+        actorUserId,
+        'notification_template_test_sent',
+        JSON.stringify({
+          templateId: template.id,
+          eventKey: template.eventKey,
+          version: template.version,
+          testedUpdatedAt: template.updatedAt,
+          destinationKind: template.channel,
+          providerRef: providerRef ?? null,
+          deliveredTo: status === 'delivered' ? template.channel : null,
+          status,
+          isTest: true,
+        }),
+        uuidv7(),
+      ]
+    );
   }
 
   /**

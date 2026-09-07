@@ -13,7 +13,12 @@ vi.mock('@barghsa/shared/notification-delivery', () => ({
   createSmsSender: () => sms,
   prepareSmsMessage: prepareSms,
 }));
-vi.mock('@barghsa/db', () => ({ getDbPool: () => ({ query }) }));
+vi.mock('@barghsa/db', () => ({
+  getDbPool: () => ({ query, connect: async () => ({ query, release: vi.fn() }) }),
+}));
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn(),
+}));
 
 beforeEach(() => {
   query.mockReset();
@@ -28,14 +33,24 @@ beforeEach(() => {
 function service(channel: 'email' | 'sms' | 'in_app') {
   const create = vi.fn().mockResolvedValue({ id: 'inbox-test' });
   const instance = new NotificationTemplateService({ create } as unknown as NotificationsService);
-  vi.spyOn(instance, 'getById').mockResolvedValue({
+  vi.spyOn(
+    instance as unknown as { lockTemplate: () => Promise<Record<string, unknown>> },
+    'lockTemplate'
+  ).mockResolvedValue({
     id: 'template',
-    eventKey: 'invoice.created',
+    event_key: 'invoice.created',
     channel,
+    locale: 'en',
     subject: 'Invoice',
-    bodyTemplate: 'Test body',
+    body_template: 'Test body',
     variables: [],
-  } as never);
+    status: 'draft',
+    is_active: false,
+    version: 1,
+    published_at: null,
+    created_at: new Date(),
+    updated_at: new Date(),
+  });
   return { instance, create };
 }
 
@@ -48,12 +63,17 @@ describe('truthful notification template tests', () => {
         instance.testSend('template', 'staff', { destination: 'staff@example.test' })
       ).rejects.toMatchObject({ status: 503 });
       expect(create).not.toHaveBeenCalled();
-      expect(query.mock.calls.some(([sql]) => sql.includes("last_test_status = 'delivered'"))).toBe(
-        false
-      );
-      expect(query.mock.calls.some(([sql]) => sql.includes("last_test_status = 'failed'"))).toBe(
-        true
-      );
+      expect(
+        query.mock.calls.some(
+          ([sql, params]) =>
+            sql.includes('UPDATE notification_templates') && params[1] === 'delivered'
+        )
+      ).toBe(false);
+      expect(
+        query.mock.calls.some(
+          ([sql, params]) => sql.includes('UPDATE notification_templates') && params[1] === 'failed'
+        )
+      ).toBe(true);
       const audit = query.mock.calls.find(([sql]) => sql.includes('INSERT INTO audit_log'));
       expect(JSON.parse(audit![1][3])).toMatchObject({
         status: 'failed',
@@ -69,7 +89,10 @@ describe('truthful notification template tests', () => {
       destination: 'in_app',
       lastTestStatus: 'delivered',
     });
-    expect(create).toHaveBeenCalledWith(expect.objectContaining({ userId: 'staff' }));
+    expect(create).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: 'staff' }),
+      expect.objectContaining({ query })
+    );
   });
   it.each([undefined, 'production', 'staging', 'preview'])(
     'rejects test allowlists in %s',
@@ -149,4 +172,24 @@ it('records a mapped SMS receipt without an inbox substitute', async () => {
   expect(create).not.toHaveBeenCalled();
   const audit = query.mock.calls.find(([sql]) => sql.includes('INSERT INTO audit_log'));
   expect(JSON.parse(audit![1][3])).toMatchObject({ deliveredTo: 'sms', providerRef: '123' });
+});
+
+it('does not relabel a sent email as failed when its audit cannot persist', async () => {
+  const { instance } = service('email');
+  send.mockResolvedValue('email-receipt');
+  query.mockImplementation(async (sql: string) => {
+    if (sql.includes('INSERT INTO audit_log')) throw new Error('audit unavailable');
+    return { rows: [{ username: 'staff@example.test' }] };
+  });
+  await expect(
+    instance.testSend('template', 'staff', { destination: 'staff@example.test' })
+  ).rejects.toThrow('audit unavailable');
+  expect(send).toHaveBeenCalledOnce();
+  expect(
+    query.mock.calls.some(
+      ([sql, params]) => sql.includes('UPDATE notification_templates') && params[1] === 'failed'
+    )
+  ).toBe(false);
+  expect(query.mock.calls.some(([sql]) => sql === 'ROLLBACK')).toBe(true);
+  expect(query.mock.calls.some(([sql]) => sql === 'COMMIT')).toBe(false);
 });

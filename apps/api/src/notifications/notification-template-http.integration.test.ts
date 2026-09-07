@@ -6,7 +6,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 const grant = JSON.stringify(['admin:notifications:edit']);
-const actions = ['create', 'update', 'publish', 'unpublish', 'delete'] as const;
+const actions = ['create', 'update', 'publish', 'unpublish', 'delete', 'test-send'] as const;
 type Action = (typeof actions)[number];
 
 beforeAll(async () => {
@@ -46,6 +46,9 @@ afterAll(async () => {
 }, 15000);
 beforeEach(async () => {
   await http.pool.query("DELETE FROM notification_templates WHERE event_key LIKE 'fix.template.%'");
+  await http.pool.query(
+    "DELETE FROM in_app_notifications WHERE recipient_user_id LIKE 'template-%'"
+  );
   await http.pool.query("DELETE FROM audit_log WHERE user_id LIKE 'template-%'");
   await http.pool.query("UPDATE staff_roles SET permissions=$1 WHERE role_id='template-editor'", [
     grant,
@@ -60,13 +63,15 @@ async function seed(action: Action, event = `fix.template.${randomUUID()}`) {
      VALUES ($1,$2,'email','en','Original message','[]',$3,$4,1,'template-editor',CASE WHEN $4 THEN NOW() END)`,
       [id, event, action === 'unpublish' ? 'active' : 'draft', action === 'unpublish']
     );
+  if (action === 'test-send')
+    await http.pool.query("UPDATE notification_templates SET channel='in_app' WHERE id=$1", [id]);
   return { id, event };
 }
 function write(action: Action, value: { id: string; event: string }, user = 'editor') {
   const path =
     action === 'create'
       ? ''
-      : `/${value.id}${action === 'publish' || action === 'unpublish' ? `/${action}` : ''}`;
+      : `/${value.id}${action === 'publish' || action === 'unpublish' || action === 'test-send' ? `/${action}` : ''}`;
   return fetch(`${http.base}/api/admin/notifications/templates${path}`, {
     method: action === 'update' ? 'PUT' : action === 'delete' ? 'DELETE' : 'POST',
     headers: headers[user]!,
@@ -87,6 +92,11 @@ function write(action: Action, value: { id: string; event: string }, user = 'edi
 }
 async function snapshot() {
   return {
+    inbox: (
+      await http.pool.query(
+        "SELECT * FROM in_app_notifications WHERE recipient_user_id LIKE 'template-%' ORDER BY id"
+      )
+    ).rows,
     templates: (
       await http.pool.query(
         "SELECT * FROM notification_templates WHERE event_key LIKE 'fix.template.%' ORDER BY id"
@@ -131,7 +141,7 @@ for (const action of actions) {
     expect(state.audits).toHaveLength(1);
     expect(state.audits[0].user_id).toBe('template-editor');
     expect(state.audits[0].event).toBe(
-      `notification_template_${{ create: 'created', update: 'updated', publish: 'published', unpublish: 'unpublished', delete: 'deleted' }[action]}`
+      `notification_template_${{ create: 'created', update: 'updated', publish: 'published', unpublish: 'unpublished', delete: 'deleted', 'test-send': 'test_sent' }[action]}`
     );
   });
   it(`${action}: rolls back state when its audit fails`, async () => {
@@ -274,3 +284,46 @@ for (const action of ['update', 'publish', 'delete'] as const) {
     expect(await snapshot()).toEqual(before);
   });
 }
+
+it('commits a failed delivery outcome before returning its channel error', async () => {
+  const value = await seed('update');
+  expect((await write('test-send', value)).status).toBe(400);
+  const state = await snapshot();
+  expect(state.templates[0].last_test_status).toBe('failed');
+  expect(state.inbox).toHaveLength(0);
+  expect(state.audits).toHaveLength(1);
+  expect(JSON.parse(state.audits[0].metadata)).toMatchObject({
+    templateId: value.id,
+    version: 1,
+    status: 'failed',
+    destinationKind: 'email',
+    deliveredTo: null,
+  });
+});
+
+it('rejects template tests without current step-up or CSRF proof', async () => {
+  const value = await seed('test-send');
+  const before = await snapshot();
+  const missingCsrf = { ...headers.editor! };
+  delete missingCsrf['X-CSRF-Token'];
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/notifications/templates/${value.id}/test-send`, {
+        method: 'POST',
+        headers: missingCsrf,
+        body: '{}',
+      })
+    ).status
+  ).toBe(403);
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='template-editor'"
+  );
+  try {
+    expect((await write('test-send', value)).status).toBe(403);
+    expect(await snapshot()).toEqual(before);
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='template-editor'"
+    );
+  }
+});
