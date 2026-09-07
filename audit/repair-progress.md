@@ -2046,3 +2046,9 @@ The forced-deadline fixture explicitly terminates orphaned PostgreSQL sessions a
 ### Review four more infrastructure task requirements
 
 Recorded two verified tasks for typecheck/suppression enforcement and Turbo test orchestration, using their exact canonical task blocks and source hashes. Recorded two partial tasks for the absent TanStack Start pipeline and six remaining combined coverage failures. Passing builds do not satisfy the missing server-rendering requirement, and passing test assertions do not satisfy failing coverage gates. The register now contains 16 assessed tasks: 13 verified, three partial, and 306 still pending individual acceptance review.
+
+### Reject malformed Redis quota results
+
+The general limiter now rejects nonpositive, fractional, unsafe or nonnumeric Redis counts and malformed TTL values before calculating quota responses. Redis protocol sentinel TTL values remain supported. Invalid replies use the existing PostgreSQL fallback instead of returning NaN quota fields or allowing a request from a negative count.
+
+Review and validation: 15 regression cases failed before repair; all 74 rate-limit tests pass afterward. Shared typechecking, targeted lint and formatting pass. This change does not make the separate Redis increment/expiry commands atomic, reconcile general counters across Redis loss, or replace fixed windows. Security counters remain PostgreSQL-authoritative. The production image checkpoint predates this follow-up.

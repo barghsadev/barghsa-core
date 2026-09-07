@@ -74,6 +74,49 @@ describe('CompositeRateLimiterStore', () => {
       expect(result.allowed).toBe(true);
     });
 
+    it.each([
+      0,
+      -1,
+      1.5,
+      Number.NaN,
+      Number.POSITIVE_INFINITY,
+      Number.MAX_SAFE_INTEGER + 1,
+      '1',
+      null,
+    ])('falls back when Redis returns an invalid count %s', async (count) => {
+      mockRedis.incr.mockResolvedValue(count);
+      mockRedis.pttl.mockResolvedValue(30_000);
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: 101 }] });
+
+      const result = await store.increment('api:1.2.3.4', 100, 60_000);
+
+      expect(result.allowed).toBe(false);
+      expect(result.remaining).toBe(0);
+      expect(mockQuery).toHaveBeenCalledOnce();
+      expect(logger.warn).toHaveBeenCalledOnce();
+    });
+
+    it.each([
+      -3,
+      1.5,
+      Number.NaN,
+      Number.POSITIVE_INFINITY,
+      Number.MAX_SAFE_INTEGER + 1,
+      '30000',
+      null,
+    ])('falls back when Redis returns an invalid TTL %s', async (ttl) => {
+      mockRedis.incr.mockResolvedValue(2);
+      mockRedis.pttl.mockResolvedValue(ttl);
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: 101 }] });
+
+      const result = await store.increment('api:1.2.3.4', 100, 60_000);
+
+      expect(result.allowed).toBe(false);
+      expect(result.remaining).toBe(0);
+      expect(mockQuery).toHaveBeenCalledOnce();
+      expect(logger.warn).toHaveBeenCalledOnce();
+    });
+
     it('returns over-limit from Redis', async () => {
       mockRedis.incr.mockResolvedValue(101);
       mockRedis.pttl.mockResolvedValue(30_000);

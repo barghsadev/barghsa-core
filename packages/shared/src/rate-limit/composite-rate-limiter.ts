@@ -121,7 +121,13 @@ export class CompositeRateLimiterStore {
   ): Promise<RateLimitResult> {
     const redis = this.redis!;
     const count = await redis.incr(key);
+    if (typeof count !== 'number' || !Number.isSafeInteger(count) || count <= 0) {
+      throw new Error('Redis rate-limit count is invalid');
+    }
     let ttl = await redis.pttl(key);
+    if (typeof ttl !== 'number' || !Number.isSafeInteger(ttl) || ttl < -2) {
+      throw new Error('Redis rate-limit TTL is invalid');
+    }
 
     // First increment in a new window — set expiry
     if (count === 1 || ttl <= 0) {
