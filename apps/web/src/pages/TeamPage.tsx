@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n';
 import { Button, Input, Label } from '@barghsa/ui';
@@ -31,6 +32,7 @@ interface Team {
 }
 
 export function TeamPage() {
+  const time = useAccountTime();
   const locale = useLocale();
   const [team, setTeam] = useState<Team | null>(null);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
@@ -153,6 +155,7 @@ export function TeamPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <h1 className="text-2xl font-bold">{word('title')}</h1>
       {loading && <p role="status">{word('loading')}</p>}
       {error && (
@@ -186,11 +189,7 @@ export function TeamPage() {
                 <p>{word(transfer.direction === 'incoming' ? 'incoming' : 'outgoing')}</p>
                 <p className="text-sm text-gray-600">
                   {word('expires')}{' '}
-                  <time dateTime={transfer.expiresAt}>
-                    {new Date(transfer.expiresAt).toLocaleString(
-                      locale === 'fa' ? 'fa-IR' : 'en-US'
-                    )}
-                  </time>
+                  <time dateTime={transfer.expiresAt}>{time.format(transfer.expiresAt)}</time>
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {(transfer.direction === 'incoming'
@@ -271,6 +270,7 @@ export function TeamPage() {
                 {members.size === 0 && invitations.length === 0 && <p>{word('empty')}</p>}
                 {Array.from(members, ([userId, member]) => (
                   <Member
+                    formatJoinedAt={(value) => time.format(value, { dateStyle: 'medium' })}
                     key={`${userId}:${member.roles.join(',')}`}
                     entry={member.entry}
                     roles={member.roles}
@@ -357,8 +357,10 @@ function Member({
   onSave,
   onRemove,
   onTransfer,
+  formatJoinedAt,
 }: {
   entry: Entry;
+  formatJoinedAt: (value: string) => string;
   roles: string[];
   onSave: (roles: Role[]) => void;
   onRemove: () => void;
@@ -378,9 +380,7 @@ function Member({
           <>
             {' '}
             · {word('joined')}{' '}
-            <time dateTime={entry.joinedAt}>
-              {new Date(entry.joinedAt).toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-US')}
-            </time>
+            <time dateTime={entry.joinedAt}>{formatJoinedAt(entry.joinedAt)}</time>
           </>
         )}
       </p>

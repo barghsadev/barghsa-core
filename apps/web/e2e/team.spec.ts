@@ -9,6 +9,9 @@ async function shell(page: Page, locale = 'en', canTransfer = true) {
     }).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+  );
   await page.route('**/api/invitations/pending', (route) =>
     route.fulfill({ json: { invitations: [] } })
   );
@@ -41,7 +44,7 @@ async function shell(page: Page, locale = 'en', canTransfer = true) {
             name: null,
             role: 'Manager',
             status: 'Active',
-            joinedAt: '2026-08-01T12:00:00Z',
+            joinedAt: '2026-08-01T01:00:00Z',
           },
           {
             id: 'invitation-one',
@@ -103,6 +106,12 @@ for (const locale of ['fa', 'en'] as const) {
     const member = page
       .getByRole('article')
       .filter({ has: page.getByRole('heading', { name: 'member@example.test' }) });
+    await expect(member.locator('time')).toHaveText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+      }).format(new Date('2026-08-01T01:00:00Z'))
+    );
     await member
       .getByRole('checkbox', { name: locale === 'fa' ? 'مالی' : 'Finance', exact: true })
       .check();
@@ -173,6 +182,9 @@ test('incoming ownership is visible and acceptance sends the bound transfer then
   });
   await page.goto('/dashboard');
   await page.getByRole('link', { name: /pending ownership request/ }).click();
+  await expect(page.locator('time[datetime="2026-09-13T00:00:00Z"]')).toHaveText(
+    'Sep 12, 2026, 5:00 PM'
+  );
   await page.getByRole('button', { name: 'Accept ownership' }).click();
   await expect(page.getByRole('dialog')).toContainText('signs both owners out');
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();

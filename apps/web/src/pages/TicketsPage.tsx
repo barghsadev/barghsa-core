@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useSearch } from '@tanstack/react-router';
 import { Button, Input, Label } from '@barghsa/ui';
@@ -67,6 +68,7 @@ export function StaffTicketsPage() {
   return <Tickets staff />;
 }
 function Tickets({ staff }: { staff: boolean }) {
+  const time = useAccountTime();
   const routeSearch = useSearch({ strict: false }) as { ticketId?: string };
   const locale = useLocale(),
     prefix = staff ? '/api/staff/tickets' : '/api/tickets';
@@ -317,13 +319,10 @@ function Tickets({ staff }: { staff: boolean }) {
     }
   }
   const canWrite = !staff || queue?.viewer?.canWrite;
-  const formatDate = (value: string) =>
-    new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-GB', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    }).format(new Date(value));
+  const formatDate = time.format;
   return (
     <section className="mx-auto max-w-5xl space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">{text(staff ? 'staffTitle' : 'title')}</h1>
         {!staff && (

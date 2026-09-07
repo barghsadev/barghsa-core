@@ -2154,3 +2154,9 @@ Review and validation: one migrated HTTP regression reproduced upload URL issuan
 Session creation, activity, absolute expiry and idle expiry now use the account timezone, including the revoke confirmation. The former relative formatter rendered every future expiry as "just now"; both language regressions reproduced that error before repair. Consent change times also use the shared account formatter, with the same visible retry when preferences cannot be read. Review found and added three missing English/Persian session labels, including the pending revoke-all action.
 
 Review and validation: six production browser cases pass for both languages, asserting future expiry across a calendar-day boundary, translated labels, consent save timestamps and existing revoke-dialog focus/pending/error behavior. Root build, types, targeted lint, formatting and bundle checks pass. Broader timestamp consumers and the full-plan coverage gates remain open.
+
+### Use account timezone for team and ticket dates
+
+Ownership-transfer deadlines, member join dates and customer/staff ticket timestamps now use the saved account timezone. Team rows share the screen's single preference read. A failed preference read offers retry without displaying device-local guesses. Ticket related-record, SLA and comment timestamps use the same formatter.
+
+Review and validation: six added assertions failed before repair, reproducing wrong calendar days in both languages and a device-local ownership deadline. All 15 team/ticket production browser checks pass after repair, preserving invitation/role confirmation, transfer decisions/sign-out, attachment retries, internal notes and stale-result behavior. Root build, types, targeted lint, formatting and bundle checks pass.

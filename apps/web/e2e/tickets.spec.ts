@@ -11,7 +11,7 @@ const item = {
   userId: 'customer',
   profileId,
   assignedTo: null,
-  updatedAt: '2026-09-01T12:00:00Z',
+  updatedAt: '2026-09-01T01:00:00Z',
   attachments: [],
   relatedEntityType: null,
   relatedEntityId: null,
@@ -23,6 +23,9 @@ async function shell(page: Page, locale = 'en') {
     }).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+  );
   await page.route('**/api/staff/tickets/teams', (route) => route.fulfill({ json: [] }));
   await page.route('**/api/profiles', (route) =>
     route.fulfill({ json: { profiles: [], activeProfileId: null } })
@@ -117,6 +120,17 @@ for (const locale of ['en', 'fa'])
     await expect(
       page.getByRole('link', { name: locale === 'en' ? 'Open attachment 1' : 'مشاهده پیوست 1' })
     ).toHaveAttribute('href', 'https://storage.example.test/fixed');
+    await expect(
+      page
+        .getByRole('row')
+        .filter({ has: page.getByRole('button', { name: item.subject, exact: true }) })
+    ).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date(item.updatedAt))
+    );
     expect(uploads).toBe(1);
     expect(submits).toBe(2);
   });
@@ -176,6 +190,9 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await expect(page.locator('#ticket-reply')).toHaveValue('Private reasoning');
   await page.getByRole('button', { name: 'Send reply', exact: true }).click();
   await expect(page.getByText('Private reasoning', { exact: true })).toBeVisible();
+  await expect(page.getByText('Private reasoning', { exact: true }).locator('..')).toContainText(
+    'Aug 31, 2026, 6:00 PM'
+  );
   await expect(page.getByText('Private reasoning', { exact: true }).locator('..')).toHaveClass(
     /bg-amber-50/
   );
