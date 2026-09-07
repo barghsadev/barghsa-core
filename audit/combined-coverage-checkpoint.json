@@ -134,10 +134,10 @@
         "apps/api/src/wallet/wallet.module.ts",
         "apps/api/src/wallet/wallet.service.ts"
       ],
-      "lines": 9021,
-      "covered_lines": 8118,
+      "lines": 9022,
+      "covered_lines": 8119,
       "branches": 6038,
-      "covered_branches": 4588,
+      "covered_branches": 4593,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -286,10 +286,10 @@
         "apps/api/src/user-settings/user-settings.controller.ts",
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
-      "lines": 4176,
-      "covered_lines": 3860,
-      "branches": 3204,
-      "covered_branches": 2500,
+      "lines": 4180,
+      "covered_lines": 3871,
+      "branches": 3218,
+      "covered_branches": 2515,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -422,9 +422,9 @@
         "apps/web/src/routes/terms.tsx"
       ],
       "lines": 6375,
-      "covered_lines": 3935,
+      "covered_lines": 3919,
       "branches": 7683,
-      "covered_branches": 4452,
+      "covered_branches": 4427,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -745,9 +745,9 @@
         "packages/shared/src/verification/types.ts"
       ],
       "lines": 1597,
-      "covered_lines": 1365,
+      "covered_lines": 1413,
       "branches": 1749,
-      "covered_branches": 1442,
+      "covered_branches": 1497,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -790,13 +790,13 @@
         "packages/shared/src/validation/legal-national-identifier.ts",
         "packages/shared/src/validation/normalize-username.ts"
       ],
-      "lines": 608,
-      "covered_lines": 504,
-      "branches": 678,
-      "covered_branches": 495,
+      "lines": 630,
+      "covered_lines": 547,
+      "branches": 717,
+      "covered_branches": 549,
       "required_lines": 80,
       "required_branches": 75,
-      "passed": false
+      "passed": true
     },
     {
       "package": "packages/ui",
@@ -839,10 +839,10 @@
         "packages/ui/src/index.ts",
         "packages/ui/src/lib/utils.ts"
       ],
-      "lines": 203,
-      "covered_lines": 100,
-      "branches": 334,
-      "covered_branches": 201,
+      "lines": 204,
+      "covered_lines": 102,
+      "branches": 348,
+      "covered_branches": 215,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -850,5 +850,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "39498a01a3275ac6e490b9f0589befda86093ded"
+  "head_sha": "86d9f497a33c27dfa803d10dce11aaa845e3fe49"
 }
