@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label } from '@barghsa/ui';
@@ -10,8 +11,9 @@ interface Safety {
 }
 const modes: GreenElectricityOrderMode[] = ['simpleOrder', 'advancedOrder'];
 export default function AdminElectricityRulesPage() {
-  const locale = useLocale(),
-    label = (key: string) => t(`admin.green.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => t(`admin.green.${key}`, locale);
   const [config, setConfig] = useState<GreenElectricityConfig | null>(null),
     [safety, setSafety] = useState<Safety | null>(null);
   const [loading, setLoading] = useState(true),
@@ -153,10 +155,7 @@ export default function AdminElectricityRulesPage() {
                     <div className="space-y-2">
                       <Label htmlFor={`${mode}-share`}>
                         {label('share')}:{' '}
-                        {new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(
-                          config[mode].mandatoryGreenSharePercent
-                        )}
-                        %
+                        {numbers.percent(config[mode].mandatoryGreenSharePercent / 100)}
                       </Label>
                       <input
                         className="w-full"

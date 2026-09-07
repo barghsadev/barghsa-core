@@ -2372,3 +2372,9 @@ Both new browser cases reproduced ignored preferences before the consumer change
 Catalogue prices and gift discount amounts now use exact IRR formatting with localized currency labels. VAT and gift percentages use the configured digit system and matching percent/decimal symbols. Gift usage counts follow the same preference. Numeric request payloads remain unchanged.
 
 All six new migrated-API browser assertions failed against the preceding production build and pass after repair, covering both languages, fractional VAT, gift caps and catalogue amounts above the safe-number range. All 11 existing catalogue/VAT/gift browser regressions pass. Web types, targeted lint, formatting, route budgets and diff review pass. Browser preference fixtures restore their previous published value after each case to avoid contaminating later workflows. Remaining numeric consumers are still under review.
+
+### Apply numeral preferences to electricity prices and green shares
+
+Electricity product prices now use the published numeral preference and exact IRR formatting. Green-share slider labels use localized percentages while retaining their original numeric control and request values.
+
+All four new preference assertions failed on the preceding production bundle and pass after repair, including real API persistence of 0.1 and 100 percent in both languages. All 18 existing ordering and green-rule browser checks pass, covering unavailable verification, failed product/address/geography loads, captured draft submission, permission removal and step-up. Web types, targeted lint, formatting, route budgets and diff review pass.

@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
@@ -50,6 +51,7 @@ interface City {
 
 function ElectricityOrderPage() {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
 
   // Profile & verification
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
@@ -683,11 +685,7 @@ function ElectricityOrderPage() {
                     <p className="text-sm font-medium">{productTitle(product)}</p>
                     {product.price && (
                       <p className="text-xs text-muted-foreground">
-                        {new Intl.NumberFormat(locale, {
-                          style: 'currency',
-                          currency: 'IRR',
-                          maximumFractionDigits: 0,
-                        }).format(BigInt(product.price))}
+                        {numbers.money(product.price)}
                       </p>
                     )}
                   </div>

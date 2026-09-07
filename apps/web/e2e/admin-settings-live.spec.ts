@@ -822,6 +822,7 @@ for (const locale of ['en', 'fa'])
         })
       ).status()
     ).toBe(200);
+    await publishNumericPreference(page.request, fa ? 'western' : 'persian');
     await page.goto('/admin/electricity-rules');
     const simple = page.getByRole('group', {
         name: fa ? 'سفارش ساده' : 'Simple orders',
@@ -851,6 +852,12 @@ for (const locale of ['en', 'fa'])
     await page.reload();
     await expect(simple.getByRole('spinbutton')).toHaveValue('1500');
     await expect(advanced.getByRole('spinbutton')).toHaveValue('2100');
+    await expect(simple.getByRole('slider')).toHaveAccessibleName(
+      new RegExp(fa ? '0\\.1%' : '۰٫۱٪')
+    );
+    await expect(advanced.getByRole('slider')).toHaveAccessibleName(
+      new RegExp(fa ? '100%' : '۱۰۰٪')
+    );
     const config = await (
       await page.request.get(`${http.base}/api/admin/config/green-electricity-rules`, { headers })
     ).json();

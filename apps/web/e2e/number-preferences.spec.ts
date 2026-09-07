@@ -94,6 +94,24 @@ for (const locale of ['en', 'fa']) {
         ],
       })
     );
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: { activeProfileId: id, verificationRequired: false, isVerified: false },
+      })
+    );
+    await page.route('**/api/products', (route) =>
+      route.fulfill({
+        json: [
+          {
+            id,
+            type: 'electricity',
+            status: 'active',
+            price: amount,
+            title: { en: 'Electricity', fa: 'برق' },
+          },
+        ],
+      })
+    );
     let limit = { limitIrR: 2000000000, version: 0 };
     const writes: unknown[] = [];
     await page.route('**/api/admin/config/wallet-top-up-limit', (route) => {
@@ -103,7 +121,13 @@ for (const locale of ['en', 'fa']) {
       limit = { limitIrR: body.limit_irr, version: body.expected_version + 1 };
       return route.fulfill({ json: limit });
     });
-    for (const path of ['/wallet', '/invoices', `/invoices/${id}`, '/admin/approval-requests']) {
+    for (const path of [
+      '/wallet',
+      '/invoices',
+      `/invoices/${id}`,
+      '/admin/approval-requests',
+      '/electricity/order',
+    ]) {
       await page.goto(path);
       await expect(page.locator('main')).toContainText(digits);
       await expect(page.locator('main')).toContainText(locale === 'fa' ? 'ریال' : 'IRR');
