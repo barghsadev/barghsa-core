@@ -36,7 +36,7 @@ beforeAll(async () => {
 }, 40000);
 beforeEach(async () => {
   await http.pool.query(
-    "DELETE FROM rate_limit_counters; DELETE FROM app_config WHERE key='admin.staff_assignment_rules'; DELETE FROM staff_assignment_cursors; UPDATE users SET disabled_at=NULL; UPDATE staff_teams SET is_active=true,skill_tags='[]'"
+    "DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security; DELETE FROM app_config WHERE key='admin.staff_assignment_rules'; DELETE FROM staff_assignment_cursors; UPDATE users SET disabled_at=NULL; UPDATE staff_teams SET is_active=true,skill_tags='[]'"
   );
 });
 afterAll(async () => {

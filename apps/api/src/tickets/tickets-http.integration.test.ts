@@ -70,7 +70,7 @@ beforeAll(async () => {
 }, 40000);
 // Each scenario has its own rate-limit budget in this disposable database.
 beforeEach(async () => {
-  await http.pool.query('DELETE FROM rate_limit_counters');
+  await http.pool.query('DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security');
 });
 afterAll(async () => {
   await http?.close();

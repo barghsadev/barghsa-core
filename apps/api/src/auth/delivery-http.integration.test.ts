@@ -126,7 +126,7 @@ it('retries provider failure and cancels replaced or expired codes without sendi
   failProvider = false;
   expect(await deliver()).toBe('sent');
   // Advance only the test fixture's send quota; do not sleep through the one-minute window.
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters');
+  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
   const resend = await post('auth/register/resend', { challengeId });
   expect(resend.status, await resend.text()).toBe(200);
   await fixture.pool.query(
@@ -156,7 +156,7 @@ it('allows only one worker to claim a message while the provider is in flight', 
 
 it('cancels an unsent replaced code and recovers an expired worker lease', async () => {
   const challengeId = await register();
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters');
+  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
   const resend = await post('auth/register/resend', { challengeId });
   expect(resend.status, await resend.text()).toBe(200);
   expect(await deliver()).toBe('cancelled');
@@ -283,7 +283,7 @@ it('allows only one password reset across two previously issued codes', async ()
   const credentials: Array<{ challengeId: string; otp: string | undefined; newPassword: string }> =
     [];
   for (let attempt = 0; attempt < 2; attempt++) {
-    await fixture.pool.query('DELETE FROM security_rate_limit_counters');
+    await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
     const response = await post('auth/forgot-password', { username: 'provider@example.test' });
     const body = (await response.json()) as { challengeId: string };
     expect(response.status).toBe(200);
@@ -665,7 +665,7 @@ it('trusts only the opaque browser cookie after OTP and rejects public fingerpri
   expect(returning.status).toBe(200);
   expect(await returning.json()).toMatchObject({ requiresOtp: false });
   // Reset only isolated send quotas between independent new-device/expiry checks.
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters');
+  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
   const imitation = await post(
     'auth/login',
     { ...credentials, deviceInfo: { fingerprint: token } },
@@ -678,11 +678,11 @@ it('trusts only the opaque browser cookie after OTP and rejects public fingerpri
     "UPDATE device_trusts SET expires_at=NOW()-INTERVAL '1 second' WHERE device_fingerprint=$1",
     [trustedHash]
   );
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters');
+  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
   const expired = await post('auth/login', credentials, { Cookie: cookie });
   expect(await expired.json()).toMatchObject({ requiresOtp: true });
   await fixture.pool.query('DELETE FROM device_trusts WHERE device_fingerprint=$1', [trustedHash]);
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters');
+  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
   const revoked = await post('auth/login', credentials, { Cookie: cookie });
   expect(await revoked.json()).toMatchObject({ requiresOtp: true });
 }, 20000);

@@ -26,7 +26,7 @@ for (const trusted of [false, true]) {
     }
     const rows = (
       await http.pool.query(
-        "SELECT key,count FROM security_rate_limit_counters WHERE key LIKE 'forgot-password:ip:%' ORDER BY key"
+        "SELECT key,cardinality(events) AS count FROM rate_limit_windows WHERE security AND key LIKE 'forgot-password:ip:%' ORDER BY key"
       )
     ).rows;
     expect(rows).toEqual(

@@ -233,7 +233,7 @@ it('issues account-bound contact and password-reset challenges through their act
       .status
   ).toBe(200);
   // These are independent issuance routes; clear only the test send quotas.
-  await http.pool.query('DELETE FROM security_rate_limit_counters');
+  await http.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
   expect((await post('forgot-password', { username: 'otp-old@example.test' })).status).toBe(200);
   expect(
     (
@@ -425,7 +425,7 @@ it('enforces both stacked IP and authenticated-user limits without accepting a b
   expect(
     (
       await http.pool.query(
-        "SELECT key,count FROM security_rate_limit_counters WHERE key LIKE 'add-contact:%' ORDER BY key"
+        "SELECT key,cardinality(events) AS count FROM rate_limit_windows WHERE security AND key LIKE 'add-contact:%' ORDER BY key"
       )
     ).rows
   ).toEqual([
