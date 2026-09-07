@@ -14,7 +14,7 @@ import { approvalRequests } from './approval-requests.js';
  * control.
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0036_create_approval_requests.sql'),
+  join(__dirname, '../../drizzle', '0036_create_approval_requests.sql'),
   'utf8'
 );
 

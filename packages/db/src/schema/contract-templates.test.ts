@@ -22,7 +22,7 @@ import {
  * loosening the template/contract-type deletion posture.
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0049_create_contract_templates.sql'),
+  join(__dirname, '../../drizzle', '0049_create_contract_templates.sql'),
   'utf8'
 );
 

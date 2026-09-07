@@ -14,7 +14,7 @@ import { reconciliationExceptions } from './reconciliation-exceptions.js';
  * reconciliation control.
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0040_create_reconciliation_exceptions.sql'),
+  join(__dirname, '../../drizzle', '0040_create_reconciliation_exceptions.sql'),
   'utf8'
 );
 

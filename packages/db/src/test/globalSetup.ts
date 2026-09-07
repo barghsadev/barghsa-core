@@ -10,54 +10,41 @@
  * @see https://node.testcontainers.org/
  */
 
-import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { PostgreSqlContainer } from '@testcontainers/postgresql';
+import type { TestProject } from 'vitest/node';
 import { Pool } from 'pg';
-
-let container: StartedPostgreSqlContainer | null = null;
-let shutdownPool: Pool | null = null;
 
 /**
  * Called once before all test workers start.
  * Starts a PostgreSQL container and exposes the connection string.
  */
-export async function setup(): Promise<void> {
+export async function setup(project: TestProject): Promise<() => Promise<void>> {
   const started = await new PostgreSqlContainer('postgres:17-alpine')
     .withDatabase('barghsa_test')
     .withUsername('barghsa')
     .withPassword('barghsa_test')
     .start();
 
-  container = started;
-
-  const connectionString = started.getConnectionUri();
-  process.env.TEST_DATABASE_URL = connectionString;
-
-  // btree_gist is required by GIST EXCLUDE windows (VAT, upload policies,
-  // service_due_periods). Create it once here so parallel migrations do
-  // not race on CREATE EXTENSION.
-  const bootstrap = new Pool({ connectionString, max: 1 });
   try {
-    await bootstrap.query('CREATE EXTENSION IF NOT EXISTS btree_gist');
-  } finally {
-    await bootstrap.end();
+    const connectionString = started.getConnectionUri();
+    // Create the shared extension before parallel fixture migrations start.
+    const bootstrap = new Pool({ connectionString, max: 1 });
+    try {
+      await bootstrap.query('CREATE EXTENSION IF NOT EXISTS btree_gist');
+    } finally {
+      await bootstrap.end();
+    }
+    // Each project gets its own worker environment. A shared process.env
+    // value would point every project at the last container started.
+    project.config.env = { ...project.config.env, TEST_DATABASE_URL: connectionString };
+  } catch (error) {
+    await started.stop();
+    throw error;
   }
 
-  // Create a lightweight pool for schema management (used by test helpers).
-  shutdownPool = new Pool({ connectionString, max: 2 });
-}
-
-/**
- * Called once after all test workers finish.
- * Stops the PostgreSQL container and cleans up the management pool.
- */
-export async function teardown(): Promise<void> {
-  if (shutdownPool) {
-    await shutdownPool.end().catch(() => {});
-    shutdownPool = null;
-  }
-  if (container) {
-    await container.stop();
-    container = null;
-  }
-  delete process.env.TEST_DATABASE_URL;
+  // Capture this container in the returned teardown. Module-level state would
+  // be overwritten when several projects load this same global setup module.
+  return async () => {
+    await started.stop();
+  };
 }

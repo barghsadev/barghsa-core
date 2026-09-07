@@ -18,7 +18,7 @@ import { aiAgents } from './ai-agents.js';
  * fails instead of silently loosening the slot-assignment posture.
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0046_create_ai_agent_slots.sql'),
+  join(__dirname, '../../drizzle', '0046_create_ai_agent_slots.sql'),
   'utf8'
 );
 

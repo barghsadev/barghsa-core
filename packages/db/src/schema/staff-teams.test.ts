@@ -16,7 +16,7 @@ import { staffTeams, staffTeamMembers } from './staff-teams.js';
  * names or orphaned memberships.
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0038_create_staff_teams.sql'),
+  join(__dirname, '../../drizzle', '0038_create_staff_teams.sql'),
   'utf8'
 );
 

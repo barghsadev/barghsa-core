@@ -16,7 +16,7 @@ import { uploadPolicies } from './upload-policies.js';
  * and on the canonical extension/size bounds.
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0050_create_upload_policies.sql'),
+  join(__dirname, '../../drizzle', '0050_create_upload_policies.sql'),
   'utf8'
 );
 

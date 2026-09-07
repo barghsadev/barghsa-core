@@ -18,11 +18,11 @@ import { serviceBreachAlerts } from './service-breach-alerts.js';
  * alerts or unbounded escalation.
  */
 const MIGRATION_0037 = readFileSync(
-  join(process.cwd(), 'drizzle', '0037_create_service_breach_alerts.sql'),
+  join(__dirname, '../../drizzle', '0037_create_service_breach_alerts.sql'),
   'utf8'
 );
 const MIGRATION_0039 = readFileSync(
-  join(process.cwd(), 'drizzle', '0039_add_escalation_to_service_breach_alerts.sql'),
+  join(__dirname, '../../drizzle', '0039_add_escalation_to_service_breach_alerts.sql'),
   'utf8'
 );
 

@@ -18,7 +18,7 @@ import { kbGroups, kbGroupMembers } from './kb-groups.js';
  * state machine).
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0043_create_knowledge_bases.sql'),
+  join(__dirname, '../../drizzle', '0043_create_knowledge_bases.sql'),
   'utf8'
 );
 

@@ -2,6 +2,8 @@ import { createVitestConfig } from '../tsconfig/vitest.base.config';
 
 export default createVitestConfig({
   test: {
+    // Node's snapshot guard tests run separately through check:db-snapshot.
+    include: ['src/**/*.{test,spec}.ts'],
     globalSetup: ['./src/test/globalSetup.ts'],
     // testcontainers manages its own lifecycle — no need for jsdom/browser env.
     environment: 'node',

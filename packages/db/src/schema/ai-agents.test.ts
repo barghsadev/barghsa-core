@@ -15,7 +15,10 @@ import { aiAgents, aiAgentKbs, aiAgentPolicies } from './ai-agents.js';
  * a constraint, this test fails instead of silently loosening the AI
  * agent posture (owner FK, model reference, per-agent link dedupe).
  */
-const MIGRATION = readFileSync(join(process.cwd(), 'drizzle', '0045_create_ai_agents.sql'), 'utf8');
+const MIGRATION = readFileSync(
+  join(__dirname, '../../drizzle', '0045_create_ai_agents.sql'),
+  'utf8'
+);
 
 /** All three tables must be created by migration 0045. */
 const TABLES = ['ai_agents', 'ai_agent_kbs', 'ai_agent_policies'] as const;

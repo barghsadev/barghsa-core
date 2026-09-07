@@ -15,5 +15,9 @@
   },
   "dependencies": {
     "@tsconfig/node20": "^20.1.0"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   }
 }

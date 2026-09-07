@@ -14,7 +14,7 @@ import { backgroundJobs } from './background-jobs.js';
  * triage control.
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0041_create_background_jobs.sql'),
+  join(__dirname, '../../drizzle', '0041_create_background_jobs.sql'),
   'utf8'
 );
 

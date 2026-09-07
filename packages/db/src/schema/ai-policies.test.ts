@@ -17,7 +17,7 @@ import { aiPolicyGroups, aiPolicyGroupMembers } from './ai-policy-groups.js';
  * guardrail posture (owner FK, supported policy types, per-group dedupe).
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0044_create_ai_policies.sql'),
+  join(__dirname, '../../drizzle', '0044_create_ai_policies.sql'),
   'utf8'
 );
 

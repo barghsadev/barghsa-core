@@ -19,7 +19,7 @@ import { orders } from './orders.js';
  * financial data).
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0048_create_gift_codes.sql'),
+  join(__dirname, '../../drizzle', '0048_create_gift_codes.sql'),
   'utf8'
 );
 

@@ -14,7 +14,10 @@ import { aiModels } from './ai-models.js';
  * this test fails instead of silently loosening the AI model security
  * posture (encrypted token column, fail-closed test status values).
  */
-const MIGRATION = readFileSync(join(process.cwd(), 'drizzle', '0042_create_ai_models.sql'), 'utf8');
+const MIGRATION = readFileSync(
+  join(__dirname, '../../drizzle', '0042_create_ai_models.sql'),
+  'utf8'
+);
 
 describe('ai_models schema (T-09.11.01)', () => {
   it('declares the domain columns expected by the service layer', () => {

@@ -19,7 +19,7 @@ import { users } from './users.js';
  * configuration posture (rates are financial data).
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0047_create_vat_configurations.sql'),
+  join(__dirname, '../../drizzle', '0047_create_vat_configurations.sql'),
   'utf8'
 );
 
