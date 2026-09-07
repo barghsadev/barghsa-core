@@ -1373,7 +1373,11 @@ for (const locale of ['en', 'fa']) {
       route.fulfill({ status: 503, json: {} })
     );
     await page.goto('/admin/tos');
-    const error = page.getByRole('alert');
+    const error = page.getByRole('alert').filter({ hasText: 'HTTP 503' });
+    const timezoneError = page.getByRole('alert').filter({
+      hasText: locale === 'fa' ? 'خطا در بارگذاری منطقه زمانی' : 'Failed to load timezone',
+    });
+    await expect(timezoneError).toBeVisible();
     await expect(error).toBeVisible();
     await error
       .getByRole('button', {
@@ -1382,6 +1386,7 @@ for (const locale of ['en', 'fa']) {
       })
       .press('Enter');
     await expect(error).toHaveCount(0);
+    await expect(timezoneError).toBeVisible();
   });
 }
 

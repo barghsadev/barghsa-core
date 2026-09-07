@@ -2194,3 +2194,7 @@ The full regression attempted during this work found one upload unit fixture usi
 ### Correct missing-object coverage after upload policy enforcement
 
 The missing-object unit fixture now uses a deployment-permitted PDF key in the document category. A separate assertion proves a disallowed JPG key is rejected before storage is opened. This preserves both expected behaviors rather than weakening policy enforcement to satisfy the old fixture. All 32 controller checks, targeted lint, formatting and diff review pass. No production behavior changed in this step.
+
+### Keep independent terms and timezone errors covered
+
+The full regression at `5001fda` passed all 5,159 unit/database checks but failed two of 280 browser cases: the terms dismissal test assumed only one alert, while the page also correctly exposed a failed timezone read. Its locator now selects the terms HTTP error and asserts that dismissing it preserves the independent localized timezone error. Both English and Persian production browser cases, targeted lint, formatting and diff review pass. No production behavior changed. The failed full browser run is not a successful combined coverage checkpoint.
