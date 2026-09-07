@@ -1,3 +1,4 @@
+import { mutateProvider } from './provider-mutation.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -219,9 +220,13 @@ export class EmailProviderConfigService {
     return row;
   }
 
-  private async findById(id: string): Promise<EmailProviderConfigResult | null> {
-    const result = await this.db.query(
-      `SELECT ${SELECT_COLUMNS} FROM email_provider_configs WHERE id = $1`,
+  private async findById(
+    id: string,
+    query: Pick<ProviderPool, 'query'> = this.db,
+    lock = false
+  ): Promise<EmailProviderConfigResult | null> {
+    const result = await query.query(
+      `SELECT ${SELECT_COLUMNS} FROM email_provider_configs WHERE id = $1${lock ? ' FOR UPDATE' : ''}`,
       [id]
     );
     const row = result.rows[0] as
@@ -249,58 +254,66 @@ export class EmailProviderConfigService {
 
   /** Create a new draft configuration. New rows always start `draft`. Secrets are encrypted at rest. */
   async create(input: CreateProviderInput): Promise<EmailProviderConfigResult> {
-    const id = uuidv7();
-    const config = this.secrets.encryptConfig(input.transport, input.config);
-    await this.db.query(
-      `INSERT INTO email_provider_configs
+    return mutateProvider(this.db, input.createdBy, 'email', 'created', async (client) => {
+      const id = uuidv7();
+      const config = this.secrets.encryptConfig(input.transport, input.config);
+      await client.query(
+        `INSERT INTO email_provider_configs
          (id, transport, label, status, config, created_by, supersedes_id)
        VALUES ($1, $2, $3, 'draft', $4, $5, $6)`,
-      [id, input.transport, input.label, config, input.createdBy, input.supersedesId ?? null]
-    );
-    const row = await this.findById(id);
-    if (!row) throw new Error('Failed to return created provider config');
-    return row;
+        [id, input.transport, input.label, config, input.createdBy, input.supersedesId ?? null]
+      );
+      const row = await this.findById(id, client);
+      if (!row) throw new Error('Failed to return created provider config');
+      return row;
+    });
   }
 
   /** Edit a draft's label and/or config. Only drafts are editable. */
-  async update(id: string, input: UpdateProviderInput): Promise<EmailProviderConfigResult> {
-    const existing = await this.findById(id);
-    if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
-    if (existing.status !== 'draft') {
-      throw new HttpException(ProviderErrors.notEditable(), 409);
-    }
+  async update(
+    id: string,
+    input: UpdateProviderInput,
+    actorUserId?: string
+  ): Promise<EmailProviderConfigResult> {
+    return mutateProvider(this.db, actorUserId, 'email', 'updated', async (client) => {
+      const existing = await this.findById(id, client, true);
+      if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
+      if (existing.status !== 'draft') {
+        throw new HttpException(ProviderErrors.notEditable(), 409);
+      }
 
-    const sets: string[] = [];
-    const params: unknown[] = [];
-    if (input.label !== undefined) {
-      params.push(input.label);
-      sets.push(`label = $${params.length}`);
-    }
-    if (input.config !== undefined) {
-      /**
-       * Encrypt secret fields of the incoming patch before merging it over the
-       * stored config (JSONB `||`). This preserves fields the client did not
-       * resend — most importantly stored secrets (SMTP password / Resend API
-       * key), which the API never returns and which the UI therefore leaves
-       * blank when editing. Omitting a secret on update keeps the current one
-       * instead of silently wiping it; providing a new one encrypts it at rest.
-       */
-      const encryptedPatch = this.secrets.encryptConfig(existing.transport, input.config);
-      params.push(encryptedPatch);
-      sets.push(`config = COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb`);
-      sets.push("last_test_status = 'pending', last_test_at = NULL, last_test_error = NULL");
-    }
-    if (sets.length > 0) {
-      params.push(id);
-      await this.db.query(
-        `UPDATE email_provider_configs SET ${sets.join(', ')}
+      const sets: string[] = [];
+      const params: unknown[] = [];
+      if (input.label !== undefined) {
+        params.push(input.label);
+        sets.push(`label = $${params.length}`);
+      }
+      if (input.config !== undefined) {
+        /**
+         * Encrypt secret fields of the incoming patch before merging it over the
+         * stored config (JSONB `||`). This preserves fields the client did not
+         * resend — most importantly stored secrets (SMTP password / Resend API
+         * key), which the API never returns and which the UI therefore leaves
+         * blank when editing. Omitting a secret on update keeps the current one
+         * instead of silently wiping it; providing a new one encrypts it at rest.
+         */
+        const encryptedPatch = this.secrets.encryptConfig(existing.transport, input.config);
+        params.push(encryptedPatch);
+        sets.push(`config = COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb`);
+        sets.push("last_test_status = 'pending', last_test_at = NULL, last_test_error = NULL");
+      }
+      if (sets.length > 0) {
+        params.push(id);
+        await client.query(
+          `UPDATE email_provider_configs SET ${sets.join(', ')}
           WHERE id = $${params.length} AND status = 'draft'`,
-        params
-      );
-    }
-    const row = await this.findById(id);
-    if (!row) throw new Error('Failed to read updated provider config');
-    return row;
+          params
+        );
+      }
+      const row = await this.findById(id, client, true);
+      if (!row) throw new Error('Failed to read updated provider config');
+      return row;
+    });
   }
 
   /**

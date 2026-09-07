@@ -1,3 +1,6 @@
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn(),
+}));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   EmailProviderConfigService,

@@ -152,7 +152,7 @@ export class SmsProviderConfigController {
     const input: UpdateSmsProviderInput = {};
     if (parsed.data.label !== undefined) input.label = parsed.data.label;
     if (parsed.data.config !== undefined) input.config = parsed.data.config;
-    return this.service.update(id, input);
+    return this.service.update(id, input, req.session.userId);
   }
 
   @Post(':id/test')

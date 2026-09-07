@@ -98,7 +98,7 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
       mockUpdate.mockResolvedValue(baseResult({ label: 'Renamed' }));
       const result = await controller.update(adminReq, 'cfg-1', { label: 'Renamed' });
       expect(result.label).toBe('Renamed');
-      expect(mockUpdate).toHaveBeenCalledWith('cfg-1', { label: 'Renamed' });
+      expect(mockUpdate).toHaveBeenCalledWith('cfg-1', { label: 'Renamed' }, 'admin-1');
     });
 
     it('rejects a non-admin with 403', async () => {

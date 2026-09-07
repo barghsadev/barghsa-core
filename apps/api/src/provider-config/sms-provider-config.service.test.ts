@@ -1,4 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn(),
+}));
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import {
   SmsProviderConfigService,

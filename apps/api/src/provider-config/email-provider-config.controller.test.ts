@@ -60,17 +60,21 @@ describe('EmailProviderConfigController', () => {
         config: { host: 'smtp.example.com' },
       });
       expect(result.label).toBe('Renamed');
-      expect(mockUpdate).toHaveBeenCalledWith('cfg-1', {
-        label: 'Renamed',
-        config: { host: 'smtp.example.com' },
-      });
+      expect(mockUpdate).toHaveBeenCalledWith(
+        'cfg-1',
+        {
+          label: 'Renamed',
+          config: { host: 'smtp.example.com' },
+        },
+        'admin-1'
+      );
     });
 
     it('supports updating only the label', async () => {
       mockUpdate.mockResolvedValue(baseResult({ label: 'Only Label' }));
       const result = await controller.update(adminReq, 'cfg-1', { label: 'Only Label' });
       expect(result.label).toBe('Only Label');
-      expect(mockUpdate).toHaveBeenCalledWith('cfg-1', { label: 'Only Label' });
+      expect(mockUpdate).toHaveBeenCalledWith('cfg-1', { label: 'Only Label' }, 'admin-1');
     });
 
     it('rejects a caller without the provider-edit permission with 403', async () => {
