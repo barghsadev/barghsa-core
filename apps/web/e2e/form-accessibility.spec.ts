@@ -1,3 +1,4 @@
+import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect, type Page } from './coverage-fixture';
 
 for (const locale of ['en', 'fa']) {
@@ -2623,3 +2624,25 @@ test('TOS draft creation conflicts retain local content until explicit replaceme
   await expect(page.getByRole('button', { name: 'Update Draft', exact: true })).toBeEnabled();
   expect(writes).toBe(1);
 });
+
+for (const locale of ['en', 'fa'])
+  for (const kind of ['individual', 'legal'])
+    test(`onboarding character counts follow numeral preference (${kind}, ${locale})`, async ({
+      page,
+    }) => {
+      await shell(page, locale);
+      await mockOppositeNumerals(page, locale);
+      await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+      await page.goto(`/onboarding/${kind}/profile-one`);
+      const address = page.locator(kind === 'legal' ? '#officialFullAddress' : '#fullAddress');
+      await address.fill('Meter Street');
+      await expect(
+        page.getByText(locale === 'fa' ? '12/500' : '۱۲/۵۰۰', { exact: true })
+      ).toBeVisible();
+      await expect(address).toHaveValue('Meter Street');
+      await address.fill('A'.repeat(500));
+      await expect(
+        page.getByText(locale === 'fa' ? '500/500' : '۵۰۰/۵۰۰', { exact: true })
+      ).toBeVisible();
+      await expect(address).toHaveAttribute('maxlength', '500');
+    });

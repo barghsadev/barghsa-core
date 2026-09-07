@@ -2402,3 +2402,9 @@ All ten preference assertions failed on the preceding production build. All 22 f
 Administrator chargeback warnings now preserve exact IRR amounts with localized currency, and their counts use the published numeral preference. Notification badges and accessible names use matching digits, including the capped 99+ display after polling. CRM profile/session/address counts and notification preview versions use the same formatter. Record identifiers and customer-authored content are unchanged.
 
 Three dashboard/CRM checks and the English badge check failed against the preceding bundle. All 18 focused browser checks pass after repair, covering exact large chargebacks, polling from 12 to 101 unread items, both languages, CRM permissions and template history. The existing dashboard unit assertion required an update from raw digits to grouped IRR. The final web unit rerun, web types, targeted lint, formatting, route budgets and diff review pass.
+
+### Format profile character counts and numeric validation limits
+
+Individual/legal address character counts, profile address totals, maximum-length validation messages and the wallet-limit maximum now honor the published numeral preference. Actual field lengths, maxlength attributes, identifiers and submitted values are unchanged. An unused wallet-panel type import found by lint was removed.
+
+Both English counter checks failed on the preceding bundle after supplying valid geography fixtures. All 22 focused onboarding/profile/wallet browser checks pass afterward, including both languages and the 500-character boundary. Web types, targeted lint, formatting, route budgets and diff review pass. The initial legal counter fixture separately reproduced a crash when the provinces endpoint returned an error object; that geography failure is the next repair, not a passed acceptance claim.

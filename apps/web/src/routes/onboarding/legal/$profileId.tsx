@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-upload.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n';
@@ -68,6 +69,7 @@ function LegalProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/legal/$profileId' });
   const router = useRouter();
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
   // ── Form state ──────────────────────────────────────────
@@ -329,7 +331,10 @@ function LegalProfileFormPage() {
       ) {
         if (field === 'representativeHonorific')
           return value.length > 50
-            ? t('onboarding.individual.error.maxChars', locale).replace('{count}', '50')
+            ? t('onboarding.individual.error.maxChars', locale).replace(
+                '{count}',
+                numbers.number(50)
+              )
             : undefined;
         if (!value.trim()) return t('onboarding.individual.error.required', locale);
         if (field === 'representativeNationalId' && !validateNationalId(value.trim()))
@@ -338,13 +343,20 @@ function LegalProfileFormPage() {
           return t('onboarding.individual.error.invalidPostalCode', locale);
         const max = field === 'representativeFullAddress' ? 500 : 100;
         return value.length > max
-          ? t('onboarding.individual.error.maxChars', locale).replace('{count}', String(max))
+          ? t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(max)
+            )
           : undefined;
       }
       switch (field) {
         case 'legalName':
           if (!value.trim()) return isRtl ? 'نام شخص حقوقی الزامی است' : 'Legal name is required';
-          if (value.length > 200) return isRtl ? 'حداکثر ۲۰۰ کاراکتر' : 'Max 200 characters';
+          if (value.length > 200)
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(200)
+            );
           return undefined;
         case 'nationalIdentifier':
           if (!value.trim())
@@ -357,7 +369,11 @@ function LegalProfileFormPage() {
         case 'registrationNumber':
           if (!value.trim())
             return isRtl ? 'شماره ثبت الزامی است' : 'Registration number is required';
-          if (value.length > 50) return isRtl ? 'حداکثر ۵۰ کاراکتر' : 'Max 50 characters';
+          if (value.length > 50)
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(50)
+            );
           return undefined;
         case 'companyTypeId':
           if (!value) return isRtl ? 'نوع شرکت الزامی است' : 'Company type is required';
@@ -379,7 +395,10 @@ function LegalProfileFormPage() {
         case 'officialFullAddress':
           if (!value.trim()) return t('onboarding.legal.required.fullAddress', locale);
           if (value && value.length > 500)
-            return isRtl ? 'حداکثر ۵۰۰ کاراکتر' : 'Max 500 characters';
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(500)
+            );
           return undefined;
         case 'officialPostalCode':
           if (!value.trim()) return t('onboarding.legal.required.postalCode', locale);
@@ -389,18 +408,26 @@ function LegalProfileFormPage() {
         case 'representativeTitle':
           if (!value.trim())
             return isRtl ? 'عنوان نماینده الزامی است' : 'Representative title is required';
-          if (value.length > 100) return isRtl ? 'حداکثر ۱۰۰ کاراکتر' : 'Max 100 characters';
+          if (value.length > 100)
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(100)
+            );
           return undefined;
         case 'representativeRelationship':
           if (!value.trim())
             return isRtl ? 'نسبت نماینده الزامی است' : 'Representative relationship is required';
-          if (value.length > 100) return isRtl ? 'حداکثر ۱۰۰ کاراکتر' : 'Max 100 characters';
+          if (value.length > 100)
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(100)
+            );
           return undefined;
         default:
           return undefined;
       }
     },
-    [isRtl, locale]
+    [isRtl, locale, numbers]
   );
 
   const handleBlur = useCallback(
@@ -1139,7 +1166,9 @@ function LegalProfileFormPage() {
                   errors.officialFullAddress ? 'officialFullAddress-error' : undefined
                 }
               />
-              <p className="text-xs text-muted-foreground">{officialFullAddress.length}/500</p>
+              <p className="text-xs text-muted-foreground">
+                {numbers.number(officialFullAddress.length)}/{numbers.number(500)}
+              </p>
               {touched.officialFullAddress && errors.officialFullAddress && (
                 <p id="officialFullAddress-error" className="text-sm text-destructive" role="alert">
                   {errors.officialFullAddress}

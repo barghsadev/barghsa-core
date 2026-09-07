@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { LegalProfileDocuments } from '../../../components/LegalProfileDocuments.js';
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
@@ -119,6 +120,7 @@ function getStatusBadge(status: string, locale: Locale): { label: string; varian
 
 function SettingsProfilePage() {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
 
   const [profile, setProfile] = useState<ProfileDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -735,8 +737,8 @@ function SettingsProfilePage() {
               <div className="pt-2 border-t">
                 <p className="text-xs text-muted-foreground mb-2">
                   {locale === 'fa'
-                    ? `تعداد کل آدرس‌ها: ${profile.addresses.length}`
-                    : `Total addresses: ${profile.addresses.length}`}
+                    ? `تعداد کل آدرس‌ها: ${numbers.number(profile.addresses.length)}`
+                    : `Total addresses: ${numbers.number(profile.addresses.length)}`}
                 </p>
               </div>
             )}

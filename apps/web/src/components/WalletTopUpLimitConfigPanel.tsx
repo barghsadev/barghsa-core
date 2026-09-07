@@ -1,6 +1,5 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import type { Locale } from '@barghsa/i18n';
 import { tWalletLimit as t } from '@barghsa/i18n/wallet-limit';
 import { validateWalletTopUpLimitConfig } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
@@ -110,7 +109,10 @@ export default function WalletTopUpLimitConfigPanel() {
     const validation = validateWalletTopUpLimitConfig({ limit_irr: raw });
     if (!validation.ok) {
       setClientIssue(
-        t('admin.walletLimit.invalid', locale).replace('{max}', String(Number.MAX_SAFE_INTEGER))
+        t('admin.walletLimit.invalid', locale).replace(
+          '{max}',
+          numbers.number(Number.MAX_SAFE_INTEGER)
+        )
       );
       return;
     }

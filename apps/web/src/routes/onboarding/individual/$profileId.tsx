@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useState, useEffect, useCallback } from 'react';
@@ -41,6 +42,7 @@ function IndividualProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/individual/$profileId' });
   const router = useRouter();
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
   // Form state
@@ -130,17 +132,26 @@ function IndividualProfileFormPage() {
       switch (field) {
         case 'title':
           if (value.length > 50)
-            return t('onboarding.individual.error.maxChars', locale).replace('{count}', '50');
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(50)
+            );
           return undefined;
         case 'firstName':
           if (!value.trim()) return t('onboarding.individual.error.required', locale);
           if (value.length > 100)
-            return t('onboarding.individual.error.maxChars', locale).replace('{count}', '100');
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(100)
+            );
           return undefined;
         case 'lastName':
           if (!value.trim()) return t('onboarding.individual.error.required', locale);
           if (value.length > 100)
-            return t('onboarding.individual.error.maxChars', locale).replace('{count}', '100');
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(100)
+            );
           return undefined;
         case 'nationalId':
           if (!value.trim()) return t('onboarding.individual.error.required', locale);
@@ -156,7 +167,10 @@ function IndividualProfileFormPage() {
         case 'fullAddress':
           if (!value.trim()) return t('onboarding.individual.error.required', locale);
           if (value.length > 500)
-            return t('onboarding.individual.error.maxChars', locale).replace('{count}', '500');
+            return t('onboarding.individual.error.maxChars', locale).replace(
+              '{count}',
+              numbers.number(500)
+            );
           return undefined;
         case 'postalCode':
           if (!value.trim()) return t('onboarding.individual.error.required', locale);
@@ -167,7 +181,7 @@ function IndividualProfileFormPage() {
           return undefined;
       }
     },
-    [locale]
+    [locale, numbers]
   );
 
   const handleBlur = useCallback(
@@ -539,7 +553,9 @@ function IndividualProfileFormPage() {
               aria-invalid={touched.fullAddress && !!errors.fullAddress}
               aria-describedby={errors.fullAddress ? 'fullAddress-error' : undefined}
             />
-            <p className="text-xs text-muted-foreground">{fullAddress.length}/500</p>
+            <p className="text-xs text-muted-foreground">
+              {numbers.number(fullAddress.length)}/{numbers.number(500)}
+            </p>
             {touched.fullAddress && errors.fullAddress && (
               <p id="fullAddress-error" className="text-sm text-destructive" role="alert">
                 {errors.fullAddress}
