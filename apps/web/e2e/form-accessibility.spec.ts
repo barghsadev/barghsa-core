@@ -1934,3 +1934,134 @@ for (const locale of ['en', 'fa']) {
     }
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`ordering saves one captured draft and rejects mismatched success (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
+      })
+    );
+    await page.route('**/api/products', (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: 'electricity',
+            type: 'electricity',
+            status: 'active',
+            title: { en: 'Green supply', fa: 'برق سبز' },
+            price: '100',
+          },
+        ],
+      })
+    );
+    const address = {
+      provinceId: 'province',
+      cityId: 'city',
+      fullAddress: 'Delivery address',
+      postalCode: '1234567890',
+    };
+    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+      route.fulfill({ json: { addresses: [{ id: 'address', ...address }] } })
+    );
+    await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    const writes: unknown[] = [];
+    let release!: () => void;
+    const pending = new Promise<void>((done) => {
+      release = done;
+    });
+    const invalid = [
+      { id: '' },
+      { profileId: 'other' },
+      { productId: 'other' },
+      { status: 'PENDING' },
+      { orderType: 'solar' },
+      { snapshotProvinceId: 'other' },
+      { snapshotCityId: 'other' },
+      { snapshotFullAddress: 'other' },
+      { snapshotPostalCode: 'other' },
+    ];
+    await page.route('**/api/orders', async (route) => {
+      writes.push(route.request().postDataJSON());
+      if (writes.length === 1) {
+        await pending;
+        return route.fulfill({ status: 503, json: {} });
+      }
+      return route.fulfill({
+        status: 201,
+        json: {
+          id: 'saved-order',
+          profileId: 'profile-one',
+          productId: 'electricity',
+          orderType: 'electricity',
+          status: 'DRAFT',
+          snapshotProvinceId: address.provinceId,
+          snapshotCityId: address.cityId,
+          snapshotFullAddress: address.fullAddress,
+          snapshotPostalCode: address.postalCode,
+          ...invalid[writes.length - 2],
+        },
+      });
+    });
+    await page.goto('/electricity/order');
+    const save = page.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save Draft',
+      exact: true,
+    });
+    await expect(save).toBeEnabled();
+    try {
+      await save.evaluate((button: HTMLButtonElement) => {
+        button.click();
+        button.click();
+      });
+      await expect.poll(() => writes.length).toBe(1);
+      for (const radio of await page.getByRole('radio').all()) await expect(radio).toBeDisabled();
+      await expect(
+        page.getByRole('button', {
+          name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+          exact: true,
+        })
+      ).toBeDisabled();
+    } finally {
+      release();
+    }
+    await expect(save).toBeEnabled();
+    for (let index = 0; index < invalid.length; index++) {
+      await save.click();
+      await expect.poll(() => writes.length).toBe(index + 2);
+      await expect(save).toBeEnabled();
+      await expect(
+        page.getByRole('heading', {
+          name: locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft Saved',
+          exact: true,
+        })
+      ).toHaveCount(0);
+    }
+    await save.click();
+    await expect(
+      page.getByRole('heading', {
+        name: locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft Saved',
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        locale === 'fa'
+          ? 'پیش‌نویس سفارش برق ذخیره شد. سفارش هنوز برای پردازش ارسال نشده است.'
+          : 'Your electricity order draft is saved. It has not been submitted for processing.',
+        { exact: true }
+      )
+    ).toBeVisible();
+    expect(writes).toEqual(
+      Array(11).fill({
+        profileId: 'profile-one',
+        productId: 'electricity',
+        orderType: 'electricity',
+        address,
+      })
+    );
+  });
+}

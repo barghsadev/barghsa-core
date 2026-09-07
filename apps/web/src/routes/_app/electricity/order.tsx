@@ -93,6 +93,7 @@ function ElectricityOrderPage() {
 
   // Order submission
   const [submitting, setSubmitting] = useState(false);
+  const orderSaveInFlight = useRef(false);
   const [orderCreated, setOrderCreated] = useState(false);
 
   // ── Fetch verification status ───────────────────────────────────────
@@ -446,7 +447,7 @@ function ElectricityOrderPage() {
   // ── Submit order ────────────────────────────────────────────────────
 
   const handleSubmitOrder = useCallback(async () => {
-    if (addressSaveInFlight.current || showNewAddressForm) return;
+    if (orderSaveInFlight.current || addressSaveInFlight.current || showNewAddressForm) return;
     if (
       loadingProducts ||
       productError ||
@@ -468,22 +469,25 @@ function ElectricityOrderPage() {
       return;
     }
 
+    orderSaveInFlight.current = true;
     setSubmitting(true);
+    const generation = verificationGeneration.current;
+    const input = {
+      profileId: activeProfileId,
+      productId: selectedProductId,
+      orderType: 'electricity',
+      address: {
+        provinceId: selectedAddress.provinceId,
+        cityId: selectedAddress.cityId,
+        fullAddress: selectedAddress.fullAddress,
+        postalCode: selectedAddress.postalCode,
+      },
+    };
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          profileId: activeProfileId,
-          productId: selectedProductId,
-          orderType: 'electricity',
-          address: {
-            provinceId: selectedAddress.provinceId,
-            cityId: selectedAddress.cityId,
-            fullAddress: selectedAddress.fullAddress,
-            postalCode: selectedAddress.postalCode,
-          },
-        }),
+        body: JSON.stringify(input),
       });
 
       if (!res.ok) {
@@ -493,11 +497,38 @@ function ElectricityOrderPage() {
         return;
       }
 
+      const result: unknown = await res.json();
+      if (generation !== verificationGeneration.current) return;
+      if (
+        !result ||
+        typeof result !== 'object' ||
+        !('id' in result) ||
+        typeof result.id !== 'string' ||
+        !result.id.trim() ||
+        !('profileId' in result) ||
+        result.profileId !== input.profileId ||
+        !('productId' in result) ||
+        result.productId !== input.productId ||
+        !('orderType' in result) ||
+        result.orderType !== input.orderType ||
+        !('status' in result) ||
+        result.status !== 'DRAFT' ||
+        !('snapshotProvinceId' in result) ||
+        result.snapshotProvinceId !== input.address.provinceId ||
+        !('snapshotCityId' in result) ||
+        result.snapshotCityId !== input.address.cityId ||
+        !('snapshotFullAddress' in result) ||
+        result.snapshotFullAddress !== input.address.fullAddress ||
+        !('snapshotPostalCode' in result) ||
+        result.snapshotPostalCode !== input.address.postalCode
+      )
+        throw new Error('Invalid saved order');
       setOrderCreated(true);
       toast.success(t('electricity.order.success.create', locale));
     } catch {
       toast.error(t('electricity.order.error.create', locale));
     } finally {
+      orderSaveInFlight.current = false;
       setSubmitting(false);
     }
   }, [
@@ -644,6 +675,7 @@ function ElectricityOrderPage() {
                     name="product"
                     value={product.id}
                     checked={selectedProductId === product.id}
+                    disabled={submitting}
                     onChange={() => setSelectedProductId(product.id)}
                     className="h-4 w-4 accent-primary"
                   />
@@ -692,7 +724,11 @@ function ElectricityOrderPage() {
               <p className="text-sm text-muted-foreground mb-4">
                 {t('electricity.order.noAddresses', locale)}
               </p>
-              <Button onClick={() => setShowNewAddressForm(true)} className="gap-2">
+              <Button
+                disabled={submitting}
+                onClick={() => setShowNewAddressForm(true)}
+                className="gap-2"
+              >
                 <PlusIcon className="h-4 w-4" />
                 {t('electricity.order.addAddress', locale)}
               </Button>
@@ -718,6 +754,7 @@ function ElectricityOrderPage() {
                         name="address"
                         value={address.id}
                         checked={selectedAddressId === address.id}
+                        disabled={submitting}
                         onChange={() => setSelectedAddressId(address.id)}
                         className="mt-1 h-4 w-4 shrink-0 accent-primary"
                       />
@@ -745,6 +782,7 @@ function ElectricityOrderPage() {
 
                   <Button
                     variant="outline"
+                    disabled={submitting}
                     onClick={() => setShowNewAddressForm(true)}
                     className="w-full gap-2 mt-2"
                   >

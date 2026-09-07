@@ -1212,8 +1212,8 @@ export const fa: I18nDictionary = {
   'electricity.order.review': 'مرور سفارش',
   'electricity.order.product': 'محصول',
   'electricity.order.deliveryAddress': 'آدرس تحویل',
-  'electricity.order.submitting': 'در حال ثبت سفارش…',
-  'electricity.order.submit': 'ثبت سفارش',
+  'electricity.order.submitting': 'در حال ذخیره پیش‌نویس…',
+  'electricity.order.submit': 'ذخیره پیش‌نویس',
 
   'electricity.order.error.noProduct': 'لطفاً یک محصول را انتخاب کنید',
   'electricity.order.error.noAddress': 'لطفاً یک آدرس را انتخاب کنید',
@@ -1228,10 +1228,10 @@ export const fa: I18nDictionary = {
   'electricity.order.retry': 'تلاش دوباره',
   'electricity.order.error.noProfile': 'پروفایل فعالی یافت نشد',
   'electricity.order.error.create': 'ایجاد سفارش با خطا مواجه شد',
-  'electricity.order.success.create': 'سفارش با موفقیت ثبت شد!',
-  'electricity.order.success.title': 'سفارش ثبت شد',
+  'electricity.order.success.create': 'پیش‌نویس سفارش ذخیره شد.',
+  'electricity.order.success.title': 'پیش‌نویس ذخیره شد',
   'electricity.order.success.description':
-    'سفارش برق شما با موفقیت ایجاد شد. می‌توانید وضعیت آن را از صفحه سفارش‌های خود پیگیری کنید.',
+    'پیش‌نویس سفارش برق ذخیره شد. سفارش هنوز برای پردازش ارسال نشده است.',
 
   'dashboard.nav.label': 'ناوبری',
   'shell.skipContent': 'رفتن به محتوای اصلی',
@@ -3212,8 +3212,8 @@ export const en: I18nDictionary = {
   'electricity.order.review': 'Review Order',
   'electricity.order.product': 'Product',
   'electricity.order.deliveryAddress': 'Delivery Address',
-  'electricity.order.submitting': 'Submitting order…',
-  'electricity.order.submit': 'Submit Order',
+  'electricity.order.submitting': 'Saving draft…',
+  'electricity.order.submit': 'Save Draft',
 
   'electricity.order.error.noProduct': 'Please select a product',
   'electricity.order.error.noAddress': 'Please select an address',
@@ -3228,10 +3228,10 @@ export const en: I18nDictionary = {
   'electricity.order.retry': 'Try again',
   'electricity.order.error.noProfile': 'No active profile found',
   'electricity.order.error.create': 'Failed to create order',
-  'electricity.order.success.create': 'Order created successfully!',
-  'electricity.order.success.title': 'Order Submitted',
+  'electricity.order.success.create': 'Order draft saved.',
+  'electricity.order.success.title': 'Draft Saved',
   'electricity.order.success.description':
-    'Your electricity order has been successfully created. You can track its status from your orders page.',
+    'Your electricity order draft is saved. It has not been submitted for processing.',
 
   'dashboard.nav.label': 'Navigation',
   'shell.skipContent': 'Skip to main content',
