@@ -5,6 +5,7 @@ import {
   type DatabaseMetrics,
 } from '@barghsa/db';
 import promClient from 'prom-client';
+import { createDatabaseTelemetry } from './database-telemetry.js';
 
 /**
  * NestJS service that registers and updates Prometheus gauges for PostgreSQL
@@ -45,6 +46,8 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
   private pollTimer: ReturnType<typeof setInterval> | null = null;
   private lastMetrics: DatabaseMetrics | null = null;
   private pollInFlight: Promise<void> | null = null;
+  private lastReplicationLag: number | null = null;
+  private readonly telemetry: ReturnType<typeof createDatabaseTelemetry>;
 
   // Polling interval (ms).  In production, metrics are updated on each scrape
   // by the controller; the poll interval controls how fresh the cached values
@@ -198,6 +201,7 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
 
   private clearDatabaseMetrics(): void {
     this.lastMetrics = null;
+    this.lastReplicationLag = null;
     // Gauge.reset() creates a zero sample for unlabelled gauges; remove it instead.
     for (const gauge of this.databaseGauges) gauge.remove();
     this.topQueryDuration.reset();
@@ -206,6 +210,10 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
   }
 
   constructor() {
+    this.telemetry = createDatabaseTelemetry(() => ({
+      metrics: this.lastMetrics,
+      replicationLag: this.lastReplicationLag,
+    }));
     // Register default Node.js / runtime metrics
     promClient.collectDefaultMetrics({ prefix: 'node_' });
   }
@@ -229,6 +237,11 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       this.pollTimer = null;
     }
     await this.pollInFlight;
+    try {
+      await this.telemetry?.shutdown({ timeoutMillis: 5000 });
+    } catch {
+      this.logger.warn('OpenTelemetry metrics shutdown did not complete');
+    }
   }
 
   /**
@@ -264,8 +277,6 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       }
 
       const m = result.metrics;
-      this.lastMetrics = m;
-
       this.queryCalls.remove();
       if (m.queryCalls !== null) this.queryCalls.set(m.queryCalls);
       this.sequentialScans.remove();
@@ -302,6 +313,7 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
 
       const lag = await collectReplicationLag();
       const validLag = lag !== null && Number.isFinite(lag) && lag >= 0;
+      this.lastReplicationLag = validLag ? lag : null;
       this.replicationLag.remove();
       if (validLag) this.replicationLag.set(lag);
       this.viewAvailable.set({ view: 'replication' }, validLag ? 1 : 0);
@@ -320,6 +332,7 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       for (const q of m.topQueries ?? []) {
         this.topQueryDuration.set({ queryid: q.queryId }, q.meanTimeMs / 1000);
       }
+      this.lastMetrics = m;
       this.collectionSuccess.set(1);
     } catch (err) {
       this.clearDatabaseMetrics();

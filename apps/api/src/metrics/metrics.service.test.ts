@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import promClient from 'prom-client';
-import type { DatabaseMetrics } from '@barghsa/db';
+import { createMetricsSnapshot as snapshot } from '../test/metrics-fixture.js';
 const collector = vi.hoisted(() => ({ performance: vi.fn(), replication: vi.fn() }));
 vi.mock('@barghsa/db', () => ({
   collectPerformanceMetrics: collector.performance,
@@ -8,63 +8,10 @@ vi.mock('@barghsa/db', () => ({
 }));
 import { MetricsService } from './metrics.service.js';
 
-function snapshot(): DatabaseMetrics {
-  return {
-    queryCalls: 55,
-    tableScans: { sequential: 12, index: 34 },
-    database: {
-      xact_commit: 10,
-      xact_rollback: 1,
-      blks_read: 2,
-      blks_hit: 98,
-      tup_returned: 100,
-      tup_fetched: 50,
-      tup_inserted: 4,
-      tup_updated: 3,
-      tup_deleted: 1,
-      conflicts: 0,
-      deadlocks: 0,
-      blk_read_time: 1,
-      blk_write_time: 1,
-      temp_files: 0,
-      temp_bytes: 0,
-    },
-    cacheHitRatio: 0.98,
-    connectionSaturation: 0.1,
-    maxConnections: 100,
-    activeConnections: 10,
-    idleInTransaction: 0,
-    waitingConnections: 0,
-    longRunningQueries: [],
-    wal: {
-      wal_records: 10,
-      wal_fpi: 1,
-      wal_bytes: 123,
-      wal_buffers_full: 0,
-      wal_write: 2,
-      wal_sync: 2,
-      wal_write_time: 1,
-      wal_sync_time: 1,
-    },
-    bgwriter: {
-      checkpoints_timed: 12,
-      checkpoints_req: 2,
-      checkpoint_write_time: 1,
-      checkpoint_sync_time: 1,
-      buffers_checkpoint: 3,
-      buffers_clean: 2,
-      maxwritten_clean: 0,
-      buffers_backend: null,
-      buffers_backend_fsync: null,
-      buffers_alloc: 4,
-      stats_reset: null,
-    },
-    topQueries: [],
-  };
-}
 let service: MetricsService;
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubEnv('OTEL_EXPORTER_OTLP_METRICS_ENDPOINT', '');
   promClient.register.clear();
   collector.performance.mockResolvedValue({ ok: true, metrics: snapshot(), latencyMs: 1 });
   collector.replication.mockResolvedValue(23);
@@ -73,6 +20,7 @@ beforeEach(() => {
 afterEach(async () => {
   await service.onModuleDestroy();
   promClient.register.clear();
+  vi.unstubAllEnvs();
 });
 
 it.each(['failed', 'thrown'])(

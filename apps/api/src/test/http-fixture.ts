@@ -11,7 +11,8 @@ export async function startHttpFixture(
   trustedProxyAddresses = '',
   poolMax = 10,
   aiModelAllowedHosts = '',
-  startAiModelWorker = false
+  startAiModelWorker = false,
+  telemetry?: { endpoint: string; intervalMs: number; timeoutMs: number }
 ) {
   const database = `test_http_${randomUUID().replaceAll('-', '')}`;
   const management = new Pool({ connectionString: testDatabaseUrl });
@@ -79,6 +80,15 @@ export async function startHttpFixture(
         AI_MODEL_ENCRYPTION_KEY: 'http-fixture-ai-key-only',
         AI_MODEL_BASE_URL_ALLOWLIST: aiModelAllowedHosts,
         AI_MODEL_TEST_WAIT_MS: startAiModelWorker ? '10000' : '1000',
+        OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: telemetry?.endpoint ?? '',
+        OTEL_EXPORTER_OTLP_METRICS_HEADERS: '',
+        OTEL_EXPORTER_OTLP_HEADERS: '',
+        ...(telemetry
+          ? {
+              OTEL_METRIC_EXPORT_INTERVAL: String(telemetry.intervalMs),
+              OTEL_METRIC_EXPORT_TIMEOUT: String(telemetry.timeoutMs),
+            }
+          : {}),
         REDIS_URL: '',
         REDIS_HOST: '',
         S3_BUCKET: localStorageEndpoint ? 'test-evidence' : '',
