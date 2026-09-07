@@ -21,6 +21,7 @@ export const test = base.extend<{ browserCoverage: void }>({
           join(directory, `${randomUUID()}.json`),
           JSON.stringify({
             schema_version: 1,
+            application_origin: new URL(process.env['PLAYWRIGHT_BASE_URL']!).origin,
             head_sha: process.env['BARGHSA_BROWSER_COVERAGE_HEAD'],
             working_tree_dirty: process.env['BARGHSA_BROWSER_COVERAGE_DIRTY'] !== 'false',
             entries,

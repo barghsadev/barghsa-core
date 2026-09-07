@@ -19,6 +19,7 @@ export async function collectBrowserCoverage({ root, distDir, rawDir, output }) 
     encoding: 'utf8',
   }).trim();
   let recordedDirty = false;
+  let ignoredScripts = 0;
   let merged = { result: [] };
   for (const name of files) {
     const record = JSON.parse(await readFile(join(rawDir, name), 'utf8'));
@@ -28,12 +29,21 @@ export async function collectBrowserCoverage({ root, distDir, rawDir, output }) 
       typeof record.working_tree_dirty !== 'boolean'
     )
       throw new Error('Browser records belong to an unknown or different revision');
+    if (
+      typeof record.application_origin !== 'string' ||
+      new URL(record.application_origin).origin !== record.application_origin
+    )
+      throw new Error('Missing application origin');
     recordedDirty ||= record.working_tree_dirty;
     const entries = record.entries;
     if (!Array.isArray(entries)) throw new Error('Invalid browser coverage records');
     const result = [];
     for (const entry of entries) {
       const url = new URL(entry.url);
+      if (url.origin !== record.application_origin) {
+        ignoredScripts++;
+        continue;
+      }
       if (!url.pathname.startsWith('/assets/') || !url.pathname.endsWith('.js')) continue;
       const filename = resolve(distDir, '.' + decodeURIComponent(url.pathname));
       if (!filename.startsWith(resolve(distDir) + sep)) throw new Error('Invalid asset path');
@@ -100,6 +110,7 @@ export async function collectBrowserCoverage({ root, distDir, rawDir, output }) 
       }).trim() !== '',
     browser_record_count: files.length,
     asset_count: merged.result.length,
+    ignored_non_application_scripts: ignoredScripts,
     coverage: JSON.parse(JSON.stringify(coverage.toJSON())),
   };
   await writeFile(output, JSON.stringify(report) + '\n');

@@ -60,6 +60,7 @@ async function fixture(run) {
     git('commit', '-m', 'fixture');
     const record = {
       schema_version: 1,
+      application_origin: 'http://127.0.0.1:1234',
       head_sha: git('rev-parse', 'HEAD'),
       working_tree_dirty: false,
       entries,
@@ -104,9 +105,10 @@ test('maps real V8 ranges and merges hits while retaining uncovered unit source'
 });
 
 test('missing maps, empty records and source mismatches invalidate previous output', async () => {
-  for (const failure of ['map', 'empty', 'mismatch', 'range', 'revision']) {
+  for (const failure of ['asset', 'map', 'empty', 'mismatch', 'range', 'revision']) {
     await fixture(async (options) => {
       await collectBrowserCoverage(options);
+      if (failure === 'asset') await rm(options.asset);
       if (failure === 'map') await rm(options.asset + '.map');
       if (failure === 'empty') await rm(options.raw);
       if (failure === 'mismatch') options.entries[0].source = 'different';
@@ -118,6 +120,19 @@ test('missing maps, empty records and source mismatches invalidate previous outp
       assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
     });
   }
+});
+
+test('separate component servers are excluded from application coverage explicitly', async () => {
+  await fixture(async (options) => {
+    options.entries.push({
+      ...options.entries[0],
+      url: 'http://127.0.0.1:9999/assets/component-only.js',
+    });
+    await writeFile(options.raw, JSON.stringify(options.record));
+    const report = await collectBrowserCoverage(options);
+    assert.equal(report.asset_count, 1);
+    assert.equal(report.ignored_non_application_scripts, 1);
+  });
 });
 
 test('dirty or wrong revision and absent unit coverage fail without overwriting reports', async () => {

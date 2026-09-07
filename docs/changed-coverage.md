@@ -36,6 +36,9 @@ Every record captures the tested revision and whether the checkout was dirty. Th
 merge rejects stale revisions and dirty runs. Unit coverage is retained for source
 not exercised in the browser. Additional browser contexts outside the shared page
 fixture are not included.
+Standalone component-test servers are also outside the production-app source map.
+Their scripts are counted separately as ignored non-application scripts; missing
+assets from the application origin still fail collection.
 
 A separate CI job combines unit and browser artifacts for the same HEAD. PR coverage
 always includes the web, UI, shared and i18n packages, even when the changed package
