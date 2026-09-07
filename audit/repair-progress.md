@@ -2036,3 +2036,9 @@ Review and validation: four browser cases failed before repair; the search/keybo
 The app root now supplies Base UI direction from the shared document locale and keeps the HTML direction synchronized during language changes. A dedicated UI package entry exposes the provider without requiring a root barrel import. Tabs now forward orientation to the primitive, so vertical tabs expose the correct accessibility state and respond to up/down arrows. Tab icon spacing and vertical indicators use logical directions.
 
 Review and validation: browser checks reproduced the missing RTL context and dropped vertical orientation. Initial tests also assumed automatic activation and a single panel during transitions; corrected them to press Enter for the installed primitive's manual activation mode and target the named panel. All 22 direction/date-picker/multi-select checks and all 59 application form/dialog checks pass. Direction changes preserve tab selection. Root build, types, targeted lint, formatting and bundle gates pass; login is 143.59 KB gzip under its 150 KB budget. These tests do not certify every remaining shared widget or full screen-reader acceptance.
+
+### Refresh production image verification after runtime and UI repairs
+
+Built all three production images from clean b6c646c using pnpm 10.11.1. The disposable production-image suite passes all four checks: non-root/read-only boot and packaged migrations, database outage/recovery, concurrent finance/notification shutdown, and interrupted-job retry with one committed result. Web and API terminate cleanly. Exact image identities are recorded in production-image-checkpoint.json.
+
+The forced-deadline fixture explicitly terminates orphaned PostgreSQL sessions and shortens the durable lease before retry. It does not establish natural disconnect or production lease timing. No deployment, existing database, external provider or scheduler was changed.
