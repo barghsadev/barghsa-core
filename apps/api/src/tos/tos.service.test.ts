@@ -134,6 +134,7 @@ describe('TosService', () => {
     it('inserts acceptance record and updates user on success', async () => {
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [{ user_id: userId }] }) // Lock user
         .mockResolvedValueOnce({ rows: [{ id: versionId }] }) // SELECT tos_versions
         .mockResolvedValueOnce({ rows: [] }) // INSERT tos_acceptances
         .mockResolvedValueOnce({ rows: [] }) // UPDATE users
@@ -166,6 +167,7 @@ describe('TosService', () => {
     it('throws 400 when TOS version does not exist or is not active', async () => {
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [{ user_id: userId }] }) // Lock user
         .mockResolvedValueOnce({ rows: [] }); // SELECT tos_versions returns empty (version not found or not active)
 
       const err = await service.recordAcceptance(userId, versionId, ip).catch((e) => e);
@@ -195,6 +197,7 @@ describe('TosService', () => {
     it('records acceptance without user_agent when not provided', async () => {
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [{ user_id: userId }] }) // Lock user
         .mockResolvedValueOnce({ rows: [{ id: versionId }] }) // SELECT tos_versions
         .mockResolvedValueOnce({ rows: [] }) // INSERT tos_acceptances
         .mockResolvedValueOnce({ rows: [] }) // UPDATE users
