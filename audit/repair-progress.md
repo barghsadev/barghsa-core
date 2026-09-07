@@ -2514,3 +2514,9 @@ The current dependency audit reports zero known advisories across 1,349 resolved
 The owner explicitly chose to retain Vite SPA and update requirements. ADR 004, the root/web documentation and canonical infrastructure, authentication, localization and CSP tasks now describe Vite with TanStack Router and client rendering. First-load budgets, early language/direction selection, accessible loading/error handling, caching, CSP and shutdown obligations remain. Obsolete claims about current TanStack package incompatibility were removed. The separate skipLibCheck issue remains open.
 
 All 1,355 task identities and their order are preserved. Generated backlog/traceability validation and all 48 protocol checks pass. Formatting and diff review pass. Historical audit requirement hashes remain tied to their original revisions; this decision does not claim outstanding acceptance checks passed or resume a stale assignment.
+
+### Close the revised frontend build-pipeline task
+
+At revision 564d141, the fresh Vite production build, route-budget regression checks and all complete-route payload gates pass. Source review confirms the client React root, TanStack Router route splitting, hashed assets, CSS splitting and HTML/static serving required by the approved architecture. Task 01-platform-infrastructure.md#T-01.03.01 is now acceptance_verified against its revised canonical text and source hashes.
+
+Its previous partial assessment is retained under superseded_assessments instead of being erased. The current ledger still has 30 assessed tasks: 23 verified, seven partial and 292 pending. Other F19 and localization obligations remain open.

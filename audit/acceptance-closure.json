@@ -526,12 +526,12 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.01",
-      "status": "partial",
-      "reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+      "status": "acceptance_verified",
+      "reviewed_sha": "564d14158fb1444dd96ba070c35abd68d03b04b4",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 129,
-      "requirement": "- **T-01.03.01:** Configure TanStack Start build pipeline in `apps/web`\n  - **Notes:** Use `@tanstack/start` build command. Ensure SSR configuration does not add server-side business logic duplication. Set `build.inlineDynamicImports: false` for route-level CSS/JS splitting. Configure `server.functions` as thin BFF only — authorization, pricing, state transitions stay in backend modules.\n  - **Dependencies:** S-01.02, packages/i18n, packages/shared, packages/ui\n  - **Complexity:** L",
-      "requirement_sha256": "53d92bb4b757e8260045f31dc3f0f47b77a7517dccf060b2987f80cf2e5b5e6c",
+      "requirement": "- **T-01.03.01:** Configure Vite SPA build pipeline in `apps/web`\n  - **Notes:** Use the Vite build command with TanStack Router and client-side React rendering, as approved in ADR 004. Keep route-level CSS/JS splitting and avoid inlining all dynamic imports. The production server serves the HTML shell and static assets; authorization, pricing and state transitions stay in backend modules. TanStack Start and server-side React rendering are not required.\n  - **Dependencies:** S-01.02, packages/i18n, packages/shared, packages/ui\n  - **Complexity:** L",
+      "requirement_sha256": "ce740e0a29e3fe1c209eff52bd5a46674b2aca7d755db7c852cc8ca15544118d",
       "source_evidence": [
         {
           "path": "apps/web/vite.config.ts",
@@ -539,19 +539,29 @@
         },
         {
           "path": "apps/web/package.json",
-          "sha256": "fdb44d2dbaa476b869b8f87de8b0e55ff9b32d8e56308c029cf83d90f8dd1ce8"
+          "sha256": "3772b0fb55ad998b1f6f1bb4dec4c2c9965b686777bc31d3f85d57d183c8ed8d"
         },
         {
           "path": "apps/web/src/client.tsx",
           "sha256": "17253729b0f69149dcb41e8915834b14b39ffd0e614d21a8ce8b7fba13a68590"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "dcfcda14e2f86914a8863e3bfb5817cdcc94610efbd80e3718db9498f5076c0c"
+        },
+        {
+          "path": "docs/adr/004-web-spa.md",
+          "sha256": "0d34ed008544b9f0d35d28d909b459127b08839e068f9c3e03ec9a4fca895b13"
         }
       ],
       "checks": [
-        "Production Vite build and route bundle gates pass at b6c646c",
-        "Source review confirms a client-rendered Vite application using TanStack Router"
+        "Owner explicitly approved retaining Vite SPA and updating requirements on 2026-09-07; ADR 004 records the decision",
+        "pnpm --filter @barghsa/web build — passed at 564d14158fb1444dd96ba070c35abd68d03b04b4",
+        "pnpm check:bundle — route-budget tests and all complete-route payload gates passed at 564d14158fb1444dd96ba070c35abd68d03b04b4",
+        "Source review confirms client React root, TanStack Router automatic route splitting, hashed assets, CSS splitting and HTML/static serving"
       ],
       "limitations": [
-        "Required TanStack Start server rendering is absent. Architecture decision requested; no exception approved."
+        "This assessment covers the updated build-pipeline task. Other F19 coverage/type-library and localization acceptance remain separate."
       ],
       "merged_prs": [
         10
@@ -1834,5 +1844,41 @@
     "07-ui-ux-design.md#T-07.01.01.01",
     "07-ui-ux-design.md#T-07.01.01.02",
     "07-ui-ux-design.md#T-07.01.01.03"
+  ],
+  "superseded_assessments": [
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.01",
+      "status": "partial",
+      "reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 129,
+      "requirement": "- **T-01.03.01:** Configure TanStack Start build pipeline in `apps/web`\n  - **Notes:** Use `@tanstack/start` build command. Ensure SSR configuration does not add server-side business logic duplication. Set `build.inlineDynamicImports: false` for route-level CSS/JS splitting. Configure `server.functions` as thin BFF only — authorization, pricing, state transitions stay in backend modules.\n  - **Dependencies:** S-01.02, packages/i18n, packages/shared, packages/ui\n  - **Complexity:** L",
+      "requirement_sha256": "53d92bb4b757e8260045f31dc3f0f47b77a7517dccf060b2987f80cf2e5b5e6c",
+      "source_evidence": [
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "2a4a5b13fe68f9b93fb7516dde50931a4e966871792f6015e0ebef3c200fb9dc"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "fdb44d2dbaa476b869b8f87de8b0e55ff9b32d8e56308c029cf83d90f8dd1ce8"
+        },
+        {
+          "path": "apps/web/src/client.tsx",
+          "sha256": "17253729b0f69149dcb41e8915834b14b39ffd0e614d21a8ce8b7fba13a68590"
+        }
+      ],
+      "checks": [
+        "Production Vite build and route bundle gates pass at b6c646c",
+        "Source review confirms a client-rendered Vite application using TanStack Router"
+      ],
+      "limitations": [
+        "Required TanStack Start server rendering is absent. Architecture decision requested; no exception approved."
+      ],
+      "merged_prs": [
+        10
+      ],
+      "historically_skipped": false
+    }
   ]
 }
