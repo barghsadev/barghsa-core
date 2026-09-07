@@ -64,8 +64,12 @@ export function buildConnectionString(
   const itt = overrides.idleTransactionTimeout ?? DEFAULT_IDLE_TX_TIMEOUT;
 
   const gucOptions = `-c statement_timeout=${st} -c lock_timeout=${lt} -c idle_in_transaction_session_timeout=${itt}`;
-  const separator = url.includes('?') ? '&' : '?';
-  return `${url}${separator}options=${encodeURIComponent(gucOptions)}`;
+  const connection = new URL(url);
+  // pg uses the last occurrence of a repeated connection-string parameter.
+  // Keep its effective startup options, then apply our timeout guards last.
+  const existing = connection.searchParams.getAll('options').at(-1);
+  connection.searchParams.set('options', existing ? `${existing} ${gucOptions}` : gucOptions);
+  return connection.toString();
 }
 
 type PendingQuery = { handleError(error: Error, connection: unknown): void };

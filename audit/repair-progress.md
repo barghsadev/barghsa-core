@@ -2747,3 +2747,10 @@ All 40 cases passed across Chromium, Firefox, WebKit, mobile Chrome and mobile S
 The next coverage refresh passed all 5351 unit/integration tests and root lint, but its browser run had 349 passes and one green-electricity-rules failure. Trace review shows the final successful save closed its dialog, started config/safety reloads, and immediately entered afterEach while proxy route fulfillment was still active. A route then reported already handled and interrupted cleanup. No coverage was collected or merged from that failed run.
 
 The green-rules test now waits for both successful config and safety-status reload responses to finish after each successful save, before a page reload or teardown. It still checks their HTTP status and propagates errors; no exception suppression, arbitrary sleep or retry allowance was added. All 30 focused cases passed over three repetitions across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari. Explicit lint passed. A full browser rerun remains necessary for a new combined-coverage claim.
+
+
+### Preserve PostgreSQL startup options and enforce guards before URL fragments
+
+All three new regressions failed against the previous connection-string builder. Real PostgreSQL showed search_path/application_name disappearing when an existing options value was overwritten. With a fragment, the appended guards became fragment text and all three server timeouts stayed zero. The builder now uses URL parsing, preserves the last effective startup-options value, applies timeout guards last and emits one options parameter. A synthetic encoded-credential case verifies unrelated URL fields and the fragment are preserved.
+
+Review: 21 focused connection/cancellation tests pass, including actual setting readback, server-side statement cancellation and subsequent connection reuse. Database typechecking and explicit lint pass. Broader suites are being refreshed; distinct read/write timeout defaults remain a separate open requirement.

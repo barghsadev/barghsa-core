@@ -33,3 +33,10 @@ A real exhausted pool reproduced a health response after five seconds with one p
 Four real-pool checks cover healthy statistics, saturation, twenty concurrent callers sharing one stalled query, server cancellation followed by an idle reusable connection, and late acquisition without executing SELECT 1. The final full database suite passes 627 tests in 84 files. Real HTTP checks pass for twenty concurrent readiness requests with PostgreSQL status and pool statistics. Database/API types and targeted lint pass after correcting test-only optional-environment and unknown-JSON typing errors. The initial red test needed a timeout longer than the required five-second probe deadline; its corrected run reproduced the queued work directly. Older mock-only health tests were replaced with these resource-level checks.
 
 A cancellation-network failure still relies on the configured server timeout and connection-acquisition timeout. Concurrent probes cannot accumulate additional work while that first attempt settles. Live proxy/network outage behavior is not certified.
+
+
+## Preserve connection startup options
+
+Real PostgreSQL tests reproduced two URL-construction errors. Appending a second options parameter discarded the configured search_path and application_name. Appending after a URL fragment left statement, lock and idle-transaction timeouts at zero. The builder now parses the URL, keeps the driver's effective last options value, appends the configured guards within that value and writes one options parameter before any fragment. Existing credentials and unrelated URL fields remain intact.
+
+Three regression cases pass, including actual server setting readback, server-side cancellation and connection reuse. The focused connection/cancellation suite passes 21 tests; database typechecking and explicit lint pass. This repair does not add the still-missing distinct ten-second read and thirty-second write defaults.
