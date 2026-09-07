@@ -72,10 +72,9 @@ describe('sniffContentTypes (T-09.12.05)', () => {
     expect(sniffContentTypes(bytes('PK\x03\x04rest...'))).toEqual(['application/zip']);
   });
 
-  it('detects OLE2 legacy office documents', () => {
+  it('does not infer a legacy Office format from an OLE2 signature', () => {
     expect(sniffContentTypes(hex([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]))).toEqual([
-      'application/msword',
-      'application/vnd.ms-excel',
+      'application/x-cfb',
     ]);
   });
 

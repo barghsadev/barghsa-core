@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { reserveUpload, requireOwnedUpload, completeUpload } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
-import { fileTypeFromBuffer } from 'file-type';
+import { detectOfficeContentType } from './office-content-type.js';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../storage/index.js';
@@ -374,22 +374,18 @@ export class UploadController {
     if (!effectiveAllowsExtension(policy, key))
       throw new BadRequestException('Upload extension is no longer permitted by the active policy');
     const object = await this.storage!.getObject(key);
-    const openXml = /\.(docx|xlsx)$/i.test(key);
+    const office = /\.(docx?|xlsx?)$/i.test(key);
     const sample = await this.readSample(
       object.body,
-      openXml ? policy.maxSizeBytes : SNIFF_SAMPLE_BYTES,
-      openXml
+      office ? policy.maxSizeBytes : SNIFF_SAMPLE_BYTES,
+      office
     );
     let candidates: string[];
-    if (openXml) {
+    if (office) {
       // A ZIP signature alone cannot distinguish an archive from an Office document.
       // Inspect the bounded complete container, including its content-type manifest.
-      try {
-        const result = await fileTypeFromBuffer(sample);
-        candidates = result ? [result.mime] : [];
-      } catch {
-        candidates = []; // Malformed or unsupported containers do not prove a format.
-      }
+      const mime = await detectOfficeContentType(sample);
+      candidates = mime ? [mime] : [];
     } else {
       candidates = sniffContentTypes(sample);
     }

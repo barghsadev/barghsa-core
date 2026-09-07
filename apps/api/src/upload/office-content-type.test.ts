@@ -1,0 +1,23 @@
+import { afterEach, expect, it, vi } from 'vitest';
+import { detectOfficeContentType } from './office-content-type.js';
+
+afterEach(() => vi.useRealTimers());
+
+it('bounds concurrent inspection and frees capacity after parsing', async () => {
+  const first = detectOfficeContentType(new Uint8Array());
+  const second = detectOfficeContentType(new Uint8Array());
+  await expect(detectOfficeContentType(new Uint8Array())).rejects.toThrow('inspection is busy');
+  await expect(Promise.all([first, second])).resolves.toEqual([null, null]);
+  await expect(detectOfficeContentType(new Uint8Array())).resolves.toBeNull();
+});
+
+it('terminates inspection at its deadline and permits a subsequent retry', async () => {
+  vi.useFakeTimers();
+  const inspection = expect(detectOfficeContentType(new Uint8Array())).rejects.toThrow(
+    'inspection is unavailable'
+  );
+  await vi.advanceTimersByTimeAsync(3000);
+  await inspection;
+  vi.useRealTimers();
+  await expect(detectOfficeContentType(new Uint8Array())).resolves.toBeNull();
+});

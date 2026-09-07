@@ -25,6 +25,7 @@
     "@nestjs/platform-express": "^11.0.0",
     "@nestjs/swagger": "^11.0.0",
     "argon2": "0.45.1",
+    "cfb": "1.2.2",
     "cookie": "0.7.2",
     "file-type": "21.3.4",
     "ioredis": "^5.11.1",

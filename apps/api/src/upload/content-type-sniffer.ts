@@ -12,8 +12,8 @@
  *
  * `sniffContentTypes` returns ALL candidate MIME types for the bytes
  * (unambiguous signatures yield one candidate; container formats such
- * as OLE2 can be several). ZIP signatures return only the archive type;
- * Office OpenXML uploads require full-container detection in the controller.
+ * as XML can be several). ZIP/OLE signatures return only the container type;
+ * Office uploads require full-container detection in the controller.
  * `pickDetectedContentType` returns
  * the candidate that is allowed by the policy, or null when none is —
  * an upload whose real bytes match no permitted type is rejected as a
@@ -74,8 +74,8 @@ function hasNulByte(bytes: Uint8Array): boolean {
 /**
  * Detect candidate MIME types from leading bytes of a file.
  *
- * Returns an array because some signatures are ambiguous (OLE2 is .doc
- * or .xls). The caller intersects candidates with the policy's allowed
+ * Returns an array because some types have MIME aliases (such as XML).
+ * The caller intersects candidates with the policy's allowed
  * MIME set. Unknown bytes return an empty array.
  */
 export function sniffContentTypes(bytes: Uint8Array): string[] {
@@ -140,7 +140,7 @@ export function sniffContentTypes(bytes: Uint8Array): string[] {
     return ['application/zip'];
   }
 
-  // OLE2 container: legacy .doc/.xls.
+  // OLE2 alone does not identify a Word or Excel document.
   if (
     bytes.length >= 8 &&
     bytes[0] === 0xd0 &&
@@ -148,7 +148,7 @@ export function sniffContentTypes(bytes: Uint8Array): string[] {
     bytes[2] === 0x11 &&
     bytes[3] === 0xe0
   ) {
-    return ['application/msword', 'application/vnd.ms-excel'];
+    return ['application/x-cfb'];
   }
 
   if (bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) return ['application/gzip'];
