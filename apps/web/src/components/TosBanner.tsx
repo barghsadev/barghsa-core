@@ -1,5 +1,6 @@
+import { useRouterState } from '@tanstack/react-router';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { t, type Locale } from '@barghsa/i18n';
 import { Button } from '@barghsa/ui';
 import {
@@ -56,6 +57,12 @@ interface TosBannerProps {
  * inside DashboardLayout and AdminLayout those are already authenticated pages.
  */
 export function TosBanner({ locale = 'fa' }: TosBannerProps) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const automaticReviewAllowed =
+    !/^(?:\/(?:auth|account-recovery|support|tickets|terms|invoices|contracts)|\/admin\/(?:tickets|invoices))(?:\/|$)/.test(
+      pathname
+    );
+  const reviewRequest = useRef(0);
   const time = useAccountTime(locale);
   const [requiresAcceptance, setRequiresAcceptance] = useState(false);
   const [checking, setChecking] = useState(true);
@@ -80,7 +87,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
         return;
       }
       const data: UserInfo = await response.json();
-      setRequiresAcceptance(data.requiresTosAcceptance);
+      setRequiresAcceptance(data.requiresTosAcceptance === true);
     } catch {
       // Silently fail — banner is non-critical UI
     } finally {
@@ -95,6 +102,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   // ── Fetch current TOS content for modal ─────────────────────────
 
   const openReviewModal = useCallback(async () => {
+    const request = ++reviewRequest.current;
     setShowModal(true);
     setLoadingTos(true);
     setCurrentTos(null);
@@ -103,26 +111,55 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
 
     try {
       const response = await fetch(`/api/tos/current?locale=${locale}`);
+      if (request !== reviewRequest.current) return;
       if (!response.ok) {
         setError(t('tos.page.error', locale));
         return;
       }
-      const data: CurrentTosResponse = await response.json();
-      setCurrentTos(data);
+      const data: unknown = await response.json();
+      if (request !== reviewRequest.current) return;
+      if (!data || typeof data !== 'object') throw new Error('Invalid terms response');
+      const version = data as Partial<CurrentTosResponse>;
+      if (
+        typeof version.id !== 'string' ||
+        !version.id ||
+        typeof version.versionId !== 'string' ||
+        !version.versionId ||
+        typeof version.content !== 'string' ||
+        !version.content.trim() ||
+        typeof version.updatedAt !== 'string' ||
+        typeof version.publishedAt !== 'string'
+      )
+        throw new Error('Invalid terms response');
+      setCurrentTos(version as CurrentTosResponse);
     } catch {
-      setError(t('tos.page.error', locale));
+      if (request === reviewRequest.current) setError(t('tos.page.error', locale));
     } finally {
-      setLoadingTos(false);
+      if (request === reviewRequest.current) setLoadingTos(false);
     }
   }, [locale]);
 
   // ── Auto-open modal on first non-exempt page visit ─────────────
 
   useEffect(() => {
-    if (requiresAcceptance && !dismissedAutoModal) {
+    if (automaticReviewAllowed && requiresAcceptance && !dismissedAutoModal) {
       openReviewModal();
     }
-  }, [requiresAcceptance, dismissedAutoModal, openReviewModal]);
+  }, [automaticReviewAllowed, requiresAcceptance, dismissedAutoModal, openReviewModal]);
+
+  useEffect(() => {
+    if (!automaticReviewAllowed) {
+      reviewRequest.current++;
+      setShowModal(false);
+      setLoadingTos(false);
+    }
+  }, [automaticReviewAllowed]);
+  useEffect(
+    () => () => {
+      reviewRequest.current++;
+    },
+    []
+  );
 
   // ── Accept TOS ──────────────────────────────────────────────────
 

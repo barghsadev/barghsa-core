@@ -145,3 +145,63 @@ test('terms acceptance waits for the document renderer to load', async ({ page }
     page.getByRole('dialog').getByRole('button', { name: 'I Accept', exact: true })
   ).toBeEnabled();
 });
+
+for (const path of ['/tickets', '/invoices', '/invoices/record-one', '/admin/tickets']) {
+  test(`terms modal waits for manual review on exempt record/support route ${path}`, async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = 'en';
+      }).observe(document, { childList: true });
+    });
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: { requiresTosAcceptance: true, userId: 'test-user', username: 'Test' },
+      })
+    );
+    let termsReads = 0;
+    await page.route('**/api/tos/current?*', (route) => {
+      termsReads++;
+      return route.fulfill({
+        json: {
+          id: 'exempt-terms',
+          versionId: 'v1',
+          content: 'Manual review terms',
+          updatedAt: '2026-09-01T00:00:00Z',
+          publishedAt: '2026-09-01T00:00:00Z',
+        },
+      });
+    });
+    await page.goto(path);
+    const review = page.getByRole('button', { name: 'Review', exact: true });
+    await expect(review).toBeVisible();
+    await review.focus();
+    await expect(review).toBeFocused();
+    expect(termsReads).toBe(0);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await review.click();
+    await expect(page.getByRole('dialog')).toContainText('Manual review terms');
+    expect(termsReads).toBe(1);
+  });
+}
+
+test('malformed terms never enable consent', async ({ page }) => {
+  await page.addInitScript(() => {
+    new MutationObserver(() => {
+      if (document.documentElement) document.documentElement.lang = 'en';
+    }).observe(document, { childList: true });
+  });
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({ json: { requiresTosAcceptance: true, userId: 'test-user', username: 'Test' } })
+  );
+  await page.route('**/api/tos/current?*', (route) =>
+    route.fulfill({ json: { versionId: 'v1', content: 'No immutable identity' } })
+  );
+  await page.goto('/admin/failed-notifications');
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText('An error occurred while loading the terms of service');
+  await expect(dialog.getByRole('button', { name: 'I Accept', exact: true })).toBeDisabled();
+});
