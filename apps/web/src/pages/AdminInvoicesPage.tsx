@@ -1,7 +1,7 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n';
-import type { Locale } from '@barghsa/i18n';
 import {
   DUE_AT_OVERRIDE_REASON_MAX_LENGTH,
   parseDueAtOverrideBody,
@@ -47,18 +47,10 @@ async function parseError(res: Response): Promise<string> {
   return `HTTP ${res.status}`;
 }
 
-function formatInstant(iso: string | null, locale: Locale): string {
-  if (!iso) return t('admin.invoices.none', locale);
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fa-IR', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'UTC',
-  }).format(d);
-}
-
 export default function AdminInvoicesPage() {
+  const time = useAccountTime();
+  const [dueTimezone, setDueTimezone] = useState('');
+  const canEditTime = time.status === 'ready' && dueTimezone === time.timezone;
   const locale = useLocale();
   const [invoiceId, setInvoiceId] = useState('');
   const [invoice, setInvoice] = useState<InvoiceDueAtDto | null>(null);
@@ -72,6 +64,7 @@ export default function AdminInvoicesPage() {
 
   async function loadInvoice(e?: FormEvent) {
     e?.preventDefault();
+    if (time.status !== 'ready') return;
     setError(null);
     setSaved(false);
     setClientIssue(null);
@@ -86,7 +79,8 @@ export default function AdminInvoicesPage() {
       if (!res.ok) throw new Error(await parseError(res));
       const data = (await res.json()) as InvoiceDueAtDto;
       setInvoice(data);
-      setDueLocal(isoToDatetimeLocal(data.dueAt));
+      setDueLocal(isoToDatetimeLocal(data.dueAt, time.timezone));
+      setDueTimezone(time.timezone);
       setReason(data.dueAtOverride?.reason ?? '');
     } catch (err) {
       setInvoice(null);
@@ -116,13 +110,17 @@ export default function AdminInvoicesPage() {
     setSaved(false);
     setClientIssue(null);
     setError(null);
-    if (!invoice) return;
+    if (!invoice || !canEditTime) return;
     if (!lookupMatchesLoadedInvoice(invoiceId, invoice.invoiceId)) {
       discardLoadedInvoice();
       return;
     }
 
-    const iso = datetimeLocalToIso(dueLocal);
+    // Preserve the original instant when the displayed minute was not edited, including DST folds.
+    const iso =
+      dueLocal === isoToDatetimeLocal(invoice.dueAt, dueTimezone)
+        ? invoice.dueAt
+        : datetimeLocalToIso(dueLocal, dueTimezone);
     if (!iso) {
       setClientIssue(t('admin.invoices.error.dueAt', locale));
       return;
@@ -150,7 +148,8 @@ export default function AdminInvoicesPage() {
       if (!res.ok) throw new Error(await parseError(res));
       const data = (await res.json()) as InvoiceDueAtDto;
       setInvoice(data);
-      setDueLocal(isoToDatetimeLocal(data.dueAt));
+      setDueLocal(isoToDatetimeLocal(data.dueAt, time.timezone));
+      setDueTimezone(time.timezone);
       setReason(data.dueAtOverride?.reason ?? parsed.value.reason);
       setSaved(true);
     } catch (err) {
@@ -162,6 +161,7 @@ export default function AdminInvoicesPage() {
 
   return (
     <div className="max-w-4xl space-y-8">
+      {time.notice}
       <ReminderOffsetTogglePanel />
 
       <div className="max-w-xl space-y-6">
@@ -208,7 +208,7 @@ export default function AdminInvoicesPage() {
           </div>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || time.status !== 'ready'}
             className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 disabled:opacity-50"
           >
             {loading ? t('admin.invoices.loading', locale) : t('admin.invoices.load', locale)}
@@ -237,11 +237,11 @@ export default function AdminInvoicesPage() {
               </div>
               <div>
                 <dt className="text-gray-500">{t('admin.invoices.issuedAt', locale)}</dt>
-                <dd>{formatInstant(invoice.issuedAt, locale)}</dd>
+                <dd>{time.format(invoice.issuedAt)}</dd>
               </div>
               <div>
                 <dt className="text-gray-500">{t('admin.invoices.currentDue', locale)}</dt>
-                <dd>{formatInstant(invoice.dueAt, locale)}</dd>
+                <dd>{time.format(invoice.dueAt)}</dd>
               </div>
             </dl>
 
@@ -257,6 +257,10 @@ export default function AdminInvoicesPage() {
               </p>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                <p id="due-at-timezone">
+                  {t('admin.invoices.accountTimezone', locale)}: {dueTimezone}
+                </p>
+                {!canEditTime && <p role="alert">{t('admin.invoices.reloadTimezone', locale)}</p>}
                 <div>
                   <label htmlFor="due-at" className="block text-sm font-medium text-gray-700 mb-1">
                     {t('admin.invoices.overrideDue', locale)}{' '}
@@ -270,6 +274,8 @@ export default function AdminInvoicesPage() {
                     type="datetime-local"
                     required
                     aria-required="true"
+                    disabled={!canEditTime || saving}
+                    aria-describedby="due-at-timezone"
                     value={dueLocal}
                     onChange={(e) => setDueLocal(e.target.value)}
                     className="w-full border border-gray-300 rounded px-3 py-2"
@@ -313,7 +319,7 @@ export default function AdminInvoicesPage() {
                 <div className="flex items-center gap-3">
                   <button
                     type="submit"
-                    disabled={saving}
+                    disabled={saving || !canEditTime}
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                   >
                     {saving

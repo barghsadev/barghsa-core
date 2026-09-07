@@ -1855,6 +1855,9 @@ export const fa: I18nDictionary = {
 
   // ── Invoice due-date override (T-04.1.03.03) ─────────────
   'admin.invoices.nav': 'فاکتورها',
+  'admin.invoices.accountTimezone': 'منطقه زمانی حساب',
+  'admin.invoices.reloadTimezone':
+    'برای ویرایش با منطقه زمانی فعلی، صورتحساب را دوباره بارگذاری کنید.',
   'admin.invoices.title': 'تغییر سررسید فاکتور',
   'admin.invoices.description':
     'تاریخ سررسید فاکتور را با یک دلیل الزامی که برای مشتری نمایش داده می‌شود تغییر دهید. دلیل در سابقه حسابرسی و فراداده فاکتور ذخیره می‌شود.',
@@ -3881,6 +3884,8 @@ export const en: I18nDictionary = {
 
   // ── Invoice due-date override (T-04.1.03.03) ─────────────
   'admin.invoices.nav': 'Invoices',
+  'admin.invoices.accountTimezone': 'Account timezone',
+  'admin.invoices.reloadTimezone': 'Reload the invoice to edit using the current account timezone.',
   'admin.invoices.title': 'Override invoice due date',
   'admin.invoices.description':
     'Replace an invoice due date with a required customer-visible reason. The reason is stored in the audit log and invoice metadata.',

@@ -109,3 +109,74 @@ for (const locale of ['en', 'fa']) {
     );
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`due override uses account wall clock, rejects gaps and binds edits to their timezone (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let accountZone = zone;
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: accountZone } })
+    );
+    await page.route('**/api/admin/config/invoice-reminder-offsets', (route) =>
+      route.fulfill({ json: [] })
+    );
+    let dueAt = '2026-11-01T08:30:45.000Z';
+    const writes: { dueAt: string; reason: string }[] = [];
+    await page.route(`**/api/admin/invoices/${id}/due-at`, (route) => {
+      if (route.request().method() === 'POST') {
+        const body = route.request().postDataJSON();
+        writes.push(body);
+        dueAt = body.dueAt;
+      }
+      return route.fulfill({
+        json: {
+          invoiceId: id,
+          issuedAt: stamp,
+          payableFrom: stamp,
+          dueAt,
+          state: 'Unpaid',
+          canOverride: true,
+          dueAtOverride: null,
+        },
+      });
+    });
+    await page.goto('/admin/invoices');
+    await page.locator('#invoice-id').fill(id);
+    const load = page
+      .locator('#invoice-id')
+      .locator('..')
+      .locator('..')
+      .getByRole('button', {
+        name: locale === 'fa' ? 'بارگذاری' : 'Load',
+        exact: true,
+      });
+    await load.click();
+    const input = page.locator('#due-at');
+    const form = input.locator('..').locator('..');
+    const save = form.locator('button[type=submit]');
+    await expect(input).toHaveValue('2026-11-01T01:30');
+    await page.locator('#override-reason').fill('Customer requested corrected deadline');
+    await save.click();
+    await expect.poll(() => writes.length).toBe(1);
+    expect(writes[0]!.dueAt).toBe('2026-11-01T08:30:45.000Z');
+    await input.fill('2026-03-08T02:30');
+    await save.click();
+    await expect(page.getByRole('alert')).toBeVisible();
+    expect(writes).toHaveLength(1);
+    await input.fill('2026-11-02T10:15');
+    await save.click();
+    await expect.poll(() => writes.length).toBe(2);
+    expect(writes[1]!.dueAt).toBe('2026-11-02T18:15:00.000Z');
+    accountZone = 'Asia/Tokyo';
+    await page.evaluate(() => window.dispatchEvent(new Event('barghsa:timezone-changed')));
+    await expect(input).toBeDisabled();
+    await expect(save).toBeDisabled();
+    await expect(form.getByRole('alert')).toBeVisible();
+    await load.click();
+    await expect(input).toBeEnabled();
+    await expect(input).toHaveValue('2026-11-03T03:15');
+    expect(writes).toHaveLength(2);
+  });
+}

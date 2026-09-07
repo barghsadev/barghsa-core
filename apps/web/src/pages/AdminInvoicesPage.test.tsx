@@ -37,6 +37,8 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
         const url = String(input);
+        if (url.endsWith('/api/user/settings/timezone'))
+          return new Response(JSON.stringify({ timezone: 'America/Los_Angeles' }));
         if (url.endsWith(`/api/admin/invoices/${INVOICE_A}/due-at`)) {
           return {
             ok: true,
@@ -81,7 +83,8 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
     expect(container.querySelector('[data-testid="loaded-invoice-id"]')?.textContent).toBe(
       INVOICE_A
     );
-    expect(container.querySelector('#due-at')).toBeTruthy();
+    expect((container.querySelector('#due-at') as HTMLInputElement).value).toBe('2026-09-15T01:00');
+    expect(container.textContent).toContain('Jul 31, 2026, 5:00 PM');
     expect(container.querySelector('#override-reason')).toBeTruthy();
 
     await act(async () => {
