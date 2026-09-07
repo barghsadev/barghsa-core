@@ -1,7 +1,7 @@
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { t } from '@barghsa/i18n/purchase';
+import { t } from '@barghsa/i18n/app';
 import { Route } from '../routes/_app/electricity/order.js';
 
 const notices = vi.hoisted(() => ({ error: vi.fn(), success: vi.fn() }));

@@ -101,6 +101,9 @@ Current step: permission-boundary evidence. Connection-security repair committed
 
 ## Evidence map
 
+- Final budget review: purchase dictionary extraction was reverted after the complete route payload measured 250.84 KB against the 250 KB ordering budget. All 41 budgets now pass again (ordering249.62 KB). Eager purchase loading remains deferred; no threshold change. The final browser command stopped at this failed budget gate, so its stale pre-existing log is not new browser evidence. A fresh run is required after this correction.
+- Local production API and worker images built at `081eccd`. The web image exposed a missing packaged Tailwind config referenced by UI CSS; it is being added to the package files and rebuilt. Logs `/tmp/barghsa-final-api-image.log`, `/tmp/barghsa-final-worker-image.log`, `/tmp/barghsa-final-web-image.log`.
+
 - Receipt-response repair: reproduced four null-JSON crashes in receipt acknowledgement, profile lookup, presigning and upload verification. Each response is now narrowed to a JSON object before reading fields; malformed responses return the existing failure result and never confirm money/upload success. Four regression failures now pass; 62 receipt/order checks, web types and lint pass. Exact int8 IRR request/acknowledgement matching is also covered. Logs `/tmp/barghsa-receipt-before.log`, `/tmp/barghsa-receipt-after.log`. This frontend change requires affected browser refresh; prior 350-case result remains bound to `3f1c318`.
 
 - Order follow-up: 31 focused component tests pass, covering duplicate-click suppression, exact saved order identity/address/status, retry after failed or malformed responses, profile/catalogue/address gates, and new-address confirmation/retained edits. Web types and explicit lint pass. Log `/tmp/barghsa-order-tests.log`. Full frontend coverage refresh remains pending.

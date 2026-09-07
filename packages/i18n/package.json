@@ -111,11 +111,6 @@
       "types": "./dist/terms.d.ts",
       "import": "./dist/terms.js",
       "default": "./dist/terms.js"
-    },
-    "./purchase": {
-      "types": "./dist/purchase.d.ts",
-      "import": "./dist/purchase.js",
-      "default": "./dist/purchase.js"
     }
   },
   "scripts": {

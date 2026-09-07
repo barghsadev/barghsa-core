@@ -2,7 +2,7 @@ import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t } from '@barghsa/i18n/purchase';
+import { t } from '@barghsa/i18n/app';
 import { MapPinIcon, PlusIcon, Loader2Icon, CheckIcon, HomeIcon, PackageIcon } from 'lucide-react';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
