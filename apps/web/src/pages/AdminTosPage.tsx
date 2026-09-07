@@ -1,9 +1,10 @@
+import { adminTosText } from './admin-tos-text.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { adminControlsText } from '@barghsa/i18n/admin-controls';
 import { useLocale } from '../hooks/useLocale.js';
 import { Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
 import { withCsrf } from '../lib/csrf.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
 
 interface TosVersion {
@@ -20,6 +21,28 @@ interface TosVersion {
   updatedAt: string;
 }
 
+function isVersion(value: unknown): value is TosVersion {
+  if (!value || typeof value !== 'object') return false;
+  const v = value as Record<string, unknown>;
+  const date = (input: unknown) => typeof input === 'string' && Number.isFinite(Date.parse(input));
+  return (
+    typeof v.id === 'string' &&
+    v.id.length > 0 &&
+    typeof v.versionId === 'string' &&
+    v.versionId.length > 0 &&
+    typeof v.contentFa === 'string' &&
+    typeof v.contentEn === 'string' &&
+    (v.status === 'draft' || v.status === 'published') &&
+    (v.changeType === null || v.changeType === 'major' || v.changeType === 'minor') &&
+    typeof v.isActive === 'boolean' &&
+    (!v.isActive || v.status === 'published') &&
+    (v.createdBy === null || typeof v.createdBy === 'string') &&
+    date(v.createdAt) &&
+    date(v.updatedAt) &&
+    (v.status === 'published' ? date(v.publishedAt) : v.publishedAt === null)
+  );
+}
+
 /**
  * Admin TOS editor page (T-09.03.01) with version history (T-09.03.02).
  *
@@ -29,8 +52,11 @@ interface TosVersion {
 export default function AdminTosPage() {
   const time = useAccountTime();
   const locale = useLocale();
+  const text = adminTosText(locale);
+  const historyRequest = useRef(0);
   const [versions, setVersions] = useState<TosVersion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [historyReady, setHistoryReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Draft editor state
@@ -51,27 +77,46 @@ export default function AdminTosPage() {
   const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>('fa');
 
   const fetchVersions = useCallback(async () => {
+    const request = ++historyRequest.current;
     try {
       setLoading(true);
+      setHistoryReady(false);
+      setError(null);
       const res = await fetch('/api/admin/tos/versions');
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setVersions(data ?? []);
+      const data: unknown = await res.json();
+      if (request !== historyRequest.current) return;
+      if (
+        !Array.isArray(data) ||
+        !data.every(isVersion) ||
+        new Set(data.map((v) => v.id)).size !== data.length ||
+        data.filter((v) => v.status === 'draft').length > 1 ||
+        data.filter((v) => v.isActive).length > 1
+      ) {
+        throw new Error(text.invalidHistory);
+      }
+      setVersions(data);
+      setHistoryReady(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load TOS versions');
+      if (request === historyRequest.current)
+        setError(err instanceof Error ? err.message : text.historyFailed);
     } finally {
-      setLoading(false);
+      if (request === historyRequest.current) setLoading(false);
     }
-  }, []);
+  }, [text]);
 
   useEffect(() => {
     fetchVersions();
+    return () => {
+      historyRequest.current++;
+    };
   }, [fetchVersions]);
 
   // Check if a draft already exists
   const hasDraft = versions.some((v) => v.status === 'draft');
 
   function openCreate() {
+    if (!historyReady || loading) return;
     setEditId(null);
     setVersionId('');
     setContentFa('');
@@ -80,6 +125,7 @@ export default function AdminTosPage() {
   }
 
   function openEdit(v: TosVersion) {
+    if (!historyReady || loading) return;
     setEditId(v.id);
     setVersionId(v.versionId);
     setContentFa(v.contentFa);
@@ -98,6 +144,7 @@ export default function AdminTosPage() {
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
+    if (!historyReady || loading) return;
     setSaving(true);
 
     try {
@@ -140,7 +187,7 @@ export default function AdminTosPage() {
   }
 
   async function handlePublish() {
-    if (!publishId) return;
+    if (!publishId || !historyReady || loading) return;
     setPublishing(true);
 
     try {
@@ -164,6 +211,7 @@ export default function AdminTosPage() {
   }
 
   async function handleDiscard(id: string) {
+    if (!historyReady || loading) return;
     if (!window.confirm('Discard this draft? This cannot be undone.')) return;
 
     try {
@@ -193,6 +241,7 @@ export default function AdminTosPage() {
         {!hasDraft && !showEditor && (
           <button
             onClick={openCreate}
+            disabled={!historyReady || loading}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             New Draft
@@ -214,6 +263,12 @@ export default function AdminTosPage() {
             ✕
           </button>
         </div>
+      )}
+
+      {!historyReady && !loading && (
+        <button type="button" onClick={fetchVersions} className="rounded border px-4 py-2">
+          {text.retry}
+        </button>
       )}
 
       {/* Draft editor */}
@@ -281,7 +336,7 @@ export default function AdminTosPage() {
           <div className="flex gap-3">
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || !historyReady || loading}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {saving ? 'Saving...' : editId ? 'Update Draft' : 'Create Draft'}
@@ -329,7 +384,7 @@ export default function AdminTosPage() {
           <div className="flex gap-3">
             <button
               onClick={handlePublish}
-              disabled={publishing}
+              disabled={publishing || !historyReady || loading}
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
             >
               {publishing ? 'Publishing...' : 'Publish'}
@@ -476,7 +531,7 @@ export default function AdminTosPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {versions.length === 0 && (
+            {historyReady && versions.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                   No TOS versions yet. Create a draft to get started.
@@ -540,18 +595,21 @@ export default function AdminTosPage() {
                     <>
                       <button
                         onClick={() => openEdit(v)}
+                        disabled={!historyReady || loading}
                         className="text-blue-600 hover:text-blue-800"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => setPublishId(v.id)}
+                        disabled={!historyReady || loading}
                         className="text-green-600 hover:text-green-800"
                       >
                         Publish
                       </button>
                       <button
                         onClick={() => handleDiscard(v.id)}
+                        disabled={!historyReady || loading}
                         className="text-red-600 hover:text-red-800"
                       >
                         Discard

@@ -2276,3 +2276,30 @@ for (const locale of ['en', 'fa']) {
     expect(writes).toBe(13);
   });
 }
+
+for (const failure of ['unavailable', 'malformed']) {
+  test(`TOS history blocks new drafts until a valid reload (${failure})`, async ({ page }) => {
+    await shell(page);
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
+    let recovered = false;
+    await page.route('**/api/admin/tos/versions', (route) =>
+      recovered
+        ? route.fulfill({ json: [] })
+        : failure === 'unavailable'
+          ? route.fulfill({ status: 503, json: {} })
+          : route.fulfill({ json: [{ id: 'broken', status: 'published' }] })
+    );
+    await page.goto('/admin/tos');
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'New Draft', exact: true })).toBeDisabled();
+    await expect(page.getByText('No TOS versions yet. Create a draft to get started.')).toHaveCount(
+      0
+    );
+    recovered = true;
+    await page.getByRole('button', { name: 'Retry', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'New Draft', exact: true })).toBeEnabled();
+    await expect(page.getByRole('alert')).toHaveCount(0);
+  });
+}
