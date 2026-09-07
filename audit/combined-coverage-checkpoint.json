@@ -135,9 +135,9 @@
         "apps/api/src/wallet/wallet.service.ts"
       ],
       "lines": 9021,
-      "covered_lines": 8086,
+      "covered_lines": 8118,
       "branches": 7044,
-      "covered_branches": 5278,
+      "covered_branches": 5295,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -285,10 +285,10 @@
         "apps/api/src/user-settings/user-settings.controller.ts",
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
-      "lines": 4066,
-      "covered_lines": 3662,
-      "branches": 3584,
-      "covered_branches": 2605,
+      "lines": 4102,
+      "covered_lines": 3736,
+      "branches": 3592,
+      "covered_branches": 2645,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -420,10 +420,10 @@
         "apps/web/src/routes/support.tsx",
         "apps/web/src/routes/terms.tsx"
       ],
-      "lines": 6346,
-      "covered_lines": 3874,
-      "branches": 7605,
-      "covered_branches": 4311,
+      "lines": 6375,
+      "covered_lines": 3912,
+      "branches": 7683,
+      "covered_branches": 4396,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -477,10 +477,10 @@
         "apps/web/src/routes/admin/verification.tsx",
         "apps/web/src/routes/admin/wallet-receipts.tsx"
       ],
-      "lines": 564,
-      "covered_lines": 404,
-      "branches": 495,
-      "covered_branches": 322,
+      "lines": 573,
+      "covered_lines": 426,
+      "branches": 516,
+      "covered_branches": 365,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -837,10 +837,10 @@
         "packages/ui/src/index.ts",
         "packages/ui/src/lib/utils.ts"
       ],
-      "lines": 202,
-      "covered_lines": 66,
-      "branches": 302,
-      "covered_branches": 97,
+      "lines": 203,
+      "covered_lines": 100,
+      "branches": 334,
+      "covered_branches": 201,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -848,5 +848,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "e5af3b7781bdbe010222b9a6b675fc0b8d0b5ed0"
+  "head_sha": "28a0934721cc5f3cc6493c3adfb41af2db7793ec"
 }

@@ -1,10 +1,9 @@
 {
   "schema_version": 1,
   "status": "passed",
-  "expected": 246,
+  "expected": 252,
   "unexpected": 0,
   "flaky": 0,
   "skipped": 0,
-  "runner_errors": 0,
-  "reviewed_head_sha": "e5af3b7781bdbe010222b9a6b675fc0b8d0b5ed0"
+  "runner_errors": 0
 }
