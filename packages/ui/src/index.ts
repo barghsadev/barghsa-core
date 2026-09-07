@@ -25,7 +25,14 @@ export * from './components/ui/switch';
 export * from './components/ui/tabs';
 export * from './components/ui/textarea';
 export * from './components/ui/tooltip';
-export type {
+// Sonner is the default notification API. Base UI remains available explicitly.
+export { toast } from 'sonner';
+export {
+  Toaster as BaseToaster,
+  Toast,
+  toast as baseToast,
+  createToastManager,
+  useToastManager,
   ToastAction,
   ToastClose,
   ToastContent,
@@ -35,7 +42,6 @@ export type {
   ToastTitle,
   ToastViewport,
 } from './components/ui/toast';
-export { toast, useToastManager, createToastManager } from './components/ui/toast';
 
 // ─── Base UI widget components ─────────────────────────────────────────────
 export * from './components/base-ui/number-field';

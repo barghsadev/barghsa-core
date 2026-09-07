@@ -2616,3 +2616,7 @@ Mounted the missing Sonner renderer with localized live-region and dismissal lab
 Review: 160 repeated authentication/feedback checks and 85 feedback/profile/branding checks pass across all five browser projects. All 155 web unit and 45 translation tests, web types/lint, formatting and diff review pass. Initial contrast failures came from the entrance fade; settled-content assertions now precede axe checks. Details and limits are in `audit/ui-feedback-followups.md`.
 
 Record correction: the prior browser-matrix checkpoint's final Vite build did not itself run route budgets. Earlier hover-step budget evidence remains valid; the prior prose now distinguishes those revisions. This feedback step includes a fresh, explicit 41-route check. The public UI toast export mismatch remains open for the next step.
+
+### Pair public notification exports correctly
+
+The public UI Toaster now shares Sonner's toast API. Explicit BaseToaster/baseToast exports retain the independent Base UI implementation, and its render components are usable runtime exports. The red test reproduced two missing-function failures. All 13 UI tests now pass, including real DOM rendering/dismissal through the public pair and independent Base UI rendering. UI/web types, lint, formatting, fresh production build, all 41 route budgets and diff review pass. Local-only change; no remote action.

@@ -1,6 +1,6 @@
 # UI feedback review
 
-Status: missing application renderer repaired and locally verified. Public UI package pairing remains open.
+Status: missing application renderer and public UI export pairing repaired and locally verified.
 
 ## Reproduction
 
@@ -20,4 +20,10 @@ Adding the renderer initially exceeded login and ordering payload limits. A nati
 - All 155 web unit tests and 45 translation tests passed. Web types, lint, formatting and diff whitespace review passed.
 - First browser attempt had 77 passes and three contrast failures measured during the entrance fade. Tests now wait for the toast's computed opacity to reach one before measuring settled text. The repeated run found no contrast violations or unresolved contrast nodes. This does not certify readability during transient fades or every application journey.
 
-The UI package still exposes a Sonner Toaster with a Base UI toast manager. Current app callers import Sonner directly. That independent public API defect is the next repair, not closed by these browser results.
+At the application checkpoint, the UI package still exposed a Sonner Toaster with a Base UI toast manager. The separate repair below closes that defect.
+
+## Public UI export repair
+
+A real DOM regression reproduced both `toast.success` and `toast.error` as missing functions when imported alongside the public Toaster. The public `toast` now uses Sonner, matching that renderer. Base UI is exported explicitly as `BaseToaster` and `baseToast`, with its provider, components and manager helpers exported as runtime values rather than type-only names. No current application caller used the mismatched root manager.
+
+Review: all 13 UI tests pass, including actual success/error rendering and dismissal through the public exports and independent rendering through a Base UI manager. UI and web types, targeted lint, formatting, a fresh Vite build and all 41 complete-route budgets pass. Existing browser evidence in the preceding section applies to the unchanged application renderer. The export repair adds no application route behavior.
