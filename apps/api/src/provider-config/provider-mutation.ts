@@ -1,5 +1,4 @@
 import { v7 as uuidv7 } from 'uuid';
-import type { PoolClient as PgClient } from 'pg';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import type { PoolClient, ProviderPool } from './provider-config.di.js';
 
@@ -14,9 +13,8 @@ export async function mutateProvider<T extends { id: string; status: string }>(
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    // The injectable pool exposes the same query operation with a narrower return type.
     await requireStaffMutationPermission(
-      client as Pick<PgClient, 'query'>,
+      client,
       actorUserId ?? '',
       'admin:notification-providers:edit'
     );
