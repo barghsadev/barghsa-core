@@ -68,7 +68,10 @@ export async function createRedisClient(
 
   // --- Build ioredis options -----------------------------------------------
   const opts: import('ioredis').RedisOptions = {
-    maxRetriesPerRequest: parsed.data.maxRetriesPerRequest ?? null,
+    maxRetriesPerRequest:
+      parsed.data.maxRetriesPerRequest === null ? null : (parsed.data.maxRetriesPerRequest ?? 1),
+    enableOfflineQueue: false,
+    commandTimeout: parsed.data.commandTimeout ?? 1_000,
     enableReadyCheck: parsed.data.enableReadyCheck ?? true,
     lazyConnect: true, // Defer so we can attempt initial connection with null-on-failure
     connectTimeout: parsed.data.connectTimeout ?? 10_000,
@@ -91,32 +94,27 @@ export async function createRedisClient(
     opts.tls = parsed.data.tls === true ? {} : parsed.data.tls;
   }
 
-  let client: Redis;
-
-  if (effectiveUrl) {
-    client = new Redis(effectiveUrl, opts);
-  } else if (parsed.data.host) {
-    opts.host = parsed.data.host;
-    opts.port = parsed.data.port ?? 6379;
-    client = new Redis(opts);
-  } else {
-    return null;
-  }
-
-  // --- Error handler -------------------------------------------------------
-  client.on('error', (err: Error) => {
-    logger?.warn('[redis] Connection error (degraded):', err.message);
-  });
-
-  // --- Connection guard: attempt initial connect ---------------------------
+  let client: Redis | undefined;
   try {
+    if (effectiveUrl) {
+      client = new Redis(effectiveUrl, opts);
+    } else if (parsed.data.host) {
+      opts.host = parsed.data.host;
+      opts.port = parsed.data.port ?? 6379;
+      client = new Redis(opts);
+    } else {
+      return null;
+    }
+    client.on('error', (err: Error) => {
+      logger?.warn('[redis] Connection error (degraded):', err.message);
+    });
     await client.connect();
   } catch (err) {
     logger?.warn(
       '[redis-factory] Initial connection failed, returning null (degraded):',
       err instanceof Error ? err.message : String(err)
     );
-    client.disconnect();
+    client?.disconnect();
     return null;
   }
 
