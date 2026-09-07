@@ -373,14 +373,15 @@ export class AiAgentsService {
         input.policyIds !== undefined ||
         input.kbGroupIds !== undefined ||
         input.policyGroupIds !== undefined;
-      const model = referencesTouched
-        ? await this.requireModel(q, effectiveModelId)
-        : await this.findModel(q, effectiveModelId);
+      let model: AgentModelRow | null;
       if (referencesTouched) {
+        model = await this.requireModel(q, effectiveModelId);
         await this.requireKbs(q, input.kbIds);
         await this.requirePolicies(q, input.policyIds);
         await this.requireGroups(q, input.kbGroupIds, 'kb');
         await this.requireGroups(q, input.policyGroupIds, 'policy');
+      } else {
+        model = await this.findModel(q, effectiveModelId);
       }
 
       const fields: string[] = [];
