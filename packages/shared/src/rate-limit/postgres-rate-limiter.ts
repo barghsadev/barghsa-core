@@ -16,12 +16,27 @@ export type DbQueryFn = (
   params?: unknown[]
 ) => Promise<{ rows: Record<string, unknown>[]; rowCount?: number | null }>;
 
+/** Reject missing or corrupt database results instead of granting quota. */
+function readCounter(row: Record<string, unknown> | undefined): number {
+  const raw = row?.count;
+  const count =
+    typeof raw === 'number'
+      ? raw
+      : typeof raw === 'string' && /^[1-9][0-9]*$/.test(raw)
+        ? Number(raw)
+        : NaN;
+  if (!Number.isSafeInteger(count) || count < 1) {
+    throw new Error('Invalid persisted rate-limit counter');
+  }
+  return count;
+}
+
 /**
  * PostgreSQL-backed rate-limiter store.
  *
  * Uses `INSERT ... ON CONFLICT` on a compound primary key of
  * `(key, window_start)` to atomically upsert the counter for each
- * sliding window.  This design is safe under concurrent access because
+ * fixed window.  This design is safe under concurrent access because
  * the unique constraint serialises the upsert — a concurrent transaction
  * that inserts the same (key, window_start) will either update the
  * existing row or wait for the first to commit and then re-check.
@@ -80,9 +95,9 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
   /**
    * Increment the counter for `key` within a window of `windowMs`.
    *
-   * The sliding window is aligned to the current epoch millis modulo
-   * `windowMs`, giving a fixed window.  This is an approximation of a
-   * true sliding window but is safe and fast with PostgreSQL upserts.
+   * Windows align to epoch multiples of `windowMs`. Requests immediately
+   * before and after a boundary consume separate quotas; this is not a
+   * rolling/sliding-window limit.
    */
   async increment(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
     const now = Date.now();
@@ -100,7 +115,7 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
     );
 
     const row = result.rows[0];
-    const count = row ? Number(row.count) : 1;
+    const count = readCounter(row);
     const allowed = count <= limit;
     const resetMs = Math.max(0, windowEnd - now);
 
@@ -138,7 +153,7 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
     );
 
     const row = result.rows[0];
-    const count = row ? Number(row.count) : 1;
+    const count = readCounter(row);
     const allowed = count <= limit;
     const resetMs = Math.max(0, windowEnd - now);
 
@@ -166,7 +181,7 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
     );
 
     const row = result.rows[0];
-    return row ? Number(row.count) : 0;
+    return row ? readCounter(row) : 0;
   }
 
   /**

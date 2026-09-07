@@ -1980,3 +1980,9 @@ Review and validation: the installed package has no defineWorkspace export. A ro
 Receipt helpers now require a permitted filename extension, matching supplied MIME, a canonical attachment key, matching storage category, and valid optional metadata types. Blank browser MIME is derived from the extension and carried consistently through presign, PUT and attachment recording for all four upload callers. This fixes PNG/WebP files previously labelled JPEG. Server byte inspection already existed; these helper gaps are not claimed to bypass it.
 
 Review and validation: twelve negative cases failed before the repair. Final shared receipt tests pass 80 cases across two files; browser upload and caller tests pass 36 across three files, including rejection before network requests and consistent MIME through the full upload sequence. API receipt tests pass 75 cases across seven files. Root types, targeted lint, formatting and whitespace checks pass. Existing nullable optional metadata remains supported.
+
+### Reject invalid persisted quota counts
+
+Both PostgreSQL increment paths now reject missing, non-positive, fractional, unsafe or malformed returned counts instead of granting quota or returning invalid remaining counts. Decimal bigint strings remain supported. Peeking returns zero for an absent row only; a malformed existing row fails. Fixed-window comments now describe the actual boundary behavior without claiming sliding-window enforcement.
+
+Review and validation: 33 new cases failed before the repair. All 59 shared rate-limit tests pass afterward, including cleanup start/stop/restart and recovery after a failed cleanup query. API login, proxy and OTP regressions pass 17 cases across three files. Shared typechecking, targeted lint and whitespace checks pass. SQL and quota windows are unchanged; full sliding-window acceptance remains open.

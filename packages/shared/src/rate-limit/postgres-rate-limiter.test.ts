@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { DbQueryFn } from './postgres-rate-limiter.js';
 import { PostgresRateLimiterStore } from './postgres-rate-limiter.js';
 
@@ -11,6 +11,87 @@ describe('PostgresRateLimiterStore', () => {
     vi.clearAllMocks();
     mockQuery = vi.fn();
     store = new PostgresRateLimiterStore(mockQuery as unknown as DbQueryFn, logger);
+  });
+
+  afterEach(() => {
+    store.stopCleanup();
+    vi.useRealTimers();
+  });
+
+  describe.each(['increment', 'incrementSecurity'] as const)('%s database response', (method) => {
+    it('rejects a missing committed counter', async () => {
+      mockQuery.mockResolvedValue({ rows: [] });
+      await expect(store[method]('key', 5, 60_000)).rejects.toThrow('counter');
+    });
+
+    it.each([
+      undefined,
+      null,
+      '',
+      ' ',
+      'no',
+      false,
+      -1,
+      0,
+      1.5,
+      NaN,
+      Infinity,
+      Number.MAX_SAFE_INTEGER + 1,
+      {},
+      '1e2',
+      '0x10',
+    ])('rejects invalid count %s', async (count) => {
+      mockQuery.mockResolvedValue({ rows: [{ count }] });
+      await expect(store[method]('key', 5, 60_000)).rejects.toThrow('counter');
+    });
+
+    it('accepts the decimal string returned by a bigint parser', async () => {
+      mockQuery.mockResolvedValue({ rows: [{ count: '6' }] });
+      await expect(store[method]('key', 5, 60_000)).resolves.toMatchObject({
+        allowed: false,
+        remaining: 0,
+      });
+    });
+  });
+
+  describe('peek', () => {
+    it('returns zero only when no row exists', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+      await expect(store.getCurrentCount('key', 60_000)).resolves.toBe(0);
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: null }] });
+      await expect(store.getCurrentCount('key', 60_000)).rejects.toThrow('counter');
+      mockQuery.mockResolvedValueOnce({ rows: [{ count: '3' }] });
+      await expect(store.getCurrentCount('key', 60_000)).resolves.toBe(3);
+    });
+  });
+
+  describe('cleanup lifecycle', () => {
+    it('starts once, stops idempotently, and can restart', async () => {
+      vi.useFakeTimers();
+      mockQuery.mockResolvedValue({ rows: [], rowCount: 0 });
+      store.startCleanup();
+      store.startCleanup();
+      await vi.advanceTimersByTimeAsync(3_600_000);
+      expect(mockQuery).toHaveBeenCalledTimes(2);
+      store.stopCleanup();
+      store.stopCleanup();
+      await vi.advanceTimersByTimeAsync(3_600_000);
+      expect(mockQuery).toHaveBeenCalledTimes(2);
+      store.startCleanup();
+      await vi.advanceTimersByTimeAsync(3_600_000);
+      expect(mockQuery).toHaveBeenCalledTimes(4);
+    });
+
+    it('reports failure and retries on the next interval', async () => {
+      vi.useFakeTimers();
+      const error = new Error('database unavailable');
+      mockQuery.mockRejectedValueOnce(error).mockResolvedValue({ rows: [], rowCount: 0 });
+      store.startCleanup();
+      await vi.advanceTimersByTimeAsync(3_600_000);
+      expect(logger.error).toHaveBeenCalledWith('[PostgresRateLimiter] cleanup failed', error);
+      await vi.advanceTimersByTimeAsync(3_600_000);
+      expect(mockQuery).toHaveBeenCalledTimes(3);
+    });
   });
 
   describe('increment', () => {
