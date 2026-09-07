@@ -1,6 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [".env", ".env.local", "packages/tsconfig/**"],
+  "globalDependencies": [
+    ".env",
+    ".env.local",
+    "packages/tsconfig/**",
+    "scripts/process-v8-provider.mjs",
+    "scripts/align-process-coverage.mjs"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

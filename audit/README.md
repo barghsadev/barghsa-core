@@ -4,6 +4,12 @@ The recorded completion list is not a reliable statement that the built features
 
 Baseline: `2f80d92df51556d47f778b5230e5eea577e2a8d4`. Latest included merge is PR #303. All 301 merged PR records were reconciled. Open #304 is excluded from completion. The other machine and its cron were not inspected.
 
+## Repair status
+
+Repairs are in progress on the local `codex/audit-fixes` branch. [Repair progress](repair-progress.md) records each implementation step, review, test result and remaining limit. The findings and verification table below describe the original audit baseline, not the current implementation. The complete plan has not passed its exit rule, and merged task records remain distinct from acceptance verification.
+
+No identity-verification provider has been selected. Automatic approval stays unavailable; manual verification remains supported. The dependency license restriction was waived by the user. Production data reconciliation, deployment and the other machine's scheduler are not certified by local tests.
+
 ## Scope and limits
 
 - 263 distinct current tasks have merged PR evidence: infrastructure 72, auth/admin 99, core business 4, finance 56, notifications 29, UI foundations 3.
@@ -11,7 +17,7 @@ Baseline: `2f80d92df51556d47f778b5230e5eea577e2a8d4`. Latest included merge is P
 - Requirements were compared with current source paths, route/worker wiring and PR scope. The register retains task requirements, parent context, PRs and current source files. Review depth is strongest on shared runtime boundaries and high-risk workflows. It does not claim a line-by-line proof of every implementation or a passing end-to-end test for every row.
 - No task is certified solely because its PR merged, its source exists, or type checking passed. Remaining acceptance work is explicit in F22.
 
-## Most urgent findings
+## Initial audit findings
 
 1. The production migration journal omits foundational and many later migrations. A clean production database is not established by the current journal.
 2. Session guards expect parsed cookies that bootstrap does not install. A real HTTP reproduction of the guard ordering accepted a POST without a CSRF token.
@@ -34,7 +40,7 @@ There are also 737 unrecorded keys before the furthest merged task in today's qu
 
 23 task keys have multiple merged PRs. Five Docker tasks were rebuilt after their completion entries disappeared. Fifteen wallet groups contain useful follow-up fixes. The remaining three groups are complementary legal-profile slices, bookkeeping, and a reverted/replaced invoice snapshot. Preserve the useful corrections. The concrete cleanup is the competing web server entry points plus task/provenance reconciliation. See [loop and duplicate evidence](loop-and-duplicates-audit.md).
 
-## Verification performed
+## Initial verification performed
 
 | Check | Result |
 |---|---|
@@ -50,7 +56,7 @@ There are also 737 unrecorded keys before the furthest merged task in today's qu
 | HTTP guard-order reproduction | Actual compiled CSRF guard plus route session guard accepts missing-CSRF POST, returns 201; Cookie header remains unparsed |
 | React Doctor | 173 files scanned, score 45/100, 237 diagnostics; triage required, not 237 confirmed defects |
 
-No product implementation, kanban queue/state, GitHub PR or scheduler changes were made. The build regenerated the tracked route tree; that audit-generated change was restored exactly to HEAD. All audit files are outside the repository.
+The initial review made no product, kanban, GitHub or scheduler changes. Its generated route-tree change was restored. The audit artifacts were subsequently copied into this project’s `audit/` directory at the user’s request; authorized local implementation repairs are recorded in the progress log.
 
 ## Files
 

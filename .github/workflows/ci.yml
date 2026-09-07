@@ -99,6 +99,9 @@ jobs:
         run: node scripts/check-auth-transfer.mjs
       - name: Verify browser retry failure gate
         run: node --test scripts/test-browser-flake-gate.mjs
+
+      - name: Test process coverage merging
+        run: node --test scripts/align-process-coverage.test.mjs
       - name: Build isolated browser coverage assets
         run: pnpm --filter @barghsa/web build
         env:

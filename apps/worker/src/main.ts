@@ -115,7 +115,10 @@ async function main(): Promise<void> {
 
   const port = parseInt(process.env['WORKER_PORT'] ?? '9090', 10);
   server.listen(port, () => {
-    logger.info(`Worker health server listening on port ${port}`);
+    const address = server.address();
+    logger.info(
+      `Worker health server listening on port ${typeof address === 'object' && address ? address.port : port}`
+    );
   });
 
   const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));

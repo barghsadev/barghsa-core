@@ -64,3 +64,13 @@ Run locally after package coverage, replacing the base with the reviewed commit:
 ```bash
 python3 scripts/check-changed-coverage.py --base origin/main --report /tmp/changed-coverage.json
 ```
+
+## Compiled worker process coverage
+
+API and worker coverage use `scripts/process-v8-provider.mjs` to merge child-process V8 execution with the package unit report. The API maps `dist/src`; the worker maps `dist`. Both require the emitted source map for every included compiled module. The shared collector participates in Turbo cache inputs. Raw records are retained under the package coverage directory in `process-v8`.
+
+Worker tests rebuild the worker and workspace dependencies before starting a compiled process against an isolated PostgreSQL database migrated by the production command. The process suite exercises health/readiness/metrics, recurring jobs, database outage and recovery, invalid interval defaults, SIGINT/SIGTERM drain, and the forced shutdown deadline. Fixture database controls never target an existing application database. Missing system-actor failures and recovery are asserted explicitly.
+
+Run `pnpm --filter @barghsa/worker test:coverage` to collect both unit and compiled-process evidence. A focused process run is useful for diagnostics but does not replace the full package report used by the acceptance gate.
+
+Compiler source maps can disagree on branch end positions. Before combining unit and process reports, the collector aligns only unique branches with the same type, exact source start and ordered arm starts. Different types, arm counts, unknown positions or ambiguous identities remain separate. This removes duplicate zero-hit placeholders without inventing coverage for unexecuted arms. The merger regression runs in CI.
