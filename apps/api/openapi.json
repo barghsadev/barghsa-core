@@ -863,6 +863,17 @@
                 "properties": {
                   "config": {
                     "description": "Brand config JSON (appTitle, colors, etc.)",
+                    "properties": {
+                      "numberStyle": {
+                        "default": "locale",
+                        "enum": [
+                          "locale",
+                          "persian",
+                          "western"
+                        ],
+                        "type": "string"
+                      }
+                    },
                     "type": "object"
                   },
                   "expectedVersion": {

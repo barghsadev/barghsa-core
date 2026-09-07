@@ -2354,3 +2354,9 @@ Acceptance evidence now covers public terms, acceptance storage, re-acceptance, 
 The new i18n numbers entry point formats decimals, percentages and whole-rial currency with locale-default, Persian or Western digits. Digit selection does not change the currency language. Integer amounts use BigInt and retain values above JavaScript's safe-number range; fractional/exponent currency input and already-lossy numeric integers are rejected. Currency output always includes IRR or ریال.
 
 All 45 i18n checks pass, including exact large amounts, localized separators, ratio percentages, numeral overrides and invalid-input rejection. Package build/types, targeted lint, formatting and diff review pass. Administrator persistence and consumer wiring are the next step; this utility alone does not close the number-formatting requirement.
+
+### Persist numeral preference through reviewed appearance settings
+
+Appearance settings now contain a locale-default, Persian or Western number choice with a localized currency preview. The existing versioned branding transaction stores the preference, validates the enum, checks current authority and publishes only the saved revision. Public readers keep the prior preference while another draft is edited. Legacy configurations default to page-language numerals. The theme context retains the last validated preference if a malformed refresh arrives.
+
+The missing public preference reproduced before repair. All 64 focused branding/configuration API checks, 8 theme-provider checks and 45 i18n checks pass. Both live language flows verify preview, draft reload, publication and preservation of the active value while editing the next draft. API/web types, targeted lint, formatting, generated contract, bundle budgets and diff review pass. Individual numeric consumers are wired next; this step does not close global formatting acceptance.

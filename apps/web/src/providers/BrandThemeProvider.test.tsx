@@ -15,7 +15,9 @@ const config = {
 };
 function Consumer() {
   const { brandConfig, loading } = useBrandConfig();
-  return <p>{loading ? 'Loading' : brandConfig.appTitle}</p>;
+  return (
+    <p data-number-style={brandConfig.numberStyle}>{loading ? 'Loading' : brandConfig.appTitle}</p>
+  );
 }
 async function mount() {
   await act(async () => {
@@ -156,4 +158,19 @@ it('removes a dynamically created icon when the next active config has no icon',
     window.dispatchEvent(new Event('barghsa:branding-activated'));
   });
   expect(document.querySelector('link[rel="icon"]')).toBeNull();
+});
+
+it('keeps the last validated number preference and accepts legacy locale defaults', async () => {
+  const request = vi
+    .fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify(config)))
+    .mockResolvedValueOnce(new Response(JSON.stringify({ ...config, numberStyle: 'western' })))
+    .mockResolvedValueOnce(new Response(JSON.stringify({ ...config, numberStyle: ['persian'] })));
+  vi.stubGlobal('fetch', request);
+  await mount();
+  expect(host.querySelector('p')?.dataset.numberStyle).toBe('locale');
+  await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
+  expect(host.querySelector('p')?.dataset.numberStyle).toBe('western');
+  await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
+  expect(host.querySelector('p')?.dataset.numberStyle).toBe('western');
 });

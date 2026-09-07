@@ -82,6 +82,7 @@ export class BrandConfigService {
         logoUrl: null,
         faviconUrl: null,
         darkMode: false,
+        numberStyle: 'locale',
       },
       version: 0,
       status: 'draft',

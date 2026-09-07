@@ -712,3 +712,52 @@ it('requires a recognized video container brand or structured document type', as
     ).toBe(valid ? 200 : 400);
   }
 });
+
+it('publishes a validated number style only through the reviewed branding version', async () => {
+  expect(await publicConfig()).toMatchObject({ numberStyle: 'locale' });
+  expect(
+    (
+      await request('admin/branding/config', 'PUT', {
+        expectedVersion: 0,
+        config: { numberStyle: 'invalid' },
+      })
+    ).status
+  ).toBe(400);
+  await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='branding-review'");
+  expect(
+    (
+      await request('admin/branding/config', 'PUT', {
+        expectedVersion: 0,
+        config: { numberStyle: 'western' },
+      })
+    ).status
+  ).toBe(403);
+  await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='branding-review'");
+  let expectedVersion = 0;
+  let active = 'locale';
+  for (const numberStyle of ['western', 'persian', 'locale']) {
+    const draft = await saved(
+      await request('admin/branding/config', 'PUT', { expectedVersion, config: { numberStyle } })
+    );
+    expect(draft.config.numberStyle).toBe(numberStyle);
+    expect(await publicConfig()).toMatchObject({ numberStyle: active });
+    expect(
+      (
+        await request('admin/branding/activate', 'POST', {
+          draftId: draft.id,
+          expectedVersion: draft.version,
+        })
+      ).status
+    ).toBe(200);
+    expect(await publicConfig()).toMatchObject({ numberStyle });
+    active = numberStyle;
+    expectedVersion = draft.version;
+  }
+  expect(
+    (
+      await http.pool.query(
+        "SELECT config->>'numberStyle' AS style FROM brand_config ORDER BY version"
+      )
+    ).rows.map((row) => row.style)
+  ).toEqual(['western', 'persian', 'locale']);
+});

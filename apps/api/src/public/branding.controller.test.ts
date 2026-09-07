@@ -41,6 +41,7 @@ describe('PublicBrandingController', () => {
       const result = await controller.getActiveBrandConfig();
 
       expect(result).toEqual({
+        numberStyle: 'locale',
         appTitle: 'My Brand',
         slogan: 'My Slogan',
         primaryColor: '#ff0000',
@@ -74,6 +75,7 @@ describe('PublicBrandingController', () => {
       const result = await controller.getActiveBrandConfig();
 
       expect(result).toEqual({
+        numberStyle: 'locale',
         appTitle: 'Barghsa',
         slogan: '',
         primaryColor: '#2563eb',

@@ -1,3 +1,4 @@
+import type { NumberStyle } from '@barghsa/i18n/numbers';
 import { Controller, Get, Logger } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BrandConfigService } from '../admin/brand-config.service.js';
@@ -17,6 +18,7 @@ export interface PublicBrandConfigDto {
   logoUrl: string | null;
   faviconUrl: string | null;
   darkMode: boolean;
+  numberStyle: NumberStyle;
 }
 
 /**
@@ -58,6 +60,10 @@ export class PublicBrandingController {
       logoUrl: (brandConfig.logoUrl as string | null) ?? null,
       faviconUrl: (brandConfig.faviconUrl as string | null) ?? null,
       darkMode: (brandConfig.darkMode as boolean) ?? false,
+      numberStyle:
+        brandConfig.numberStyle === 'persian' || brandConfig.numberStyle === 'western'
+          ? brandConfig.numberStyle
+          : 'locale',
     };
   }
 }

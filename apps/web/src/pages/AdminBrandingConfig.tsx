@@ -1,3 +1,4 @@
+import { formatCurrencyIrr, type NumberStyle } from '@barghsa/i18n/numbers';
 import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
 import { brandingText } from '@barghsa/i18n/branding';
@@ -19,6 +20,7 @@ interface BrandConfig {
   logoUrl: string | null;
   faviconUrl: string | null;
   darkMode: boolean;
+  numberStyle: NumberStyle;
 }
 
 interface BrandConfigDto {
@@ -44,6 +46,7 @@ const DEFAULT_CONFIG: BrandConfig = {
   logoUrl: null,
   faviconUrl: null,
   darkMode: false,
+  numberStyle: 'locale',
 };
 
 // ---------------------------------------------------------------------------
@@ -454,6 +457,34 @@ export default function AdminBrandingConfig() {
             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600" />
           </label>
         </div>
+      </section>
+
+      <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-3">
+        <label
+          htmlFor="branding-number-style"
+          className="block text-lg font-semibold text-gray-800"
+        >
+          {text('numberStyle')}
+        </label>
+        <p id="branding-number-style-help" className="text-sm text-gray-500">
+          {text('numberStyleHint')}
+        </p>
+        <select
+          id="branding-number-style"
+          aria-describedby="branding-number-style-help"
+          value={config.numberStyle}
+          onChange={(event) => updateConfig('numberStyle', event.target.value)}
+          className="rounded border border-gray-300 px-3 py-2"
+        >
+          <option value="locale">{text('numberLocale')}</option>
+          <option value="persian">{text('numberPersian')}</option>
+          <option value="western">{text('numberWestern')}</option>
+        </select>
+        <p>
+          <output aria-label={text('numberPreview')}>
+            {formatCurrencyIrr('123456789', locale, { numberStyle: config.numberStyle })}
+          </output>
+        </p>
       </section>
 
       {/* ── Preview ───────────────────────────────────────────────────── */}

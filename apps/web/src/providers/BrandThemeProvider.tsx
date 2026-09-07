@@ -1,3 +1,4 @@
+import type { NumberStyle } from '@barghsa/i18n/numbers';
 import { createContext, useContext, useEffect, useState, useMemo, type ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------
@@ -13,6 +14,7 @@ export interface BrandConfig {
   logoUrl: string | null;
   faviconUrl: string | null;
   darkMode: boolean;
+  numberStyle: NumberStyle;
 }
 
 const DEFAULT_BRAND_CONFIG: BrandConfig = {
@@ -24,6 +26,7 @@ const DEFAULT_BRAND_CONFIG: BrandConfig = {
   logoUrl: null,
   faviconUrl: null,
   darkMode: false,
+  numberStyle: 'locale',
 };
 
 // ---------------------------------------------------------------------------
@@ -84,7 +87,10 @@ function parseBrand(value: unknown): BrandConfig | null {
   for (const field of ['primaryColor', 'secondaryColor', 'accentColor'])
     if (typeof data[field] !== 'string' || !/^#[a-f0-9]{6}$/i.test(data[field])) return null;
   if (!validAsset(data.logoUrl) || !validAsset(data.faviconUrl)) return null;
-  return data as unknown as BrandConfig;
+  const numberStyle = data.numberStyle ?? 'locale';
+  if (typeof numberStyle !== 'string' || !['locale', 'persian', 'western'].includes(numberStyle))
+    return null;
+  return { ...data, numberStyle } as unknown as BrandConfig;
 }
 
 /** Apply validated active branding and restore document ownership on unmount. */

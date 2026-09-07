@@ -115,6 +115,7 @@ export const UpsertBrandConfigSchema = z.object({
     logoUrl: assetUrl.nullable().optional().default(null),
     faviconUrl: assetUrl.nullable().optional().default(null),
     darkMode: z.boolean().optional().default(false),
+    numberStyle: z.enum(['locale', 'persian', 'western']).optional().default('locale'),
   }),
 });
 export interface BrandConfigDto {
@@ -873,7 +874,17 @@ export class AdminController {
           type: 'string',
           description: 'Verified branding_logo image upload owned by the editor',
         },
-        config: { type: 'object', description: 'Brand config JSON (appTitle, colors, etc.)' },
+        config: {
+          type: 'object',
+          description: 'Brand config JSON (appTitle, colors, etc.)',
+          properties: {
+            numberStyle: {
+              type: 'string',
+              enum: ['locale', 'persian', 'western'],
+              default: 'locale',
+            },
+          },
+        },
       },
     },
   })

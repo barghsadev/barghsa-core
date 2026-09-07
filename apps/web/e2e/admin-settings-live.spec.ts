@@ -2265,10 +2265,20 @@ for (const locale of ['en', 'fa'] as const) {
     const publicTitle = async () =>
       (await (await page.request.get(`${http.base}/api/public/branding/config`)).json()).appTitle;
     const before = await publicTitle();
+    const publicStyle = async () =>
+      (await (await page.request.get(`${http.base}/api/public/branding/config`)).json())
+        .numberStyle;
+    const beforeStyle = await publicStyle();
+    const numberStyle = fa ? 'western' : 'persian';
     await page.goto('/admin/branding');
     const title = page.getByLabel(fa ? 'نام برنامه' : 'App Title', { exact: true });
     const savedTitle = `Brand published ${locale}`;
     await title.fill(savedTitle);
+    const style = page.getByLabel(fa ? 'نمایش اعداد' : 'Number display', { exact: true });
+    await style.selectOption(numberStyle);
+    await expect(
+      page.getByLabel(fa ? 'پیش‌نمایش نمایش اعداد' : 'Number display preview', { exact: true })
+    ).toContainText(fa ? '123,456,789' : '۱۲۳٬۴۵۶٬۷۸۹');
     await page
       .getByLabel(fa ? 'کد هگز رنگ اصلی' : 'Primary hex value', { exact: true })
       .fill('#777777');
@@ -2299,8 +2309,10 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(await publicTitle()).toBe(before);
+    expect(await publicStyle()).toBe(beforeStyle);
     await page.reload();
     await expect(title).toHaveValue(savedTitle);
+    await expect(style).toHaveValue(numberStyle);
     const savedTime = page.locator('main time');
     await expect(savedTime).toHaveCount(1);
     const instant = await savedTime.getAttribute('datetime');
@@ -2347,6 +2359,7 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(await publicTitle()).toBe(savedTitle);
+    expect(await publicStyle()).toBe(numberStyle);
     await expect(page).toHaveTitle(savedTitle);
     await expect
       .poll(() => page.evaluate(() => document.documentElement.style.getPropertyValue('--primary')))
@@ -2357,6 +2370,7 @@ for (const locale of ['en', 'fa'] as const) {
       )
       .toBe('#000000');
     await title.fill(`Next draft ${locale}`);
+    await style.selectOption('locale');
     await page
       .getByRole('button', { name: fa ? 'ذخیره پیش‌نویس' : 'Save Draft', exact: true })
       .click();
@@ -2368,6 +2382,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.reload();
     await expect(title).toHaveValue(`Next draft ${locale}`);
     expect(await publicTitle()).toBe(savedTitle);
+    expect(await publicStyle()).toBe(numberStyle);
   });
 }
 
