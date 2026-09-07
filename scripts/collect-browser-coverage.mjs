@@ -23,7 +23,19 @@ export async function collectBrowserCoverage({
   await writeFile(output, JSON.stringify({ schema_version: 1, status: 'invalid' }) + '\n');
   if (resultsPath) {
     const results = JSON.parse(await readFile(resultsPath, 'utf8'));
-    minimumRecords = results.stats?.expected;
+    const stats = results.stats;
+    if (
+      !stats ||
+      !Number.isSafeInteger(stats.expected) ||
+      stats.expected <= 0 ||
+      stats.unexpected !== 0 ||
+      stats.flaky !== 0 ||
+      stats.skipped !== 0 ||
+      !Array.isArray(results.errors) ||
+      results.errors.length !== 0
+    )
+      throw new Error('Browser coverage requires a complete passing test run');
+    minimumRecords = stats.expected;
   }
   const files = (await readdir(rawDir)).filter((name) => name.endsWith('.json'));
   if (!files.length) throw new Error('No browser coverage records');

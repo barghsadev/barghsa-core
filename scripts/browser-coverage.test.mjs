@@ -178,6 +178,32 @@ test('requires a coverage record for every completed browser check', async () =>
   });
 });
 
+test('rejects failed, flaky, skipped, empty or malformed browser summaries', async () => {
+  await fixture(async (options) => {
+    const resultsPath = join(options.rawDir, 'results-summary.txt');
+    const passing = { expected: 1, unexpected: 0, flaky: 0, skipped: 0 };
+    for (const stats of [
+      { ...passing, unexpected: 1 },
+      { ...passing, flaky: 1 },
+      { ...passing, skipped: 1 },
+      { ...passing, expected: 0 },
+      { expected: 1 },
+      { ...passing, expected: '1' },
+    ]) {
+      await writeFile(resultsPath, JSON.stringify({ stats, errors: [] }));
+      await assert.rejects(collectBrowserCoverage({ ...options, resultsPath }));
+      assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
+    }
+    await writeFile(
+      resultsPath,
+      JSON.stringify({ stats: passing, errors: [{ message: 'setup failed' }] })
+    );
+    await assert.rejects(collectBrowserCoverage({ ...options, resultsPath }));
+    await writeFile(resultsPath, JSON.stringify({ stats: passing, errors: [] }));
+    assert.equal((await collectBrowserCoverage({ ...options, resultsPath })).status, 'mapped');
+  });
+});
+
 test('chains workspace package maps to TypeScript and rejects missing intermediate maps', async () => {
   await fixture(async (options) => {
     const source = join(options.root, 'packages/i18n/src/sample.ts');
