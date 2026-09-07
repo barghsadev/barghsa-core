@@ -70,9 +70,9 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
       configVersion: 4,
     });
     await expect(controller.getWallet(PROFILE_ID, req)).resolves.toEqual({
-      balance: 1_500_000,
-      postedBalance: 1_500_000,
-      reservedBalance: 0,
+      balance: '1500000',
+      postedBalance: '1500000',
+      reservedBalance: '0',
       currency: 'IRR',
       onlineTopUpLimit: 50_000,
       configVersion: 4,
@@ -88,9 +88,9 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
     });
     resolveOnlineTopUpLimit.mockResolvedValue(null);
     await expect(controller.getWallet(PROFILE_ID, req)).resolves.toEqual({
-      balance: 0,
-      postedBalance: 0,
-      reservedBalance: 0,
+      balance: '0',
+      postedBalance: '0',
+      reservedBalance: '0',
       currency: 'IRR',
     });
   });

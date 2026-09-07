@@ -10,7 +10,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 
 interface WalletBalance {
-  balance: number;
+  balance: string;
   postedBalance?: number;
   reservedBalance?: number;
   currency: string;
@@ -39,11 +39,11 @@ type ReceiptError =
 const DOCUMENT_MAX_BYTES = 10 * 1024 * 1024;
 const IMAGE_MAX_BYTES = 20 * 1024 * 1024;
 
-function formatAmount(amount: number | bigint, locale: Locale): string {
+function formatAmount(amount: number | bigint | string, locale: Locale): string {
   try {
     return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
       style: 'decimal',
-    }).format(amount);
+    }).format(typeof amount === 'string' ? BigInt(amount) : amount);
   } catch {
     return amount.toLocaleString();
   }

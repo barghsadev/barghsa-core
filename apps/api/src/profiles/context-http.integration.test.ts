@@ -141,3 +141,20 @@ it('does not grant owner privileges from a stale Owner membership', async () => 
   expect((await request(`profiles/switch/${unrelated}`, 'POST')).status).toBe(404);
   expect((await request(`wallet/${unrelated}/create`, 'POST')).status).toBe(404);
 });
+
+it('returns exact wallet balances above the JavaScript safe integer limit', async () => {
+  await http.pool.query(
+    'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES ($1,$2,$3)',
+    [owned, '9007199254740995', '2']
+  );
+  const response = await request(`wallet/${owned}`);
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    balance: '9007199254740993',
+    postedBalance: '9007199254740995',
+    reservedBalance: '2',
+  });
+  const created = await request(`wallet/${owned}/create`, 'POST');
+  expect(created.status).toBe(201);
+  expect(await created.json()).toMatchObject({ balance: '9007199254740993' });
+});

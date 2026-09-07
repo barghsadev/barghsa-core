@@ -100,6 +100,24 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     expect(container.querySelector('#top-up-amount-hint')?.textContent).toContain('2,000,000,000');
   });
 
+  it.each(['en', 'fa'] as const)('renders exact large balances in %s', async (locale) => {
+    document.documentElement.lang = locale;
+    fetchMock.mockImplementation(async (input: RequestInfo | URL) => {
+      if (String(input).endsWith('/api/profiles'))
+        return jsonResponse({ activeProfileId: PROFILE_ID });
+      return jsonResponse({
+        balance: '9007199254740993',
+        currency: 'IRR',
+        onlineTopUpLimit: 2_000_000_000,
+      });
+    });
+    await renderPage();
+    const balance = container.querySelector('[data-testid="wallet-balance"]')?.textContent ?? '';
+    expect(balance).toContain(
+      new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(9007199254740993n)
+    );
+  });
+
   it('posts the amount and redirects the browser to the gateway', async () => {
     await renderPage();
     const input = container.querySelector('[data-testid="wallet-amount"]') as HTMLInputElement;

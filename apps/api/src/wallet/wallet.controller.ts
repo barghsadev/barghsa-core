@@ -92,15 +92,15 @@ export class WalletController {
           };
     if (!wallet) {
       return {
-        balance: 0,
+        balance: '0',
         currency: 'IRR',
         ...limitFields,
       };
     }
     return {
-      balance: Number(wallet.availableBalance),
-      postedBalance: Number(wallet.postedBalance),
-      reservedBalance: Number(wallet.reservedBalance),
+      balance: wallet.availableBalance.toString(),
+      postedBalance: wallet.postedBalance.toString(),
+      reservedBalance: wallet.reservedBalance.toString(),
       currency: 'IRR',
       ...limitFields,
     };
@@ -114,7 +114,7 @@ export class WalletController {
     const wallet = await this.walletService.createWallet(profileId);
     return {
       ok: true,
-      balance: Number(wallet.availableBalance),
+      balance: wallet.availableBalance.toString(),
       currency: 'IRR',
     };
   }
