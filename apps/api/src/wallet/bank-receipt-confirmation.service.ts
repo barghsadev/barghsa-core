@@ -442,7 +442,7 @@ export class BankReceiptConfirmationService {
             ? `Bank receipt ${pending.id} allocated to invoice ${invoiceId}; wallet excess ${overpayment?.walletCreditAmount ?? '0'}`
             : `Bank receipt top-up ${pending.id} credited as ${creditId} for wallet ${pending.walletId}`
         );
-        return this.toDto(updated ?? pending, {
+        return this.toDto(updated, {
           creditTransactionId: creditId,
           overpayment,
           auditId,
@@ -570,7 +570,7 @@ export class BankReceiptConfirmationService {
         this.logger.log(
           `Bank receipt top-up ${pending.id} rejected for wallet ${pending.walletId}`
         );
-        return this.toDto(updated ?? pending, {
+        return this.toDto(updated, {
           auditId,
           ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
         });
@@ -848,7 +848,7 @@ export class BankReceiptConfirmationService {
     client: WalletQueryClient,
     pendingId: string,
     decision: Record<string, unknown>
-  ): Promise<LedgerRow | null> {
+  ): Promise<LedgerRow> {
     const result = await client.query(
       `UPDATE wallet_transactions
           SET state = 'Released',
@@ -860,14 +860,18 @@ export class BankReceiptConfirmationService {
         RETURNING *`,
       [pendingId, JSON.stringify(decision)]
     );
-    return (result.rows as LedgerRow[])[0] ?? null;
+    const updated = (result.rows as LedgerRow[])[0];
+    if (!updated || updated.state !== 'Released') {
+      httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt transition was not persisted', 409);
+    }
+    return updated;
   }
 
   private async markRejected(
     client: WalletQueryClient,
     pendingId: string,
     decision: Record<string, unknown>
-  ): Promise<LedgerRow | null> {
+  ): Promise<LedgerRow> {
     const result = await client.query(
       `UPDATE wallet_transactions
           SET state = 'Rejected',
@@ -879,7 +883,11 @@ export class BankReceiptConfirmationService {
         RETURNING *`,
       [pendingId, JSON.stringify(decision)]
     );
-    return (result.rows as LedgerRow[])[0] ?? null;
+    const updated = (result.rows as LedgerRow[])[0];
+    if (!updated || updated.state !== 'Rejected') {
+      httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt transition was not persisted', 409);
+    }
+    return updated;
   }
 
   private async loadProfileOwnerUserId(

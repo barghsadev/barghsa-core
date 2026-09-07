@@ -192,6 +192,81 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     };
   }
 
+  it.each([
+    { action: 'confirm' as const, state: 'Released', returned: 'NULL' },
+    { action: 'confirm' as const, state: 'Released', returned: 'OLD' },
+    { action: 'reject' as const, state: 'Rejected', returned: 'NULL' },
+    { action: 'reject' as const, state: 'Rejected', returned: 'OLD' },
+  ])(
+    'rolls back $action when receipt write returns $returned',
+    async ({ action, state, returned }) => {
+      const pendingId = await insertPending(uuidv7().slice(-12));
+      const before = await walletBalances();
+      await ctx.pool
+        .query(`CREATE FUNCTION suppress_wallet_receipt_transition() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.state = '${state}' THEN RETURN ${returned}; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER suppress_wallet_receipt_transition BEFORE UPDATE ON wallet_transactions
+      FOR EACH ROW EXECUTE FUNCTION suppress_wallet_receipt_transition()`);
+      const input = {
+        transactionId: pendingId,
+        actorUserId: ACTOR_USER_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+        raw: { reason: 'Missing stamp' },
+      };
+      const outboxKey =
+        action === 'confirm'
+          ? bankReceiptTopUpCompletedNotificationIdempotencyKey(pendingId)
+          : bankReceiptTopUpFailedNotificationIdempotencyKey(pendingId);
+      try {
+        await expect(service[action](input)).rejects.toMatchObject({ status: 409 });
+        expect(await walletBalances()).toEqual(before);
+        expect(
+          (await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [pendingId]))
+            .rows[0].state
+        ).toBe('Pending');
+        expect(
+          (
+            await ctx.pool.query('SELECT id FROM wallet_transactions WHERE idempotency_key=$1', [
+              bankReceiptCreditIdempotencyKey(pendingId),
+            ])
+          ).rows
+        ).toHaveLength(0);
+        expect(
+          (
+            await ctx.pool.query('SELECT id FROM notification_outbox WHERE idempotency_key=$1', [
+              outboxKey,
+            ])
+          ).rows
+        ).toHaveLength(0);
+      } finally {
+        await ctx.pool.query(
+          'DROP TRIGGER suppress_wallet_receipt_transition ON wallet_transactions; DROP FUNCTION suppress_wallet_receipt_transition()'
+        );
+      }
+      await service[action](input);
+      expect(
+        (await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [pendingId]))
+          .rows[0].state
+      ).toBe(state);
+      expect((await walletBalances()).posted).toBe(
+        before.posted + (action === 'confirm' ? AMOUNT : 0n)
+      );
+      // A retry does not create another credit or notification.
+      await service[action](input);
+      expect((await walletBalances()).posted).toBe(
+        before.posted + (action === 'confirm' ? AMOUNT : 0n)
+      );
+      expect(
+        (
+          await ctx.pool.query('SELECT id FROM notification_outbox WHERE idempotency_key=$1', [
+            outboxKey,
+          ])
+        ).rows
+      ).toHaveLength(1);
+    }
+  );
+
   it('credits posted_balance through WalletService.credit() and releases the pending intent', async () => {
     const before = await walletBalances();
     const pendingId = await insertPending('confirm');
