@@ -1,3 +1,5 @@
+import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
+import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-upload.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
@@ -19,25 +21,6 @@ import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barg
 export const Route = createFileRoute('/onboarding/legal/$profileId')({
   component: LegalProfileFormPage,
 });
-
-interface Province {
-  id: string;
-  nameFa: string;
-  nameEn: string;
-}
-
-interface City {
-  id: string;
-  provinceId: string;
-  nameFa: string;
-  nameEn: string;
-}
-
-interface CompanyType {
-  id: string;
-  nameEn: string;
-  nameFa: string;
-}
 
 interface FormErrors {
   representativeHonorific?: string | undefined;
@@ -87,36 +70,6 @@ function LegalProfileFormPage() {
     representativeFullAddress: '',
     representativePostalCode: '',
   });
-  const [representativeCities, setRepresentativeCities] = useState<City[]>([]);
-  const [loadingRepresentativeCities, setLoadingRepresentativeCities] = useState(false);
-  useEffect(() => {
-    const controller = new AbortController();
-    setRepresentativeCities([]);
-    if (!representative.representativeProvinceId) {
-      setLoadingRepresentativeCities(false);
-      return;
-    }
-    setLoadingRepresentativeCities(true);
-    fetch(`/api/geography/provinces/${representative.representativeProvinceId}/cities`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Cities unavailable');
-        return response.json() as Promise<City[]>;
-      })
-      .then((data) => {
-        if (!controller.signal.aborted) setRepresentativeCities(data);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted)
-          toast.error(t('onboarding.individual.error.loadCities', locale));
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoadingRepresentativeCities(false);
-      });
-    return () => controller.abort();
-  }, [representative.representativeProvinceId]);
   const [legalName, setLegalName] = useState('');
   const [nationalIdentifier, setNationalIdentifier] = useState('');
   const [registrationNumber, setRegistrationNumber] = useState('');
@@ -134,14 +87,36 @@ function LegalProfileFormPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  // ── Data loading ────────────────────────────────────────
-  const [provinces, setProvinces] = useState<Province[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
-  const [companyTypes, setCompanyTypes] = useState<CompanyType[]>([]);
-  const [loadingProvinces, setLoadingProvinces] = useState(true);
-  const [loadingCities, setLoadingCities] = useState(false);
-  const [loadingCompanyTypes, setLoadingCompanyTypes] = useState(true);
-  const [companyTypesError, setCompanyTypesError] = useState(false);
+  const provinceOptions = useGeographyOptions('/api/geography/provinces');
+  const companyTypeOptions = useGeographyOptions('/api/geography/company-types');
+  const cityOptions = useGeographyOptions(
+    officialProvinceId
+      ? `/api/geography/provinces/${encodeURIComponent(officialProvinceId)}/cities`
+      : null,
+    officialProvinceId || undefined
+  );
+  const representativeCityOptions = useGeographyOptions(
+    representative.representativeProvinceId
+      ? `/api/geography/provinces/${encodeURIComponent(representative.representativeProvinceId)}/cities`
+      : null,
+    representative.representativeProvinceId || undefined
+  );
+  const provinces = provinceOptions.options;
+  const cities = cityOptions.options;
+  const representativeCities = representativeCityOptions.options;
+  const companyTypes = companyTypeOptions.options;
+  const loadingProvinces = provinceOptions.loading;
+  const loadingCities = cityOptions.loading;
+  const loadingRepresentativeCities = representativeCityOptions.loading;
+  const loadingCompanyTypes = companyTypeOptions.loading;
+  const companyTypesError = companyTypeOptions.error;
+  const fetchCompanyTypes = companyTypeOptions.retry;
+  const geographyUnavailable = [
+    provinceOptions,
+    companyTypeOptions,
+    cityOptions,
+    representativeCityOptions,
+  ].some((options) => options.loading || options.error);
 
   // Submission
   const [submitting, setSubmitting] = useState(false);
@@ -225,95 +200,6 @@ function LegalProfileFormPage() {
     restoreDraft
   );
 
-  // Fetch provinces on mount
-  useEffect(() => {
-    let cancelled = false;
-    setLoadingProvinces(true);
-    fetch('/api/geography/provinces', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data: Province[]) => {
-        if (!cancelled) {
-          setProvinces(data);
-          setLoadingProvinces(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLoadingProvinces(false);
-          toast.error(isRtl ? 'بارگذاری استان‌ها با خطا مواجه شد' : 'Failed to load provinces');
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // Fetch company types on mount
-  const fetchCompanyTypes = useCallback(() => {
-    let cancelled = false;
-    setLoadingCompanyTypes(true);
-    setCompanyTypesError(false);
-    fetch('/api/geography/company-types', { credentials: 'include' })
-      .then((res) => {
-        if (!res.ok) throw new Error('HTTP error');
-        return res.json();
-      })
-      .then((data: CompanyType[]) => {
-        if (!cancelled) {
-          setCompanyTypes(data);
-          setLoadingCompanyTypes(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLoadingCompanyTypes(false);
-          setCompanyTypesError(true);
-          toast.error(
-            isRtl ? 'بارگذاری انواع شرکت با خطا مواجه شد' : 'Failed to load company types'
-          );
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [isRtl]);
-
-  useEffect(() => {
-    return fetchCompanyTypes();
-  }, [fetchCompanyTypes]);
-
-  // Fetch cities when province changes
-  useEffect(() => {
-    if (!officialProvinceId) {
-      setCities([]);
-      setOfficialCityId('');
-      return;
-    }
-    let cancelled = false;
-    setLoadingCities(true);
-    setCities([]);
-    fetch(`/api/geography/provinces/${officialProvinceId}/cities`, { credentials: 'include' })
-      .then((res) => {
-        if (!res.ok) throw new Error('Cities unavailable');
-        return res.json();
-      })
-      .then((data: City[]) => {
-        if (!cancelled) {
-          setCities(data);
-          setLoadingCities(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLoadingCities(false);
-          toast.error(isRtl ? 'بارگذاری شهرها با خطا مواجه شد' : 'Failed to load cities');
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [officialProvinceId]);
-
   // ── Field-level validation ──────────────────────────────
   const validateField = useCallback(
     (field: string, value: string): string | undefined => {
@@ -337,6 +223,13 @@ function LegalProfileFormPage() {
               )
             : undefined;
         if (!value.trim()) return t('onboarding.individual.error.required', locale);
+        if (field === 'representativeProvinceId' && !provinces.some((row) => row.id === value))
+          return t('onboarding.individual.error.required', locale);
+        if (
+          field === 'representativeCityId' &&
+          !representativeCities.some((row) => row.id === value)
+        )
+          return t('onboarding.individual.error.required', locale);
         if (field === 'representativeNationalId' && !validateNationalId(value.trim()))
           return t('onboarding.individual.error.invalidNationalId', locale);
         if (field === 'representativePostalCode' && !validatePostalCode(value.trim()))
@@ -376,7 +269,8 @@ function LegalProfileFormPage() {
             );
           return undefined;
         case 'companyTypeId':
-          if (!value) return isRtl ? 'نوع شرکت الزامی است' : 'Company type is required';
+          if (!value || !companyTypes.some((row) => row.id === value))
+            return isRtl ? 'نوع شرکت الزامی است' : 'Company type is required';
           return undefined;
         case 'registrationDate':
           return undefined; // optional
@@ -389,9 +283,13 @@ function LegalProfileFormPage() {
             return isRtl ? 'ایمیل معتبر نیست' : 'Invalid email format';
           return undefined;
         case 'officialProvinceId':
-          return value ? undefined : t('onboarding.legal.required.province', locale);
+          return value && provinces.some((row) => row.id === value)
+            ? undefined
+            : t('onboarding.legal.required.province', locale);
         case 'officialCityId':
-          return value ? undefined : t('onboarding.legal.required.city', locale);
+          return value && cities.some((row) => row.id === value)
+            ? undefined
+            : t('onboarding.legal.required.city', locale);
         case 'officialFullAddress':
           if (!value.trim()) return t('onboarding.legal.required.fullAddress', locale);
           if (value && value.length > 500)
@@ -427,7 +325,7 @@ function LegalProfileFormPage() {
           return undefined;
       }
     },
-    [isRtl, locale, numbers]
+    [isRtl, locale, numbers, provinces, cities, representativeCities, companyTypes]
   );
 
   const handleBlur = useCallback(
@@ -529,6 +427,7 @@ function LegalProfileFormPage() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+      if (geographyUnavailable) return;
       setSubmitError(null);
 
       if (!draft.ready || uploading || !validateForm()) return;
@@ -634,6 +533,7 @@ function LegalProfileFormPage() {
       representativeTitle,
       representativeRelationship,
       validateForm,
+      geographyUnavailable,
       isRtl,
       router,
     ]
@@ -802,6 +702,12 @@ function LegalProfileFormPage() {
           noValidate
         >
           {/* ── Section 1: Authorized Representative ────────── */}
+          <GeographyLoadError
+            {...provinceOptions}
+            message={t('onboarding.individual.error.loadProvinces', locale)}
+            locale={locale}
+            testId="onboarding-provinces-retry"
+          />
           <fieldset
             disabled={!draft.ready || submitting}
             onBlur={(event) => {
@@ -880,6 +786,14 @@ function LegalProfileFormPage() {
                       )
                     )}
                   </select>
+                  {field === 'representativeCityId' && (
+                    <GeographyLoadError
+                      {...representativeCityOptions}
+                      message={t('onboarding.individual.error.loadCities', locale)}
+                      locale={locale}
+                      testId="onboarding-representative-cities-retry"
+                    />
+                  )}
                   {touched[field] && errors[field] && (
                     <p id={`${field}-error`} role="alert" className="text-sm text-destructive">
                       {errors[field]}
@@ -979,6 +893,7 @@ function LegalProfileFormPage() {
                       <span>{isRtl ? 'خطا در بارگذاری' : 'Failed to load'}</span>
                       <button
                         type="button"
+                        data-testid="onboarding-company-types-retry"
                         onClick={fetchCompanyTypes}
                         disabled={loadingCompanyTypes}
                         className="rounded border border-input px-2 py-1 text-xs hover:bg-muted"
@@ -1092,7 +1007,6 @@ function LegalProfileFormPage() {
                     onChange={(e) => {
                       setOfficialProvinceId(e.target.value);
                       setOfficialCityId('');
-                      setCities([]);
                     }}
                     onBlur={() => handleBlur('officialProvinceId')}
                     disabled={submitting}
@@ -1139,6 +1053,12 @@ function LegalProfileFormPage() {
                     ))}
                   </select>
                 )}
+                <GeographyLoadError
+                  {...cityOptions}
+                  message={t('onboarding.individual.error.loadCities', locale)}
+                  locale={locale}
+                  testId="onboarding-official-cities-retry"
+                />
                 {touched.officialCityId && errors.officialCityId && (
                   <p className="text-sm text-destructive" role="alert">
                     {errors.officialCityId}
@@ -1288,7 +1208,7 @@ function LegalProfileFormPage() {
           <Button
             type="submit"
             className="w-full"
-            disabled={submitting || uploading || !draft.ready}
+            disabled={submitting || uploading || !draft.ready || geographyUnavailable}
           >
             {submitting ? (
               <>

@@ -385,6 +385,7 @@ for (const locale of ['en', 'fa']) {
         json: [
           {
             id: route.request().url().includes('province-a') ? 'city-a' : 'city-b',
+            provinceId: route.request().url().includes('province-a') ? 'province-a' : 'province-b',
             nameFa: 'شهر',
             nameEn: 'City',
           },
@@ -465,7 +466,9 @@ for (const locale of ['en', 'fa']) {
       route.fulfill({ json: [{ id: 'province-one', nameFa: 'استان', nameEn: 'Province' }] })
     );
     await page.route('**/api/geography/provinces/province-one/cities', (route) =>
-      route.fulfill({ json: [{ id: 'city-one', nameFa: 'شهر', nameEn: 'City' }] })
+      route.fulfill({
+        json: [{ id: 'city-one', provinceId: 'province-one', nameFa: 'شهر', nameEn: 'City' }],
+      })
     );
     let sent: Record<string, unknown> | undefined;
     await page.route('**/api/onboarding/individual/*', (route) => {
@@ -548,7 +551,9 @@ for (const locale of ['en', 'fa']) {
       route.fulfill({ json: [{ id: 'province-one', nameFa: 'استان', nameEn: 'Province' }] })
     );
     await page.route('**/api/geography/provinces/*/cities', (route) =>
-      route.fulfill({ json: [{ id: 'city-one', nameFa: 'شهر', nameEn: 'City' }] })
+      route.fulfill({
+        json: [{ id: 'city-one', provinceId: 'province-one', nameFa: 'شهر', nameEn: 'City' }],
+      })
     );
     await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
     await page.goto('/onboarding/legal/profile-one');
@@ -2645,4 +2650,70 @@ for (const locale of ['en', 'fa'])
         page.getByText(locale === 'fa' ? '500/500' : '۵۰۰/۵۰۰', { exact: true })
       ).toBeVisible();
       await expect(address).toHaveAttribute('maxlength', '500');
+    });
+
+for (const locale of ['en', 'fa'])
+  for (const kind of ['individual', 'legal'])
+    test(`onboarding geography retries invalid responses without losing fields (${kind}, ${locale})`, async ({
+      page,
+    }) => {
+      await shell(page, locale);
+      const province = { id: 'province-one', nameEn: 'Province One', nameFa: 'استان یک' };
+      let provinceResponse: unknown = {};
+      let provinceStatus = 503;
+      let companyResponse: unknown = {};
+      let cityResponse: unknown = [
+        {
+          id: 'wrong-city',
+          provinceId: 'another-province',
+          nameEn: 'Wrong city',
+          nameFa: 'شهر نادرست',
+        },
+      ];
+      await page.route('**/api/geography/provinces', (route) =>
+        route.fulfill({ status: provinceStatus, json: provinceResponse })
+      );
+      await page.route('**/api/geography/provinces/*/cities', (route) =>
+        route.fulfill({ json: cityResponse })
+      );
+      await page.route('**/api/geography/company-types', (route) =>
+        route.fulfill({ json: companyResponse })
+      );
+      await page.goto(`/onboarding/${kind}/profile-one`);
+      const retry = page.getByTestId('onboarding-provinces-retry');
+      await expect(retry).toBeVisible({ timeout: 2000 });
+      const name = page.locator(kind === 'legal' ? '#legalName' : '#firstName');
+      await name.fill('Retained identity');
+      for (const malformed of [{}, [{ ...province, nameFa: 1 }], [province, province]]) {
+        provinceStatus = 200;
+        provinceResponse = malformed;
+        await retry.click();
+        await expect(retry).toBeVisible();
+        await expect(name).toHaveValue('Retained identity');
+      }
+      provinceResponse = [province];
+      await retry.click();
+      await expect(retry).toHaveCount(0);
+      if (kind === 'legal') {
+        const companyRetry = page.getByTestId('onboarding-company-types-retry');
+        await expect(companyRetry).toBeVisible();
+        companyResponse = [{ id: 'limited', nameEn: 'Limited', nameFa: 'محدود' }];
+        await companyRetry.click();
+        await page.locator('#companyTypeId').selectOption('limited');
+      }
+      const provinceInput = page.locator(kind === 'legal' ? '#officialProvinceId' : '#provinceId');
+      await provinceInput.selectOption(province.id);
+      const cityRetry = page.getByTestId(
+        kind === 'legal' ? 'onboarding-official-cities-retry' : 'onboarding-cities-retry'
+      );
+      await expect(cityRetry).toBeVisible();
+      const cityInput = page.locator(kind === 'legal' ? '#officialCityId' : '#cityId');
+      await expect(cityInput.locator('option[value="wrong-city"]')).toHaveCount(0);
+      cityResponse = [
+        { id: 'city-one', provinceId: province.id, nameEn: 'City One', nameFa: 'شهر یک' },
+      ];
+      await cityRetry.click();
+      await cityInput.selectOption('city-one');
+      await expect(name).toHaveValue('Retained identity');
+      await expect(cityInput).toHaveValue('city-one');
     });

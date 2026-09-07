@@ -1,7 +1,9 @@
+import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
+import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { withCsrf } from '../../../lib/csrf.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t } from '@barghsa/i18n';
@@ -13,19 +15,6 @@ import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barg
 export const Route = createFileRoute('/onboarding/individual/$profileId')({
   component: IndividualProfileFormPage,
 });
-
-interface Province {
-  id: string;
-  nameFa: string;
-  nameEn: string;
-}
-
-interface City {
-  id: string;
-  provinceId: string;
-  nameFa: string;
-  nameEn: string;
-}
 
 interface FormErrors {
   title?: string | undefined;
@@ -57,74 +46,23 @@ function IndividualProfileFormPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  // Data loading
-  const [provinces, setProvinces] = useState<Province[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
-  const [loadingProvinces, setLoadingProvinces] = useState(true);
-  const [loadingCities, setLoadingCities] = useState(false);
+  const provinceOptions = useGeographyOptions('/api/geography/provinces');
+  const cityOptions = useGeographyOptions(
+    selectedProvinceId
+      ? `/api/geography/provinces/${encodeURIComponent(selectedProvinceId)}/cities`
+      : null,
+    selectedProvinceId || undefined
+  );
+  const provinces = provinceOptions.options;
+  const cities = cityOptions.options;
+  const loadingProvinces = provinceOptions.loading;
+  const loadingCities = cityOptions.loading;
+  const geographyUnavailable =
+    provinceOptions.loading || provinceOptions.error || cityOptions.loading || cityOptions.error;
 
   // Submission
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-
-  // Fetch provinces on mount
-  useEffect(() => {
-    let cancelled = false;
-    setLoadingProvinces(true);
-    fetch('/api/geography/provinces', { credentials: 'include' })
-      .then((res) => {
-        if (!res.ok) throw new Error('Geography unavailable');
-        return res.json();
-      })
-      .then((data: Province[]) => {
-        if (!cancelled) {
-          setProvinces(data);
-          setLoadingProvinces(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLoadingProvinces(false);
-          toast.error(t('onboarding.individual.error.loadProvinces', locale));
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // Fetch cities when province changes
-  useEffect(() => {
-    if (!selectedProvinceId) {
-      setCities([]);
-      setSelectedCityId('');
-      return;
-    }
-    let cancelled = false;
-    setLoadingCities(true);
-    setCities([]);
-    setSelectedCityId('');
-    fetch(`/api/geography/provinces/${selectedProvinceId}/cities`, { credentials: 'include' })
-      .then((res) => {
-        if (!res.ok) throw new Error('Geography unavailable');
-        return res.json();
-      })
-      .then((data: City[]) => {
-        if (!cancelled) {
-          setCities(data);
-          setLoadingCities(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLoadingCities(false);
-          toast.error(t('onboarding.individual.error.loadCities', locale));
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [selectedProvinceId]);
 
   // Field-level validation
   const validateField = useCallback(
@@ -159,10 +97,12 @@ function IndividualProfileFormPage() {
             return t('onboarding.individual.error.invalidNationalId', locale);
           return undefined;
         case 'provinceId':
-          if (!value) return t('onboarding.individual.error.required', locale);
+          if (!value || !provinces.some((row) => row.id === value))
+            return t('onboarding.individual.error.required', locale);
           return undefined;
         case 'cityId':
-          if (!value) return t('onboarding.individual.error.required', locale);
+          if (!value || !cities.some((row) => row.id === value))
+            return t('onboarding.individual.error.required', locale);
           return undefined;
         case 'fullAddress':
           if (!value.trim()) return t('onboarding.individual.error.required', locale);
@@ -181,7 +121,7 @@ function IndividualProfileFormPage() {
           return undefined;
       }
     },
-    [locale, numbers]
+    [locale, numbers, provinces, cities]
   );
 
   const handleBlur = useCallback(
@@ -251,7 +191,7 @@ function IndividualProfileFormPage() {
       e.preventDefault();
       setSubmitError(null);
 
-      if (!validateForm()) return;
+      if (geographyUnavailable || !validateForm()) return;
 
       setSubmitting(true);
 
@@ -311,6 +251,7 @@ function IndividualProfileFormPage() {
       fullAddress,
       postalCode,
       validateForm,
+      geographyUnavailable,
       locale,
       router,
     ]
@@ -345,6 +286,12 @@ function IndividualProfileFormPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+          <GeographyLoadError
+            {...provinceOptions}
+            message={t('onboarding.individual.error.loadProvinces', locale)}
+            locale={locale}
+            testId="onboarding-provinces-retry"
+          />
           {/* Title (optional) */}
           <div className="space-y-2">
             <Label htmlFor="title">
@@ -470,7 +417,6 @@ function IndividualProfileFormPage() {
                   onChange={(e) => {
                     setSelectedProvinceId(e.target.value);
                     setSelectedCityId('');
-                    setCities([]);
                   }}
                   onBlur={() => handleBlur('provinceId')}
                   disabled={submitting}
@@ -525,6 +471,12 @@ function IndividualProfileFormPage() {
                   ))}
                 </select>
               )}
+              <GeographyLoadError
+                {...cityOptions}
+                message={t('onboarding.individual.error.loadCities', locale)}
+                locale={locale}
+                testId="onboarding-cities-retry"
+              />
               {touched.cityId && errors.cityId && (
                 <p id="cityId-error" className="text-sm text-destructive" role="alert">
                   {errors.cityId}
@@ -594,7 +546,7 @@ function IndividualProfileFormPage() {
           </div>
 
           {/* Submit */}
-          <Button type="submit" className="w-full" disabled={submitting}>
+          <Button type="submit" className="w-full" disabled={submitting || geographyUnavailable}>
             {submitting ? (
               <>
                 <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
