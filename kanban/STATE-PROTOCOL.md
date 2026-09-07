@@ -22,6 +22,8 @@ Three unsuccessful fix rounds block further fixes. The first request for changes
 
 ## Events and recovery
 
+The obsolete `transition_state.py` entry point refuses every command with exit status 2 and writes nothing. It cannot mark a task merged or edit the historical checkout snapshot. Builders use the separate assignment-bound handoff; live transitions belong to the supervisor's durable state transaction.
+
 Task events distinguish `partial`, `merged`, `acceptance_verified`, `deferred`, `blocked` and `retired`. Historical events cannot be removed or rewritten. Ordinary state saves cannot remove completed identities. An incorrect historical completion needs a reviewed reconciliation/correction procedure; editing the completion array is rejected.
 
 The initial repair has not implemented a general correction/recovery command. Keep state blocked until that procedure and acceptance closure are reviewed. This is intentional: an ad hoc edit must not silently restart old work.
