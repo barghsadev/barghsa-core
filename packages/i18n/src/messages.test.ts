@@ -1,5 +1,11 @@
 import { expect, it } from 'vitest';
 import { dictionaries, t } from './index.js';
+import { fa as adminFa, en as adminEn, t as adminText } from './admin-ui.js';
+import { fa as crmFa, en as crmEn, t as crmText } from './crm.js';
+const allDictionaries = {
+  fa: { ...dictionaries.fa, ...adminFa, ...crmFa },
+  en: { ...dictionaries.en, ...adminEn, ...crmEn },
+};
 import { t as authText } from './auth.js';
 import { tCatalogue } from './catalogue.js';
 import { tGift } from './gifts.js';
@@ -8,25 +14,27 @@ import { tWalletLimit } from './wallet-limit.js';
 import { tWalletReceipts } from './wallet-receipts.js';
 
 it('keeps full Persian/English keys and interpolation placeholders consistent', () => {
-  expect(Object.keys(dictionaries.fa).sort()).toEqual(Object.keys(dictionaries.en).sort());
+  expect(Object.keys(allDictionaries.fa).sort()).toEqual(Object.keys(allDictionaries.en).sort());
   const placeholders = (value: string) =>
     [...value.matchAll(/\{\{?([a-zA-Z_][a-zA-Z_0-9]*)\}?\}/g)]
       .map((match) =>
         match[1] === 'status_label_fa' || match[1] === 'status_label_en' ? 'status_label' : match[1]
       )
       .sort();
-  for (const key of Object.keys(dictionaries.en)) {
-    expect.soft(dictionaries.fa[key]?.trim(), key).not.toBe('');
+  for (const key of Object.keys(allDictionaries.en)) {
+    expect.soft(allDictionaries.fa[key]?.trim(), key).not.toBe('');
     expect
-      .soft(placeholders(dictionaries.fa[key] ?? ''), key)
-      .toEqual(placeholders(dictionaries.en[key]!));
-    expect(t(key, 'fa')).toBe(dictionaries.fa[key]);
-    expect(t(key, 'en')).toBe(dictionaries.en[key]);
+      .soft(placeholders(allDictionaries.fa[key] ?? ''), key)
+      .toEqual(placeholders(allDictionaries.en[key]!));
+    expect(adminText(key, 'fa')).toBe(allDictionaries.fa[key]);
+    expect(adminText(key, 'en')).toBe(allDictionaries.en[key]);
   }
 });
 for (const [name, resolve] of Object.entries({
   t,
   authText,
+  adminText,
+  crmText,
   tCatalogue,
   tGift,
   tVat,

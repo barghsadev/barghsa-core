@@ -1,7 +1,7 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';

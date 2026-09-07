@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@barghsa/ui';
 import { Outlet } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import { TosBanner } from '../components/TosBanner.js';
 import { useLocale } from '../hooks/useLocale.js';
 

@@ -84,7 +84,7 @@ for (const locale of ['en', 'fa'])
         json: {
           id: 'test-version',
           versionId: 'v1',
-          content: locale === 'fa' ? 'شرایط آزمایشی' : 'Test terms',
+          content: '**' + (locale === 'fa' ? 'شرایط آزمایشی' : 'Test terms') + '**',
           updatedAt: '2026-09-01T00:00:00Z',
           publishedAt: '2026-09-01T00:00:00Z',
         },
@@ -99,5 +99,49 @@ for (const locale of ['en', 'fa'])
       })
     ).toBeVisible();
     await expect(dialog).toContainText(locale === 'fa' ? 'شرایط آزمایشی' : 'Test terms');
+    await expect(dialog.locator('strong')).toBeVisible();
     expect(requestedLocale).toBe(locale);
   });
+
+test('terms acceptance waits for the document renderer to load', async ({ page }) => {
+  await page.addInitScript(() => {
+    new MutationObserver(() => {
+      if (document.documentElement) document.documentElement.lang = 'en';
+    }).observe(document, { childList: true });
+  });
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({ json: { requiresTosAcceptance: true, userId: 'test-user', username: 'Test' } })
+  );
+  await page.route('**/api/tos/current?*', (route) =>
+    route.fulfill({
+      json: {
+        id: 'delayed-terms',
+        versionId: 'v1',
+        content: '**Read before accepting**',
+        updatedAt: '2026-09-01T00:00:00Z',
+        publishedAt: '2026-09-01T00:00:00Z',
+      },
+    })
+  );
+  let release!: () => void;
+  const pending = new Promise<void>((done) => {
+    release = done;
+  });
+  await page.route('**/assets/TosContent-*.js', async (route) => {
+    await pending;
+    await route.continue();
+  });
+  try {
+    await page.goto('/admin/failed-notifications', { waitUntil: 'domcontentloaded' });
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('status')).toHaveText('Loading terms of service...');
+    await expect(dialog.getByRole('button', { name: 'I Accept', exact: true })).toBeDisabled();
+  } finally {
+    release();
+  }
+  await expect(page.getByRole('dialog').locator('strong')).toHaveText('Read before accepting');
+  await expect(
+    page.getByRole('dialog').getByRole('button', { name: 'I Accept', exact: true })
+  ).toBeEnabled();
+});

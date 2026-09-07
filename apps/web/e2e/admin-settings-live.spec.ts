@@ -2425,4 +2425,6 @@ test('TOS rich draft preview and publication persist through the migrated API', 
   await expect(page.getByRole('button', { name: 'Edit', exact: true })).toHaveCount(0);
   await page.getByRole('button', { name: 'View', exact: true }).click();
   await expect(page.getByRole('dialog')).toContainText('live-terms-v1');
+  await page.getByRole('dialog').getByRole('button', { name: 'English', exact: true }).click();
+  await expect(page.getByRole('dialog').locator('strong')).toHaveText('Published terms');
 });

@@ -1,6 +1,6 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import {
   Button,
   datePickerAtTime,

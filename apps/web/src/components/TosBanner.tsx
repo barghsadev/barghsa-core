@@ -1,5 +1,5 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { t, type Locale } from '@barghsa/i18n';
 import { Button } from '@barghsa/ui';
 import {
@@ -12,6 +12,8 @@ import {
 } from '@barghsa/ui';
 import { AlertCircleIcon, CheckIcon, Loader2Icon } from 'lucide-react';
 import { withCsrf } from '../lib/csrf.js';
+
+const TosContent = lazy(() => import('./TosContent.js'));
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -60,6 +62,9 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   const [showModal, setShowModal] = useState(false);
   const [currentTos, setCurrentTos] = useState<CurrentTosResponse | null>(null);
   const [loadingTos, setLoadingTos] = useState(false);
+  const [renderedVersion, setRenderedVersion] = useState<string | null>(null);
+  const renderKey = currentTos ? `${currentTos.id}:${locale}` : null;
+  const markRendered = useCallback(() => setRenderedVersion(renderKey), [renderKey]);
   const [accepting, setAccepting] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -93,6 +98,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     setShowModal(true);
     setLoadingTos(true);
     setCurrentTos(null);
+    setRenderedVersion(null);
     setError(null);
 
     try {
@@ -121,7 +127,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   // ── Accept TOS ──────────────────────────────────────────────────
 
   const handleAccept = useCallback(async () => {
-    if (!currentTos) return;
+    if (!currentTos || renderedVersion !== renderKey) return;
 
     setAccepting(true);
     setError(null);
@@ -151,7 +157,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     } finally {
       setAccepting(false);
     }
-  }, [currentTos, locale]);
+  }, [currentTos, locale, renderedVersion, renderKey]);
 
   // ── Render ──────────────────────────────────────────────────────
 
@@ -215,13 +221,9 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
               </div>
             )}
             {currentTos && !loadingTos && !error && (
-              <div className="prose prose-sm max-w-none" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-                {currentTos.content.split('\n').map((line, i) => (
-                  <p key={i} className="mb-2">
-                    {line}
-                  </p>
-                ))}
-              </div>
+              <Suspense fallback={<p role="status">{t('tos.page.loading', locale)}</p>}>
+                <TosContent content={currentTos.content} language={locale} onReady={markRendered} />
+              </Suspense>
             )}
           </div>
 
@@ -234,7 +236,9 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
             ) : (
               <Button
                 onClick={handleAccept}
-                disabled={accepting || loadingTos || !!error || !currentTos}
+                disabled={
+                  accepting || loadingTos || !!error || !currentTos || renderedVersion !== renderKey
+                }
               >
                 {accepting ? (
                   <>

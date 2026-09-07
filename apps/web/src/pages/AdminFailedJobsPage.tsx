@@ -1,6 +1,6 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import { BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
 import { Button, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';

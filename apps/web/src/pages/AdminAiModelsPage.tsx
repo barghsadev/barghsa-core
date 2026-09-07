@@ -1,7 +1,7 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex -- The labelled, horizontally scrollable table region must be keyboard-focusable. */
 import { useEffect, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';

@@ -2,7 +2,7 @@ import { LegalProfileDocuments } from '../../../components/LegalProfileDocuments
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/crm';
 import {
   UserIcon,
   Building2Icon,

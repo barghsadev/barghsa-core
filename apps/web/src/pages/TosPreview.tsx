@@ -1,6 +1,5 @@
 import { useMemo, useEffect } from 'react';
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import TosContent from '../components/TosContent.js';
 import { diffLines } from 'diff';
 import { adminTosText } from './admin-tos-text.js';
 
@@ -36,12 +35,7 @@ export default function TosPreview({
             <h4 className="mb-3 border-b pb-2 font-semibold">{item.title}</h4>
             <div dir={language === 'fa' ? 'rtl' : 'ltr'} lang={language}>
               {item.content ? (
-                <Markdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{ img: ({ alt }) => <span>{alt}</span> }}
-                >
-                  {item.content}
-                </Markdown>
+                <TosContent content={item.content} language={language} />
               ) : (
                 <p>{text.noCurrent}</p>
               )}

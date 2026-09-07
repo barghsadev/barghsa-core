@@ -1,9 +1,11 @@
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { timezoneText } from '@barghsa/i18n/timezone';
 import { createFileRoute, Link, useSearch } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { t, type Locale } from '@barghsa/i18n';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+
+const TosContent = lazy(() => import('../components/TosContent.js'));
 
 interface CurrentTosResponse {
   content: string;
@@ -157,12 +159,9 @@ function TermsPage() {
                 )}
               </header>
 
-              <div
-                className="whitespace-pre-wrap leading-relaxed text-foreground/90"
-                style={{ whiteSpace: 'pre-wrap' }}
-              >
-                {tos.content}
-              </div>
+              <Suspense fallback={<p role="status">{t('tos.page.loading', locale)}</p>}>
+                <TosContent content={tos.content} language={locale} />
+              </Suspense>
             </article>
           )}
         </div>

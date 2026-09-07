@@ -12,7 +12,7 @@ import {
 } from '@barghsa/ui';
 import { useState, useEffect, useId } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/crm';
 import { useLocale } from '../hooks/useLocale.js';
 
 interface Profile {

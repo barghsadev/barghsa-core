@@ -1,7 +1,7 @@
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import DeadLetterPanel from '../components/DeadLetterPanel.js';
 import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.js';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 export function KnowledgeBaseDocumentPicker({
   attachedKeys,

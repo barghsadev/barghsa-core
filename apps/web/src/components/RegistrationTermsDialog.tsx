@@ -1,3 +1,4 @@
+import TosContent from './TosContent.js';
 import type { RefObject } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/auth';
@@ -31,7 +32,9 @@ export default function RegistrationTermsDialog({
           <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>
           <DialogDescription>{versionId}</DialogDescription>
         </DialogHeader>
-        <div className="overflow-y-auto whitespace-pre-wrap text-sm leading-relaxed">{content}</div>
+        <div className="overflow-y-auto text-sm">
+          <TosContent content={content} language={locale} />
+        </div>
       </DialogContent>
     </Dialog>
   );

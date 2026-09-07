@@ -1,7 +1,7 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import {
   DUE_AT_OVERRIDE_REASON_MAX_LENGTH,
   parseDueAtOverrideBody,

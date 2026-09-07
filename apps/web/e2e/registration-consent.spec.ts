@@ -7,7 +7,7 @@ test('registration shows and submits the same terms version', async ({ page }) =
   await page.route('**/api/tos/current?*', (route) => {
     reads++;
     return route.fulfill({
-      json: { id, versionId: 'consent-v1', content: 'قوانین اول نمایش داده شده' },
+      json: { id, versionId: 'consent-v1', content: '**قوانین اول نمایش داده شده**' },
     });
   });
   await page.route('**/api/auth/register', (route) =>
@@ -22,6 +22,7 @@ test('registration shows and submits the same terms version', async ({ page }) =
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText('قوانین اول نمایش داده شده');
   await expect(dialog).toContainText('consent-v1');
+  await expect(dialog.locator('strong')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(dialog).not.toBeVisible();
   await expect(page.locator('#tos-label button')).toBeFocused();
@@ -62,5 +63,35 @@ for (const locale of ['en', 'fa']) {
       )
     );
     expect(timezoneReads).toBe(0);
+  });
+}
+
+for (const locale of ['fa', 'en']) {
+  test(`public terms render formatting without executing embedded markup (${locale})`, async ({
+    page,
+  }) => {
+    await page.route('**/api/tos/current?*', (route) =>
+      route.fulfill({
+        json: {
+          id: 'formatted-terms',
+          versionId: 'v1',
+          updatedAt: '2026-09-01T00:00:00Z',
+          publishedAt: '2026-09-01T00:00:00Z',
+          content:
+            '## Published heading\n\n**Important**\n\n- First rule\n- Second rule\n\n<script>alert(1)</script>\n\n[Unsafe](javascript:alert(1))',
+        },
+      })
+    );
+    await page.goto(`/terms?lang=${locale}`);
+    const article = page.getByRole('article');
+    await expect(article.getByRole('heading', { name: 'Published heading' })).toBeVisible();
+    await expect(article.locator('strong')).toHaveText('Important');
+    await expect(article.getByRole('listitem')).toHaveCount(2);
+    await expect(article.locator('script')).toHaveCount(0);
+    await expect(article.locator('a[href^="javascript:"]')).toHaveCount(0);
+    await expect(article.locator('[lang]').last()).toHaveAttribute(
+      'dir',
+      locale === 'fa' ? 'rtl' : 'ltr'
+    );
   });
 }

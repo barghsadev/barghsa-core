@@ -81,6 +81,16 @@
       "types": "./dist/contract-templates.d.ts",
       "import": "./dist/contract-templates.js",
       "default": "./dist/contract-templates.js"
+    },
+    "./admin-ui": {
+      "types": "./dist/admin-ui.d.ts",
+      "import": "./dist/admin-ui.js",
+      "default": "./dist/admin-ui.js"
+    },
+    "./crm": {
+      "types": "./dist/crm.d.ts",
+      "import": "./dist/crm.js",
+      "default": "./dist/crm.js"
     }
   },
   "scripts": {

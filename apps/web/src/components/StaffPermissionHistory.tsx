@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/admin-ui';
 import { Button, DatePicker, datePickerDayBounds, Label } from '@barghsa/ui';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';

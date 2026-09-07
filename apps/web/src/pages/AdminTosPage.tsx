@@ -9,6 +9,7 @@ import type { FormEvent } from 'react';
 
 const TosRichText = lazy(() => import('./TosRichText.js'));
 const TosPreview = lazy(() => import('./TosPreview.js'));
+const TosContent = lazy(() => import('../components/TosContent.js'));
 
 interface TosVersion {
   revision?: string;
@@ -650,12 +651,12 @@ export default function AdminTosPage() {
 
             {/* Content */}
             <div className="px-6 py-4 overflow-y-auto flex-1">
-              <pre
-                className="whitespace-pre-wrap font-mono text-sm leading-relaxed"
-                dir={detailLocale === 'fa' ? 'rtl' : 'ltr'}
-              >
-                {detailLocale === 'fa' ? viewVersion.contentFa : viewVersion.contentEn}
-              </pre>
+              <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
+                <TosContent
+                  content={detailLocale === 'fa' ? viewVersion.contentFa : viewVersion.contentEn}
+                  language={detailLocale}
+                />
+              </Suspense>
             </div>
           </DialogContent>
         </Dialog>
