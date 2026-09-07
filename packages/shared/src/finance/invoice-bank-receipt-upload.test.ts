@@ -9,6 +9,9 @@ import {
   invoiceBankReceiptCategoryFromClientFile,
   invoiceBankReceiptDetailsMatch,
   parseInvoiceBankReceiptAmountIrR,
+  parsePositiveByteCount,
+  invoiceBankReceiptLookupKeys,
+  invoiceBankReceiptContentTypeFromName,
   parseInvoiceBankReceiptSubmission,
   sealedInvoiceBankReceiptAttachmentKey,
 } from './invoice-bank-receipt-upload.js';
@@ -258,4 +261,125 @@ describe('sealedInvoiceBankReceiptAttachmentKey (T-04.3.01.02)', () => {
       )
     ).toBe(true);
   });
+});
+
+for (const input of [
+  { name: 'receipt.pdf', type: 'image/jpeg' },
+  { name: 'receipt.png', type: 'image/jpeg' },
+  { name: 'receipt.exe', type: 'application/pdf' },
+  { name: 'receipt.pdf', type: 'application/octet-stream' },
+  { name: 1, type: 'application/pdf' },
+  { name: 'receipt.pdf', type: [] },
+]) {
+  it(`rejects contradictory client file identity ${JSON.stringify(input)}`, () => {
+    expect(evaluateInvoiceBankReceiptClientFile({ ...input, size: 10 })).toEqual({
+      ok: false,
+      reason: 'type',
+    });
+  });
+}
+for (const attachmentKey of [
+  'uploads/image/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+  'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.png',
+  'uploads/document/not-an-issued-upload.pdf',
+]) {
+  it(`rejects invalid stored upload identity without optional metadata: ${attachmentKey}`, () => {
+    expect(evaluateInvoiceBankReceiptStoredFile({ attachmentKey, fileSize: 10 })).toEqual({
+      ok: false,
+      reason: 'type',
+    });
+  });
+}
+for (const field of ['category', 'contentType', 'fileName'] as const) {
+  it(`rejects malformed declared storage ${field}`, () => {
+    expect(
+      evaluateInvoiceBankReceiptStoredFile({ attachmentKey: ATTACHMENT, fileSize: 10, [field]: 3 })
+    ).toEqual({ ok: false, reason: 'type' });
+  });
+}
+for (const [name, type, category] of [
+  ['SCAN.PDF', 'APPLICATION/PDF', 'document'],
+  ['photo.jpg', 'image/jpeg', 'image'],
+  ['photo.jpeg', 'image/jpeg', 'image'],
+  ['photo.png', 'image/png', 'image'],
+  ['photo.webp', 'image/webp', 'image'],
+  ['scan.pdf', '', 'document'],
+]) {
+  it(`accepts matching supported file ${name} with MIME ${type}`, () => {
+    expect(evaluateInvoiceBankReceiptClientFile({ name, type, size: 1 })).toEqual({
+      ok: true,
+      category,
+      fileSize: 1,
+    });
+  });
+}
+
+for (const value of [
+  0,
+  0n,
+  -1,
+  -1n,
+  1.5,
+  NaN,
+  Infinity,
+  Number.MAX_SAFE_INTEGER + 1,
+  BigInt(Number.MAX_SAFE_INTEGER) + 1n,
+  '9007199254740992',
+  '',
+  '01',
+  '1e3',
+  '1.0',
+  '-1',
+  true,
+  null,
+  undefined,
+  {},
+]) {
+  it(`rejects unsafe or noncanonical byte count ${String(value)} (${typeof value})`, () => {
+    expect(parsePositiveByteCount(value)).toBeNull();
+  });
+}
+for (const value of [
+  1,
+  1n,
+  '1',
+  ' 1 ',
+  Number.MAX_SAFE_INTEGER,
+  BigInt(Number.MAX_SAFE_INTEGER),
+  String(Number.MAX_SAFE_INTEGER),
+]) {
+  it(`preserves positive safe byte count ${String(value)} (${typeof value})`, () => {
+    expect(parsePositiveByteCount(value)).toBe(Number(value));
+  });
+}
+for (const [field, value] of [
+  ['amount', null],
+  ['paymentDate', '2026-09-02'],
+  ['payerReference', ''],
+  ['attachmentKey', 'uploads/document/../secret.pdf'],
+  ['customerNote', 'x'.repeat(2001)],
+] as const) {
+  it(`reports the invalid submission field ${field}`, () => {
+    expect(parseInvoiceBankReceiptSubmission(validBody({ [field]: value }), TODAY)).toMatchObject({
+      ok: false,
+      field,
+    });
+  });
+}
+it('rejects non-object submissions and retains only legitimate receipt lookup identities', () => {
+  expect(parseInvoiceBankReceiptSubmission(null, TODAY)).toMatchObject({
+    ok: false,
+    field: 'amount',
+  });
+  expect(invoiceBankReceiptLookupKeys(ATTACHMENT)).toEqual([
+    ATTACHMENT,
+    'receipts/submitted/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+  ]);
+  expect(invoiceBankReceiptLookupKeys('untrusted')).toEqual(['untrusted']);
+});
+
+it('does not infer media types for invalid or unsupported names', () => {
+  for (const name of [undefined, 1, '', '.pdf', 'script.js', 'receipt']) {
+    expect(invoiceBankReceiptContentTypeFromName(name)).toBeNull();
+  }
 });

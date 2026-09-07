@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   INVOICE_BANK_RECEIPT_DOCUMENT_MAX_BYTES,
   evaluateInvoiceBankReceiptClientFile,
@@ -8,6 +8,10 @@ import {
   isAllowedInvoiceReceiptFile,
   mapInvoiceReceiptSubmitError,
   normalizeIrrAmountDigits,
+  uploadInvoiceReceiptAttachment,
+  uploadVerificationEvidence,
+  uploadTicketAttachment,
+  uploadLegalProfileDocument,
 } from './invoice-bank-receipt-upload.js';
 
 describe('invoice bank receipt upload helpers (T-04.3.01.02)', () => {
@@ -56,4 +60,66 @@ describe('invoice bank receipt upload helpers (T-04.3.01.02)', () => {
     expect(mapInvoiceReceiptSubmitError(404)).toBe('no-profile');
     expect(mapInvoiceReceiptSubmitError(400)).toBe('generic');
   });
+});
+
+afterEach(() => vi.unstubAllGlobals());
+for (const upload of [
+  uploadInvoiceReceiptAttachment,
+  uploadVerificationEvidence,
+  uploadTicketAttachment,
+  uploadLegalProfileDocument,
+]) {
+  it(`${upload.name} rejects a contradictory file before contacting storage`, async () => {
+    const request = vi.fn();
+    vi.stubGlobal('fetch', request);
+    expect(
+      await upload(new File(['fixture'], 'receipt.pdf', { type: 'image/jpeg' }), 'profile')
+    ).toBeNull();
+    expect(request).not.toHaveBeenCalled();
+  });
+}
+for (const [extension, contentType] of [
+  ['pdf', 'application/pdf'],
+  ['jpg', 'image/jpeg'],
+  ['jpeg', 'image/jpeg'],
+  ['png', 'image/png'],
+  ['webp', 'image/webp'],
+]) {
+  it(`presigns ${extension} with the correct MIME when the browser omits it`, async () => {
+    const request = vi.fn().mockResolvedValue(new Response(null, { status: 400 }));
+    vi.stubGlobal('fetch', request);
+    expect(
+      await uploadInvoiceReceiptAttachment(
+        new File(['fixture'], `receipt.${extension}`, { type: '' }),
+        'profile'
+      )
+    ).toBeNull();
+    expect(request).toHaveBeenCalledOnce();
+    expect(request.mock.calls[0]![0]).toBe('/api/upload/presigned-url');
+    expect(JSON.parse(request.mock.calls[0]![1].body)).toMatchObject({ contentType });
+  });
+}
+
+it('uses the same detected-name MIME for presign and object PUT when browser MIME is empty', async () => {
+  const request = vi
+    .fn()
+    .mockResolvedValueOnce(
+      Response.json({
+        key: 'uploads/image/fixture.png',
+        presignedUrl: 'https://storage.example.test/fixture',
+      })
+    )
+    .mockResolvedValueOnce(new Response(null, { status: 200 }))
+    .mockResolvedValueOnce(Response.json({ status: 'confirmed' }))
+    .mockResolvedValueOnce(Response.json({ id: 'record' }));
+  vi.stubGlobal('fetch', request);
+  expect(
+    await uploadInvoiceReceiptAttachment(
+      new File(['fixture'], 'receipt.png', { type: '' }),
+      'profile'
+    )
+  ).toBe('uploads/image/fixture.png');
+  expect(JSON.parse(request.mock.calls[0]![1].body).contentType).toBe('image/png');
+  expect(request.mock.calls[1]![1].headers).toEqual({ 'Content-Type': 'image/png' });
+  expect(JSON.parse(request.mock.calls[3]![1].body).contentType).toBe('image/png');
 });

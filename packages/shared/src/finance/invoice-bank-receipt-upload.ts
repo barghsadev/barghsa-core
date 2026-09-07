@@ -148,6 +148,12 @@ export function invoiceBankReceiptExtensionFromName(name: unknown): string | nul
   return (INVOICE_BANK_RECEIPT_ALLOWED_EXTENSIONS as readonly string[]).includes(ext) ? ext : null;
 }
 
+/** Expected media type for a permitted receipt filename. */
+export function invoiceBankReceiptContentTypeFromName(name: unknown): string | null {
+  const extension = invoiceBankReceiptExtensionFromName(name);
+  return extension === null ? null : (MIME_BY_EXTENSION[extension] ?? null);
+}
+
 /**
  * Classify a browser File (name + MIME) as a receipt document or image.
  * Unknown combinations are rejected rather than guessed.
@@ -156,21 +162,12 @@ export function invoiceBankReceiptCategoryFromClientFile(input: {
   name: unknown;
   type: unknown;
 }): InvoiceBankReceiptFileCategory | null {
-  const name = typeof input.name === 'string' ? input.name.toLowerCase() : '';
-  const type = typeof input.type === 'string' ? input.type.toLowerCase() : '';
-  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'document';
-  if (
-    type === 'image/jpeg' ||
-    type === 'image/png' ||
-    type === 'image/webp' ||
-    name.endsWith('.jpg') ||
-    name.endsWith('.jpeg') ||
-    name.endsWith('.png') ||
-    name.endsWith('.webp')
-  ) {
-    return 'image';
-  }
-  return null;
+  const extension = invoiceBankReceiptExtensionFromName(input.name);
+  if (extension === null || typeof input.type !== 'string') return null;
+  const type = input.type.trim().toLowerCase();
+  // Browsers may omit MIME, but a supplied MIME must agree with the name.
+  if (type !== '' && type !== MIME_BY_EXTENSION[extension]) return null;
+  return extension === '.pdf' ? 'document' : 'image';
 }
 
 export function parsePositiveByteCount(raw: unknown): number | null {
@@ -229,11 +226,21 @@ export function evaluateInvoiceBankReceiptStoredFile(input: {
   category?: unknown;
   fileName?: unknown;
 }): InvoiceBankReceiptFileResult {
+  if (parseBankReceiptAttachmentKey(input.attachmentKey) === null) {
+    return { ok: false, reason: 'type' };
+  }
   const keyCategory = invoiceBankReceiptCategoryFromKey(input.attachmentKey);
   if (keyCategory === null) return { ok: false, reason: 'type' };
 
   const keyExt = invoiceBankReceiptExtensionFromName(input.attachmentKey);
   if (keyExt === null) return { ok: false, reason: 'type' };
+  const allowed = INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY[keyCategory] as readonly string[];
+  if (!allowed.includes(MIME_BY_EXTENSION[keyExt] ?? '')) return { ok: false, reason: 'type' };
+  for (const declared of [input.category, input.fileName, input.contentType]) {
+    if (declared !== undefined && declared !== null && typeof declared !== 'string') {
+      return { ok: false, reason: 'type' };
+    }
+  }
 
   if (typeof input.category === 'string' && input.category.trim() !== '') {
     if (input.category.trim() !== keyCategory) return { ok: false, reason: 'type' };
@@ -246,7 +253,6 @@ export function evaluateInvoiceBankReceiptStoredFile(input: {
 
   if (typeof input.contentType === 'string' && input.contentType.trim() !== '') {
     const mime = input.contentType.trim().toLowerCase();
-    const allowed = INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY[keyCategory] as readonly string[];
     const expected = MIME_BY_EXTENSION[keyExt];
     if (!allowed.includes(mime) || (expected !== undefined && mime !== expected)) {
       return { ok: false, reason: 'type' };

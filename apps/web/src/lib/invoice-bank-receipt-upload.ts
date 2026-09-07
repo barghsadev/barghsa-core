@@ -10,6 +10,7 @@ import {
   BANK_RECEIPT_STORAGE_PURPOSE,
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,
   evaluateInvoiceBankReceiptClientFile,
+  invoiceBankReceiptContentTypeFromName,
   parseInvoiceBankReceiptAmountIrR,
 } from '@barghsa/shared/finance';
 import { withCsrf } from './csrf.js';
@@ -115,6 +116,8 @@ async function uploadVerifiedAttachment(
   });
   if (!evaluated.ok) return null;
   const category = evaluated.category;
+  const contentType = file.type || invoiceBankReceiptContentTypeFromName(file.name);
+  if (!contentType) return null;
   const presignRes = await fetch('/api/upload/presigned-url', {
     method: 'POST',
     credentials: 'include',
@@ -124,7 +127,7 @@ async function uploadVerifiedAttachment(
     }),
     body: JSON.stringify({
       fileName: file.name,
-      contentType: file.type || (category === 'document' ? 'application/pdf' : 'image/jpeg'),
+      contentType,
       fileSize: file.size,
       category,
       metadata: { recordType: 'receipt' },
@@ -146,7 +149,7 @@ async function uploadVerifiedAttachment(
     method: 'PUT',
     body: file,
     headers: {
-      'Content-Type': file.type || (category === 'document' ? 'application/pdf' : 'image/jpeg'),
+      'Content-Type': contentType,
     },
   });
   if (!putRes.ok) return null;
@@ -169,7 +172,7 @@ async function uploadVerifiedAttachment(
     }),
     body: JSON.stringify({
       fileName: file.name,
-      contentType: file.type || undefined,
+      contentType,
       fileSize: file.size,
       category,
       purpose,
