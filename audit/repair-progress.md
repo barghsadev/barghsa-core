@@ -2378,3 +2378,9 @@ All six new migrated-API browser assertions failed against the preceding product
 Electricity product prices now use the published numeral preference and exact IRR formatting. Green-share slider labels use localized percentages while retaining their original numeric control and request values.
 
 All four new preference assertions failed on the preceding production bundle and pass after repair, including real API persistence of 0.1 and 100 percent in both languages. All 18 existing ordering and green-rule browser checks pass, covering unavailable verification, failed product/address/geography loads, captured draft submission, permission removal and step-up. Web types, targeted lint, formatting, route budgets and diff review pass.
+
+### Validate appearance reads and bind successful writes to their requests
+
+The appearance editor now shares public branding validation and rejects invalid configuration, version/status and timestamp metadata before rendering. Legacy settings without a numeral field still default to locale numerals. Invalid reads disable saving and allow refresh. Save confirmation requires the next draft version and the captured submitted settings; activation confirmation requires the exact selected draft ID/version and active status. Malformed or mismatched responses retain local edits and the confirmation error instead of reporting success.
+
+Both malformed-read cases reproduced a crashed editor on the preceding bundle. After repair, both language cases cover five invalid reads, four invalid save confirmations, three invalid activation confirmations and successful retries with identical captured requests. Both migrated-API publication flows and the existing control-label check pass. All eight theme-provider unit checks, web types, targeted lint, formatting, route budgets and diff review pass. Two initial test runs required narrower alert selectors and access to modal-hidden fields; their final reruns pass.

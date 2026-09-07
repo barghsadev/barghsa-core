@@ -229,6 +229,9 @@ test('branding controls have distinct labels and color IDs', async ({ page }) =>
     route.fulfill({
       json: {
         id: 'branding-one',
+        createdBy: 'system',
+        createdAt: '2026-09-01T00:00:00Z',
+        updatedAt: '2026-09-01T00:00:00Z',
         version: 1,
         status: 'active',
         config: {

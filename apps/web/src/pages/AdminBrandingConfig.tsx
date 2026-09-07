@@ -1,3 +1,4 @@
+import { parseBrandConfig } from '../providers/BrandThemeProvider.js';
 import { formatCurrencyIrr, type NumberStyle } from '@barghsa/i18n/numbers';
 import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
@@ -53,10 +54,34 @@ const DEFAULT_CONFIG: BrandConfig = {
 // API helpers
 // ---------------------------------------------------------------------------
 
+function parseConfigDto(value: unknown): BrandConfigDto {
+  if (!value || typeof value !== 'object' || Array.isArray(value))
+    throw new Error('Invalid branding response');
+  const dto = value as Record<string, unknown>;
+  const config = parseBrandConfig(dto.config);
+  if (
+    !config ||
+    typeof dto.id !== 'string' ||
+    !dto.id.length ||
+    typeof dto.version !== 'number' ||
+    !Number.isSafeInteger(dto.version) ||
+    dto.version < 0 ||
+    (dto.status !== 'draft' && dto.status !== 'active' && dto.status !== 'superseded') ||
+    typeof dto.createdBy !== 'string' ||
+    !dto.createdBy.length ||
+    typeof dto.createdAt !== 'string' ||
+    !Number.isFinite(Date.parse(dto.createdAt)) ||
+    typeof dto.updatedAt !== 'string' ||
+    !Number.isFinite(Date.parse(dto.updatedAt))
+  )
+    throw new Error('Invalid branding response');
+  return { ...dto, config } as unknown as BrandConfigDto;
+}
+
 async function fetchActiveConfig(): Promise<BrandConfigDto> {
   const res = await fetch('/api/admin/branding/config');
   if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`);
-  return res.json();
+  return parseConfigDto(await res.json());
 }
 
 // ---------------------------------------------------------------------------
@@ -242,7 +267,32 @@ export default function AdminBrandingConfig() {
           action={action}
           onClose={() => setAction(null)}
           onSuccess={async (result) => {
-            const dto = result as BrandConfigDto;
+            const dto = parseConfigDto(result);
+            const submitted = action.body as {
+              expectedVersion: number;
+              draftId?: string;
+              config?: BrandConfig;
+              logoUploadKey?: string;
+            };
+            if (action.method === 'PUT') {
+              if (
+                dto.status !== 'draft' ||
+                dto.version !== submitted.expectedVersion + 1 ||
+                !submitted.config
+              )
+                throw new Error('Unconfirmed branding draft');
+              for (const key of Object.keys(submitted.config) as Array<keyof BrandConfig>) {
+                if (key === 'logoUrl' && submitted.logoUploadKey) continue;
+                if (dto.config[key] !== submitted.config[key])
+                  throw new Error('Unconfirmed branding settings');
+              }
+            } else if (
+              dto.status !== 'active' ||
+              dto.id !== submitted.draftId ||
+              dto.version !== submitted.expectedVersion
+            ) {
+              throw new Error('Unconfirmed branding activation');
+            }
             if (dto.status === 'active')
               window.dispatchEvent(new Event('barghsa:branding-activated'));
             setLogoFile(null);
