@@ -1,3 +1,4 @@
+import type { APIRequestContext } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { fork, type ChildProcess } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -11,6 +12,45 @@ let http: {
   csrf: string;
   jobs: Record<string, { first: string; second: string; dead: string }>;
 };
+let restoreNumberPreference: (() => Promise<void>) | null = null;
+async function publishNumericPreference(
+  request: APIRequestContext,
+  numberStyle: 'locale' | 'persian' | 'western',
+  restoring = false
+) {
+  const headers = {
+    cookie: `barghsa_session=${http.session}`,
+    'x-csrf-token': http.csrf,
+    origin: 'https://app.example.test',
+  };
+  const current = await request.get(`${http.base}/api/admin/branding/config`, { headers });
+  expect(current.status()).toBe(200);
+  const config = await current.json();
+  if (!restoring)
+    restoreNumberPreference = () =>
+      publishNumericPreference(request, config.config.numberStyle ?? 'locale', true);
+  const saved = await request.put(`${http.base}/api/admin/branding/config`, {
+    headers,
+    data: { expectedVersion: config.version, config: { ...config.config, numberStyle } },
+  });
+  expect(saved.status()).toBe(200);
+  const draft = await saved.json();
+  expect(
+    (
+      await request.post(`${http.base}/api/admin/branding/activate`, {
+        headers,
+        data: { draftId: draft.id, expectedVersion: draft.version },
+      })
+    ).status()
+  ).toBe(200);
+}
+
+test.afterEach(async () => {
+  const restore = restoreNumberPreference;
+  restoreNumberPreference = null;
+  if (restore) await restore();
+});
+
 test.beforeAll(async () => {
   test.setTimeout(90000);
   buildApi();
@@ -1716,6 +1756,7 @@ for (const locale of ['en', 'fa'])
       await confirm();
     };
     const category = fa ? 'saving_plan' : 'consultation';
+    await publishNumericPreference(page.request, fa ? 'western' : 'persian');
     await page.goto('/admin/vat');
     await page.getByRole('button', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
     await page.getByLabel(fa ? 'دسته' : 'Category', { exact: true }).selectOption(category);
@@ -1726,6 +1767,7 @@ for (const locale of ['en', 'fa'])
     ).json()) as Array<{ id: string; category: string; rateBasisPoints: number }>;
     const rate = rates.find((row) => row.category === category)!;
     expect(rate.rateBasisPoints).toBe(725);
+    await expect(page.locator('main')).toContainText(fa ? '7.25%' : '۷٫۲۵٪');
     await page
       .getByRole('button', {
         name: fa ? 'افزودن نرخ اختصاصی محصول' : 'Add product override',
@@ -1837,6 +1879,7 @@ for (const locale of ['en', 'fa'])
       await form.getByRole('button', { name: fa ? 'ذخیره کد' : 'Save code', exact: true }).click();
       await confirm();
     };
+    await publishNumericPreference(page.request, fa ? 'western' : 'persian');
     await page.goto('/admin/gift-codes');
     await page.getByRole('button', { name: fa ? 'افزودن کد' : 'Add code', exact: true }).click();
     await form.getByLabel(fa ? 'کد' : 'Code', { exact: true }).fill(code.toLowerCase());
@@ -1883,6 +1926,8 @@ for (const locale of ['en', 'fa'])
     await page.getByRole('grid').getByRole('button').last().click();
     await save();
     const updated = await detail();
+    await expect(page.locator('main')).toContainText(fa ? '25%' : '۲۵٪');
+    await expect(page.locator('main')).toContainText(fa ? '5,000' : '۵٬۰۰۰');
     expect(updated.code).toMatchObject({
       discountType: 'percentage',
       discountValue: '2500',
@@ -2009,6 +2054,7 @@ for (const locale of ['en', 'fa'])
         })
       ).status()
     ).toBe(200);
+    await publishNumericPreference(page.request, fa ? 'western' : 'persian');
     await page.goto('/admin/catalogue');
     for (const [type, tab] of [
       ['consultation', fa ? 'مشاوره' : 'Consultation'],
@@ -2050,6 +2096,9 @@ for (const locale of ['en', 'fa'])
         price: '9007199254740993',
         categories: type === 'consultation' ? ['electricity_generation_station_consultation'] : [],
       });
+      await expect(page.locator('main')).toContainText(
+        fa ? '9,007,199,254,740,993' : '۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۳'
+      );
       await page.getByRole('button', { name: fa ? 'فعال‌سازی' : 'Activate', exact: true }).click();
       await confirm();
       expect(await detail()).toMatchObject({ status: 'active' });

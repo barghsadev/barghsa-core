@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Button, DatePicker, datePickerAtTime, Input, Label } from '@barghsa/ui';
 import { tVat } from '@barghsa/i18n/vat';
@@ -19,8 +20,9 @@ type Editor =
 const categories = [...CHARGE_CATEGORIES, PRODUCT_OVERRIDE_CATEGORY];
 export default function AdminVatPage() {
   const preference = useTimezone();
-  const locale = useLocale(),
-    label = (key: string) => tVat(`admin.vat.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => tVat(`admin.vat.${key}`, locale);
   const [rates, setRates] = useState<VatConfigDto[]>([]),
     [overrides, setOverrides] = useState<VatProductOverrideDto[]>([]),
     [products, setProducts] = useState<Product[]>([]);
@@ -253,7 +255,7 @@ export default function AdminVatPage() {
                       {rates.map((rate) => (
                         <option key={rate.id} value={rate.id}>
                           {label(`category.${rate.category}`)} ·{' '}
-                          {(rate.rateBasisPoints / 100).toLocaleString(locale)}% ·{' '}
+                          {numbers.percent(rate.rateBasisPoints / 10000)} ·{' '}
                           {dateText(rate.effectiveFrom)}
                         </option>
                       ))}
@@ -317,7 +319,7 @@ export default function AdminVatPage() {
                 <li key={rate.id} className="flex flex-col gap-2 py-4">
                   <h3 className="font-semibold">
                     {label(`category.${rate.category}`)} ·{' '}
-                    {(rate.rateBasisPoints / 100).toLocaleString(locale)}%
+                    {numbers.percent(rate.rateBasisPoints / 10000)}
                   </h3>
                   <p>{label(`status.${rate.status}`)}</p>
                   <p>
@@ -356,8 +358,7 @@ export default function AdminVatPage() {
               {overrides.map((row) => (
                 <li key={row.id} className="flex flex-col gap-2 py-4">
                   <h3 className="break-words font-semibold">
-                    {productTitle(row.productId)} ·{' '}
-                    {(row.rateBasisPoints / 100).toLocaleString(locale)}%
+                    {productTitle(row.productId)} · {numbers.percent(row.rateBasisPoints / 10000)}
                   </h3>
                   <p>{label(`status.${vatWindowStatus(row.effectiveFrom, row.effectiveUntil)}`)}</p>
                   <p>

@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Button, DatePicker, datePickerAtTime, Input, Label } from '@barghsa/ui';
 import { tGift } from '@barghsa/i18n/gifts';
@@ -73,9 +74,10 @@ function draftFrom(row: GiftCodeDto | undefined, zone: string): Draft {
 }
 export default function AdminGiftCodesPage() {
   const preference = useTimezone();
-  const locale = useLocale(),
-    label = (key: string) => tGift(`admin.gifts.${key}`, locale),
-    money = (value: string) => BigInt(value).toLocaleString(locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => tGift(`admin.gifts.${key}`, locale);
+  const money = numbers.money;
   const [rows, setRows] = useState<GiftCodeDto[]>([]),
     [draft, setDraft] = useState<Draft | null>(null),
     [editor, setEditor] = useState<string | null>(null),
@@ -534,14 +536,14 @@ export default function AdminGiftCodesPage() {
                 </p>
                 <p>
                   {row.discountType === 'percentage'
-                    ? `${(Number(row.discountValue) / 100).toLocaleString(locale)}% · ${label('cap')}: ${money(row.maxCapIrr!)}`
-                    : `${money(row.discountValue)} ${label('irr')}`}
+                    ? `${numbers.percent(Number(row.discountValue) / 10000)} · ${label('cap')}: ${money(row.maxCapIrr!)}`
+                    : money(row.discountValue)}
                 </p>
                 <dl className="grid gap-2 text-sm sm:grid-cols-3">
                   {[
-                    ['consumed', row.usage.consumed.toLocaleString(locale)],
-                    ['released', row.usage.released.toLocaleString(locale)],
-                    ['totalDiscount', `${money(row.usage.totalDiscountIrr)} ${label('irr')}`],
+                    ['consumed', numbers.number(row.usage.consumed)],
+                    ['released', numbers.number(row.usage.released)],
+                    ['totalDiscount', money(row.usage.totalDiscountIrr)],
                   ].map(([key, value]) => (
                     <div key={key}>
                       <dt>{label(key!)}</dt>

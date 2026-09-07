@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, DatePicker, datePickerAtTime, Input, Label, Textarea } from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
@@ -54,8 +55,9 @@ const categoryOptions: Record<ProductType, string[]> = {
 const base = '/api/admin/catalogue/products';
 export default function AdminCataloguePage() {
   const preference = useTimezone();
-  const locale = useLocale(),
-    label = (key: string) => tCatalogue(key, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => tCatalogue(key, locale);
   const [type, setType] = useState<ProductType>('consultation'),
     [rows, setRows] = useState<Product[]>([]);
   const [editor, setEditor] = useState<string | null>(null),
@@ -81,8 +83,7 @@ export default function AdminCataloguePage() {
   }
   const zone = preference.timezone;
   const title = (row: Product) => row.title[locale] || row.title.en || row.title.fa;
-  const money = (value: string | null) =>
-    value === null ? label('unset') : `${BigInt(value).toLocaleString(locale)} ${label('irr')}`;
+  const money = (value: string | null) => (value === null ? label('unset') : numbers.money(value));
   const dateText = (value: string) => new Date(value).toLocaleString(locale, { timeZone: zone });
   useEffect(() => {
     const abort = new AbortController();
