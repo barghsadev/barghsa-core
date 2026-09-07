@@ -261,19 +261,163 @@
         54
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6887a78754d12e3c46040ed5988fd6e47390ec25",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 92,
+      "requirement": "- **T-01.02.01:** Create `packages/tsconfig/base.json` with strict shared settings\n  - **Notes:** Settings: `target: ES2022`, `module: NodeNext`, `moduleResolution: NodeNext`, `lib: [ES2022]`, `declaration: true`, `declarationMap: true`, `sourceMap: true`, `composite: true`, `strict: true`, `noUncheckedIndexedAccess: true`, `noImplicitReturns: true`, `exactOptionalPropertyTypes: true`, `forceConsistentCasingInFileNames: true`, `esModuleInterop: true`, `skipLibCheck: false`, `isolatedModules: true`. For test files, a `tsconfig.test.json` variant may relax `strict` minimally with explicit justification.\n  - **Dependencies:** S-01.01\n  - **Complexity:** M",
+      "requirement_sha256": "f2725d44a716d5fed2aced5c0ecc982efa68365035ae3857bef153317f03562d",
+      "source_evidence": [
+        {
+          "path": "packages/tsconfig/base.json",
+          "sha256": "6097ef4fb31ac5f9c3909d607f67a76322e7cfbbf7c1e1c2f6cd5c0dd6ce3e9a"
+        }
+      ],
+      "checks": [
+        "All requested shared base flags inspected, including strict, exact optional properties, unchecked indexed access and skipLibCheck=false",
+        "Root typecheck passes"
+      ],
+      "limitations": [
+        "Per-package overrides are assessed separately under T-01.02.02."
+      ],
+      "merged_prs": [
+        6
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.02",
+      "status": "partial",
+      "reviewed_sha": "6887a78754d12e3c46040ed5988fd6e47390ec25",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 97,
+      "requirement": "- **T-01.02.02:** Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api`\n  - **Notes:** Each extends `../../tsconfig/base.json` (or `../tsconfig/base.json` from packages). Set `rootDir: src`, `outDir: dist`. Add `references` to upstream dependencies. For `apps/web`, extend with JSX config. For `apps/api`, set `emitDecoratorMetadata: true`, `experimentalDecorators: true` for NestJS compatibility.\n  - **Dependencies:** T-01.02.01\n  - **Complexity:** L",
+      "requirement_sha256": "791a0a49ce36fc7967514e2d0e2ca3f287cfaf8524ce3211ed2a165d55f8d2f9",
+      "source_evidence": [
+        {
+          "path": "apps/api/tsconfig.json",
+          "sha256": "06f38ba4b704a61447632759958bd3d3ad61661809b29861aa68a4ccbdc5e87b"
+        },
+        {
+          "path": "apps/web/tsconfig.json",
+          "sha256": "e43f9ff1ec99e3c3063251c316bc38bb38f2e1f6d130bfe9eb12449d51a1fd4f"
+        },
+        {
+          "path": "apps/worker/tsconfig.json",
+          "sha256": "127302b3febf8b4925fabf951045974e714f554c5207690de97b2cd1740dfde7"
+        },
+        {
+          "path": "packages/db/tsconfig.json",
+          "sha256": "c4f86006485c06aa9cee6e74e7fa08c052b1eab58977ed9fd64c3a81a36bb1fe"
+        },
+        {
+          "path": "packages/shared/tsconfig.json",
+          "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+        },
+        {
+          "path": "packages/i18n/tsconfig.json",
+          "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+        },
+        {
+          "path": "packages/ui/tsconfig.json",
+          "sha256": "4067448168bab52a2405dc11ed35a4ce2be5a85488b5a019b697f316bce62b24"
+        }
+      ],
+      "checks": [
+        "All runtime projects extend the shared base and declare upstream references",
+        "Removed both UI strictness overrides and shared library-check override; root typecheck passes"
+      ],
+      "limitations": [
+        "API, web, worker and database still use skipLibCheck=true. Database strict-library check records 144 Drizzle declaration errors in audit/database-library-type-errors.txt."
+      ],
+      "merged_prs": [
+        7
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6887a78754d12e3c46040ed5988fd6e47390ec25",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 102,
+      "requirement": "- **T-01.02.03:** Create root-level `tsconfig.json` that references all sub-projects with `files: []` so IDE picks up project references\n  - **Notes:** This is a solution-style tsconfig: no files, just `references` to every app/package. Enables \"Find All References\" and \"Go to Definition\" across package boundaries in VS Code.\n  - **Dependencies:** T-01.02.02\n  - **Complexity:** S",
+      "requirement_sha256": "51f85b872a1964e3ba82dd94a6abe64ae8aa5dbeefcef3677e5138d3cd51f360",
+      "source_evidence": [
+        {
+          "path": "tsconfig.json",
+          "sha256": "c7de5a1fa5fc19fbe8c3bc146f4d7e7f877e3aa38030b9af64d0c15d3ce53d87"
+        }
+      ],
+      "checks": [
+        "Root solution uses files:[] and references all seven runtime code projects, including worker",
+        "tsc -b --dry enumerates each project; uncached root typecheck passes"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        8
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6887a78754d12e3c46040ed5988fd6e47390ec25",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 172,
+      "requirement": "- **T-01.04.01:** Create root `vitest.workspace.ts` that includes all packages and apps\n  - **Notes:** Use `@vitest/workspace` with glob `packages/*`, `apps/*`. Each package gets its own `vitest.config.ts` or shares a base config. Set `test.globals: false` (explicit imports). Set `test.typecheck.enabled: false` by default (separate typecheck step).\n  - **Dependencies:** S-01.01, S-01.02\n  - **Complexity:** M",
+      "requirement_sha256": "c69168e46bb63bc127bc605e8878c46a7ee566f4e51ed28f0ca27451edca5937",
+      "source_evidence": [
+        {
+          "path": "vitest.config.ts",
+          "sha256": "25274bef7df785431bbf7f3ab348a604399716e280813dd70aa786ffc17c7f30"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.ts",
+          "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+        },
+        {
+          "path": "packages/tsconfig/vitest.config.ts",
+          "sha256": "5798a9f4efac02d6d6e061624525a7fd065a0e299acfa64877cd040300e1af8d"
+        },
+        {
+          "path": "packages/tsconfig/package.json",
+          "sha256": "9ca9ac0d50bdd285b8b1a68af36afd74dfc5c18f2486b0e6337f9b16c9810ff4"
+        },
+        {
+          "path": "packages/db/vitest.config.ts",
+          "sha256": "1f2f82e644d59d66b67743e4b518d5a62fb3e887bcf4ada7d512dc601714b974"
+        },
+        {
+          "path": "packages/db/src/test/globalSetup.ts",
+          "sha256": "b6b946750bbe026a4699fa19392971222744b1be1eab35de58d9103b8446fd72"
+        }
+      ],
+      "checks": [
+        "423 unique test files discovered across all eight test-bearing packages/apps",
+        "Root Vitest run passes 4951 tests",
+        "Configuration tests now run through normal package test scripts",
+        "Global database setup uses project-specific environments and independent container teardown"
+      ],
+      "limitations": [
+        "Installed Vitest 4 replaces the removed workspace API with root test.projects configuration. Package coverage remains under pnpm test:coverage to retain custom process providers."
+      ],
+      "merged_prs": [
+        15
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
-    "01-platform-infrastructure.md#T-01.02.01",
-    "01-platform-infrastructure.md#T-01.02.02",
-    "01-platform-infrastructure.md#T-01.02.03",
     "01-platform-infrastructure.md#T-01.02.04",
     "01-platform-infrastructure.md#T-01.03.01",
     "01-platform-infrastructure.md#T-01.03.02",
     "01-platform-infrastructure.md#T-01.03.03",
     "01-platform-infrastructure.md#T-01.03.04",
     "01-platform-infrastructure.md#T-01.03.05",
-    "01-platform-infrastructure.md#T-01.04.01",
     "01-platform-infrastructure.md#T-01.04.02",
     "01-platform-infrastructure.md#T-01.04.03",
     "01-platform-infrastructure.md#T-01.04.04",
