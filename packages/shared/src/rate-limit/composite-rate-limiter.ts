@@ -15,17 +15,9 @@ return {count, ttl}
 `;
 
 /**
- * A rate-limiter store that tries Redis first and falls back to PostgreSQL.
- *
- * This is the primary high-level store used by the NestJS guard and
- * application code.  It wraps:
- *
- * 1. A **Redis store** (fast, ephemeral) — used when `redis` is available.
- * 2. A **PostgreSQL store** (durable, slower) — used as fallback when
- *    Redis is unavailable, and always used for security-critical counters.
- *
- * Redis loss NEVER allows an unbounded rate limit — the PostgreSQL store
- * always provides a safety net.
+ * PostgreSQL records every request before admission. Redis supplies an additional
+ * fast counter, but losing or replacing it cannot erase the durable quota.
+ * Database errors fail closed. Redis errors use the already-recorded result.
  */
 export class CompositeRateLimiterStore {
   private pgStore: PostgresRateLimiterStore;
@@ -44,20 +36,34 @@ export class CompositeRateLimiterStore {
   /**
    * Increment a general rate-limit counter.
    *
-   * Tries Redis first; falls back to PostgreSQL on any Redis error.
+   * Persists first; Redis can further restrict admission, never grant extra quota.
    */
   async increment(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
+    const durable = await this.pgStore.increment(key, limit, windowMs);
     if (this.redis) {
       try {
-        return await this.incrementRedis(key, limit, windowMs);
+        const cached = await this.incrementRedis(key, limit, windowMs);
+        return {
+          allowed: durable.allowed && cached.allowed,
+          remaining: Math.min(durable.remaining, cached.remaining),
+          limit,
+          resetMs:
+            !durable.allowed && !cached.allowed
+              ? Math.max(durable.resetMs, cached.resetMs)
+              : !durable.allowed
+                ? durable.resetMs
+                : !cached.allowed
+                  ? cached.resetMs
+                  : Math.max(durable.resetMs, cached.resetMs),
+        };
       } catch (err) {
         this.logger?.warn(
-          '[CompositeRateLimiter] Redis increment failed, falling back to PostgreSQL',
+          '[CompositeRateLimiter] Redis increment failed, using persisted PostgreSQL quota',
           err
         );
       }
     }
-    return this.pgStore.increment(key, limit, windowMs);
+    return durable;
   }
 
   /**

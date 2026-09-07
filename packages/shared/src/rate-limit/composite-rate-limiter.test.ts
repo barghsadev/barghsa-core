@@ -16,10 +16,30 @@ describe('CompositeRateLimiterStore', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockQuery = vi.fn();
+    mockQuery = vi.fn().mockResolvedValue({ rows: [{ count: 1 }] });
     mockRedis = createMockRedis();
     pgStore = new PostgresRateLimiterStore(mockQuery as unknown as DbQueryFn, logger);
     store = new CompositeRateLimiterStore(pgStore, mockRedis as unknown as null, logger);
+  });
+
+  it('does not grant another quota after Redis loss or recovery', async () => {
+    let durableCount = 0;
+    mockQuery.mockImplementation(async () => ({ rows: [{ count: ++durableCount }] }));
+    mockRedis.eval.mockResolvedValue([1, 60_000]);
+    expect((await store.increment('durable', 2, 60_000)).allowed).toBe(true);
+    expect((await store.increment('durable', 2, 60_000)).allowed).toBe(true);
+    mockRedis.eval.mockRejectedValueOnce(new Error('Redis lost'));
+    expect((await store.increment('durable', 2, 60_000)).allowed).toBe(false);
+    // The replacement Redis instance has no record of earlier traffic.
+    expect((await store.increment('durable', 2, 60_000)).allowed).toBe(false);
+    expect(durableCount).toBe(4);
+  });
+
+  it('fails closed when the durable write fails even with healthy Redis', async () => {
+    mockQuery.mockRejectedValue(new Error('database unavailable'));
+    mockRedis.eval.mockResolvedValue([1, 60_000]);
+    await expect(store.increment('durable', 2, 60_000)).rejects.toThrow('database unavailable');
+    expect(mockRedis.eval).not.toHaveBeenCalled();
   });
 
   describe('when Redis is available', () => {
@@ -27,13 +47,13 @@ describe('CompositeRateLimiterStore', () => {
       store = new CompositeRateLimiterStore(pgStore, mockRedis as unknown as null, logger);
     });
 
-    it('uses Redis for increment when Redis succeeds', async () => {
+    it('records the durable quota even when Redis succeeds', async () => {
       mockRedis.eval.mockResolvedValue([1, 60_000]);
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
 
       expect(mockRedis.eval).toHaveBeenCalledWith(expect.any(String), 1, 'api:1.2.3.4', 60_000);
-      expect(mockQuery).not.toHaveBeenCalled(); // No PG fallback
+      expect(mockQuery).toHaveBeenCalledOnce();
       expect(result.allowed).toBe(true);
       expect(result.remaining).toBe(99);
     });

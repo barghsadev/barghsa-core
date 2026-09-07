@@ -15,7 +15,7 @@ The application uses Redis for three operational purposes:
 
 1. **Read-heavy config caching** — Admin settings (VAT rates, product prices, thresholds) are immutable and change infrequently. `ConfigCache` in `packages/shared/src/config-cache/` stores entries under `config:entry:*` with a 5-minute TTL and version-gated staleness detection (`config:global:version`). See `01-platform-infrastructure.md#T-04.02.03`.
 
-2. **Distributed rate-limit acceleration** — The `CompositeRateLimiterStore` in `packages/shared/src/rate-limit/` attempts Redis-backed rate counting first and falls back to PostgreSQL when Redis is unavailable. See `01-platform-infrastructure.md#T-04.02.02`.
+2. **Distributed rate-limit acceleration** — The `CompositeRateLimiterStore` in `packages/shared/src/rate-limit/` records every general request in PostgreSQL before checking the additional Redis counter. Either store may deny a request; Redis failure returns the already-persisted PostgreSQL result. See `01-platform-infrastructure.md#T-04.02.02`.
 
 3. **Short-lived coordination locks** — Planned for future use (mutex-style locks for distributed job scheduling, cache stampede prevention, etc.) with sub-second to 30-second TTLs.
 
@@ -52,16 +52,18 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 
 - **Operational simplicity:** Redis can be reconfigured, migrated, or replaced without application downtime or data loss.
 - **Fail-safe by default:** All Redis clients are created with `lazyConnect: true`, offline queuing disabled, one reconnect attempt per command and a one-second command deadline by default. Initial connection timeout defaults to ten seconds. Construction and connection failures log a warning and return `null`.
-- **Horizontal scalability:** Rate-limit counters can share a single Redis instance across N API replicas, providing consistent enforcement without PG advisory-lock contention.
+- **Horizontal scalability:** Rate-limit counters can share a single Redis instance across N API replicas, with PostgreSQL atomic upserts preserving the shared quota across connected and degraded replicas.
 
 ### Negative
 
-- **Latency tail on fallback:** When Redis is degraded, every config read and rate-limit check incurs a PostgreSQL round-trip. This is acceptable for low-traffic periods but may require capacity planning under load.
+- **Latency tail on fallback:** Every rate-limit check incurs a PostgreSQL write, including when Redis is healthy. Config-cache hits also validate the PostgreSQL version. This is acceptable for low-traffic periods but may require capacity planning under load.
 - **Monitoring gap:** Degraded Redis does not raise an alert by default — the app silently falls back. Operators should monitor Redis connection health and page when Redis becomes unavailable for extended periods.
 
 ### Migration
 
 Configuration entries now use `config:entry:v2:`. Old entries expire under their existing TTL and are never read by the repaired cache. A cache hit requires an equal, positive PostgreSQL version; population checks that version before and after reading the value. Missing version metadata forces a database value read without caching. Each hit adds a PostgreSQL metadata read.
+
+General rate counters now persist during healthy Redis operation as well as outages. PostgreSQL failure refuses admission even when Redis is healthy. Redis increments retain their original expiry and can further restrict requests. Counters still use fixed windows; the required sliding-window or token-bucket behavior remains open. Traffic recorded only in Redis before this repair cannot be reconstructed after data loss, so rollout must account for that existing window.
 
 No database migration is required. Future introductions of Redis-based storage must be reviewed against the guarantees above and approved through the ADR process.
 

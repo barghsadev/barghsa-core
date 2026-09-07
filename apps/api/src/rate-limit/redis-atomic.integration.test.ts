@@ -1,17 +1,20 @@
 import { randomUUID } from 'node:crypto';
-import { afterAll, beforeAll, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, expect, it } from 'vitest';
 import { GenericContainer, type StartedTestContainer } from 'testcontainers';
 import { Redis } from 'ioredis';
 import { CompositeRateLimiterStore, PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 
+import { startHttpFixture } from '../test/http-fixture.js';
+
+let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
+let pgStore: PostgresRateLimiterStore;
 let container: StartedTestContainer;
 let redis: Redis;
-const fallback = vi.fn(async () => {
-  throw new Error('Unexpected PostgreSQL fallback');
-});
 let store: CompositeRateLimiterStore;
 
 beforeAll(async () => {
+  fixture = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  pgStore = new PostgresRateLimiterStore((text, params) => fixture.pool.query(text, params));
   container = await new GenericContainer('redis:7-alpine').withExposedPorts(6379).start();
   redis = new Redis({
     host: container.getHost(),
@@ -20,12 +23,13 @@ beforeAll(async () => {
     commandTimeout: 2000,
   });
   await redis.ping();
-  store = new CompositeRateLimiterStore(new PostgresRateLimiterStore(fallback), redis);
+  store = new CompositeRateLimiterStore(pgStore, redis);
 }, 60_000);
 
 afterAll(async () => {
   redis?.disconnect();
   await container?.stop();
+  await fixture?.close();
 });
 
 it('admits exactly the quota under concurrent requests and keeps a bounded expiry', async () => {
@@ -37,7 +41,11 @@ it('admits exactly the quota under concurrent requests and keeps a bounded expir
   expect(await redis.get(key)).toBe('100');
   expect(await redis.pttl(key)).toBeGreaterThan(0);
   expect(await redis.pttl(key)).toBeLessThanOrEqual(60_000);
-  expect(fallback).not.toHaveBeenCalled();
+  const { rows } = await fixture.pool.query(
+    'SELECT SUM(count)::int AS count FROM rate_limit_counters WHERE key = $1',
+    [key]
+  );
+  expect(rows[0].count).toBe(100);
 });
 
 it('preserves the existing deadline instead of extending it for later requests', async () => {
@@ -46,7 +54,7 @@ it('preserves the existing deadline instead of extending it for later requests',
   const result = await store.increment(key, 2, 60_000);
   expect(result.allowed).toBe(true);
   expect(result.resetMs).toBeGreaterThan(0);
-  expect(result.resetMs).toBeLessThanOrEqual(10_000);
+  expect(await redis.pttl(key)).toBeLessThanOrEqual(10_000);
   expect((await store.increment(key, 2, 60_000)).allowed).toBe(false);
 });
 
@@ -67,4 +75,43 @@ it('starts a fresh bounded quota after the prior key has expired', async () => {
   const result = await store.increment(key, 20, 60_000);
   expect(result.remaining).toBe(19);
   expect(await redis.pttl(key)).toBeGreaterThan(0);
+});
+
+it('retains spent quota through missing Redis, deleted counters and a new client', async () => {
+  const key = randomUUID();
+  const degraded = new CompositeRateLimiterStore(pgStore, null);
+  expect((await store.increment(key, 2, 3_600_000)).allowed).toBe(true);
+  expect((await degraded.increment(key, 2, 3_600_000)).allowed).toBe(true);
+  await redis.del(key);
+  expect((await store.increment(key, 2, 3_600_000)).allowed).toBe(false);
+  const replacement = redis.duplicate();
+  try {
+    await replacement.del(key);
+    const recovered = new CompositeRateLimiterStore(pgStore, replacement);
+    expect((await recovered.increment(key, 2, 3_600_000)).allowed).toBe(false);
+    expect((await degraded.increment(key, 2, 3_600_000)).allowed).toBe(false);
+  } finally {
+    replacement.disconnect();
+  }
+});
+
+it('denies excess traffic across concurrent connected and degraded instances', async () => {
+  const key = randomUUID();
+  const degraded = new CompositeRateLimiterStore(pgStore, null);
+  const results = await Promise.all(
+    Array.from({ length: 100 }, (_, index) =>
+      (index % 2 ? store : degraded).increment(key, 20, 3_600_000)
+    )
+  );
+  expect(results.filter((result) => result.allowed)).toHaveLength(20);
+});
+
+it('uses durable quota after a Redis connection fails', async () => {
+  const key = randomUUID();
+  expect((await store.increment(key, 1, 3_600_000)).allowed).toBe(true);
+  const failedRedis = redis.duplicate();
+  await failedRedis.ping();
+  failedRedis.disconnect();
+  const degraded = new CompositeRateLimiterStore(pgStore, failedRedis);
+  expect((await degraded.increment(key, 1, 3_600_000)).allowed).toBe(false);
 });
