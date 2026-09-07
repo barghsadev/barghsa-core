@@ -1,8 +1,5 @@
 import { useEffect } from 'react';
 
-/** Regex stripping a leading unread-count prefix like `(3) ` from a title. */
-const UNREAD_PREFIX = /^\(\d+\)\s*/;
-
 /**
  * Reflect the unread count in the document title while the tab is
  * backgrounded (E-05, T-05.02.04).
@@ -11,22 +8,26 @@ const UNREAD_PREFIX = /^\(\d+\)\s*/;
  * shows `(N) <title>` so the count is visible at a glance; when the tab is
  * visible again (or the count reaches zero) the base title is restored.
  *
- * The base title is re-derived from `document.title` on every change by
- * stripping any existing `(N) ` prefix, so repeated updates never accumulate
- * nested prefixes.
+ * Only text written by this hook is removed. Observe branding/route changes
+ * so a later title write cannot silently discard the background badge.
  */
-export function useUnreadDocumentTitle(unreadCount: number): void {
+export function useUnreadDocumentTitle(unreadCount: number, formattedCount: string): void {
   useEffect(() => {
+    let base = document.title;
+    let written: string | null = null;
     const apply = () => {
-      const base = document.title.replace(UNREAD_PREFIX, '');
-      document.title = document.hidden && unreadCount > 0 ? `(${unreadCount}) ${base}` : base;
+      if (written === null || document.title !== written) base = document.title;
+      written = document.hidden && unreadCount > 0 ? `(${formattedCount}) ${base}` : base;
+      if (document.title !== written) document.title = written;
     };
     apply();
+    const observer = new MutationObserver(apply);
+    observer.observe(document.head, { childList: true, subtree: true, characterData: true });
     document.addEventListener('visibilitychange', apply);
     return () => {
+      observer.disconnect();
       document.removeEventListener('visibilitychange', apply);
-      // Always restore the clean base title on unmount.
-      document.title = document.title.replace(UNREAD_PREFIX, '');
+      if (document.title === written) document.title = base;
     };
-  }, [unreadCount]);
+  }, [unreadCount, formattedCount]);
 }

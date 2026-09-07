@@ -2484,3 +2484,9 @@ The new merge regression failed before the fix. All 21 browser-mapping and branc
 At revision eaa301f9ff2973e9f224b207180324c7206f5018, all 5,238 unit/database checks across 438 files and all 321 production Chromium checks pass. All 321 browser records map to 224 sources and merge into four package reports. Root lint, formatting and all eleven typechecking tasks pass.
 
 Six of thirteen strict changed-code groups still fail, with no report errors. API critical branches remain 76.31%; web general is 64.31% lines / 62.08% branches; web critical is 76.87% / 74.24%; database general is 86.67% / 68.83%; i18n critical branches are 75%; UI general is 51.18% / 66.86%. The checkpoint records these results without lowering thresholds. Removing duplicated covered branches can lower a percentage as well as raise it. Remaining ambiguous compiler mappings are retained.
+
+### Preserve localized unread counts across title changes
+
+Notification titles now receive the published numeral format. The hook tracks its own written title and observes later title changes instead of removing every leading numeric prefix. Branding or route updates retain the unread badge while hidden; legitimate titles such as (2026) Barghsa survive count changes and cleanup. Unmount does not overwrite an external title that has not yet been observed.
+
+Three of four new DOM regressions failed before repair. All 155 web checks across 23 files and eight focused production-browser checks pass afterward. Browser visibility is explicitly simulated in the numeral cases because headless focus is unreliable; native background-tab behavior is not claimed from that simulation. Web types, build, targeted lint, formatting and diff review pass. The previous full coverage checkpoint predates this change.

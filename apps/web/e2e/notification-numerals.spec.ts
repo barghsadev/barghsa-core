@@ -28,6 +28,20 @@ for (const locale of ['en', 'fa'])
     await expect(bell).toHaveAccessibleName(
       locale === 'fa' ? 'مشاهده اعلان‌ها (تعداد خوانده‌نشده: 12)' : 'View notifications (۱۲ unread)'
     );
+    // Exercise the hidden-document event path; headless tabs do not reliably background.
+    await page.evaluate(() => {
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await expect(page).toHaveTitle(
+      locale === 'fa' ? '(12) Preference test' : '(۱۲) Preference test'
+    );
+    await page.evaluate(() => {
+      document.title = '(2026) New brand';
+    });
+    await expect(page).toHaveTitle(
+      locale === 'fa' ? '(12) (2026) New brand' : '(۱۲) (2026) New brand'
+    );
     count = 101;
     await page.clock.runFor(30001);
     await expect(bell).toContainText(locale === 'fa' ? '99+' : '۹۹+');
@@ -35,5 +49,8 @@ for (const locale of ['en', 'fa'])
       locale === 'fa'
         ? 'مشاهده اعلان‌ها (تعداد خوانده‌نشده: 101)'
         : 'View notifications (۱۰۱ unread)'
+    );
+    await expect(page).toHaveTitle(
+      locale === 'fa' ? '(101) (2026) New brand' : '(۱۰۱) (2026) New brand'
     );
   });

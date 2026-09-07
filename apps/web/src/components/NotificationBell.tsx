@@ -46,7 +46,7 @@ export function NotificationBell() {
   const { unreadCount, setUnreadCount, optimisticDecrement } = useUnreadCount();
 
   // Mirror the unread count into the tab title while it is backgrounded.
-  useUnreadDocumentTitle(unreadCount);
+  useUnreadDocumentTitle(unreadCount, numbers.number(unreadCount, { useGrouping: false }));
 
   const load = useCallback(async () => {
     setLoading(true);
