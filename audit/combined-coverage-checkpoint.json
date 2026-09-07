@@ -213,6 +213,7 @@
         "apps/api/src/knowledge-bases/knowledge-bases.module.ts",
         "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
         "apps/api/src/main.ts",
+        "apps/api/src/metrics/database-telemetry.ts",
         "apps/api/src/metrics/metrics.controller.ts",
         "apps/api/src/metrics/metrics.module.ts",
         "apps/api/src/metrics/metrics.service.ts",
@@ -290,10 +291,10 @@
         "apps/api/src/user-settings/user-settings.controller.ts",
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
-      "lines": 4360,
-      "covered_lines": 4065,
-      "branches": 3394,
-      "covered_branches": 2714,
+      "lines": 4465,
+      "covered_lines": 4178,
+      "branches": 3482,
+      "covered_branches": 2808,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -435,9 +436,9 @@
         "apps/web/src/routes/terms.tsx"
       ],
       "lines": 6770,
-      "covered_lines": 4327,
-      "branches": 8558,
-      "covered_branches": 5116,
+      "covered_lines": 4354,
+      "branches": 8329,
+      "covered_branches": 5171,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -494,8 +495,8 @@
       ],
       "lines": 575,
       "covered_lines": 442,
-      "branches": 503,
-      "covered_branches": 370,
+      "branches": 493,
+      "covered_branches": 366,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -626,10 +627,10 @@
         "packages/db/src/seed/notification-templates.ts",
         "packages/db/src/types.ts"
       ],
-      "lines": 440,
-      "covered_lines": 357,
-      "branches": 252,
-      "covered_branches": 150,
+      "lines": 450,
+      "covered_lines": 390,
+      "branches": 308,
+      "covered_branches": 212,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -677,8 +678,8 @@
       ],
       "lines": 21,
       "covered_lines": 21,
-      "branches": 38,
-      "covered_branches": 29,
+      "branches": 36,
+      "covered_branches": 27,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -702,8 +703,8 @@
       ],
       "lines": 52,
       "covered_lines": 52,
-      "branches": 104,
-      "covered_branches": 93,
+      "branches": 97,
+      "covered_branches": 86,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -767,8 +768,8 @@
       ],
       "lines": 1622,
       "covered_lines": 1465,
-      "branches": 1816,
-      "covered_branches": 1592,
+      "branches": 1799,
+      "covered_branches": 1585,
       "required_lines": 90,
       "required_branches": 85,
       "passed": true
@@ -813,8 +814,8 @@
       ],
       "lines": 630,
       "covered_lines": 547,
-      "branches": 717,
-      "covered_branches": 549,
+      "branches": 715,
+      "covered_branches": 548,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -864,8 +865,8 @@
       ],
       "lines": 211,
       "covered_lines": 108,
-      "branches": 361,
-      "covered_branches": 234,
+      "branches": 347,
+      "covered_branches": 232,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -873,5 +874,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "28a50ef109a6801ae3a6a94b368d1c2a847e184c"
+  "head_sha": "eaa301f9ff2973e9f224b207180324c7206f5018"
 }

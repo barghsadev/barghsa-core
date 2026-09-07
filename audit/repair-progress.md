@@ -2478,3 +2478,9 @@ All sixteen collector checks and sixteen API monitoring/OTLP checks pass. Databa
 Review of localization coverage found duplicate branch counters where the two compilers reported different end columns for the same branch. Browser merging now uses the existing conservative alignment rule: identical type, start and ordered arm starts, with exactly one match on each side and matching arm counts. Differing starts and ambiguous mappings remain separate. No thresholds or unexecuted-arm counts are changed.
 
 The new merge regression failed before the fix. All 21 browser-mapping and branch-alignment tests pass after repair, including ambiguity and unexecuted-arm checks. Targeted lint, formatting and diff review pass. The prior combined checkpoint remains historical; fresh full evidence is still needed.
+
+### Refresh full evidence after monitoring and coverage repairs
+
+At revision eaa301f9ff2973e9f224b207180324c7206f5018, all 5,238 unit/database checks across 438 files and all 321 production Chromium checks pass. All 321 browser records map to 224 sources and merge into four package reports. Root lint, formatting and all eleven typechecking tasks pass.
+
+Six of thirteen strict changed-code groups still fail, with no report errors. API critical branches remain 76.31%; web general is 64.31% lines / 62.08% branches; web critical is 76.87% / 74.24%; database general is 86.67% / 68.83%; i18n critical branches are 75%; UI general is 51.18% / 66.86%. The checkpoint records these results without lowering thresholds. Removing duplicated covered branches can lower a percentage as well as raise it. Remaining ambiguous compiler mappings are retained.
