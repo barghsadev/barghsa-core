@@ -51,6 +51,7 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 - Added 49 verification-case controller boundary checks: independent read/create/review capabilities, denial before service access, immediate revocation, malformed correction/decision input, audit actor binding, missing resources and terminal conflicts. All 49 pass; the existing 11 real HTTP cases also pass. API types and explicit lint pass. No production change was needed for this step; coverage checkpoint remains the previous revision until refreshed.
 - Do not run API typechecking concurrently with Vitest global setup, which rebuilds shared packages. One such race produced transient missing-declaration errors; the sequential typecheck passed after fixture build completion.
+- Authentication controller checks now cover production cookie scopes, device-cookie possession instead of caller fingerprints, OTP/password-change gating, refresh rejection without cookie issuance, logout clearing, malformed input, purpose-bound resends and failed-password step-up. All 49 tests in the focused controller/login-rate/contact HTTP run pass; API types and explicit lint pass. This extends evidence without changing authentication behavior or claiming the critical coverage gate passed.
 
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
