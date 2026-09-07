@@ -44,6 +44,7 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(MetricsService.name);
   private pollTimer: ReturnType<typeof setInterval> | null = null;
   private lastMetrics: DatabaseMetrics | null = null;
+  private pollInFlight: Promise<void> | null = null;
 
   // Polling interval (ms).  In production, metrics are updated on each scrape
   // by the controller; the poll interval controls how fresh the cached values
@@ -138,13 +139,56 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
   });
   private readonly replicationLag = new promClient.Gauge({
     name: 'pg_replication_lag_seconds',
-    help: 'Replication lag in seconds (0 if no replica or not streaming)',
+    help: 'Replication lag in seconds when available',
   });
   private readonly topQueryDuration = new promClient.Gauge({
     name: 'pg_top_query_duration_seconds',
     help: 'Mean execution time in seconds for top queries (labeled by queryid)',
     labelNames: ['queryid'] as const,
   });
+
+  private readonly collectionSuccess = new promClient.Gauge({
+    name: 'pg_metrics_collection_success',
+    help: 'Whether the latest core PostgreSQL metrics collection succeeded (1 or 0)',
+  });
+  private readonly viewAvailable = new promClient.Gauge({
+    name: 'pg_metrics_view_available',
+    help: 'Whether an optional PostgreSQL metrics view is available (1 or 0)',
+    labelNames: ['view'] as const,
+  });
+  private readonly databaseGauges = [
+    this.cacheHitRatio,
+    this.connectionSaturation,
+    this.activeConnections,
+    this.idleInTransaction,
+    this.waitingConnections,
+    this.longRunningQueries,
+    this.deadlocksTotal,
+    this.tempFilesTotal,
+    this.xactCommitTotal,
+    this.xactRollbackTotal,
+    this.cacheHitTotal,
+    this.cacheReadTotal,
+    this.checkpointsTimedTotal,
+    this.checkpointsReqTotal,
+    this.walBytesTotal,
+    this.walRecordsTotal,
+    this.tupleReturnedTotal,
+    this.tupleFetchedTotal,
+    this.tupleInsertedTotal,
+    this.tupleUpdatedTotal,
+    this.tupleDeletedTotal,
+    this.replicationLag,
+  ];
+
+  private clearDatabaseMetrics(): void {
+    this.lastMetrics = null;
+    // Gauge.reset() creates a zero sample for unlabelled gauges; remove it instead.
+    for (const gauge of this.databaseGauges) gauge.remove();
+    this.topQueryDuration.reset();
+    this.viewAvailable.reset();
+    this.collectionSuccess.set(0);
+  }
 
   constructor() {
     // Register default Node.js / runtime metrics
@@ -164,11 +208,12 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     }, this.POLL_INTERVAL_MS);
   }
 
-  onModuleDestroy(): void {
+  async onModuleDestroy(): Promise<void> {
     if (this.pollTimer) {
       clearInterval(this.pollTimer);
       this.pollTimer = null;
     }
+    await this.pollInFlight;
   }
 
   /**
@@ -187,10 +232,18 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
 
   // ── Internal: poll PG and push to Prometheus gauges ─────────────
 
-  private async poll(): Promise<void> {
+  private poll(): Promise<void> {
+    // Timer and HTTP scrapes share one snapshot; late polls cannot restore old samples.
+    return (this.pollInFlight ??= this.refreshMetrics().finally(() => {
+      this.pollInFlight = null;
+    }));
+  }
+
+  private async refreshMetrics(): Promise<void> {
     try {
       const result = await collectPerformanceMetrics(10, 30);
       if (!result.ok || !result.metrics) {
+        this.clearDatabaseMetrics();
         this.logger.warn(`Metrics collection failed: ${result.error ?? 'unknown'}`);
         return;
       }
@@ -210,29 +263,42 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       this.xactRollbackTotal.set(m.database.xact_rollback);
       this.cacheHitTotal.set(m.database.blks_hit);
       this.cacheReadTotal.set(m.database.blks_read);
-      this.walBytesTotal.set(m.wal?.wal_bytes ?? 0);
-      this.walRecordsTotal.set(m.wal?.wal_records ?? 0);
+      this.walBytesTotal.remove();
+      this.walRecordsTotal.remove();
+      if (m.wal) {
+        this.walBytesTotal.set(m.wal.wal_bytes);
+        this.walRecordsTotal.set(m.wal.wal_records);
+      }
+      this.viewAvailable.set({ view: 'wal' }, m.wal ? 1 : 0);
       this.tupleReturnedTotal.set(m.database.tup_returned);
       this.tupleFetchedTotal.set(m.database.tup_fetched);
       this.tupleInsertedTotal.set(m.database.tup_inserted);
       this.tupleUpdatedTotal.set(m.database.tup_updated);
       this.tupleDeletedTotal.set(m.database.tup_deleted);
 
-      // Replication lag — query separately, defaults to 0 if no replica
       const lag = await collectReplicationLag();
-      this.replicationLag.set(lag ?? 0);
+      const validLag = lag !== null && Number.isFinite(lag) && lag >= 0;
+      this.replicationLag.remove();
+      if (validLag) this.replicationLag.set(lag);
+      this.viewAvailable.set({ view: 'replication' }, validLag ? 1 : 0);
 
+      this.checkpointsTimedTotal.remove();
+      this.checkpointsReqTotal.remove();
+      this.viewAvailable.set({ view: 'checkpoints' }, m.bgwriter ? 1 : 0);
       if (m.bgwriter) {
         this.checkpointsTimedTotal.set(m.bgwriter.checkpoints_timed);
         this.checkpointsReqTotal.set(m.bgwriter.checkpoints_req);
       }
 
       // Top queries — reset before re-labelling
+      this.viewAvailable.set({ view: 'statements' }, m.topQueries === null ? 0 : 1);
       this.topQueryDuration.reset();
       for (const q of m.topQueries ?? []) {
         this.topQueryDuration.set({ queryid: q.queryId }, q.meanTimeMs / 1000);
       }
+      this.collectionSuccess.set(1);
     } catch (err) {
+      this.clearDatabaseMetrics();
       this.logger.error(`Metrics poll error: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
