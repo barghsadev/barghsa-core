@@ -8,8 +8,10 @@ import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react'
 import type { FormEvent } from 'react';
 
 const TosRichText = lazy(() => import('./TosRichText.js'));
+const TosPreview = lazy(() => import('./TosPreview.js'));
 
 interface TosVersion {
+  revision?: string;
   id: string;
   versionId: string;
   contentFa: string;
@@ -28,6 +30,8 @@ function isVersion(value: unknown): value is TosVersion {
   const v = value as Record<string, unknown>;
   const date = (input: unknown) => typeof input === 'string' && Number.isFinite(Date.parse(input));
   return (
+    (v.revision === undefined ||
+      (typeof v.revision === 'string' && /^[a-f0-9]{64}$/.test(v.revision))) &&
     typeof v.id === 'string' &&
     v.id.length > 0 &&
     typeof v.versionId === 'string' &&
@@ -71,7 +75,14 @@ export default function AdminTosPage() {
   const [saving, setSaving] = useState(false);
 
   // Publish dialog state
-  const [publishId, setPublishId] = useState<string | null>(null);
+  const [publishVersion, setPublishVersion] = useState<TosVersion | null>(null);
+  const [previewLocale, setPreviewLocale] = useState<'fa' | 'en'>(locale);
+  const [previewReady, setPreviewReady] = useState(false);
+  const publishInFlight = useRef(false);
+  const markPreviewReady = useCallback(
+    () => setPreviewReady(!!publishVersion?.revision),
+    [publishVersion?.revision]
+  );
   const [changeType, setChangeType] = useState<'major' | 'minor'>('minor');
   const [publishing, setPublishing] = useState(false);
 
@@ -196,25 +207,36 @@ export default function AdminTosPage() {
   }
 
   async function handlePublish() {
-    if (!publishId || !historyReady || loading) return;
+    if (!publishVersion || !historyReady || loading || publishInFlight.current || !previewReady)
+      return;
+    if (!publishVersion.revision) {
+      setError(text.previewRequired);
+      return;
+    }
+    publishInFlight.current = true;
     setPublishing(true);
 
     try {
-      const res = await fetch(`/api/admin/tos/versions/${publishId}/publish`, {
+      const res = await fetch(`/api/admin/tos/versions/${publishVersion.id}/publish`, {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ changeType }),
+        body: JSON.stringify({ changeType, expectedRevision: publishVersion.revision }),
       });
+      if (res.status === 409) {
+        setPreviewReady(false);
+        throw new Error(text.previewChanged);
+      }
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
 
-      setPublishId(null);
+      setPublishVersion(null);
       await fetchVersions();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to publish');
     } finally {
+      publishInFlight.current = false;
       setPublishing(false);
     }
   }
@@ -355,44 +377,68 @@ export default function AdminTosPage() {
       )}
 
       {/* Publish dialog */}
-      {publishId && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 space-y-3">
+      {publishVersion && (
+        <div
+          role="region"
+          aria-label="Publish TOS Version"
+          className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 space-y-3"
+        >
           <h3 className="font-semibold">Publish TOS Version</h3>
           <p className="text-sm text-gray-600">
             Is this a material change? Users will need to re-accept for major changes.
           </p>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="changeType"
-                value="minor"
-                checked={changeType === 'minor'}
-                onChange={() => setChangeType('minor')}
-              />
-              <span className="text-sm">Minor (typo/clarification — no re-acceptance)</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="changeType"
-                value="major"
-                checked={changeType === 'major'}
-                onChange={() => setChangeType('major')}
-              />
-              <span className="text-sm">Major (material change — triggers re-acceptance)</span>
-            </label>
+          <div className="flex gap-2">
+            {(['fa', 'en'] as const).map((language) => (
+              <button
+                type="button"
+                key={language}
+                aria-pressed={previewLocale === language}
+                disabled={publishing}
+                onClick={() => setPreviewLocale(language)}
+                className="rounded border px-3 py-1 aria-pressed:bg-blue-100"
+              >
+                {language === 'fa' ? text.persian : text.english}
+              </button>
+            ))}
           </div>
+          <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
+            <TosPreview
+              current={
+                (previewLocale === 'fa'
+                  ? versions.find((v) => v.isActive)?.contentFa
+                  : versions.find((v) => v.isActive)?.contentEn) ?? ''
+              }
+              proposed={
+                previewLocale === 'fa' ? publishVersion.contentFa : publishVersion.contentEn
+              }
+              locale={locale}
+              language={previewLocale}
+              onReady={markPreviewReady}
+            />
+          </Suspense>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={changeType === 'major'}
+              disabled={publishing}
+              onChange={(event) => setChangeType(event.target.checked ? 'major' : 'minor')}
+            />
+            {text.materialChange}
+          </label>
           <div className="flex gap-3">
             <button
               onClick={handlePublish}
-              disabled={publishing || !historyReady || loading}
+              disabled={publishing || !historyReady || loading || !previewReady}
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
             >
               {publishing ? 'Publishing...' : 'Publish'}
             </button>
             <button
-              onClick={() => setPublishId(null)}
+              disabled={publishing}
+              onClick={() => {
+                setPublishVersion(null);
+                void fetchVersions();
+              }}
               className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
             >
               Cancel
@@ -597,21 +643,27 @@ export default function AdminTosPage() {
                     <>
                       <button
                         onClick={() => openEdit(v)}
-                        disabled={!historyReady || loading || showEditor}
+                        disabled={!historyReady || loading || showEditor || !!publishVersion}
                         className="text-blue-600 hover:text-blue-800"
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => setPublishId(v.id)}
-                        disabled={!historyReady || loading || showEditor}
+                        onClick={() => {
+                          setPublishVersion(v);
+                          setPreviewLocale(locale);
+                          setChangeType('minor');
+                          setPreviewReady(false);
+                          if (!v.revision) setError(text.previewRequired);
+                        }}
+                        disabled={!historyReady || loading || showEditor || !!publishVersion}
                         className="text-green-600 hover:text-green-800"
                       >
                         Publish
                       </button>
                       <button
                         onClick={() => handleDiscard(v.id)}
-                        disabled={!historyReady || loading || showEditor}
+                        disabled={!historyReady || loading || showEditor || !!publishVersion}
                         className="text-red-600 hover:text-red-800"
                       >
                         Discard

@@ -37,7 +37,18 @@ beforeEach(async () => {
 afterAll(async () => {
   await http?.close();
 }, 15000);
-function request(path = '', method = 'GET', body?: unknown, actor = 'editor') {
+async function request(path = '', method = 'GET', body?: unknown, actor = 'editor') {
+  if (
+    method === 'POST' &&
+    path.endsWith('/publish') &&
+    body &&
+    typeof body === 'object' &&
+    !('expectedRevision' in body)
+  ) {
+    const current = await request(path.slice(0, -8), 'GET', undefined, actor);
+    const version = (await current.json()) as { revision: string };
+    body = { ...body, expectedRevision: version.revision };
+  }
   return fetch(`${http.base}/api/admin/tos/versions${path}`, {
     method,
     headers: headers[actor]!,
@@ -197,4 +208,28 @@ it('makes an initial minor release available and requires first consent', async 
   expect((await acceptVersion(first)).status).toBe(200);
   await publish('next-minor', 'minor');
   expect(await acceptanceRequired()).toBe(false);
+});
+
+it('rejects publication after the previewed draft changed', async () => {
+  const { id } = await create();
+  const snapshot = (await (await request(`/${id}`)).json()) as { revision?: string };
+  expect((await request(`/${id}`, 'PUT', { contentEn: 'Changed after preview' })).status).toBe(200);
+  const stale = await request(`/${id}/publish`, 'POST', {
+    changeType: 'major',
+    expectedRevision: snapshot.revision ?? '0'.repeat(64),
+  });
+  expect(stale.status).toBe(409);
+  const missing = await fetch(`${http.base}/api/admin/tos/versions/${id}/publish`, {
+    method: 'POST',
+    headers: headers.editor!,
+    body: JSON.stringify({ changeType: 'major' }),
+  });
+  expect(missing.status).toBe(400);
+  expect(
+    (await http.pool.query('SELECT status FROM tos_versions WHERE id=$1', [id])).rows[0].status
+  ).toBe('draft');
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE metadata::jsonb->>'action'='publish'"))
+      .rows
+  ).toHaveLength(0);
 });

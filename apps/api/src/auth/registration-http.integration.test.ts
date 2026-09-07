@@ -25,6 +25,11 @@ afterEach(async () => {
 }, 15000);
 
 async function post(path: string, body: unknown, headers: Record<string, string> = {}) {
+  if (path.startsWith('admin/tos/versions/') && path.endsWith('/publish')) {
+    const current = await fetch(`${fixture.base}/api/${path.slice(0, -8)}`, { headers });
+    const version = (await current.json()) as { revision: string };
+    body = { ...(body as Record<string, unknown>), expectedRevision: version.revision };
+  }
   return fetch(`${fixture.base}/api/${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...headers },

@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -18,6 +19,7 @@ export interface CurrentTosResponse {
 }
 
 export interface TosVersionListItem {
+  revision: string;
   id: string;
   versionId: string;
   contentFa: string;
@@ -51,6 +53,24 @@ export type UpdateTosVersionFields = Partial<
 
 export interface PublishTosVersionInput {
   changeType: 'major' | 'minor';
+  expectedRevision: string;
+}
+
+function withRevision(version: TosVersionDetail): TosVersionDetail {
+  return {
+    ...version,
+    revision: createHash('sha256')
+      .update(
+        JSON.stringify([
+          version.id,
+          version.versionId,
+          version.contentFa,
+          version.contentEn,
+          version.status,
+        ])
+      )
+      .digest('hex'),
+  };
 }
 
 @Injectable()
@@ -232,7 +252,7 @@ export class TosService {
        FROM tos_versions
        ORDER BY created_at DESC`
     );
-    return result.rows;
+    return result.rows.map(withRevision);
   }
 
   /**
@@ -258,7 +278,7 @@ export class TosService {
       );
     }
 
-    return result.rows[0]!;
+    return withRevision(result.rows[0]!);
   }
 
   /**
@@ -283,7 +303,7 @@ export class TosService {
       );
       const version = result.rows[0]!;
       await this.auditAdminWrite(client, actorUserId, ip, 'create', version);
-      return version;
+      return withRevision(version);
     });
   }
 
@@ -308,7 +328,7 @@ export class TosService {
       );
       const version = result.rows[0]!;
       await this.auditAdminWrite(client, actorUserId, ip, 'edit', version);
-      return version;
+      return withRevision(version);
     });
   }
 
@@ -319,7 +339,9 @@ export class TosService {
     ip = 'unknown'
   ): Promise<TosVersionDetail> {
     return this.adminTransaction(actorUserId, async (client) => {
-      await this.lockDraft(client, id, 'TOS_VERSION_ALREADY_PUBLISHED');
+      const draft = await this.lockDraft(client, id, 'TOS_VERSION_ALREADY_PUBLISHED');
+      if (withRevision(draft).revision !== input.expectedRevision)
+        throw new HttpException({ statusCode: 409, error: 'TOS_PREVIEW_CHANGED' }, 409);
       await client.query('UPDATE tos_versions SET is_active=false WHERE is_active=true');
       const result = await client.query<TosVersionDetail>(
         `UPDATE tos_versions SET status='published',change_type=$1,is_active=$2,
@@ -329,7 +351,7 @@ export class TosService {
       );
       const version = result.rows[0]!;
       await this.auditAdminWrite(client, actorUserId, ip, 'publish', version);
-      return version;
+      return withRevision(version);
     });
   }
 

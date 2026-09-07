@@ -7230,10 +7230,16 @@
                       "minor"
                     ],
                     "type": "string"
+                  },
+                  "expectedRevision": {
+                    "description": "Revision of the previewed draft",
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
                   }
                 },
                 "required": [
-                  "changeType"
+                  "changeType",
+                  "expectedRevision"
                 ],
                 "type": "object"
               }
@@ -7250,6 +7256,9 @@
           },
           "404": {
             "description": "Version not found"
+          },
+          "409": {
+            "description": "Draft changed since preview"
           }
         },
         "summary": "Publish a draft TOS version",

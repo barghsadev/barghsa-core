@@ -1159,8 +1159,13 @@ export class AdminController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['changeType'],
+      required: ['changeType', 'expectedRevision'],
       properties: {
+        expectedRevision: {
+          type: 'string',
+          pattern: '^[a-f0-9]{64}$',
+          description: 'Revision of the previewed draft',
+        },
         changeType: {
           type: 'string',
           enum: ['major', 'minor'],
@@ -1172,6 +1177,7 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'TOS version published.' })
   @ApiResponse({ status: 400, description: 'Version is not a draft' })
   @ApiResponse({ status: 404, description: 'Version not found' })
+  @ApiResponse({ status: 409, description: 'Draft changed since preview' })
   async publishTosVersion(
     @Param('id') id: string,
     @Body() rawBody: unknown,
@@ -1186,6 +1192,7 @@ export class AdminController {
 
     const schema = z.object({
       changeType: z.enum(['major', 'minor']),
+      expectedRevision: z.string().regex(/^[a-f0-9]{64}$/),
     });
 
     const parsed = schema.safeParse(rawBody);

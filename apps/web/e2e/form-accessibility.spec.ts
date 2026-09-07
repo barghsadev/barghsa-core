@@ -2410,3 +2410,78 @@ test('TOS editor preserves unsupported existing formatting when editing another 
     original
   );
 });
+
+test('TOS preview renders safely, shows changes and blocks stale publication', async ({ page }) => {
+  await shell(page);
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  const current = {
+    id: 'current-terms',
+    versionId: 'v1',
+    contentFa: 'Terms',
+    contentEn: 'Old wording',
+    status: 'published',
+    isActive: true,
+    publishedAt: '2026-09-01T00:00:00Z',
+    changeType: 'major',
+    createdBy: null,
+    createdAt: '2026-09-01T00:00:00Z',
+    updatedAt: '2026-09-01T00:00:00Z',
+  };
+  const draft = {
+    ...current,
+    id: 'draft-terms',
+    versionId: 'v2',
+    contentEn:
+      '## New wording\n\n**Important**\n\n<script>window.__tosInjected=true</script>\n\n[Unsafe](javascript:alert(1))',
+    status: 'draft',
+    isActive: false,
+    publishedAt: null,
+    revision: 'a'.repeat(64),
+  };
+  let reload = false;
+  const writes: unknown[] = [];
+  await page.route('**/api/admin/tos/versions', (route) =>
+    route.fulfill({
+      json: [
+        current,
+        reload ? { ...draft, revision: 'b'.repeat(64), contentEn: 'Latest wording' } : draft,
+      ],
+    })
+  );
+  await page.route('**/api/admin/tos/versions/draft-terms/publish', (route) => {
+    writes.push(route.request().postDataJSON());
+    return route.fulfill({ status: 409, json: { error: 'TOS_PREVIEW_CHANGED' } });
+  });
+  await page.goto('/admin/tos');
+  await page.getByRole('button', { name: 'Publish', exact: true }).click();
+  const proposed = page.getByRole('region', { name: 'Draft preview', exact: true });
+  await expect(proposed.getByRole('heading', { name: 'New wording', exact: true })).toBeVisible();
+  await expect(proposed.locator('strong')).toHaveText('Important');
+  await expect(proposed.locator('script')).toHaveCount(0);
+  await expect(proposed.locator('a[href^="javascript:"]')).toHaveCount(0);
+  await expect(page.getByRole('region', { name: 'Current published version' })).toContainText(
+    'Old wording'
+  );
+  await page.getByText('Show text changes', { exact: true }).click();
+  await expect(page.locator('del')).toContainText('Old wording');
+  await expect(page.locator('ins')).toContainText('New wording');
+  await page.getByRole('checkbox', { name: 'Mark as material change' }).check();
+  const publish = page
+    .getByRole('region', { name: 'Publish TOS Version', exact: true })
+    .getByRole('button', { name: 'Publish', exact: true });
+  await publish.click();
+  await expect.poll(() => writes.length).toBe(1);
+  expect(writes[0]).toEqual({ changeType: 'major', expectedRevision: 'a'.repeat(64) });
+  await expect(page.getByRole('alert')).toContainText('changed after preview');
+  await expect(publish).toBeDisabled();
+  reload = true;
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await page.getByRole('button', { name: 'Publish', exact: true }).click();
+  await expect(page.getByRole('region', { name: 'Draft preview' })).toContainText('Latest wording');
+  await expect(page.getByRole('checkbox', { name: 'Mark as material change' })).not.toBeChecked();
+  await publish.click();
+  await expect.poll(() => writes.length).toBe(2);
+  expect(writes[1]).toEqual({ changeType: 'minor', expectedRevision: 'b'.repeat(64) });
+});

@@ -2370,3 +2370,59 @@ for (const locale of ['en', 'fa'] as const) {
     expect(await publicTitle()).toBe(savedTitle);
   });
 }
+
+test('TOS rich draft preview and publication persist through the migrated API', async ({
+  page,
+}, testInfo) => {
+  await page.addInitScript(() => {
+    new MutationObserver(() => {
+      if (document.documentElement) document.documentElement.lang = 'en';
+    }).observe(document, { childList: true });
+  });
+  await page.route('**/api/**', async (route) => {
+    const request = route.request(),
+      url = new URL(request.url());
+    const response = await route.fetch({
+      url: `${http.base}${url.pathname}${url.search}`,
+      headers: {
+        ...request.headers(),
+        host: new URL(http.base).host,
+        origin: 'https://app.example.test',
+        cookie: `barghsa_session=${http.session}`,
+        'x-csrf-token': http.csrf,
+      },
+    });
+    await route.fulfill({ response });
+  });
+  await page.goto('/admin/tos');
+  await page.getByRole('button', { name: 'New Draft', exact: true }).click();
+  await page.getByLabel('Version ID').fill('live-terms-v1');
+  await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('شرایط انتشار');
+  const english = page.getByRole('textbox', { name: 'English content', exact: true });
+  await english.fill('Published terms');
+  await english.press('ControlOrMeta+a');
+  await page
+    .getByRole('group', { name: 'English content: Formatting' })
+    .getByRole('button', { name: 'Bold', exact: true })
+    .click();
+  await page.getByRole('button', { name: 'Create Draft', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
+  await page.reload();
+  await page.getByRole('button', { name: 'Publish', exact: true }).click();
+  const preview = page.getByRole('region', { name: 'Publish TOS Version', exact: true });
+  await expect(preview.getByRole('region', { name: 'Draft preview' }).locator('strong')).toHaveText(
+    'Published terms'
+  );
+  await page.screenshot({ path: testInfo.outputPath('tos-preview.png'), fullPage: true });
+  await preview.getByRole('button', { name: 'Publish', exact: true }).click();
+  await expect(preview).toHaveCount(0);
+  const current = await page.request.get(`${http.base}/api/tos/current?locale=en`);
+  expect(current.status()).toBe(200);
+  expect(await current.json()).toMatchObject({
+    versionId: 'live-terms-v1',
+    content: '**Published terms**',
+  });
+  await expect(page.getByRole('button', { name: 'Edit', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'View', exact: true }).click();
+  await expect(page.getByRole('dialog')).toContainText('live-terms-v1');
+});
