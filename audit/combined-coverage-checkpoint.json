@@ -288,10 +288,10 @@
         "apps/api/src/user-settings/user-settings.controller.ts",
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
-      "lines": 4192,
-      "covered_lines": 3884,
-      "branches": 3242,
-      "covered_branches": 2546,
+      "lines": 4198,
+      "covered_lines": 3890,
+      "branches": 3244,
+      "covered_branches": 2548,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -328,6 +328,7 @@
         "apps/web/src/components/VerificationBanner.tsx",
         "apps/web/src/components/WalletBalanceCard.tsx",
         "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+        "apps/web/src/hooks/useAccountTime.tsx",
         "apps/web/src/hooks/useLocale.ts",
         "apps/web/src/hooks/useOnboardingDraft.ts",
         "apps/web/src/hooks/useTimezone.ts",
@@ -425,10 +426,10 @@
         "apps/web/src/routes/support.tsx",
         "apps/web/src/routes/terms.tsx"
       ],
-      "lines": 6480,
-      "covered_lines": 4044,
-      "branches": 7850,
-      "covered_branches": 4589,
+      "lines": 6507,
+      "covered_lines": 4128,
+      "branches": 8000,
+      "covered_branches": 4733,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -482,9 +483,9 @@
         "apps/web/src/routes/admin/verification.tsx",
         "apps/web/src/routes/admin/wallet-receipts.tsx"
       ],
-      "lines": 575,
-      "covered_lines": 429,
-      "branches": 510,
+      "lines": 571,
+      "covered_lines": 435,
+      "branches": 504,
       "covered_branches": 367,
       "required_lines": 90,
       "required_branches": 85,
@@ -659,14 +660,15 @@
       "files": [
         "packages/i18n/src/admin-controls.ts",
         "packages/i18n/src/auth.ts",
+        "packages/i18n/src/contract-templates.ts",
         "packages/i18n/src/verification-config.ts",
         "packages/i18n/src/wallet-limit.ts",
         "packages/i18n/src/wallet-receipts.ts"
       ],
-      "lines": 15,
-      "covered_lines": 15,
-      "branches": 24,
-      "covered_branches": 20,
+      "lines": 18,
+      "covered_lines": 18,
+      "branches": 30,
+      "covered_branches": 21,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -682,13 +684,14 @@
         "packages/i18n/src/index.ts",
         "packages/i18n/src/lookup.ts",
         "packages/i18n/src/preferences.ts",
+        "packages/i18n/src/providers.ts",
         "packages/i18n/src/timezone.ts",
         "packages/i18n/src/vat.ts"
       ],
-      "lines": 27,
-      "covered_lines": 27,
-      "branches": 46,
-      "covered_branches": 43,
+      "lines": 30,
+      "covered_lines": 30,
+      "branches": 52,
+      "covered_branches": 42,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -752,8 +755,8 @@
       ],
       "lines": 1620,
       "covered_lines": 1463,
-      "branches": 1794,
-      "covered_branches": 1574,
+      "branches": 1806,
+      "covered_branches": 1581,
       "required_lines": 90,
       "required_branches": 85,
       "passed": true
@@ -858,5 +861,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "df62d17d69d844d84dd07c190effa13371594406"
+  "head_sha": "3fd042175e506822180ead17badff01bfcf8feca"
 }

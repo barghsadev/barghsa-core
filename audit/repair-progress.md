@@ -2198,3 +2198,9 @@ The missing-object unit fixture now uses a deployment-permitted PDF key in the d
 ### Keep independent terms and timezone errors covered
 
 The full regression at `5001fda` passed all 5,159 unit/database checks but failed two of 280 browser cases: the terms dismissal test assumed only one alert, while the page also correctly exposed a failed timezone read. Its locator now selects the terms HTTP error and asserts that dismissing it preserves the independent localized timezone error. Both English and Persian production browser cases, targeted lint, formatting and diff review pass. No production behavior changed. The failed full browser run is not a successful combined coverage checkpoint.
+
+### Full timestamp regression checkpoint
+
+At clean commit `3fd042175e506822180ead17badff01bfcf8feca`, all 280 production Chromium checks pass. The 5,159 unit/database checks passed at `5001fda`; the intervening commit changes only the reviewed browser test and this audit. Browser coverage maps 280 records to 213 sources and merges into four package reports. `combined-coverage-checkpoint.json` records this revision against the original audit baseline with no collection errors.
+
+Six of thirteen required coverage groups still fail: critical API (90.23% lines / 76.27% branches), general web (63.44% / 59.16%), critical web (76.18% / 72.82%), general database (81.14% / 59.52%), critical i18n (100% / 70%), and general UI (51.18% / 64.82%). Thresholds are unchanged. Root lint/format, backlog, suppression, schema snapshot and contract checks pass; the preceding runtime build/type/bundle checks also pass. This is a passing regression checkpoint with an explicitly failing coverage gate, not plan completion.
