@@ -2768,3 +2768,8 @@ Critical translation coverage now passes at 100% lines and branches, using actua
 - packages/db general: 87.70% lines; 70.55% branches. Required 80%/75%.
 
 The full repair plan remains open. Acceptance ledger remains 48 reviewed: 35 verified, 13 partial, 274 pending. Three historical skips are verified and must not be rebuilt. Rolling authentication counters, remaining coverage and broader task/operational acceptance remain outstanding.
+
+
+### Record constraints for the next authentication-window repair
+
+Saved authentication-window-review.md after tracing the PostgreSQL store, composite store, RateLimitService and AuthService. The existing atomic failure increment is important: replacing it with an unsynchronized rolling SUM would regress the sixth-concurrent-failure guarantee. The large failure-counter ceiling also cannot serve as a token-bucket refill capacity. The report records migration, bounded-history, clock and concurrency checks required for the remaining repair. No rate-limit algorithm was changed or marked complete.

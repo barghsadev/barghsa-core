@@ -1,0 +1,13 @@
+# Authentication window repair constraints
+
+Reviewed at 46346b2340850a44e50feb4375c75eac595b8680. This is remaining-work analysis; no rolling-window implementation was added in this review.
+
+The PostgreSQL store aligns general and security counters to epoch multiples of windowMs. Requests on opposite sides of a boundary therefore consume separate quotas. The infrastructure story requires sliding-window or token-bucket counters, while authentication also specifies per-destination quotas and a fifteen-minute credential-failure history. Generic token-bucket refill must not silently replace that failure-history requirement.
+
+The current failure path is deliberately atomic. AuthService increments a PostgreSQL-backed security counter with ceiling 2147483647, derives the prior failure count from remaining quota, and delays the sixth failure even when six attempts began together. Successful credential checks separately read the failure count. A naive rolling SUM over independently inserted timestamp rows can lose this concurrent-sixth-failure guarantee under statement snapshots. A token bucket refilled using that huge ceiling would also erase useful failure history almost immediately.
+
+The repair must preserve normalized account-plus-IP identity, database-first enforcement, Redis-loss protection, successful-login reset behavior and the existing delay progression. Failure-history storage should be bounded without losing the counts needed for the delay threshold and saturation. Quota admissions require serialization per qualified key and window, with database time and a tested boundary rule. Existing fixed-window rows lack individual timestamps; a migration cannot claim to reconstruct those exact timestamps. Any conservative transition behavior must be explicit and tested rather than dropping old protection.
+
+Required evidence includes requests immediately before/after a window boundary, simultaneous failures and admissions from independent database clients, exact expiry, account/IP separation, reset races, clock skew, cleanup and Redis flush/outage. The general quota algorithm and credential-failure history should be reviewed separately. No existing rate-limit threshold, regression or concurrency guarantee should be relaxed to pass coverage.
+
+Source paths: packages/shared/src/rate-limit/postgres-rate-limiter.ts, packages/shared/src/rate-limit/composite-rate-limiter.ts, apps/api/src/rate-limit/rate-limit.service.ts and apps/api/src/auth/auth.service.ts. The canonical counter requirement is in kanban/epics/01-platform-infrastructure.md, S-04.02; authentication acceptance is also tracked by F23 in audit/fix-plan.md.
