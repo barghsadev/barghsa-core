@@ -377,6 +377,62 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     expect(await receiptState(receiptId)).toBe('Confirmed');
   });
 
+  it.each(['NULL', 'OLD'])(
+    'rolls back settlement when PostgreSQL does not persist the receipt transition: %s',
+    async (returned) => {
+      const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 250_000n });
+      const receiptId = await insertReceipt({
+        invoiceId,
+        amount: 900_000n,
+        suffix: `${returned === 'NULL' ? '0' : '1'}-missing-update`,
+      });
+      const beforeWallet = await walletBalances();
+      // RETURN NULL models a database rule suppressing a write without raising an error.
+      await ctx.pool
+        .query(`CREATE FUNCTION suppress_receipt_confirmation() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.state = 'Confirmed' THEN RETURN ${returned}; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER suppress_receipt_confirmation BEFORE UPDATE ON bank_receipts
+      FOR EACH ROW EXECUTE FUNCTION suppress_receipt_confirmation()`);
+      try {
+        await expect(
+          service.confirm({ receiptId, actorUserId: ACTOR_USER_ID, ip: '10.0.0.9', now: NOW })
+        ).rejects.toMatchObject({ status: 409 });
+        expect(await invoiceSettlement(invoiceId)).toEqual({
+          paid: 250_000n,
+          state: 'Unpaid',
+          paidAt: null,
+        });
+        expect(await walletBalances()).toEqual(beforeWallet);
+        expect(await receiptState(receiptId)).toBe('Submitted');
+        expect(
+          (
+            await ctx.pool.query('SELECT id FROM wallet_transactions WHERE idempotency_key=$1', [
+              invoiceBankReceiptOverpaymentCreditIdempotencyKey(receiptId),
+            ])
+          ).rows
+        ).toHaveLength(0);
+        expect(
+          (
+            await ctx.pool.query(
+              "SELECT id FROM audit_log WHERE event=$1 AND metadata::jsonb->>'receiptId'=$2",
+              [INVOICE_BANK_RECEIPT_CONFIRMED_EVENT, receiptId]
+            )
+          ).rows
+        ).toHaveLength(0);
+      } finally {
+        await ctx.pool.query(
+          'DROP TRIGGER suppress_receipt_confirmation ON bank_receipts; DROP FUNCTION suppress_receipt_confirmation()'
+        );
+      }
+      // The failed transaction releases locks and permits one successful retry.
+      expect(
+        (await service.confirm({ receiptId, actorUserId: ACTOR_USER_ID, ip: '10.0.0.9', now: NOW }))
+          .state
+      ).toBe('Confirmed');
+      expect((await walletBalances()).posted).toBe(beforeWallet.posted + 150_000n);
+    }
+  );
+
   it('rolls back invoice paid_amount, wallet credit, and receipt when confirm audit fails', async () => {
     const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 250_000n });
     const receiptId = await insertReceipt({

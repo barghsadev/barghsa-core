@@ -387,7 +387,7 @@ export class InvoiceBankReceiptConfirmationService {
           if (latestRequest.initiatorId === input.actorUserId) {
             const parked = await this.ensureUnderReview(client, receipt.id);
             await client.query('COMMIT');
-            return this.toDto(parked ?? { ...receipt, state: 'UnderReview' }, {
+            return this.toDto(parked, {
               ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
             });
           }
@@ -544,7 +544,7 @@ export class InvoiceBankReceiptConfirmationService {
           `Invoice bank receipt ${receipt.id} confirmed against invoice ${invoice.id}; wallet excess ${overpayment.walletCreditAmount}`
         );
         const destination = invoiceStateAfterConfirm(invoice, allocation.invoiceAllocation);
-        return this.toDto(updated ?? { ...receipt, state: 'Confirmed' }, {
+        return this.toDto(updated, {
           overpayment,
           auditId,
           invoiceState: destination,
@@ -669,17 +669,10 @@ export class InvoiceBankReceiptConfirmationService {
         this.logger.log(
           `Invoice bank receipt ${receipt.id} rejected against invoice ${receipt.invoiceId}`
         );
-        return this.toDto(
-          updated ?? {
-            ...receipt,
-            state: 'Rejected',
-            rejection_reason: parsed.reason,
-          },
-          {
-            auditId,
-            ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
-          }
-        );
+        return this.toDto(updated, {
+          auditId,
+          ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
+        });
       } catch (error) {
         await client.query('ROLLBACK').catch(() => undefined);
         throw error;
@@ -753,7 +746,7 @@ export class InvoiceBankReceiptConfirmationService {
       initiatorId: input.actorUserId,
       status: 'pending',
     };
-    return this.toDto(parked ?? { ...input.receipt, state: 'UnderReview' }, {
+    return this.toDto(parked, {
       ...dualApprovalExtrasFromRead(input.thresholdRead, input.receipt.amount, pending),
     });
   }
@@ -795,7 +788,7 @@ export class InvoiceBankReceiptConfirmationService {
   private async ensureUnderReview(
     client: WalletQueryClient,
     receiptId: string
-  ): Promise<BankReceiptRow | null> {
+  ): Promise<BankReceiptRow> {
     const result = await client.query(
       `UPDATE bank_receipts
           SET state = 'UnderReview'
@@ -804,7 +797,11 @@ export class InvoiceBankReceiptConfirmationService {
         RETURNING ${RECEIPT_SELECT}`,
       [receiptId]
     );
-    return (result.rows as BankReceiptRow[])[0] ?? null;
+    const updated = (result.rows as BankReceiptRow[])[0];
+    if (!updated || updated.state !== 'UnderReview') {
+      httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt transition was not persisted', 409);
+    }
+    return updated;
   }
 
   private async loadDualApprovalThreshold(
@@ -898,8 +895,7 @@ export class InvoiceBankReceiptConfirmationService {
     const reason = invoiceBankReceiptReasonFromDualApprovalRejection(
       input.latestRequest.reviewReason
     );
-    const updated = await this.markRejected(client, input.receipt.id, reason);
-    if (!updated) return;
+    await this.markRejected(client, input.receipt.id, reason);
 
     const ownerUserId = await this.loadProfileOwnerUserId(client, input.receipt.profileId);
     let notificationOutboxId: string | null = null;
@@ -1170,7 +1166,7 @@ export class InvoiceBankReceiptConfirmationService {
     receiptId: string,
     actorUserId: string,
     confirmedAt: Date
-  ): Promise<BankReceiptRow | null> {
+  ): Promise<BankReceiptRow> {
     const result = await client.query(
       `UPDATE bank_receipts
           SET state = 'Confirmed',
@@ -1181,14 +1177,18 @@ export class InvoiceBankReceiptConfirmationService {
         RETURNING ${RECEIPT_SELECT}`,
       [receiptId, actorUserId, confirmedAt]
     );
-    return (result.rows as BankReceiptRow[])[0] ?? null;
+    const updated = (result.rows as BankReceiptRow[])[0];
+    if (!updated || updated.state !== 'Confirmed') {
+      httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt confirmation was not persisted', 409);
+    }
+    return updated;
   }
 
   private async markRejected(
     client: WalletQueryClient,
     receiptId: string,
     reason: string
-  ): Promise<BankReceiptRow | null> {
+  ): Promise<BankReceiptRow> {
     const result = await client.query(
       `UPDATE bank_receipts
           SET state = 'Rejected',
@@ -1198,7 +1198,11 @@ export class InvoiceBankReceiptConfirmationService {
         RETURNING ${RECEIPT_SELECT}`,
       [receiptId, reason]
     );
-    return (result.rows as BankReceiptRow[])[0] ?? null;
+    const updated = (result.rows as BankReceiptRow[])[0];
+    if (!updated || updated.state !== 'Rejected') {
+      httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt transition was not persisted', 409);
+    }
+    return updated;
   }
 
   private async loadProfileOwnerUserId(

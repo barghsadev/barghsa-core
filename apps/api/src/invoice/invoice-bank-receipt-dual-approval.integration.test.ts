@@ -213,6 +213,47 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     return result.rows;
   }
 
+  it.each(['NULL', 'OLD'])(
+    'rolls back approval creation when parking the receipt was suppressed: %s',
+    async (returned) => {
+      await setThreshold(Number(THRESHOLD));
+      const invoiceId = await insertInvoice({ total: 2_000_000n });
+      const receiptId = await insertReceipt({
+        invoiceId,
+        amount: THRESHOLD,
+        suffix: `${returned === 'NULL' ? '0' : '1'}-suppressed-park`,
+      });
+      const beforeWallet = await walletPosted();
+      await ctx.pool
+        .query(`CREATE FUNCTION suppress_receipt_parking() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.state = 'UnderReview' THEN RETURN ${returned}; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER suppress_receipt_parking BEFORE UPDATE ON bank_receipts
+      FOR EACH ROW EXECUTE FUNCTION suppress_receipt_parking()`);
+      const input = { receiptId, actorUserId: FIRST_STAFF, ip: '10.0.0.9', now: NOW };
+      try {
+        await expect(service.confirm(input)).rejects.toMatchObject({ status: 409 });
+        expect(await receiptState(receiptId)).toBe('Submitted');
+        expect(await pendingApprovals(receiptId)).toHaveLength(0);
+        expect(await invoicePaid(invoiceId)).toEqual({ paid: 0n, state: 'Unpaid' });
+        expect(await walletPosted()).toBe(beforeWallet);
+        expect(
+          (
+            await ctx.pool.query(
+              "SELECT id FROM audit_log WHERE metadata::jsonb->>'receiptId'=$1",
+              [receiptId]
+            )
+          ).rows
+        ).toHaveLength(0);
+      } finally {
+        await ctx.pool.query(
+          'DROP TRIGGER suppress_receipt_parking ON bank_receipts; DROP FUNCTION suppress_receipt_parking()'
+        );
+      }
+      expect((await service.confirm(input)).state).toBe('UnderReview');
+      expect(await pendingApprovals(receiptId)).toHaveLength(1);
+    }
+  );
+
   it('confirms below-threshold receipts in one step', async () => {
     await setThreshold(Number(THRESHOLD));
     const invoiceId = await insertInvoice({ total: 1_000_000n });

@@ -166,6 +166,57 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
     };
   }
 
+  it.each(['NULL', 'OLD'])(
+    'does not notify rejection when the receipt update was suppressed: %s',
+    async (returned) => {
+      const invoiceId = await insertInvoice({ total: 1_000_000n });
+      const receiptId = await insertReceipt({
+        invoiceId,
+        amount: 400_000n,
+        suffix: `${returned === 'NULL' ? '0' : '1'}-suppressed-reject`,
+      });
+      await ctx.pool
+        .query(`CREATE FUNCTION suppress_receipt_rejection() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.state = 'Rejected' THEN RETURN ${returned}; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER suppress_receipt_rejection BEFORE UPDATE ON bank_receipts
+      FOR EACH ROW EXECUTE FUNCTION suppress_receipt_rejection()`);
+      const input = {
+        receiptId,
+        raw: { reason: 'Illegible scan' },
+        actorUserId: ACTOR_USER_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      };
+      try {
+        await expect(service.reject(input)).rejects.toMatchObject({ status: 409 });
+        expect(
+          (await ctx.pool.query('SELECT state FROM bank_receipts WHERE id=$1', [receiptId])).rows[0]
+            .state
+        ).toBe('Submitted');
+        expect(
+          (
+            await ctx.pool.query('SELECT id FROM notification_outbox WHERE idempotency_key=$1', [
+              invoiceBankReceiptRejectedNotificationIdempotencyKey(receiptId),
+            ])
+          ).rows
+        ).toHaveLength(0);
+        expect(
+          (
+            await ctx.pool.query(
+              "SELECT id FROM audit_log WHERE event=$1 AND metadata::jsonb->>'receiptId'=$2",
+              [INVOICE_BANK_RECEIPT_REJECTED_EVENT, receiptId]
+            )
+          ).rows
+        ).toHaveLength(0);
+      } finally {
+        await ctx.pool.query(
+          'DROP TRIGGER suppress_receipt_rejection ON bank_receipts; DROP FUNCTION suppress_receipt_rejection()'
+        );
+      }
+      expect((await service.reject(input)).state).toBe('Rejected');
+    }
+  );
+
   it('marks a Submitted receipt Rejected, stores the reason, and notifies the customer', async () => {
     const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 250_000n });
     const receiptId = await insertReceipt({
