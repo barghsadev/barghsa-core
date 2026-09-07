@@ -101,6 +101,8 @@ Current step: permission-boundary evidence. Connection-security repair committed
 
 ## Evidence map
 
+- Order follow-up: 31 focused component tests pass, covering duplicate-click suppression, exact saved order identity/address/status, retry after failed or malformed responses, profile/catalogue/address gates, and new-address confirmation/retained edits. Web types and explicit lint pass. Log `/tmp/barghsa-order-tests.log`. Full frontend coverage refresh remains pending.
+
 - Current production browser checkpoint at `3f1c318`: 350/350 Chromium cases pass, no skips/flakes/failures; 350 coverage records mapped to 219 sources and merged into web/shared/i18n/UI. Logs `/tmp/barghsa-resumed-browser.log`, `/tmp/barghsa-resumed-collect.log`, `/tmp/barghsa-resumed-merge.log`. Frontend package refresh also passes (`/tmp/barghsa-frontend-refresh.log`). Current gate is 10/13, no report errors: API critical90.66/77.25%, web general64.54/61.74%, web critical76.87/74.24% (lines/branches). This supersedes the old browser checkpoint; subsequent API-only tests do not alter these browser sources.
 - Payment adapter follow-up: 108 checks across existing/new HTTP adapter suites pass. New checks cover exact server-side verification binding, malformed success responses, unsafe money values, definite versus uncertain HTTP failure, invalid JSON, unavailable inquiry, recovery cache/idempotency, and required HTTPS/verification configuration. No external PSP was contacted. API types/lint pass; updated full API coverage remains pending.
 
