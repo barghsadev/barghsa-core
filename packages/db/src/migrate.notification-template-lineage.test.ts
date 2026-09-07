@@ -70,7 +70,11 @@ it('upgrades valid history without rewriting publication identity and enforces l
       .rows;
     expect(await runMigrations({ connection: db.connection })).toEqual({
       ok: true,
-      applied: ['0117_notification_template_lineage', '0118_reconcile_schema_snapshot'],
+      applied: [
+        '0117_notification_template_lineage',
+        '0118_reconcile_schema_snapshot',
+        '0119_brand_history',
+      ],
     });
     const after = (await db.pool.query('SELECT * FROM notification_templates ORDER BY version'))
       .rows;

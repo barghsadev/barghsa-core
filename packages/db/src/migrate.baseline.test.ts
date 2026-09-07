@@ -77,6 +77,7 @@ describe('complete production schema baseline', () => {
         '0116_ai_agent_group_links',
         '0117_notification_template_lineage',
         '0118_reconcile_schema_snapshot',
+        '0119_brand_history',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });

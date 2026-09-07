@@ -274,6 +274,13 @@
       "when": 1791331200021,
       "tag": "0118_reconcile_schema_snapshot",
       "breakpoints": true
+    },
+    {
+      "idx": 119,
+      "version": "7",
+      "when": 1791331200022,
+      "tag": "0119_brand_history",
+      "breakpoints": true
     }
   ]
 }

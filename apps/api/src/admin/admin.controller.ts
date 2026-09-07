@@ -80,6 +80,7 @@ export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>;
 const hexColorRe = /^#[0-9a-fA-F]{6}$/;
 
 export const UpsertBrandConfigSchema = z.object({
+  expectedVersion: z.number().int().min(0).max(2147483647),
   config: z.object({
     appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
     slogan: z.string().max(200).optional().default(''),
@@ -107,7 +108,7 @@ export interface BrandConfigDto {
   id: string;
   config: Record<string, unknown>;
   version: number;
-  status: 'draft' | 'active';
+  status: 'draft' | 'active' | 'superseded';
   createdBy: string;
   createdAt: string;
   updatedAt: string;
@@ -842,11 +843,19 @@ export class AdminController {
    * draft version based on the active config. Permission: admin only.
    */
   @Put('branding/config')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Upsert draft brand configuration' })
   @ApiBody({
     schema: {
       type: 'object',
+      required: ['config', 'expectedVersion'],
       properties: {
+        expectedVersion: {
+          type: 'integer',
+          minimum: 0,
+          description: 'Last observed saved version',
+        },
         config: { type: 'object', description: 'Brand config JSON (appTitle, colors, etc.)' },
       },
     },
@@ -881,7 +890,11 @@ export class AdminController {
       );
     }
 
-    return this.brandConfigService.upsertDraft(parsed.data.config, req.session.userId);
+    return this.brandConfigService.upsertDraft(
+      parsed.data.config,
+      req.session.userId,
+      parsed.data.expectedVersion
+    );
   }
 
   /**
@@ -891,12 +904,28 @@ export class AdminController {
    * deactivated and the draft becomes the new active config. Permission: admin only.
    */
   @Post('branding/activate')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Activate draft brand configuration' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['draftId', 'expectedVersion'],
+      properties: {
+        draftId: { type: 'string', format: 'uuid' },
+        expectedVersion: { type: 'integer', minimum: 1 },
+      },
+    },
+  })
+  @ApiResponse({ status: 409, description: 'The selected draft is stale or already activated.' })
   @ApiResponse({ status: 200, description: 'Draft config activated.', schema: { type: 'object' } })
   @ApiResponse({ status: 400, description: 'No draft config to activate' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
-  async activateBrandConfig(@Req() req: AuthenticatedRequest): Promise<BrandConfigDto> {
+  async activateBrandConfig(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: unknown
+  ): Promise<BrandConfigDto> {
     if (!hasStaffPermission(req, 'admin:branding:edit')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to activate brand config`);
       throw new HttpException(
@@ -904,7 +933,22 @@ export class AdminController {
         403
       );
     }
-    return this.brandConfigService.activateDraft(req.session.userId);
+    const parsed = z
+      .object({
+        draftId: z.string().uuid(),
+        expectedVersion: z.number().int().min(1).max(2147483647),
+      })
+      .safeParse(body);
+    if (!parsed.success)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    return this.brandConfigService.activateDraft(
+      req.session.userId,
+      parsed.data.draftId,
+      parsed.data.expectedVersion
+    );
   }
 
   // ───────────────────────────────────────────────────────────────────────

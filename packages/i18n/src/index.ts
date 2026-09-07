@@ -6,6 +6,11 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'admin.branding.saveConfirm': 'این تنظیمات به عنوان نسخه پیش‌نویس جدید ذخیره شوند؟',
+  'admin.branding.activateConfirm': 'نسخه ذخیره‌شده {version} برای همه کاربران منتشر شود؟',
+  'admin.branding.changed': 'تنظیمات تغییر کرده‌اند. پنجره را ببندید و تازه‌سازی کنید.',
+  'admin.branding.saved': 'تغییرات ذخیره شد.',
+  'admin.branding.refresh': 'تازه‌سازی',
   'onboarding.legal.titleEn': 'Legal Profile',
   'admin.catalogue.title': 'فهرست محصولات',
   'admin.gifts.title': 'کدهای تخفیف',
@@ -2017,6 +2022,11 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'admin.branding.saveConfirm': 'Save these settings as a new draft version?',
+  'admin.branding.activateConfirm': 'Publish saved version {version} for all users?',
+  'admin.branding.changed': 'Settings changed. Close this dialog and refresh before continuing.',
+  'admin.branding.saved': 'Changes saved.',
+  'admin.branding.refresh': 'Refresh',
   'onboarding.welcome.subtitleEn': 'Please create your profile to get started.',
   'onboarding.profile.individualDescEn': 'Individual registration',
   'onboarding.profile.legalDescEn': 'Legal entity registration',

@@ -746,6 +746,30 @@
       "post": {
         "operationId": "AdminController_activateBrandConfig",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
@@ -762,6 +786,9 @@
           },
           "403": {
             "description": "Admin role required"
+          },
+          "409": {
+            "description": "The selected draft is stale or already activated."
           }
         },
         "summary": "Activate draft brand configuration",
@@ -805,8 +832,17 @@
                   "config": {
                     "description": "Brand config JSON (appTitle, colors, etc.)",
                     "type": "object"
+                  },
+                  "expectedVersion": {
+                    "description": "Last observed saved version",
+                    "minimum": 0,
+                    "type": "integer"
                   }
                 },
+                "required": [
+                  "config",
+                  "expectedVersion"
+                ],
                 "type": "object"
               }
             }

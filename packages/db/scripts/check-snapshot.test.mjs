@@ -5,6 +5,7 @@ import {
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  readdirSync,
   writeFileSync,
   symlinkSync,
   rmSync,
@@ -32,7 +33,13 @@ for (const stale of [false, true])
         });
         symlinkSync(join(root, 'node_modules'), join(fixture, 'node_modules'));
         symlinkSync(join(root, 'src'), join(fixture, 'src'));
-        const path = join(fixture, 'drizzle/production/meta/0118_snapshot.json');
+        const meta = join(fixture, 'drizzle/production/meta');
+        const latest = readdirSync(meta)
+          .filter((name) => /^\d+_snapshot\.json$/.test(name))
+          .sort((a, b) => Number.parseInt(a) - Number.parseInt(b))
+          .at(-1);
+        assert.ok(latest, 'A committed schema snapshot is required');
+        const path = join(meta, latest);
         if (stale) {
           const value = JSON.parse(readFileSync(path, 'utf8'));
           delete value.tables['public.profiles'].columns.contact_email;

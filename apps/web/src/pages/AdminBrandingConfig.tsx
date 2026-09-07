@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useId } from 'react';
-import { withCsrf } from '../lib/csrf.js';
+import { t } from '@barghsa/i18n';
+import { useLocale } from '../hooks/useLocale.js';
+import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -20,7 +22,7 @@ interface BrandConfigDto {
   id: string;
   config: BrandConfig;
   version: number;
-  status: 'draft' | 'active';
+  status: 'draft' | 'active' | 'superseded';
   createdBy: string;
   createdAt: string;
   updatedAt: string;
@@ -48,28 +50,6 @@ const DEFAULT_CONFIG: BrandConfig = {
 async function fetchActiveConfig(): Promise<BrandConfigDto> {
   const res = await fetch('/api/admin/branding/config');
   if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`);
-  return res.json();
-}
-
-async function saveDraftConfig(config: BrandConfig): Promise<BrandConfigDto> {
-  const res = await fetch('/api/admin/branding/config', {
-    method: 'PUT',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ config }),
-  });
-  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`);
-  return res.json();
-}
-
-async function activateConfig(): Promise<BrandConfigDto> {
-  const res = await fetch('/api/admin/branding/activate', {
-    method: 'POST',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-  });
-  if (!res.ok) {
-    if (res.status === 400) throw new Error('No draft config to activate');
-    throw new Error(`Failed to activate config: ${res.statusText}`);
-  }
   return res.json();
 }
 
@@ -120,23 +100,24 @@ export default function AdminBrandingConfig() {
   const [config, setConfig] = useState<BrandConfig>(DEFAULT_CONFIG);
   const [activeConfig, setActiveConfig] = useState<BrandConfigDto | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [activating, setActivating] = useState(false);
+  const locale = useLocale();
+  const [action, setAction] = useState<TeamAction | null>(null);
+  const [revision, setRevision] = useState(0);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [draftInfo, setDraftInfo] = useState<{ version: number; updatedAt: string } | null>(null);
+  const draftInfo = activeConfig?.status === 'draft' ? activeConfig : null;
   const [, setLogoFile] = useState<File | null>(null);
 
   // Load current config
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setMessage(null);
+    setActiveConfig(null);
     fetchActiveConfig()
       .then((dto) => {
         if (cancelled) return;
         setActiveConfig(dto);
         setConfig({ ...DEFAULT_CONFIG, ...dto.config });
-        if (dto.status === 'draft') {
-          setDraftInfo({ version: dto.version, updatedAt: dto.updatedAt });
-        }
       })
       .catch((err) => {
         if (!cancelled)
@@ -148,55 +129,38 @@ export default function AdminBrandingConfig() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [revision]);
 
   const updateConfig = useCallback((key: keyof BrandConfig, value: string | boolean | null) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  const handleSave = useCallback(async () => {
-    setSaving(true);
-    setMessage(null);
-    try {
-      const dto = await saveDraftConfig(config);
-      setDraftInfo({ version: dto.version, updatedAt: dto.updatedAt });
-      setMessage({ type: 'success', text: 'Draft config saved successfully.' });
-    } catch (err) {
-      setMessage({ type: 'error', text: `Failed to save: ${(err as Error).message}` });
-    } finally {
-      setSaving(false);
-    }
-  }, [config]);
+  const handleSave = () => {
+    if (!activeConfig) return;
+    setAction({
+      title: 'Save Draft',
+      description: t('admin.branding.saveConfirm', locale),
+      path: '/api/admin/branding/config',
+      method: 'PUT',
+      body: { config: { ...config }, expectedVersion: activeConfig.version },
+      conflictMessage: t('admin.branding.changed', locale),
+    });
+  };
 
-  const handleActivate = useCallback(async () => {
-    setActivating(true);
-    setMessage(null);
-    try {
-      const dto = await activateConfig();
-      setActiveConfig(dto);
-      setConfig({ ...DEFAULT_CONFIG, ...dto.config });
-      setDraftInfo(null);
-      setMessage({ type: 'success', text: `Config version ${dto.version} activated.` });
-    } catch (err) {
-      // Save first if no draft exists
-      if ((err as Error).message === 'No draft config to activate') {
-        await handleSave();
-        try {
-          const dto = await activateConfig();
-          setActiveConfig(dto);
-          setConfig({ ...DEFAULT_CONFIG, ...dto.config });
-          setDraftInfo(null);
-          setMessage({ type: 'success', text: `Config version ${dto.version} activated.` });
-        } catch (e2) {
-          setMessage({ type: 'error', text: `Failed to activate: ${(e2 as Error).message}` });
-        }
-      } else {
-        setMessage({ type: 'error', text: `Failed to activate: ${(err as Error).message}` });
-      }
-    } finally {
-      setActivating(false);
-    }
-  }, [handleSave]);
+  const handleActivate = () => {
+    if (!draftInfo || draftInfo.version < 1) return;
+    setAction({
+      title: 'Activate',
+      description: t('admin.branding.activateConfirm', locale).replace(
+        '{version}',
+        String(draftInfo.version)
+      ),
+      path: '/api/admin/branding/activate',
+      method: 'POST',
+      body: { draftId: draftInfo.id, expectedVersion: draftInfo.version },
+      conflictMessage: t('admin.branding.changed', locale),
+    });
+  };
 
   const handleLogoUpload = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,12 +183,33 @@ export default function AdminBrandingConfig() {
     );
   }
 
-  const isDirty = activeConfig
-    ? JSON.stringify(config) !== JSON.stringify({ ...DEFAULT_CONFIG, ...activeConfig.config })
-    : true;
+  const isDirty =
+    activeConfig && activeConfig.version > 0
+      ? JSON.stringify(config) !== JSON.stringify({ ...DEFAULT_CONFIG, ...activeConfig.config })
+      : true;
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
+      {action && (
+        <TeamActionDialog
+          action={action}
+          onClose={() => setAction(null)}
+          onSuccess={async (result) => {
+            const dto = result as BrandConfigDto;
+            setActiveConfig(dto);
+            setConfig({ ...DEFAULT_CONFIG, ...dto.config });
+            setMessage({ type: 'success', text: t('admin.branding.saved', locale) });
+            setAction(null);
+          }}
+        />
+      )}
+      <button
+        type="button"
+        onClick={() => setRevision((value) => value + 1)}
+        disabled={action !== null}
+      >
+        {t('admin.branding.refresh', locale)}
+      </button>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Branding Settings</h1>
@@ -447,19 +432,19 @@ export default function AdminBrandingConfig() {
         <button
           type="button"
           onClick={handleSave}
-          disabled={saving || !isDirty}
+          disabled={action !== null || !activeConfig || !isDirty}
           className="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {saving ? 'Saving...' : 'Save Draft'}
+          Save Draft
         </button>
 
         <button
           type="button"
           onClick={handleActivate}
-          disabled={activating}
+          disabled={action !== null || !draftInfo || isDirty}
           className="px-6 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {activating ? 'Activating...' : 'Activate'}
+          Activate
         </button>
 
         {activeConfig?.status === 'active' && (

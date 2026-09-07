@@ -2220,3 +2220,62 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(main).toContainText(new Intl.NumberFormat(locale).format(9007199254740993n));
   });
 }
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`branding publishes only the saved reviewed version (${locale})`, async ({ page }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request();
+      const url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const publicTitle = async () =>
+      (await (await page.request.get(`${http.base}/api/public/branding/config`)).json()).appTitle;
+    const before = await publicTitle();
+    await page.goto('/admin/branding');
+    const title = page.getByLabel('App Title', { exact: true });
+    const savedTitle = `Brand published ${locale}`;
+    await title.fill(savedTitle);
+    await page.getByRole('button', { name: 'Save Draft', exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(await publicTitle()).toBe(before);
+    await title.fill('Unsaved change');
+    await expect(page.getByRole('button', { name: 'Activate', exact: true })).toBeDisabled();
+    await title.fill(savedTitle);
+    await page.getByRole('button', { name: 'Activate', exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(await publicTitle()).toBe(savedTitle);
+    await title.fill(`Next draft ${locale}`);
+    await page.getByRole('button', { name: 'Save Draft', exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.reload();
+    await expect(title).toHaveValue(`Next draft ${locale}`);
+    expect(await publicTitle()).toBe(savedTitle);
+  });
+}
