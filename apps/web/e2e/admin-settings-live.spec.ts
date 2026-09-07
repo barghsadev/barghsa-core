@@ -2371,60 +2371,123 @@ for (const locale of ['en', 'fa'] as const) {
   });
 }
 
-test('TOS rich draft preview and publication persist through the migrated API', async ({
-  page,
-}, testInfo) => {
-  await page.addInitScript(() => {
-    new MutationObserver(() => {
-      if (document.documentElement) document.documentElement.lang = 'en';
-    }).observe(document, { childList: true });
-  });
-  await page.route('**/api/**', async (route) => {
-    const request = route.request(),
-      url = new URL(request.url());
-    const response = await route.fetch({
-      url: `${http.base}${url.pathname}${url.search}`,
-      headers: {
-        ...request.headers(),
-        host: new URL(http.base).host,
-        origin: 'https://app.example.test',
-        cookie: `barghsa_session=${http.session}`,
-        'x-csrf-token': http.csrf,
-      },
+for (const locale of ['en', 'fa'])
+  test(`TOS rich draft preview and publication persist through the migrated API (${locale})`, async ({
+    page,
+  }, testInfo) => {
+    const fa = locale === 'fa';
+    const versionId = `live-terms-${locale}`;
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
     });
-    await route.fulfill({ response });
+    const actor = await page.request.get(`${http.base}/api/auth/user`, {
+      headers: { cookie: `barghsa_session=${http.session}` },
+    });
+    expect(actor.status()).toBe(200);
+    const needsConsent = (await actor.json()).requiresTosAcceptance === true;
+    await page.goto('/admin/tos');
+    if (needsConsent) {
+      const consent = page.getByRole('dialog', {
+        name: fa ? 'قوانین استفاده' : 'Terms of Service',
+        exact: true,
+      });
+      await consent
+        .getByRole('button', { name: fa ? 'می‌پذیرم' : 'I Accept', exact: true })
+        .click();
+      await expect(consent).toHaveCount(0);
+    }
+    await page
+      .getByRole('button', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true })
+      .click();
+    await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(versionId);
+    await page
+      .getByRole('textbox', { name: fa ? 'محتوای فارسی' : 'Persian content', exact: true })
+      .fill('شرایط انتشار');
+    const english = page.getByRole('textbox', {
+      name: fa ? 'محتوای انگلیسی' : 'English content',
+      exact: true,
+    });
+    await english.fill('Published terms');
+    await english.press('ControlOrMeta+a');
+    await page
+      .getByRole('group', {
+        name: fa ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',
+      })
+      .getByRole('button', { name: fa ? 'پررنگ' : 'Bold', exact: true })
+      .click();
+    await page
+      .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
+      .click();
+    await expect(
+      page.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true })
+    ).toBeVisible();
+    await page.reload();
+    await page.getByRole('button', { name: fa ? 'انتشار' : 'Publish', exact: true }).click();
+    const preview = page.getByRole('region', {
+      name: fa ? 'انتشار نسخه شرایط' : 'Publish TOS Version',
+      exact: true,
+    });
+    if (fa) await preview.getByRole('button', { name: 'محتوای انگلیسی', exact: true }).click();
+    await expect(
+      preview
+        .getByRole('region', { name: fa ? 'پیش‌نمایش پیش‌نویس' : 'Draft preview' })
+        .locator('strong')
+    ).toHaveText('Published terms');
+    await page.screenshot({ path: testInfo.outputPath('tos-preview.png'), fullPage: true });
+    await preview.getByRole('button', { name: fa ? 'انتشار' : 'Publish', exact: true }).click();
+    await expect(preview).toHaveCount(0);
+    const current = await page.request.get(`${http.base}/api/tos/current?locale=en`);
+    expect(current.status()).toBe(200);
+    expect(await current.json()).toMatchObject({
+      versionId,
+      content: '**Published terms**',
+    });
+    await expect(
+      page.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true })
+    ).toHaveCount(0);
+    await page
+      .getByRole('row')
+      .filter({ hasText: versionId })
+      .getByRole('button', { name: fa ? 'مشاهده' : 'View', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toContainText(versionId);
+    await page.getByRole('dialog').getByRole('button', { name: 'English', exact: true }).click();
+    await expect(page.getByRole('dialog').locator('strong')).toHaveText('Published terms');
+    await page.keyboard.press('Escape');
+    await page
+      .getByRole('button', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true })
+      .click();
+    await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(`discard-${locale}`);
+    await page
+      .getByRole('textbox', { name: fa ? 'محتوای فارسی' : 'Persian content', exact: true })
+      .fill('پیش‌نویس موقت');
+    await page
+      .getByRole('textbox', { name: fa ? 'محتوای انگلیسی' : 'English content', exact: true })
+      .fill('Temporary draft');
+    await page
+      .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
+      .click();
+    const discarded = page.getByRole('row').filter({ hasText: `discard-${locale}` });
+    page.once('dialog', (dialog) => dialog.accept());
+    await discarded
+      .getByRole('button', { name: fa ? 'حذف پیش‌نویس' : 'Discard', exact: true })
+      .click();
+    await expect(discarded).toHaveCount(0);
   });
-  await page.goto('/admin/tos');
-  await page.getByRole('button', { name: 'New Draft', exact: true }).click();
-  await page.getByLabel('Version ID').fill('live-terms-v1');
-  await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('شرایط انتشار');
-  const english = page.getByRole('textbox', { name: 'English content', exact: true });
-  await english.fill('Published terms');
-  await english.press('ControlOrMeta+a');
-  await page
-    .getByRole('group', { name: 'English content: Formatting' })
-    .getByRole('button', { name: 'Bold', exact: true })
-    .click();
-  await page.getByRole('button', { name: 'Create Draft', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
-  await page.reload();
-  await page.getByRole('button', { name: 'Publish', exact: true }).click();
-  const preview = page.getByRole('region', { name: 'Publish TOS Version', exact: true });
-  await expect(preview.getByRole('region', { name: 'Draft preview' }).locator('strong')).toHaveText(
-    'Published terms'
-  );
-  await page.screenshot({ path: testInfo.outputPath('tos-preview.png'), fullPage: true });
-  await preview.getByRole('button', { name: 'Publish', exact: true }).click();
-  await expect(preview).toHaveCount(0);
-  const current = await page.request.get(`${http.base}/api/tos/current?locale=en`);
-  expect(current.status()).toBe(200);
-  expect(await current.json()).toMatchObject({
-    versionId: 'live-terms-v1',
-    content: '**Published terms**',
-  });
-  await expect(page.getByRole('button', { name: 'Edit', exact: true })).toHaveCount(0);
-  await page.getByRole('button', { name: 'View', exact: true }).click();
-  await expect(page.getByRole('dialog')).toContainText('live-terms-v1');
-  await page.getByRole('dialog').getByRole('button', { name: 'English', exact: true }).click();
-  await expect(page.getByRole('dialog').locator('strong')).toHaveText('Published terms');
-});

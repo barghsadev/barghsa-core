@@ -2277,6 +2277,18 @@ for (const locale of ['en', 'fa']) {
   });
 }
 
+test('TOS network failures stay localized in Persian and block writes', async ({ page }) => {
+  await shell(page, 'fa');
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  await page.route('**/api/admin/tos/versions', (route) => route.abort('failed'));
+  await page.goto('/admin/tos');
+  await expect(page.getByRole('alert')).toContainText('بارگذاری تاریخچه شرایط انجام نشد.');
+  await expect(page.getByRole('alert')).not.toContainText('Failed to fetch');
+  await expect(page.getByRole('button', { name: 'پیش‌نویس جدید', exact: true })).toBeDisabled();
+});
+
 for (const failure of ['unavailable', 'malformed']) {
   test(`TOS history blocks new drafts until a valid reload (${failure})`, async ({ page }) => {
     await shell(page);
@@ -2324,8 +2336,10 @@ for (const locale of ['en', 'fa']) {
       return route.fulfill({ status: 503, json: {} });
     });
     await page.goto('/admin/tos');
-    await page.getByRole('button', { name: 'New Draft', exact: true }).click();
-    await page.getByLabel('Version ID').fill('rich-v1');
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'پیش‌نویس جدید' : 'New Draft', exact: true })
+      .click();
+    await page.getByLabel(locale === 'fa' ? 'شناسه نسخه' : 'Version ID').fill('rich-v1');
     const persian = page.getByRole('textbox', {
       name: locale === 'fa' ? 'محتوای فارسی' : 'Persian content',
       exact: true,
@@ -2348,7 +2362,10 @@ for (const locale of ['en', 'fa']) {
     await expect(english.locator('strong')).toHaveText('Important terms');
     try {
       await page
-        .getByRole('button', { name: 'Create Draft', exact: true })
+        .getByRole('button', {
+          name: locale === 'fa' ? 'ایجاد پیش‌نویس' : 'Create Draft',
+          exact: true,
+        })
         .evaluate((button: HTMLButtonElement) => {
           button.click();
           button.click();
@@ -2359,10 +2376,12 @@ for (const locale of ['en', 'fa']) {
         contentFa: 'شرایط جدید',
         contentEn: '**Important terms**',
       });
-      await expect(page.getByLabel('Version ID')).toBeDisabled();
+      await expect(page.getByLabel(locale === 'fa' ? 'شناسه نسخه' : 'Version ID')).toBeDisabled();
       await expect(english).toHaveAttribute('contenteditable', 'false');
       await expect(persian).toHaveAttribute('contenteditable', 'false');
-      await expect(page.getByRole('button', { name: 'Cancel', exact: true })).toBeDisabled();
+      await expect(
+        page.getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+      ).toBeDisabled();
     } finally {
       release();
     }

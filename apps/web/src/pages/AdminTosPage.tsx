@@ -11,6 +11,21 @@ const TosRichText = lazy(() => import('./TosRichText.js'));
 const TosPreview = lazy(() => import('./TosPreview.js'));
 const TosContent = lazy(() => import('../components/TosContent.js'));
 
+type MessageKey = keyof ReturnType<typeof adminTosText>;
+class TosUiError extends Error {
+  constructor(
+    readonly key: MessageKey,
+    readonly status?: number
+  ) {
+    super(key);
+  }
+}
+function displayError(error: unknown, fallback: MessageKey): { key: MessageKey; status?: number } {
+  return error instanceof TosUiError
+    ? { key: error.key, ...(error.status ? { status: error.status } : {}) }
+    : { key: fallback };
+}
+
 interface TosVersion {
   revision?: string;
   id: string;
@@ -65,7 +80,7 @@ export default function AdminTosPage() {
   const [versions, setVersions] = useState<TosVersion[]>([]);
   const [loading, setLoading] = useState(true);
   const [historyReady, setHistoryReady] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ key: MessageKey; status?: number } | null>(null);
 
   // Draft editor state
   const [showEditor, setShowEditor] = useState(false);
@@ -102,7 +117,7 @@ export default function AdminTosPage() {
       setHistoryReady(false);
       setError(null);
       const res = await fetch('/api/admin/tos/versions');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new TosUiError('historyFailed', res.status);
       const data: unknown = await res.json();
       if (request !== historyRequest.current) return;
       if (
@@ -112,17 +127,16 @@ export default function AdminTosPage() {
         data.filter((v) => v.status === 'draft').length > 1 ||
         data.filter((v) => v.isActive).length > 1
       ) {
-        throw new Error(text.invalidHistory);
+        throw new TosUiError('invalidHistory');
       }
       setVersions(data);
       setHistoryReady(true);
     } catch (err) {
-      if (request === historyRequest.current)
-        setError(err instanceof Error ? err.message : text.historyFailed);
+      if (request === historyRequest.current) setError(displayError(err, 'historyFailed'));
     } finally {
       if (request === historyRequest.current) setLoading(false);
     }
-  }, [text]);
+  }, []);
 
   useEffect(() => {
     fetchVersions();
@@ -148,7 +162,7 @@ export default function AdminTosPage() {
   function openEdit(v: TosVersion) {
     if (!historyReady || loading) return;
     if (!v.revision) {
-      setError(text.previewRequired);
+      setError({ key: 'previewRequired' });
       return;
     }
     setEditId(v.id);
@@ -162,7 +176,7 @@ export default function AdminTosPage() {
 
   function openView(v: TosVersion) {
     setViewVersion(v);
-    setDetailLocale('fa');
+    setDetailLocale(locale);
   }
 
   function closeView() {
@@ -173,7 +187,7 @@ export default function AdminTosPage() {
     e.preventDefault();
     if (saveInFlight.current || !historyReady || loading || editConflict) return;
     if (!contentFa.trim() || !contentEn.trim()) {
-      setError(text.requiredContent);
+      setError({ key: 'requiredContent' });
       return;
     }
     saveInFlight.current = true;
@@ -182,7 +196,7 @@ export default function AdminTosPage() {
     try {
       if (editId) {
         // Update existing draft
-        if (!editRevision) throw new Error(text.previewRequired);
+        if (!editRevision) throw new TosUiError('previewRequired');
         const body: Record<string, string> = { expectedRevision: editRevision };
         if (versionId) body.versionId = versionId;
         if (contentFa) body.contentFa = contentFa;
@@ -195,11 +209,10 @@ export default function AdminTosPage() {
         });
         if (res.status === 409) {
           setEditConflict(true);
-          throw new Error(text.draftChanged);
+          throw new TosUiError('draftChanged');
         }
         if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
+          throw new TosUiError('saveFailed', res.status);
         }
         const result: unknown = await res.json().catch(() => null);
         if (
@@ -212,7 +225,7 @@ export default function AdminTosPage() {
           (editId && result.id !== editId)
         ) {
           setHistoryReady(false);
-          throw new Error(text.unconfirmedWrite);
+          throw new TosUiError('unconfirmedWrite');
         }
       } else {
         // Create new draft
@@ -223,11 +236,10 @@ export default function AdminTosPage() {
         });
         if (res.status === 409) {
           setEditConflict(true);
-          throw new Error(text.draftChanged);
+          throw new TosUiError('draftChanged');
         }
         if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
+          throw new TosUiError('saveFailed', res.status);
         }
         const result: unknown = await res.json().catch(() => null);
         if (
@@ -240,14 +252,14 @@ export default function AdminTosPage() {
           (editId && result.id !== editId)
         ) {
           setHistoryReady(false);
-          throw new Error(text.unconfirmedWrite);
+          throw new TosUiError('unconfirmedWrite');
         }
       }
 
       setShowEditor(false);
       await fetchVersions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save');
+      setError(displayError(err, 'saveFailed'));
     } finally {
       saveInFlight.current = false;
       setSaving(false);
@@ -262,7 +274,7 @@ export default function AdminTosPage() {
       const response = await fetch(`/api/admin/tos/versions/${editId}`);
       const result: unknown = await response.json();
       if (!response.ok || !isVersion(result) || result.id !== editId || !result.revision)
-        throw new Error(text.unconfirmedWrite);
+        throw new TosUiError('unconfirmedWrite');
       if (result.status !== 'draft') {
         setShowEditor(false);
         await fetchVersions();
@@ -271,7 +283,7 @@ export default function AdminTosPage() {
       openEdit(result);
       setError(null);
     } catch (error) {
-      setError(error instanceof Error ? error.message : text.historyFailed);
+      setError(displayError(error, 'historyFailed'));
     } finally {
       saveInFlight.current = false;
       setSaving(false);
@@ -282,7 +294,7 @@ export default function AdminTosPage() {
     if (!publishVersion || !historyReady || loading || publishInFlight.current || !previewReady)
       return;
     if (!publishVersion.revision) {
-      setError(text.previewRequired);
+      setError({ key: 'previewRequired' });
       return;
     }
     publishInFlight.current = true;
@@ -296,11 +308,10 @@ export default function AdminTosPage() {
       });
       if (res.status === 409) {
         setPreviewReady(false);
-        throw new Error(text.previewChanged);
+        throw new TosUiError('previewChanged');
       }
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
+        throw new TosUiError('publishFailed', res.status);
       }
 
       const result: unknown = await res.json().catch(() => null);
@@ -315,12 +326,12 @@ export default function AdminTosPage() {
         result.contentEn !== publishVersion.contentEn
       ) {
         setPreviewReady(false);
-        throw new Error(text.unconfirmedWrite);
+        throw new TosUiError('unconfirmedWrite');
       }
       setPublishVersion(null);
       await fetchVersions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to publish');
+      setError(displayError(err, 'publishFailed'));
     } finally {
       publishInFlight.current = false;
       setPublishing(false);
@@ -330,10 +341,10 @@ export default function AdminTosPage() {
   async function handleDiscard(version: TosVersion) {
     if (!historyReady || loading || discardInFlight.current) return;
     if (!version.revision) {
-      setError(text.previewRequired);
+      setError({ key: 'previewRequired' });
       return;
     }
-    if (!window.confirm('Discard this draft? This cannot be undone.')) return;
+    if (!window.confirm(text.confirmDiscard)) return;
 
     discardInFlight.current = true;
     setDiscarding(true);
@@ -347,15 +358,14 @@ export default function AdminTosPage() {
       );
       if (res.status === 409) {
         setHistoryReady(false);
-        throw new Error(text.draftChanged);
+        throw new TosUiError('draftChanged');
       }
       if (res.status !== 204) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
+        throw new TosUiError('discardFailed', res.status);
       }
       await fetchVersions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to discard');
+      setError(displayError(err, 'discardFailed'));
     } finally {
       discardInFlight.current = false;
       setDiscarding(false);
@@ -363,21 +373,21 @@ export default function AdminTosPage() {
   }
 
   if (loading && versions.length === 0) {
-    return <div className="p-4 text-gray-500">Loading TOS versions...</div>;
+    return <div className="p-4 text-gray-500">{text.loading}</div>;
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Terms of Service Editor</h1>
+        <h1 className="text-2xl font-bold">{text.title}</h1>
         {!hasDraft && !showEditor && (
           <button
             onClick={openCreate}
             disabled={!historyReady || loading}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            New Draft
+            {text.newDraft}
           </button>
         )}
       </div>
@@ -387,11 +397,12 @@ export default function AdminTosPage() {
           role="alert"
           className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
         >
-          {error}
+          {text[error.key]}
+          {error.status ? ` (HTTP ${error.status})` : ''}
           <button
             aria-label={adminControlsText('dismissError', locale)}
             onClick={() => setError(null)}
-            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+            className="absolute top-2 end-2 text-red-500 hover:text-red-700"
           >
             ✕
           </button>
@@ -410,14 +421,14 @@ export default function AdminTosPage() {
           onSubmit={handleSave}
           className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
         >
-          <h2 className="text-lg font-semibold">{editId ? 'Edit Draft' : 'Create New Draft'}</h2>
+          <h2 className="text-lg font-semibold">{editId ? text.editDraft : text.createNewDraft}</h2>
 
           <div>
             <label
               htmlFor="admintospage-field-1"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Version ID <span className="text-red-500">*</span>
+              {text.versionId} <span className="text-red-500">*</span>
             </label>
             <input
               id="admintospage-field-1"
@@ -425,7 +436,8 @@ export default function AdminTosPage() {
               value={versionId}
               onChange={(e) => setVersionId(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="e.g. v2"
+              placeholder={text.versionExample}
+              maxLength={50}
               required
               disabled={!!editId || saving}
             />
@@ -474,7 +486,7 @@ export default function AdminTosPage() {
               disabled={saving || !historyReady || loading || editConflict}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
-              {saving ? 'Saving...' : editId ? 'Update Draft' : 'Create Draft'}
+              {saving ? text.saving : editId ? text.updateDraft : text.createDraft}
             </button>
             <button
               type="button"
@@ -482,7 +494,7 @@ export default function AdminTosPage() {
               disabled={saving}
               className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
             >
-              Cancel
+              {text.cancel}
             </button>
           </div>
         </form>
@@ -492,13 +504,11 @@ export default function AdminTosPage() {
       {publishVersion && (
         <div
           role="region"
-          aria-label="Publish TOS Version"
+          aria-label={text.publishTitle}
           className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 space-y-3"
         >
-          <h3 className="font-semibold">Publish TOS Version</h3>
-          <p className="text-sm text-gray-600">
-            Is this a material change? Users will need to re-accept for major changes.
-          </p>
+          <h3 className="font-semibold">{text.publishTitle}</h3>
+          <p className="text-sm text-gray-600">{text.materialHelp}</p>
           <div className="flex gap-2">
             {(['fa', 'en'] as const).map((language) => (
               <button
@@ -543,7 +553,7 @@ export default function AdminTosPage() {
               disabled={publishing || !historyReady || loading || !previewReady}
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
             >
-              {publishing ? 'Publishing...' : 'Publish'}
+              {publishing ? text.publishing : text.publish}
             </button>
             <button
               disabled={publishing}
@@ -553,7 +563,7 @@ export default function AdminTosPage() {
               }}
               className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
             >
-              Cancel
+              {text.cancel}
             </button>
           </div>
         </div>
@@ -576,29 +586,29 @@ export default function AdminTosPage() {
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <div>
                 <DialogTitle className="text-lg font-semibold">
-                  TOS Version: {viewVersion.versionId}
+                  {text.versionTitle} {viewVersion.versionId}
                 </DialogTitle>
                 <p className="text-sm text-gray-500">
-                  {viewVersion.status === 'published' ? 'Published' : 'Draft'} ·
+                  {text[viewVersion.status]} ·
                   {viewVersion.changeType && (
                     <span
-                      className={`ml-1 inline-block px-2 py-0.5 text-xs rounded ${
+                      className={`ms-1 inline-block px-2 py-0.5 text-xs rounded ${
                         viewVersion.changeType === 'major'
                           ? 'bg-red-100 text-red-800'
                           : 'bg-gray-100 text-gray-800'
                       }`}
                     >
-                      {viewVersion.changeType}
+                      {text[viewVersion.changeType]}
                     </span>
                   )}
                   {viewVersion.isActive && (
-                    <span className="ml-2 text-green-600 text-sm font-medium">✓ Active</span>
+                    <span className="ms-2 text-green-600 text-sm font-medium">✓ {text.active}</span>
                   )}
                 </p>
               </div>
               <button
                 onClick={closeView}
-                aria-label="Close"
+                aria-label={text.close}
                 className="text-gray-400 hover:text-gray-600 text-xl leading-none"
               >
                 ✕
@@ -608,19 +618,19 @@ export default function AdminTosPage() {
             {/* Metadata */}
             <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-500">Version ID:</span>{' '}
+                <span className="text-gray-500">{text.versionId}:</span>{' '}
                 <span className="font-medium">{viewVersion.versionId}</span>
               </div>
               <div>
-                <span className="text-gray-500">Author:</span>{' '}
+                <span className="text-gray-500">{text.author}:</span>{' '}
                 <span className="font-medium">{viewVersion.createdBy ?? '—'}</span>
               </div>
               <div>
-                <span className="text-gray-500">Published:</span>{' '}
+                <span className="text-gray-500">{text.published}:</span>{' '}
                 <span className="font-medium">{time.format(viewVersion.publishedAt)}</span>
               </div>
               <div>
-                <span className="text-gray-500">Created:</span>{' '}
+                <span className="text-gray-500">{text.created}:</span>{' '}
                 <span className="font-medium">{time.format(viewVersion.createdAt)}</span>
               </div>
             </div>
@@ -663,30 +673,31 @@ export default function AdminTosPage() {
       )}
 
       {/* Version list */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
+          <caption className="sr-only">{text.history}</caption>
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Version
+              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                {text.version}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Status
+              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                {text.status}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Change
+              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                {text.change}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Active
+              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                {text.active}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Published
+              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                {text.published}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Author
+              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                {text.author}
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                Actions
+              <th className="px-4 py-3 text-end text-xs font-medium text-gray-500 uppercase">
+                {text.actions}
               </th>
             </tr>
           </thead>
@@ -694,7 +705,7 @@ export default function AdminTosPage() {
             {historyReady && versions.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
-                  No TOS versions yet. Create a draft to get started.
+                  {text.empty}
                 </td>
               </tr>
             )}
@@ -709,7 +720,7 @@ export default function AdminTosPage() {
                         : 'bg-green-100 text-green-800'
                     }`}
                   >
-                    {v.status}
+                    {text[v.status]}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm">
@@ -721,7 +732,7 @@ export default function AdminTosPage() {
                           : 'bg-gray-100 text-gray-800'
                       }`}
                     >
-                      {v.changeType}
+                      {v.changeType ? text[v.changeType] : text.notRecorded}
                     </span>
                   ) : (
                     <span className="text-gray-400">—</span>
@@ -729,7 +740,7 @@ export default function AdminTosPage() {
                 </td>
                 <td className="px-4 py-3">
                   {v.isActive ? (
-                    <span className="text-green-600 text-sm font-medium">✓ Active</span>
+                    <span className="text-green-600 text-sm font-medium">✓ {text.active}</span>
                   ) : (
                     <span className="text-gray-400 text-sm">—</span>
                   )}
@@ -738,18 +749,18 @@ export default function AdminTosPage() {
                 <td className="px-4 py-3 text-sm text-gray-500">
                   {v.createdBy ? (
                     <span className="font-mono text-xs" title={v.createdBy}>
-                      {v.createdBy.substring(0, 8)}…
+                      {v.createdBy}
                     </span>
                   ) : (
                     <span className="text-gray-400">—</span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-right text-sm space-x-2">
+                <td className="px-4 py-3 text-end text-sm [&_button]:ms-2">
                   <button
                     onClick={() => openView(v)}
                     className="text-indigo-600 hover:text-indigo-800"
                   >
-                    View
+                    {text.view}
                   </button>
                   {v.status === 'draft' && (
                     <>
@@ -758,9 +769,9 @@ export default function AdminTosPage() {
                         disabled={
                           !historyReady || loading || showEditor || !!publishVersion || discarding
                         }
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-blue-600 hover:text-blue-800 disabled:opacity-40"
                       >
-                        Edit
+                        {text.edit}
                       </button>
                       <button
                         onClick={() => {
@@ -768,23 +779,23 @@ export default function AdminTosPage() {
                           setPreviewLocale(locale);
                           setChangeType('minor');
                           setPreviewReady(false);
-                          if (!v.revision) setError(text.previewRequired);
+                          if (!v.revision) setError({ key: 'previewRequired' });
                         }}
                         disabled={
                           !historyReady || loading || showEditor || !!publishVersion || discarding
                         }
-                        className="text-green-600 hover:text-green-800"
+                        className="text-green-600 hover:text-green-800 disabled:opacity-40"
                       >
-                        Publish
+                        {text.publish}
                       </button>
                       <button
                         onClick={() => handleDiscard(v)}
                         disabled={
                           !historyReady || loading || showEditor || !!publishVersion || discarding
                         }
-                        className="text-red-600 hover:text-red-800"
+                        className="text-red-600 hover:text-red-800 disabled:opacity-40"
                       >
-                        Discard
+                        {text.discard}
                       </button>
                     </>
                   )}
