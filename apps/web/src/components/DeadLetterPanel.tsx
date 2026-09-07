@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useId } from 'react';
 import { t } from '@barghsa/i18n';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
@@ -57,6 +58,7 @@ function statusLabel(status: DeadLetterRow['status'], uiLocale: Locale): string 
 }
 
 export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
+  const time = useAccountTime(uiLocale);
   const filterId = useId();
   const label = (key: string) => t(`admin.notifications.deadLetter.${key}`, uiLocale);
   const [rows, setRows] = useState<DeadLetterRow[]>([]);
@@ -131,6 +133,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
 
   return (
     <section className="space-y-3" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{label('title')}</h2>
         <Button variant="outline" disabled={loading} onClick={() => setRevision((v) => v + 1)}>
@@ -296,9 +299,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                     {new Intl.NumberFormat(uiLocale).format(row.attempts)}/
                     {new Intl.NumberFormat(uiLocale).format(row.maxAttempts)}
                   </td>
-                  <td className="px-4 py-3 text-xs text-gray-500">
-                    {new Date(row.createdAt).toLocaleString(uiLocale === 'fa' ? 'fa-IR' : 'en-US')}
-                  </td>
+                  <td className="px-4 py-3 text-xs text-gray-500">{time.format(row.createdAt)}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     {row.status === 'open' && access?.canRetry ? (
                       <div className="flex gap-2">

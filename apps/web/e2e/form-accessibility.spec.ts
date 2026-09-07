@@ -1260,8 +1260,33 @@ for (const locale of ['en', 'fa']) {
 for (const locale of ['en', 'fa']) {
   test(`email-provider labels identify SMTP and Resend fields (${locale})`, async ({ page }) => {
     await shell(page, locale);
-    await page.route('**/api/admin/email-providers', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
+    const stamp = '2026-09-01T01:00:00Z';
+    await page.route('**/api/admin/email-providers', (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: 'provider-time',
+            transport: 'smtp',
+            label: 'Date provider',
+            status: 'active',
+            lastTestStatus: 'passed',
+            lastTestAt: stamp,
+            activatedAt: stamp,
+          },
+        ],
+      })
+    );
     await page.goto('/admin/providers');
+    await expect(page.locator('tbody tr').first()).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date(stamp))
+    );
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'ارائه‌دهنده جدید' : 'New provider',

@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import {
   Dialog,
@@ -127,17 +128,6 @@ function getProfileTypeLabel(type: string, locale: Locale): string {
   return t(`crm.list.${type}`, locale);
 }
 
-function formatDate(iso: string | null, locale: Locale): string {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-GB', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
 interface TabDef {
   id: string;
   labelKey: string;
@@ -159,6 +149,7 @@ export default function CrmProfileDetail() {
 }
 
 function CrmProfileDetailContent() {
+  const time = useAccountTime();
   const locale: Locale = useLocale();
   const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' });
   const [data, setData] = useState<ProfileDetail | null>(null);
@@ -359,6 +350,7 @@ function CrmProfileDetailContent() {
 
   return (
     <div dir={locale === 'fa' ? 'rtl' : undefined}>
+      {time.notice}
       {/* Breadcrumb / Header */}
       <div className="mb-6">
         <Link to="/admin/crm/" className="text-blue-600 hover:underline text-sm">
@@ -619,7 +611,7 @@ function CrmProfileDetailContent() {
             />
             <SummaryCard
               title={t('crm.profile.summary.lastLogin', locale)}
-              value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'}
+              value={user.lastLogin ? time.format(user.lastLogin) : '—'}
               icon="🔑"
               colorClass="text-gray-600"
             />
@@ -637,7 +629,7 @@ function CrmProfileDetailContent() {
             />
             <SummaryCard
               title={t('crm.profile.summary.lastActivity', locale)}
-              value={sessions.lastActive ? formatDate(sessions.lastActive, locale) : '—'}
+              value={sessions.lastActive ? time.format(sessions.lastActive) : '—'}
               icon="⏱"
               colorClass="text-gray-600"
             />
@@ -663,11 +655,11 @@ function CrmProfileDetailContent() {
             />
             <DetailRow
               label={t('crm.profile.label.created', locale)}
-              value={formatDate(user.createdAt, locale)}
+              value={time.format(user.createdAt)}
             />
             <DetailRow
               label={t('crm.profile.summary.lastLogin', locale)}
-              value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'}
+              value={user.lastLogin ? time.format(user.lastLogin) : '—'}
             />
           </Section>
 
@@ -745,9 +737,9 @@ function CrmProfileDetailContent() {
             )}
             <DetailRow
               label={t('crm.profile.label.created', locale)}
-              value={formatDate(profile.createdAt, locale)}
+              value={time.format(profile.createdAt)}
             />
-            <DetailRow label="Updated" value={formatDate(profile.updatedAt, locale)} />
+            <DetailRow label="Updated" value={time.format(profile.updatedAt)} />
           </Section>
 
           {legalInfo && (
@@ -797,7 +789,7 @@ function CrmProfileDetailContent() {
                     Postal code: {addr.postalCode} | Province/City: {addr.provinceId}/{addr.cityId}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
-                    {t('crm.profile.label.created', locale)}: {formatDate(addr.createdAt, locale)}
+                    {t('crm.profile.label.created', locale)}: {time.format(addr.createdAt)}
                   </p>
                 </div>
               ))}
@@ -812,7 +804,7 @@ function CrmProfileDetailContent() {
           <div className="mb-4 text-sm text-gray-500">
             {sessions.count} {t('crm.profile.tab.sessions', locale)} |{' '}
             {t('crm.profile.summary.lastActivity', locale)}:{' '}
-            {sessions.lastActive ? formatDate(sessions.lastActive, locale) : '—'}
+            {sessions.lastActive ? time.format(sessions.lastActive) : '—'}
           </div>
           {sessions.entries.length === 0 ? (
             <p className="text-gray-500 text-center py-8">{t('crm.profile.noSessions', locale)}</p>
@@ -837,9 +829,9 @@ function CrmProfileDetailContent() {
                       <td className="py-2 font-mono text-xs">
                         {s.sessionId.replace(/^session-ref:/, '').substring(0, 12)}...
                       </td>
-                      <td className="py-2">{formatDate(s.createdAt, locale)}</td>
-                      <td className="py-2">{formatDate(s.lastActive, locale)}</td>
-                      <td className="py-2">{formatDate(s.expiresAt, locale)}</td>
+                      <td className="py-2">{time.format(s.createdAt)}</td>
+                      <td className="py-2">{time.format(s.lastActive)}</td>
+                      <td className="py-2">{time.format(s.expiresAt)}</td>
                       <td className="py-2">
                         <span
                           className={`text-xs px-1.5 py-0.5 rounded-full ${

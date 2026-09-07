@@ -2172,3 +2172,9 @@ Review and validation: 24 invoice/receipt unit checks and four production browse
 The staff due-date editor previously showed UTC summaries but initialized and submitted wall-clock inputs in the device timezone. Display and conversion now use the loaded account timezone. Invalid Gregorian dates, invalid zones and skipped DST times are rejected. Saving an unchanged displayed minute preserves the original instant, including seconds and the first occurrence of a repeated autumn hour. After an account timezone change, editing requires an explicit invoice reload so an existing wall-clock value cannot be silently reinterpreted.
 
 Review and validation: seven helper/component checks and six finance production browser checks pass. The two new browser flows assert the exact outgoing UTC values, unchanged repeated-hour preservation, no request for the spring gap, and disabled editing until reload after changing Los Angeles to Tokyo. Root build, types, targeted lint, formatting and bundle checks pass. These browser tests isolate conversion with controlled API responses; earlier service/HTTP finance evidence remains separate.
+
+### Use account time in CRM and delivery administration
+
+CRM profile/address/account/session dates, failed-notification history and email-provider test/activation times now use the shared account formatter. Embedded panels can explicitly select their display locale while retaining the saved account timezone. Preference-read failures remain visible and retryable.
+
+Review and validation: three formatter-hook checks and ten production browser checks pass. Both languages assert CRM, failure-history and provider timestamps across a date boundary while retaining permission, paging, step-up, edit failure and field-label checks. Root build, types, targeted lint, formatting and bundle checks pass. Broader CRM translation and TOS/invitation timestamps remain open.

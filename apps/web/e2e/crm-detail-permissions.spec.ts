@@ -12,8 +12,8 @@ function detail(targetAdmin: boolean, allowed: boolean) {
       firstName: 'Example',
       lastName: 'Customer',
       nationalId: null,
-      createdAt: '2026-08-01T12:00:00Z',
-      updatedAt: '2026-08-01T12:00:00Z',
+      createdAt: '2026-08-01T01:00:00Z',
+      updatedAt: '2026-08-01T01:00:00Z',
     },
     user: {
       userId: 'customer',
@@ -22,7 +22,7 @@ function detail(targetAdmin: boolean, allowed: boolean) {
       mobile: '+989121234568',
       lastLogin: null,
       isAdmin: targetAdmin,
-      createdAt: '2026-08-01T12:00:00Z',
+      createdAt: '2026-08-01T01:00:00Z',
     },
     viewerPermissions: { canEdit: allowed, canVerify: allowed, canManageUser: allowed },
     legalInfo: null,
@@ -41,6 +41,9 @@ for (const allowed of [true, false])
       }).observe(document, { childList: true });
     });
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route(`**/api/crm/profiles/${id}`, (route) =>
       route.fulfill({ json: detail(!allowed, allowed) })
     );
@@ -65,6 +68,9 @@ test('session expiry preserves customer and reason through password confirmation
     }).observe(document, { childList: true });
   });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+  );
   await page.route(`**/api/crm/profiles/${id}`, (route) =>
     route.fulfill({ json: detail(false, true) })
   );
@@ -103,6 +109,9 @@ test('verification requires a reason when removing approval and archive blockers
     }).observe(document, { childList: true });
   });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+  );
   const profile = detail(false, true);
   profile.profile.status = 'VERIFIED';
   await page.route(`**/api/crm/profiles/${id}`, (route) =>
@@ -151,6 +160,9 @@ for (const locale of ['fa', 'en'] as const)
     let fail = true;
     const writes: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route(`**/api/crm/profiles/${id}`, (route) => {
       if (route.request().method() !== 'PUT') return route.fulfill({ json: current });
       const body = route.request().postDataJSON();
@@ -167,6 +179,13 @@ for (const locale of ['fa', 'en'] as const)
         exact: true,
       })
       .click();
+    await expect(page.getByRole('tabpanel')).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date(current.profile.createdAt))
+    );
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
       .click();

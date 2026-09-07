@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback } from 'react';
 import type { FormEvent, ReactNode } from 'react';
 import { t } from '@barghsa/i18n';
@@ -218,6 +219,7 @@ function resendConfig(form: ResendForm): Record<string, unknown> {
 // ---------------------------------------------------------------------------
 
 export default function AdminEmailProvidersPage() {
+  const time = useAccountTime();
   const uiLocale = useLocale();
   const [providers, setProviders] = useState<EmailProvider[]>([]);
   const [loading, setLoading] = useState(true);
@@ -413,16 +415,9 @@ export default function AdminEmailProvidersPage() {
     return t('admin.providers.test.pending', uiLocale);
   }
 
-  function formatDate(iso: string): string {
-    try {
-      return new Date(iso).toLocaleString();
-    } catch {
-      return iso;
-    }
-  }
-
   return (
     <div className="space-y-6">
+      {time.notice}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">{t('admin.providers.title', uiLocale)}</h1>
@@ -607,7 +602,7 @@ export default function AdminEmailProvidersPage() {
                         {lastTestLabel(p)}
                       </span>
                       {p.lastTestAt && (
-                        <p className="text-xs text-gray-400 mt-1">{formatDate(p.lastTestAt)}</p>
+                        <p className="text-xs text-gray-400 mt-1">{time.format(p.lastTestAt)}</p>
                       )}
                       {p.lastTestError && (
                         <p className="text-xs text-red-600 mt-1" title={p.lastTestError}>
@@ -631,7 +626,7 @@ export default function AdminEmailProvidersPage() {
                       })()}
                     </td>
                     <td className="px-4 py-3">
-                      {p.activatedAt ? formatDate(p.activatedAt) : '—'}
+                      {p.activatedAt ? time.format(p.activatedAt) : '—'}
                       {p.activatedAt && p.activatedBy && (
                         <p className="text-xs text-gray-400 mt-1">
                           {t('admin.providers.meta.activatedBy', uiLocale)}: {p.activatedBy}

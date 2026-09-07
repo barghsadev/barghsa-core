@@ -1,11 +1,13 @@
+import type { Locale } from '@barghsa/i18n';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { timezoneText } from '@barghsa/i18n/timezone';
 import { useLocale } from './useLocale.js';
 import { useTimezone } from './useTimezone.js';
 
 /** One account preference read per screen, shared by every timestamp on that screen. */
-export function useAccountTime() {
-  const locale = useLocale();
+export function useAccountTime(localeOverride?: Locale) {
+  const documentLocale = useLocale();
+  const locale = localeOverride ?? documentLocale;
   const zone = useTimezone();
   const format = (value: string | Date | number | null, options?: Intl.DateTimeFormatOptions) => {
     if (value === null) return '—';

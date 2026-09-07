@@ -19,7 +19,7 @@ for (const locale of ['en', 'fa'])
       cause: 'Test provider failure',
       attempts: 5,
       maxAttempts: 5,
-      createdAt: '2026-09-01T12:00:00Z',
+      createdAt: '2026-09-01T01:00:00Z',
       recipientKey: 'ab...yz',
       data: { token: '***' },
       resolvedById: null,
@@ -32,6 +32,9 @@ for (const locale of ['en', 'fa'])
     const attempts: string[] = [],
       queries: URLSearchParams[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route('**/api/admin/failed-notifications/access', (route) =>
       route.fulfill({ json: { canView, canRetry } })
     );
@@ -62,6 +65,13 @@ for (const locale of ['en', 'fa'])
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
     await expect(page.locator('tbody tr')).toHaveCount(25);
+    await expect(page.locator('tbody tr').first()).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date(rows[0]!.createdAt))
+    );
     await expect(page.locator('tbody button')).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect(page.locator('tbody tr')).toHaveCount(0);

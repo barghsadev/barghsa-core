@@ -4,8 +4,8 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { useAccountTime } from './useAccountTime.js';
 let root: Root, host: HTMLDivElement;
 const stamp = '2026-01-01T01:00:00Z';
-function Screen() {
-  const time = useAccountTime();
+function Screen({ locale }: { locale?: 'en' | 'fa' }) {
+  const time = useAccountTime(locale);
   return (
     <>
       {time.notice}
@@ -53,4 +53,20 @@ it('refreshes dates after the account timezone changes', async () => {
     window.dispatchEvent(new Event('barghsa:timezone-changed'));
   });
   expect(host.querySelector('time')!.textContent).toBe('Jan 1, 2026, 10:00 AM');
+});
+
+it('honors an embedded panel locale without changing its account timezone', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue(new Response(JSON.stringify({ timezone: 'America/Los_Angeles' })))
+  );
+  await act(async () => root.render(<Screen locale="fa" />));
+  expect(host.querySelector('time')!.textContent).toBe(
+    new Intl.DateTimeFormat('fa', {
+      timeZone: 'America/Los_Angeles',
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(new Date(stamp))
+  );
+  expect(host.querySelector('span')!.textContent).not.toBe('Invalid timestamp');
 });
