@@ -5,7 +5,7 @@ Updated 2026-09-08. Repairs resumed at user request; the prior checkpoint is his
 ## Workspace and authority
 
 - Repository `/Users/majid/www/barghsa/barghsa-core`, existing branch `codex/audit-fixes`.
-- Latest runtime revision: `9898b4fb07140607d79cddb1c2c079a5e9aacc49`. The final documentation commit follows it.
+- Prior checkpoint runtime: `9898b4fb07140607d79cddb1c2c079a5e9aacc49`; resumed shared-build revision: `e76c901`. See follow-up evidence below for subsequent UI work.
 - Original audit baseline: `2f80d92df51556d47f778b5230e5eea577e2a8d4`.
 - Local edits and commits only. No push, PR, merge, deployment, remote state/scheduler change or PR304 action was performed. Those actions remain outside authority.
 - User authorized Codex to build and review these repairs directly, overriding the Cursor/Codex role split for this pass.
@@ -100,6 +100,9 @@ User requested continued local blocker repair and building on 2026-09-08. Work i
 Current step: permission-boundary evidence. Connection-security repair committed at `3bf1e3a`: real pg configuration proved URL sslmode=disable overrode explicit TLS enablement. Explicit application/environment TLS now removes competing URL TLS parameters. Missing/empty/malformed CA files fail startup, and timeout validation precedes singleton creation. Added certificate-verification opt-out and pool-ownership checks; 18 security tests pass. Full database coverage refresh passes and the database general gate now passes (10/13 groups pass; API/web deficits remain). Logs: `/tmp/barghsa-db-followup-coverage.log`, `/tmp/barghsa-current-gates.json`. Broader affected regression will follow shared changes.
 
 ## Evidence map
+
+- Resumed full package regression at `e76c901`: all 12 Turbo tasks pass, 5,528 unit/integration tests (DB660, API3316, worker367, shared934, web155, UI43, i18n50, tsconfig3). Log `/tmp/barghsa-resumed-regression.log`. This predates the UI changes below; backend evidence remains reusable. All 11 workspace types also pass (`/tmp/barghsa-states-all-types.log`).
+- Shared UI follow-up (`T-06.03.06`): exports `EmptyState`, `PageLoading`, `ErrorState`, and render-catching `ErrorBoundary`. Added localized route recovery with support/home links and live loading announcements; removed raw exception details and visible reduced-motion loading text. Skeleton animation now uses motion-safe CSS; alert layout uses RTL logical properties. Fourteen focused UI/web tests pass, including explicit retry, resource-key recovery, persistent-failure loop safety, no private exception leakage, and live Persian/English changes. Explicit lint passes. Production browser and refreshed frontend coverage are pending.
 
 - Permission follow-up: `apps/api/src/admin/admin-permission-boundaries.test.ts` adds 144 passing checks across 22 operations, covering denied/unrelated capabilities, explicit grants, wildcard/admin access, capability revocation and malformed privileged inputs. API typecheck and explicit lint pass. These controller checks supplement existing HTTP/step-up tests; they do not certify the complete historical role matrix. Full API coverage refresh remains pending.
 - Shared build follow-up (`T-06.01.01`): `packages/shared` now emits ESM and CommonJS through TypeScript NodeNext compilation, conditional runtime/type exports, preserved module boundaries and no test files in the output. All 16 public module entry points load in both formats; root/subpath identity and strict `.mts`/`.cts` consumer checks pass (18 build checks). No added build dependency. UI package TSUP format requirement is separate and remains open. Broader shared-dependent regression is next.

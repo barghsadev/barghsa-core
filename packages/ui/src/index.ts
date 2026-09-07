@@ -19,6 +19,8 @@ export * from './components/ui/select';
 export * from './components/ui/separator';
 export * from './components/ui/sheet';
 export * from './components/ui/skeleton';
+export * from './components/ui/empty';
+export * from './components/ui/page-states';
 export * from './components/ui/slider';
 export * from './components/ui/sonner';
 export * from './components/ui/switch';
