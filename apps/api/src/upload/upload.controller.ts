@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { reserveUpload, requireOwnedUpload, completeUpload } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
-import { detectOfficeContentType } from './office-content-type.js';
+import { detectDocumentContentType } from './document-content-type.js';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../storage/index.js';
@@ -375,16 +375,16 @@ export class UploadController {
       throw new BadRequestException('Upload extension is no longer permitted by the active policy');
     const object = await this.storage!.getObject(key);
     const office = /\.(docx?|xlsx?)$/i.test(key);
+    const csv = /\.csv$/i.test(key);
     const sample = await this.readSample(
       object.body,
-      office ? policy.maxSizeBytes : SNIFF_SAMPLE_BYTES,
-      office
+      office || csv ? policy.maxSizeBytes : SNIFF_SAMPLE_BYTES,
+      office || csv
     );
     let candidates: string[];
-    if (office) {
-      // A ZIP signature alone cannot distinguish an archive from an Office document.
-      // Inspect the bounded complete container, including its content-type manifest.
-      const mime = await detectOfficeContentType(sample);
+    if (office || csv) {
+      // These formats need complete content inspection, rather than a leading signature.
+      const mime = await detectDocumentContentType(sample, csv ? 'csv' : 'office');
       candidates = mime ? [mime] : [];
     } else {
       candidates = sniffContentTypes(sample);
@@ -425,7 +425,7 @@ export class UploadController {
   }
 
   /**
-   * Read a signature sample, or an entire Office container within the active
+   * Read a signature sample, or an entire document within the active
    * size limit. Complete reads reject excess bytes even if storage metadata
    * understates the length. Always release the response stream.
    */

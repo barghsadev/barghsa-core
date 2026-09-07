@@ -7,7 +7,7 @@
     "typeCheck": false,
     "preserveSymlinks": false,
     "tsConfigPath": "tsconfig.json",
-    "assets": [{ "include": "upload/office-parser.cjs", "outDir": "dist/src" }],
+    "assets": [{ "include": "upload/document-parser.cjs", "outDir": "dist/src" }],
     "plugins": [
       {
         "name": "@nestjs/swagger",

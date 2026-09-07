@@ -632,3 +632,37 @@ it('distinguishes Word and spreadsheet containers from arbitrary ZIP archives', 
     ).toBe(expected === 'type_mismatch' ? 400 : 200);
   }
 });
+
+it('verifies and records CSV text while rejecting invalid encoding and malformed quoted fields', async () => {
+  for (const [bytes, valid] of [
+    [Buffer.from('name,value\r\n"Persian, فارسی","line one\nline two"\r\n'), true],
+    [Buffer.from('name\nvalue\n'), true],
+    [Buffer.from('\uFEFFname,value\n"quoted ""value""",42'), true],
+    [Buffer.from('name,value\nonly-one-field'), false],
+    [Buffer.from('name,value\nbare"quote,42'), false],
+    [Buffer.from('name,value\ncontrol\u0000,42'), false],
+    [Buffer.from('name,value\n"unfinished,value'), false],
+    [Buffer.from('name,value\n"quoted"garbage,value'), false],
+    [Buffer.from([0xff, 0xfe, 0x00, 0x01]), false],
+  ] as const) {
+    const details = {
+      fileName: 'data.csv',
+      contentType: 'text/csv',
+      fileSize: bytes.length,
+      category: 'document',
+    };
+    const issued = z
+      .object({ key: z.string(), presignedUrl: z.string() })
+      .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+    expect(
+      (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(bytes) })).status
+    ).toBe(200);
+    const path = `upload/${encodeURIComponent(issued.key)}`;
+    expect(await (await request(`${path}/verify`, 'POST')).json()).toMatchObject({
+      status: valid ? 'confirmed' : 'type_mismatch',
+    });
+    expect(
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' })).status
+    ).toBe(valid ? 200 : 400);
+  }
+});

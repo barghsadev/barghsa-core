@@ -7,14 +7,17 @@ const MAX_PARSERS = 2;
 const PARSER_TIMEOUT_MS = 3000;
 
 /** Bound parser concurrency and lifetime without blocking the API event loop. */
-export async function detectOfficeContentType(bytes: Uint8Array): Promise<string | null> {
+export async function detectDocumentContentType(
+  bytes: Uint8Array,
+  format: 'office' | 'csv' = 'office'
+): Promise<string | null> {
   if (activeParsers >= MAX_PARSERS)
     throw new ServiceUnavailableException('Document inspection is busy; retry shortly');
   activeParsers++;
   let worker: Worker;
   try {
-    worker = new Worker(resolve(__dirname, 'office-parser.cjs'), {
-      workerData: bytes,
+    worker = new Worker(resolve(__dirname, 'document-parser.cjs'), {
+      workerData: { bytes, format },
       resourceLimits: { maxOldGenerationSizeMb: 96, maxYoungGenerationSizeMb: 16 },
     });
   } catch (error) {
