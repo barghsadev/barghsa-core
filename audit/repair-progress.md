@@ -2669,3 +2669,10 @@ The shared table still applied its initial sort after `sortable={false}` hid its
 Six new unit cases cover numeric, natural-text and date sorting, null placement, restoring input order, controlled selection across pages, uncontrolled row toggles and loading-state selection. The initial run had one product failure and one test selector error; the selector now targets the actual checkbox. Added contract-template translation fallback/prototype-key cases in both languages.
 
 Review: all 19 UI tests and 50 translation tests passed. UI typechecking and explicit ESLint passed. All 45 shared-table browser cases passed across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari, including the new disable/re-enable regression. An initial multi-project invocation used incorrect mobile project names and did not execute tests; the corrected run supplies the evidence. Production web build and all 41 unchanged route budgets passed. This is local implementation evidence, not overall acceptance closure or a refreshed combined-coverage result.
+
+
+### Review account-date boundary behavior
+
+Added 24 focused cases for malformed date-only filters, invalid calendar dates, Gregorian leap-century rules, the 23-hour spring DST interval, invalid numeric wall-clock fields, midnight and the last minute of a Tehran day. Existing tests retain the 25-hour fall interval and skipped New York local-time checks. The date helpers passed without a product change; the original Date remains unchanged.
+
+Review: all 43 UI unit tests passed, including these cases; UI typechecking and explicit ESLint passed. This extends boundary evidence without claiming full date-picker interaction coverage or refreshing the combined coverage checkpoint.
