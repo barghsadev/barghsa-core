@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "dev": "drizzle-kit push",
+    "dev": "tsc -b --watch",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "typecheck": "tsc --noEmit",

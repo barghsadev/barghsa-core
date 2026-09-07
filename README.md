@@ -1229,7 +1229,7 @@ Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 - Node.js 20+ (via Corepack for automatic pnpm version management:
   ```bash
   corepack enable
-  corepack prepare pnpm@10.8.1 --activate
+  corepack install
   ```
   )
 - pnpm 10+ (managed automatically by Corepack when enabled above)
@@ -1240,8 +1240,9 @@ Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 ```bash
 cp .env.example .env
 docker compose up -d postgres redis minio
-pnpm install
-pnpm db:push
+pnpm install --frozen-lockfile
+pnpm build
+pnpm --filter @barghsa/db db:migrate
 pnpm db:seed
 pnpm dev
 ```
