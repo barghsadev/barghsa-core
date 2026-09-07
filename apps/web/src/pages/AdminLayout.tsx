@@ -29,178 +29,184 @@ export default function AdminLayout() {
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
         <aside
           id="admin-navigation"
-          className={`${menuOpen ? 'block' : 'hidden'} max-h-[45dvh] w-full overflow-y-auto bg-white border-e border-gray-200 p-4 shrink-0 md:block md:max-h-none md:w-64`}
+          className={`${menuOpen ? 'block' : 'hidden'} max-h-[45dvh] w-full overflow-y-auto bg-card text-card-foreground border-e border-border p-4 shrink-0 md:block md:max-h-none md:w-64`}
         >
           <nav aria-label={t('admin.nav.label', locale)}>
             <h2 className="text-lg font-semibold mb-4">{t('admin.nav.title', locale)}</h2>
             <ul className="space-y-2">
               <li>
-                <a href="/admin/catalogue" className="text-blue-600 hover:underline">
+                <a href="/admin/catalogue" className="text-card-foreground hover:underline">
                   {t('admin.catalogue.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/knowledge-bases" className="text-blue-600 hover:underline">
+                <a href="/admin/knowledge-bases" className="text-card-foreground hover:underline">
                   {t('admin.kb.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/policies" className="text-blue-600 hover:underline">
+                <a href="/admin/policies" className="text-card-foreground hover:underline">
                   {t('admin.policies.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/agent-slots" className="text-blue-600 hover:underline">
+                <a href="/admin/agent-slots" className="text-card-foreground hover:underline">
                   {t('admin.slots.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/gift-codes" className="text-blue-600 hover:underline">
+                <a href="/admin/gift-codes" className="text-card-foreground hover:underline">
                   {t('admin.gifts.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/vat" className="text-blue-600 hover:underline">
+                <a href="/admin/vat" className="text-card-foreground hover:underline">
                   {t('admin.vat.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/contract-templates" className="text-blue-600 hover:underline">
+                <a
+                  href="/admin/contract-templates"
+                  className="text-card-foreground hover:underline"
+                >
                   {t('admin.templates.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/agents" className="text-blue-600 hover:underline">
+                <a href="/admin/agents" className="text-card-foreground hover:underline">
                   {t('admin.agents.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/ai-models" className="text-blue-600 hover:underline">
+                <a href="/admin/ai-models" className="text-card-foreground hover:underline">
                   {t('admin.aiModels.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/contract-limits" className="text-blue-600 hover:underline">
+                <a href="/admin/contract-limits" className="text-card-foreground hover:underline">
                   {t('admin.contractLimits.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/electricity-rules" className="text-blue-600 hover:underline">
+                <a href="/admin/electricity-rules" className="text-card-foreground hover:underline">
                   {t('admin.green.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/reconciliation" className="text-blue-600 hover:underline">
+                <a href="/admin/reconciliation" className="text-card-foreground hover:underline">
                   {t('admin.reconciliation.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin" className="text-blue-600 hover:underline">
+                <a href="/admin" className="text-card-foreground hover:underline">
                   {t('admin.nav.dashboard', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/service-targets" className="text-blue-600 hover:underline">
+                <a href="/admin/service-targets" className="text-card-foreground hover:underline">
                   {t('admin.targets.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/staff-teams" className="text-blue-600 hover:underline">
+                <a href="/admin/staff-teams" className="text-card-foreground hover:underline">
                   {t('admin.teams.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/tickets" className="text-blue-600 hover:underline">
+                <a href="/admin/tickets" className="text-card-foreground hover:underline">
                   {t('tickets.staffTitle', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/users" className="text-blue-600 hover:underline">
+                <a href="/admin/users" className="text-card-foreground hover:underline">
                   {t('admin.staff.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/failed-notifications" className="text-blue-600 hover:underline">
+                <a
+                  href="/admin/failed-notifications"
+                  className="text-card-foreground hover:underline"
+                >
                   {t('admin.notifications.deadLetter.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/failed-jobs" className="text-blue-600 hover:underline">
+                <a href="/admin/failed-jobs" className="text-card-foreground hover:underline">
                   {t('admin.jobs.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/upload-policies" className="text-blue-600 hover:underline">
+                <a href="/admin/upload-policies" className="text-card-foreground hover:underline">
                   {t('admin.uploadPolicies.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/storage" className="text-blue-600 hover:underline">
+                <a href="/admin/storage" className="text-card-foreground hover:underline">
                   {t('admin.nav.storage', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/verification" className="text-blue-600 hover:underline">
+                <a href="/admin/verification" className="text-card-foreground hover:underline">
                   {t('admin.nav.verification', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/branding" className="text-blue-600 hover:underline">
+                <a href="/admin/branding" className="text-card-foreground hover:underline">
                   {t('admin.nav.branding', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/geography" className="text-blue-600 hover:underline">
+                <a href="/admin/geography" className="text-card-foreground hover:underline">
                   {t('admin.nav.geography', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/tos" className="text-blue-600 hover:underline">
+                <a href="/admin/tos" className="text-card-foreground hover:underline">
                   {t('admin.nav.tos', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/notifications" className="text-blue-600 hover:underline">
+                <a href="/admin/notifications" className="text-card-foreground hover:underline">
                   {t('admin.nav.notifications', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/invoices" className="text-blue-600 hover:underline">
+                <a href="/admin/invoices" className="text-card-foreground hover:underline">
                   {t('admin.nav.invoices', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/wallet-receipts" className="text-blue-600 hover:underline">
+                <a href="/admin/wallet-receipts" className="text-card-foreground hover:underline">
                   {t('admin.walletReceipts.nav', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/approval-requests" className="text-blue-600 hover:underline">
+                <a href="/admin/approval-requests" className="text-card-foreground hover:underline">
                   {t('admin.approvals.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/providers" className="text-blue-600 hover:underline">
+                <a href="/admin/providers" className="text-card-foreground hover:underline">
                   {t('admin.nav.providers', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/roles" className="text-blue-600 hover:underline">
+                <a href="/admin/roles" className="text-card-foreground hover:underline">
                   {t('admin.nav.roles', locale)}
                 </a>
               </li>
-              <li className="pt-2 mt-2 border-t border-gray-100">
-                <span className="text-xs text-gray-400 uppercase tracking-wide">
+              <li className="pt-2 mt-2 border-t border-border">
+                <span className="text-xs text-card-foreground/80 uppercase tracking-wide">
                   {t('admin.nav.crm', locale)}
                 </span>
               </li>
               <li>
-                <a href="/admin/crm/corrections" className="text-blue-600 hover:underline">
+                <a href="/admin/crm/corrections" className="text-card-foreground hover:underline">
                   {t('crm.corrections.title', locale)}
                 </a>
               </li>
               <li>
-                <a href="/admin/crm" className="text-blue-600 hover:underline">
+                <a href="/admin/crm" className="text-card-foreground hover:underline">
                   {t('admin.nav.crmProfiles', locale)}
                 </a>
               </li>

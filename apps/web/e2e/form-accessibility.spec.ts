@@ -1436,11 +1436,16 @@ for (const locale of ['en', 'fa']) {
       const checkContrast = async () => {
         const result = await new AxeBuilder({ page })
           .include('#admin-content')
+          .include('#admin-navigation')
           .withRules(['color-contrast'])
           .analyze();
         expect(result.violations).toEqual([]);
         expect(result.incomplete).toEqual([]);
       };
+      await checkContrast();
+      await page.locator('#admin-navigation').evaluate((node) => {
+        node.scrollTop = node.scrollHeight;
+      });
       await checkContrast();
       await page.locator('#verification-mode-DISABLED').check();
       const save = page.getByRole('button', {
