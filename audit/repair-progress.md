@@ -2538,3 +2538,9 @@ All six verification browser checks pass after repair, including failed-read pro
 The shared administrator sidebar now uses defined card background, foreground and border tokens. Links and the CRM section caption remain readable in both themes. The new sidebar scan reproduced a 1.04:1 heading contrast failure. The first implementation used unavailable sidebar-specific tokens and failed; it was replaced with tokens defined by this project. Scrolling the navigation exposed the additional light-theme caption contrast failure.
 
 All six final verification/navigation browser checks pass. The measured cases cover English/Persian, light/dark, the top and bottom of the sidebar, and initial/error/success page states, with no unresolved axe measurements. Build, web types, targeted lint, formatting and diff review pass. Other administrator content pages still need their own theme review; the shared content background has not been certified.
+
+### Protect errors that bypass middleware or interceptors
+
+The global exception filter now always writes private/no-store cache headers and an X-Correlation-ID matching its response body and log record. It reuses the request context ID where available and generates UUIDv7 otherwise. Authentication guards, missing routes and malformed JSON reproduced the missing-cache-header defect before repair; parser errors also bypassed the correlation middleware.
+
+All 691 HTTP/filter checks across 55 files pass. After final source review, the 19 focused checks pass again, along with API typechecking, targeted lint, formatting, a fresh API build and the OpenAPI contract gate. Ten production static-server checks also pass. This does not certify all error-message localization or downstream worker correlation propagation. No external state changed.

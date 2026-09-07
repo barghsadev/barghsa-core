@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ZodError } from 'zod';
+import { v7 as uuidv7 } from 'uuid';
 import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
 import type { ErrorCodeDef } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n';
@@ -27,7 +28,7 @@ function resolveErrorCodeDef(errorCode: string, httpStatus: number): ErrorCodeDe
  * Global exception filter that catches all unhandled exceptions and maps them to
  * a stable, machine-readable error response shape.
  *
- * Response shape:  { error: { code, message, correlationId? } }
+ * Response shape:  { error: { code, message, correlationId } }
  *
  * Over-limit online top-up 400s also include `onlineTopUpLimit` and
  * `configVersion` on `error` so the customer form can retry with a reduced
@@ -60,7 +61,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
         : t(errorCodeDef.messageKey, locale);
 
     // Get correlation ID from AsyncLocalStorage
-    const correlationId = correlationIdStorage.getStore();
+    const correlationId = correlationIdStorage.getStore() ?? uuidv7();
+    // Guards and body-parser failures can bypass response interceptors and
+    // request middleware. Error responses still require private caching and
+    // an identifier shared by the response header, body and log record.
+    response.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    response.setHeader('Pragma', 'no-cache');
+    response.setHeader('Expires', '0');
+    response.setHeader('X-Correlation-ID', correlationId);
 
     // Log at appropriate severity
     this.logError(exception, httpStatus, errorCode, correlationId, request);
@@ -70,12 +78,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       error: {
         code: errorCode,
         message,
+        correlationId,
       },
     };
-
-    if (correlationId) {
-      (body.error as Record<string, unknown>).correlationId = correlationId;
-    }
 
     if (exception instanceof HttpException) {
       const snapshot = readOnlineTopUpLimitFromErrorBody(exception.getResponse());

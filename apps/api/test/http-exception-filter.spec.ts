@@ -105,7 +105,7 @@ describe('HttpExceptionFilter', () => {
   function createMockHost(statusCode: number, body: unknown, headers: Record<string, string> = {}) {
     const json = vi.fn();
     const status = vi.fn(() => ({ json }));
-    const response = { status } as any;
+    const response = { status, setHeader: vi.fn() } as any;
     const request = {
       method: 'GET',
       url: '/test',
@@ -137,6 +137,7 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(400);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'VALIDATION:PARSE:ZOD_ERROR',
         message: 'داده‌های ارسالی معتبر نیستند',
       },
@@ -152,6 +153,7 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(400);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
         message: 'Bad input',
       },
@@ -175,6 +177,7 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(400);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
         message:
           'Online top-up amount 100001 IRR exceeds the configured per-transaction limit of 50000 IRR',
@@ -199,6 +202,7 @@ describe('HttpExceptionFilter', () => {
 
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
         message: 'Bad input',
       },
@@ -214,6 +218,7 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(401);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'AUTH:UNAUTHENTICATED',
         message: 'Unauthorized',
       },
@@ -229,6 +234,7 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(404);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'NOT_FOUND:RESOURCE',
         message: 'Not Found',
       },
@@ -245,6 +251,7 @@ describe('HttpExceptionFilter', () => {
     // Should NOT forward the raw error message
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'INTERNAL:UNEXPECTED',
         message: 'خطای غیرمنتظره رخ داده است',
       },
@@ -277,6 +284,7 @@ describe('HttpExceptionFilter', () => {
 
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'NOT_FOUND:RESOURCE',
         message: 'Not Found',
       },
@@ -295,6 +303,7 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(500);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'INTERNAL:SERVER_ERROR',
         message: 'خطای داخلی سرور',
       },
@@ -361,7 +370,7 @@ describe('HttpExceptionFilter + CorrelationIdMiddleware (integration)', () => {
     for (const { exception, expectedStatus, expectedCode } of testCases) {
       const json = vi.fn();
       const status = vi.fn(() => ({ json }));
-      const response = { status } as any;
+      const response = { status, setHeader: vi.fn() } as any;
       const request = {
         method: 'GET',
         url: '/test',
