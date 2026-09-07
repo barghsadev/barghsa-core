@@ -5,12 +5,13 @@ import {
   HttpCode,
   HttpException,
   Query,
+  Param,
   Body,
   Req,
   Logger,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiBody, ApiParam } from '@nestjs/swagger';
 
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -63,6 +64,23 @@ export class TosController {
   async getCurrent(@Query('locale') locale?: string): Promise<CurrentTosResponse> {
     const normalizedLocale = locale === 'en' ? 'en' : 'fa';
     return this.tosService.getCurrent(normalizedLocale);
+  }
+
+  @UseGuards(SessionAuthGuard)
+  @Post('accept/:versionId')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Accept the current Terms of Service identified in the URL' })
+  @ApiParam({ name: 'versionId', description: 'Immutable UUID of the displayed published version' })
+  @ApiResponse({ status: 200, description: 'TOS acceptance recorded.' })
+  @ApiResponse({ status: 400, description: 'Version is invalid or no longer active' })
+  @ApiResponse({ status: 401, description: 'Unauthenticated' })
+  @ApiResponse({ status: 403, description: 'CSRF validation failed' })
+  acceptVersion(
+    @Param('versionId') versionId: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<{ message: string }> {
+    // The URL identifies the displayed document. A body cannot substitute another version.
+    return this.accept({ versionId }, req);
   }
 
   /**

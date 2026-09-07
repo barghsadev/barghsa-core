@@ -170,10 +170,9 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     setError(null);
 
     try {
-      const response = await fetch('/api/tos/accept', {
+      const response = await fetch(`/api/tos/accept/${encodeURIComponent(currentTos.id)}`, {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ versionId: currentTos.id }),
       });
 
       if (!response.ok) {

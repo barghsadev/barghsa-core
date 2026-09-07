@@ -266,3 +266,52 @@ it('preserves a newer draft against stale edits and discard', async () => {
     (await http.pool.query('SELECT content_en FROM tos_versions WHERE id=$1', [created.id])).rows
   ).toEqual([{ content_en: 'Newer draft' }]);
 });
+
+it('accepts the canonical version URL with session and CSRF and preserves exact evidence', async () => {
+  const previous = await publish('canonical-before', 'major');
+  const current = await publish('canonical-current', 'major');
+  const url = `${http.base}/api/tos/accept/${current}`;
+  expect((await fetch(url, { method: 'POST' })).status).toBe(401);
+  expect(
+    (await fetch(url, { method: 'POST', headers: { cookie: headers.other!.cookie! } })).status
+  ).toBe(403);
+  expect(
+    (
+      await fetch(`${http.base}/api/tos/accept/${previous}`, {
+        method: 'POST',
+        headers: headers.other!,
+      })
+    ).status
+  ).toBe(400);
+  expect(
+    (
+      await fetch(`${http.base}/api/tos/accept/not-a-version`, {
+        method: 'POST',
+        headers: headers.other!,
+      })
+    ).status
+  ).toBe(400);
+  expect(
+    Number((await http.pool.query('SELECT count(*) FROM tos_acceptances')).rows[0].count)
+  ).toBe(0);
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { ...headers.other!, 'user-agent': 'TOS-consent-browser-test/1.0' },
+    body: JSON.stringify({ versionId: previous }),
+  });
+  expect(response.status).toBe(200);
+  const records = (
+    await http.pool.query(
+      'SELECT user_id,version_id,accepted_at,ip_address,user_agent FROM tos_acceptances'
+    )
+  ).rows;
+  expect(records).toHaveLength(1);
+  expect(records[0]).toMatchObject({
+    user_id: 'other',
+    version_id: current,
+    user_agent: 'TOS-consent-browser-test/1.0',
+  });
+  expect(records[0].accepted_at).toBeInstanceOf(Date);
+  expect(records[0].ip_address).toMatch(/127\.0\.0\.1/);
+  expect(await acceptanceRequired()).toBe(false);
+});

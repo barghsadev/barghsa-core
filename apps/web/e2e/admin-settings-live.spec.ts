@@ -2408,9 +2408,15 @@ for (const locale of ['en', 'fa'])
         name: fa ? 'قوانین استفاده' : 'Terms of Service',
         exact: true,
       });
+      const acceptance = page.waitForResponse(
+        (response) =>
+          new URL(response.url()).pathname.startsWith('/api/tos/accept/') &&
+          response.request().method() === 'POST'
+      );
       await consent
         .getByRole('button', { name: fa ? 'می‌پذیرم' : 'I Accept', exact: true })
         .click();
+      expect((await acceptance).status()).toBe(200);
       await expect(consent).toHaveCount(0);
     }
     await page

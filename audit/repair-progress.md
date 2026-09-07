@@ -2310,3 +2310,9 @@ Four browser regressions reproduced automatic modal interference on customer tic
 The editor, draft form, publication controls, history, detail view and discard confirmation now use Persian/English text. Persian uses RTL layout with logical alignment, while document language remains independently selectable. History shows the full recorded actor identifier. Network and HTTP errors use localized message keys, including when the browser reports an English transport error. Failed history still blocks writes.
 
 All 15 focused production Chromium checks pass, including real migrated-API create/edit-preview/publish/history/discard flows in both languages and Persian network-failure blocking. The Persian run explicitly completes consent prompted by the preceding English publication. The Persian preview screenshot was visually reviewed. Web types, targeted lint, formatting, bundle budgets and diff review pass. The canonical re-acceptance endpoint and remaining task-level evidence are reviewed separately; no overall plan completion is claimed.
+
+### Add the required version-addressed TOS acceptance endpoint
+
+The client now submits to the canonical `POST /api/tos/accept/:versionId` route. It uses the same authenticated, CSRF-protected acceptance transaction as the existing body-based endpoint. The URL identifies the displayed immutable publication; a conflicting body cannot replace it. Old clients remain compatible. The generated OpenAPI contract includes the new path.
+
+The missing-route HTTP regression failed before repair. All 28 focused TOS/registration API checks pass afterward, including guest and CSRF rejection, stale/malformed version rejection and exact version, actor, timestamp, IP and user-agent persistence. Ten production Chromium checks pass; the live Persian flow confirms successful submission through the canonical URL. API/web types, lint, formatting, generated contract, bundle budgets and diff review pass.
