@@ -27,6 +27,8 @@ The existing Prometheus endpoint remains available during collector failure. Exp
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
 ```
 
+The database role used by the collector must have effective `pg_read_all_stats` privileges, directly or through `pg_monitor`. The application does not grant this role. Without it, PostgreSQL hides fields from other sessions; the collector reports failure instead of treating those fields as zero activity. A database administrator must configure the intended monitoring role before claiming complete statistics.
+
 The collector distinguishes an absent extension from an empty query list. PostgreSQL 17 checkpoint statistics come from `pg_stat_checkpointer`; shared query I/O timings use `shared_blk_read_time` and `shared_blk_write_time`.
 
 `postgres-config/alert-rules.json` defines collection-failure, lag, slow-query, saturation, lock and deadlock rules. Load these into your monitoring stack and exercise delivery before claiming operational readiness. Query throughput in Prometheus can use `rate(pg_query_calls_total[5m])`. Statistics resets and pg_stat_statements entry eviction affect these counters. Scan counts are available as `pg_sequential_scans_total` and `pg_index_scans_total`.

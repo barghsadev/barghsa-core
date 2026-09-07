@@ -2466,3 +2466,9 @@ The initial live collector test failed because no export existed. A subsequent f
 ### Record bounded monitoring acceptance
 
 Task 01-platform-infrastructure.md#T-04.01.04 now has a partial acceptance record at revision 8136b1901af95d6f0cc7e3e2b4fedab74061a2a5. Local collector, scrape recovery and OTLP checks are tied to source hashes. Production host sizing, measured load, alert delivery, live replicas and monitoring-role visibility remain unverified. The ledger contains 30 assessed tasks: 22 verified, eight partial and 292 pending. Backlog validation and all eleven root typechecking tasks pass.
+
+### Reject statistics hidden by database role permissions
+
+The collector now requires effective pg_read_all_stats privileges before accepting a snapshot. Restricted visibility returns structured failure instead of misleading zero activity. Documentation explains administrator provisioning; application code grants no privileges. The real PostgreSQL regression exercises an unprivileged role and recovery after its monitoring grant. Its connection startup options preserve that role even when an optional-query error replaces the pooled connection.
+
+All sixteen collector checks and sixteen API monitoring/OTLP checks pass. Database types, targeted lint, formatting and diff review pass. Production role provisioning remains unverified.

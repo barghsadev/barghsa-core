@@ -152,3 +152,34 @@ it.each([
     await previous.query(`DROP SCHEMA "${schema}" CASCADE`);
   }
 });
+
+it('requires readable monitoring statistics instead of treating hidden activity as zero', async () => {
+  const previous = pool;
+  const role = `test_metrics_reader_${randomUUID().replaceAll('-', '')}`;
+  await previous.query(`CREATE ROLE "${role}"`);
+  const restricted = new Pool({
+    connectionString: process.env.TEST_DATABASE_URL,
+    options: `-c role=${role}`,
+    max: 1,
+  });
+  try {
+    expect(
+      (
+        await restricted.query(
+          "SELECT current_user AS actor, pg_has_role(current_user, 'pg_read_all_stats', 'USAGE') AS readable"
+        )
+      ).rows[0]
+    ).toEqual({ actor: role, readable: false });
+    pool = restricted;
+    const hidden = await collectPerformanceMetrics();
+    expect(hidden).toMatchObject({ ok: false, metrics: null });
+    await previous.query(`GRANT pg_read_all_stats TO "${role}"`);
+    const readable = await collectPerformanceMetrics();
+    expect(readable.ok).toBe(true);
+    expect(readable.metrics?.activeConnections).toBeGreaterThanOrEqual(0);
+  } finally {
+    pool = previous;
+    await restricted.end();
+    await previous.query(`DROP ROLE "${role}"`);
+  }
+});

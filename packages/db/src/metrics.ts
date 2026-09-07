@@ -295,7 +295,8 @@ export async function collectPerformanceMetrics(
 
     // Query server max_connections from pg_settings
     const maxConnResult = pool.query(`
-      SELECT setting::integer AS max_connections
+      SELECT setting::integer AS max_connections,
+             pg_has_role(current_user, 'pg_read_all_stats', 'USAGE') AS stats_readable
       FROM pg_settings
       WHERE name = 'max_connections'
     `);
@@ -343,6 +344,8 @@ export async function collectPerformanceMetrics(
     const queryResult = queryResultSettled.status === 'fulfilled' ? queryResultSettled.value : null;
     const dbRow = dbResultSettled.value.rows[0];
     const actRow = activityResultSettled.value.rows[0];
+    if (maxConnResultSettled.value.rows[0].stats_readable !== true)
+      throw new Error('PostgreSQL monitoring requires pg_read_all_stats privileges');
     const maxConnections = Number(maxConnResultSettled.value.rows[0].max_connections);
     if (!Number.isSafeInteger(maxConnections) || maxConnections <= 0)
       throw new Error('Invalid PostgreSQL max_connections metric');
