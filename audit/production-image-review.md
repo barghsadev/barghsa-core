@@ -26,3 +26,7 @@ API and worker receive provider configuration from an external runtime environme
 ## Limits
 
 The full backing-service stack inherited from docker-compose.yml still contains development-oriented credentials and service choices. This check is not a production deployment certification. Before rollout, configure the actual backing services, providers, secrets, backup/restore and migration procedure. Do not restart the other-machine orchestrator as part of this repair.
+
+## Current checkpoint
+
+The clean rebuild and complete runtime exercise were repeated at 2aeaf54 after updating pnpm to 10.11.1. All checks passed. Exact image identities are recorded in [production-image-checkpoint.json](production-image-checkpoint.json). The dependency lockfile is unchanged by the tool update.

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "head_sha": "2aeaf54d0f2d01a519811a413ef12fc19e502593",
+  "working_tree_dirty": false,
+  "pnpm": "10.11.1",
+  "images": [
+    {
+      "tags": [
+        "barghsa-audit-api:f18"
+      ],
+      "id": "sha256:a5b1ee8aa87878af3eb181145bf2f64a34369b317381eee07d5ab8ce3099cdf0"
+    },
+    {
+      "tags": [
+        "barghsa-audit-worker:f18"
+      ],
+      "id": "sha256:310978fca8d5674c48c0bf0e4f3413748d0640ac91dd4a2bdae9aac94bf46e8f"
+    },
+    {
+      "tags": [
+        "barghsa-audit-web:f18"
+      ],
+      "id": "sha256:6bf758402538ba01b2dd13819915f1869b224c87815b76cf42faaa9c526a1da3"
+    }
+  ],
+  "checks": [
+    "PASS non-root/read-only boot, packaged migrations, optional Redis fallback",
+    "PASS database loss/recovery changes readiness but preserves liveness",
+    "PASS SIGTERM waits for concurrent notification and finance commits",
+    "PASS forced deadline leaves retryable work; restart commits once; web/API SIGTERM exit cleanly"
+  ],
+  "scope": "Disposable PostgreSQL 17 and Docker network; no deployment, external providers or existing database."
+}
