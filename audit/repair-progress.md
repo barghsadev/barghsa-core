@@ -2588,3 +2588,7 @@ Twenty language/theme/hover checks and sixty repeated timezone, invoice and reco
 ### Correct mobile profile selection checks
 
 The committed full browser run passed all 975 desktop cases but stopped on eight mobile profile tests that assumed navigation was already open. Tests now open the menu after it mounts and verify selector removal independently of visibility. All sixty profile cases pass across five projects with two repetitions. The browser wrapper also validates variadic project flags, including mixed-browser coverage requests. No product behavior changed in this follow-up. Complete mobile-suite validation is next.
+
+### Complete local browser matrix evidence
+
+All 650 mobile tests pass after the menu-test correction. All 975 desktop tests passed with the identical product source tree before that test-only correction, and the changed profile cases passed twice in every project. The combined 1,625-case evidence, exact revisions and limitations are saved in `audit/browser-nightly-checkpoint.json`. No skipped or flaky cases are counted as passed. Remote execution and future business-flow acceptance remain open.

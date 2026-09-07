@@ -1,6 +1,6 @@
 # Nightly browser repair review
 
-Status: implemented with focused validation; full final matrix pending. No workflow has been pushed or activated on GitHub.
+Status: local browser validation passed across the recorded runs. No workflow has been pushed or activated on GitHub.
 
 ## Reproduced issues
 
@@ -36,3 +36,7 @@ At committed revision `5a495f670c6a21593ead2006edcca1d112e2266f`, the next matri
 Review also found that Playwright accepts several project names after one flag. Coverage validation now inspects every name, including the equals form, and rejects a mixed Chromium/Firefox request before running. Both new mixed-project regressions failed before this correction.
 
 Chromium, Firefox and desktop WebKit each completed all 325 cases in the committed run. Remaining validation is a complete run of both mobile projects after the profile test correction. Product code is unchanged since that run.
+
+## Final local evidence
+
+Both complete mobile projects passed all 650 tests at `d55c7685d6adac4abdd669395904ad3954434b08`. Combined with 975 desktop passes at `5a495f670c6a21593ead2006edcca1d112e2266f`, all 1,625 unique cases have passed. The product source tree is identical between these revisions. All changed profile cases also passed twice in every project. This is combined evidence from separate runs, not a single all-project green run. Exact revisions, report digests and per-project outcomes are saved in `audit/browser-nightly-checkpoint.json`.
