@@ -2620,3 +2620,7 @@ Record correction: the prior browser-matrix checkpoint's final Vite build did no
 ### Pair public notification exports correctly
 
 The public UI Toaster now shares Sonner's toast API. Explicit BaseToaster/baseToast exports retain the independent Base UI implementation, and its render components are usable runtime exports. The red test reproduced two missing-function failures. All 13 UI tests now pass, including real DOM rendering/dismissal through the public pair and independent Base UI rendering. UI/web types, lint, formatting, fresh production build, all 41 route budgets and diff review pass. Local-only change; no remote action.
+
+### Reject malformed provider amounts during payment recovery
+
+Recovery no longer truncates provider inquiry amount strings. It requires an exact positive decimal or safe integer match before attaching the unique callback-bound authority. Six new cases failed before repair; all 99 gateway/top-up checks, including real-PostgreSQL recovery tests, now pass. API types/lint, formatting and diff review pass. Details and external-provider limits are recorded in `audit/payment-recovery-amount-review.md`.

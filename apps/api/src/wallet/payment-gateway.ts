@@ -832,10 +832,10 @@ export function createZarinpalPaymentGateway(options: {
         const entryAmount =
           typeof item.amount === 'number'
             ? item.amount
-            : typeof item.amount === 'string'
-              ? Number.parseInt(item.amount, 10)
+            : typeof item.amount === 'string' && /^[1-9][0-9]*$/.test(item.amount)
+              ? Number(item.amount)
               : NaN;
-        if (entryAmount !== amount) continue;
+        if (!Number.isSafeInteger(entryAmount) || entryAmount !== amount) continue;
         if (!callback || !callbackUrlsMatch(callback, request.callbackUrl)) continue;
         matches.push(authority);
       }

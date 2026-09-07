@@ -757,3 +757,73 @@ function restoreEnv(name: string, value: string | undefined): void {
   if (value === undefined) delete process.env[name];
   else process.env[name] = value;
 }
+
+describe('ZarinPal recovery amount integrity', () => {
+  for (const amount of [
+    '250000.5',
+    '250000IRR',
+    '250000e1',
+    ' 250000',
+    '+250000',
+    '250000 ',
+    '',
+    null,
+    {},
+    250000.5,
+    0,
+    -250000,
+    '9007199254740993',
+  ]) {
+    it(`does not recover a session using malformed or different amount ${JSON.stringify(amount)}`, async () => {
+      const fetchImpl: PaymentGatewayFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          data: {
+            authorities: [
+              {
+                authority: 'A00000000000000000000000000000000001',
+                amount,
+                callback_url: START_REQUEST.callbackUrl,
+              },
+            ],
+          },
+        }),
+      });
+      const gateway = createZarinpalPaymentGateway({
+        merchantId: '11111111-1111-1111-1111-111111111111',
+        fetchImpl,
+      });
+      await expect(gateway.recoverPayment(START_REQUEST)).resolves.toBeNull();
+      expect(fetchImpl).toHaveBeenCalledTimes(1);
+      expect(String((fetchImpl as ReturnType<typeof vi.fn>).mock.calls[0]![0])).toContain(
+        '/unVerified.json'
+      );
+    });
+  }
+  for (const amount of [250000, '250000']) {
+    it(`recovers the exact numeric value represented as ${typeof amount}`, async () => {
+      const gateway = createZarinpalPaymentGateway({
+        merchantId: '11111111-1111-1111-1111-111111111111',
+        fetchImpl: vi.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            data: {
+              authorities: [
+                {
+                  authority: 'A00000000000000000000000000000000001',
+                  amount,
+                  callback_url: START_REQUEST.callbackUrl,
+                },
+              ],
+            },
+          }),
+        }),
+      });
+      await expect(gateway.recoverPayment(START_REQUEST)).resolves.toMatchObject({
+        authority: 'A00000000000000000000000000000000001',
+      });
+    });
+  }
+});
