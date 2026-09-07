@@ -1,4 +1,5 @@
 import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { resolve, sep, join } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -6,6 +7,7 @@ import { parse } from 'acorn';
 import { mergeProcessCovs } from '@bcoe/v8-coverage';
 import { convert } from 'ast-v8-to-istanbul';
 import coverageLibrary from 'istanbul-lib-coverage';
+import remapping from '@jridgewell/remapping';
 
 const sourcePattern = /^(apps\/web|packages\/(ui|i18n|shared))\/src\//;
 
@@ -104,10 +106,20 @@ export async function collectBrowserCoverage({
       url.search = '';
       return url.href;
     });
+    const chainedMap = remapping(sourceMap, (source, context) => {
+      const path = fileURLToPath(source);
+      if (!path.startsWith(resolve(root) + sep)) return null;
+      const relative = path.slice(resolve(root).length + 1);
+      if (/^packages\/(i18n|shared)\/dist\/.+\.js$/.test(relative))
+        return JSON.parse(readFileSync(path + '.map', 'utf8'));
+      if (sourcePattern.test(relative) && context.content == null)
+        context.content = readFileSync(path, 'utf8');
+      return null;
+    });
     coverage.merge(
       await convert({
         code,
-        sourceMap,
+        sourceMap: chainedMap,
         coverage: entry,
         ast: parse(code, { ecmaVersion: 'latest', sourceType: 'module', locations: true }),
       })

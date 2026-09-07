@@ -39,6 +39,16 @@ class CoverageTests(unittest.TestCase):
         document["branchMap"]["0"]["loc"]["end"]["line"] = 8
         self.assertEqual(module.metrics(document, {5}, False)["branches"], 2)
 
+    def test_minified_reverse_span_preserves_uncovered_branch_counts(self):
+        document = coverage()
+        document["branchMap"]["0"]["loc"] = {"start": {"line": 5}, "end": {"line": 3}}
+        result = module.metrics(document, {4}, False)
+        self.assertEqual(result["branches"], 2)
+        self.assertEqual(result["covered_branches"], 1)
+        document["branchMap"]["0"]["loc"]["end"]["line"] = 0
+        with self.assertRaises(ValueError):
+            module.metrics(document, {4}, False)
+
     def test_corrupt_counters_fail_closed(self):
         for hit in (-1, True, None, "1", float("nan"), float("inf")):
             with self.subTest(hit=hit), self.assertRaises(ValueError):

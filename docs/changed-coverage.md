@@ -24,13 +24,16 @@ Vitest, including the API's HTTP-process coverage provider. Missing source entri
 missing or malformed reports and inconsistent counters fail the check. Generated
 source, declarations and test code are excluded. Deleted lines need no coverage.
 General line coverage follows Istanbul statement-start line semantics; branches
-are included when their source extent intersects the change. An empty executable
+are included when their source extent intersects the change. Minified spans whose
+mapped end precedes their start use the interval between those endpoints; hit
+counts are unchanged. An empty executable
 line or branch set adds no artificial hits or failures.
 
 The browser job builds a separate `dist-coverage` directory with hidden source maps.
 Normal production output stays in `dist` without maps. Chromium collects V8 ranges
 through the shared test fixture. Collection verifies the executed JavaScript against
-the built asset before mapping it back to workspace source. Missing maps or records
+the built asset before mapping it back to workspace source, including the shared
+and i18n packages' intermediate TypeScript maps. Missing maps or records
 fail; source-map failure never becomes zero reported flakes or successful coverage.
 Every record captures the tested revision and whether the checkout was dirty. The
 merge rejects stale revisions and dirty runs. Unit coverage is retained for source

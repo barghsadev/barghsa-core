@@ -77,8 +77,11 @@ def metrics(coverage, changed, critical):
         location = branch.get("loc", {})
         start = line_number(location)
         end = location.get("end", {}).get("line", start)
-        if type(end) is not int or end < start:
+        if type(end) is not int or end < 1:
             raise ValueError("invalid branch extent")
+        # Minifiers can map a folded return to an earlier expression. Keep its
+        # counters unchanged and conservatively include either mapped endpoint.
+        start, end = min(start, end), max(start, end)
         if critical or any(start <= line <= end for line in changed):
             branches.extend(count(hit) for hit in hits)
     return {"lines": len(lines), "covered_lines": sum(hit > 0 for hit in lines.values()),
