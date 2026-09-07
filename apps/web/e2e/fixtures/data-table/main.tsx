@@ -8,6 +8,11 @@ const rows = [
   { id: 'a', name: 'Alpha', fixed: 'Kept A' },
 ];
 function Fixture() {
+  const params = new URLSearchParams(location.search);
+  const [locale, setLocale] = React.useState<'en' | 'fa'>(
+    params.get('locale') === 'fa' ? 'fa' : 'en'
+  );
+  const [mode, setMode] = React.useState(params.get('state') ?? 'rows');
   const [selected, setSelected] = React.useState<Set<string | number>>(new Set());
   const [sortEvents, setSortEvents] = React.useState(0);
   const [selectionEvents, setSelectionEvents] = React.useState(0);
@@ -16,7 +21,16 @@ function Fixture() {
     <main>
       <button onClick={() => setSelected(new Set(['a']))}>Select Alpha externally</button>
       <button onClick={() => setSelected(new Set())}>Clear externally</button>
+      <button onClick={() => setLocale((value) => (value === 'en' ? 'fa' : 'en'))}>
+        Switch language
+      </button>
+      <button onClick={() => setMode('loading')}>Show loading</button>
+      <button onClick={() => setMode('empty')}>Show empty</button>
+      <button onClick={() => setMode('rows')}>Show rows</button>
       <DataTable
+        locale={locale}
+        {...(params.has('latin') ? { numerals: 'latn' as const } : {})}
+        loading={mode === 'loading'}
         columns={[
           { id: 'name', header: 'Name', accessorKey: 'name' },
           {
@@ -27,7 +41,7 @@ function Fixture() {
             sortable: false,
           },
         ]}
-        data={rows}
+        data={mode === 'empty' ? [] : rows}
         keyExtractor={(row) => row.id}
         selectable
         {...(controlled ? { selectedRows: selected } : {})}

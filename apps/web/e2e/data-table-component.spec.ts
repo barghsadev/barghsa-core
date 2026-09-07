@@ -94,3 +94,66 @@ test('controlled selection follows external updates without emitting user-change
   await expect(page.getByRole('checkbox', { name: 'Select row 2', exact: true })).not.toBeChecked();
   await expect(page.getByRole('status', { name: 'Selection events' })).toHaveText('0');
 });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`loading and empty tables explain state and prevent hidden selection (${locale})`, async ({
+    page,
+  }) => {
+    await page.goto(`${url}?locale=${locale}&state=loading`);
+    const table = page.getByRole('table');
+    await expect(table).toHaveAttribute('aria-busy', 'true');
+    await expect(
+      table.getByText(locale === 'fa' ? 'در حال بارگذاری...' : 'Loading...')
+    ).toBeVisible();
+    await expect(table.getByRole('checkbox')).toBeDisabled();
+    await page.getByRole('button', { name: 'Show empty', exact: true }).click();
+    await expect(table).toHaveAttribute('aria-busy', 'false');
+    await expect(
+      table.getByText(locale === 'fa' ? 'نتیجه‌ای یافت نشد' : 'No results')
+    ).toBeVisible();
+    await expect(table.getByRole('checkbox')).toBeDisabled();
+    await expect(page.getByRole('status', { name: 'Selection events' })).toHaveText('0');
+    await page.getByRole('button', { name: 'Show rows', exact: true }).click();
+    const selectAll = table.getByRole('checkbox', {
+      name: locale === 'fa' ? 'انتخاب همه ردیف‌ها' : 'Select all rows',
+      exact: true,
+    });
+    await expect(selectAll).toBeEnabled();
+    await selectAll.press('Space');
+    await expect(page.getByRole('status', { name: 'Selected keys' })).toHaveText('a,b');
+    await expect(
+      table.getByRole('checkbox', {
+        name: locale === 'fa' ? 'لغو انتخاب همه ردیف‌ها' : 'Deselect all rows',
+        exact: true,
+      })
+    ).toBeChecked();
+  });
+}
+
+test('language switching updates direction and selection labels without losing state', async ({
+  page,
+}) => {
+  await page.goto(url);
+  await page.getByRole('checkbox', { name: 'Select row 1', exact: true }).press('Space');
+  await page.getByRole('button', { name: 'Switch language', exact: true }).click();
+  const table = page.getByRole('table');
+  await expect(table.locator('..')).toHaveAttribute('dir', 'rtl');
+  await expect(table.locator('..')).toHaveAttribute('lang', 'fa');
+  await expect(table.getByRole('checkbox', { name: 'انتخاب ردیف ۱', exact: true })).toBeChecked();
+  await expect(page.getByRole('status', { name: 'Selected keys' })).toHaveText('b');
+  await expect(page.getByRole('status', { name: 'Selection events' })).toHaveText('1');
+  await expect(page.getByRole('columnheader', { name: 'Name', exact: true })).toHaveCSS(
+    'text-align',
+    'start'
+  );
+  await page.getByRole('button', { name: 'Switch language', exact: true }).click();
+  await expect(table.locator('..')).toHaveAttribute('dir', 'ltr');
+  await expect(table.getByRole('checkbox', { name: 'Select row 1', exact: true })).toBeChecked();
+});
+
+test('Persian labels support an explicit Latin numeral preference', async ({ page }) => {
+  await page.goto(`${url}?locale=fa&latin`);
+  await page.getByRole('checkbox', { name: 'انتخاب ردیف 1', exact: true }).press('Space');
+  await expect(page.getByRole('status', { name: 'Selected keys' })).toHaveText('b');
+  await expect(page.getByRole('checkbox', { name: 'انتخاب ردیف 1', exact: true })).toBeChecked();
+});

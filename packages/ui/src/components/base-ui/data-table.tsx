@@ -5,6 +5,7 @@ import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon } from 'lucide-react
 
 import { cn } from '../../lib/utils';
 import { Checkbox } from '../ui/checkbox';
+import { dataTableLabels } from './data-table.labels';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -28,6 +29,8 @@ interface ColumnDef<T> {
 }
 
 interface DataTableProps<T> {
+  locale?: 'en' | 'fa';
+  numerals?: 'latn' | 'arabext';
   columns: ColumnDef<T>[];
   data: T[];
   keyExtractor: (row: T) => string | number;
@@ -52,7 +55,8 @@ function useTableSort<T>(
   data: T[],
   columns: ColumnDef<T>[],
   initialSort?: { column: string; direction: SortDirection },
-  onSortChange?: (sort: SortState | null) => void
+  onSortChange?: (sort: SortState | null) => void,
+  locale: 'en' | 'fa' = 'en'
 ) {
   const [sort, setSort] = React.useState<SortState | null>(
     initialSort?.direction ? (initialSort as SortState) : null
@@ -77,14 +81,14 @@ function useTableSort<T>(
       } else if (aVal instanceof Date && bVal instanceof Date) {
         cmp = aVal.getTime() - bVal.getTime();
       } else {
-        cmp = String(aVal).localeCompare(String(bVal), undefined, {
+        cmp = String(aVal).localeCompare(String(bVal), locale, {
           numeric: true,
         });
       }
 
       return sort.direction === 'desc' ? -cmp : cmp;
     });
-  }, [data, sort, columns]);
+  }, [data, sort, columns, locale]);
 
   const toggleSort = React.useCallback(
     (columnId: string) => {
@@ -152,15 +156,17 @@ function useTableSelection<T>(
 
 function SortIcon({ columnId, currentSort }: { columnId: string; currentSort: SortState | null }) {
   if (currentSort?.column !== columnId) {
-    return <ChevronsUpDownIcon className="ml-1 size-3.5 shrink-0 text-muted-foreground/50" />;
+    return <ChevronsUpDownIcon className="ms-1 size-3.5 shrink-0 text-muted-foreground/50" />;
   }
   if (currentSort.direction === 'asc') {
-    return <ChevronUpIcon className="ml-1 size-3.5 shrink-0" />;
+    return <ChevronUpIcon className="ms-1 size-3.5 shrink-0" />;
   }
-  return <ChevronDownIcon className="ml-1 size-3.5 shrink-0" />;
+  return <ChevronDownIcon className="ms-1 size-3.5 shrink-0" />;
 }
 
 function DataTable<T extends Record<string, unknown>>({
+  locale = 'en',
+  numerals,
   columns,
   data,
   keyExtractor,
@@ -172,19 +178,28 @@ function DataTable<T extends Record<string, unknown>>({
   initialSortDirection,
   onSortChange,
   loading = false,
-  emptyMessage = 'No results',
+  emptyMessage,
   className,
   tableClassName,
   headerClassName,
   rowClassName,
 }: DataTableProps<T>) {
+  const labels = dataTableLabels[locale];
+  const rowNumbers = React.useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        numberingSystem: numerals ?? (locale === 'fa' ? 'arabext' : 'latn'),
+      }),
+    [locale, numerals]
+  );
   const { sortedData, sort, toggleSort } = useTableSort(
     data,
     columns,
     initialSortColumn
       ? { column: initialSortColumn, direction: initialSortDirection ?? false }
       : undefined,
-    onSortChange
+    onSortChange,
+    locale
   );
 
   const { selected, allSelected, someSelected, toggleRow, toggleAll } = useTableSelection(
@@ -197,17 +212,22 @@ function DataTable<T extends Record<string, unknown>>({
   const visibleColumns = columns;
 
   return (
-    <div className={cn('relative w-full overflow-auto rounded-lg border', className)}>
-      <table className={cn('w-full caption-bottom text-sm', tableClassName)}>
+    <div
+      lang={locale}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      className={cn('relative w-full overflow-auto rounded-lg border', className)}
+    >
+      <table aria-busy={loading} className={cn('w-full caption-bottom text-sm', tableClassName)}>
         <thead className={cn('[&_tr]:border-b', headerClassName)}>
           <tr className="border-b transition-colors">
             {selectable && (
-              <th className="h-10 w-10 px-2 text-left align-middle">
+              <th className="h-10 w-10 px-2 text-start align-middle">
                 <Checkbox
+                  disabled={loading || data.length === 0}
                   checked={allSelected}
                   indeterminate={someSelected}
                   onCheckedChange={toggleAll}
-                  aria-label={allSelected ? 'Deselect all rows' : 'Select all rows'}
+                  aria-label={allSelected ? labels.deselectAll : labels.selectAll}
                 />
               </th>
             )}
@@ -215,7 +235,7 @@ function DataTable<T extends Record<string, unknown>>({
               <th
                 key={col.id}
                 className={cn(
-                  'h-10 px-3 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
+                  'h-10 px-3 text-start align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pe-0',
                   col.sortable !== false && enableSort && 'cursor-pointer select-none',
                   col.headerClassName
                 )}
@@ -252,7 +272,7 @@ function DataTable<T extends Record<string, unknown>>({
                 colSpan={selectable ? visibleColumns.length + 1 : visibleColumns.length}
                 className="h-24 px-3 text-center text-muted-foreground"
               >
-                Loading...
+                {labels.loading}
               </td>
             </tr>
           ) : sortedData.length === 0 ? (
@@ -261,7 +281,7 @@ function DataTable<T extends Record<string, unknown>>({
                 colSpan={selectable ? visibleColumns.length + 1 : visibleColumns.length}
                 className="h-24 px-3 text-center text-muted-foreground"
               >
-                {emptyMessage}
+                {emptyMessage ?? labels.empty}
               </td>
             </tr>
           ) : (
@@ -282,7 +302,7 @@ function DataTable<T extends Record<string, unknown>>({
                       <Checkbox
                         checked={selected.has(key)}
                         onCheckedChange={() => toggleRow(key)}
-                        aria-label={`Select row ${index + 1}`}
+                        aria-label={labels.selectRow(rowNumbers.format(index + 1))}
                       />
                     </td>
                   )}
