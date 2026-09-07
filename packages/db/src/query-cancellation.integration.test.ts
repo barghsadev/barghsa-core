@@ -1,5 +1,5 @@
 import { Client } from 'pg';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { wrapClientQuery } from './index.js';
 
 it('cancels a running query without breaking its database connection', async () => {
@@ -85,3 +85,37 @@ it('leaves a cancelled transaction abortable without committing its writes', asy
     await client.end();
   }
 });
+
+for (const callback of [false, true]) {
+  it(`emits structured production warnings for slow ${callback ? 'callback' : 'Promise'} queries`, async () => {
+    const client = new Client({
+      connectionString: process.env.TEST_DATABASE_URL,
+      statement_timeout: 2000,
+    });
+    await client.connect();
+    const output = vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.stubEnv('NODE_ENV', 'production');
+    try {
+      client.query = wrapClientQuery(client, 1000);
+      if (callback)
+        await new Promise<void>((resolve, reject) => {
+          client.query('SELECT pg_sleep(0.25)', (error) => (error ? reject(error) : resolve()));
+        });
+      else await client.query('SELECT pg_sleep(0.25)');
+      const warnings = output.mock.calls.map(([line]) => JSON.parse(String(line)));
+      expect(warnings).toContainEqual({
+        level: 'warn',
+        event: 'slow_query',
+        query: 'SELECT pg_sleep(0.25)',
+        durationMs: expect.any(Number),
+      });
+      expect(warnings.find((value) => value.event === 'slow_query').durationMs).toBeGreaterThan(
+        200
+      );
+    } finally {
+      vi.unstubAllEnvs();
+      output.mockRestore();
+      await client.end();
+    }
+  });
+}
