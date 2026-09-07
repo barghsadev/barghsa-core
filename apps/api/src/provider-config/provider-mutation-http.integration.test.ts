@@ -299,7 +299,7 @@ for (const channel of ['email', 'sms']) {
         body: '{}',
       });
       expect(response.status).toBe(409);
-      expect((await response.json()).error.code).toBe('CONFLICT:INVALID_STATE');
+      expect(await response.json()).toMatchObject({ error: { code: 'CONFLICT:INVALID_STATE' } });
       expect(await snapshot(table)).toEqual(before);
     });
   }
