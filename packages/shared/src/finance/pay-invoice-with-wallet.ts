@@ -357,6 +357,26 @@ export function parsePayInvoiceWithWalletCache(
   if (ledger.refId != null && typeof ledger.refId !== 'string') return null;
   if (ledger.description != null && typeof ledger.description !== 'string') return null;
   if (typeof ledger.createdAt !== 'string' || typeof ledger.updatedAt !== 'string') return null;
+  // A cached success must describe the same completed debit. Reject damaged
+  // snapshots before callers convert money/dates or report a successful retry.
+  if (!UUID_RE.test(row.invoiceId) || !UUID_RE.test(row.profileId) || !UUID_RE.test(ledger.id)) {
+    return null;
+  }
+  if (!isWalletPayableInvoiceState(row.fromState) && row.fromState !== 'Paid') return null;
+  if (!/^[1-9][0-9]*$/.test(row.remainingPaid) || ledger.amount !== `-${row.remainingPaid}`) {
+    return null;
+  }
+  if (
+    ledger.type !== 'payment' ||
+    ledger.state !== 'Completed' ||
+    ledger.walletId.toLowerCase() !== row.profileId.toLowerCase() ||
+    typeof ledger.refId !== 'string' ||
+    ledger.refId.toLowerCase() !== row.invoiceId.toLowerCase() ||
+    !ledger.idempotencyKey.trim() ||
+    !Number.isFinite(Date.parse(ledger.createdAt)) ||
+    !Number.isFinite(Date.parse(ledger.updatedAt))
+  )
+    return null;
   return {
     invoiceId: row.invoiceId,
     profileId: row.profileId,

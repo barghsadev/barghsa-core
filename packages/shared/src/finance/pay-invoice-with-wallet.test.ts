@@ -312,6 +312,47 @@ describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => 
       expect(parsePayInvoiceWithWalletCache({ invoiceId: INVOICE_ID })).toBeNull();
     });
 
+    it.each([
+      { remainingPaid: 'not-money' },
+      { remainingPaid: '0' },
+      { remainingPaid: '-1000000' },
+      { remainingPaid: '1e6' },
+      { remainingPaid: ' 1000000' },
+      { remainingPaid: '01000000' },
+      { fromState: 'Cancelled' },
+      { fromState: 'unknown' },
+    ])('rejects inconsistent payment snapshots: %j', (changes) => {
+      expect(parsePayInvoiceWithWalletCache({ ...snapshot, ...changes })).toBeNull();
+    });
+
+    it.each([
+      { amount: '1000000' },
+      { amount: '-999999' },
+      { amount: 'not-money' },
+      { type: 'topup' },
+      { state: 'Pending' },
+      { walletId: INVOICE_ID },
+      { refId: PROFILE_ID },
+      { refId: null },
+      { id: 'not-a-uuid' },
+      { idempotencyKey: ' ' },
+      { createdAt: 'not-a-date' },
+      { updatedAt: 'not-a-date' },
+    ])('rejects inconsistent cached ledger: %j', (changes) => {
+      expect(
+        parsePayInvoiceWithWalletCache({
+          ...snapshot,
+          walletTransaction: { ...snapshot.walletTransaction, ...changes },
+        })
+      ).toBeNull();
+    });
+
+    it('preserves the Paid-state snapshot produced by ledger recovery', () => {
+      expect(
+        parsePayInvoiceWithWalletCache({ ...snapshot, fromState: 'Paid', auditId: '' })
+      ).toMatchObject({ fromState: 'Paid', auditId: '' });
+    });
+
     it('matches only the original invoice and profile', () => {
       expect(cachedWalletPaymentMatchesRequest(snapshot, INVOICE_ID, PROFILE_ID)).toBe(true);
       expect(

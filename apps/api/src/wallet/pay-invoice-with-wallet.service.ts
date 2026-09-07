@@ -169,7 +169,7 @@ export class PayInvoiceWithWalletService {
         if (!parsed) {
           throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
         }
-        this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId);
+        this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId, key);
         await client.query('COMMIT');
         return resultFromCache(parsed);
       }
@@ -377,9 +377,13 @@ export class PayInvoiceWithWalletService {
   private assertCachedMatchesRequest(
     cached: PayInvoiceWithWalletCachedResponse,
     invoiceId: string,
-    profileId: string
+    profileId: string,
+    idempotencyKey: string
   ): void {
-    if (!cachedWalletPaymentMatchesRequest(cached, invoiceId, profileId)) {
+    if (
+      !cachedWalletPaymentMatchesRequest(cached, invoiceId, profileId) ||
+      cached.walletTransaction.idempotencyKey !== idempotencyKey
+    ) {
       throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
     }
   }

@@ -402,6 +402,33 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
     ]);
   });
 
+  it.each([
+    ['remainingPaid', 'not-money'],
+    ['walletTransaction,amount', '-1'],
+    ['walletTransaction,walletId', 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'],
+    ['walletTransaction,idempotencyKey', 'another-payment-key'],
+    ['walletTransaction,createdAt', 'not-a-date'],
+  ])('rejects corrupted cache field %s without another debit', async (field, value) => {
+    const { profileId, invoiceId } = await seedPayable({ posted: 1_500_000n });
+    const key = `pay-corrupt-${invoiceId}`;
+    await pay(invoiceId, profileId, key);
+    const wallet = await fetchWallet(profileId);
+    const ledger = await fetchLedger(profileId);
+    const audit = await fetchAudit(invoiceId);
+    await ctx.pool.query(
+      `UPDATE idempotency_keys SET response=jsonb_set(response,$1::text[],$2::jsonb)
+       WHERE idempotency_key=$3 AND entity_type=$4`,
+      [field.split(','), JSON.stringify(value), key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE]
+    );
+    await expect(pay(invoiceId, profileId, key)).rejects.toThrow(
+      PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION()
+    );
+    expect(await fetchWallet(profileId)).toEqual(wallet);
+    expect(await fetchLedger(profileId)).toEqual(ledger);
+    expect(await fetchAudit(invoiceId)).toEqual(audit);
+    expect((await fetchInvoice(invoiceId)).state).toBe('Paid');
+  });
+
   it('rejects the same key used for a different invoice after a successful payment', async () => {
     const first = await seedPayable({ posted: 1_500_000n });
     const second = await seedPayable({ posted: 1_500_000n });
