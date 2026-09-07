@@ -1,6 +1,8 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import {
   fetchActiveProfileId,
+  mapInvoiceReceiptSubmitError,
+  normalizeIrrAmountDigits,
   submitInvoiceBankReceipt,
   uploadInvoiceReceiptAttachment,
 } from './invoice-bank-receipt-upload.js';
@@ -14,6 +16,35 @@ const receipt = {
   payerReference: 'bank-ref',
   attachmentKey: 'receipt/key.pdf',
 };
+
+it('preserves Arabic-Indic IRR digits and maps an unavailable service to a generic localized error', () => {
+  expect(normalizeIrrAmountDigits('١٢٣٬٤٥٦')).toBe('123456');
+  expect(mapInvoiceReceiptSubmitError(502)).toBe('generic');
+});
+
+it.each(['put', 'record'])(
+  'never returns a usable attachment after the %s step fails',
+  async (phase) => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(
+        json({ key: 'receipt/key.pdf', presignedUrl: 'https://storage.example.test/object' })
+      );
+    fetch.mockResolvedValueOnce(json({}, phase === 'put' ? 503 : 200));
+    if (phase === 'record')
+      fetch
+        .mockResolvedValueOnce(json({ status: 'confirmed' }))
+        .mockResolvedValueOnce(json({}, 503));
+    vi.stubGlobal('fetch', fetch);
+    await expect(
+      uploadInvoiceReceiptAttachment(
+        new File(['%PDF'], 'receipt.pdf', { type: 'application/pdf' }),
+        'profile-1'
+      )
+    ).resolves.toBeNull();
+    expect(fetch).toHaveBeenCalledTimes(phase === 'put' ? 2 : 4);
+  }
+);
 
 it.each([null, [], 'unexpected', {}].map((body) => ({ body })))(
   'rejects malformed receipt acknowledgement $body without throwing',
