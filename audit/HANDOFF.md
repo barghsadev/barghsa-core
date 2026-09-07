@@ -69,19 +69,10 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
-- **5,634 unit/integration tests across 455 files pass**, using the full regression and affected refreshes: API3355, DB660, worker367, shared934, UI49, i18n50, web216, tsconfig3. The last two invoice checks were a targeted refresh of an existing test file; other source/test evidence remains valid.
-- **350/350 production Chromium cases pass at `469641a`**, with no skips/flakes/failures. Collector accepted 350 records mapping 218 source files. This historical run predates the resumed runtime repairs above. This is not a five-browser run.
-- Browser coverage was merged at its exact revision before subsequent test commits. The last invoice-helper unit coverage was accumulated only for that unchanged production file after byte comparison with `469641a`; the browser revision was not rewritten and the merger guard was not weakened.
-- Root lint and all 11 workspace typechecks pass; later tests pass targeted lint/type checks. Backlog (1355 tasks/116 traceability entries), 55 loop tests, OpenAPI, migration snapshot and clean/upgrade/repeat migration checks through 0120 pass.
-- Local API, worker and web production images build. Network-isolated API/worker package/money-parser smoke checks and web health check pass. Temporary smoke containers were removed. No image push/deployment occurred.
-- Coverage: **11/13 groups pass**, no report errors. Web critical now passes at **90.12% lines / 88.15% branches**. Database general also passes. Thresholds unchanged; no exception granted.
-
-| Remaining coverage gap | Lines | Branches | Required lines/branches |
-| --- | ---: | ---: | --- |
-| API critical | 90.93% | 77.86% | 90% / 85% |
-| Web general | 65.00% | 62.65% | 80% / 75% |
-
-Full-run log: `/tmp/barghsa-repair-final-regression.log`; affected frontend `/tmp/barghsa-final-frontend-current.log`, `/tmp/barghsa-receipt-followup-coverage.log`, `/tmp/barghsa-invoice-final-tests.log`. Current browser logs use `/tmp/barghsa-current-*`. The older `/tmp/barghsa-final-browser.log` was stale after a failed command chain and is not credited as new evidence.
+- **5,815 unit/integration tests across 461 files pass** at `0494ad4`, with affected web/i18n coverage refreshed at `eb19ed5`. All 11 workspace typechecks and root lint pass, with subsequent label changes checked separately.
+- **378/378 production Chromium cases pass at `eb19ed5`**, no skips/flakes/failures. Collector mapped 378 records to 222 source files and merged them at that exact revision. Logs `/tmp/barghsa-resumed-browser-final.log`, `/tmp/barghsa-resumed-browser-collect.log`, `/tmp/barghsa-resumed-browser-merge.log`. This is not a full five-browser run.
+- **11/13 coverage groups pass**, no report errors. API critical: 92.13% lines / 80.48% branches, needs 90/85. Web general: 66.34% / 63.44%, needs 80/75. Thresholds unchanged; no exception. Current report `audit/combined-coverage-checkpoint.json`.
+- Unchanged backlog, 55 loop tests, OpenAPI and migration chain/snapshot evidence through 0120 is reused from the preceding checkpoint. Production images are historical and predate resumed runtime changes; no current image rebuild, push or deployment occurred.
 
 ## External blockers
 

@@ -136,10 +136,10 @@
         "apps/api/src/wallet/wallet.module.ts",
         "apps/api/src/wallet/wallet.service.ts"
       ],
-      "lines": 9098,
-      "covered_lines": 8273,
-      "branches": 6142,
-      "covered_branches": 4782,
+      "lines": 9112,
+      "covered_lines": 8395,
+      "branches": 6128,
+      "covered_branches": 4932,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -293,7 +293,7 @@
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
       "lines": 4481,
-      "covered_lines": 4194,
+      "covered_lines": 4195,
       "branches": 3505,
       "covered_branches": 2835,
       "required_lines": 80,
@@ -347,6 +347,7 @@
         "apps/web/src/lib/bank-receipt-confirmation.ts",
         "apps/web/src/lib/branding-logo-upload.ts",
         "apps/web/src/lib/due-at-override.ts",
+        "apps/web/src/lib/geography-api.ts",
         "apps/web/src/lib/notifications.ts",
         "apps/web/src/lib/profile-context.ts",
         "apps/web/src/lib/template-preview.ts",
@@ -437,10 +438,10 @@
         "apps/web/src/routes/support.tsx",
         "apps/web/src/routes/terms.tsx"
       ],
-      "lines": 6766,
-      "covered_lines": 4398,
-      "branches": 8341,
-      "covered_branches": 5226,
+      "lines": 6794,
+      "covered_lines": 4507,
+      "branches": 8439,
+      "covered_branches": 5354,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -450,6 +451,7 @@
       "critical": true,
       "files": [
         "apps/web/src/lib/auth-errors.ts",
+        "apps/web/src/lib/auth-responses.ts",
         "apps/web/src/lib/csrf.ts",
         "apps/web/src/lib/customer-invoices.ts",
         "apps/web/src/lib/invoice-bank-receipt-upload.ts",
@@ -495,10 +497,10 @@
         "apps/web/src/routes/admin/verification.tsx",
         "apps/web/src/routes/admin/wallet-receipts.tsx"
       ],
-      "lines": 577,
-      "covered_lines": 520,
-      "branches": 498,
-      "covered_branches": 439,
+      "lines": 592,
+      "covered_lines": 537,
+      "branches": 538,
+      "covered_branches": 478,
       "required_lines": 90,
       "required_branches": 85,
       "passed": true
@@ -696,6 +698,7 @@
         "packages/i18n/src/crm.ts",
         "packages/i18n/src/date-time.ts",
         "packages/i18n/src/feedback.ts",
+        "packages/i18n/src/geography.ts",
         "packages/i18n/src/gifts.ts",
         "packages/i18n/src/index.ts",
         "packages/i18n/src/lookup.ts",
@@ -706,10 +709,10 @@
         "packages/i18n/src/timezone.ts",
         "packages/i18n/src/vat.ts"
       ],
-      "lines": 64,
-      "covered_lines": 63,
-      "branches": 113,
-      "covered_branches": 93,
+      "lines": 67,
+      "covered_lines": 66,
+      "branches": 115,
+      "covered_branches": 95,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -882,5 +885,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "a4e5fa99dfec2279a135fdbd9037e99fdcbeb424"
+  "head_sha": "eb19ed5b3ce959429ba5dd90339118417c37f534"
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-09-08",
-  "runtime_revision": "469641a73df7f8cbd7789bd2a2b05b9069e306ad",
+  "runtime_revision": "eb19ed5b3ce959429ba5dd90339118417c37f534",
   "branch": "codex/audit-fixes",
   "scope": "Bounded confirmed runtime and build repairs, targeted critical-path tests and final regression. Two coverage gates and historical acceptance remain open.",
   "remote_actions_performed": false,
@@ -63,70 +63,95 @@
         "469641a"
       ],
       "summary": "Dual-format shared/UI distributions, shared page states and clean image build fixes."
+    },
+    {
+      "group": "F04/F15",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "c6f9f69",
+        "518019b"
+      ],
+      "summary": "CRM, geography and provider permission/input boundary checks."
+    },
+    {
+      "group": "F13/F14",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "8584d3e",
+        "9babc0e"
+      ],
+      "summary": "Require persisted invoice/wallet receipt decisions; injected PostgreSQL failures roll back money, notices and approval parking."
+    },
+    {
+      "group": "F03/F05",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "ade0fe0",
+        "e45ab81",
+        "ce3c79f",
+        "b12d562",
+        "0494ad4"
+      ],
+      "summary": "Cookie and OTP boundary review; validate login/registration session, password-change, resend and registration challenge acknowledgements."
+    },
+    {
+      "group": "F17/F20",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "955acb3",
+        "eb19ed5"
+      ],
+      "summary": "Localized, keyboard-managed geography dialogs and recovery; preserve filter name; correct fallback primary contrast."
     }
   ],
   "regression": {
     "status": "passed",
-    "tests": 5634,
-    "files": 455,
+    "tests": 5815,
+    "files": 461,
     "full_run": {
-      "revision": "081eccd",
-      "log": "/tmp/barghsa-repair-final-regression.log",
+      "revision": "0494ad4",
+      "log": "/tmp/barghsa-resumed-full-coverage.log",
       "turbo_tasks": 12
     },
     "packages": {
-      "api": 3355,
+      "api": 3502,
       "db": 660,
       "worker": 367,
       "shared": 934,
       "ui": 49,
       "i18n": 50,
-      "web": 216,
+      "web": 250,
       "tsconfig": 3
     },
     "affected_refreshes": [
       {
-        "revision": "c74ecc5",
+        "revision": "eb19ed5b3ce959429ba5dd90339118417c37f534",
         "packages": [
-          "ui",
-          "i18n",
-          "web"
+          "web",
+          "i18n"
         ],
-        "log": "/tmp/barghsa-final-frontend-current.log"
-      },
-      {
-        "revision": "799cc66",
-        "packages": [
-          "web"
-        ],
-        "tests": 214,
-        "log": "/tmp/barghsa-receipt-followup-coverage.log"
-      },
-      {
-        "revision": "a4e5fa9",
-        "test_file": "apps/web/src/lib/customer-invoices.test.ts",
-        "tests": 4,
-        "net_added_tests": 2,
-        "log": "/tmp/barghsa-invoice-final-tests.log"
+        "logs": [
+          "/tmp/barghsa-resumed-web-refresh.log",
+          "/tmp/barghsa-resumed-i18n-refresh.log"
+        ]
       }
-    ],
-    "reuse": "Unchanged package evidence reused; the removed purchase dictionary tests are excluded from totals."
+    ]
   },
   "browser": {
     "status": "passed",
-    "revision": "469641a73df7f8cbd7789bd2a2b05b9069e306ad",
+    "revision": "eb19ed5b3ce959429ba5dd90339118417c37f534",
     "project": "production Chromium",
-    "passed": 350,
+    "passed": 378,
     "skipped": 0,
     "flaky": 0,
     "failed": 0,
-    "coverage_records": 350,
-    "mapped_source_files": 218,
-    "log": "/tmp/barghsa-current-browser.log",
-    "build_log": "/tmp/barghsa-current-browser-build.log",
-    "collector_log": "/tmp/barghsa-current-collect.log",
-    "merge_log": "/tmp/barghsa-current-merge.log",
-    "reuse_limit": "Subsequent commits add tests only; not a five-browser run. Final invoice helper coverage accumulated only after byte equality with this source revision. No browser revision rewriting."
+    "coverage_records": 378,
+    "mapped_source_files": 222,
+    "log": "/tmp/barghsa-resumed-browser-final.log",
+    "build_log": "/tmp/barghsa-resumed-browser-build.log",
+    "collector_log": "/tmp/barghsa-resumed-browser-collect.log",
+    "merge_log": "/tmp/barghsa-resumed-browser-merge.log",
+    "reuse_limit": "Exact committed production revision. Full Chromium run; other browser profiles were checked only for focused repairs."
   },
   "checks": {
     "root_lint": "passed",
@@ -150,14 +175,15 @@
     "migration_clean_upgrade_repeat": "passed through 0120",
     "migration_snapshot": "passed",
     "logs": {
-      "lint": "/tmp/barghsa-repair-final-lint.log",
-      "types": "/tmp/barghsa-final-types-current.log",
+      "lint": "/tmp/barghsa-resumed-lint.log",
+      "types": "/tmp/barghsa-resumed-types.log",
       "latest_test_types": "/tmp/barghsa-invoice-final-types.log",
       "backlog": "/tmp/barghsa-repair-final-backlog.log",
       "loop": "/tmp/barghsa-repair-final-loop.log",
       "snapshot": "/tmp/barghsa-repair-final-snapshot.log",
       "contract": "/tmp/barghsa-repair-final-contract.log"
-    }
+    },
+    "reuse_note": "Root lint/types refreshed at 0494ad4; subsequent filter label passed focused lint/types. Unchanged loop, contract and migration tooling evidence reused."
   },
   "coverage": {
     "status": "failed",
@@ -171,21 +197,21 @@
       {
         "package": "apps/api",
         "critical": true,
-        "lines_percent": 90.93,
-        "branches_percent": 77.86,
+        "lines_percent": 92.13,
+        "branches_percent": 80.48,
         "required_lines": 90,
         "required_branches": 85
       },
       {
         "package": "apps/web",
         "critical": false,
-        "lines_percent": 65.0,
-        "branches_percent": 62.65,
+        "lines_percent": 66.34,
+        "branches_percent": 63.44,
         "required_lines": 80,
         "required_branches": 75
       }
     ],
-    "log": "/tmp/barghsa-final-current-gate.log"
+    "log": "/tmp/barghsa-resumed-coverage-gate.log"
   },
   "historical_acceptance": {
     "verified": 35,
@@ -194,9 +220,9 @@
     "changed": false
   },
   "external_and_deferred_details": "audit/HANDOFF.md",
-  "checkpoint_revision": "a4e5fa99dfec2279a135fdbd9037e99fdcbeb424",
+  "checkpoint_revision": "eb19ed5b3ce959429ba5dd90339118417c37f534",
   "production_images": {
-    "status": "built_and_smoke_passed_locally",
+    "status": "historical_build_and_smoke_passed_locally",
     "network": "none during smoke",
     "temporary_containers": "removed",
     "pushed": false,
@@ -217,6 +243,7 @@
         "source_revision": "469641a73df7f8cbd7789bd2a2b05b9069e306ad",
         "log": "/tmp/barghsa-web-image-synced.log"
       }
-    ]
+    ],
+    "reuse_limit": "Images predate resumed runtime repairs; current source images have not been rebuilt."
   }
 }
