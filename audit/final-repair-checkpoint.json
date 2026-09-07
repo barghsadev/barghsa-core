@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-07",
+  "runtime_revision": "9898b4fb07140607d79cddb1c2c079a5e9aacc49",
+  "branch": "codex/audit-fixes",
+  "scope": "Bounded carry-forward runtime repairs F23 and F02; original-plan acceptance is not certified.",
+  "remote_actions_performed": false,
+  "repairs": [
+    {
+      "group": "F23",
+      "status": "implemented_and_reviewed",
+      "commit": "6aac3dd",
+      "summary": "Serialized server-time rolling quotas and bounded credential-failure history; conservative legacy transition."
+    },
+    {
+      "group": "F02",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "d4377bc",
+        "b5b5a3e",
+        "9898b4f"
+      ],
+      "summary": "Per-statement read/write deadlines, transaction completion deadlines, and avoidance of duplicate automatic cancellation."
+    }
+  ],
+  "regression": {
+    "status": "passed",
+    "tests": 5366,
+    "files": 448,
+    "refreshed_packages": {
+      "revision": "9898b4fb07140607d79cddb1c2c079a5e9aacc49",
+      "packages": {
+        "db": {
+          "tests": 642,
+          "files": 87
+        },
+        "api": {
+          "tests": 3172,
+          "files": 239
+        },
+        "worker": {
+          "tests": 367,
+          "files": 32
+        }
+      },
+      "log": "/tmp/barghsa-final-affected-coverage.log"
+    },
+    "reused_unchanged_packages": {
+      "revision": "d4377bc05124c335b710f341e4320684d627a962",
+      "packages": {
+        "tsconfig": {
+          "tests": 3,
+          "files": 1
+        },
+        "ui": {
+          "tests": 43,
+          "files": 4
+        },
+        "shared": {
+          "tests": 934,
+          "files": 58
+        },
+        "i18n": {
+          "tests": 50,
+          "files": 4
+        },
+        "web": {
+          "tests": 155,
+          "files": 23
+        }
+      },
+      "log": "/tmp/barghsa-final-coverage.log"
+    },
+    "initial_failures": "13 API failures from stale fixture resets/count reads were corrected. Subsequent database refresh exposed a real automatic cancellation race, corrected and retested. Failed runs were not credited as passes."
+  },
+  "browser": {
+    "status": "passed",
+    "revision": "d27d351c506ba6266ccb28ae05bc15c6787720f8",
+    "project": "production Chromium",
+    "passed": 350,
+    "skipped": 0,
+    "flaky": 0,
+    "failed": 0,
+    "coverage_records": 350,
+    "mapped_source_files": 230,
+    "log": "/tmp/barghsa-final-browser.log",
+    "reuse_limit": "Frontend sources unchanged. This run predates final database-only corrections and does not certify browser execution against the latest backend."
+  },
+  "checks": {
+    "root_lint": "passed",
+    "workspace_typecheck": {
+      "status": "passed",
+      "tasks": 11
+    },
+    "backlog": "passed",
+    "loop_tests": {
+      "status": "passed",
+      "tests": 55
+    },
+    "openapi_contract": "passed",
+    "route_budgets": {
+      "status": "passed",
+      "routes": 41,
+      "artifact": "Existing unchanged frontend production build"
+    },
+    "migration_clean_upgrade_repeat": "passed through 0120",
+    "migration_snapshot": "passed"
+  },
+  "coverage": {
+    "status": "failed",
+    "passed_groups": 9,
+    "total_groups": 13,
+    "errors": [],
+    "report": "audit/combined-coverage-checkpoint.json",
+    "thresholds_changed": false,
+    "exception_granted": false,
+    "failed_groups": [
+      {
+        "package": "apps/api",
+        "critical": true,
+        "lines_percent": 90.4,
+        "branches_percent": 76.65,
+        "required_lines": 90,
+        "required_branches": 85
+      },
+      {
+        "package": "apps/web",
+        "critical": false,
+        "lines_percent": 64.94,
+        "branches_percent": 62.54,
+        "required_lines": 80,
+        "required_branches": 75
+      },
+      {
+        "package": "apps/web",
+        "critical": true,
+        "lines_percent": 77.04,
+        "branches_percent": 74.24,
+        "required_lines": 90,
+        "required_branches": 85
+      },
+      {
+        "package": "packages/db",
+        "critical": false,
+        "lines_percent": 86.92,
+        "branches_percent": 71.93,
+        "required_lines": 80,
+        "required_branches": 75
+      }
+    ]
+  },
+  "historical_acceptance": {
+    "verified": 35,
+    "partial": 13,
+    "pending": 274,
+    "changed": false
+  },
+  "external_and_deferred_details": "audit/HANDOFF.md"
+}

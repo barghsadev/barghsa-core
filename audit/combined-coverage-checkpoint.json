@@ -293,9 +293,9 @@
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
       "lines": 4481,
-      "covered_lines": 4194,
+      "covered_lines": 4195,
       "branches": 3505,
-      "covered_branches": 2830,
+      "covered_branches": 2833,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -496,7 +496,7 @@
         "apps/web/src/routes/admin/wallet-receipts.tsx"
       ],
       "lines": 575,
-      "covered_lines": 442,
+      "covered_lines": 443,
       "branches": 493,
       "covered_branches": 366,
       "required_lines": 90,
@@ -629,10 +629,10 @@
         "packages/db/src/seed/notification-templates.ts",
         "packages/db/src/types.ts"
       ],
-      "lines": 496,
-      "covered_lines": 435,
-      "branches": 326,
-      "covered_branches": 230,
+      "lines": 520,
+      "covered_lines": 452,
+      "branches": 367,
+      "covered_branches": 264,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -658,8 +658,8 @@
         "packages/db/src/schema/wallet-chargeback-events.ts",
         "packages/db/src/schema/wallet-topup-callback-events.ts"
       ],
-      "lines": 94,
-      "covered_lines": 88,
+      "lines": 96,
+      "covered_lines": 90,
       "branches": 0,
       "covered_branches": 0,
       "required_lines": 90,
@@ -771,10 +771,10 @@
         "packages/shared/src/verification/index.ts",
         "packages/shared/src/verification/types.ts"
       ],
-      "lines": 1622,
-      "covered_lines": 1465,
-      "branches": 1799,
-      "covered_branches": 1585,
+      "lines": 1611,
+      "covered_lines": 1453,
+      "branches": 1814,
+      "covered_branches": 1593,
       "required_lines": 90,
       "required_branches": 85,
       "passed": true
@@ -880,5 +880,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "46346b2340850a44e50feb4375c75eac595b8680"
+  "head_sha": "9898b4fb07140607d79cddb1c2c079a5e9aacc49"
 }
