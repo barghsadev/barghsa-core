@@ -2624,3 +2624,9 @@ The public UI Toaster now shares Sonner's toast API. Explicit BaseToaster/baseTo
 ### Reject malformed provider amounts during payment recovery
 
 Recovery no longer truncates provider inquiry amount strings. It requires an exact positive decimal or safe integer match before attaching the unique callback-bound authority. Six new cases failed before repair; all 99 gateway/top-up checks, including real-PostgreSQL recovery tests, now pass. API types/lint, formatting and diff review pass. Details and external-provider limits are recorded in `audit/payment-recovery-amount-review.md`.
+
+### Repair database query cancellation and fixture shutdown
+
+Real PostgreSQL reproduced protocol error 08P01 when the query wrapper attempted cancellation on its existing connection. Cancellation now sends a separate CancelRequest, rechecks the original query identity, bounds socket lifetime, and rejects an expired queued query without cancelling unrelated work. Four real-database checks cover Promise/callback execution, queued isolation, connection reuse and transaction rollback. Invalid mock expectations that endorsed the old protocol use were removed.
+
+Review: 19 final focused tests pass. The earlier full database run passed 623 tests in 83 files before the additional transaction test, with no subsequent application-code change. The first full API run had 3171 passing assertions but an unhandled teardown error and is recorded as failed. Contract-template teardown now waits for sessions to disappear before dropping the database without FORCE. The full API rerun passes all 3171 tests in 239 files without unhandled errors. Database/API types, targeted lint, formatting and diff review pass. `audit/database-foundation-review.md` records protocol limits and remaining acceptance gaps. No database story is declared fully closed by this repair.

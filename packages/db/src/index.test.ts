@@ -9,7 +9,6 @@ import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery, dbHeal
 
 function makeMockClient(): {
   client: any;
-  cancel: ReturnType<typeof vi.fn>;
   runQuery: ReturnType<typeof vi.fn>;
   resolvePromise: () => void;
 } {
@@ -47,11 +46,9 @@ function makeMockClient(): {
     });
   });
 
-  const cancel = vi.fn();
   const client = {
     query: runQuery,
     _queryQueue,
-    cancel,
   };
   // Use a getter for _activeQuery so wrapClientQuery reads the live value.
   Object.defineProperty(client, '_activeQuery', {
@@ -64,7 +61,7 @@ function makeMockClient(): {
     deferredResolve = null;
   };
 
-  return { client, cancel, runQuery, resolvePromise };
+  return { client, runQuery, resolvePromise };
 }
 
 describe('@barghsa/db', () => {
@@ -146,49 +143,8 @@ describe('@barghsa/db', () => {
       vi.useRealTimers();
     });
 
-    it('cancels the correct query object when timeout elapses (Promise path)', () => {
-      const { client, cancel } = makeMockClient();
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query;
-      wrapped('SELECT pg_sleep(5)');
-
-      // The captured query should be the one in _activeQuery.
-      const captured = (client as any)._activeQuery;
-      expect(captured).toBeDefined();
-
-      vi.advanceTimersByTime(100);
-      expect(cancel).toHaveBeenCalledTimes(1);
-      const call = cancel.mock.calls[0]!;
-      // First arg is the client instance, second is the exact captured query.
-      expect(call[0]).toBe(client);
-      expect(call[1]).toBe(captured);
-    });
-
-    it('does not throw when the timeout fires', () => {
-      const { client, cancel } = makeMockClient();
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query;
-      wrapped('SELECT pg_sleep(5)');
-      expect(() => vi.advanceTimersByTime(100)).not.toThrow();
-      expect(cancel).toHaveBeenCalled();
-    });
-
-    it('cancels the correct query object when timeout elapses (callback path)', () => {
-      const { client, cancel } = makeMockClient();
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query;
-      const cb = vi.fn();
-      wrapped('SELECT pg_sleep(5)', cb);
-
-      // The captured query should be the one from the internal state.
-      const captured = (client as any)._activeQuery;
-      expect(captured).toBeDefined();
-
-      vi.advanceTimersByTime(100);
-      expect(cancel).toHaveBeenCalledTimes(1);
-      const call = cancel.mock.calls[0]!;
-      expect(call[1]).toBe(captured);
-    });
-
     it('does not cancel when the query completes before the timeout', async () => {
-      const { client, cancel, resolvePromise } = makeMockClient();
+      const { client, resolvePromise } = makeMockClient();
       const wrapped = wrapClientQuery(client, 100) as typeof client.query;
       wrapped('SELECT 1');
 
@@ -200,15 +156,15 @@ describe('@barghsa/db', () => {
 
       // Now advance far past the threshold; timer must have been cleaned up.
       await vi.advanceTimersByTimeAsync(200);
-      expect(cancel).not.toHaveBeenCalled();
+      expect(vi.getTimerCount()).toBe(0);
     });
 
     it('does not schedule a timeout when queryTimeout is 0 (disabled)', () => {
-      const { client, cancel } = makeMockClient();
+      const { client } = makeMockClient();
       const wrapped = wrapClientQuery(client, 0) as typeof client.query;
       wrapped('SELECT pg_sleep(5)');
       vi.advanceTimersByTime(1000);
-      expect(cancel).not.toHaveBeenCalled();
+      expect(vi.getTimerCount()).toBe(0);
     });
 
     it('preserves callback invocation', () => {

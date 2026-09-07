@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool, type Client, type PoolConfig } from 'pg';
+import { Pool, Client, type PoolConfig } from 'pg';
 import * as fs from 'node:fs';
 
 let pool: Pool | null = null;
@@ -68,6 +68,44 @@ export function buildConnectionString(
   return `${url}${separator}options=${encodeURIComponent(gucOptions)}`;
 }
 
+type PendingQuery = { handleError(error: Error, connection: unknown): void };
+type QueryClient = Client & {
+  _activeQuery?: PendingQuery | null;
+  _queryQueue?: PendingQuery[];
+  processID: number;
+  secretKey: number;
+};
+
+/** Send PostgreSQL CancelRequest on a separate socket, never the query socket. */
+function cancelRunningQuery(client: QueryClient, query: PendingQuery): () => void {
+  const connection = new Client({ host: client.host, port: client.port })
+    .connection as Client['connection'] & {
+    connect(portOrPath: number | string, host?: string): void;
+    cancel(processId: number, secretKey: number): void;
+  };
+  const deadline = setTimeout(() => connection.stream.destroy(), 5000);
+  const dispose = () => {
+    clearTimeout(deadline);
+    connection.stream.destroy();
+  };
+  connection.once('end', () => clearTimeout(deadline));
+  connection.once('error', () => {
+    structuredLog('error', 'query_cancel_transport_failed', {});
+    dispose();
+  });
+  connection.once('connect', () => {
+    // The queued cancellation may connect after the original query completed.
+    if (client._activeQuery !== query) {
+      dispose();
+      return;
+    }
+    connection.cancel(client.processID, client.secretKey);
+  });
+  if (client.host.startsWith('/')) connection.connect(`${client.host}/.s.PGSQL.${client.port}`);
+  else connection.connect(client.port, client.host);
+  return dispose;
+}
+
 /**
  * Wrap a client's query method so that in production we measure execution
  * duration and emit a structured JSON warning for slow queries, and in any
@@ -95,33 +133,41 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
     const cbIndex = args.findIndex((a: unknown) => typeof a === 'function');
     const hasCallback = cbIndex !== -1;
 
-    let timedOut = false;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let disposeCancellation: (() => void) | undefined;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let capturedQuery: any = null;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const captureQuery = (c: any): void => {
       // Peek at the client's internal state right after the call to find
-      // the pg Query object that was just created.  This works for both
-      // callback and Promise paths because pg synchronously pushes the
-      // Query to _queryQueue (or sets it as _activeQuery) inside
-      // client.query() before returning.
-      capturedQuery = c._activeQuery ?? c._queryQueue?.[c._queryQueue.length - 1];
+      // the pg Query object just submitted. pg queues it synchronously
+      // behind any running query before client.query() returns.
+      // A newly submitted query is last in the queue when another is active.
+      capturedQuery = c._queryQueue?.[c._queryQueue.length - 1] ?? c._activeQuery;
     };
 
     const scheduleTimeout = (): void => {
       if (queryTimeoutMs <= 0 || !capturedQuery) return;
       timeoutId = setTimeout(() => {
-        timedOut = true;
         structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (client as any).cancel(client, capturedQuery);
+        const target = client as QueryClient;
+        const queuedIndex = target._queryQueue?.indexOf(capturedQuery) ?? -1;
+        if (queuedIndex >= 0) {
+          target._queryQueue!.splice(queuedIndex, 1);
+          capturedQuery.handleError(
+            Object.assign(new Error('Query timed out before execution'), { code: '57014' }),
+            client.connection
+          );
+        } else if (target._activeQuery === capturedQuery) {
+          disposeCancellation = cancelRunningQuery(target, capturedQuery);
+        }
       }, queryTimeoutMs);
     };
 
     const cleanup = (): void => {
-      if (!timedOut && timeoutId) {
+      disposeCancellation?.();
+      if (timeoutId) {
         clearTimeout(timeoutId);
         timeoutId = null;
       }
