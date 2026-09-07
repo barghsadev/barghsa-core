@@ -71,6 +71,16 @@
       "types": "./dist/date-time.d.ts",
       "import": "./dist/date-time.js",
       "default": "./dist/date-time.js"
+    },
+    "./providers": {
+      "types": "./dist/providers.d.ts",
+      "import": "./dist/providers.js",
+      "default": "./dist/providers.js"
+    },
+    "./contract-templates": {
+      "types": "./dist/contract-templates.d.ts",
+      "import": "./dist/contract-templates.js",
+      "default": "./dist/contract-templates.js"
     }
   },
   "scripts": {

@@ -1,7 +1,7 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
-import { t } from '@barghsa/i18n';
+import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
 import type { ContractTemplateDto, ContractTemplateDetailDto } from '@barghsa/shared/admin';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -11,7 +11,7 @@ const MAX_BYTES = 10 * 1024 * 1024;
 export default function AdminContractTemplatesPage() {
   const time = useAccountTime();
   const locale = useLocale(),
-    label = (key: string) => t(`admin.templates.${key}`, locale);
+    label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
   const [rows, setRows] = useState<ContractTemplateDto[]>([]),
     [detail, setDetail] = useState<ContractTemplateDetailDto | null>(null);
   const [selected, setSelected] = useState<string | null>(null),

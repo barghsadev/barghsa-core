@@ -1,3 +1,4 @@
+import { providerText } from '@barghsa/i18n/providers';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback } from 'react';
 import type { FormEvent, ReactNode } from 'react';
@@ -244,7 +245,9 @@ export default function AdminEmailProvidersPage() {
       const data = await listProviders();
       setProviders(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.providers.error.load', uiLocale));
+      setError(
+        err instanceof Error ? err.message : providerText('admin.providers.error.load', uiLocale)
+      );
     } finally {
       setLoading(false);
     }
@@ -268,7 +271,7 @@ export default function AdminEmailProvidersPage() {
   function openEdit(p: EmailProvider) {
     // Superseded/disabled versions are read-only; only drafts may be edited.
     if (p.status !== 'draft') {
-      setError(t('admin.providers.supersededNote', uiLocale));
+      setError(providerText('admin.providers.supersededNote', uiLocale));
       return;
     }
     setEditId(p.id);
@@ -304,11 +307,11 @@ export default function AdminEmailProvidersPage() {
     setNotice(null);
     try {
       // Client-side required-field validation mirrors the server schemas.
-      if (!label.trim()) throw new Error(t('admin.providers.field.required', uiLocale));
+      if (!label.trim()) throw new Error(providerText('admin.providers.field.required', uiLocale));
       if (transport === 'smtp') {
         const f = form as SmtpForm;
         if (!f.host.trim() || !f.fromEmail.trim()) {
-          throw new Error(t('admin.providers.field.required', uiLocale));
+          throw new Error(providerText('admin.providers.field.required', uiLocale));
         }
         if (editId) {
           await updateProvider(editId, { label: label.trim(), config: smtpConfig(f) });
@@ -321,7 +324,7 @@ export default function AdminEmailProvidersPage() {
         // create. When editing, an empty apiKey preserves the stored key
         // (server merges the config patch over the existing config).
         if (!f.fromEmail.trim() || (!editId && !f.apiKey.trim())) {
-          throw new Error(t('admin.providers.field.required', uiLocale));
+          throw new Error(providerText('admin.providers.field.required', uiLocale));
         }
         if (editId) {
           await updateProvider(editId, { label: label.trim(), config: resendConfig(f) });
@@ -332,7 +335,9 @@ export default function AdminEmailProvidersPage() {
       closeEditor();
       await fetchAll();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.providers.error.save', uiLocale));
+      setError(
+        err instanceof Error ? err.message : providerText('admin.providers.error.save', uiLocale)
+      );
     } finally {
       setBusy(false);
     }
@@ -365,14 +370,18 @@ export default function AdminEmailProvidersPage() {
       await activateProvider(p.id);
       await fetchAll();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.providers.error.activate', uiLocale));
+      setError(
+        err instanceof Error
+          ? err.message
+          : providerText('admin.providers.error.activate', uiLocale)
+      );
     } finally {
       setBusy(false);
     }
   }
 
   async function handleDisable(p: EmailProvider) {
-    if (!window.confirm(t('admin.providers.disableConfirm', uiLocale))) return;
+    if (!window.confirm(providerText('admin.providers.disableConfirm', uiLocale))) return;
     setBusy(true);
     setError(null);
     setNotice(null);
@@ -380,23 +389,29 @@ export default function AdminEmailProvidersPage() {
       await disableProvider(p.id);
       await fetchAll();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.providers.error.disable', uiLocale));
+      setError(
+        err instanceof Error ? err.message : providerText('admin.providers.error.disable', uiLocale)
+      );
     } finally {
       setBusy(false);
     }
   }
 
   async function handleRollback(p: EmailProvider) {
-    if (!window.confirm(t('admin.providers.rollbackConfirm', uiLocale))) return;
+    if (!window.confirm(providerText('admin.providers.rollbackConfirm', uiLocale))) return;
     setBusy(true);
     setError(null);
     setNotice(null);
     try {
       await rollbackProvider(p.id);
       await fetchAll();
-      setNotice(t('admin.providers.rollback', uiLocale));
+      setNotice(providerText('admin.providers.rollback', uiLocale));
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.providers.error.rollback', uiLocale));
+      setError(
+        err instanceof Error
+          ? err.message
+          : providerText('admin.providers.error.rollback', uiLocale)
+      );
     } finally {
       setBusy(false);
     }
@@ -410,9 +425,9 @@ export default function AdminEmailProvidersPage() {
   }
 
   function lastTestLabel(p: EmailProvider): string {
-    if (p.lastTestStatus === 'passed') return t('admin.providers.test.passed', uiLocale);
-    if (p.lastTestStatus === 'failed') return t('admin.providers.test.failed', uiLocale);
-    return t('admin.providers.test.pending', uiLocale);
+    if (p.lastTestStatus === 'passed') return providerText('admin.providers.test.passed', uiLocale);
+    if (p.lastTestStatus === 'failed') return providerText('admin.providers.test.failed', uiLocale);
+    return providerText('admin.providers.test.pending', uiLocale);
   }
 
   return (
@@ -420,15 +435,17 @@ export default function AdminEmailProvidersPage() {
       {time.notice}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">{t('admin.providers.title', uiLocale)}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t('admin.providers.subtitle', uiLocale)}</p>
+          <h1 className="text-2xl font-bold">{providerText('admin.providers.title', uiLocale)}</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {providerText('admin.providers.subtitle', uiLocale)}
+          </p>
         </div>
         {!showEditor && (
           <button
             onClick={openCreate}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            {t('admin.providers.new', uiLocale)}
+            {providerText('admin.providers.new', uiLocale)}
           </button>
         )}
       </div>
@@ -467,8 +484,8 @@ export default function AdminEmailProvidersPage() {
         >
           <h2 className="text-lg font-semibold">
             {editId
-              ? t('admin.providers.update.title', uiLocale)
-              : t('admin.providers.create.title', uiLocale)}
+              ? providerText('admin.providers.update.title', uiLocale)
+              : providerText('admin.providers.create.title', uiLocale)}
           </h2>
 
           <div>
@@ -476,7 +493,8 @@ export default function AdminEmailProvidersPage() {
               htmlFor="email-provider-label"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              {t('admin.providers.label', uiLocale)} <span className="text-red-500">*</span>
+              {providerText('admin.providers.label', uiLocale)}{' '}
+              <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -493,7 +511,8 @@ export default function AdminEmailProvidersPage() {
               htmlFor="email-provider-transport"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              {t('admin.providers.transport', uiLocale)} <span className="text-red-500">*</span>
+              {providerText('admin.providers.transport', uiLocale)}{' '}
+              <span className="text-red-500">*</span>
             </label>
             <select
               id="email-provider-transport"
@@ -520,10 +539,10 @@ export default function AdminEmailProvidersPage() {
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {busy
-                ? t('admin.providers.saving', uiLocale)
+                ? providerText('admin.providers.saving', uiLocale)
                 : editId
-                  ? t('admin.providers.update', uiLocale)
-                  : t('admin.providers.create', uiLocale)}
+                  ? providerText('admin.providers.update', uiLocale)
+                  : providerText('admin.providers.create', uiLocale)}
             </button>
             <button
               type="button"
@@ -531,7 +550,7 @@ export default function AdminEmailProvidersPage() {
               disabled={busy}
               className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 disabled:opacity-50"
             >
-              {t('admin.providers.cancel', uiLocale)}
+              {providerText('admin.providers.cancel', uiLocale)}
             </button>
           </div>
         </form>
@@ -540,28 +559,30 @@ export default function AdminEmailProvidersPage() {
       {/* Provider list */}
       <div className="overflow-x-auto bg-white rounded-lg border border-gray-200">
         {loading && (
-          <div className="p-4 text-gray-500">{t('admin.providers.loading', uiLocale)}</div>
+          <div className="p-4 text-gray-500">
+            {providerText('admin.providers.loading', uiLocale)}
+          </div>
         )}
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">
-                {t('admin.providers.col.label', uiLocale)}
+                {providerText('admin.providers.col.label', uiLocale)}
               </th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">
-                {t('admin.providers.col.transport', uiLocale)}
+                {providerText('admin.providers.col.transport', uiLocale)}
               </th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">
-                {t('admin.providers.col.status', uiLocale)}
+                {providerText('admin.providers.col.status', uiLocale)}
               </th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">
-                {t('admin.providers.col.test', uiLocale)}
+                {providerText('admin.providers.col.test', uiLocale)}
               </th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">
-                {t('admin.providers.col.activated', uiLocale)}
+                {providerText('admin.providers.col.activated', uiLocale)}
               </th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">
-                {t('admin.providers.col.actions', uiLocale)}
+                {providerText('admin.providers.col.actions', uiLocale)}
               </th>
             </tr>
           </thead>
@@ -569,7 +590,7 @@ export default function AdminEmailProvidersPage() {
             {providers.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
-                  {t('admin.providers.empty', uiLocale)}
+                  {providerText('admin.providers.empty', uiLocale)}
                 </td>
               </tr>
             ) : (
@@ -580,18 +601,18 @@ export default function AdminEmailProvidersPage() {
                     <td className="px-4 py-3 font-medium">{p.label}</td>
                     <td className="px-4 py-3">
                       <span className="text-xs uppercase tracking-wide text-gray-500">
-                        {t(`admin.providers.transport.${p.transport}`, uiLocale)}
+                        {providerText(`admin.providers.transport.${p.transport}`, uiLocale)}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[p.status]}`}
                       >
-                        {t(`admin.providers.status.${p.status}`, uiLocale)}
+                        {providerText(`admin.providers.status.${p.status}`, uiLocale)}
                       </span>
                       {p.status === 'superseded' && (
                         <p className="text-xs text-gray-400 mt-1">
-                          {t('admin.providers.supersededNote', uiLocale)}
+                          {providerText('admin.providers.supersededNote', uiLocale)}
                         </p>
                       )}
                     </td>
@@ -617,8 +638,9 @@ export default function AdminEmailProvidersPage() {
                               className={`text-xs mt-1 ${outcome.ok ? 'text-green-600' : 'text-red-600'}`}
                             >
                               {outcome.ok
-                                ? t('admin.providers.test.passed', uiLocale)
-                                : outcome.error || t('admin.providers.test.failed', uiLocale)}
+                                ? providerText('admin.providers.test.passed', uiLocale)
+                                : outcome.error ||
+                                  providerText('admin.providers.test.failed', uiLocale)}
                             </p>
                           );
                         }
@@ -629,7 +651,8 @@ export default function AdminEmailProvidersPage() {
                       {p.activatedAt ? time.format(p.activatedAt) : '—'}
                       {p.activatedAt && p.activatedBy && (
                         <p className="text-xs text-gray-400 mt-1">
-                          {t('admin.providers.meta.activatedBy', uiLocale)}: {p.activatedBy}
+                          {providerText('admin.providers.meta.activatedBy', uiLocale)}:{' '}
+                          {p.activatedBy}
                         </p>
                       )}
                     </td>
@@ -642,7 +665,7 @@ export default function AdminEmailProvidersPage() {
                             disabled={busy}
                             className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
                           >
-                            {t('admin.providers.update', uiLocale)}
+                            {providerText('admin.providers.update', uiLocale)}
                           </button>
                           {p.transport === 'resend' ? (
                             <ResendTestRow provider={p} onTest={handleTest} busy={busy} />
@@ -653,8 +676,8 @@ export default function AdminEmailProvidersPage() {
                               className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
                             >
                               {busy
-                                ? t('admin.providers.test.running', uiLocale)
-                                : t('admin.providers.test.run', uiLocale)}
+                                ? providerText('admin.providers.test.running', uiLocale)
+                                : providerText('admin.providers.test.run', uiLocale)}
                             </button>
                           )}
                           <button
@@ -662,12 +685,12 @@ export default function AdminEmailProvidersPage() {
                             disabled={busy || p.lastTestStatus !== 'passed'}
                             title={
                               p.lastTestStatus !== 'passed'
-                                ? t('admin.providers.activateHint', uiLocale)
+                                ? providerText('admin.providers.activateHint', uiLocale)
                                 : undefined
                             }
                             className="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700 disabled:opacity-40 w-full text-left"
                           >
-                            {t('admin.providers.activate', uiLocale)}
+                            {providerText('admin.providers.activate', uiLocale)}
                           </button>
                         </>
                       )}
@@ -676,7 +699,7 @@ export default function AdminEmailProvidersPage() {
                         <>
                           {risky && (
                             <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-2 py-1.5 rounded text-xs mb-2">
-                              {t('admin.providers.disableWarn', uiLocale)}
+                              {providerText('admin.providers.disableWarn', uiLocale)}
                             </div>
                           )}
                           <button
@@ -684,7 +707,7 @@ export default function AdminEmailProvidersPage() {
                             disabled={busy}
                             className="px-3 py-1 border border-red-300 text-red-600 rounded text-xs hover:bg-red-50 disabled:opacity-50 w-full text-left"
                           >
-                            {t('admin.providers.disable', uiLocale)}
+                            {providerText('admin.providers.disable', uiLocale)}
                           </button>
                         </>
                       )}
@@ -695,7 +718,7 @@ export default function AdminEmailProvidersPage() {
                           disabled={busy}
                           className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
                         >
-                          {t('admin.providers.rollback', uiLocale)}
+                          {providerText('admin.providers.rollback', uiLocale)}
                         </button>
                       )}
                     </td>
@@ -725,7 +748,7 @@ function SmtpFields({
 }) {
   const uiLocale = useLocale();
   const set = (k: keyof SmtpForm, v: string) => setField(k as string, v);
-  const sec = (k: string) => t(`admin.providers.field.${k}`, uiLocale);
+  const sec = (k: string) => providerText(`admin.providers.field.${k}`, uiLocale);
   return (
     <div className="grid grid-cols-2 gap-4">
       <Field label={sec('host')} required>
@@ -767,7 +790,9 @@ function SmtpFields({
           type="password"
           value={form.password}
           onChange={(e) => set('password', e.target.value)}
-          placeholder={editing ? t('admin.providers.field.secretPlaceholder', uiLocale) : undefined}
+          placeholder={
+            editing ? providerText('admin.providers.field.secretPlaceholder', uiLocale) : undefined
+          }
           autoComplete="new-password"
           className="w-full border border-gray-300 rounded px-3 py-2"
         />
@@ -811,7 +836,7 @@ function ResendFields({
 }) {
   const uiLocale = useLocale();
   const set = (k: keyof ResendForm, v: string) => setField(k as string, v);
-  const sec = (k: string) => t(`admin.providers.field.${k}`, uiLocale);
+  const sec = (k: string) => providerText(`admin.providers.field.${k}`, uiLocale);
   return (
     <div className="grid grid-cols-2 gap-4">
       <Field label={sec('apiKey')} required secret>
@@ -819,7 +844,9 @@ function ResendFields({
           type="password"
           value={form.apiKey}
           onChange={(e) => set('apiKey', e.target.value)}
-          placeholder={editing ? t('admin.providers.field.secretPlaceholder', uiLocale) : undefined}
+          placeholder={
+            editing ? providerText('admin.providers.field.secretPlaceholder', uiLocale) : undefined
+          }
           autoComplete="new-password"
           className="w-full border border-gray-300 rounded px-3 py-2"
         />
@@ -881,8 +908,8 @@ function ResendTestRow({
         type="email"
         value={recipient}
         onChange={(e) => setRecipient(e.target.value)}
-        aria-label={t('admin.providers.test.recipient', uiLocale)}
-        placeholder={t('admin.providers.test.recipient', uiLocale)}
+        aria-label={providerText('admin.providers.test.recipient', uiLocale)}
+        placeholder={providerText('admin.providers.test.recipient', uiLocale)}
         className="w-full border border-gray-300 rounded px-2 py-1 text-xs"
       />
       <button
@@ -891,8 +918,8 @@ function ResendTestRow({
         className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
       >
         {busy
-          ? t('admin.providers.test.running', uiLocale)
-          : t('admin.providers.test.run', uiLocale)}
+          ? providerText('admin.providers.test.running', uiLocale)
+          : providerText('admin.providers.test.run', uiLocale)}
       </button>
     </div>
   );
