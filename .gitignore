@@ -12,3 +12,4 @@ playwright-report/
 test-results/
 dist-coverage/
 packages/shared/.build-cjs-*/
+packages/ui/.distribution-*/

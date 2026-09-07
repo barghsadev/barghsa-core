@@ -172,7 +172,7 @@
     }
   },
   "scripts": {
-    "build": "node scripts/build.mjs && node --test scripts/package-exports.test.mjs",
+    "build": "node scripts/build.mjs && node --test scripts/package-exports.check.mjs",
     "dev": "tsc --watch --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",

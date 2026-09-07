@@ -2,6 +2,7 @@
 @import 'tw-animate-css';
 @config "../tailwind.config.ts";
 @source "./";
+@source "../dist";
 @source "../../../apps/web/src";
 
 /*
