@@ -140,14 +140,18 @@ describe('ProviderSecretsService (T-05.06.05)', () => {
     expect(isMaskedValue('')).toBe(false);
   });
 
-  it('stores secrets as plaintext when no encryption key is configured (documented degradation)', () => {
-    const svc = new ProviderSecretsService(undefined);
-    process.env[PROVIDER_SECRET_ENCRYPTION_ENV] = '';
-    const result = svc.encryptConfig('smtp', { host: 'h', password: 'plain' });
-    // Pass-through, not encrypted.
-    expect(result.password).toBe('plain');
-    expect(isEncryptedSecretValue(String(result.password))).toBe(false);
-  });
+  it.each(['smtp', 'resend', 'smsir'] as const)(
+    'refuses new %s secrets when the encryption key is missing',
+    (transport) => {
+      process.env[PROVIDER_SECRET_ENCRYPTION_ENV] = '';
+      const svc = new ProviderSecretsService(undefined);
+      const field = transport === 'smtp' ? 'password' : 'api_key';
+      expect(() => svc.encryptConfig(transport, { [field]: 'fixture-secret' })).toThrow(/not set/);
+      expect(svc.encryptConfig(transport, { label: 'No secret', [field]: '********' })).toEqual({
+        label: 'No secret',
+      });
+    }
+  );
 
   it('maskConfig degrades gracefully (no crash) when the key is missing for encrypted rows', () => {
     process.env[PROVIDER_SECRET_ENCRYPTION_ENV] = '';

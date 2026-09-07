@@ -154,13 +154,13 @@ function buildHarness() {
   return { rows, pool, queries, activeTemplateEvents, toResult, exec };
 }
 
-/** Build a service with a real (no-key) ProviderSecretsService + harness pool. */
+/** Build a service with a real keyed ProviderSecretsService + harness pool. */
 
 function makeService(h: ReturnType<typeof buildHarness>) {
   return new SmsProviderConfigService(
     h.pool as any,
     undefined,
-    new ProviderSecretsService(undefined)
+    new ProviderSecretsService('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
   );
 }
 

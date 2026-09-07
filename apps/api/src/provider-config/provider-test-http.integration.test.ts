@@ -5,7 +5,14 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
 beforeAll(async () => {
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  const priorKey = process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
+  process.env.PROVIDER_CONFIG_ENCRYPTION_KEY = '';
+  try {
+    http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  } finally {
+    if (priorKey === undefined) delete process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
+    else process.env.PROVIDER_CONFIG_ENCRYPTION_KEY = priorKey;
+  }
   await http.pool.query(
     "INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('provider-editor','Provider editor','Fixture','[\"admin:notification-providers:edit\"]')"
   );
@@ -101,5 +108,21 @@ for (const channel of ['email', 'sms']) {
       ).status
     ).toBe(409);
     expect((await http.pool.query(`SELECT * FROM ${table} ORDER BY id`)).rows).toEqual(before);
+  });
+  it(`${channel}: refuses to write a new secret without an encryption key`, async () => {
+    const id = await seed();
+    const before = (await http.pool.query(`SELECT * FROM ${table} WHERE id=$1`, [id])).rows;
+    const config =
+      channel === 'email' ? { password: 'fixture-secret' } : { api_key: 'fixture-secret' };
+    const response = await fetch(`${http.base}/api/admin/${channel}-providers/${id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ config }),
+    });
+    expect(response.status).toBe(500);
+    expect(await response.text()).not.toContain('fixture-secret');
+    expect((await http.pool.query(`SELECT * FROM ${table} WHERE id=$1`, [id])).rows).toEqual(
+      before
+    );
   });
 }

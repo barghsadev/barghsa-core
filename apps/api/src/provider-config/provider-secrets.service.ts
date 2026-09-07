@@ -66,8 +66,7 @@ export class ProviderSecretsService {
     this.key = resolveKey(key);
     if (!this.key) {
       this.logger.warn(
-        `${PROVIDER_SECRET_ENCRYPTION_ENV} is not set — secrets will be stored PLAINTEXT ` +
-          'when provider configs are created. Set it to encrypt secrets at rest.'
+        `${PROVIDER_SECRET_ENCRYPTION_ENV} is not set — new provider secret writes are unavailable.`
       );
     }
   }
@@ -128,9 +127,8 @@ export class ProviderSecretsService {
    * Return a copy of `config` with every secret field encrypted. Non-secret
    * fields are untouched. Unknown keys are passed through as-is.
    *
-   * - When no key is configured, secret fields are passed through as plaintext
-   *   (matching the documented/`.env.example` behavior: configs can still be
-   *   created, they just won't be encrypted at rest).
+   * - New nonempty secrets require the encryption key. Legacy values remain
+   *   readable, but missing configuration never downgrades a new write to plaintext.
    * - Values that already look like admin-UI masked placeholders (e.g.
    *   `********cret`) are omitted from the returned object so the write path's
    *   JSONB merge preserves the existing stored secret instead of encrypting
@@ -144,13 +142,6 @@ export class ProviderSecretsService {
       // Masked display value → omit so the merge keeps the stored secret.
       if (isMaskedValue(value)) {
         delete out[field];
-        continue;
-      }
-      if (!this.available) {
-        // No key: store plaintext (documented degradation), not fail.
-        this.logger.warn(
-          `Provider owners: storing secret field "${field}" PLAINTEXT because ${PROVIDER_SECRET_ENCRYPTION_ENV} is not set`
-        );
         continue;
       }
       out[field] = this.encryptValue(value);
