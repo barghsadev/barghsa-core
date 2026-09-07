@@ -62,7 +62,7 @@ for (const locale of ['fa', 'en'] as const) {
       name: locale === 'fa' ? 'تغییر پروفایل فعال' : 'Switch active profile',
     });
     await expect(selector).toHaveValue('');
-    await expect(page.locator('main')).toContainText('۱۲۳٬۴۵۶');
+    await expect(page.locator('main')).toContainText(locale === 'fa' ? '۱۲۳٬۴۵۶' : '123,456');
     await page.evaluate(() => {
       (window as unknown as Record<string, unknown>).profileSwitchDocument = 'preserved';
     });
@@ -71,8 +71,8 @@ for (const locale of ['fa', 'en'] as const) {
       if (request.resourceType() === 'document') documentRequests++;
     });
     await selector.selectOption('remaining');
-    await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
-    await expect(page.locator('main')).not.toContainText('۱۲۳٬۴۵۶');
+    await expect(page.locator('main')).toContainText(locale === 'fa' ? '۹۸۷٬۶۵۴' : '987,654');
+    await expect(page.locator('main')).not.toContainText(locale === 'fa' ? '۱۲۳٬۴۵۶' : '123,456');
     await expect(page.getByRole('combobox')).toHaveCount(0);
     expect(dashboardReads).toBeGreaterThanOrEqual(2);
     expect(documentRequests).toBe(0);
@@ -101,7 +101,9 @@ test('a failed switch keeps the existing selection and reports the error', async
   await page.goto('/dashboard');
   await page.getByRole('combobox').selectOption('second');
   await expect(page.getByRole('combobox')).toHaveValue('first');
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('complementary').getByRole('alert')).toHaveText(
+    'تغییر پروفایل با خطا مواجه شد'
+  );
 });
 
 test('the initial radio selection submits from the required profile dialog', async ({ page }) => {

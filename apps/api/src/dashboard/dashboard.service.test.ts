@@ -22,7 +22,7 @@ describe('DashboardService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    service = new DashboardService();
+    service = new DashboardService({ getWallet: vi.fn() } as never);
   });
 
   describe('getQuickStatusCounts', () => {

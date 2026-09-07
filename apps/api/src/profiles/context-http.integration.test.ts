@@ -126,6 +126,7 @@ it('does not fall back to a different profile after membership removal or archiv
     unread_count: 0,
   });
   expect((await request(`wallet/${finance}`)).status).toBe(404);
+  expect((await request('dashboard')).status).toBe(404);
   expect((await request(`profiles/switch/${owned}`, 'POST')).status).toBe(200);
   await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [owned]);
   expect(await (await request('profiles')).json()).toMatchObject({ activeProfileId: null });
@@ -157,4 +158,55 @@ it('returns exact wallet balances above the JavaScript safe integer limit', asyn
   const created = await request(`wallet/${owned}/create`, 'POST');
   expect(created.status).toBe(201);
   expect(await created.json()).toMatchObject({ balance: '9007199254740993' });
+});
+
+it('shows the selected profile name and exact available wallet balance on the dashboard', async () => {
+  await http.pool.query("UPDATE profiles SET first_name='Ada',last_name='Example' WHERE id=$1", [
+    owned,
+  ]);
+  await http.pool.query(
+    'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES ($1,$2,2)',
+    [owned, '9007199254740995']
+  );
+  const response = await request('dashboard');
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    profile: { id: owned, name: 'Ada Example' },
+    wallet: { balance: '9007199254740993', currency: 'IRR', lowBalanceWarning: false },
+  });
+  expect((await request(`profiles/switch/${legal}`, 'POST')).status).toBe(200);
+  expect(await (await request('dashboard')).json()).toMatchObject({
+    profile: { id: legal },
+    wallet: null,
+  });
+});
+
+it('compares available balance with due unpaid invoices for the selected profile only', async () => {
+  await http.pool.query(
+    'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES ($1,1000,100)',
+    [owned]
+  );
+  await http.pool.query(
+    "INSERT INTO invoices(profile_id,state,total_amount,paid_amount,due_at) VALUES ($1,'Overdue',1200,200,NOW()-INTERVAL '1 day'),($2,'Overdue',999999,0,NOW()-INTERVAL '1 day')",
+    [owned, unrelated]
+  );
+  expect(await (await request('dashboard')).json()).toMatchObject({
+    wallet: { balance: '900', lowBalanceWarning: true },
+  });
+  await http.pool.query('UPDATE wallets SET posted_balance=1100 WHERE profile_id=$1', [owned]);
+  expect(await (await request('dashboard')).json()).toMatchObject({
+    wallet: { balance: '1000', lowBalanceWarning: false },
+  });
+  await http.pool.query(
+    "INSERT INTO invoices(profile_id,state,total_amount,due_at) VALUES ($1,'Unpaid',999999,NOW()+INTERVAL '1 day')",
+    [owned]
+  );
+  expect(await (await request('dashboard')).json()).toMatchObject({
+    wallet: { lowBalanceWarning: false },
+  });
+});
+
+it('does not return successful zero counts when a dashboard query fails', async () => {
+  await http.pool.query('ALTER TABLE tickets RENAME TO dashboard_test_unavailable_tickets');
+  expect((await request('dashboard')).status).toBe(500);
 });

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useLocale } from '../hooks/useLocale.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n';
 import { WalletBalanceCard } from '../components/WalletBalanceCard.js';
 import { QuickStatusCards } from '../components/QuickStatusCards.js';
 
 interface DashboardData {
-  wallet: { balance: number; currency: string; lowBalanceWarning: boolean };
+  profile?: { id: string; name: string };
+  wallet: { balance: string; currency: string; lowBalanceWarning: boolean } | null;
   activeOrders: number;
   pendingInvoices: number;
   openTickets: number;
@@ -28,7 +30,10 @@ interface DashboardData {
  *     coding, replacing the previous inline summary cards.
  *   - Quick actions section.
  */
-export function DashboardPage({ locale = 'fa' as Locale }) {
+export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = {}) {
+  const documentLocale = useLocale();
+  const locale = localeOverride ?? documentLocale;
+  const [revision, setRevision] = useState(0);
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +41,8 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setError(null);
 
     async function fetchDashboard() {
       try {
@@ -56,20 +63,21 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [revision]);
 
-  // Placeholder profile name — in the future read from active profile state
-  const profileName = '…';
+  const profileName = data?.profile?.name || t('dashboard.profile.unnamed', locale);
 
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-600">{error}</p>
+        <p role="alert" className="text-red-600">
+          {t('dashboard.overview.loadError', locale)}
+        </p>
         <button
-          onClick={() => window.location.reload()}
+          onClick={() => setRevision((value) => value + 1)}
           className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
         >
-          {t('dashboard.overview.moreInfo', locale)}
+          {t('dashboard.overview.retry', locale)}
         </button>
       </div>
     );
@@ -96,7 +104,7 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
   const quickActions = [
     { label: t('dashboard.overview.newOrder', locale), href: '/electricity' },
     { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet' },
-    { label: t('dashboard.overview.supportTicket', locale), href: '/support' },
+    { label: t('dashboard.overview.supportTicket', locale), href: '/tickets' },
   ];
 
   const qs = data?.quickStatus ?? {
@@ -123,7 +131,7 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
       {/* Wallet balance + Quick status cards side‑by‑side */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
-          {data ? (
+          {data?.wallet ? (
             <WalletBalanceCard
               balance={data.wallet.balance}
               currency={data.wallet.currency}
@@ -132,12 +140,9 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
               locale={locale}
             />
           ) : (
-            <div className="bg-white rounded-lg shadow-sm p-6 animate-pulse">
-              <div className="h-4 w-24 bg-gray-200 rounded mb-4" />
-              <div className="h-8 w-32 bg-gray-200 rounded mb-2" />
-              <div className="h-5 w-28 bg-gray-200 rounded mb-4" />
-              <div className="h-10 w-full bg-gray-200 rounded" />
-            </div>
+            <p className="text-sm text-gray-500">
+              {t('dashboard.overview.walletUnavailable', locale)}
+            </p>
           )}
         </div>
 

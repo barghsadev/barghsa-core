@@ -4,7 +4,8 @@ import {
   type AgentPermission,
 } from '@barghsa/shared/agent-permissions';
 import { activeProfileSql } from '../profiles/profile-context.js';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { WalletService } from '../wallet/wallet.service.js';
 import { getDbPool } from '@barghsa/db';
 import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance';
 
@@ -25,6 +26,50 @@ export interface QuickStatusCounts {
  */
 @Injectable()
 export class DashboardService {
+  constructor(private readonly walletService: WalletService) {}
+
+  async getOverview(userId: string) {
+    const context = await this.getDefaultProfileId(userId);
+    if (!context) throw new NotFoundException('No accessible active profile');
+    const pool = getDbPool();
+    const allowed = (permission: AgentPermission) =>
+      context.is_owner || hasAnyRolePermission(context.roles, permission);
+    const [profileResult, quickStatus, wallet, dueResult] = await Promise.all([
+      pool.query<{ name: string }>(
+        `SELECT COALESCE(NULLIF(l.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.title,p.first_name,p.last_name)),''),'') AS name
+         FROM profiles p LEFT JOIN legal_profiles l ON l.id=p.id WHERE p.id=$1`,
+        [context.id]
+      ),
+      this.getCountsForContext(context),
+      allowed('wallet:view') ? this.walletService.getWallet(context.id) : Promise.resolve(null),
+      allowed('wallet:view') && allowed('invoices:view')
+        ? pool.query<{ amount: string }>(
+            `SELECT COALESCE(SUM(total_amount-paid_amount),0)::text AS amount FROM invoices
+             WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}
+               AND (state='Overdue' OR due_at<=NOW())`,
+            [context.id]
+          )
+        : Promise.resolve({ rows: [{ amount: '0' }] }),
+    ]);
+    if (!profileResult.rows[0]) throw new NotFoundException('Active profile no longer exists');
+    const balance = wallet?.availableBalance ?? 0n;
+    return {
+      profile: { id: context.id, name: profileResult.rows[0].name },
+      wallet: allowed('wallet:view')
+        ? {
+            balance: balance.toString(),
+            currency: 'IRR',
+            lowBalanceWarning: balance < BigInt(dueResult.rows[0]!.amount),
+          }
+        : null,
+      activeOrders: quickStatus.pendingOrders,
+      pendingInvoices: quickStatus.unpaidInvoices,
+      openTickets: quickStatus.openTickets,
+      contracts: { active: quickStatus.activeContracts, total: quickStatus.activeContracts },
+      quickStatus,
+    };
+  }
+
   /**
    * Resolve the user's default profile ID, or null if they have none.
    */
@@ -66,6 +111,15 @@ export class DashboardService {
       return { activeContracts: 0, pendingOrders: 0, openTickets: 0, unpaidInvoices: 0 };
     }
 
+    return this.getCountsForContext(context);
+  }
+
+  private async getCountsForContext(context: {
+    id: string;
+    is_owner: boolean;
+    roles: AgentRole[];
+  }): Promise<QuickStatusCounts> {
+    const profileId = context.id;
     const pool = getDbPool();
 
     const allowed = (permission: AgentPermission) =>

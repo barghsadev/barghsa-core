@@ -77,6 +77,18 @@ async function main() {
   const profile = (
     await http.pool.query("INSERT INTO profiles(user_id) VALUES ('team-ui-admin') RETURNING id")
   ).rows[0].id;
+  await http.pool.query(
+    "UPDATE profiles SET is_default=true,status='VERIFIED',first_name='Dashboard',last_name='Example' WHERE id=$1",
+    [profile]
+  );
+  await http.pool.query(
+    'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES ($1,$2,2)',
+    [profile, '9007199254740995']
+  );
+  await http.pool.query(
+    "INSERT INTO invoices(profile_id,state,total_amount,due_at) VALUES ($1,'Overdue',$2,NOW()-INTERVAL '1 day')",
+    [profile, '9007199254740994']
+  );
   for (const locale of ['en', 'fa'])
     for (const action of ['retry', 'resolve', 'dismiss']) {
       const outbox = randomUUID(),

@@ -3,7 +3,7 @@ import { t, type Locale } from '@barghsa/i18n';
 
 export interface WalletBalanceCardProps {
   /** Wallet balance in IRR (Rial). */
-  balance: number;
+  balance: string | number;
   /** Currency label, e.g. 'IRR'. */
   currency: string;
   /** Whether balance is low relative to pending invoices. */
@@ -17,7 +17,7 @@ export interface WalletBalanceCardProps {
 /**
  * Formats a number with locale-aware digit grouping.
  */
-function formatAmount(amount: number, locale: Locale): string {
+function formatAmount(amount: bigint, locale: Locale): string {
   try {
     return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
       style: 'decimal',
@@ -41,7 +41,9 @@ export function WalletBalanceCard({
   locale = 'fa',
 }: WalletBalanceCardProps) {
   const isRtl = locale === 'fa';
-  const tomanAmount = Math.round(balance / 10);
+  const exactBalance = BigInt(balance);
+  const tomanAmount =
+    exactBalance >= 0n ? (exactBalance + 5n) / 10n : -((-exactBalance + 4n) / 10n);
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -51,7 +53,7 @@ export function WalletBalanceCard({
           {t('dashboard.overview.walletBalance', locale)}
         </p>
         <p className="text-3xl font-bold text-gray-900 leading-tight">
-          {formatAmount(balance, locale)}{' '}
+          {formatAmount(exactBalance, locale)}{' '}
           <span className="text-lg font-medium text-gray-500">{currency}</span>
         </p>
         <p className="text-base text-gray-500 mt-1">

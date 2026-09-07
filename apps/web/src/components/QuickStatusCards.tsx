@@ -21,6 +21,7 @@ function ContractIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className}
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
@@ -42,6 +43,7 @@ function OrderIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className}
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
@@ -62,6 +64,7 @@ function TicketIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className}
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
@@ -82,6 +85,7 @@ function InvoiceIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className}
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
@@ -106,8 +110,8 @@ function InvoiceIcon({ className }: { className?: string }) {
  * Active contracts: any count is a positive signal → green always.
  */
 function contractColor(count: number): string {
-  if (count === 0) return 'border-l-4 border-gray-400 bg-white';
-  return 'border-l-4 border-green-500 bg-green-50';
+  if (count === 0) return 'border-s-4 border-gray-400 bg-white';
+  return 'border-s-4 border-green-500 bg-green-50';
 }
 
 /**
@@ -119,9 +123,9 @@ function contractColor(count: number): string {
  * exists; see T-08.01.03.
  */
 function orderColor(count: number): string {
-  if (count === 0) return 'border-l-4 border-green-500 bg-green-50';
-  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50';
-  return 'border-l-4 border-red-500 bg-red-50';
+  if (count === 0) return 'border-s-4 border-green-500 bg-green-50';
+  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50';
+  return 'border-s-4 border-red-500 bg-red-50';
 }
 
 /**
@@ -131,9 +135,9 @@ function orderColor(count: number): string {
  * attention, and a growing backlog (3+) signals the customer needs to act.
  */
 function ticketColor(count: number): string {
-  if (count === 0) return 'border-l-4 border-green-500 bg-green-50';
-  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50';
-  return 'border-l-4 border-red-500 bg-red-50';
+  if (count === 0) return 'border-s-4 border-green-500 bg-green-50';
+  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50';
+  return 'border-s-4 border-red-500 bg-red-50';
 }
 
 /**
@@ -144,9 +148,9 @@ function ticketColor(count: number): string {
  * placeholders pending operational data.
  */
 function invoiceColor(count: number): string {
-  if (count === 0) return 'border-l-4 border-green-500 bg-green-50';
-  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50';
-  return 'border-l-4 border-red-500 bg-red-50';
+  if (count === 0) return 'border-s-4 border-green-500 bg-green-50';
+  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50';
+  return 'border-s-4 border-red-500 bg-red-50';
 }
 
 /** ─── Card definitions ─────────────────────────────────────────────── */
@@ -181,7 +185,7 @@ export function QuickStatusCards({
       key: 'contracts',
       icon: ContractIcon,
       labelKey: 'dashboard.overview.contractStatus',
-      href: isRtl ? '/برق' : '/electricity',
+      href: '/electricity',
       search: { status: 'CONFIRMED' },
       count: activeContracts,
       colorFn: contractColor,
@@ -190,7 +194,7 @@ export function QuickStatusCards({
       key: 'orders',
       icon: OrderIcon,
       labelKey: 'dashboard.overview.activeOrders',
-      href: isRtl ? '/برق' : '/electricity',
+      href: '/electricity',
       search: { status: 'PENDING' },
       count: pendingOrders,
       colorFn: orderColor,
@@ -199,8 +203,8 @@ export function QuickStatusCards({
       key: 'tickets',
       icon: TicketIcon,
       labelKey: 'dashboard.overview.openTickets',
-      href: '/support',
-      search: { tab: 'open' },
+      href: '/tickets',
+
       count: openTickets,
       colorFn: ticketColor,
     },
@@ -227,13 +231,15 @@ export function QuickStatusCards({
             search={card.search}
             className={`block rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow ${colorClass}`}
           >
-            <div className={`flex items-start gap-3 ${isRtl ? 'flex-row-reverse' : ''}`}>
+            <div className="flex items-start gap-3">
               <Icon className="w-8 h-8 text-gray-600 shrink-0 mt-0.5" />
               <div className="min-w-0 flex-1">
                 <p className="text-sm text-gray-500 mb-1">
                   {t(card.labelKey as keyof typeof t, locale)}
                 </p>
-                <p className="text-2xl font-semibold text-gray-900">{card.count}</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {new Intl.NumberFormat(locale).format(card.count)}
+                </p>
               </div>
             </div>
           </Link>

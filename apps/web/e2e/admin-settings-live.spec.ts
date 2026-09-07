@@ -2159,3 +2159,64 @@ for (const locale of ['en', 'fa'])
     await expect(form).toBeVisible();
     await page.screenshot({ path: `/tmp/catalogue-${locale}.png`, fullPage: true });
   });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`dashboard displays exact live profile balances and recovers failed reads (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    let failDashboard = false;
+    await page.route('**/api/**', async (route) => {
+      const request = route.request();
+      const url = new URL(request.url());
+      if (failDashboard && url.pathname === '/api/dashboard') {
+        await route.fulfill({ status: 503, json: { message: 'test outage' } });
+        return;
+      }
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const fa = locale === 'fa';
+    await page.goto('/dashboard');
+    const main = page.locator('main');
+    await expect(
+      main.getByRole('heading', {
+        name: fa ? 'خوش آمدید، Dashboard Example' : 'Welcome, Dashboard Example',
+      })
+    ).toBeVisible();
+    await expect(main).toContainText(new Intl.NumberFormat(locale).format(9007199254740993n));
+    await expect(main).toContainText(new Intl.NumberFormat(locale).format(900719925474099n));
+    await expect(main).toContainText(
+      fa
+        ? 'موجودی کیف پول شما برای پرداخت صورتحساب‌های جاری کافی نیست'
+        : 'Your wallet balance is too low to cover pending invoices'
+    );
+    await expect(
+      main.getByRole('link', { name: fa ? 'شارژ کیف پول' : 'Charge Wallet' })
+    ).toHaveAttribute('href', '/wallet');
+    failDashboard = true;
+    await page.reload();
+    await expect(main.getByRole('alert')).toHaveText(
+      fa
+        ? 'دریافت اطلاعات داشبورد انجام نشد. دوباره تلاش کنید.'
+        : 'Could not load dashboard data. Try again.'
+    );
+    await expect(main).not.toContainText(new Intl.NumberFormat(locale).format(9007199254740993n));
+    failDashboard = false;
+    await main.getByRole('button', { name: fa ? 'تلاش دوباره' : 'Try again' }).click();
+    await expect(main).toContainText(new Intl.NumberFormat(locale).format(9007199254740993n));
+  });
+}
