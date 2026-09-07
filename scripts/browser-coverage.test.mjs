@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, writeFile, rm, realpath } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile, rm, realpath, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -199,4 +199,70 @@ test('chains workspace package maps to TypeScript and rejects missing intermedia
     await assert.rejects(collectBrowserCoverage(options));
     assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
   });
+});
+
+async function componentFixture(options) {
+  const directory = 'component-calendar-fixture';
+  const build = join(options.rawDir, 'builds', directory);
+  const asset = join(build, 'assets', 'component.js');
+  await mkdir(join(build, 'assets'), { recursive: true });
+  await writeFile(asset, options.entries[0].source);
+  const map = JSON.parse(await readFile(options.asset + '.map', 'utf8'));
+  map.sources = [pathToFileURL(options.source).href];
+  await writeFile(asset + '.map', JSON.stringify(map));
+  options.record.component_builds = [{ origin: 'http://127.0.0.1:9999', directory }];
+  options.entries.push({
+    ...structuredClone(options.entries[0]),
+    url: 'http://127.0.0.1:9999/assets/component.js',
+  });
+  await writeFile(options.raw, JSON.stringify(options.record));
+  return { asset, build };
+}
+
+test('counts registered component production assets only after exact source verification', async () => {
+  await fixture(async (options) => {
+    const baseline = await collectBrowserCoverage(options);
+    const { asset } = await componentFixture(options);
+    const report = await collectBrowserCoverage(options);
+    assert.equal(report.asset_count, 2);
+    assert.equal(report.component_asset_count, 1);
+    assert.equal(report.ignored_non_application_scripts, 0);
+    assert.ok(
+      Object.values(report.coverage[options.source].s).reduce((a, b) => a + b, 0) >
+        Object.values(baseline.coverage[options.source].s).reduce((a, b) => a + b, 0)
+    );
+    await writeFile(asset, 'mismatched build');
+    await assert.rejects(collectBrowserCoverage(options), /differs from built asset/);
+    assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
+  });
+});
+
+test('rejects malformed component registries, escaped paths, foreign origins and absent maps', async () => {
+  for (const failure of [
+    'registry',
+    'directory',
+    'origin',
+    'duplicate',
+    'missing',
+    'map',
+    'symlink',
+  ]) {
+    await fixture(async (options) => {
+      const { asset, build } = await componentFixture(options);
+      const registration = options.record.component_builds[0];
+      if (failure === 'registry') options.record.component_builds = {};
+      if (failure === 'directory') registration.directory = '../dist-coverage';
+      if (failure === 'origin') registration.origin = 'https://example.com';
+      if (failure === 'duplicate') registration.origin = options.record.application_origin;
+      if (failure === 'missing') registration.directory = 'component-missing';
+      if (failure === 'map') await rm(asset + '.map');
+      if (failure === 'symlink') {
+        await rm(build, { recursive: true });
+        await symlink(options.distDir, build);
+      }
+      await writeFile(options.raw, JSON.stringify(options.record));
+      await assert.rejects(collectBrowserCoverage(options));
+      assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
+    });
+  }
 });

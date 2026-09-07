@@ -1,4 +1,4 @@
-import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
+import { readFile, readdir, mkdir, writeFile, realpath } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { resolve, sep, join } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
@@ -36,6 +36,7 @@ export async function collectBrowserCoverage({
   let recordedDirty = false;
   let ignoredScripts = 0;
   let missingSources = 0;
+  const componentAssets = new Set();
   let merged = { result: [] };
   for (const name of files) {
     const record = JSON.parse(await readFile(join(rawDir, name), 'utf8'));
@@ -50,19 +51,45 @@ export async function collectBrowserCoverage({
       new URL(record.application_origin).origin !== record.application_origin
     )
       throw new Error('Missing application origin');
+    const roots = new Map([[record.application_origin, distDir]]);
+    if (record.component_builds !== undefined && !Array.isArray(record.component_builds))
+      throw new Error('Invalid component build registry');
+    for (const build of record.component_builds ?? []) {
+      if (
+        !build ||
+        typeof build.origin !== 'string' ||
+        typeof build.directory !== 'string' ||
+        !/^component-[a-zA-Z0-9_-]+$/.test(build.directory)
+      )
+        throw new Error('Invalid component build');
+      const origin = new URL(build.origin);
+      if (
+        origin.origin !== build.origin ||
+        origin.protocol !== 'http:' ||
+        origin.hostname !== '127.0.0.1' ||
+        !origin.port ||
+        roots.has(build.origin)
+      )
+        throw new Error('Invalid component origin');
+      const directory = resolve(rawDir, 'builds', build.directory);
+      if ((await realpath(directory)) !== directory)
+        throw new Error('Invalid component build path');
+      roots.set(build.origin, directory);
+    }
     recordedDirty ||= record.working_tree_dirty;
     const entries = record.entries;
     if (!Array.isArray(entries)) throw new Error('Invalid browser coverage records');
     const result = [];
     for (const entry of entries) {
       const url = new URL(entry.url);
-      if (url.origin !== record.application_origin) {
+      const assetRoot = roots.get(url.origin);
+      if (!assetRoot) {
         ignoredScripts++;
         continue;
       }
       if (!url.pathname.startsWith('/assets/') || !url.pathname.endsWith('.js')) continue;
-      const filename = resolve(distDir, '.' + decodeURIComponent(url.pathname));
-      if (!filename.startsWith(resolve(distDir) + sep)) throw new Error('Invalid asset path');
+      const filename = resolve(assetRoot, '.' + decodeURIComponent(url.pathname));
+      if (!filename.startsWith(resolve(assetRoot) + sep)) throw new Error('Invalid asset path');
       const code = await readFile(filename, 'utf8');
       // Chromium may discard source text after navigation. Such ranges cannot
       // prove execution against this build, so they contribute no coverage.
@@ -87,6 +114,7 @@ export async function collectBrowserCoverage({
         }
       }
       const scriptUrl = pathToFileURL(filename).href;
+      if (url.origin !== record.application_origin) componentAssets.add(scriptUrl);
       scripts.set(scriptUrl, code);
       result.push({ ...entry, url: scriptUrl });
     }
@@ -142,6 +170,7 @@ export async function collectBrowserCoverage({
       }).trim() !== '',
     browser_record_count: files.length,
     asset_count: merged.result.length,
+    component_asset_count: componentAssets.size,
     ignored_non_application_scripts: ignoredScripts,
     unmeasured_missing_source_scripts: missingSources,
     coverage: JSON.parse(JSON.stringify(coverage.toJSON())),

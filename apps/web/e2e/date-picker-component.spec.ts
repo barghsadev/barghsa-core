@@ -1,8 +1,8 @@
-import { test, expect } from './coverage-fixture';
+import { test, expect, registerComponentCoverage } from './coverage-fixture';
 import { build, preview, type PreviewServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
@@ -13,14 +13,17 @@ let server: PreviewServer;
 let outDir: string;
 let url: string;
 test.beforeAll(async () => {
-  outDir = await mkdtemp(join(tmpdir(), 'barghsa-date-picker-'));
+  const coverageDir = process.env['BARGHSA_BROWSER_COVERAGE_DIR'];
+  const buildParent = coverageDir ? join(coverageDir, 'builds') : tmpdir();
+  await mkdir(buildParent, { recursive: true });
+  outDir = await mkdtemp(join(buildParent, 'component-date-picker-'));
   const root = resolve('e2e/fixtures/date-picker');
   await build({
     configFile: false,
     root,
     plugins: [react(), tailwindcss()],
     logLevel: 'error',
-    build: { outDir, emptyOutDir: true },
+    build: { outDir, emptyOutDir: true, sourcemap: coverageDir ? 'hidden' : false },
   });
   server = await preview({
     configFile: false,
@@ -30,13 +33,15 @@ test.beforeAll(async () => {
     preview: { host: '127.0.0.1', port: 0 },
   });
   url = server.resolvedUrls.local[0]!;
+  if (coverageDir) registerComponentCoverage(url, outDir);
 });
 test.afterAll(async () => {
   if (server)
     await new Promise<void>((done, reject) =>
       server.httpServer.close((error) => (error ? reject(error) : done()))
     );
-  if (outDir) await rm(outDir, { recursive: true, force: true });
+  if (outDir && !process.env['BARGHSA_BROWSER_COVERAGE_DIR'])
+    await rm(outDir, { recursive: true, force: true });
 });
 
 for (const mode of ['single', 'range']) {

@@ -39,9 +39,12 @@ Every record captures the tested revision and whether the checkout was dirty. Th
 merge rejects stale revisions and dirty runs. Unit coverage is retained for source
 not exercised in the browser. Additional browser contexts outside the shared page
 fixture are not included.
-Standalone component-test servers are also outside the production-app source map.
-Their scripts are counted separately as ignored non-application scripts; missing
-assets from the application origin still fail collection.
+Calendar and table component tests retain their separate production builds with hidden
+source maps while collecting coverage. Each record explicitly registers those local
+origins and build directories. Collection verifies their asset bytes and maps them
+using the same checks as the application build; component asset counts stay explicit.
+Unregistered origins receive no credit. Missing assets/maps, foreign registered
+origins, escaped paths and symlinked component directories fail collection.
 Chromium occasionally discards a script's optional source text after navigation.
 Those ranges receive no coverage credit and are reported as unmeasured. Supplied
 source that differs from the built asset still fails collection.
