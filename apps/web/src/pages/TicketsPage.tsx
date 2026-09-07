@@ -2,7 +2,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useSearch } from '@tanstack/react-router';
 import { Button, Input, Label } from '@barghsa/ui';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import {

@@ -1,6 +1,6 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { Button, Input, Label } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';

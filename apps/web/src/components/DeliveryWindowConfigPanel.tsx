@@ -4,7 +4,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useRef } from 'react';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import type { Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n/app';
 
 /**
  * Delivery-window configuration panel (E-05, T-05.03.03).

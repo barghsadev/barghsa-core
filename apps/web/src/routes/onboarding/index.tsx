@@ -2,7 +2,7 @@ import { useLocale } from '../../hooks/useLocale.js';
 import { withCsrf } from '../../lib/csrf.js';
 import { useState } from 'react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 
 export const Route = createFileRoute('/onboarding/')({
   component: OnboardingPage,

@@ -3,7 +3,7 @@ import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-upload.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';

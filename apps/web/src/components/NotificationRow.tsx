@@ -1,4 +1,4 @@
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 import {
   ShieldAlertIcon,
   CreditCardIcon,

@@ -9,7 +9,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
-import type { Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,

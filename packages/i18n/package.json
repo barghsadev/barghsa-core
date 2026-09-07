@@ -96,6 +96,16 @@
       "types": "./dist/numbers.d.ts",
       "import": "./dist/numbers.js",
       "default": "./dist/numbers.js"
+    },
+    "./feedback": {
+      "types": "./dist/feedback.d.ts",
+      "import": "./dist/feedback.js",
+      "default": "./dist/feedback.js"
+    },
+    "./app": {
+      "types": "./dist/app.d.ts",
+      "import": "./dist/app.js",
+      "default": "./dist/app.js"
     }
   },
   "scripts": {

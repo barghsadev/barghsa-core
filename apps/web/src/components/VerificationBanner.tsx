@@ -2,7 +2,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useEffect, useState } from 'react';
 import { Link, useRouter } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 
 interface VerificationStatusResponse {
   activeProfileId: string | null;

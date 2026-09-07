@@ -1,7 +1,7 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 import { Button } from '@barghsa/ui';
 import { withCsrf } from '../lib/csrf.js';
 

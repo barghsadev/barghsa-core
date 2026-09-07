@@ -1,4 +1,4 @@
-import type { Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n/app';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { timezoneText } from '@barghsa/i18n/timezone';
 import { useLocale } from './useLocale.js';

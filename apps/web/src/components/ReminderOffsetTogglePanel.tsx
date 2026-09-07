@@ -7,7 +7,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import type { Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   INVOICE_REMINDER_OFFSETS,

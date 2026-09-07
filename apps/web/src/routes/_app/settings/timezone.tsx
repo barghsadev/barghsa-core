@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { timezoneText } from '@barghsa/i18n/timezone';
 import { GlobeIcon, ClockIcon, Loader2Icon, SaveIcon, SearchIcon } from 'lucide-react';
 import { Alert, AlertDescription, Button, Card, CardContent, Input } from '@barghsa/ui';

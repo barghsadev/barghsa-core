@@ -1,6 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   Button,

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Button } from '@barghsa/ui';
 import { Link, Outlet } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
+import { useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js';
 import { TosBanner } from '../components/TosBanner.js';
@@ -25,6 +26,7 @@ interface DashboardLayoutProps {
  */
 export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps) {
   const currentLocale = useLocale();
+  const { brandConfig } = useBrandConfig();
   const locale = localeOverride ?? currentLocale;
   const [menuOpen, setMenuOpen] = useState(false);
   const isRtl = locale === 'fa';
@@ -59,7 +61,7 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
       {/* App header — brand + notification center bell (T-05.02.03) */}
       <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:px-6">
         <Link to="/" className="text-lg font-bold text-primary no-underline">
-          {t('auth.brand.title', locale)}
+          {brandConfig.appTitle}
         </Link>
         <Button
           variant="outline"
@@ -88,7 +90,7 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
 
             {/* Brand */}
             <Link to="/" className="block text-lg font-bold text-primary no-underline">
-              {t('auth.brand.title', locale)}
+              {brandConfig.appTitle}
             </Link>
 
             {/* Navigation */}

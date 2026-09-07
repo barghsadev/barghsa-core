@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocale } from '../hooks/useLocale.js';
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 import { WalletBalanceCard } from '../components/WalletBalanceCard.js';
 import { QuickStatusCards } from '../components/QuickStatusCards.js';
 

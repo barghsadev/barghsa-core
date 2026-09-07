@@ -2,7 +2,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance';
 import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';

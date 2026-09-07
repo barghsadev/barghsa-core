@@ -1,5 +1,5 @@
 import { notificationLink } from '@barghsa/shared/notifications';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 import { withCsrf } from './csrf.js';
 
 /**

@@ -2,7 +2,7 @@ import { useAccountTime } from '../../../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { preferencesText } from '@barghsa/i18n/preferences';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import {
   BellIcon,
   SmartphoneIcon,

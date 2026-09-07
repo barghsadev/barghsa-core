@@ -6,7 +6,7 @@ import { exactIrr, formatNumber } from '@barghsa/i18n/numbers';
  * strings end-to-end so int8 IRR never passes through JSON Number.
  */
 
-import type { Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n/app';
 
 export type InvoiceCorrectionRole =
   'original' | 'replacement' | 'adjustment_charge' | 'adjustment_credit';

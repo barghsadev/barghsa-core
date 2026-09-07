@@ -1,7 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useState, useEffect, useCallback } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import type { Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n/app';
 import {
   renderTemplatePreview,
   buildSampleData,

@@ -2,7 +2,7 @@ import { refreshProfileContext } from '../lib/profile-context.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 import { Badge } from '@barghsa/ui';
 
 /** Profile shape returned by GET /api/profiles (T-03.01.01). */

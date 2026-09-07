@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 import {
   MonitorIcon,
   SmartphoneIcon,

@@ -1,6 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import {
   parseBankReceiptTopUpAmountIrR,
   BANK_RECEIPT_STORAGE_PURPOSE,

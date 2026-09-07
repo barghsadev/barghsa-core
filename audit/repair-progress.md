@@ -2583,7 +2583,7 @@ The production browser runner honors explicit browser projects and keeps Chromiu
 
 Cross-browser review corrected locale initialization, browser-native date expectations, an invalid PNG fixture checksum, the smoke identity assertion and overlapping API compilation. It also fixed two product defects: verification-button hover contrast and hidden reminder labels escaping their scroll container on Persian mobile pages. Live-API test teardown now waits for outstanding request handlers, and native-select keyboard checks use ArrowDown.
 
-Twenty language/theme/hover checks and sixty repeated timezone, invoice and reconciliation cases pass across all five projects. Eighteen related unit tests, web typechecking, targeted lint, formatting, both 41-route budget checks and runner gate tests pass. The first full matrix's failures and repairs are preserved in `audit/browser-nightly-review.md`; final full-matrix confirmation is next. Future business journeys, remote nightly execution and production promotion are not certified.
+Twenty language/theme/hover checks and sixty repeated timezone, invoice and reconciliation cases pass across all five projects. Eighteen related unit tests, web typechecking, targeted lint, formatting and runner gate tests pass. Both 41-route budget checks passed after the earlier hover fix; the final browser revision was built but did not receive another explicit budget check. The first full matrix's failures and repairs are preserved in `audit/browser-nightly-review.md`; final full-matrix confirmation is next. Future business journeys, remote nightly execution and production promotion are not certified.
 
 ### Correct mobile profile selection checks
 
@@ -2608,3 +2608,11 @@ The new automatic-invoice fixture omitted its required product title. Runtime te
 At revision f42235b, VAT resolution, RoundingService, calculation-snapshot storage and snapshot replay are acceptance_verified against their exact canonical task rows. Evidence includes the 444-test invoice run, final 25 boundary cases, real PostgreSQL replay/precedence checks, source digests and original merged-PR provenance. Legacy invoices without snapshots and future business flows remain outside these four claims.
 
 The acceptance ledger now has 42 reviewed tasks: 30 verified, 12 partial, and 280 pending. This is task-level review progress, not a claim that the entire repair plan is complete.
+
+### Restore application notification feedback
+
+Mounted the missing Sonner renderer with localized live-region and dismissal labels, configured theme, RTL direction and profile-unmount cleanup. Removed duplicate auth inline/toast errors. Dashboard branding now follows configured company title. Splitting application dictionaries while preserving all 909 public keys per language and using a native trusted-device checkbox keeps all 41 route budgets passing without changing limits.
+
+Review: 160 repeated authentication/feedback checks and 85 feedback/profile/branding checks pass across all five browser projects. All 155 web unit and 45 translation tests, web types/lint, formatting and diff review pass. Initial contrast failures came from the entrance fade; settled-content assertions now precede axe checks. Details and limits are in `audit/ui-feedback-followups.md`.
+
+Record correction: the prior browser-matrix checkpoint's final Vite build did not itself run route budgets. Earlier hover-step budget evidence remains valid; the prior prose now distinguishes those revisions. This feedback step includes a fresh, explicit 41-route check. The public UI toast export mismatch remains open for the next step.

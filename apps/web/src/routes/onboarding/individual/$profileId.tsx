@@ -6,7 +6,7 @@ import { withCsrf } from '../../../lib/csrf.js';
 import { useState, useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { Loader2Icon, ChevronRightIcon } from 'lucide-react';

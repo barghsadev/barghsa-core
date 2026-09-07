@@ -2,7 +2,7 @@ import { useLocale } from '../../hooks/useLocale.js';
 import { withCsrf } from '../../lib/csrf.js';
 import { useEffect, useState } from 'react';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { Button } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/complete')({

@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import {
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,
   parseInvoiceBankReceiptAmountIrR,

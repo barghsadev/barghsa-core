@@ -1,7 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, type NavigateOptions } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon } from 'lucide-react';
 import {
   DropdownMenu,

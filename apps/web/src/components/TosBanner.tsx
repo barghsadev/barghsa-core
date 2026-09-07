@@ -1,7 +1,7 @@
 import { useRouterState } from '@tanstack/react-router';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 import { Button } from '@barghsa/ui';
 import {
   Dialog,

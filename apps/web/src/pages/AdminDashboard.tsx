@@ -5,7 +5,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { AlertTriangle, ShieldCheck } from 'lucide-react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 
 interface PendingVerificationProfile {

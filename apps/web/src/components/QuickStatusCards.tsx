@@ -1,6 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 import type { JSX } from 'react';
 
 export interface QuickStatusCardsProps {

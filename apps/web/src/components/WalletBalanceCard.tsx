@@ -1,7 +1,7 @@
 import { exactIrr } from '@barghsa/i18n/numbers';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t, type Locale } from '@barghsa/i18n/app';
 
 export interface WalletBalanceCardProps {
   /** Wallet balance in IRR (Rial). */

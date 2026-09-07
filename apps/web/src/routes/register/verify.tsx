@@ -137,7 +137,6 @@ function OtpVerifyPage() {
         const retry = rateLimitMessage(response, locale, numbers.numberStyle);
         const message = retry ?? t('auth.otp.error.resend', locale);
         setOtpError(message);
-        toast.error(message);
         if (retry) {
           setResendTimer(retryAfterSeconds(response) ?? 60);
         }

@@ -1,7 +1,7 @@
 import { refreshProfileContext } from '../lib/profile-context.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useEffect, useState } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import {
   Dialog,

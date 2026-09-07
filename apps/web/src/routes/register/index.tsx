@@ -3,7 +3,6 @@ import { useLocale } from '../../hooks/useLocale.js';
 import { rateLimitMessage } from '../../lib/auth-errors.js';
 import { lazy, Suspense, useRef, useState, useCallback, useEffect } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
-import { toast } from 'sonner';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';
 import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
@@ -241,7 +240,6 @@ function RegisterPage() {
             rateLimitMessage(response, locale, numbers.numberStyle) ??
             resolveErrorMessage(errorCode, locale);
           setFormError(msg);
-          toast.error(msg);
           return;
         }
 
@@ -250,7 +248,6 @@ function RegisterPage() {
         if (!challengeId) {
           const msg = t('auth.register.error.generic', locale);
           setFormError(msg);
-          toast.error(msg);
           return;
         }
 
@@ -270,7 +267,6 @@ function RegisterPage() {
         // Network error or unexpected failure
         const msg = t('auth.register.error.generic', locale);
         setFormError(msg);
-        toast.error(msg);
       } finally {
         setSubmitting(false);
       }

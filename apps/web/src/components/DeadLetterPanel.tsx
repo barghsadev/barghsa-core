@@ -4,7 +4,7 @@ import { useState, useEffect, useId } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { Button } from '@barghsa/ui';
-import type { Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n/app';
 
 /**
  * Admin dead-letter queue panel (E-05, T-05.01.06).

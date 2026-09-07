@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { Button } from '@barghsa/ui';
 

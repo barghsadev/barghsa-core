@@ -14,6 +14,7 @@ const DefaultProfileModal = lazy(() =>
 );
 import { UiDirectionProvider } from '../providers/UiDirectionProvider.js';
 import { BrandThemeProvider } from '../providers/BrandThemeProvider.js';
+import { ApplicationToaster } from '../components/ApplicationToaster.js';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -119,6 +120,7 @@ function RootComponent() {
           </Suspense>
         )}
         <Outlet />
+        <ApplicationToaster />
         {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
       </BrandThemeProvider>
     </UiDirectionProvider>

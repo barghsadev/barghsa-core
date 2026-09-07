@@ -6,7 +6,7 @@ import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';
-import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField, evaluateStrength } from '../components/PasswordField.js';
 import { OtpInput } from '../components/OtpInput.js';
@@ -229,7 +229,6 @@ function LoginPage() {
             rateLimitMessage(response, locale, numbers.numberStyle) ??
             resolveErrorMessage(errorCode, locale);
           setFormError(msg);
-          toast.error(msg);
           return;
         }
 
@@ -239,7 +238,6 @@ function LoginPage() {
           if (!token) {
             const msg = t('auth.login.error.generic', locale);
             setFormError(msg);
-            toast.error(msg);
             return;
           }
           setPasswordChangeToken(token);
@@ -256,7 +254,6 @@ function LoginPage() {
           if (!cid) {
             const msg = t('auth.login.error.generic', locale);
             setFormError(msg);
-            toast.error(msg);
             return;
           }
           setChallengeId(cid);
@@ -275,7 +272,6 @@ function LoginPage() {
         // Network error or unexpected failure
         const msg = t('auth.login.error.generic', locale);
         setFormError(msg);
-        toast.error(msg);
       } finally {
         setSubmitting(false);
       }
@@ -429,7 +425,6 @@ function LoginPage() {
         const retry = rateLimitMessage(response, locale, numbers.numberStyle);
         const message = retry ?? t('auth.otp.error.resend', locale);
         setOtpError(message);
-        toast.error(message);
         if (retry) {
           setResendTimer(retryAfterSeconds(response) ?? 60);
         }
@@ -549,10 +544,12 @@ function LoginPage() {
 
             {/* Trust this device checkbox */}
             <div className="flex items-center gap-2">
-              <Checkbox
+              <input
+                type="checkbox"
+                className="size-4 shrink-0 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 id="trust-device"
                 checked={trustDevice}
-                onCheckedChange={(checked) => setTrustDevice(checked === true)}
+                onChange={(event) => setTrustDevice(event.target.checked)}
                 disabled={verifying}
               />
               <Label htmlFor="trust-device" className="text-sm text-muted-foreground">

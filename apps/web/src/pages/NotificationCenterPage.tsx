@@ -1,7 +1,7 @@
 import { notificationContent } from '../lib/notifications.js';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
 import { Button } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';

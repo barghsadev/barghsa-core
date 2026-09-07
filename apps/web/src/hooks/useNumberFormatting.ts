@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n/app';
 import {
   exactIrr,
   formatCurrencyIrr,
