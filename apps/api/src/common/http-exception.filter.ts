@@ -9,6 +9,7 @@ import {
 import { Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
+import { STATUS_CODES } from 'node:http';
 import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
 import type { ErrorCodeDef } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n';
@@ -140,7 +141,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           rawMessage = (body.message as string[]).join('; ');
         }
         // Extract a custom error code from the body if present
-        if (typeof body.error === 'string') {
+        if (typeof body.error === 'string' && body.error !== STATUS_CODES[status]) {
           customErrorCode = body.error;
         }
       }
@@ -148,7 +149,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return {
         httpStatus: status,
         errorCode: customErrorCode ?? defaultErrorCode(status),
-        rawMessage,
+        rawMessage: rawMessage === STATUS_CODES[status] ? undefined : rawMessage,
       };
     }
 

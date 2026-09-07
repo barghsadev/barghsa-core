@@ -2556,3 +2556,9 @@ All 52 selected HTTP/filter checks across five files pass. These include English
 At revision 1bbf2b050981f77430686b2880a18b0d7a654b5a, the fresh API/OpenAPI and Vite builds, contract gate and complete-route budgets pass. All 226 manifest JS/CSS assets exist under hashed paths, compiled controller decorator metadata is retained, and ten production static-server tests pass. The Nest build and hashed-asset/cache tasks are acceptance_verified.
 
 Six other tasks remain partial with explicit evidence and unmet requirements: eager customer purchase routes, the specified bundle-checking tool, missing future refund/order concurrency cases, nightly cross-browser execution, production quarantine enforcement, and complete stable/localized errors with downstream correlation. Eight quarantine tests and two browser-outcome tests pass. These assessments preserve historical PR/skip provenance. The ledger now has 38 reviewed tasks: 25 verified, 13 partial, and 284 still pending. Passing infrastructure checks do not certify the future business flows.
+
+### Normalize built-in HTTP exception labels
+
+Nest's default error labels such as Bad Request and Forbidden were being returned as machine-readable codes, and default messages bypassed translation. The filter now maps the status's standard label through shared error definitions and translates default messages. Explicit application codes and explanatory business messages keep their existing behavior. All five new built-in-exception cases failed before repair.
+
+All 700 HTTP/filter checks across 55 files pass after the change. API typechecking, targeted lint, formatting and diff review pass. Application-specific raw messages, generated route-not-found details and complete downstream correlation remain separate acceptance work; this change does not certify every error response.

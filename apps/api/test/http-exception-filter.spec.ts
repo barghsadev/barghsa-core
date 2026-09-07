@@ -1,5 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { HttpException, HttpStatus, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  UnauthorizedException,
+  ForbiddenException,
+  NotFoundException,
+  BadGatewayException,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpExceptionFilter } from '../src/common/http-exception.filter.js';
 import {
@@ -119,6 +128,39 @@ describe('HttpExceptionFilter', () => {
     return { json, status, response, request, host };
   }
 
+  it.each([
+    {
+      exception: new BadRequestException(),
+      code: 'VALIDATION:INPUT:INVALID',
+      message: 'مقدار ورودی نامعتبر است',
+    },
+    {
+      exception: new UnauthorizedException(),
+      code: 'AUTH:UNAUTHENTICATED',
+      message: 'احراز هویت نشده‌اید',
+    },
+    { exception: new ForbiddenException(), code: 'AUTHZ:FORBIDDEN', message: 'دسترسی غیرمجاز' },
+    {
+      exception: new NotFoundException(),
+      code: 'NOT_FOUND:RESOURCE',
+      message: 'منبع درخواستی یافت نشد',
+    },
+    {
+      exception: new BadGatewayException(),
+      code: 'PROVIDER:DOWNSTREAM_ERROR',
+      message: 'خطا در سرویس خارجی',
+    },
+  ])(
+    'maps built-in $code to its shared code and localized message',
+    ({ exception, code, message }) => {
+      const { json, host } = createMockHost(exception.getStatus(), {});
+      filter.catch(exception, host);
+      expect(json).toHaveBeenCalledWith({
+        error: { code, message, correlationId: expect.any(String) },
+      });
+    }
+  );
+
   it('returns 400 with VALIDATION:PARSE:ZOD_ERROR for ZodError', () => {
     const issues: ZodIssue[] = [
       {
@@ -209,7 +251,7 @@ describe('HttpExceptionFilter', () => {
     });
   });
 
-  it('returns 401 for unauthorized — uses raw HttpException message for 4xx', () => {
+  it('localizes the default unauthorized message', () => {
     const exception = new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     const { json, status, host } = createMockHost(401, {});
 
@@ -220,12 +262,12 @@ describe('HttpExceptionFilter', () => {
       error: {
         correlationId: expect.any(String),
         code: 'AUTH:UNAUTHENTICATED',
-        message: 'Unauthorized',
+        message: 'احراز هویت نشده‌اید',
       },
     });
   });
 
-  it('returns 404 for not found — uses raw HttpException message for 4xx', () => {
+  it('localizes the default not-found message', () => {
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
     const { json, status, host } = createMockHost(404, {});
 
@@ -236,7 +278,7 @@ describe('HttpExceptionFilter', () => {
       error: {
         correlationId: expect.any(String),
         code: 'NOT_FOUND:RESOURCE',
-        message: 'Not Found',
+        message: 'منبع درخواستی یافت نشد',
       },
     });
   });
@@ -270,13 +312,13 @@ describe('HttpExceptionFilter', () => {
     expect(json).toHaveBeenCalledWith({
       error: {
         code: 'NOT_FOUND:RESOURCE',
-        message: 'Not Found',
+        message: 'منبع درخواستی یافت نشد',
         correlationId: testId,
       },
     });
   });
 
-  it('uses English locale when accept-language is en — raw message used for 4xx', () => {
+  it('uses English locale for the default not-found message', () => {
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
     const { json, host } = createMockHost(404, {}, { 'accept-language': 'en-US' });
 
@@ -286,7 +328,7 @@ describe('HttpExceptionFilter', () => {
       error: {
         correlationId: expect.any(String),
         code: 'NOT_FOUND:RESOURCE',
-        message: 'Not Found',
+        message: 'Requested resource was not found',
       },
     });
   });
