@@ -289,7 +289,7 @@
       "lines": 4180,
       "covered_lines": 3871,
       "branches": 3218,
-      "covered_branches": 2515,
+      "covered_branches": 2514,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -422,9 +422,9 @@
         "apps/web/src/routes/terms.tsx"
       ],
       "lines": 6375,
-      "covered_lines": 3919,
+      "covered_lines": 3930,
       "branches": 7683,
-      "covered_branches": 4427,
+      "covered_branches": 4443,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -478,10 +478,10 @@
         "apps/web/src/routes/admin/verification.tsx",
         "apps/web/src/routes/admin/wallet-receipts.tsx"
       ],
-      "lines": 573,
-      "covered_lines": 426,
-      "branches": 516,
-      "covered_branches": 365,
+      "lines": 575,
+      "covered_lines": 429,
+      "branches": 510,
+      "covered_branches": 367,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -744,13 +744,13 @@
         "packages/shared/src/verification/index.ts",
         "packages/shared/src/verification/types.ts"
       ],
-      "lines": 1597,
-      "covered_lines": 1413,
-      "branches": 1749,
-      "covered_branches": 1497,
+      "lines": 1609,
+      "covered_lines": 1452,
+      "branches": 1761,
+      "covered_branches": 1541,
       "required_lines": 90,
       "required_branches": 85,
-      "passed": false
+      "passed": true
     },
     {
       "package": "packages/shared",
@@ -850,5 +850,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "86d9f497a33c27dfa803d10dce11aaa845e3fe49"
+  "head_sha": "89e71e88c9bfdb6d71750486e456e83e34efe3eb"
 }
