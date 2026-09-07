@@ -122,7 +122,12 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
       });
       expect(result.test.ok).toBe(true);
       expect(result.lastTestStatus).toBe('passed');
-      expect(mockTestConnection).toHaveBeenCalledWith('cfg-1', '989121234567', 'otp:login');
+      expect(mockTestConnection).toHaveBeenCalledWith(
+        'cfg-1',
+        '989121234567',
+        'otp:login',
+        'admin-1'
+      );
     });
 
     it('rejects an invalid recipient mobile with 400', async () => {

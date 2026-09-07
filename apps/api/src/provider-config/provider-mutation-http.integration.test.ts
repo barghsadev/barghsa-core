@@ -1,4 +1,10 @@
-import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
+import { EmailProviderConfigService } from './email-provider-config.service.js';
+import { SmsProviderConfigService } from './sms-provider-config.service.js';
+import { EmailCircuitBreakerService } from './email-circuit-breaker.service.js';
+import { SmtpConnectionTesterService } from './smtp-connection-tester.service.js';
+import { SmsirConnectionTesterService } from './smsir-connection-tester.service.js';
+import { ProviderSecretsService } from './provider-secrets.service.js';
+import { beforeAll, afterAll, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 
@@ -72,7 +78,7 @@ async function waitForLock() {
 }
 for (const channel of ['email', 'sms']) {
   const table = `${channel}_provider_configs`;
-  for (const action of ['create', 'update', 'activate', 'disable', 'rollback']) {
+  for (const action of ['create', 'update', 'activate', 'disable', 'rollback', 'test-connection']) {
     async function seed() {
       const id = randomUUID();
       if (action !== 'create')
@@ -143,7 +149,7 @@ for (const channel of ['email', 'sms']) {
       const state = await snapshot(table);
       expect(state.audits).toHaveLength(1);
       expect(state.audits[0].event).toBe(
-        `${channel}_provider_${({ create: 'created', update: 'updated', activate: 'activated', disable: 'disabled', rollback: 'rolled_back' } as Record<string, string>)[action]}`
+        `${channel}_provider_${({ create: 'created', update: 'updated', activate: 'activated', disable: 'disabled', rollback: 'rolled_back', 'test-connection': 'tested' } as Record<string, string>)[action]}`
       );
       expect(JSON.stringify(state.audits)).not.toMatch(/fixture-password|fixture-api-key/);
       if (action === 'create')
@@ -301,6 +307,130 @@ for (const channel of ['email', 'sms']) {
       expect(response.status).toBe(409);
       expect(await response.json()).toMatchObject({ error: { code: 'CONFLICT:INVALID_STATE' } });
       expect(await snapshot(table)).toEqual(before);
+    });
+  }
+}
+
+for (const channel of ['email', 'sms']) {
+  for (const concurrent of ['edit', 'revoke', 'audit-failure']) {
+    it(`${channel} server test: holds authority and settings through ${concurrent}`, async () => {
+      const id = randomUUID(),
+        table = `${channel}_provider_configs`;
+      const config =
+        channel === 'email'
+          ? {
+              host: 'smtp.example.test',
+              from_email: 'sender@example.test',
+              password: 'fixture-password',
+            }
+          : {
+              api_key: 'fixture-api-key',
+              sender: '9830000000',
+              timeout: 15,
+              throughput_limit: 100,
+              low_credit_threshold: 0,
+            };
+      const secrets = new ProviderSecretsService('provider-mutation-fixture-key');
+      await http.pool.query(
+        `INSERT INTO ${table}(id,transport,label,status,config,created_by) VALUES ($1,$2,'Delayed test','draft',$3,'provider-writer')`,
+        [
+          id,
+          channel === 'email' ? 'smtp' : 'smsir',
+          secrets.encryptConfig(channel === 'email' ? 'smtp' : 'smsir', config),
+        ]
+      );
+      if (channel === 'email')
+        await http.pool.query(
+          `UPDATE ${table} SET consecutive_failures=2,window_failures=2 WHERE id=$1`,
+          [id]
+        );
+      const before = await snapshot(table);
+      let release!: () => void;
+      const held = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const smtp = new SmtpConnectionTesterService(),
+        sms = new SmsirConnectionTesterService();
+      const send = vi.fn(async () => {
+        await held;
+        return { ok: true };
+      });
+      vi.spyOn(smtp, 'test').mockImplementation(send);
+      vi.spyOn(sms, 'test').mockImplementation(send);
+      const service =
+        channel === 'email'
+          ? new EmailProviderConfigService(
+              http.pool,
+              smtp,
+              undefined,
+              secrets,
+              new EmailCircuitBreakerService(http.pool)
+            )
+          : new SmsProviderConfigService(http.pool, sms, secrets);
+      if (concurrent === 'audit-failure')
+        await http.pool.query(
+          "CREATE OR REPLACE FUNCTION reject_provider_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$; CREATE TRIGGER reject_provider_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_provider_audit()"
+        );
+      const testing =
+        service instanceof EmailProviderConfigService
+          ? service.testConnection(id, undefined, 'provider-writer')
+          : service.testConnection(id, undefined, undefined, 'provider-writer');
+      const observed = testing.then(
+        (value) => ({ value, error: undefined }),
+        (error) => ({ value: undefined, error })
+      );
+      let writing: Promise<unknown> | undefined;
+      try {
+        await expect.poll(() => send.mock.calls.length, { timeout: 3000 }).toBe(1);
+        if (concurrent === 'edit')
+          writing = service.update(
+            id,
+            {
+              config:
+                channel === 'email' ? { host: 'changed.example.test' } : { sender: '9830000001' },
+            },
+            'provider-writer'
+          );
+        if (concurrent === 'revoke')
+          writing = http.pool.query(
+            "UPDATE staff_roles SET permissions='[]' WHERE role_id='provider-writer'"
+          );
+        if (writing) await waitForLock();
+        expect((await snapshot(table)).providers[0].last_test_status).toBe('pending');
+        release();
+        const finished = await observed;
+        await writing;
+        if (concurrent === 'audit-failure') {
+          expect(finished.error).toBeDefined();
+          expect(await snapshot(table)).toEqual(before);
+        } else {
+          expect(finished.error).toBeUndefined();
+          expect(finished.value).toMatchObject({ ok: true, result: { lastTestStatus: 'passed' } });
+          const state = await snapshot(table);
+          expect(state.providers[0].last_test_status).toBe(
+            concurrent === 'edit' ? 'pending' : 'passed'
+          );
+          expect(
+            state.audits.filter((row) => row.event === `${channel}_provider_tested`)
+          ).toHaveLength(1);
+          const testAudit = state.audits.find((row) => row.event === `${channel}_provider_tested`);
+          expect(JSON.parse(testAudit.metadata)).toMatchObject({
+            providerId: id,
+            lastTestStatus: 'passed',
+          });
+          if (channel === 'email') expect(state.providers[0].consecutive_failures).toBe(0);
+          if (concurrent === 'revoke')
+            await expect(
+              service.update(id, { label: 'Denied' }, 'provider-writer')
+            ).rejects.toMatchObject({ status: 403 });
+        }
+      } finally {
+        release();
+        await observed;
+        await writing;
+        if (concurrent === 'audit-failure')
+          await http.pool.query('DROP TRIGGER reject_provider_audit ON audit_log');
+      }
     });
   }
 }

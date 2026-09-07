@@ -1,4 +1,4 @@
-import { mutateProvider } from './provider-mutation.js';
+import { mutateProvider, testProvider } from './provider-mutation.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -320,21 +320,25 @@ export class EmailProviderConfigService {
    * Record the outcome of a test-send. Only drafts may be tested. A passing
    * test marks the row as eligible for activation.
    */
-  async recordTest(id: string, input: RecordTestInput): Promise<EmailProviderConfigResult> {
-    const existing = await this.findById(id);
+  async recordTest(
+    id: string,
+    input: RecordTestInput,
+    query: Pick<ProviderPool, 'query'> = this.db
+  ): Promise<EmailProviderConfigResult> {
+    const existing = await this.findById(id, query);
     if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
     if (existing.status !== 'draft') {
       throw new HttpException(ProviderErrors.notEditable(), 409);
     }
 
     const testStatus = input.passed ? 'passed' : 'failed';
-    await this.db.query(
+    await query.query(
       `UPDATE email_provider_configs
           SET last_test_status = $1, last_test_error = $2, last_test_at = NOW()
         WHERE id = $3`,
       [testStatus, input.passed ? null : (input.error ?? null), id]
     );
-    const row = await this.findById(id);
+    const row = await this.findById(id, query);
     if (!row) throw new Error('Failed to read updated provider config');
     return row;
   }
@@ -461,13 +465,14 @@ export class EmailProviderConfigService {
    * (older test harnesses) the gate is always open.
    */
   async breakerDecision(
-    id: string
+    id: string,
+    breaker = this.circuitBreaker
   ): Promise<
     | { allow: true; kind: 'closed' | 'half_open'; probeToken?: string }
     | { allow: false; kind: 'open'; degradedReason: string; cooldownUntil: Date }
   > {
-    if (!this.circuitBreaker) return { allow: true, kind: 'closed' };
-    const decision = await this.circuitBreaker.decision(id);
+    if (!breaker) return { allow: true, kind: 'closed' };
+    const decision = await breaker.decision(id);
     if (!decision.allow) {
       return {
         allow: false,
@@ -496,51 +501,67 @@ export class EmailProviderConfigService {
    */
   async testConnection(
     id: string,
-    recipient?: string
+    recipient?: string,
+    actorUserId?: string
   ): Promise<{
     ok: boolean;
     error: string | null;
     result: EmailProviderConfigResult;
   }> {
-    const existing = await this.findById(id);
-    if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
-    if (existing.status !== 'draft') {
-      throw new HttpException(ProviderErrors.notEditable(), 409);
-    }
+    return testProvider(this.db, actorUserId, 'email', async (client) => {
+      const existing = await this.findById(id, client, true);
+      if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
+      if (existing.status !== 'draft') {
+        throw new HttpException(ProviderErrors.notEditable(), 409);
+      }
 
-    // T-05.06.06 — while the circuit breaker is OPEN (degraded, cooldown not
-    // elapsed), no test-send is allowed through this provider. After the
-    // cooldown the breaker allows exactly one half-open probe, which is what
-    // this connection test performs; its outcome is fed back via
-    // recordBreakerOutcome and a success resets the breaker.
-    const breaker = await this.breakerDecision(existing.id);
-    if (!breaker.allow) {
-      throw new HttpException(
-        errBody(
-          409,
-          ErrorCodes.CONFLICT_STATE.code,
-          `Email provider is degraded by the circuit breaker; test-send paused until ${breaker.cooldownUntil.toISOString()}`
-        ),
-        409
-      );
-    }
+      // T-05.06.06 — while the circuit breaker is OPEN (degraded, cooldown not
+      // elapsed), no test-send is allowed through this provider. After the
+      // cooldown the breaker allows exactly one half-open probe, which is what
+      // this connection test performs; its outcome is fed back via
+      // recordBreakerOutcome and a success resets the breaker.
+      const boundBreaker = this.circuitBreaker?.using(client);
+      const breaker = await this.breakerDecision(existing.id, boundBreaker);
+      if (!breaker.allow) {
+        throw new HttpException(
+          errBody(
+            409,
+            ErrorCodes.CONFLICT_STATE.code,
+            `Email provider is degraded by the circuit breaker; test-send paused until ${breaker.cooldownUntil.toISOString()}`
+          ),
+          409
+        );
+      }
 
-    if (existing.transport === 'resend') {
-      const outcome = await this.testResendConnection(existing.id, recipient);
-      return this.recordBreakerOutcome(existing.id, outcome, breaker.probeToken);
-    }
-    if (existing.transport !== 'smtp') {
-      throw new HttpException(
-        errBody(
-          400,
-          ErrorCodes.VALIDATION_PARSE_ZOD.code,
-          `Unsupported email transport: ${existing.transport}`
-        ),
-        400
+      if (existing.transport === 'resend') {
+        const outcome = await this.testResendConnection(existing.id, recipient, client);
+        return this.recordBreakerOutcome(
+          existing.id,
+          outcome,
+          breaker.probeToken,
+          client,
+          boundBreaker
+        );
+      }
+      if (existing.transport !== 'smtp') {
+        throw new HttpException(
+          errBody(
+            400,
+            ErrorCodes.VALIDATION_PARSE_ZOD.code,
+            `Unsupported email transport: ${existing.transport}`
+          ),
+          400
+        );
+      }
+      const outcome = await this.testSmtpConnection(existing.id, client);
+      return this.recordBreakerOutcome(
+        existing.id,
+        outcome,
+        breaker.probeToken,
+        client,
+        boundBreaker
       );
-    }
-    const outcome = await this.testSmtpConnection(existing.id);
-    return this.recordBreakerOutcome(existing.id, outcome, breaker.probeToken);
+    });
   }
 
   /**
@@ -554,33 +575,42 @@ export class EmailProviderConfigService {
   private async recordBreakerOutcome(
     id: string,
     outcome: { ok: boolean; error: string | null },
-    probeToken?: string
+    probeToken?: string,
+    query: Pick<ProviderPool, 'query'> = this.db,
+    breaker = this.circuitBreaker
   ): Promise<{ ok: boolean; error: string | null; result: EmailProviderConfigResult }> {
-    if (this.circuitBreaker) {
-      await this.circuitBreaker.recordOutcome(id, {
+    if (breaker) {
+      await breaker.recordOutcome(id, {
         ok: outcome.ok,
         ...(outcome.error ? { cause: outcome.error } : {}),
         ...(probeToken ? { probeToken } : {}),
       });
     }
-    const result = await this.findById(id);
+    const result = await this.findById(id, query);
     if (!result) throw new HttpException(ProviderErrors.notFound(), 404);
     return { ok: outcome.ok, error: outcome.error, result };
   }
 
   /** SMTP handshake connection test (T-05.06.02). */
-  private async testSmtpConnection(id: string): Promise<{
+  private async testSmtpConnection(
+    id: string,
+    query: Pick<ProviderPool, 'query'> = this.db
+  ): Promise<{
     ok: boolean;
     error: string | null;
     result: EmailProviderConfigResult;
   }> {
-    const saved = await this.readConfig(id);
+    const saved = await this.readConfig(id, query);
     const parsed = parseSmtpConfig(saved);
     if (!parsed.ok) {
-      const recorded = await this.recordTest(id, {
-        passed: false,
-        error: `Invalid SMTP configuration: ${parsed.error}`,
-      });
+      const recorded = await this.recordTest(
+        id,
+        {
+          passed: false,
+          error: `Invalid SMTP configuration: ${parsed.error}`,
+        },
+        query
+      );
       return { ok: false, error: `Invalid SMTP configuration: ${parsed.error}`, result: recorded };
     }
 
@@ -596,17 +626,22 @@ export class EmailProviderConfigService {
     }
 
     const outcome = await this.smtpTester.test(parsed.config);
-    const recorded = await this.recordTest(id, {
-      passed: outcome.ok,
-      ...(outcome.error !== undefined ? { error: outcome.error } : {}),
-    });
+    const recorded = await this.recordTest(
+      id,
+      {
+        passed: outcome.ok,
+        ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+      },
+      query
+    );
     return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
   }
 
   /** Resend domain-verification + test-send to the admin's email (T-05.06.03). */
   private async testResendConnection(
     id: string,
-    recipient?: string
+    recipient?: string,
+    query: Pick<ProviderPool, 'query'> = this.db
   ): Promise<{
     ok: boolean;
     error: string | null;
@@ -634,13 +669,17 @@ export class EmailProviderConfigService {
       );
     }
 
-    const saved = await this.readConfig(id);
+    const saved = await this.readConfig(id, query);
     const parsed = parseResendConfig(saved);
     if (!parsed.ok) {
-      const recorded = await this.recordTest(id, {
-        passed: false,
-        error: `Invalid Resend configuration: ${parsed.error}`,
-      });
+      const recorded = await this.recordTest(
+        id,
+        {
+          passed: false,
+          error: `Invalid Resend configuration: ${parsed.error}`,
+        },
+        query
+      );
       return {
         ok: false,
         error: `Invalid Resend configuration: ${parsed.error}`,
@@ -660,10 +699,14 @@ export class EmailProviderConfigService {
     }
 
     const outcome = await this.resendTester.test(parsed.config, trimmed);
-    const recorded = await this.recordTest(id, {
-      passed: outcome.ok,
-      ...(outcome.error !== undefined ? { error: outcome.error } : {}),
-    });
+    const recorded = await this.recordTest(
+      id,
+      {
+        passed: outcome.ok,
+        ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+      },
+      query
+    );
     return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
   }
 

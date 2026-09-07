@@ -1,4 +1,4 @@
-import { mutateProvider } from './provider-mutation.js';
+import { mutateProvider, testProvider } from './provider-mutation.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -312,21 +312,25 @@ export class SmsProviderConfigService {
   }
 
   /** Record the outcome of a connection test. Only drafts may be tested. */
-  async recordTest(id: string, input: RecordSmsTestInput): Promise<SmsProviderConfigResult> {
-    const existing = await this.findById(id);
+  async recordTest(
+    id: string,
+    input: RecordSmsTestInput,
+    query: Pick<ProviderPool, 'query'> = this.db
+  ): Promise<SmsProviderConfigResult> {
+    const existing = await this.findById(id, query);
     if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
     if (existing.status !== 'draft') {
       throw new HttpException(SmsProviderErrors.notEditable(), 409);
     }
 
     const testStatus = input.passed ? 'passed' : 'failed';
-    await this.db.query(
+    await query.query(
       `UPDATE sms_provider_configs
           SET last_test_status = $1, last_test_error = $2, last_test_at = NOW()
         WHERE id = $3`,
       [testStatus, input.passed ? null : (input.error ?? null), id]
     );
-    const row = await this.findById(id);
+    const row = await this.findById(id, query);
     if (!row) throw new Error('Failed to read updated SMS provider config');
     return row;
   }
@@ -486,46 +490,61 @@ export class SmsProviderConfigService {
   async testConnection(
     id: string,
     recipient?: string,
-    eventKey?: string
+    eventKey?: string,
+    actorUserId?: string
   ): Promise<{
     ok: boolean;
     error: string | null;
     result: SmsProviderConfigResult;
   }> {
-    const existing = await this.findById(id);
-    if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
-    if (existing.status !== 'draft') {
-      throw new HttpException(SmsProviderErrors.notEditable(), 409);
-    }
+    return testProvider(this.db, actorUserId, 'sms', async (client) => {
+      const existing = await this.findById(id, client, true);
+      if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
+      if (existing.status !== 'draft') {
+        throw new HttpException(SmsProviderErrors.notEditable(), 409);
+      }
 
-    if (!this.smsirTester) {
-      const recorded = await this.recordTest(id, {
-        passed: false,
-        error: 'SMS connection tester is not available',
-      });
-      return { ok: false, error: 'SMS connection tester is not available', result: recorded };
-    }
+      if (!this.smsirTester) {
+        const recorded = await this.recordTest(
+          id,
+          {
+            passed: false,
+            error: 'SMS connection tester is not available',
+          },
+          client
+        );
+        return { ok: false, error: 'SMS connection tester is not available', result: recorded };
+      }
 
-    const saved = await this.readConfig(id);
-    const parsed = parseSmsirConfig(saved);
-    if (!parsed.ok) {
-      const recorded = await this.recordTest(id, {
-        passed: false,
-        error: `Invalid SMS.ir configuration: ${parsed.error}`,
-      });
-      return {
-        ok: false,
-        error: `Invalid SMS.ir configuration: ${parsed.error}`,
-        result: recorded,
-      };
-    }
+      const saved = await this.readConfig(id, client);
+      const parsed = parseSmsirConfig(saved);
+      if (!parsed.ok) {
+        const recorded = await this.recordTest(
+          id,
+          {
+            passed: false,
+            error: `Invalid SMS.ir configuration: ${parsed.error}`,
+          },
+          client
+        );
+        return {
+          ok: false,
+          error: `Invalid SMS.ir configuration: ${parsed.error}`,
+          result: recorded,
+        };
+      }
 
-    const outcome = await this.smsirTester.test(parsed.config, recipient, eventKey);
-    const recorded = await this.recordTest(id, {
-      passed: outcome.ok,
-      ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+      const outcome = await this.smsirTester.test(parsed.config, recipient, eventKey);
+      const recorded = await this.recordTest(
+        id,
+        {
+          passed: outcome.ok,
+          ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+        },
+        client
+      );
+      return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
     });
-    return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
   }
 
   /* ------------------------- Transaction + helpers ----------------------- */

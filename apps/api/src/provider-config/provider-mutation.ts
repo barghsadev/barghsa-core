@@ -31,7 +31,11 @@ export async function mutateProvider<T extends { id: string; status: string }>(
         uuidv7(),
         actorUserId,
         `${channel}_provider_${event}`,
-        JSON.stringify({ providerId: result.id, status: result.status }),
+        JSON.stringify({
+          providerId: result.id,
+          status: result.status,
+          ...('lastTestStatus' in result ? { lastTestStatus: result.lastTestStatus } : {}),
+        }),
         uuidv7(),
       ]
     );
@@ -57,4 +61,18 @@ export async function mutateProvider<T extends { id: string; status: string }>(
   } finally {
     client.release();
   }
+}
+
+/** Commit a server-produced outcome and its provider audit together. */
+export async function testProvider<T extends { id: string; status: string }>(
+  pool: ProviderPool,
+  actorUserId: string | undefined,
+  channel: 'email' | 'sms',
+  work: (client: PoolClient) => Promise<{ ok: boolean; error: string | null; result: T }>
+): Promise<{ ok: boolean; error: string | null; result: T }> {
+  const committed = await mutateProvider(pool, actorUserId, channel, 'tested', async (client) => {
+    const outcome = await work(client);
+    return { ...outcome.result, outcome };
+  });
+  return committed.outcome;
 }

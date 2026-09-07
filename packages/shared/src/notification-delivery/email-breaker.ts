@@ -62,6 +62,10 @@ export class EmailCircuitBreaker {
     private readonly config: EmailBreakerConfig = DEFAULT_EMAIL_BREAKER_CONFIG,
     private readonly clock?: Clock
   ) {}
+  /** Bind all reads, probe claims and outcomes to a caller's held transaction. */
+  using(pool: DeliveryPool): EmailCircuitBreaker {
+    return new EmailCircuitBreaker(pool, this.config, this.clock);
+  }
   private async now(): Promise<Date> {
     if (this.clock) return this.clock.now();
     const row = (await this.pool.query('SELECT clock_timestamp() AS now')).rows[0];

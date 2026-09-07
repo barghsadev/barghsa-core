@@ -198,7 +198,11 @@ export class EmailProviderConfigController {
         400
       );
     }
-    const { ok, error, result } = await this.service.testConnection(id, parsed?.data?.recipient);
+    const { ok, error, result } = await this.service.testConnection(
+      id,
+      parsed?.data?.recipient,
+      req.session.userId
+    );
     return { ...result, test: { ok, error } };
   }
 

@@ -213,7 +213,8 @@ export class SmsProviderConfigController {
     const { ok, error, result } = await this.service.testConnection(
       id,
       parsed?.data?.recipient,
-      parsed?.data?.eventKey
+      parsed?.data?.eventKey,
+      req.session.userId
     );
     return { ...result, test: { ok, error } };
   }
