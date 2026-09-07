@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "inlineSources": true
+  },
+  "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"]
+}

@@ -6,33 +6,177 @@
     "dist"
   ],
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./errors": "./dist/errors/index.js",
-    "./redis": "./dist/redis/index.js",
-    "./rate-limit": "./dist/rate-limit/index.js",
-    "./config-cache": "./dist/config-cache/index.js",
-    "./storage": "./dist/storage/index.js",
-    "./validation": "./dist/validation/index.js",
-    "./agent-permissions": "./dist/agent-permissions/index.js",
-    "./verification": "./dist/verification/index.js",
-    "./notifications": "./dist/notifications/index.js",
-    "./finance": "./dist/finance/index.js",
-    "./admin": "./dist/admin/index.js",
-    "./promotions": "./dist/promotions/index.js",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./errors": {
+      "import": {
+        "types": "./dist/errors/index.d.ts",
+        "default": "./dist/errors/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/errors/index.d.ts",
+        "default": "./dist/cjs/errors/index.js"
+      }
+    },
+    "./redis": {
+      "import": {
+        "types": "./dist/redis/index.d.ts",
+        "default": "./dist/redis/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/redis/index.d.ts",
+        "default": "./dist/cjs/redis/index.js"
+      }
+    },
+    "./rate-limit": {
+      "import": {
+        "types": "./dist/rate-limit/index.d.ts",
+        "default": "./dist/rate-limit/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/rate-limit/index.d.ts",
+        "default": "./dist/cjs/rate-limit/index.js"
+      }
+    },
+    "./config-cache": {
+      "import": {
+        "types": "./dist/config-cache/index.d.ts",
+        "default": "./dist/config-cache/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/config-cache/index.d.ts",
+        "default": "./dist/cjs/config-cache/index.js"
+      }
+    },
+    "./storage": {
+      "import": {
+        "types": "./dist/storage/index.d.ts",
+        "default": "./dist/storage/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/storage/index.d.ts",
+        "default": "./dist/cjs/storage/index.js"
+      }
+    },
+    "./validation": {
+      "import": {
+        "types": "./dist/validation/index.d.ts",
+        "default": "./dist/validation/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/validation/index.d.ts",
+        "default": "./dist/cjs/validation/index.js"
+      }
+    },
+    "./agent-permissions": {
+      "import": {
+        "types": "./dist/agent-permissions/index.d.ts",
+        "default": "./dist/agent-permissions/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/agent-permissions/index.d.ts",
+        "default": "./dist/cjs/agent-permissions/index.js"
+      }
+    },
+    "./verification": {
+      "import": {
+        "types": "./dist/verification/index.d.ts",
+        "default": "./dist/verification/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/verification/index.d.ts",
+        "default": "./dist/cjs/verification/index.js"
+      }
+    },
+    "./notifications": {
+      "import": {
+        "types": "./dist/notifications/index.d.ts",
+        "default": "./dist/notifications/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/notifications/index.d.ts",
+        "default": "./dist/cjs/notifications/index.js"
+      }
+    },
+    "./finance": {
+      "import": {
+        "types": "./dist/finance/index.d.ts",
+        "default": "./dist/finance/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/finance/index.d.ts",
+        "default": "./dist/cjs/finance/index.js"
+      }
+    },
+    "./admin": {
+      "import": {
+        "types": "./dist/admin/index.d.ts",
+        "default": "./dist/admin/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/admin/index.d.ts",
+        "default": "./dist/cjs/admin/index.js"
+      }
+    },
+    "./promotions": {
+      "import": {
+        "types": "./dist/promotions/index.d.ts",
+        "default": "./dist/promotions/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/promotions/index.d.ts",
+        "default": "./dist/cjs/promotions/index.js"
+      }
+    },
     "./package.json": "./package.json",
-    "./auth-delivery": "./dist/auth-delivery/index.js",
-    "./notification-delivery": "./dist/notification-delivery/index.js",
-    "./ai-models": "./dist/ai-models/index.js"
+    "./auth-delivery": {
+      "import": {
+        "types": "./dist/auth-delivery/index.d.ts",
+        "default": "./dist/auth-delivery/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/auth-delivery/index.d.ts",
+        "default": "./dist/cjs/auth-delivery/index.js"
+      }
+    },
+    "./notification-delivery": {
+      "import": {
+        "types": "./dist/notification-delivery/index.d.ts",
+        "default": "./dist/notification-delivery/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/notification-delivery/index.d.ts",
+        "default": "./dist/cjs/notification-delivery/index.js"
+      }
+    },
+    "./ai-models": {
+      "import": {
+        "types": "./dist/ai-models/index.d.ts",
+        "default": "./dist/ai-models/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/ai-models/index.d.ts",
+        "default": "./dist/cjs/ai-models/index.js"
+      }
+    }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "node scripts/build.mjs && node --test scripts/package-exports.test.mjs",
     "dev": "tsc --watch --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
-    "typecheck": "tsc"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.700.0",
@@ -44,5 +188,6 @@
   "devDependencies": {
     "@types/nodemailer": "8.0.1",
     "@barghsa/tsconfig": "workspace:*"
-  }
+  },
+  "module": "dist/index.js"
 }
