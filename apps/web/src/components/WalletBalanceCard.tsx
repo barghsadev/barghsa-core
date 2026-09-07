@@ -1,3 +1,5 @@
+import { exactIrr } from '@barghsa/i18n/numbers';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n';
 
@@ -15,19 +17,6 @@ export interface WalletBalanceCardProps {
 }
 
 /**
- * Formats a number with locale-aware digit grouping.
- */
-function formatAmount(amount: bigint, locale: Locale): string {
-  try {
-    return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-      style: 'decimal',
-    }).format(amount);
-  } catch {
-    return amount.toLocaleString();
-  }
-}
-
-/**
  * Wallet balance card (T-08.01.02).
  *
  * Shows the wallet balance prominently in IRR (Rial) and Toman, with a
@@ -41,9 +30,19 @@ export function WalletBalanceCard({
   locale = 'fa',
 }: WalletBalanceCardProps) {
   const isRtl = locale === 'fa';
-  const exactBalance = BigInt(balance);
+  const numbers = useNumberFormatting(locale);
+  let exactBalance: bigint | null;
+  try {
+    exactBalance = exactIrr(balance);
+  } catch {
+    exactBalance = null;
+  }
   const tomanAmount =
-    exactBalance >= 0n ? (exactBalance + 5n) / 10n : -((-exactBalance + 4n) / 10n);
+    exactBalance === null
+      ? null
+      : exactBalance >= 0n
+        ? (exactBalance + 5n) / 10n
+        : -((-exactBalance + 4n) / 10n);
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -53,13 +52,14 @@ export function WalletBalanceCard({
           {t('dashboard.overview.walletBalance', locale)}
         </p>
         <p className="text-3xl font-bold text-gray-900 leading-tight">
-          {formatAmount(exactBalance, locale)}{' '}
-          <span className="text-lg font-medium text-gray-500">{currency}</span>
+          {currency === 'IRR'
+            ? numbers.money(balance)
+            : `${numbers.irrDigits(balance)} ${currency}`}
         </p>
         <p className="text-base text-gray-500 mt-1">
           {t('dashboard.overview.balanceInToman', locale).replace(
             '{amount}',
-            formatAmount(tomanAmount, locale)
+            tomanAmount === null ? '—' : numbers.irrDigits(tomanAmount)
           )}
         </p>
       </div>

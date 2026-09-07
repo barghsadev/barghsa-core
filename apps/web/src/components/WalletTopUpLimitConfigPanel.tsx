@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type { Locale } from '@barghsa/i18n';
 import { tWalletLimit as t } from '@barghsa/i18n/wallet-limit';
@@ -43,17 +44,10 @@ function normalizeIrrDigits(raw: string): string {
   return ascii.replace(/[^\d]/g, '');
 }
 
-function formatGroupedIrr(digits: string, locale: Locale): string {
-  if (digits === '') return '';
-  try {
-    return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(BigInt(digits));
-  } catch {
-    return digits;
-  }
-}
-
 export default function WalletTopUpLimitConfigPanel() {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const formatGroupedIrr = (digits: string) => (digits === '' ? '' : numbers.irrDigits(digits));
   const isRtl = locale === 'fa';
   const [config, setConfig] = useState<WalletTopUpLimitDto | null>(null);
   const [limitDigits, setLimitDigits] = useState('');
@@ -125,7 +119,7 @@ export default function WalletTopUpLimitConfigPanel() {
     setError(null);
     setAction({
       title: t('admin.walletLimit.save', locale),
-      description: `${t('admin.walletLimit.label', locale)}: ${formatGroupedIrr(String(raw), locale)}. ${t('admin.walletLimit.warning', locale)}`,
+      description: `${t('admin.walletLimit.label', locale)}: ${formatGroupedIrr(String(raw))}. ${t('admin.walletLimit.warning', locale)}`,
       path: '/api/admin/config/wallet-top-up-limit',
       method: 'PUT',
       body: { limit_irr: raw, expected_version: config.version },
@@ -206,7 +200,7 @@ export default function WalletTopUpLimitConfigPanel() {
             autoComplete="off"
             dir="ltr"
             disabled={loading || !config || !!action}
-            value={formatGroupedIrr(limitDigits, locale)}
+            value={formatGroupedIrr(limitDigits)}
             onChange={(event) => {
               setLimitDigits(normalizeIrrDigits(event.target.value));
               setSaved(false);
@@ -224,7 +218,7 @@ export default function WalletTopUpLimitConfigPanel() {
             >
               {t('admin.walletLimit.toman', locale).replace(
                 '{amount}',
-                formatGroupedIrr(tomanPreview.toString(), locale)
+                formatGroupedIrr(tomanPreview.toString())
               )}
             </p>
           )}
@@ -239,13 +233,13 @@ export default function WalletTopUpLimitConfigPanel() {
         {config && (
           <p className="text-xs text-gray-400" data-testid="wallet-top-up-limit-current">
             {t('admin.walletLimit.current', locale)}:{' '}
-            <span className="font-mono">{formatGroupedIrr(String(config.limitIrR), locale)}</span>
+            <span className="font-mono">{formatGroupedIrr(String(config.limitIrR))}</span>
             {typeof config.version === 'number' && (
               <>
                 {' · '}
                 {t('admin.walletLimit.version', locale).replace(
                   '{version}',
-                  new Intl.NumberFormat(locale).format(config.version)
+                  numbers.number(config.version)
                 )}
               </>
             )}

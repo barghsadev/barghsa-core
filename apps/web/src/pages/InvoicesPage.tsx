@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
@@ -6,7 +7,6 @@ import { Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import {
   fetchInvoiceList,
-  formatIrr,
   roleI18nKey,
   stateI18nKey,
   type CustomerInvoiceListItem,
@@ -21,6 +21,7 @@ import {
 export function InvoicesPage() {
   const time = useAccountTime();
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
   const [items, setItems] = useState<CustomerInvoiceListItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -77,10 +78,7 @@ export function InvoicesPage() {
                   <p className="text-sm text-gray-600">{t(stateI18nKey(item.state), locale)}</p>
                 </div>
                 <p className="mt-2 text-lg font-semibold text-gray-900">
-                  {formatIrr(item.totalAmount, locale)}{' '}
-                  <span className="text-sm font-normal text-gray-500">
-                    {t('invoices.details.currency', locale)}
-                  </span>
+                  {numbers.money(item.totalAmount)}
                 </p>
                 <p className="mt-1 text-sm text-gray-500">
                   {t('invoices.list.issued', locale)}: {time.format(item.issuedAt)}

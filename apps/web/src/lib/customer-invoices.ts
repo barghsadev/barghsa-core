@@ -1,3 +1,4 @@
+import { exactIrr, formatNumber } from '@barghsa/i18n/numbers';
 /**
  * Customer invoice details page helpers (T-04.1.05.04).
  *
@@ -106,7 +107,7 @@ export async function fetchInvoiceList(): Promise<CustomerInvoiceList> {
 /** Format a decimal-digit IRR string with grouping separators. */
 export function formatIrr(amount: string, locale: Locale): string {
   try {
-    return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(BigInt(amount));
+    return formatNumber(exactIrr(amount), locale);
   } catch {
     return amount;
   }

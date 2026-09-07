@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
   useCallback,
@@ -16,7 +17,6 @@ import {
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
-import { formatIrr } from '../lib/customer-invoices.js';
 import {
   isImageAttachment,
   isPdfAttachment,
@@ -191,6 +191,7 @@ function formatPaymentDate(value: string | null, locale: Locale): string {
 export default function AdminWalletReceiptsPage() {
   const time = useAccountTime();
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
   const [items, setItems] = useState<BankReceiptReviewDto[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -571,7 +572,7 @@ export default function AdminWalletReceiptsPage() {
                   aria-current={active ? 'true' : undefined}
                 >
                   <span className="block font-medium">
-                    {formatIrr(row.amount, locale)} {row.currency}
+                    {numbers.irrDigits(row.amount)} {row.currency}
                   </span>
                   <span className="block text-xs text-gray-500" dir="ltr">
                     {row.payerReference}
@@ -602,7 +603,7 @@ export default function AdminWalletReceiptsPage() {
                 <div>
                   <dt className="text-gray-500">{t('admin.walletReceipts.amount', locale)}</dt>
                   <dd className="font-medium">
-                    {formatIrr(selected.amount, locale)} {selected.currency}
+                    {numbers.irrDigits(selected.amount)} {selected.currency}
                   </dd>
                 </div>
                 <div>
@@ -710,7 +711,7 @@ export default function AdminWalletReceiptsPage() {
                           {t('admin.walletReceipts.remaining', locale)}
                         </dt>
                         <dd className="font-medium">
-                          {formatIrr(allocation.remaining, locale)} {selected.currency}
+                          {numbers.irrDigits(allocation.remaining)} {selected.currency}
                         </dd>
                       </div>
                       <div>
@@ -718,7 +719,7 @@ export default function AdminWalletReceiptsPage() {
                           {t('admin.walletReceipts.invoiceAllocation', locale)}
                         </dt>
                         <dd className="font-medium">
-                          {formatIrr(allocation.invoiceAllocation, locale)} {selected.currency}
+                          {numbers.irrDigits(allocation.invoiceAllocation)} {selected.currency}
                         </dd>
                       </div>
                       <div>
@@ -726,7 +727,7 @@ export default function AdminWalletReceiptsPage() {
                           {t('admin.walletReceipts.overpaymentCredit', locale)}
                         </dt>
                         <dd className="font-medium">
-                          {formatIrr(allocation.walletCreditAmount, locale)} {selected.currency}
+                          {numbers.irrDigits(allocation.walletCreditAmount)} {selected.currency}
                         </dd>
                       </div>
                       {allocation.isOverpayment && (

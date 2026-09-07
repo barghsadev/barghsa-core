@@ -1,10 +1,10 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
 import { Button, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { formatIrr } from '../lib/customer-invoices.js';
 
 type Status = 'pending' | 'approved' | 'rejected';
 interface Request {
@@ -24,6 +24,7 @@ const PAGE_SIZE = 25;
 
 export default function AdminApprovalRequestsPage() {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const [status, setStatus] = useState<Status>('pending');
   const [offset, setOffset] = useState(0);
   const [items, setItems] = useState<Request[]>([]);
@@ -67,7 +68,7 @@ export default function AdminApprovalRequestsPage() {
     setSaved(false);
     setAction({
       title: t(`admin.approvals.${decision}`, locale),
-      description: `${t('admin.approvals.confirm', locale)} ${request.id} · ${formatIrr(request.amountIrR, locale)} ${decision === 'reject' ? `· ${reason}` : ''}`,
+      description: `${t('admin.approvals.confirm', locale)} ${request.id} · ${numbers.money(request.amountIrR)} ${decision === 'reject' ? `· ${reason}` : ''}`,
       path: `/api/admin/approval-requests/${encodeURIComponent(request.id)}/${decision}`,
       method: 'POST',
       ...(decision === 'reject' ? { body: { reason } } : {}),
@@ -122,7 +123,7 @@ export default function AdminApprovalRequestsPage() {
               <dl className="grid gap-2 text-sm sm:grid-cols-2">
                 {[
                   [t('admin.approvals.requestId', locale), request.id],
-                  [t('admin.approvals.amount', locale), formatIrr(request.amountIrR, locale)],
+                  [t('admin.approvals.amount', locale), numbers.money(request.amountIrR)],
                   [
                     t('admin.approvals.initiator', locale),
                     request.initiatorUsername ?? request.initiatorId,

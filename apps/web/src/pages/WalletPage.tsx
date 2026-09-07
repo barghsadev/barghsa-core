@@ -1,5 +1,6 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
-import { t, type Locale } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n';
 import {
   parseBankReceiptTopUpAmountIrR,
   BANK_RECEIPT_STORAGE_PURPOSE,
@@ -38,16 +39,6 @@ type ReceiptError =
 
 const DOCUMENT_MAX_BYTES = 10 * 1024 * 1024;
 const IMAGE_MAX_BYTES = 20 * 1024 * 1024;
-
-function formatAmount(amount: number | bigint | string, locale: Locale): string {
-  try {
-    return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-      style: 'decimal',
-    }).format(typeof amount === 'string' ? BigInt(amount) : amount);
-  } catch {
-    return amount.toLocaleString();
-  }
-}
 
 function newIdempotencyKey(): string {
   return crypto.randomUUID();
@@ -220,6 +211,7 @@ async function uploadReceiptAttachment(file: File, profileId: string): Promise<s
  */
 export function WalletPage() {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
   const [profileId, setProfileId] = useState<string | null>(null);
@@ -501,8 +493,9 @@ export function WalletPage() {
             <section className="rounded-lg bg-white p-6 shadow-sm">
               <p className="text-sm text-gray-500">{t('wallet.page.currentBalance', locale)}</p>
               <p className="mt-1 text-3xl font-bold text-gray-900" data-testid="wallet-balance">
-                {formatAmount(wallet.balance, locale)}{' '}
-                <span className="text-lg font-medium text-gray-500">{wallet.currency}</span>
+                {wallet.currency === 'IRR'
+                  ? numbers.money(wallet.balance)
+                  : `${numbers.irrDigits(wallet.balance)} ${wallet.currency}`}
               </p>
             </section>
           )}
@@ -549,14 +542,14 @@ export function WalletPage() {
                     ? t('wallet.page.amountHintBlocked', locale)
                     : t('wallet.page.amountHint', locale).replace(
                         '{limit}',
-                        advertisedLimit !== null ? formatAmount(advertisedLimit, locale) : '—'
+                        advertisedLimit !== null ? numbers.irrDigits(advertisedLimit) : '—'
                       )}
                 </p>
                 {tomanPreview !== null && (
                   <p className="mt-1 text-sm text-gray-500" data-testid="wallet-toman">
                     {t('wallet.page.tomanPreview', locale).replace(
                       '{amount}',
-                      formatAmount(tomanPreview, locale)
+                      numbers.irrDigits(tomanPreview)
                     )}
                   </p>
                 )}
@@ -631,7 +624,7 @@ export function WalletPage() {
                   <p className="mt-1 text-sm text-gray-500" data-testid="wallet-receipt-toman">
                     {t('wallet.page.tomanPreview', locale).replace(
                       '{amount}',
-                      formatAmount(receiptTomanPreview, locale)
+                      numbers.irrDigits(receiptTomanPreview)
                     )}
                   </p>
                 )}

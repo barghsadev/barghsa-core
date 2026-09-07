@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
@@ -8,7 +9,6 @@ import { useLocale } from '../hooks/useLocale.js';
 import {
   InvoiceRequestError,
   fetchInvoiceDetails,
-  formatIrr,
   roleI18nKey,
   stateI18nKey,
   type CustomerInvoiceDetails,
@@ -173,6 +173,7 @@ function InvoiceCard({
   showExplanation?: boolean;
 }) {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const explanation = node.explanation;
 
   return (
@@ -202,15 +203,11 @@ function InvoiceCard({
       <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
         <div>
           <dt className="text-gray-500">{t('invoices.details.total', locale)}</dt>
-          <dd className="font-medium text-gray-900">
-            {formatIrr(node.totalAmount, locale)} {t('invoices.details.currency', locale)}
-          </dd>
+          <dd className="font-medium text-gray-900">{numbers.money(node.totalAmount)}</dd>
         </div>
         <div>
           <dt className="text-gray-500">{t('invoices.details.paid', locale)}</dt>
-          <dd className="font-medium text-gray-900">
-            {formatIrr(node.paidAmount, locale)} {t('invoices.details.currency', locale)}
-          </dd>
+          <dd className="font-medium text-gray-900">{numbers.money(node.paidAmount)}</dd>
         </div>
         <div>
           <dt className="text-gray-500">{t('invoices.details.issuedAt', locale)}</dt>
@@ -243,9 +240,7 @@ function InvoiceCard({
               <tr key={`${node.invoiceId}-line-${index}`} className="border-b border-gray-100">
                 <td className="py-1">{line.description}</td>
                 <td className="py-1">{line.quantity}</td>
-                <td className="py-1">
-                  {formatIrr(line.lineTotal, locale)} {t('invoices.details.currency', locale)}
-                </td>
+                <td className="py-1">{numbers.money(line.lineTotal)}</td>
               </tr>
             ))}
           </tbody>
