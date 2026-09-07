@@ -97,7 +97,7 @@ Outstanding original-plan work: the four coverage deficits above, upstream Drizz
 
 User requested continued local blocker repair and building on 2026-09-08. Work is active: close locally fixable blockers and failed coverage gates, then remaining known build gaps. External/remote restrictions still apply. Do not restart exhaustive historical acceptance.
 
-Current step: connection-security repair. Real pg configuration proved URL sslmode=disable overrode explicit TLS enablement. Explicit application/environment TLS now removes competing URL TLS parameters. Missing/empty/malformed CA files fail startup, and timeout validation precedes singleton creation. Eighteen focused connection checks, database types and explicit lint pass. Full database coverage refresh is next; broader affected regression will follow shared changes.
+Current step: permission-boundary evidence. Connection-security repair committed at `3bf1e3a`: real pg configuration proved URL sslmode=disable overrode explicit TLS enablement. Explicit application/environment TLS now removes competing URL TLS parameters. Missing/empty/malformed CA files fail startup, and timeout validation precedes singleton creation. Added certificate-verification opt-out and pool-ownership checks; 18 security tests pass. Full database coverage refresh passes and the database general gate now passes (10/13 groups pass; API/web deficits remain). Logs: `/tmp/barghsa-db-followup-coverage.log`, `/tmp/barghsa-current-gates.json`. Broader affected regression will follow shared changes.
 
 ## Evidence map
 

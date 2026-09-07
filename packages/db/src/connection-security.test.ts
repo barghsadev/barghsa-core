@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { rootCertificates } from 'node:tls';
 import { Client, type Pool } from 'pg';
-import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 const scratch = mkdtempSync(join(tmpdir(), 'barghsa-db-ca-'));
 const pools: Pool[] = [];
@@ -14,7 +14,6 @@ afterEach(async () => {
   await Promise.all(pools.splice(0).map((pool) => pool.end()));
   vi.unstubAllEnvs();
 });
-import { afterAll } from 'vitest';
 afterAll(() => rmSync(scratch, { recursive: true, force: true }));
 
 for (const direct of [false, true]) {
@@ -47,6 +46,29 @@ it('allows explicit TLS disable to override environment and URL enablement', asy
   });
   pools.push(pool);
   expect(new Client(pool.options).ssl).toBe(false);
+});
+
+it.each(['false', '0'])(
+  'preserves an explicit certificate-verification opt-out (%s)',
+  async (flag) => {
+    vi.stubEnv('DATABASE_SSL_ENABLED', 'true');
+    vi.stubEnv('DATABASE_SSL_REJECT_UNAUTHORIZED', flag);
+    const { createDirectDbPool } = await import('./index.js');
+    const pool = createDirectDbPool({ pgdirectUrl: 'postgresql://localhost/test' });
+    pools.push(pool);
+    expect(new Client(pool.options).ssl).toEqual({ rejectUnauthorized: false });
+  }
+);
+
+it('reuses only shared direct pools and isolates explicitly owned pools', async () => {
+  vi.stubEnv('PGDIRECT_URL', 'postgresql://localhost/direct');
+  const { createDirectDbPool } = await import('./index.js');
+  const shared = createDirectDbPool();
+  const owned = createDirectDbPool({}, { shared: false });
+  pools.push(shared, owned);
+  expect(createDirectDbPool()).toBe(shared);
+  expect(owned).not.toBe(shared);
+  expect(new Client(owned.options).database).toBe('direct');
 });
 
 it.each(['true', '1'])(
