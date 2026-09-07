@@ -288,6 +288,7 @@ export class EmailProviderConfigService {
       const encryptedPatch = this.secrets.encryptConfig(existing.transport, input.config);
       params.push(encryptedPatch);
       sets.push(`config = COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb`);
+      sets.push("last_test_status = 'pending', last_test_at = NULL, last_test_error = NULL");
     }
     if (sets.length > 0) {
       params.push(id);
@@ -417,7 +418,11 @@ export class EmailProviderConfigService {
   async rollback(supersededId: string, createdBy: string): Promise<EmailProviderConfigResult> {
     const source = await this.findById(supersededId);
     if (!source) throw new HttpException(ProviderErrors.notFound(), 404);
-    if (source.status !== 'superseded' && source.status !== 'disabled') {
+    if (
+      (source.status !== 'superseded' && source.status !== 'disabled') ||
+      source.lastTestStatus !== 'passed' ||
+      !source.activatedAt
+    ) {
       throw new HttpException(ProviderErrors.invalidRollbackSource(), 409);
     }
 

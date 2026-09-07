@@ -147,10 +147,11 @@ export class EmailProviderConfigController {
   @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
-  @ApiOperation({ summary: 'Record a test-send result for a draft' })
+  @ApiOperation({ summary: 'Reject client-supplied test results', deprecated: true })
+  @ApiResponse({ status: 409, description: 'Use the live test-connection endpoint.' })
   async recordTest(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id') _id: string,
     @Body() body: z.infer<typeof RecordTestSchema>
   ): Promise<EmailProviderConfigResult> {
     this.assertProviderEditPermission(req);
@@ -161,10 +162,14 @@ export class EmailProviderConfigController {
         400
       );
     }
-    return this.service.recordTest(id, {
-      passed: parsed.data.passed,
-      ...(parsed.data.error !== undefined ? { error: parsed.data.error } : {}),
-    });
+    throw new HttpException(
+      {
+        statusCode: 409,
+        error: 'PROVIDER_SERVER_TEST_REQUIRED',
+        message: 'Run a live connection test; client-supplied results cannot authorize activation.',
+      },
+      409
+    );
   }
 
   @Post(':id/test-connection')

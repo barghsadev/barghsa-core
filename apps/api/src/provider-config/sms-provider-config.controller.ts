@@ -159,18 +159,11 @@ export class SmsProviderConfigController {
   @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
-  @ApiOperation({
-    summary: 'Record a connection-test result for a draft',
-    description:
-      'Trust model: setting passed=true self-attests a successful check without a send. ' +
-      'The canonical path is POST :id/test-connection, which performs the live credential/template ' +
-      'check (and a real test-send when body.recipient is given) and records the outcome itself. ' +
-      'This endpoint exists for parity with the email provider controller; admins should use ' +
-      'test-connection so activation gate (last_test_status=passed) reflects a real check.',
-  })
+  @ApiOperation({ summary: 'Reject client-supplied test results', deprecated: true })
+  @ApiResponse({ status: 409, description: 'Use the live test-connection endpoint.' })
   async recordTest(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id') _id: string,
     @Body() body: z.infer<typeof RecordSmsTestSchema>
   ): Promise<SmsProviderConfigResult> {
     this.assertProviderEditPermission(req);
@@ -181,10 +174,14 @@ export class SmsProviderConfigController {
         400
       );
     }
-    return this.service.recordTest(id, {
-      passed: parsed.data.passed,
-      ...(parsed.data.error !== undefined ? { error: parsed.data.error } : {}),
-    });
+    throw new HttpException(
+      {
+        statusCode: 409,
+        error: 'PROVIDER_SERVER_TEST_REQUIRED',
+        message: 'Run a live connection test; client-supplied results cannot authorize activation.',
+      },
+      409
+    );
   }
 
   @Post(':id/test-connection')

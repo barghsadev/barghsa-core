@@ -2657,6 +2657,7 @@
     },
     "/api/admin/email-providers/{id}/test": {
       "post": {
+        "deprecated": true,
         "operationId": "EmailProviderConfigController_recordTest",
         "parameters": [
           {
@@ -2669,8 +2670,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": ""
+          "409": {
+            "description": "Use the live test-connection endpoint."
           }
         },
         "security": [
@@ -2678,7 +2679,7 @@
             "bearer": []
           }
         ],
-        "summary": "Record a test-send result for a draft",
+        "summary": "Reject client-supplied test results",
         "tags": [
           "Admin · Email Provider"
         ]
@@ -6191,7 +6192,7 @@
     },
     "/api/admin/sms-providers/{id}/test": {
       "post": {
-        "description": "Trust model: setting passed=true self-attests a successful check without a send. The canonical path is POST :id/test-connection, which performs the live credential/template check (and a real test-send when body.recipient is given) and records the outcome itself. This endpoint exists for parity with the email provider controller; admins should use test-connection so activation gate (last_test_status=passed) reflects a real check.",
+        "deprecated": true,
         "operationId": "SmsProviderConfigController_recordTest",
         "parameters": [
           {
@@ -6204,8 +6205,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": ""
+          "409": {
+            "description": "Use the live test-connection endpoint."
           }
         },
         "security": [
@@ -6213,7 +6214,7 @@
             "bearer": []
           }
         ],
-        "summary": "Record a connection-test result for a draft",
+        "summary": "Reject client-supplied test results",
         "tags": [
           "Admin · SMS Provider"
         ]

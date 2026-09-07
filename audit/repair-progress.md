@@ -1814,3 +1814,9 @@ Review and validation: all 16 component browser checks pass, mapping two retaine
 
 
 Clean checkpoint at 28a0934: all 4,640 package tests across 408 files pass; all 252 browser checks pass with no observed flakes/skips. The 46 loop protocol tests, canonical queue validation and repository formatting also pass. Same-revision clean browser collection and merge succeed, now including the two component builds. Changed-source coverage still fails in 11 of 13 groups, with zero malformed/missing entries. UI changed lines rise from 32.67% to 49.26% and branches from 32.12% to 60.18%; no required threshold is waived. Reports are saved in combined-coverage-checkpoint.json and browser-outcomes-checkpoint.json. Provider review found client-attested test passes and preserved pass status after credential edits; these are active repair work, not accepted completion.
+
+### Reject provider test self-attestation and stale eligibility (F09/F17)
+
+Email/SMS legacy test-result endpoints now reject client-supplied outcomes and direct callers to the server connection-test endpoint. Editing provider configuration clears prior test status/time/error. Rollback requires a previously activated version with a passing test; a disabled untested draft cannot bypass activation through cloning. Updated the generated API contract for the deprecated endpoints.
+
+Review and validation: eight real HTTP cases reproduced the bypasses before repair and pass afterward. Related provider regression totals 135 checks across 14 files, preserving genuine lifecycle/connection-test cases. Root types, lint, regenerated contract verification, targeted formatting and whitespace checks pass. Current grant/transaction locking, concurrent test-result binding and fail-closed provider-secret storage remain separate next repairs; no production provider was tested or changed.
