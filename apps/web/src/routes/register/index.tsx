@@ -245,7 +245,7 @@ function RegisterPage() {
 
         // ── Success — received challengeId ─────────────────────────────
         const challengeId = body?.challengeId;
-        if (!challengeId) {
+        if (typeof challengeId !== 'string' || !challengeId.trim()) {
           const msg = t('auth.register.error.generic', locale);
           setFormError(msg);
           return;
@@ -259,7 +259,7 @@ function RegisterPage() {
         router.navigate({
           to: '/register/verify',
           search: {
-            challengeId: challengeId as string,
+            challengeId,
             destination,
           },
         });

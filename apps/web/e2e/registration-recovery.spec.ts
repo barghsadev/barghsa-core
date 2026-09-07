@@ -61,3 +61,29 @@ for (const locale of ['en', 'fa'] as const) {
     expect(attempts).toBe(2);
   });
 }
+
+for (const challenge of [42, { invalid: true }, '   ']) {
+  test(`registration rejects invalid challenge ${JSON.stringify(challenge)}`, async ({ page }) => {
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/tos/current?*', (route) =>
+      route.fulfill({ json: { id: challengeId, versionId: 'v1', content: 'Terms' } })
+    );
+    let attempts = 0;
+    await page.route('**/api/auth/register', (route) => {
+      attempts++;
+      return route.fulfill({ json: { challengeId: attempts === 1 ? challenge : challengeId } });
+    });
+    await page.goto('/register');
+    await page.locator('#username').fill('retry@example.test');
+    await page.locator('#username').press('Tab');
+    await page.locator('#password').fill('Browser-registration-password-123!');
+    await page.getByRole('checkbox').click();
+    await page.locator('button[type="submit"]').click();
+    await expect(page.getByRole('alert').first()).toBeVisible();
+    await expect(page).toHaveURL(/\/register$/);
+    await expect(page.locator('#password')).toHaveValue('Browser-registration-password-123!');
+    await page.locator('button[type="submit"]').click();
+    await expect(page).toHaveURL(new RegExp(`/register/verify\\?challengeId=${challengeId}`));
+    expect(attempts).toBe(2);
+  });
+}
