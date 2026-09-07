@@ -3,26 +3,8 @@ import type { DbQueryFn } from './postgres-rate-limiter.js';
 import { PostgresRateLimiterStore } from './postgres-rate-limiter.js';
 import { CompositeRateLimiterStore } from './composite-rate-limiter.js';
 
-function createMockRedis(): ReturnType<typeof vi.fn> & {
-  incr: ReturnType<typeof vi.fn>;
-  pttl: ReturnType<typeof vi.fn>;
-  pexpire: ReturnType<typeof vi.fn>;
-  del: ReturnType<typeof vi.fn>;
-  setex: ReturnType<typeof vi.fn>;
-} {
-  return {
-    incr: vi.fn(),
-    pttl: vi.fn(),
-    pexpire: vi.fn(),
-    del: vi.fn(),
-    setex: vi.fn(),
-  } as unknown as ReturnType<typeof vi.fn> & {
-    incr: ReturnType<typeof vi.fn>;
-    pttl: ReturnType<typeof vi.fn>;
-    pexpire: ReturnType<typeof vi.fn>;
-    del: ReturnType<typeof vi.fn>;
-    setex: ReturnType<typeof vi.fn>;
-  };
+function createMockRedis() {
+  return { eval: vi.fn(), del: vi.fn(), setex: vi.fn() };
 }
 
 describe('CompositeRateLimiterStore', () => {
@@ -46,26 +28,23 @@ describe('CompositeRateLimiterStore', () => {
     });
 
     it('uses Redis for increment when Redis succeeds', async () => {
-      mockRedis.incr.mockResolvedValue(1);
-      mockRedis.pttl.mockResolvedValue(-1);
-      mockRedis.pexpire.mockResolvedValue('OK');
+      mockRedis.eval.mockResolvedValue([1, 60_000]);
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
 
-      expect(mockRedis.incr).toHaveBeenCalledWith('api:1.2.3.4');
-      expect(mockRedis.pexpire).toHaveBeenCalledWith('api:1.2.3.4', 60_000);
+      expect(mockRedis.eval).toHaveBeenCalledWith(expect.any(String), 1, 'api:1.2.3.4', 60_000);
       expect(mockQuery).not.toHaveBeenCalled(); // No PG fallback
       expect(result.allowed).toBe(true);
       expect(result.remaining).toBe(99);
     });
 
     it('falls back to PostgreSQL when Redis throws', async () => {
-      mockRedis.incr.mockRejectedValue(new Error('ECONNREFUSED'));
+      mockRedis.eval.mockRejectedValue(new Error('ECONNREFUSED'));
       mockQuery.mockResolvedValueOnce({ rows: [{ count: 1 }] });
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
 
-      expect(mockRedis.incr).toHaveBeenCalled();
+      expect(mockRedis.eval).toHaveBeenCalled();
       expect(mockQuery).toHaveBeenCalled();
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining('Redis increment failed'),
@@ -84,8 +63,7 @@ describe('CompositeRateLimiterStore', () => {
       '1',
       null,
     ])('falls back when Redis returns an invalid count %s', async (count) => {
-      mockRedis.incr.mockResolvedValue(count);
-      mockRedis.pttl.mockResolvedValue(30_000);
+      mockRedis.eval.mockResolvedValue([count, 30_000]);
       mockQuery.mockResolvedValueOnce({ rows: [{ count: 101 }] });
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
@@ -97,6 +75,8 @@ describe('CompositeRateLimiterStore', () => {
     });
 
     it.each([
+      -2,
+      -1,
       -3,
       1.5,
       Number.NaN,
@@ -105,8 +85,7 @@ describe('CompositeRateLimiterStore', () => {
       '30000',
       null,
     ])('falls back when Redis returns an invalid TTL %s', async (ttl) => {
-      mockRedis.incr.mockResolvedValue(2);
-      mockRedis.pttl.mockResolvedValue(ttl);
+      mockRedis.eval.mockResolvedValue([2, ttl]);
       mockQuery.mockResolvedValueOnce({ rows: [{ count: 101 }] });
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
@@ -117,9 +96,18 @@ describe('CompositeRateLimiterStore', () => {
       expect(logger.warn).toHaveBeenCalledOnce();
     });
 
+    it.each([null, 1, [], [1], [1, 100, 200]])(
+      'rejects malformed script reply %j',
+      async (reply) => {
+        mockRedis.eval.mockResolvedValue(reply);
+        mockQuery.mockResolvedValueOnce({ rows: [{ count: 101 }] });
+        expect((await store.increment('api:1.2.3.4', 100, 60_000)).allowed).toBe(false);
+        expect(mockQuery).toHaveBeenCalledOnce();
+      }
+    );
+
     it('returns over-limit from Redis', async () => {
-      mockRedis.incr.mockResolvedValue(101);
-      mockRedis.pttl.mockResolvedValue(30_000);
+      mockRedis.eval.mockResolvedValue([101, 30_000]);
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
 

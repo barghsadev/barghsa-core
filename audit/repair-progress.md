@@ -2052,3 +2052,9 @@ Recorded two verified tasks for typecheck/suppression enforcement and Turbo test
 The general limiter now rejects nonpositive, fractional, unsafe or nonnumeric Redis counts and malformed TTL values before calculating quota responses. Redis protocol sentinel TTL values remain supported. Invalid replies use the existing PostgreSQL fallback instead of returning NaN quota fields or allowing a request from a negative count.
 
 Review and validation: 15 regression cases failed before repair; all 74 rate-limit tests pass afterward. Shared typechecking, targeted lint and formatting pass. This change does not make the separate Redis increment/expiry commands atomic, reconcile general counters across Redis loss, or replace fixed windows. Security counters remain PostgreSQL-authoritative. The production image checkpoint predates this follow-up.
+
+### Make Redis quota increment and expiry atomic
+
+Replaced separate INCR/PTTL/PEXPIRE calls with one parameterized Lua operation. A client disconnect between those former commands can no longer leave a newly incremented key without expiry. Existing deadlines remain unchanged, and legacy keys without expiry receive one without resetting their accumulated count. Script response shape, count and TTL are validated before use. Redis documents server-side script atomicity at https://redis.io/docs/latest/develop/programmability/eval-intro/.
+
+Review and validation: all 81 rate-limit unit checks and four tests against a disposable Redis 7 container pass. Real Redis tests exercise 100 competing requests with exactly 20 admitted, existing deadline preservation, legacy missing-expiry repair and expired-key renewal. Root typechecking, targeted lint and formatting pass. General Redis/PostgreSQL fallback reconciliation and the canonical sliding-window/token-bucket requirement remain open. This does not claim resilience to Redis data loss or Lua command failures after a partial script write.
