@@ -68,12 +68,8 @@ describe('sniffContentTypes (T-09.12.05)', () => {
     expect(sniffContentTypes(hex([...webm, ...'random-mkv-body']))).toEqual(['video/x-matroska']);
   });
 
-  it('detects ZIP containers (office OpenXML candidates included)', () => {
-    expect(sniffContentTypes(bytes('PK\x03\x04rest...'))).toEqual([
-      'application/zip',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    ]);
+  it('does not infer an Office format from a ZIP signature', () => {
+    expect(sniffContentTypes(bytes('PK\x03\x04rest...'))).toEqual(['application/zip']);
   });
 
   it('detects OLE2 legacy office documents', () => {
@@ -123,10 +119,9 @@ describe('pickDetectedContentType (T-09.12.05)', () => {
     'text/csv',
   ];
 
-  it('picks the allowed candidate for a docx zip', () => {
-    expect(pick(bytes('PK\x03\x04...'), documentAllowed)).toBe(
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    );
+  it('requires more than a ZIP signature to accept an Office document', () => {
+    expect(pick(bytes('PK\x03\x04...'), documentAllowed)).toBeNull();
+    expect(pick(bytes('PK\x03\x04...'), ['application/zip'])).toBe('application/zip');
   });
 
   it('picks pdf for a pdf', () => {
@@ -141,7 +136,7 @@ describe('pickDetectedContentType (T-09.12.05)', () => {
     // a .pdf-named upload whose real bytes are a PNG
     expect(pick(hex([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), documentAllowed)).toBeNull();
     // a .jpg-named upload whose real bytes are a ZIP
-    expect(pick(bytes('PK\x03\x04...'), documentAllowed)).not.toBeNull();
+    expect(pick(bytes('PK\x03\x04...'), documentAllowed)).toBeNull();
   });
 
   it('image category allows jpeg/png/webp/gif/svg/avif and rejects zip', () => {

@@ -12,7 +12,9 @@
  *
  * `sniffContentTypes` returns ALL candidate MIME types for the bytes
  * (unambiguous signatures yield one candidate; container formats such
- * as ZIP/OLE2/EBML can be several). `pickDetectedContentType` returns
+ * as OLE2 can be several). ZIP signatures return only the archive type;
+ * Office OpenXML uploads require full-container detection in the controller.
+ * `pickDetectedContentType` returns
  * the candidate that is allowed by the policy, or null when none is —
  * an upload whose real bytes match no permitted type is rejected as a
  * content-type mismatch even when its extension and claimed MIME were
@@ -72,9 +74,8 @@ function hasNulByte(bytes: Uint8Array): boolean {
 /**
  * Detect candidate MIME types from leading bytes of a file.
  *
- * Returns an array because some signatures are ambiguous (a ZIP can be a
- * .docx, .xlsx, or a plain archive; OLE2 is .doc or .xls; EBML is .webm
- * or .mkv). The caller intersects candidates with the policy's allowed
+ * Returns an array because some signatures are ambiguous (OLE2 is .doc
+ * or .xls). The caller intersects candidates with the policy's allowed
  * MIME set. Unknown bytes return an empty array.
  */
 export function sniffContentTypes(bytes: Uint8Array): string[] {
@@ -128,18 +129,15 @@ export function sniffContentTypes(bytes: Uint8Array): string[] {
     return hasAscii(bytes, 'webm', SNIFF_SAMPLE_BYTES) ? ['video/webm'] : ['video/x-matroska'];
   }
 
-  // ZIP container: office OpenXML documents and plain archives.
+  // A leading ZIP signature proves only a container. Office uploads require
+  // bounded complete-container inspection at the upload controller.
   if (
     bytes.length >= 4 &&
     bytes[0] === 0x50 &&
     bytes[1] === 0x4b &&
     (bytes[2] === 0x03 || bytes[2] === 0x05 || bytes[2] === 0x07)
   ) {
-    return [
-      'application/zip',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    ];
+    return ['application/zip'];
   }
 
   // OLE2 container: legacy .doc/.xls.

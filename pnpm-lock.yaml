@@ -92,6 +92,9 @@ importers:
       cookie:
         specifier: 0.7.2
         version: 0.7.2
+      file-type:
+        specifier: 21.3.4
+        version: 21.3.4
       ioredis:
         specifier: ^5.11.1
         version: 5.11.1

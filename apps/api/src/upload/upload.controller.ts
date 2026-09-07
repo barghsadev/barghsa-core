@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { reserveUpload, requireOwnedUpload, completeUpload } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
+import { fileTypeFromBuffer } from 'file-type';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../storage/index.js';
@@ -373,8 +374,25 @@ export class UploadController {
     if (!effectiveAllowsExtension(policy, key))
       throw new BadRequestException('Upload extension is no longer permitted by the active policy');
     const object = await this.storage!.getObject(key);
-    const sample = await this.readSample(object.body);
-    const candidates = sniffContentTypes(sample);
+    const openXml = /\.(docx|xlsx)$/i.test(key);
+    const sample = await this.readSample(
+      object.body,
+      openXml ? policy.maxSizeBytes : SNIFF_SAMPLE_BYTES,
+      openXml
+    );
+    let candidates: string[];
+    if (openXml) {
+      // A ZIP signature alone cannot distinguish an archive from an Office document.
+      // Inspect the bounded complete container, including its content-type manifest.
+      try {
+        const result = await fileTypeFromBuffer(sample);
+        candidates = result ? [result.mime] : [];
+      } catch {
+        candidates = []; // Malformed or unsupported containers do not prove a format.
+      }
+    } else {
+      candidates = sniffContentTypes(sample);
+    }
     const allowedMimeTypes = effectiveMimeTypesForFile(policy, key);
     const detected = pickDetectedContentType(candidates, allowedMimeTypes);
     if (detected !== null) {
@@ -411,12 +429,15 @@ export class UploadController {
   }
 
   /**
-   * Read up to {@link SNIFF_SAMPLE_BYTES} leading bytes from a web
-   * ReadableStream, then cancel it (the verify seam only needs the
-   * signature). Never buffers the whole object; cancelling tears down
-   * the underlying storage response/socket instead of leaking it.
+   * Read a signature sample, or an entire Office container within the active
+   * size limit. Complete reads reject excess bytes even if storage metadata
+   * understates the length. Always release the response stream.
    */
-  private async readSample(stream: ReadableStream): Promise<Uint8Array> {
+  private async readSample(
+    stream: ReadableStream,
+    limit = SNIFF_SAMPLE_BYTES,
+    requireComplete = false
+  ): Promise<Uint8Array> {
     const reader = stream.getReader();
     const chunks: Uint8Array[] = [];
     let total = 0;
@@ -425,9 +446,11 @@ export class UploadController {
         const { done, value } = await reader.read();
         if (done) break;
         if (value) {
+          if (requireComplete && total + value.byteLength > limit)
+            throw new BadRequestException('Uploaded file exceeds the active size limit');
           chunks.push(value);
           total += value.byteLength;
-          if (total >= SNIFF_SAMPLE_BYTES) break;
+          if (!requireComplete && total >= limit) break;
         }
       }
     } finally {
@@ -436,8 +459,9 @@ export class UploadController {
       // the sample has already been read and a failed teardown must not
       // turn a successful verification into a 500.
       await reader.cancel().catch(() => {});
+      reader.releaseLock();
     }
-    const sample = new Uint8Array(Math.min(total, SNIFF_SAMPLE_BYTES));
+    const sample = new Uint8Array(Math.min(total, limit));
     let written = 0;
     for (const chunk of chunks) {
       const take = Math.min(chunk.byteLength, sample.length - written);

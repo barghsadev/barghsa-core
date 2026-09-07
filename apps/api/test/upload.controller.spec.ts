@@ -342,6 +342,40 @@ describe('UploadController', () => {
   // -----------------------------------------------------------------------
 
   describe('verifyUpload', () => {
+    it('cancels an oversized Office stream even when storage reports a smaller length', async () => {
+      resolver.resolveEffective.mockResolvedValue({
+        ...deploymentPolicy('document'),
+        maxSizeBytes: 8,
+      });
+      const cancel = vi.fn();
+      vi.mocked(storage.getObject).mockResolvedValue({
+        body: new ReadableStream({
+          start(stream) {
+            stream.enqueue(new Uint8Array(9));
+          },
+          cancel,
+        }),
+        contentLength: 1,
+        contentType: 'application/zip',
+        metadata: {},
+      });
+      await expect(
+        controller.verifyUpload('uploads/document/oversized.docx', actorRequest)
+      ).rejects.toThrow('Uploaded file exceeds the active size limit');
+      expect(cancel).toHaveBeenCalledOnce();
+    });
+
+    it('rejects a truncated Office container without surfacing a parser failure', async () => {
+      vi.mocked(storage.getObject).mockResolvedValue({
+        body: streamOf('PK\x03\x04'),
+        contentLength: 4,
+        contentType: 'application/zip',
+        metadata: {},
+      });
+      await expect(
+        controller.verifyUpload('uploads/document/broken.docx', actorRequest)
+      ).resolves.toMatchObject({ status: 'type_mismatch' });
+    });
     it('fails closed when the key has no category segment', async () => {
       vi.mocked(storage.getObject).mockResolvedValue({
         body: new ReadableStream(),

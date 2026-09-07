@@ -1,6 +1,8 @@
 import { createServer, type Server } from 'node:http';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { z } from 'zod';
 import { startHttpFixture } from '../test/http-fixture.js';
 
@@ -592,5 +594,37 @@ it('rejects PNG content disguised as a permitted JPG before reservation and afte
     expect(row.metadata.verified).not.toBe(true);
   } finally {
     expect((await request(`admin/upload-policies/${policy.id}/end`, 'POST', {})).status).toBe(200);
+  }
+});
+
+it('distinguishes Word and spreadsheet containers from arbitrary ZIP archives', async () => {
+  const wordMime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  const sheetMime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  for (const [fixture, extension, mime, expected] of [
+    ['plain.zip', 'docx', wordMime, 'type_mismatch'],
+    ['minimal.xlsx', 'docx', wordMime, 'type_mismatch'],
+    ['minimal.docx', 'docx', wordMime, 'confirmed'],
+    ['minimal.xlsx', 'xlsx', sheetMime, 'confirmed'],
+  ] as const) {
+    const bytes = await readFile(resolve(__dirname, '../test/fixtures/uploads', fixture));
+    const details = {
+      fileName: `document.${extension}`,
+      contentType: mime,
+      fileSize: bytes.length,
+      category: 'document',
+    };
+    const issued = z
+      .object({ key: z.string(), presignedUrl: z.string() })
+      .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+    expect(
+      (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(bytes) })).status
+    ).toBe(200);
+    const path = `upload/${encodeURIComponent(issued.key)}`;
+    const verified = await request(`${path}/verify`, 'POST');
+    expect(verified.status).toBe(200);
+    expect(await verified.json()).toMatchObject({ status: expected });
+    expect(
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' })).status
+    ).toBe(expected === 'type_mismatch' ? 400 : 200);
   }
 });
