@@ -2568,3 +2568,7 @@ All 700 HTTP/filter checks across 55 files pass after the change. API typechecki
 The route-budget gate now invokes the actual Size Limit CLI with every manifest-resolved route's complete asset list, explicit byte limit and gzip enabled. Size Limit and its file plugin are pinned to 12.1.0 to retain the supported Node 20 baseline. The existing default-gzip measurement also remains mandatory because Size Limit's level-9 compression can report fewer bytes. No limits were raised.
 
 All 41 production route budgets pass both checks. The regression fixture runs the real CLI, passes a small route and rejects an oversized shared chunk. Review reproduced Size Limit silently omitting a missing asset; the wrapper now validates every supplied file before running it, and that case rejects. The tool has a bounded timeout and its temporary configuration is removed after success or failure. Targeted lint, formatting, frozen-lockfile install and diff review pass. The current dependency scan reports zero known advisories.
+
+### Close the specified bundle-budget tooling requirement
+
+At clean revision e545153, a fresh Vite build and all 41 complete-route budgets pass both the existing gzip gate and Size Limit. Task T-01.03.04 is now acceptance_verified with the previous partial assessment retained under superseded_assessments. The ledger has 38 reviewed tasks: 26 verified, 12 partial, and 284 pending. The current raw dependency scan is saved under audit and reports zero known advisories across 1,355 dependencies.

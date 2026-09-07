@@ -1627,8 +1627,8 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.04",
-      "status": "partial",
-      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "status": "acceptance_verified",
+      "reviewed_sha": "e54515379bd7bb9d1cf0876c0d5ffb87d9cfb21d",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 145,
       "requirement": "- **T-01.03.04:** Implement bundle budget checking in CI\n  - **Notes:** Use `size-limit` or `@size-limit/preset-app` to set per-route budgets. Initial budgets: login/register pages under 150 KB JS gzip, dashboard under 300 KB JS gzip, electricity ordering under 250 KB JS gzip, admin pages under 500 KB JS gzip. CI compares against a committed `.size-limit.json`. Budget regression fails the PR gate.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M",
@@ -1640,23 +1640,36 @@
         },
         {
           "path": "scripts/check-route-budgets.mjs",
-          "sha256": "04db366d34158c153dd1bee973e9a78ad2608bc2a3fb50cad099bdfec9ed224d"
+          "sha256": "06665689de2f8cade32e16394849157410e27f36037e94ea11d0332c46c1241d"
         },
         {
           "path": "scripts/check-route-budgets.test.mjs",
-          "sha256": "0c6cec0a8f2f93fce6a00762d72124c0d24329a1003d2834adb93d5165ec64bb"
+          "sha256": "affeaa636ba458d6d5e7116164894ffee4148d7655c1a34fd37ab4971811ff4a"
         },
         {
           "path": ".github/workflows/ci.yml",
           "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        },
+        {
+          "path": "package.json",
+          "sha256": "53efc6d21e787dc283a79486d74d6be9831f09f13c8d00c57dac26e8e613e631"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "ee77c6188fdaf24e060545dfe296d21cb5c14e611ad043cc09083f7d00f9afd3"
+        },
+        {
+          "path": "docs/route-bundle-budgets.md",
+          "sha256": "f75900c1622fa542bc37e162270263f84d8f1c24a8f425dd2d542e2fa35ee2ae"
         }
       ],
       "checks": [
-        "Fresh pnpm check:bundle passes its regression tests and all configured complete-route payload budgets. CI calls this check after building."
+        "Fresh Vite production build and pnpm check:bundle pass at the reviewed revision. All 41 complete-route gzip budgets pass the existing check and the required Size Limit CLI.",
+        "The real CLI regression fixture admits a small route and rejects an oversized shared chunk. Missing assets are rejected before the CLI because its glob resolution can silently omit them. Shared chunks are counted once.",
+        "Explicit byte limits preserve the committed 150/300/250/500 KB budgets; the original stricter default-gzip gate remains alongside Size Limit level 9.",
+        "CI runs pnpm check:bundle after building. Targeted lint, formatting and frozen-lockfile installation pass."
       ],
-      "limitations": [
-        "The implementation uses a custom manifest-aware checker rather than the explicitly named size-limit or @size-limit/preset-app tooling. Functional budget enforcement is present; the tooling requirement has no recorded owner exception."
-      ],
+      "limitations": [],
       "merged_prs": [
         13
       ],
@@ -2195,6 +2208,43 @@
       ],
       "merged_prs": [
         10
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.04",
+      "status": "partial",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 145,
+      "requirement": "- **T-01.03.04:** Implement bundle budget checking in CI\n  - **Notes:** Use `size-limit` or `@size-limit/preset-app` to set per-route budgets. Initial budgets: login/register pages under 150 KB JS gzip, dashboard under 300 KB JS gzip, electricity ordering under 250 KB JS gzip, admin pages under 500 KB JS gzip. CI compares against a committed `.size-limit.json`. Budget regression fails the PR gate.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M",
+      "requirement_sha256": "4438f57ddaa016eb62feb0acfe88a8de5a1eefa9482cd834930632b0bfe03854",
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "b25a082188c27f00e3ca2f5578fb2cf2fb8c0f4fdc97f99d8a311745e2ccbe65"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "04db366d34158c153dd1bee973e9a78ad2608bc2a3fb50cad099bdfec9ed224d"
+        },
+        {
+          "path": "scripts/check-route-budgets.test.mjs",
+          "sha256": "0c6cec0a8f2f93fce6a00762d72124c0d24329a1003d2834adb93d5165ec64bb"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        }
+      ],
+      "checks": [
+        "Fresh pnpm check:bundle passes its regression tests and all configured complete-route payload budgets. CI calls this check after building."
+      ],
+      "limitations": [
+        "The implementation uses a custom manifest-aware checker rather than the explicitly named size-limit or @size-limit/preset-app tooling. Functional budget enforcement is present; the tooling requirement has no recorded owner exception."
+      ],
+      "merged_prs": [
+        13
       ],
       "historically_skipped": false
     }
