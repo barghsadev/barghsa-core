@@ -2654,3 +2654,9 @@ Full Chromium coverage at 0dde44b caught a regression I introduced: TosBanner im
 Review: 185 consent/team/feedback checks plus ten live-API rich-terms checks pass across five projects. All 48 translation tests, web types, both 41-route budget checks, formatting and diff review pass. Ordering remains under its unchanged limit at 249.89 KB / 250 KB. Direct ESLint passed for web, API, database, UI and translations.
 
 Audit correction: earlier application-feedback and payment-amount entries incorrectly credited package-level lint commands that reported missing scripts. Those were no-ops. Current source has now passed explicit ESLint. Earlier explicit UI/database/finance lint evidence remains valid. The 5316-test unit-coverage run at 0dde44b passed, but combined coverage remains stale until a complete passing browser run is available at the repaired revision.
+
+### Refresh combined coverage at the repaired terms revision
+
+At clean revision b63ef48375cc285751c0a3df4a400d99498093a2, all 5319 unit/integration tests across 444 files and all 334 production Chromium cases pass. The collector validated 334 revision-bound browser records, mapped 228 source files, and merged them with unit reports. No browser failures, retries, skips or unmapped-source errors were accepted as passing evidence.
+
+The current combined checkpoint still fails six of thirteen groups, with no missing-report errors: API critical 90.40% lines / 76.65% branches; web general 64.83 / 62.43; web critical 76.87 / 74.24; database general 87.65 / 70.55; i18n critical 100 / 75; UI general 78.57 / 69.45. Required floors remain 80/75 for general and 90/85 for critical code. The prior failed 0dde44b browser run was not merged. This checkpoint confirms current passing execution, not completion of the coverage gate or entire fix plan.

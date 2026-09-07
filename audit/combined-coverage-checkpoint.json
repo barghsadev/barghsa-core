@@ -136,10 +136,10 @@
         "apps/api/src/wallet/wallet.module.ts",
         "apps/api/src/wallet/wallet.service.ts"
       ],
-      "lines": 9090,
-      "covered_lines": 8214,
-      "branches": 6111,
-      "covered_branches": 4663,
+      "lines": 9098,
+      "covered_lines": 8225,
+      "branches": 6142,
+      "covered_branches": 4708,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -172,6 +172,7 @@
         "apps/api/src/catalogue/catalogue-products.service.ts",
         "apps/api/src/catalogue/catalogue.module.ts",
         "apps/api/src/catalogue/index.ts",
+        "apps/api/src/common/body-parser-errors.ts",
         "apps/api/src/common/cache-control.interceptor.ts",
         "apps/api/src/common/correlation-id.middleware.ts",
         "apps/api/src/common/etag.interceptor.ts",
@@ -291,10 +292,10 @@
         "apps/api/src/user-settings/user-settings.controller.ts",
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
-      "lines": 4465,
-      "covered_lines": 4178,
-      "branches": 3482,
-      "covered_branches": 2808,
+      "lines": 4481,
+      "covered_lines": 4197,
+      "branches": 3505,
+      "covered_branches": 2836,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -304,6 +305,7 @@
       "critical": false,
       "files": [
         "apps/web/src/client.tsx",
+        "apps/web/src/components/ApplicationToaster.tsx",
         "apps/web/src/components/AssignmentFallbackEditor.tsx",
         "apps/web/src/components/AuthLayout.tsx",
         "apps/web/src/components/DeadLetterPanel.tsx",
@@ -435,10 +437,10 @@
         "apps/web/src/routes/support.tsx",
         "apps/web/src/routes/terms.tsx"
       ],
-      "lines": 6770,
-      "covered_lines": 4354,
-      "branches": 8329,
-      "covered_branches": 5171,
+      "lines": 6775,
+      "covered_lines": 4392,
+      "branches": 8345,
+      "covered_branches": 5210,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -627,10 +629,10 @@
         "packages/db/src/seed/notification-templates.ts",
         "packages/db/src/types.ts"
       ],
-      "lines": 450,
-      "covered_lines": 390,
-      "branches": 308,
-      "covered_branches": 212,
+      "lines": 494,
+      "covered_lines": 433,
+      "branches": 326,
+      "covered_branches": 230,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -688,23 +690,26 @@
       "package": "packages/i18n",
       "critical": false,
       "files": [
+        "packages/i18n/src/app.ts",
         "packages/i18n/src/branding.ts",
         "packages/i18n/src/catalogue.ts",
         "packages/i18n/src/crm.ts",
         "packages/i18n/src/date-time.ts",
+        "packages/i18n/src/feedback.ts",
         "packages/i18n/src/gifts.ts",
         "packages/i18n/src/index.ts",
         "packages/i18n/src/lookup.ts",
         "packages/i18n/src/numbers.ts",
         "packages/i18n/src/preferences.ts",
         "packages/i18n/src/providers.ts",
+        "packages/i18n/src/terms.ts",
         "packages/i18n/src/timezone.ts",
         "packages/i18n/src/vat.ts"
       ],
-      "lines": 52,
-      "covered_lines": 52,
-      "branches": 97,
-      "covered_branches": 86,
+      "lines": 63,
+      "covered_lines": 63,
+      "branches": 111,
+      "covered_branches": 93,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -863,10 +868,10 @@
         "packages/ui/src/index.ts",
         "packages/ui/src/lib/utils.ts"
       ],
-      "lines": 211,
-      "covered_lines": 108,
+      "lines": 210,
+      "covered_lines": 165,
       "branches": 347,
-      "covered_branches": 232,
+      "covered_branches": 241,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -874,5 +879,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "eaa301f9ff2973e9f224b207180324c7206f5018"
+  "head_sha": "b63ef48375cc285751c0a3df4a400d99498093a2"
 }
