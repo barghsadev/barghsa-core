@@ -21,3 +21,7 @@ A broader API run passed 3171 assertions but failed with an unhandled 57P01 duri
 - UUID migration uses millisecond time plus random bits. Same-millisecond UUID values are not strictly monotonic. Existing tests cover version, variant, time prefix and uniqueness; concurrent production-baseline evidence should be recorded separately.
 - ADR 001 still describes some timestamp triggers as future work and links historical migration paths. Review it against the production baseline before certifying all column-convention claims.
 - Migration generation targets drizzle/production and excludes schema tests. Clean/upgrade tests passed in the database suite. Live backup/restore and rollout remain operational requirements outside these local checks.
+
+## Task ledger checkpoint
+
+At 6c435c4, T-02.01.01, T-02.01.03 and T-02.02.01 are acceptance_verified for their specific package, cancellation/logging and type-definition requirements. T-02.01.02 and T-02.01.04 remain partial for the stated timeout-default and health-resource gaps. Both real slow-query logging cases pass; the latest focused run has 28 tests. The remaining foundation tasks are still under review.

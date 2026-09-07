@@ -2083,14 +2083,166 @@
         233
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6c435c4518450ceaa64e2aef558061c6ccdffd90",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 246,
+      "requirement": "- **T-02.01.01:** Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit\n  - **Notes:** `package.json` declares `drizzle-orm`, `drizzle-kit`, `pg`, `@types/pg`. Dependencies: `drizzle-orm` (runtime), `drizzle-kit` (dev, for migrations/generate). Export `* from './src/index'` in package entry.\n  - **Dependencies:** S-01.02\n  - **Complexity:** M",
+      "requirement_sha256": "15b1a85c3353f5b05bbe993dabb54548d23f26fac05ec39c972ce8a52b5ddf67",
+      "source_evidence": [
+        {
+          "path": "packages/db/package.json",
+          "sha256": "07ea6c59a78be70fe5812a1337d8c92c65fd7a43669e8265c28df31fdd56a373"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "2a1de879f3d5a222817feb9012eae35660e6edd1974c4490cb58b353256fcbb5"
+        }
+      ],
+      "checks": [
+        "Compiled database exports resolve from the API workspace; required runtime/dev dependencies are declared.",
+        "Fresh database/API builds and 3171 API tests passed in the preceding cancellation repair."
+      ],
+      "limitations": [
+        "The package exposes compiled dist entry points for production consumers rather than executing source TypeScript. pg supplies its pg-pool implementation."
+      ],
+      "merged_prs": [
+        17
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.02",
+      "status": "partial",
+      "reviewed_sha": "6c435c4518450ceaa64e2aef558061c6ccdffd90",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 251,
+      "requirement": "- **T-02.01.02:** Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard\n  - **Notes:** Factory function `createDbPool(config: DbPoolConfig)` returns the pool. Apply `statement_timeout` via `query` event handler or `pool.on('connect')` with `SET statement_timeout`. Apply `lock_timeout` and `idle_in_transaction_session_timeout` similarly. Use environment variables: `DATABASE_URL`, `DB_POOL_MIN`, `DB_POOL_MAX`. Export typed `drizzle(pool, { schema, logger })` instance.\n  - **Dependencies:** T-02.01.01\n  - **Complexity:** M",
+      "requirement_sha256": "6ce21cdb19a84668b3d0b8d11b87ea8f0e8a934c7b4ca6073fb79281cdf81490",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "2a1de879f3d5a222817feb9012eae35660e6edd1974c4490cb58b353256fcbb5"
+        },
+        {
+          "path": "packages/db/src/index.test.ts",
+          "sha256": "fe4e900da97006fddfc387f7ffa49428fdc452b3a45680f709798fa073944001"
+        }
+      ],
+      "checks": [
+        "Pool bounds, startup GUCs, shared pool ownership and configurable timeouts inspected.",
+        "Database focused tests pass."
+      ],
+      "limitations": [
+        "The story requires 10-second reads and 30-second writes. Startup currently sets one 30-second statement timeout; no general read/write policy exists.",
+        "Live TLS/PgBouncer behavior is not certified by local direct-PostgreSQL checks."
+      ],
+      "merged_prs": [
+        18
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6c435c4518450ceaa64e2aef558061c6ccdffd90",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 256,
+      "requirement": "- **T-02.01.03:** Implement query timeout and cancellation via Drizzle configuration\n  - **Notes:** For slow query detection, emit structured log warning for queries exceeding 200ms. Use Drizzle's `beforeQuery`/`afterQuery` hooks or a pool middleware. Cancel long-running queries server-side if they exceed statement_timeout.\n  - **Dependencies:** T-02.01.02\n  - **Complexity:** S",
+      "requirement_sha256": "e9676419602f6121ff3be588e92a4a44a9f8c6fe422d84bd3969786a5c558116",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "2a1de879f3d5a222817feb9012eae35660e6edd1974c4490cb58b353256fcbb5"
+        },
+        {
+          "path": "packages/db/src/query-cancellation.integration.test.ts",
+          "sha256": "ba3b68d844bd643a2cf3bbe339b54e9656c5f0643905663e574e7d42b9962a0b"
+        }
+      ],
+      "checks": [
+        "Real PostgreSQL confirms server cancellation, connection reuse, queued-query isolation and transaction rollback.",
+        "Real slow Promise and callback queries emit structured production warnings above 200 ms.",
+        "28 focused database tests, database types and targeted lint pass."
+      ],
+      "limitations": [
+        "Tests use the installed pg driver in its default non-pipelined mode and local PostgreSQL 17. Network partitions and live proxy cancellation are not certified.",
+        "Separate read/write timeout defaults remain open under T-02.01.02."
+      ],
+      "merged_prs": [
+        19
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.04",
+      "status": "partial",
+      "reviewed_sha": "6c435c4518450ceaa64e2aef558061c6ccdffd90",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 261,
+      "requirement": "- **T-02.01.04:** Set up database health check endpoint for readiness probes\n  - **Notes:** Export a `dbHealth()` function that runs `SELECT 1` with a 5s timeout and returns `{ ok: boolean, latencyMs: number, poolStats: { totalCount, idleCount, waitingCount } }`. This is used by NestJS health controller for liveness/readiness checks.\n  - **Dependencies:** T-02.01.02\n  - **Complexity:** S\n  - **UI/UX:** N/A",
+      "requirement_sha256": "3601aed97b118896bd855ce361c044048e7ccffa4d67f2ae7f9f15de345c2162",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "2a1de879f3d5a222817feb9012eae35660e6edd1974c4490cb58b353256fcbb5"
+        },
+        {
+          "path": "packages/db/src/index.test.ts",
+          "sha256": "fe4e900da97006fddfc387f7ffa49428fdc452b3a45680f709798fa073944001"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "ea95b1a232a229cec3b3bb37829d29dabd8d5034fd59cab8a2f6c0a53b3bcf9f"
+        }
+      ],
+      "checks": [
+        "dbHealth executes SELECT 1, reports latency/pool statistics and is consumed by the Nest health service.",
+        "Existing mocked healthy, failure and deadline cases pass."
+      ],
+      "limitations": [
+        "The Promise.race deadline does not itself cancel its underlying query or pool acquisition. Real-pool timeout resource behavior remains unverified."
+      ],
+      "merged_prs": [
+        20
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.02.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6c435c4518450ceaa64e2aef558061c6ccdffd90",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 286,
+      "requirement": "- **T-02.02.01:** Create `packages/db/src/types.ts` with custom Drizzle type definitions\n  - **Notes:** Define `uuidv7` type using `drizzle-orm/pg-core` custom types. Generate UUIDv7 via a PostgreSQL function `uuid_generate_v7()` (to be created in migration) that combines timestamp + random bits. Define `timestamptz` as `timestamp with time zone`. Define `irrAmount` as `bigint()`. Define `fixedDecimal` as `numeric(20, 6)`. Define `halfOpenRange` as `tstzrange`.\n  - **Dependencies:** T-02.01.01\n  - **Complexity:** M",
+      "requirement_sha256": "0fd95bf167d1cfc8e0c69717350a4176538479d43aae8d91ea367b33f35975e2",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/types.ts",
+          "sha256": "584962fd6ea6153a65bb080b7f704472ad90542fdd87225345aeffc26a051a6d"
+        },
+        {
+          "path": "packages/db/src/types.test.ts",
+          "sha256": "b4fd9fbb93970404a31eb2a4bac4263750712ba6d7625c6fc8e768619a8000c6"
+        }
+      ],
+      "checks": [
+        "All seven custom-type tests pass within the 28-test focused run.",
+        "UUID default, timestamptz, bigint IRR, numeric(20,6) and tstzrange definitions inspected."
+      ],
+      "limitations": [
+        "Per-column range constraints and universal schema conventions are separate acceptance requirements; this record certifies the custom type definitions only."
+      ],
+      "merged_prs": [
+        22
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
-    "01-platform-infrastructure.md#T-02.01.01",
-    "01-platform-infrastructure.md#T-02.01.02",
-    "01-platform-infrastructure.md#T-02.01.03",
-    "01-platform-infrastructure.md#T-02.01.04",
-    "01-platform-infrastructure.md#T-02.02.01",
     "01-platform-infrastructure.md#T-02.02.02",
     "01-platform-infrastructure.md#T-02.02.03",
     "01-platform-infrastructure.md#T-02.02.04",
