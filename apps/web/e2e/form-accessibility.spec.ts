@@ -1,4 +1,5 @@
 import { mockOppositeNumerals } from './number-preference-fixture';
+import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 
 for (const locale of ['en', 'fa']) {
@@ -1400,6 +1401,63 @@ for (const locale of ['en', 'fa']) {
 }
 
 for (const locale of ['en', 'fa']) {
+  for (const darkMode of [false, true]) {
+    test(`verification settings retain readable text through theme and save outcomes (${locale}, dark=${darkMode})`, async ({
+      page,
+    }, testInfo) => {
+      await shell(page, locale);
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Contrast test',
+            slogan: '',
+            primaryColor: '#2563eb',
+            secondaryColor: '#64748b',
+            accentColor: '#f59e0b',
+            logoUrl: null,
+            faviconUrl: null,
+            darkMode,
+          },
+        })
+      );
+      let writes = 0;
+      await page.route('**/api/admin/config/profile-verification-mode', (route) => {
+        if (route.request().method() === 'GET') return route.fulfill({ json: { mode: 'MANUAL' } });
+        writes++;
+        return route.fulfill(
+          writes === 1 ? { status: 503, json: {} } : { json: { mode: 'DISABLED' } }
+        );
+      });
+      await page.goto('/admin/verification');
+      await expect(page.locator('#verification-mode-MANUAL')).toBeChecked();
+      await expect
+        .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
+        .toBe(darkMode);
+      const checkContrast = async () => {
+        const result = await new AxeBuilder({ page })
+          .include('#admin-content')
+          .withRules(['color-contrast'])
+          .analyze();
+        expect(result.violations).toEqual([]);
+        expect(result.incomplete).toEqual([]);
+      };
+      await checkContrast();
+      await page.locator('#verification-mode-DISABLED').check();
+      const save = page.getByRole('button', {
+        name: locale === 'fa' ? 'ذخیره تنظیمات' : 'Save Configuration',
+        exact: true,
+      });
+      await save.click();
+      await expect(page.getByRole('alert')).toBeVisible();
+      await checkContrast();
+      await save.click();
+      await expect(page.locator('#admin-content').getByRole('status')).toBeVisible();
+      await checkContrast();
+      await page
+        .locator('#admin-content')
+        .screenshot({ path: testInfo.outputPath('verification-contrast.png') });
+    });
+  }
   test(`verification settings require a valid read and keep automatic verification unavailable (${locale})`, async ({
     page,
   }) => {

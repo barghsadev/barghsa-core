@@ -33,6 +33,7 @@
     "sonner": "2.0.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@barghsa/tsconfig": "workspace:*",
     "@playwright/test": "1.62.1",
     "@tailwindcss/vite": "4.3.0",

@@ -86,14 +86,17 @@ export default function AdminVerificationConfig() {
   }, [currentMode, selectedMode, loading, loadFailed]);
 
   return (
-    <div dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      className="rounded-lg bg-background p-6 text-foreground"
+    >
       <h1 className="text-2xl font-bold mb-6">{text('title')}</h1>
-      <p className="text-sm text-gray-600 mb-6">{text('description')}</p>
+      <p className="text-sm text-muted-foreground mb-6">{text('description')}</p>
       {loading && <p role="status">{text('loading')}</p>}
       {loadFailed && (
         <div
           role="alert"
-          className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm"
+          className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-foreground text-sm"
         >
           <p>{text('loadFailed')}</p>
           <button
@@ -107,12 +110,12 @@ export default function AdminVerificationConfig() {
         </div>
       )}
       {saveFailed && (
-        <p role="alert" className="mb-4 text-red-700">
+        <p role="alert" className="mb-4 text-foreground">
           {text('saveFailed')}
         </p>
       )}
       {saved && (
-        <p role="status" className="mb-4 text-green-700">
+        <p role="status" className="mb-4 text-foreground">
           {text('saved')}
         </p>
       )}
@@ -122,7 +125,7 @@ export default function AdminVerificationConfig() {
           <label
             key={mode}
             htmlFor={`verification-mode-${mode}`}
-            className={`block p-4 border rounded-lg transition-colors ${selectedMode === mode ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+            className={`block p-4 border rounded-lg text-card-foreground transition-colors ${selectedMode === mode ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
           >
             <span className="flex items-center gap-3">
               <input
@@ -138,13 +141,13 @@ export default function AdminVerificationConfig() {
                   setSaved(false);
                   setSelectedMode(mode);
                 }}
-                className="text-blue-600 focus:ring-blue-500"
+                className="accent-primary focus-visible:outline-2 focus-visible:outline-ring"
               />
               <span>
-                <span className="block font-medium text-sm text-gray-900">{text(mode)}</span>
+                <span className="block font-medium text-sm">{text(mode)}</span>
                 <span
                   id={`verification-mode-${mode}-description`}
-                  className="block text-xs text-gray-500 mt-0.5"
+                  className="block text-xs text-foreground/80 mt-0.5"
                 >
                   {text(`${mode}_description`)}
                 </span>
@@ -156,7 +159,7 @@ export default function AdminVerificationConfig() {
           type="button"
           onClick={handleSave}
           disabled={selectedMode === currentMode || selectedMode === 'API'}
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? text('saving') : text('save')}
         </button>
