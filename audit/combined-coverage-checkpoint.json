@@ -135,9 +135,9 @@
         "apps/api/src/wallet/wallet.service.ts"
       ],
       "lines": 9022,
-      "covered_lines": 8119,
-      "branches": 6038,
-      "covered_branches": 4593,
+      "covered_lines": 8120,
+      "branches": 6040,
+      "covered_branches": 4596,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -289,7 +289,7 @@
       "lines": 4180,
       "covered_lines": 3871,
       "branches": 3218,
-      "covered_branches": 2514,
+      "covered_branches": 2517,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -386,6 +386,7 @@
         "apps/web/src/pages/VideosPage.tsx",
         "apps/web/src/pages/WalletPage.tsx",
         "apps/web/src/providers/BrandThemeProvider.tsx",
+        "apps/web/src/providers/UiDirectionProvider.tsx",
         "apps/web/src/routeTree.gen.ts",
         "apps/web/src/router.tsx",
         "apps/web/src/routes/__root.tsx",
@@ -421,10 +422,10 @@
         "apps/web/src/routes/support.tsx",
         "apps/web/src/routes/terms.tsx"
       ],
-      "lines": 6375,
-      "covered_lines": 3930,
-      "branches": 7683,
-      "covered_branches": 4443,
+      "lines": 6381,
+      "covered_lines": 3935,
+      "branches": 7685,
+      "covered_branches": 4447,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -744,10 +745,10 @@
         "packages/shared/src/verification/index.ts",
         "packages/shared/src/verification/types.ts"
       ],
-      "lines": 1609,
-      "covered_lines": 1452,
-      "branches": 1761,
-      "covered_branches": 1541,
+      "lines": 1620,
+      "covered_lines": 1463,
+      "branches": 1794,
+      "covered_branches": 1574,
       "required_lines": 90,
       "required_branches": 85,
       "passed": true
@@ -803,6 +804,7 @@
       "critical": false,
       "files": [
         "packages/ui/src/components/base-ui/combo-box.tsx",
+        "packages/ui/src/components/base-ui/data-table.labels.ts",
         "packages/ui/src/components/base-ui/data-table.tsx",
         "packages/ui/src/components/base-ui/date-picker.tsx",
         "packages/ui/src/components/base-ui/multi-select.tsx",
@@ -836,13 +838,14 @@
         "packages/ui/src/components/ui/textarea.tsx",
         "packages/ui/src/components/ui/toast.tsx",
         "packages/ui/src/components/ui/tooltip.tsx",
+        "packages/ui/src/direction-provider.ts",
         "packages/ui/src/index.ts",
         "packages/ui/src/lib/utils.ts"
       ],
-      "lines": 204,
-      "covered_lines": 102,
-      "branches": 348,
-      "covered_branches": 215,
+      "lines": 211,
+      "covered_lines": 108,
+      "branches": 361,
+      "covered_branches": 234,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -850,5 +853,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "89e71e88c9bfdb6d71750486e456e83e34efe3eb"
+  "head_sha": "f23841829229e3f596ae794c8a09371e9006ae9e"
 }

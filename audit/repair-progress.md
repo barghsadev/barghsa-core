@@ -2058,3 +2058,9 @@ Review and validation: 15 regression cases failed before repair; all 74 rate-lim
 Replaced separate INCR/PTTL/PEXPIRE calls with one parameterized Lua operation. A client disconnect between those former commands can no longer leave a newly incremented key without expiry. Existing deadlines remain unchanged, and legacy keys without expiry receive one without resetting their accumulated count. Script response shape, count and TTL are validated before use. Redis documents server-side script atomicity at https://redis.io/docs/latest/develop/programmability/eval-intro/.
 
 Review and validation: all 81 rate-limit unit checks and four tests against a disposable Redis 7 container pass. Real Redis tests exercise 100 competing requests with exactly 20 admitted, existing deadline preservation, legacy missing-expiry repair and expired-key renewal. Root typechecking, targeted lint and formatting pass. General Redis/PostgreSQL fallback reconciliation and the canonical sliding-window/token-bucket requirement remain open. This does not claim resilience to Redis data loss or Lua command failures after a partial script write.
+
+### Refresh combined coverage after wallet, UI and quota repairs
+
+At f238418, the full workspace run passes 5,102 tests across 424 files. Turbo completes 12 tasks with four cache hits. All 266 Chromium checks pass in 2.5 minutes. Browser collection maps 266 records to 198 source files and merges four package reports. The combined checker reports no collection errors; six of thirteen groups still fail. Thresholds and exclusions remain unchanged.
+
+This checkpoint includes cached payment validation, table localization, accessible multi-select removal, direction/orientation repairs, malformed Redis result validation and atomic Redis expiry. It does not certify the newly identified dashboard wallet placeholder or wallet HTTP precision defect. Those repairs follow this checkpoint.
