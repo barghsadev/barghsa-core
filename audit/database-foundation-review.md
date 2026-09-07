@@ -25,3 +25,11 @@ A broader API run passed 3171 assertions but failed with an unhandled 57P01 duri
 ## Task ledger checkpoint
 
 At 6c435c4, T-02.01.01, T-02.01.03 and T-02.02.01 are acceptance_verified for their specific package, cancellation/logging and type-definition requirements. T-02.01.02 and T-02.01.04 remain partial for the stated timeout-default and health-resource gaps. Both real slow-query logging cases pass; the latest focused run has 28 tests. The remaining foundation tasks are still under review.
+
+## Health-probe resource repair
+
+A real exhausted pool reproduced a health response after five seconds with one probe still queued. Health checks now decline to queue behind a saturated application pool. Concurrent callers share one probe and its deadline until its underlying work settles. A late checkout is released without running expired SQL; an active query gets a separate cancellation deadline using the reviewed cancellation helper.
+
+Four real-pool checks cover healthy statistics, saturation, twenty concurrent callers sharing one stalled query, server cancellation followed by an idle reusable connection, and late acquisition without executing SELECT 1. The final full database suite passes 627 tests in 84 files. Real HTTP checks pass for twenty concurrent readiness requests with PostgreSQL status and pool statistics. Database/API types and targeted lint pass after correcting test-only optional-environment and unknown-JSON typing errors. The initial red test needed a timeout longer than the required five-second probe deadline; its corrected run reproduced the queued work directly. Older mock-only health tests were replaced with these resource-level checks.
+
+A cancellation-network failure still relies on the configured server timeout and connection-acquisition timeout. Concurrent probes cannot accumulate additional work while that first attempt settles. Live proxy/network outage behavior is not certified.

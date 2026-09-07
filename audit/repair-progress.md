@@ -2636,3 +2636,9 @@ Review: 19 final focused tests pass. The earlier full database run passed 623 te
 At revision 6c435c4, package initialization, query timeout/logging and custom type definitions are acceptance_verified. Real PostgreSQL tests verify cancellation, reusable connections, rollback and structured slow-query warnings in Promise/callback paths; all 28 focused checks, database types and lint pass. Compiled package exports resolve from the API workspace.
 
 Pool configuration remains partial because distinct 10-second read/30-second write defaults are absent. Database health remains partial until its deadline's resource cleanup is proved with a real pool. These five records include exact canonical requirements, source hashes, original merged PR provenance and limits. The ledger now has 47 reviewed tasks: 33 verified, 14 partial, and 275 pending. This is task-level evidence, not completion of the fix plan.
+
+### Bound health-probe database work
+
+The five-second health response previously left a query queued behind an exhausted pool. The probe now skips saturated pools, shares concurrent work, cancels an active query at its deadline and releases a late checkout without executing expired SQL. Four real-pool cases cover these paths; twenty concurrent HTTP readiness requests return real PostgreSQL statistics.
+
+Review: full database suite 84 files / 627 tests passed; both telemetry/readiness HTTP tests passed. Database/API types, targeted lint, formatting and diff review pass. Test-only typing corrections and the original reproduction are recorded in `audit/database-foundation-review.md`. Network cancellation failure still uses server/acquisition timeouts as fallback, while one in-flight probe prevents repeated accumulation.

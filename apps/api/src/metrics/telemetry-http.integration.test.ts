@@ -48,3 +48,30 @@ it('exports database metrics over OTLP and keeps serving after a collector failu
   expect(requests).toBeGreaterThanOrEqual(2);
   expect((await fetch(`${fixture.base}/api/health/live`)).status).toBe(200);
 }, 25_000);
+
+it('serves concurrent readiness probes with real PostgreSQL pool statistics', async () => {
+  const results = await Promise.all(
+    Array.from({ length: 20 }, async () => {
+      const response = await fetch(`${fixture.base}/api/health/ready`);
+      expect(response.status).toBe(200);
+      return response.json();
+    })
+  );
+  for (const result of results) {
+    expect(result).toMatchObject({
+      checks: {
+        postgresql: {
+          status: 'ok',
+          latencyMs: expect.any(Number),
+          details: {
+            poolStats: {
+              totalCount: expect.any(Number),
+              idleCount: expect.any(Number),
+              waitingCount: 0,
+            },
+          },
+        },
+      },
+    });
+  }
+});

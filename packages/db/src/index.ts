@@ -366,9 +366,11 @@ const HEALTH_CHECK_TIMEOUT_MS = 5_000;
  * Used by the NestJS health controller for liveness/readiness probes.
  * Never throws — returns `{ ok: false }` on any error or timeout.
  */
-export async function dbHealth(): Promise<HealthCheckResult> {
-  const startedAt = Date.now();
+let healthProbe: Promise<HealthCheckResult> | null = null;
 
+export async function dbHealth(): Promise<HealthCheckResult> {
+  if (healthProbe) return healthProbe;
+  const startedAt = Date.now();
   let p: Pool;
   try {
     p = getDbPool();
@@ -379,43 +381,53 @@ export async function dbHealth(): Promise<HealthCheckResult> {
       poolStats: { totalCount: 0, idleCount: 0, waitingCount: 0 },
     };
   }
+  const result = (ok: boolean): HealthCheckResult => ({
+    ok,
+    latencyMs: Date.now() - startedAt,
+    poolStats: { totalCount: p.totalCount, idleCount: p.idleCount, waitingCount: p.waitingCount },
+  });
+  // A readiness probe must not join a queue behind business transactions.
+  if (p.totalCount >= p.options.max && p.idleCount === 0) return result(false);
 
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-  try {
-    const timeout = new Promise<never>((_, reject) => {
-      timeoutId = setTimeout(
-        () => reject(new Error('Health check query timed out')),
-        HEALTH_CHECK_TIMEOUT_MS
-      );
-    });
-
-    await Promise.race([p.query('SELECT 1'), timeout]);
-
-    const latencyMs = Date.now() - startedAt;
-    return {
-      ok: true,
-      latencyMs,
-      poolStats: {
-        totalCount: p.totalCount,
-        idleCount: p.idleCount,
-        waitingCount: p.waitingCount,
-      },
-    };
-  } catch {
-    const latencyMs = Date.now() - startedAt;
-    return {
-      ok: false,
-      latencyMs,
-      poolStats: {
-        totalCount: p.totalCount,
-        idleCount: p.idleCount,
-        waitingCount: p.waitingCount,
-      },
-    };
-  } finally {
-    if (timeoutId) clearTimeout(timeoutId);
-  }
+  let expired = false;
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      expired = true;
+      reject(new Error('Health check query timed out'));
+    }, HEALTH_CHECK_TIMEOUT_MS);
+  });
+  const work = p.connect().then(async (client) => {
+    try {
+      // Acquisition can finish after the caller's deadline. Release it without
+      // starting a query the caller no longer needs.
+      if (expired) return;
+      const remaining = Math.max(1, HEALTH_CHECK_TIMEOUT_MS - (Date.now() - startedAt));
+      const query = wrapClientQuery(client, remaining);
+      await query('SELECT 1');
+    } finally {
+      client.release();
+    }
+  });
+  const probe = (async () => {
+    try {
+      await Promise.race([work, deadline]);
+      return result(true);
+    } catch {
+      return result(false);
+    } finally {
+      expired = true;
+      clearTimeout(timeoutId);
+    }
+  })();
+  healthProbe = probe;
+  // Share the result until the underlying acquisition/query actually settles,
+  // including after a timeout. Repeated probes cannot accumulate more work.
+  const settled = () => {
+    if (healthProbe === probe) healthProbe = null;
+  };
+  void work.then(settled, settled);
+  return probe;
 }
 
 export * from 'drizzle-orm';
