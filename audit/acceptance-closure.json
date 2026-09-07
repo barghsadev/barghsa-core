@@ -1467,6 +1467,78 @@
       ],
       "merged_prs": [],
       "historically_skipped": true
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.01.04",
+      "status": "partial",
+      "reviewed_sha": "8136b1901af95d6f0cc7e3e2b4fedab74061a2a5",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 570,
+      "requirement": "- **T-04.01.04:** Implement PostgreSQL performance baseline and monitoring\n  - **Notes:** Set `shared_buffers` (25% of RAM), `effective_cache_size` (75% of RAM), `work_mem` (32–64MB), `maintenance_work_mem` (256MB–1GB). Enable `pg_stat_statements`. Export key metrics via OpenTelemetry: connections used, queries per second, cache hit ratio, replication lag, deadlocks, tuple fetches, sequential scans vs index scans. Alert on: replication lag > 30s, long-running queries (>30s), connection pool saturation (>80%).\n  - **Dependencies:** T-04.01.01\n  - **Complexity:** M",
+      "requirement_sha256": "c9c586411734bb82ac1aee24d996b9866a1142d49f5cbc5a7418ad7bda34c155",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/metrics.ts",
+          "sha256": "e2c88d0be58527f01e4b6594a5eedcc16a30d1bc7fbde0b75ecb4610c1c40908"
+        },
+        {
+          "path": "packages/db/src/metrics.integration.test.ts",
+          "sha256": "485a93173b58fdfb232154cf47ac727ba79969773432fdcd047e7eeb57df1cce"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "3425ed54d69a6cb86d37149db851862443f8706040bd7d03dc366aab1305daf6"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.test.ts",
+          "sha256": "f326d1d418468ca81a5de447bd773ecdb0647a2c18e88824015394efe80899f6"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+          "sha256": "63cbc370baa53d00e55067c339626bc55396c4943de4e18e2d896b89bf4dca23"
+        },
+        {
+          "path": "apps/api/src/metrics/database-telemetry.ts",
+          "sha256": "82ddd0593757ccd0aea437c13d9c9aac6d6834d99eb62057ada682d8fbc12fa7"
+        },
+        {
+          "path": "apps/api/src/metrics/database-telemetry.test.ts",
+          "sha256": "3a571730e5bc17502744a5ee87aa9398d4b37fde91d5a0faf42ae7a66b08ca73"
+        },
+        {
+          "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+          "sha256": "543db3f237b19677504e7eec65a4e4c9705c39bc2b41dff637274d169fd9be49"
+        },
+        {
+          "path": "postgres-config/barghsa-postgres.conf",
+          "sha256": "9f88a138264f2fac92f1b1882abd2b12a0e75b21af32bb433dc3779736d93b16"
+        },
+        {
+          "path": "postgres-config/alert-rules.json",
+          "sha256": "189f8ba35210f39b5c316a923c122c41e82faa73f9f3d377ab37d63c0c1d06de"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "2ae3385a28100e7be24cac475a10545497e671af454dff77c6d7fe14fff805e9"
+        }
+      ],
+      "checks": [
+        "All fifteen PostgreSQL collector checks and all sixteen API monitoring/OpenTelemetry checks pass after the local repairs.",
+        "Real PostgreSQL 17 queries work with pg_stat_statements both absent and enabled. Required read failures return unavailable rather than healthy zeros.",
+        "Actual compiled API scrapes survive a disposable database outage, remove stale samples, expose collection failure and recover after connections are restored.",
+        "OTLP payloads reach a local HTTP receiver after an initial rejection. Current-value, invalid configuration, optional export, failed/throwing snapshot and stale-value removal cases pass.",
+        "Root typechecking, targeted lint, formatting, frozen-lockfile installation and canonical backlog validation pass."
+      ],
+      "limitations": [
+        "Production host memory sizing and a measured load/performance baseline are not verified. Development settings are not evidence of production sizing.",
+        "Alert rules are defined locally, but deployment to a monitoring stack and real alert delivery are not exercised.",
+        "Replica lag aggregation uses controlled PostgreSQL rows rather than live streaming replicas. Production monitoring-role visibility remains to be exercised.",
+        "The combined coverage checkpoint predates the monitoring repairs and still reports six failing groups."
+      ],
+      "merged_prs": [
+        46
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -1512,7 +1584,6 @@
     "01-platform-infrastructure.md#T-04.01.01",
     "01-platform-infrastructure.md#T-04.01.02",
     "01-platform-infrastructure.md#T-04.01.03",
-    "01-platform-infrastructure.md#T-04.01.04",
     "01-platform-infrastructure.md#T-04.01.05",
     "01-platform-infrastructure.md#T-04.01.06",
     "01-platform-infrastructure.md#T-04.01.07",
