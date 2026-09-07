@@ -2597,4 +2597,8 @@ All 650 mobile tests pass after the menu-test correction. All 975 desktop tests 
 
 Snapshot replay now requires its supported version, half-up rule and basis-point scale. It rejects manual order discounts instead of ignoring them. Manual and automatic calculations reject unsafe numeric quantities before BigInt conversion. Valid snapshot arithmetic and exact money strings are unchanged; no financial records were rewritten.
 
-All 23 new negative regressions failed before repair, while the two safe-boundary cases passed. The repaired invoice group passes all 444 tests across 33 files, including the 25 new cases and real PostgreSQL replay/VAT tests. API typechecking, targeted lint, formatting and diff review pass. Review covered snapshot writers for manual, automatic, replacement and adjustment invoices. Detailed findings and limitations remain in `audit/finance-review-followups.md`.
+All 23 new negative regressions failed before repair, while the two safe-boundary cases passed. The repaired invoice group passes all 444 tests across 33 files, including the 25 new cases and real PostgreSQL replay/VAT tests. Typechecking then caught a missing required field in the new test fixture; its correction and final checks are recorded below. Review covered snapshot writers for manual, automatic, replacement and adjustment invoices. Detailed findings and limitations remain in `audit/finance-review-followups.md`.
+
+### Correct the finance test fixture and validation record
+
+The new automatic-invoice fixture omitted its required product title. Runtime tests passed, but TypeScript correctly rejected the fixture. The earlier types/lint success statement was premature and has been corrected. The fixture now includes its title; API typechecking, targeted lint and all 25 boundary cases pass. Product calculation code is unchanged from the 444-test invoice run.

@@ -11,7 +11,12 @@ import {
 } from './invoice-calculation-snapshot.js';
 
 const manualLine = { description: 'Calculation boundary', quantity: 1, unitPrice: 1n, vatRate: 0 };
-const autoLine = { ...manualLine, productId: 'product-one', productType: 'electricity' };
+const autoLine = {
+  ...manualLine,
+  productId: 'product-one',
+  productType: 'electricity',
+  productTitle: { en: 'Calculation boundary' },
+};
 
 function snapshot(source: 'manual' | 'auto'): InvoiceCalculationSnapshot {
   return source === 'manual'
