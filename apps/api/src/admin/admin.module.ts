@@ -1,3 +1,6 @@
+import { AdminBrandAssetController } from './brand-asset.controller.js';
+import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
+import { BrandAssetService } from './brand-asset.service.js';
 import { Module, forwardRef } from '@nestjs/common';
 import { SessionModule } from '../session/session.module.js';
 import { NotificationsModule } from '../notifications/index.js';
@@ -43,6 +46,7 @@ import { ChargebackAlertController } from './chargeback-alert.controller.js';
     WalletModule,
   ],
   controllers: [
+    AdminBrandAssetController,
     AdminController,
     DualApprovalController,
     ReconciliationExceptionsController,
@@ -60,6 +64,8 @@ import { ChargebackAlertController } from './chargeback-alert.controller.js';
     ChargebackAlertController,
   ],
   providers: [
+    VerifiedAttachmentsService,
+    BrandAssetService,
     InvoiceBankReceiptConfirmationService,
     AdminService,
     BrandConfigService,
@@ -76,6 +82,7 @@ import { ChargebackAlertController } from './chargeback-alert.controller.js';
     ReminderOffsetToggleService,
   ],
   exports: [
+    BrandAssetService,
     AdminService,
     BrandConfigService,
     DualApprovalService,

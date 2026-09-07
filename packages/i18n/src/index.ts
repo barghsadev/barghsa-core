@@ -10,6 +10,9 @@ export const fa: I18nDictionary = {
   'admin.branding.activateConfirm': 'نسخه ذخیره‌شده {version} برای همه کاربران منتشر شود؟',
   'admin.branding.changed': 'تنظیمات تغییر کرده‌اند. پنجره را ببندید و تازه‌سازی کنید.',
   'admin.branding.saved': 'تغییرات ذخیره شد.',
+  'admin.branding.uploading': 'Uploading logo…',
+  'admin.branding.uploadFailed':
+    'Logo upload failed. Choose a PNG, JPG or WebP up to 2 MB and retry.',
   'admin.branding.refresh': 'تازه‌سازی',
   'onboarding.legal.titleEn': 'Legal Profile',
   'admin.catalogue.title': 'فهرست محصولات',
@@ -2026,6 +2029,9 @@ export const en: I18nDictionary = {
   'admin.branding.activateConfirm': 'Publish saved version {version} for all users?',
   'admin.branding.changed': 'Settings changed. Close this dialog and refresh before continuing.',
   'admin.branding.saved': 'Changes saved.',
+  'admin.branding.uploading': 'در حال بارگذاری نشان…',
+  'admin.branding.uploadFailed':
+    'بارگذاری نشان ناموفق بود. فایل PNG، JPG یا WebP تا ۲ مگابایت انتخاب و دوباره تلاش کنید.',
   'admin.branding.refresh': 'Refresh',
   'onboarding.welcome.subtitleEn': 'Please create your profile to get started.',
   'onboarding.profile.individualDescEn': 'Individual registration',

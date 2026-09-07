@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useId } from 'react';
+import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
+import { useState, useEffect, useCallback, useId, useRef } from 'react';
 import { t } from '@barghsa/i18n';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -105,12 +106,28 @@ export default function AdminBrandingConfig() {
   const [revision, setRevision] = useState(0);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const draftInfo = activeConfig?.status === 'draft' ? activeConfig : null;
-  const [, setLogoFile] = useState<File | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoUploadKey, setLogoUploadKey] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const uploadRequest = useRef<AbortController | null>(null);
+  useEffect(() => () => uploadRequest.current?.abort(), []);
+  useEffect(() => {
+    if (!logoFile) {
+      setLogoPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(logoFile);
+    setLogoPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [logoFile]);
 
   // Load current config
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setLogoFile(null);
+    setLogoUploadKey(null);
     setMessage(null);
     setActiveConfig(null);
     fetchActiveConfig()
@@ -142,7 +159,11 @@ export default function AdminBrandingConfig() {
       description: t('admin.branding.saveConfirm', locale),
       path: '/api/admin/branding/config',
       method: 'PUT',
-      body: { config: { ...config }, expectedVersion: activeConfig.version },
+      body: {
+        config: { ...config },
+        expectedVersion: activeConfig.version,
+        ...(logoUploadKey ? { logoUploadKey } : {}),
+      },
       conflictMessage: t('admin.branding.changed', locale),
     });
   };
@@ -162,18 +183,28 @@ export default function AdminBrandingConfig() {
     });
   };
 
-  const handleLogoUpload = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    uploadRequest.current?.abort();
+    const controller = new AbortController();
+    uploadRequest.current = controller;
+    setUploading(true);
+    setLogoUploadKey(null);
+    setLogoFile(null);
+    setMessage(null);
+    try {
+      const key = await uploadBrandingLogo(file, controller.signal);
+      if (controller.signal.aborted) return;
+      setLogoUploadKey(key);
       setLogoFile(file);
-      // In a real implementation, upload to storage and get CDN URL
-      // For now, create a local object URL for preview
-      const url = URL.createObjectURL(file);
-      updateConfig('logoUrl', url);
-    },
-    [updateConfig]
-  );
+    } catch {
+      if (!controller.signal.aborted)
+        setMessage({ type: 'error', text: t('admin.branding.uploadFailed', locale) });
+    } finally {
+      if (!controller.signal.aborted) setUploading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -184,10 +215,16 @@ export default function AdminBrandingConfig() {
   }
 
   const isDirty =
-    activeConfig && activeConfig.version > 0
+    Boolean(logoUploadKey) ||
+    (activeConfig && activeConfig.version > 0
       ? JSON.stringify(config) !== JSON.stringify({ ...DEFAULT_CONFIG, ...activeConfig.config })
-      : true;
+      : true);
 
+  const displayedLogo =
+    logoPreview ??
+    (config.logoUrl?.startsWith('/api/public/branding/assets/')
+      ? config.logoUrl.replace('/api/public/', '/api/admin/')
+      : config.logoUrl);
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       {action && (
@@ -196,6 +233,8 @@ export default function AdminBrandingConfig() {
           onClose={() => setAction(null)}
           onSuccess={async (result) => {
             const dto = result as BrandConfigDto;
+            setLogoFile(null);
+            setLogoUploadKey(null);
             setActiveConfig(dto);
             setConfig({ ...DEFAULT_CONFIG, ...dto.config });
             setMessage({ type: 'success', text: t('admin.branding.saved', locale) });
@@ -206,7 +245,7 @@ export default function AdminBrandingConfig() {
       <button
         type="button"
         onClick={() => setRevision((value) => value + 1)}
-        disabled={action !== null}
+        disabled={action !== null || uploading}
       >
         {t('admin.branding.refresh', locale)}
       </button>
@@ -228,8 +267,10 @@ export default function AdminBrandingConfig() {
         </div>
       </div>
 
+      {uploading && <p role="status">{t('admin.branding.uploading', locale)}</p>}
       {message && (
         <div
+          role={message.type === 'error' ? 'alert' : 'status'}
           className={`px-4 py-3 rounded-lg text-sm ${
             message.type === 'success'
               ? 'bg-green-50 text-green-700 border border-green-200'
@@ -315,23 +356,29 @@ export default function AdminBrandingConfig() {
             <input
               id="adminbrandingconfig-field-4"
               type="file"
-              accept="image/png,image/jpeg,image/svg+xml"
+              accept="image/png,image/jpeg,image/webp"
+              disabled={action !== null}
               onChange={handleLogoUpload}
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
-            <p className="text-xs text-gray-400 mt-1">PNG, JPG, or SVG. Max 2MB.</p>
+            <p className="text-xs text-gray-400 mt-1">PNG, JPG, or WebP. Max 2MB.</p>
           </div>
 
-          {config.logoUrl && (
+          {displayedLogo && (
             <div className="shrink-0">
               <img
-                src={config.logoUrl}
+                src={displayedLogo}
                 alt="Logo preview"
                 className="max-w-32 max-h-16 object-contain border border-gray-200 rounded"
               />
               <button
                 type="button"
-                onClick={() => updateConfig('logoUrl', null)}
+                disabled={action !== null || uploading}
+                onClick={() => {
+                  setLogoFile(null);
+                  setLogoUploadKey(null);
+                  updateConfig('logoUrl', null);
+                }}
                 className="text-xs text-red-500 hover:text-red-700 mt-1"
               >
                 Remove
@@ -389,7 +436,7 @@ export default function AdminBrandingConfig() {
           }}
         >
           <div className="flex items-center gap-4 mb-4">
-            {config.logoUrl && <img src={config.logoUrl} alt="Logo" className="h-10" />}
+            {displayedLogo && <img src={displayedLogo} alt="Logo" className="h-10" />}
             <div>
               <h3 className="text-xl font-bold" style={{ color: config.primaryColor }}>
                 {config.appTitle || 'Barghsa'}
@@ -432,7 +479,7 @@ export default function AdminBrandingConfig() {
         <button
           type="button"
           onClick={handleSave}
-          disabled={action !== null || !activeConfig || !isDirty}
+          disabled={uploading || action !== null || !activeConfig || !isDirty}
           className="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Save Draft
@@ -441,7 +488,7 @@ export default function AdminBrandingConfig() {
         <button
           type="button"
           onClick={handleActivate}
-          disabled={action !== null || !draftInfo || isDirty}
+          disabled={uploading || action !== null || !draftInfo || isDirty}
           className="px-6 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Activate

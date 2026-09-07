@@ -77,10 +77,23 @@ export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>;
  *
  * Validates the config JSON for the PUT /api/admin/branding/config endpoint.
  */
+const assetUrl = z
+  .string()
+  .max(2048)
+  .refine((value) => {
+    if (/^\/api\/public\/branding\/assets\/[a-f0-9-]{36}\/[a-f0-9]{64}$/.test(value)) return true;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && !url.username && !url.password;
+    } catch {
+      return false;
+    }
+  }, 'Use a persistent HTTPS asset URL');
 const hexColorRe = /^#[0-9a-fA-F]{6}$/;
 
 export const UpsertBrandConfigSchema = z.object({
   expectedVersion: z.number().int().min(0).max(2147483647),
+  logoUploadKey: z.string().max(255).optional(),
   config: z.object({
     appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
     slogan: z.string().max(200).optional().default(''),
@@ -99,8 +112,8 @@ export const UpsertBrandConfigSchema = z.object({
       .regex(hexColorRe, 'Must be a valid 6-char hex color')
       .optional()
       .default('#f59e0b'),
-    logoUrl: z.string().url().nullable().optional().default(null),
-    faviconUrl: z.string().url().nullable().optional().default(null),
+    logoUrl: assetUrl.nullable().optional().default(null),
+    faviconUrl: assetUrl.nullable().optional().default(null),
     darkMode: z.boolean().optional().default(false),
   }),
 });
@@ -856,6 +869,10 @@ export class AdminController {
           minimum: 0,
           description: 'Last observed saved version',
         },
+        logoUploadKey: {
+          type: 'string',
+          description: 'Verified branding_logo image upload owned by the editor',
+        },
         config: { type: 'object', description: 'Brand config JSON (appTitle, colors, etc.)' },
       },
     },
@@ -893,7 +910,8 @@ export class AdminController {
     return this.brandConfigService.upsertDraft(
       parsed.data.config,
       req.session.userId,
-      parsed.data.expectedVersion
+      parsed.data.expectedVersion,
+      parsed.data.logoUploadKey
     );
   }
 

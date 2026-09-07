@@ -18,8 +18,9 @@ import {
 import type { DualApprovalQueryClient } from '../admin/dual-approval-resolution.js';
 const MAX_BYTES = 10 * 1024 * 1024;
 const MIME = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
-export type AttachmentPurpose = 'ticket_attachment' | 'legal_profile_document';
+export type AttachmentPurpose = 'ticket_attachment' | 'legal_profile_document' | 'branding_logo';
 function prefix(purpose: AttachmentPurpose) {
+  if (purpose === 'branding_logo') return 'branding-assets/';
   return purpose === 'ticket_attachment' ? 'ticket-attachments/' : 'legal-profile-documents/';
 }
 @Injectable()
@@ -57,7 +58,10 @@ export class VerifiedAttachmentsService {
           'Attachment must be a verified upload for this profile by this uploader'
         );
       const object = await this.storage.getObject(key);
-      const read = await readCappedBytes(object.body, MAX_BYTES);
+      const read = await readCappedBytes(
+        object.body,
+        purpose === 'branding_logo' ? 2 * 1024 * 1024 : MAX_BYTES
+      );
       if (read.truncated) throw new BadRequestException('Attachment file is too large');
       const bytes = Buffer.from(read.bytes),
         total = bytes.length;
@@ -65,7 +69,7 @@ export class VerifiedAttachmentsService {
         throw new BadRequestException('Attachment size changed after upload verification');
       const contentType = pickDetectedContentType(
         sniffContentTypes(bytes.subarray(0, SNIFF_SAMPLE_BYTES)),
-        MIME
+        purpose === 'branding_logo' ? ['image/png', 'image/jpeg', 'image/webp'] : MIME
       );
       if (!contentType) throw new BadRequestException('Unsupported attachment file content');
       const digest = createHash('sha256').update(bytes).digest('hex');

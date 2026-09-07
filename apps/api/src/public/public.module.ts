@@ -1,3 +1,4 @@
+import { PublicBrandAssetController } from '../admin/brand-asset.controller.js';
 import { Module } from '@nestjs/common';
 import { AdminModule } from '../admin/admin.module.js';
 import { PublicBrandingController } from './branding.controller.js';
@@ -10,6 +11,6 @@ import { PublicBrandingController } from './branding.controller.js';
  */
 @Module({
   imports: [AdminModule],
-  controllers: [PublicBrandingController],
+  controllers: [PublicBrandingController, PublicBrandAssetController],
 })
 export class PublicModule {}

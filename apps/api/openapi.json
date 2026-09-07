@@ -797,6 +797,38 @@
         ]
       }
     },
+    "/api/admin/branding/assets/{id}/{digest}": {
+      "get": {
+        "operationId": "AdminBrandAssetController_read",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "digest",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Preview a saved branding image",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/branding/config": {
       "get": {
         "operationId": "AdminController_getActiveBrandConfig",
@@ -837,6 +869,10 @@
                     "description": "Last observed saved version",
                     "minimum": 0,
                     "type": "integer"
+                  },
+                  "logoUploadKey": {
+                    "description": "Verified branding_logo image upload owned by the editor",
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -11891,6 +11927,38 @@
         "summary": "Initiate ownership transfer for a legal profile",
         "tags": [
           "Profiles"
+        ]
+      }
+    },
+    "/api/public/branding/assets/{id}/{digest}": {
+      "get": {
+        "operationId": "PublicBrandAssetController_read",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "digest",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read an image referenced by active branding",
+        "tags": [
+          "Public"
         ]
       }
     },

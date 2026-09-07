@@ -2250,6 +2250,19 @@ for (const locale of ['en', 'fa'] as const) {
     const title = page.getByLabel('App Title', { exact: true });
     const savedTitle = `Brand published ${locale}`;
     await title.fill(savedTitle);
+    await page.getByLabel('Upload logo', { exact: true }).setInputFiles({
+      name: 'brand.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aT0kAAAAASUVORK5CYII=',
+        'base64'
+      ),
+    });
+    await expect(page.getByRole('img', { name: 'Logo preview', exact: true })).toHaveAttribute(
+      'src',
+      /^blob:/
+    );
+
     await page.getByRole('button', { name: 'Save Draft', exact: true }).click();
     await page
       .getByRole('dialog')
@@ -2257,6 +2270,14 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(await publicTitle()).toBe(before);
+    await page.reload();
+    await expect(title).toHaveValue(savedTitle);
+    const preview = page.getByRole('img', { name: 'Logo preview', exact: true });
+    await expect(preview).toHaveAttribute('src', /^\/api\/admin\/branding\/assets\//);
+    await expect
+      .poll(() => preview.evaluate((image: HTMLImageElement) => image.naturalWidth))
+      .toBe(1);
+
     await title.fill('Unsaved change');
     await expect(page.getByRole('button', { name: 'Activate', exact: true })).toBeDisabled();
     await title.fill(savedTitle);

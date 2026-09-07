@@ -19,11 +19,40 @@ async function cleanup() {
 async function main() {
   const database = await startTestPostgres();
   cleanups.push(database.close);
-  const storage = createServer((_request, response) => {
-    response.setHeader('Content-Type', 'application/xml');
-    response.end(
-      '<ListBucketResult><Name>test-evidence</Name><KeyCount>0</KeyCount><IsTruncated>false</IsTruncated></ListBucketResult>'
-    );
+  const objects = new Map<string, Buffer>();
+  const storage = createServer(async (request, response) => {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods', 'PUT, GET, HEAD, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', '*');
+    if (request.method === 'OPTIONS') {
+      response.end();
+      return;
+    }
+    const url = new URL(request.url!, 'http://localhost');
+    const key = decodeURIComponent(url.pathname).replace('/test-evidence/', '');
+    if (request.method === 'PUT') {
+      const chunks: Buffer[] = [];
+      for await (const chunk of request) chunks.push(Buffer.from(chunk));
+      objects.set(key, Buffer.concat(chunks));
+      response.end();
+      return;
+    }
+    if (url.searchParams.has('list-type') || url.pathname.replace(/\/$/, '') === '/test-evidence') {
+      response.setHeader('Content-Type', 'application/xml');
+      response.end(
+        '<ListBucketResult><Name>test-evidence</Name><KeyCount>0</KeyCount><IsTruncated>false</IsTruncated></ListBucketResult>'
+      );
+      return;
+    }
+    const bytes = objects.get(key);
+    if (!bytes) {
+      response.statusCode = 404;
+      response.end();
+      return;
+    }
+    response.setHeader('Content-Type', 'image/png');
+    response.setHeader('Content-Length', bytes.length);
+    response.end(request.method === 'HEAD' ? undefined : bytes);
   });
   await new Promise<void>((done) => storage.listen(0, '127.0.0.1', done));
   cleanups.push(() => new Promise<void>((done) => storage.close(() => done())));

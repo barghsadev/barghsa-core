@@ -1,4 +1,5 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
+import { Injectable, ConflictException, Optional, BadRequestException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { v7 as uuidv7 } from 'uuid';
@@ -21,6 +22,7 @@ import type { BrandConfigDto } from './admin.controller.js';
  */
 @Injectable()
 export class BrandConfigService {
+  constructor(@Optional() private readonly attachments?: VerifiedAttachmentsService) {}
   /**
    * Map a DB row to a BrandConfigDto.
    */
@@ -106,17 +108,42 @@ export class BrandConfigService {
   async upsertDraft(
     config: Record<string, unknown>,
     userId: string,
-    expectedVersion: number
+    expectedVersion: number,
+    logoUploadKey?: string
   ): Promise<BrandConfigDto> {
     return this.withHistoryLock(userId, async (client) => {
       const version = await this.currentVersion(client);
       if (version !== expectedVersion || version >= 2147483647)
         throw new ConflictException('Brand configuration changed');
+      let savedConfig = { ...config };
+      if (logoUploadKey) {
+        if (!this.attachments) throw new BadRequestException('Logo storage is unavailable');
+        const [key] = await this.attachments.seal(
+          client,
+          [logoUploadKey],
+          userId,
+          null,
+          'branding_logo'
+        );
+        savedConfig = {
+          ...savedConfig,
+          logoUrl: `/api/public/branding/assets/${key!.slice('branding-assets/'.length)}`,
+        };
+      } else if (
+        typeof config.logoUrl === 'string' &&
+        config.logoUrl.startsWith('/api/public/branding/assets/')
+      ) {
+        const known = await client.query(
+          "SELECT 1 FROM brand_config WHERE config->>'logoUrl'=$1 LIMIT 1",
+          [config.logoUrl]
+        );
+        if (!known.rows[0]) throw new BadRequestException('Unknown branding asset');
+      }
       await client.query("UPDATE brand_config SET status='superseded' WHERE status='draft'");
       const result = await client.query(
         `INSERT INTO brand_config(id,config,version,status,created_by) VALUES ($1,$2::jsonb,$3,'draft',$4)
          RETURNING id,config,version,status,created_by,created_at,updated_at`,
-        [uuidv7(), JSON.stringify(config), version + 1, userId]
+        [uuidv7(), JSON.stringify(savedConfig), version + 1, userId]
       );
       const dto = this.rowToDto(result.rows[0]);
       await this.audit(client, userId, 'branding.draft_created', dto);
