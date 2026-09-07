@@ -34,3 +34,25 @@ it.each([
   );
   expect(response.headers.get('x-correlation-id')).toBe(body.error.correlationId);
 });
+
+it.each(
+  [
+    '/api/auth/login',
+    '/api/admin/contract-templates/550e8400-e29b-41d4-a716-446655440000/versions',
+  ].flatMap((path) => [
+    { path, locale: 'en', message: 'Invalid input value' },
+    { path, locale: 'fa', message: 'مقدار ورودی نامعتبر است' },
+  ])
+)('does not echo malformed JSON input ($locale, $path)', async ({ path, locale, message }) => {
+  const response = await fetch(fixture.base + path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
+    body: 'secret-token',
+  });
+  expect(response.status).toBe(400);
+  const text = await response.text();
+  expect(text).not.toContain('secret-token');
+  const body = JSON.parse(text);
+  expect(body.error.code).toBe('VALIDATION:INPUT:INVALID');
+  expect(body.error.message).toBe(message);
+});

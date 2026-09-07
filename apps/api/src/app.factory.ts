@@ -7,6 +7,7 @@ import { CacheControlInterceptor } from './common/cache-control.interceptor.js';
 import { HttpExceptionFilter } from './common/http-exception.filter.js';
 import { EtagInterceptor } from './common/etag.interceptor.js';
 import { Reflector } from '@nestjs/core';
+import { sanitizeBodyParserErrors } from './common/body-parser-errors.js';
 
 export async function createApplication() {
   const proxies = trustedProxyIps();
@@ -29,6 +30,7 @@ export async function createApplication() {
       /^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
   });
   app.useBodyParser('json');
+  app.use(sanitizeBodyParserErrors);
 
   // Enable shutdown hooks for graceful SIGTERM/SIGINT handling.
   // NestJS will call OnApplicationShutdown lifecycle hooks on all registered

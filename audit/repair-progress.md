@@ -2544,3 +2544,9 @@ All six final verification/navigation browser checks pass. The measured cases co
 The global exception filter now always writes private/no-store cache headers and an X-Correlation-ID matching its response body and log record. It reuses the request context ID where available and generates UUIDv7 otherwise. Authentication guards, missing routes and malformed JSON reproduced the missing-cache-header defect before repair; parser errors also bypassed the correlation middleware.
 
 All 691 HTTP/filter checks across 55 files pass. After final source review, the 19 focused checks pass again, along with API typechecking, targeted lint, formatting, a fresh API build and the OpenAPI contract gate. Ten production static-server checks also pass. This does not certify all error-message localization or downstream worker correlation propagation. No external state changed.
+
+### Remove submitted text from JSON parser errors
+
+A real HTTP regression showed malformed JSON returning the submitted marker inside Nest's raw parser diagnostic. A narrowly scoped error middleware now replaces JSON parse failures before Nest converts them, allowing the global filter to return the stable validation code and localized message without retaining the original body or cause. Other error types continue to the existing handler.
+
+All 52 selected HTTP/filter checks across five files pass. These include English/Persian malformed input through both the ordinary parser and the larger contract-template parser, registration/contact login and template upload flows. API types, targeted lint, formatting and diff review pass. The initial trailing-comma fixture did not reproduce disclosure; the invalid-token fixture did. This repairs parser diagnostics only, not every application's 4xx message or downstream correlation propagation.
