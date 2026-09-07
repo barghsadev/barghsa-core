@@ -1,366 +1,207 @@
-import { adminControlsText } from '@barghsa/i18n/admin-controls';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  Label,
+} from '@barghsa/ui';
+import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
 import { useLocale } from '../hooks/useLocale.js';
-import { useState, useEffect, useCallback } from 'react';
-import { withCsrf } from '../lib/csrf.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import {
+  deactivateProvince,
+  GeographyRequestError,
+  listProvinces,
+  saveProvince,
+  type Province,
+} from '../lib/geography-api.js';
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-interface Province {
-  id: string;
-  nameFa: string;
-  nameEn: string;
-  status: 'active' | 'inactive';
-  createdAt: string;
-  updatedAt: string;
+type Modal = {
+  kind: 'add' | 'edit' | 'deactivate';
+  province: Province | null;
+  trigger: HTMLElement;
+};
+const selectClass =
+  'h-10 rounded-md border border-input bg-background px-3 text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
+function failureKey(error: unknown): GeographyTextKey {
+  return error instanceof GeographyRequestError ? error.code : 'requestFailed';
 }
-
-interface ListProvincesResponse {
-  provinces: Province[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
-// ---------------------------------------------------------------------------
-// API helpers
-// ---------------------------------------------------------------------------
-
-async function listProvinces(params: {
-  search?: string | undefined;
-  status?: 'active' | 'inactive' | undefined;
-  page?: number | undefined;
-  limit?: number | undefined;
-}): Promise<ListProvincesResponse> {
-  const qs = new URLSearchParams();
-  if (params.search) qs.set('search', params.search);
-  if (params.status) qs.set('status', params.status);
-  if (params.page) qs.set('page', String(params.page));
-  if (params.limit) qs.set('limit', String(params.limit));
-
-  const res = await fetch(`/api/admin/geography/provinces?${qs.toString()}`);
-  if (!res.ok) throw new Error(`Failed to fetch provinces: ${res.statusText}`);
-  return res.json();
-}
-
-async function createProvince(data: { nameFa: string; nameEn: string }): Promise<Province> {
-  const res = await fetch('/api/admin/geography/provinces', {
-    method: 'POST',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err.error ?? 'Failed to create province');
-  }
-  return res.json();
-}
-
-async function updateProvince(
-  id: string,
-  data: { nameFa?: string; nameEn?: string; status?: 'active' | 'inactive' }
-): Promise<Province> {
-  const res = await fetch(`/api/admin/geography/provinces/${id}`, {
-    method: 'PATCH',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err.error ?? 'Failed to update province');
-  }
-  return res.json();
-}
-
-async function deleteProvince(id: string): Promise<void> {
-  const res = await fetch(`/api/admin/geography/provinces/${id}`, {
-    method: 'DELETE',
-    headers: withCsrf({}),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err.error ?? 'Failed to delete province');
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-const PERSIAN_ALPHABET = /^[\u0600-\u06FF\u200C\s]+$/;
-const ENGLISH_ALPHABET = /^[a-zA-Z\s]+$/;
-
-// ---------------------------------------------------------------------------
-// ProvinceFormModal
-// ---------------------------------------------------------------------------
-
-interface ProvinceFormModalProps {
-  mode: 'add' | 'edit';
-  province?: Province; // for edit mode
+function ProvinceDialog({
+  modal,
+  onClose,
+  onSaved,
+}: {
+  modal: Modal;
   onClose: () => void;
   onSaved: () => void;
-}
-
-function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormModalProps) {
-  const [nameFa, setNameFa] = useState(province?.nameFa ?? '');
-  const [nameEn, setNameEn] = useState(province?.nameEn ?? '');
-  const [status, setStatus] = useState<'active' | 'inactive'>(province?.status ?? 'active');
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      setError(null);
-
-      // Validation
-      if (!nameFa.trim()) {
-        setError('Persian name is required');
-        return;
-      }
-      if (!PERSIAN_ALPHABET.test(nameFa.trim())) {
-        setError('Persian name must contain only Persian characters');
-        return;
-      }
-      if (!nameEn.trim()) {
-        setError('English name is required');
-        return;
-      }
-      if (!ENGLISH_ALPHABET.test(nameEn.trim())) {
-        setError('English name must contain only English letters');
-        return;
-      }
-
-      setSaving(true);
-      try {
-        if (mode === 'add') {
-          await createProvince({ nameFa: nameFa.trim(), nameEn: nameEn.trim() });
-        } else if (province) {
-          const patch: { nameFa?: string; nameEn?: string; status?: 'active' | 'inactive' } = {};
-          if (nameFa.trim() !== province.nameFa) patch.nameFa = nameFa.trim();
-          if (nameEn.trim() !== province.nameEn) patch.nameEn = nameEn.trim();
-          if (status !== province.status) patch.status = status;
-          await updateProvince(province.id, patch);
-        }
-        onSaved();
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Save failed');
-      } finally {
-        setSaving(false);
-      }
-    },
-    [mode, province, nameFa, nameEn, status, onSaved]
-  );
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
-        <h2 className="text-lg font-semibold mb-4">
-          {mode === 'add' ? 'Add Province' : 'Edit Province'}
-        </h2>
-
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            {/* Persian name */}
-            <div>
-              <label
-                htmlFor="admingeographypage-field-1"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Persian Name
-              </label>
-              <input
-                id="admingeographypage-field-1"
-                type="text"
-                value={nameFa}
-                onChange={(e) => setNameFa(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                dir="rtl"
-                placeholder="نام استان"
-                required
-              />
-            </div>
-
-            {/* English name */}
-            <div>
-              <label
-                htmlFor="admingeographypage-field-2"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                English Name
-              </label>
-              <input
-                id="admingeographypage-field-2"
-                type="text"
-                value={nameEn}
-                onChange={(e) => setNameEn(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Province name"
-                required
-              />
-            </div>
-
-            {/* Status (edit mode only) */}
-            {mode === 'edit' && (
-              <div>
-                <label
-                  htmlFor="admingeographypage-field-3"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Status
-                </label>
-                <select
-                  id="admingeographypage-field-3"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value as 'active' | 'inactive')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
-            )}
-
-            {/* Error */}
-            {error && (
-              <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{error}</div>
-            )}
-
-            {/* Actions */}
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                disabled={saving}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={saving}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
-              >
-                {saving ? 'Saving...' : mode === 'add' ? 'Create' : 'Save'}
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// DeleteConfirmModal
-// ---------------------------------------------------------------------------
-
-interface DeleteConfirmModalProps {
-  province: Province;
-  onClose: () => void;
-  onDeleted: () => void;
-}
-
-function DeleteConfirmModal({ province, onClose, onDeleted }: DeleteConfirmModalProps) {
-  const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleDelete = useCallback(async () => {
-    setDeleting(true);
+}) {
+  const locale = useLocale();
+  const t = (key: GeographyTextKey) => geographyText(key, locale);
+  const firstField = useRef<HTMLInputElement>(null);
+  const [nameFa, setNameFa] = useState(modal.province?.nameFa ?? '');
+  const [nameEn, setNameEn] = useState(modal.province?.nameEn ?? '');
+  const [status, setStatus] = useState<'active' | 'inactive'>(modal.province?.status ?? 'active');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<GeographyTextKey | null>(null);
+  const deactivating = modal.kind === 'deactivate';
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (busy) return;
     setError(null);
-    try {
-      await deleteProvince(province.id);
-      onDeleted();
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Delete failed');
-      setDeleting(false);
+    if (!deactivating) {
+      if (!nameFa.trim() || !/^[\u0600-\u06FF\u200C\s]+$/.test(nameFa.trim())) {
+        setError('invalidFa');
+        return;
+      }
+      if (!nameEn.trim() || !/^[a-zA-Z\s]+$/.test(nameEn.trim())) {
+        setError('invalidEn');
+        return;
+      }
     }
-  }, [province.id, onDeleted]);
-
+    setBusy(true);
+    try {
+      if (deactivating && modal.province) await deactivateProvince(modal.province.id);
+      else
+        await saveProvince(modal.province, {
+          nameFa: nameFa.trim(),
+          nameEn: nameEn.trim(),
+          status,
+        });
+      onSaved();
+    } catch (cause) {
+      setError(failureKey(cause));
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 p-6">
-        <h2 className="text-lg font-semibold mb-2">Delete Province</h2>
-        <p className="text-sm text-gray-600 mb-4">
-          Are you sure you want to deactivate <strong>{province.nameFa}</strong> ({province.nameEn}
-          )? The province will be set to inactive.
-        </p>
-
-        {error && (
-          <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded mb-4">{error}</div>
-        )}
-
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-            disabled={deleting}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={deleting}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50"
-          >
-            {deleting ? 'Deleting...' : 'Deactivate'}
-          </button>
-        </div>
-      </div>
-    </div>
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open && !busy) onClose();
+      }}
+    >
+      <DialogContent
+        showCloseButton={false}
+        initialFocus={deactivating ? undefined : firstField}
+        finalFocus={() => modal.trigger}
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      >
+        <DialogHeader>
+          <DialogTitle>
+            {t(deactivating ? 'deactivateTitle' : modal.kind === 'add' ? 'add' : 'editTitle')}
+          </DialogTitle>
+          <DialogDescription>
+            {deactivating
+              ? t('deactivateDescription').replace(
+                  '{name}',
+                  (locale === 'fa' ? modal.province?.nameFa : modal.province?.nameEn) ?? ''
+                )
+              : t('formDescription')}
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={submit} noValidate aria-busy={busy} className="flex flex-col gap-4">
+          {!deactivating && (
+            <fieldset disabled={busy} className="flex flex-col gap-4">
+              <legend className="sr-only">{t('editTitle')}</legend>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="province-name-fa">{t('nameFa')}</Label>
+                <Input
+                  id="province-name-fa"
+                  ref={firstField}
+                  dir="rtl"
+                  lang="fa"
+                  value={nameFa}
+                  onChange={(event) => setNameFa(event.target.value)}
+                  maxLength={100}
+                  required
+                  aria-invalid={error === 'invalidFa'}
+                  aria-describedby={error === 'invalidFa' ? 'province-error' : undefined}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="province-name-en">{t('nameEn')}</Label>
+                <Input
+                  id="province-name-en"
+                  dir="ltr"
+                  lang="en"
+                  value={nameEn}
+                  onChange={(event) => setNameEn(event.target.value)}
+                  maxLength={100}
+                  required
+                  aria-invalid={error === 'invalidEn'}
+                  aria-describedby={error === 'invalidEn' ? 'province-error' : undefined}
+                />
+              </div>
+              {modal.kind === 'edit' && (
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="province-status">{t('status')}</Label>
+                  <select
+                    id="province-status"
+                    className={selectClass}
+                    value={status}
+                    onChange={(event) => setStatus(event.target.value as 'active' | 'inactive')}
+                  >
+                    <option value="active">{t('active')}</option>
+                    <option value="inactive">{t('inactive')}</option>
+                  </select>
+                </div>
+              )}
+            </fieldset>
+          )}
+          {error && (
+            <Alert variant="destructive" role="alert" id="province-error">
+              <AlertDescription>{t(error)}</AlertDescription>
+            </Alert>
+          )}
+          <DialogFooter>
+            <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
+              {t('cancel')}
+            </Button>
+            <Button
+              type="submit"
+              variant={deactivating ? 'destructive' : 'default'}
+              disabled={busy}
+            >
+              {t(
+                busy
+                  ? deactivating
+                    ? 'deactivating'
+                    : 'saving'
+                  : deactivating
+                    ? 'deactivate'
+                    : modal.kind === 'add'
+                      ? 'create'
+                      : 'save'
+              )}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-// ---------------------------------------------------------------------------
-// AdminGeographyPage
-// ---------------------------------------------------------------------------
-
 export default function AdminGeographyPage() {
   const locale = useLocale();
+  const t = (key: GeographyTextKey) => geographyText(key, locale);
+  const { number } = useNumberFormatting(locale);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [limit] = useState(20);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'active' | 'inactive' | ''>('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Modal state
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [editingProvince, setEditingProvince] = useState<Province | null>(null);
-  const [deletingProvince, setDeletingProvince] = useState<Province | null>(null);
-
-  const fetchProvinces = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await listProvinces({
-        search: search || undefined,
-        status: statusFilter || undefined,
-        page,
-        limit,
-      });
-      setProvinces(data.provinces);
-      setTotal(data.total);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load provinces');
-    } finally {
-      setLoading(false);
-    }
-  }, [search, statusFilter, page, limit]);
-
-  useEffect(() => {
-    fetchProvinces();
-  }, [fetchProvinces]);
-
-  const totalPages = Math.ceil(total / limit);
-
-  // Debounced search
   const [searchInput, setSearchInput] = useState('');
+  const [status, setStatus] = useState('');
+  const [revision, setRevision] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<GeographyTextKey | null>(null);
+  const [modal, setModal] = useState<Modal | null>(null);
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearch(searchInput);
@@ -368,190 +209,175 @@ export default function AdminGeographyPage() {
     }, 300);
     return () => clearTimeout(timer);
   }, [searchInput]);
-
-  // -----------------------------------------------------------------------
-  // Loading state
-  // -----------------------------------------------------------------------
-
-  if (loading && provinces.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Loading...</div>
-      </div>
-    );
-  }
-
-  // -----------------------------------------------------------------------
-  // Render
-  // -----------------------------------------------------------------------
-
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setError(null);
+    listProvinces({ search, status, page }, controller.signal)
+      .then((result) => {
+        if (controller.signal.aborted) return;
+        setProvinces(result.provinces);
+        setTotal(result.total);
+        const lastPage = Math.max(1, Math.ceil(result.total / 20));
+        if (page > lastPage) setPage(lastPage);
+      })
+      .catch((cause: unknown) => {
+        if (!controller.signal.aborted) setError(failureKey(cause));
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [search, status, page, revision]);
+  const totalPages = Math.max(1, Math.ceil(total / 20));
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Province Management</h1>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+    <section
+      className="flex flex-col gap-4 text-foreground"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      aria-labelledby="province-heading"
+    >
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        <h1 id="province-heading" className="text-2xl font-bold">
+          {t('title')}
+        </h1>
+        <Button
+          onClick={(event) =>
+            setModal({ kind: 'add', province: null, trigger: event.currentTarget })
+          }
         >
-          + Add Province
-        </button>
-      </div>
-
-      {/* Filters */}
-      <div className="flex gap-4 mb-4">
-        <input
-          type="text"
-          aria-label={adminControlsText('provinceSearch', locale)}
+          {t('add')}
+        </Button>
+      </header>
+      <div className="flex flex-wrap gap-4">
+        <Input
+          className="max-w-sm"
+          aria-label={t('search')}
+          placeholder={t('search')}
           value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder={adminControlsText('provinceSearch', locale)}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(event) => setSearchInput(event.target.value)}
         />
         <select
-          aria-label={adminControlsText('statusFilter', locale)}
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value as 'active' | 'inactive' | '');
+          className={selectClass}
+          aria-label={t('status')}
+          value={status}
+          onChange={(event) => {
+            setStatus(event.target.value);
             setPage(1);
           }}
-          className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="">All statuses</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="">{t('all')}</option>
+          <option value="active">{t('active')}</option>
+          <option value="inactive">{t('inactive')}</option>
         </select>
       </div>
-
-      {/* Error */}
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded mb-4">{error}</div>
+        <Alert role="alert" variant="destructive">
+          <AlertDescription>
+            {t(error)}
+            <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+              {t('retry')}
+            </Button>
+          </AlertDescription>
+        </Alert>
       )}
-
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {loading && <p role="status">{t('loading')}</p>}
+      <div
+        className="overflow-x-auto rounded-md border bg-card text-card-foreground"
+        aria-busy={loading}
+      >
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <caption className="sr-only">{t('title')}</caption>
+          <thead>
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Persian Name</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">English Name</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-              <th className="text-right px-4 py-3 font-medium text-gray-600">Actions</th>
+              {(['nameFa', 'nameEn', 'status', 'actions'] as const).map((key) => (
+                <th key={key} scope="col" className="p-3 text-start">
+                  {t(key)}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
-            {provinces.length === 0 ? (
+          <tbody>
+            {!loading && !error && provinces.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
-                  No provinces found.
+                <td colSpan={4} className="p-4 text-center">
+                  {t('empty')}
                 </td>
               </tr>
-            ) : (
-              provinces.map((province) => (
-                <tr key={province.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3" dir="rtl">
-                    {province.nameFa}
-                  </td>
-                  <td className="px-4 py-3">{province.nameEn}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        province.status === 'active'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}
-                    >
-                      {province.status === 'active' ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={() => setEditingProvince(province)}
-                      className="text-blue-600 hover:text-blue-800 mr-3 text-sm"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() =>
-                        province.status === 'active'
-                          ? setDeletingProvince(province)
-                          : setEditingProvince(province)
-                      }
-                      className={`text-sm ${
-                        province.status === 'active'
-                          ? 'text-red-600 hover:text-red-800'
-                          : 'text-blue-600 hover:text-blue-800'
-                      }`}
-                    >
-                      {province.status === 'active' ? 'Deactivate' : 'Activate'}
-                    </button>
-                  </td>
-                </tr>
-              ))
             )}
+            {provinces.map((province) => (
+              <tr key={province.id} className="border-t">
+                <td className="p-3" dir="rtl" lang="fa">
+                  {province.nameFa}
+                </td>
+                <td className="p-3" dir="ltr" lang="en">
+                  {province.nameEn}
+                </td>
+                <td className="p-3">{t(province.status)}</td>
+                <td className="p-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={(event) =>
+                        setModal({ kind: 'edit', province, trigger: event.currentTarget })
+                      }
+                    >
+                      {t('edit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={(event) =>
+                        setModal({
+                          kind: province.status === 'active' ? 'deactivate' : 'edit',
+                          province,
+                          trigger: event.currentTarget,
+                        })
+                      }
+                    >
+                      {t(province.status === 'active' ? 'deactivate' : 'activate')}
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-4 text-sm text-gray-600">
-          <span>
-            Showing {Math.min((page - 1) * limit + 1, total)}–{Math.min(page * limit, total)} of{' '}
-            {total}
-          </span>
+        <nav aria-label={t('title')} className="flex flex-wrap items-center justify-between gap-4">
+          <p>
+            {t('range')
+              .replace('{from}', number((page - 1) * 20 + 1))
+              .replace('{to}', number(Math.min(page * 20, total)))
+              .replace('{total}', number(total))}
+          </p>
           <div className="flex gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-              className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
+            <Button
+              variant="outline"
+              disabled={loading || page <= 1}
+              onClick={() => setPage((value) => value - 1)}
             >
-              Previous
-            </button>
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages}
-              className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
+              {t('previous')}
+            </Button>
+            <Button
+              variant="outline"
+              disabled={loading || page >= totalPages}
+              onClick={() => setPage((value) => value + 1)}
             >
-              Next
-            </button>
+              {t('next')}
+            </Button>
           </div>
-        </div>
+        </nav>
       )}
-
-      {/* Modals */}
-      {showAddModal && (
-        <ProvinceFormModal
-          mode="add"
-          onClose={() => setShowAddModal(false)}
+      {modal && (
+        <ProvinceDialog
+          modal={modal}
+          onClose={() => setModal(null)}
           onSaved={() => {
-            setShowAddModal(false);
-            fetchProvinces();
+            setModal(null);
+            setRevision((value) => value + 1);
           }}
         />
       )}
-
-      {editingProvince && (
-        <ProvinceFormModal
-          mode="edit"
-          province={editingProvince}
-          onClose={() => setEditingProvince(null)}
-          onSaved={() => {
-            setEditingProvince(null);
-            fetchProvinces();
-          }}
-        />
-      )}
-
-      {deletingProvince && (
-        <DeleteConfirmModal
-          province={deletingProvince}
-          onClose={() => setDeletingProvince(null)}
-          onDeleted={() => {
-            setDeletingProvince(null);
-            fetchProvinces();
-          }}
-        />
-      )}
-    </div>
+    </section>
   );
 }

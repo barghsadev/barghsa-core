@@ -111,6 +111,11 @@
       "types": "./dist/terms.d.ts",
       "import": "./dist/terms.js",
       "default": "./dist/terms.js"
+    },
+    "./geography": {
+      "types": "./dist/geography.d.ts",
+      "import": "./dist/geography.js",
+      "default": "./dist/geography.js"
     }
   },
   "scripts": {
