@@ -97,6 +97,8 @@ async function main() {
     if (closing) return;
     closing = true;
     await http.close();
+    // The browser runner captures this output and attaches it only on failure.
+    process.stderr.write(http.logs());
     await new Promise<void>((done) => storage.close(() => done()));
     await teardown();
     process.exit(0);

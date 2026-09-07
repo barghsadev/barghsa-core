@@ -1755,3 +1755,9 @@ Review and validation: 14 focused browser checks pass across ordering and the pr
 Agent updates now perform model selection and related-reference validation in one explicit if/else branch, retaining the existing query order and scalar-only behavior. The previous repeated condition around awaited calls produced a negative implicit-else counter in V8-to-Istanbul output, reproduced with unit tests alone. The checker continues to reject negative counters; none are clamped or silently accepted.
 
 Review and validation: all 88 agent/service/controller/real-HTTP checks pass across six files. Focused coverage contains no negative branch counters after the refactor. Diagnostic focused coverage disabled only command-line whole-package floors because unrelated source is intentionally unexercised; committed thresholds and the changed-code gate are unchanged. Root types, lint, formatting and whitespace checks pass. Full coverage remains a separate required checkpoint.
+
+### Preserve API diagnostics for failed browser fixtures (F19)
+
+The administration browser fixture now captures bounded wrapper/API output and attaches it to a failed test after cleanup. This closes the diagnostic gap that left the earlier ECONNRESET without API logs. It adds no automatic request retry or passing override.
+
+Review and validation: ten activation checks passed across five repeats, followed by ten additional serial checks to avoid concurrent shared-build effects. Targeted formatting, root lint and whitespace checks pass. The connection reset did not reproduce; its root cause remains unknown and is not marked fixed. These diagnostic changes do not change production application behavior.

@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { setup as buildApi } from '../../api/src/test/build-http-app';
 let child: ChildProcess;
+let fixtureLogs = '';
 let http: {
   base: string;
   session: string;
@@ -21,13 +22,13 @@ test.beforeAll(async () => {
     [fileURLToPath(new URL('../../api/scripts/admin-ui-fixture.ts', import.meta.url))],
     { silent: true }
   );
-  let logs = '';
+  fixtureLogs = '';
   for (const stream of [child.stdout, child.stderr])
     stream?.on('data', (data) => {
-      logs = (logs + String(data)).slice(-10000);
+      fixtureLogs = (fixtureLogs + String(data)).slice(-30000);
     });
   http = await new Promise((done, reject) => {
-    const timer = setTimeout(() => reject(new Error(logs || 'Fixture timeout')), 60000);
+    const timer = setTimeout(() => reject(new Error(fixtureLogs || 'Fixture timeout')), 60000);
     child.once('message', (message) => {
       clearTimeout(timer);
       done(message as typeof http);
@@ -38,11 +39,11 @@ test.beforeAll(async () => {
     });
     child.once('exit', () => {
       clearTimeout(timer);
-      reject(new Error(logs || 'Fixture exited'));
+      reject(new Error(fixtureLogs || 'Fixture exited'));
     });
   });
 });
-test.afterAll(async () => {
+test.afterAll(async ({}, testInfo) => {
   if (child && child.exitCode === null && child.connected)
     await new Promise<void>((done) => {
       const timer = setTimeout(() => child.kill('SIGTERM'), 15000);
@@ -51,6 +52,11 @@ test.afterAll(async () => {
         done();
       });
       child.send('stop');
+    });
+  if (testInfo.status !== testInfo.expectedStatus)
+    await testInfo.attach('local-api-fixture.log', {
+      body: fixtureLogs || 'No fixture output was captured.',
+      contentType: 'text/plain',
     });
 });
 
