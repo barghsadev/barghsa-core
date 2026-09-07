@@ -2496,4 +2496,11 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'حذف پیش‌نویس' : 'Discard', exact: true })
       .click();
     await expect(discarded).toHaveCount(0);
+    await page.context().clearCookies();
+    await page.goto(`/terms?lang=${locale}`);
+    const document = page.getByRole('article');
+    await expect(document).toContainText(fa ? 'شرایط انتشار' : 'Published terms');
+    if (!fa) await expect(document.locator('strong')).toHaveText('Published terms');
+    await expect(document.locator('[lang]').last()).toHaveAttribute('dir', fa ? 'rtl' : 'ltr');
+    await page.screenshot({ path: testInfo.outputPath('public-terms.png'), fullPage: true });
   });

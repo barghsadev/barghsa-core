@@ -92,9 +92,6 @@ export class TosController {
    * The user must accept the CURRENT active version of the TOS.
    * On success, the acceptance is recorded immutably and the user's
    * `last_accepted_tos_version` is updated.
-   *
-   * Rate limits:
-   * - 10 acceptance attempts per IP per 60s
    */
   @UseGuards(SessionAuthGuard)
   @Post('accept')

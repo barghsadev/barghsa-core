@@ -315,3 +315,35 @@ it('accepts the canonical version URL with session and CSRF and preserves exact 
   expect(records[0].ip_address).toMatch(/127\.0\.0\.1/);
   expect(await acceptanceRequired()).toBe(false);
 });
+
+it('keeps earlier consent immutable and rolls back a new record when account update fails', async () => {
+  const first = await publish('consent-original', 'major');
+  expect((await acceptVersion(first)).status).toBe(200);
+  const original = (await http.pool.query('SELECT * FROM tos_acceptances ORDER BY accepted_at'))
+    .rows;
+  const second = await publish('consent-next', 'major');
+  await http.pool
+    .query(`CREATE FUNCTION reject_new_consent() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test account update failure'; END $$;
+    CREATE TRIGGER reject_new_consent BEFORE UPDATE OF last_accepted_tos_version ON users FOR EACH ROW EXECUTE FUNCTION reject_new_consent()`);
+  try {
+    expect((await acceptVersion(second)).status).toBe(500);
+    expect(
+      (await http.pool.query('SELECT * FROM tos_acceptances ORDER BY accepted_at')).rows
+    ).toEqual(original);
+    expect(
+      (await http.pool.query("SELECT last_accepted_tos_version FROM users WHERE user_id='other'"))
+        .rows[0].last_accepted_tos_version
+    ).toBe(first);
+    expect(await acceptanceRequired()).toBe(true);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER reject_new_consent ON users; DROP FUNCTION reject_new_consent()'
+    );
+  }
+  expect((await acceptVersion(second)).status).toBe(200);
+  const history = (await http.pool.query('SELECT * FROM tos_acceptances ORDER BY accepted_at'))
+    .rows;
+  expect(history).toHaveLength(2);
+  expect(history[0]).toEqual(original[0]);
+  expect(history[1].version_id).toBe(second);
+});

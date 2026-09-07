@@ -85,10 +85,14 @@ it('keeps consent bound to the displayed publication and supports later re-accep
   ]);
   await fixture.pool.query('UPDATE tos_versions SET is_active=false WHERE id=$1', [oldTerms]);
   await fixture.pool.query('UPDATE tos_versions SET is_active=true WHERE id=$1', [newTerms]);
-  const verified = await post('auth/register/verify', {
-    challengeId: challenge.challengeId,
-    otp: '123456',
-  });
+  const verified = await post(
+    'auth/register/verify',
+    {
+      challengeId: challenge.challengeId,
+      otp: '123456',
+    },
+    { 'User-Agent': 'Registration-consent-test/1.0' }
+  );
   const user = (await verified.json()) as { userId: string; csrfToken: string };
   expect(verified.status, JSON.stringify(user) + fixture.logs()).toBe(200);
   expect(
@@ -105,6 +109,19 @@ it('keeps consent bound to the displayed publication and supports later re-accep
       ])
     ).rows[0].last_accepted_tos_version
   ).toBe(oldTerms);
+  const registrationEvidence = (
+    await fixture.pool.query(
+      'SELECT user_id,version_id,accepted_at,ip_address,user_agent FROM tos_acceptances WHERE user_id=$1',
+      [user.userId]
+    )
+  ).rows[0];
+  expect(registrationEvidence).toMatchObject({
+    user_id: user.userId,
+    version_id: oldTerms,
+    user_agent: 'Registration-consent-test/1.0',
+  });
+  expect(registrationEvidence.accepted_at).toBeInstanceOf(Date);
+  expect(registrationEvidence.ip_address).toMatch(/127\.0\.0\.1/);
   const headers = {
     Cookie: verified.headers
       .getSetCookie()

@@ -2328,3 +2328,9 @@ All four English/Persian outage and malformed-response cases failed before repai
 The public document now validates content, version and timestamps before rendering. Malformed responses produce a localized error and retry instead of reaching the Markdown renderer. Each new load clears the previous document, and failed loads never display stale content. Visible Persian/English links switch the document language and direction without requiring an account.
 
 Both malformed-content browser cases failed before repair; the language-switch regression also exposed the missing control. All 25 focused production Chromium checks pass afterward, including public retry, language-switch failure/recovery, safe formatting, registration binding, consent loading and support exemptions. Web types, all 31 i18n checks, targeted lint, formatting, bundle limits and diff review pass.
+
+### Verify immutable acceptance history and transaction rollback
+
+Additional real HTTP evidence confirms registration stores the exact version, account, timestamp, IP and request user-agent. An injected account-update failure rolls back the new acceptance row, preserves the old record byte-for-byte at the returned-field level and leaves re-acceptance required. Removing the failure permits a second append without altering the first record. All 29 focused API checks pass. An inaccurate controller comment claiming an unenforced acceptance rate limit was removed; no new rate-limit behavior is claimed.
+
+Both live administrator flows now clear authentication and read the actual published document through the public page in Persian/English. Both pass, and the Persian public screenshot was visually reviewed. API types, targeted API/browser lint, formatting and diff review pass. Final editor review found a separate create-conflict recovery issue, so editor acceptance remains open until that repair is checked.
