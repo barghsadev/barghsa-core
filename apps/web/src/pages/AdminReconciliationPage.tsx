@@ -1,7 +1,10 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n';
 import {
   Button,
+  datePickerAtTime,
+  datePickerCalendarDate,
   Input,
   Label,
   Dialog,
@@ -28,6 +31,7 @@ const statuses = ['open', 'investigating', 'resolved', 'closed'];
 const severities = ['low', 'medium', 'high', 'critical'];
 const pageSize = 25;
 export default function AdminReconciliationPage() {
+  const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.reconciliation.${key}`, locale);
   const [status, setStatus] = useState('open'),
@@ -86,12 +90,21 @@ export default function AdminReconciliationPage() {
     })();
     return () => controller.abort();
   }, [query, offset, revision]);
+  function filterInstant(value: string): Date | undefined {
+    if (time.status !== 'ready') return undefined;
+    const match = /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})$/.exec(value);
+    if (!match) return undefined;
+    const date = datePickerCalendarDate(match[1]!, time.timezone);
+    return date && datePickerAtTime(date, Number(match[2]), Number(match[3]), time.timezone);
+  }
   function filter(event: FormEvent) {
     event.preventDefault();
+    const fromInstant = from ? filterInstant(from) : undefined;
+    const beforeInstant = before ? filterInstant(before) : undefined;
     if (
-      (from && !Number.isFinite(Date.parse(from))) ||
-      (before && !Number.isFinite(Date.parse(before))) ||
-      (from && before && Date.parse(from) >= Date.parse(before))
+      (from && !fromInstant) ||
+      (before && !beforeInstant) ||
+      (fromInstant && beforeInstant && fromInstant >= beforeInstant)
     ) {
       setInvalid(true);
       return;
@@ -102,8 +115,8 @@ export default function AdminReconciliationPage() {
     const params = new URLSearchParams();
     if (status) params.set('status', status);
     if (severity) params.set('severity', severity);
-    if (from) params.set('createdFrom', new Date(from).toISOString());
-    if (before) params.set('createdBefore', new Date(before).toISOString());
+    if (fromInstant) params.set('createdFrom', fromInstant.toISOString());
+    if (beforeInstant) params.set('createdBefore', beforeInstant.toISOString());
     setQuery(params.toString());
     setRevision((v) => v + 1);
   }
@@ -120,13 +133,10 @@ export default function AdminReconciliationPage() {
     });
     setSelected(null);
   }
-  const date = (value: string) =>
-    new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-GB', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    }).format(new Date(value));
+  const date = (value: string) => time.format(value);
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <header>
         <h1 className="text-2xl font-semibold">{label('title')}</h1>
         <p className="text-muted-foreground">{label('description')}</p>
@@ -175,7 +185,9 @@ export default function AdminReconciliationPage() {
           />
         </div>
         <Button type="submit">{label('apply')}</Button>
-        <p className="w-full text-sm text-muted-foreground">{label('timeHint')}</p>
+        <p className="w-full text-sm text-muted-foreground">
+          {time.status === 'ready' && label('timeHint').replace('{zone}', time.timezone)}
+        </p>
         {invalid && <p role="alert">{label('invalidDates')}</p>}
       </form>
       {saved && <p role="status">{label('saved')}</p>}

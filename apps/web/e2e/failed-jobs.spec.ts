@@ -31,6 +31,9 @@ for (const locale of ['en', 'fa'])
     const queries: URLSearchParams[] = [],
       attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route('**/api/admin/failed-jobs/access', (route) =>
       route.fulfill({ json: { canView, canRetry } })
     );
@@ -66,6 +69,13 @@ for (const locale of ['en', 'fa'])
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
     await expect(page.locator('tbody tr')).toHaveCount(25);
+    await expect(page.locator('tbody tr').first()).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date(jobs[0]!.firstFailedAt))
+    );
     await expect(page.getByRole('checkbox')).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');

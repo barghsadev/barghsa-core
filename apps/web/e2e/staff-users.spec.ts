@@ -18,6 +18,9 @@ for (const locale of ['en', 'fa'] as const) {
       failSave = true;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route('**/api/admin/staff-access', (route) =>
       route.fulfill({
         json: {
@@ -267,6 +270,9 @@ for (const locale of ['en', 'fa'] as const) {
     const fa = locale === 'fa';
     let attempts = 0;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route('**/api/admin/staff-access', (route) =>
       route.fulfill({
         json: {

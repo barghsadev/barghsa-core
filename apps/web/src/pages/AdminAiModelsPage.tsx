@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex -- The labelled, horizontally scrollable table region must be keyboard-focusable. */
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n';
@@ -35,6 +36,7 @@ const blank = (): Draft => ({
   masked: '',
 });
 export default function AdminAiModelsPage() {
+  const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.aiModels.${key}`, locale);
   const [models, setModels] = useState<Model[]>([]),
@@ -116,6 +118,7 @@ export default function AdminAiModelsPage() {
   }
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">{label('title')}</h1>
@@ -291,11 +294,7 @@ export default function AdminAiModelsPage() {
                         <p>{label(model.status)}</p>
                         {model.lastTestedAt && (
                           <p>
-                            {label('lastTest')}:{' '}
-                            {new Intl.DateTimeFormat(locale, {
-                              dateStyle: 'medium',
-                              timeStyle: 'short',
-                            }).format(new Date(model.lastTestedAt))}
+                            {label('lastTest')}: {time.format(model.lastTestedAt)}
                           </p>
                         )}
                         {model.lastTestError && (

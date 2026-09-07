@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n';
 import { BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
@@ -21,6 +22,7 @@ interface Job {
 const statuses = ['failed', 'retrying', 'dead_letter', 'resolved', 'all'];
 const pageSize = 25;
 export default function AdminFailedJobsPage() {
+  const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.jobs.${key}`, locale);
   const [status, setStatus] = useState('failed'),
@@ -92,13 +94,7 @@ export default function AdminFailedJobsPage() {
       value = t(key, locale);
     return value === key ? type : value;
   };
-  const date = (value: string | null) =>
-    value
-      ? new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-GB', {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-        }).format(new Date(value))
-      : label('none');
+  const date = (value: string | null) => (value ? time.format(value) : label('none'));
   function act(kind: 'retry' | 'resolve', ids: string[]) {
     const bulk = ids.length > 1;
     setAction({
@@ -121,6 +117,7 @@ export default function AdminFailedJobsPage() {
   }
   return (
     <section className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">{label('title')}</h1>
@@ -188,7 +185,7 @@ export default function AdminFailedJobsPage() {
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
-            {label('timezone').replace('{zone}', Intl.DateTimeFormat().resolvedOptions().timeZone)}
+            {time.status === 'ready' && label('timezone').replace('{zone}', time.timezone)}
           </p>
           {access.canRetry && (
             <Button

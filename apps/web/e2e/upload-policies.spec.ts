@@ -16,6 +16,9 @@ for (const locale of ['en', 'fa'])
       failSave = true;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route('**/api/admin/upload-policies/access', (route) =>
       route.fulfill({ json: { canEdit } })
     );

@@ -2134,3 +2134,11 @@ Clean implementation HEAD `df62d17d69d844d84dd07c190effa13371594406` passes 5,14
 The combined changed-code report still fails six of 13 groups with no collection errors. API critical is 90.23% lines / 76.27% branches; web general 62.41% / 58.46%; web critical 74.61% / 71.96%; database general 81.14% / 59.52%; i18n critical 100% / 83.33%; UI general 51.18% / 64.82%. Required thresholds are unchanged. Passing tests do not satisfy these remaining coverage gates. Production image evidence still predates the branding runtime changes.
 
 The task acceptance register now contains 22 assessments: 14 verified and eight partial, with 300 still awaiting individual closure. Branding settings, theme application and timezone utilities are explicitly partial with the remaining requirements above; their merged PR evidence is preserved separately.
+
+### Use account timezone for six administrator timestamp consumers
+
+Failed jobs, contract template history, upload policy history, reconciliation, AI model test times and staff activation/login dates now share one account-time formatter per screen. A failed preference read shows a localized retry and unavailable times instead of a guessed browser timezone. Staff permission history already used the account preference and was retained.
+
+Reconciliation's datetime filters also used device-local conversion. They now resolve the entered Gregorian wall-clock values in the account timezone, preserve the exclusive end bound and reject invalid/skipped DST times. Both language hints identify the account timezone.
+
+Review and validation: all 60 selected production browser checks pass, including all live administrator flows, explicit account-zone date assertions, exact UTC reconciliation filter values and rejection of the Los Angeles spring DST gap. Two formatter-hook tests pass for unavailable preferences, successful retry and timezone changes. Root build, types, targeted lint, formatting and bundle checks pass. Existing browser fixtures now provide a timezone response independently from intentional business endpoint failures. General customer/finance/TOS timestamp displays remain to be migrated. The combined full-suite checkpoint predates this step.

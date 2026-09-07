@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n';
@@ -42,6 +43,7 @@ const blank = () => ({
 });
 
 export default function AdminStaffUsersPage() {
+  const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.staff.${key}`, locale);
   const [access, setAccess] = useState<Access | null>(null),
@@ -136,6 +138,7 @@ export default function AdminStaffUsersPage() {
   );
   return (
     <section className="mx-auto max-w-5xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">{label('title')}</h1>
@@ -246,23 +249,14 @@ export default function AdminStaffUsersPage() {
                               {staff.activationExpiresAt && (
                                 <>
                                   {' '}
-                                  · {label('expires')}:{' '}
-                                  {new Intl.DateTimeFormat(locale, {
-                                    dateStyle: 'medium',
-                                    timeStyle: 'short',
-                                  }).format(new Date(staff.activationExpiresAt))}
+                                  · {label('expires')}: {time.format(staff.activationExpiresAt)}
                                 </>
                               )}
                             </p>
                           )}
                         </td>
                         <td className="p-3">
-                          {staff.lastLoginAt
-                            ? new Intl.DateTimeFormat(locale, {
-                                dateStyle: 'medium',
-                                timeStyle: 'short',
-                              }).format(new Date(staff.lastLoginAt))
-                            : label('never')}
+                          {staff.lastLoginAt ? time.format(staff.lastLoginAt) : label('never')}
                         </td>
                         <td className="p-3">
                           <div className="flex gap-2">

@@ -14,6 +14,9 @@ for (const locale of ['en', 'fa'])
       canResolve = false;
     const queries: string[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route('**/api/admin/reconciliation/items**', (route) => {
       const url = new URL(route.request().url());
       if (url.pathname.endsWith('/access')) return route.fulfill({ json: { canView, canResolve } });
@@ -40,6 +43,13 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toContainText(fa ? 'دریافت مغایرت‌ها' : 'Could not load');
     fail = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Retry', exact: true }).click();
+    await expect(page.locator('tbody tr').first()).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date('2026-09-01T00:00:00Z'))
+    );
     await page.getByRole('button', { name: 'Mismatch 0', exact: true }).click();
     await expect(
       page
@@ -56,6 +66,19 @@ for (const locale of ['en', 'fa'])
     ).toBeDisabled();
     expect(queries.some((query) => query.includes('offset=25'))).toBe(true);
     canResolve = true;
+    const beforeInvalid = queries.length;
+    await page
+      .getByLabel(fa ? 'تاریخ ایجاد از' : 'Created from', { exact: true })
+      .fill('2026-03-08T02:30');
+    await page
+      .getByLabel(fa ? 'تاریخ ایجاد تا پیش از' : 'Created before', { exact: true })
+      .fill('2026-03-08T04:30');
+    await page
+      .getByRole('button', { name: fa ? 'اعمال فیلترها' : 'Apply filters', exact: true })
+      .click();
+    await expect(page.getByRole('alert')).toBeVisible();
+    expect(queries).toHaveLength(beforeInvalid);
+
     await page
       .getByLabel(fa ? 'تاریخ ایجاد از' : 'Created from', { exact: true })
       .fill('2026-09-01T00:00');
@@ -65,6 +88,12 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'اعمال فیلترها' : 'Apply filters', exact: true })
       .click();
+    await expect
+      .poll(() => new URLSearchParams(queries.at(-1)).get('createdFrom'))
+      .toBe('2026-09-01T07:00:00.000Z');
+    expect(new URLSearchParams(queries.at(-1)).get('createdBefore')).toBe(
+      '2026-09-03T07:00:00.000Z'
+    );
     await page.getByRole('button', { name: 'Mismatch 0', exact: true }).click();
     await page.getByLabel(fa ? 'توضیح' : 'Explanation', { exact: true }).fill('Review note');
     await page.getByRole('button', { name: fa ? 'رفع مغایرت' : 'Resolve', exact: true }).click();

@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
 import { t } from '@barghsa/i18n';
@@ -8,6 +9,7 @@ type Draft = { name: string; description: string; status: 'active' | 'inactive' 
 type Upload = { fileName: string; contentType: string; content: string };
 const MAX_BYTES = 10 * 1024 * 1024;
 export default function AdminContractTemplatesPage() {
+  const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.templates.${key}`, locale);
   const [rows, setRows] = useState<ContractTemplateDto[]>([]),
@@ -145,6 +147,7 @@ export default function AdminContractTemplatesPage() {
       className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
+      {time.notice}
       <h1 className="text-2xl font-semibold">{label('title')}</h1>
       <div>
         <Button
@@ -270,9 +273,7 @@ export default function AdminContractTemplatesPage() {
                       {label('version')} {version.versionNumber.toLocaleString(locale)}
                     </h3>
                     <p className="break-words">{version.fileName}</p>
-                    <time dateTime={version.createdAt}>
-                      {new Date(version.createdAt).toLocaleString(locale)}
-                    </time>
+                    <time dateTime={version.createdAt}>{time.format(version.createdAt)}</time>
                     <p>{label('placeholders')}</p>
                     <p className="break-words" dir="ltr">
                       {version.placeholders.length

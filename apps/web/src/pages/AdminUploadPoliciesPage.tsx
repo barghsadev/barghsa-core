@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n';
 import type { UploadPolicyDto } from '@barghsa/shared/admin';
@@ -26,6 +27,7 @@ interface Editor {
 }
 const mib = 1024 * 1024;
 export default function AdminUploadPoliciesPage() {
+  const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.uploadPolicies.${key}`, locale);
   const [limits, setLimits] = useState<Limit[]>([]),
@@ -80,13 +82,7 @@ export default function AdminUploadPoliciesPage() {
   }, [revision]);
   const size = (bytes: number) =>
     `${new Intl.NumberFormat(locale, { maximumFractionDigits: 6 }).format(bytes / mib)} ${label('mib')}`;
-  const date = (value: string | null) =>
-    value
-      ? new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-GB', {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-        }).format(new Date(value))
-      : label('openEnded');
+  const date = (value: string | null) => (value ? time.format(value) : label('openEnded'));
   const errors = {
     UPLOAD_POLICY_INVALID_EFFECTIVE_FROM: label('scheduleConflict'),
     UPLOAD_POLICY_WINDOW_OVERLAP: label('scheduleConflict'),
@@ -148,6 +144,7 @@ export default function AdminUploadPoliciesPage() {
   }
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <header className="flex flex-wrap justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">{label('title')}</h1>

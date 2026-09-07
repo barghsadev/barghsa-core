@@ -1,4 +1,6 @@
 const en = {
+  'display.pending': 'Time unavailable',
+  'display.invalid': 'Invalid timestamp',
   title: 'Timezone Settings',
   description: 'Select your timezone. All date and time displays will use this setting.',
   preview: 'Current time in selected timezone:',
@@ -14,6 +16,8 @@ const en = {
 } as const;
 
 const fa: Record<keyof typeof en, string> = {
+  'display.pending': 'زمان در دسترس نیست',
+  'display.invalid': 'زمان نامعتبر',
   title: 'تنظیمات منطقه زمانی',
   description:
     'منطقه زمانی خود را انتخاب کنید. تمام نمایش‌های تاریخ و ساعت بر اساس این تنظیم خواهد بود.',

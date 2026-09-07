@@ -12,6 +12,9 @@ for (const locale of ['en', 'fa'])
       denied = false;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
     await page.route('**/api/admin/contract-templates', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
