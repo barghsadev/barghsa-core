@@ -610,7 +610,7 @@ it('distinguishes Word and spreadsheet containers from arbitrary ZIP archives', 
     ['legacy.doc', 'doc', 'application/msword', 'confirmed'],
     ['legacy.xls', 'xls', 'application/vnd.ms-excel', 'confirmed'],
   ] as const) {
-    const bytes = await readFile(resolve(__dirname, '../test/fixtures/uploads', fixture));
+    const bytes = await readFile(resolve(__dirname, '../../test/fixtures/uploads', fixture));
     const details = {
       fileName: `document.${extension}`,
       contentType: mime,

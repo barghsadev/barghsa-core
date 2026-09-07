@@ -5,11 +5,13 @@ import { mergeProcessCovs } from '@bcoe/v8-coverage';
 import { mkdir, readdir, readFile, rm } from 'node:fs/promises';
 import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readProcessCoverageSource } from './process-coverage-source.mjs';
 
 export class ProcessV8CoverageProvider extends V8CoverageProvider {
   environmentKey = 'BARGHSA_HTTP_COVERAGE_DIR';
   compiledDirectory = 'dist/src';
   processLabel = 'HTTP';
+  copiedSources = {};
 
   initialize(ctx) {
     super.initialize(ctx);
@@ -39,14 +41,15 @@ export class ProcessV8CoverageProvider extends V8CoverageProvider {
     }
     for (const entry of merged.result) {
       const filename = fileURLToPath(entry.url);
-      const code = await readFile(filename, 'utf8');
-      // Production compilers emit external maps pointing to the original TypeScript.
-      // A missing map is an error, never a silently omitted process path.
-      const map = JSON.parse(await readFile(filename + '.map', 'utf8'));
-      map.sources = map.sources.map((source) => new URL(source, entry.url).href);
-      if (!map.sources.some((source) => this.isIncluded(fileURLToPath(source)))) continue;
+      const { url, code, map } = await readProcessCoverageSource(
+        filename,
+        this.ctx.config.root,
+        this.copiedSources
+      );
+      if (!(map?.sources ?? [url]).some((source) => this.isIncluded(fileURLToPath(source))))
+        continue;
       const mapped = createCoverageMap(
-        await this.remapCoverage(entry.url, 0, { code, map }, entry.functions)
+        await this.remapCoverage(url, 0, { code, map }, entry.functions)
       );
       for (const source of mapped.files()) {
         const incoming = mapped.fileCoverageFor(source).toJSON();
