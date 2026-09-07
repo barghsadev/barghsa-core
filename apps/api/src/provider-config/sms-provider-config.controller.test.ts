@@ -145,6 +145,7 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
       mockDisable.mockResolvedValue(baseResult({ status: 'disabled' }));
       const result = await controller.disable(adminReq, 'cfg-1');
       expect(result.status).toBe('disabled');
+      expect(mockDisable).toHaveBeenCalledWith('cfg-1', 'admin-1');
     });
 
     it('rolls back for an admin', async () => {

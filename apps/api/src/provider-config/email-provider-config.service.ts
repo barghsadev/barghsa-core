@@ -347,17 +347,17 @@ export class EmailProviderConfigService {
    * show who promoted this configuration to active (T-05.06.04).
    */
   async activate(id: string, activatedBy?: string): Promise<EmailProviderConfigResult> {
-    const existing = await this.findById(id);
-    if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
-    if (existing.status === 'active') return existing;
-    if (existing.status !== 'draft') {
-      throw new HttpException(ProviderErrors.notEditable(), 409);
-    }
-    if (existing.lastTestStatus !== 'passed') {
-      throw new HttpException(ProviderErrors.testRequired(), 409);
-    }
+    return mutateProvider(this.db, activatedBy, 'email', 'activated', async (client) => {
+      const existing = await this.findById(id, client, true);
+      if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
+      if (existing.status === 'active') return existing;
+      if (existing.status !== 'draft') {
+        throw new HttpException(ProviderErrors.notEditable(), 409);
+      }
+      if (existing.lastTestStatus !== 'passed') {
+        throw new HttpException(ProviderErrors.testRequired(), 409);
+      }
 
-    await this.runTransaction(async (client) => {
       // Demote the current active -> superseded, capture it as the source of
       // this new active (for the rollback link).
       const before = await client.query(
@@ -372,55 +372,57 @@ export class EmailProviderConfigService {
           WHERE id = $1 AND status = 'draft'`,
         [id, supersedesId, activatedBy ?? null]
       );
-    });
 
-    const row = await this.findById(id);
-    if (!row) throw new Error('Failed to read activated provider config');
-    return row;
+      const row = await this.findById(id, client);
+      if (!row) throw new Error('Failed to read activated provider config');
+      return row;
+    });
   }
 
   /**
    * Disable a configuration. Disabling the sole ACTIVE provider is blocked to
    * guarantee an out-of-band OTP recovery path exists.
    */
-  async disable(id: string): Promise<EmailProviderConfigResult> {
-    const existing = await this.findById(id);
-    if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
-    if (existing.status === 'disabled') return existing;
-    if (existing.status === 'superseded') {
-      throw new HttpException(ProviderErrors.notEditable(), 409);
-    }
+  async disable(id: string, actorUserId?: string): Promise<EmailProviderConfigResult> {
+    return mutateProvider(this.db, actorUserId, 'email', 'disabled', async (client) => {
+      const existing = await this.findById(id, client, true);
+      if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
+      if (existing.status === 'disabled') return existing;
+      if (existing.status === 'superseded') {
+        throw new HttpException(ProviderErrors.notEditable(), 409);
+      }
 
-    if (existing.status === 'active') {
-      const count = await this.db.query(
-        `SELECT COUNT(*) AS n FROM email_provider_configs WHERE status = 'active'`
-      );
-      const activeCount = parseInt((count.rows[0] as { n?: string } | undefined)?.n ?? '0', 10);
-      if (activeCount <= 1) {
-        // Block only when this is the sole active provider AND no recovery path
-        // (a superseded/disabled version to roll back to) exists — otherwise an
-        // out-of-band OTP recovery route would be lost.
-        const recovery = await this.db.query(
-          `SELECT COUNT(*) AS n FROM email_provider_configs
+      if (existing.status === 'active') {
+        const count = await client.query(
+          `SELECT COUNT(*) AS n FROM email_provider_configs WHERE status = 'active'`
+        );
+        const activeCount = parseInt((count.rows[0] as { n?: string } | undefined)?.n ?? '0', 10);
+        if (activeCount <= 1) {
+          // Block only when this is the sole active provider AND no recovery path
+          // (a superseded/disabled version to roll back to) exists — otherwise an
+          // out-of-band OTP recovery route would be lost.
+          const recovery = await client.query(
+            `SELECT COUNT(*) AS n FROM email_provider_configs
             WHERE id <> $1 AND status IN ('superseded', 'disabled')`,
-          [id]
-        );
-        const recoveryCount = parseInt(
-          (recovery.rows[0] as { n?: string } | undefined)?.n ?? '0',
-          10
-        );
-        if (recoveryCount === 0) {
-          throw new HttpException(ProviderErrors.soleOtpProvider(), 409);
+            [id]
+          );
+          const recoveryCount = parseInt(
+            (recovery.rows[0] as { n?: string } | undefined)?.n ?? '0',
+            10
+          );
+          if (recoveryCount === 0) {
+            throw new HttpException(ProviderErrors.soleOtpProvider(), 409);
+          }
         }
       }
-    }
 
-    await this.db.query(`UPDATE email_provider_configs SET status = 'disabled' WHERE id = $1`, [
-      id,
-    ]);
-    const row = await this.findById(id);
-    if (!row) throw new Error('Failed to read disabled provider config');
-    return row;
+      await client.query(`UPDATE email_provider_configs SET status = 'disabled' WHERE id = $1`, [
+        id,
+      ]);
+      const row = await this.findById(id, client);
+      if (!row) throw new Error('Failed to read disabled provider config');
+      return row;
+    });
   }
 
   /**
@@ -429,26 +431,28 @@ export class EmailProviderConfigService {
    * UI's "Rollback to this version" action (T-05.00.04).
    */
   async rollback(supersededId: string, createdBy: string): Promise<EmailProviderConfigResult> {
-    const source = await this.findById(supersededId);
-    if (!source) throw new HttpException(ProviderErrors.notFound(), 404);
-    if (
-      (source.status !== 'superseded' && source.status !== 'disabled') ||
-      source.lastTestStatus !== 'passed' ||
-      !source.activatedAt
-    ) {
-      throw new HttpException(ProviderErrors.invalidRollbackSource(), 409);
-    }
+    return mutateProvider(this.db, createdBy, 'email', 'rolled_back', async (client) => {
+      const source = await this.findById(supersededId, client, true);
+      if (!source) throw new HttpException(ProviderErrors.notFound(), 404);
+      if (
+        (source.status !== 'superseded' && source.status !== 'disabled') ||
+        source.lastTestStatus !== 'passed' ||
+        !source.activatedAt
+      ) {
+        throw new HttpException(ProviderErrors.invalidRollbackSource(), 409);
+      }
 
-    const config = await this.readConfig(source.id);
-    const created = await this.create({
-      transport: source.transport,
-      label: `${source.label} (rollback)`,
-      config,
-      createdBy,
-    });
-
-    // Activate the fresh clone in a transaction (known-good source, no re-test).
-    await this.runTransaction(async (client) => {
+      const config = this.secrets.encryptConfig(
+        source.transport,
+        await this.readConfig(source.id, client)
+      );
+      const id = uuidv7();
+      await client.query(
+        `INSERT INTO email_provider_configs
+         (id, transport, label, status, config, created_by, supersedes_id)
+         VALUES ($1, $2, $3, 'draft', $4, $5, $6)`,
+        [id, source.transport, `${source.label} (rollback)`, config, createdBy, null]
+      );
       const before = await client.query(
         `UPDATE email_provider_configs SET status = 'superseded'
           WHERE status = 'active' RETURNING id`
@@ -456,16 +460,15 @@ export class EmailProviderConfigService {
       const priorActiveId = (before.rows[0] as { id?: string } | undefined)?.id ?? null;
       await client.query(
         `UPDATE email_provider_configs
-            SET status = 'active', activated_at = NOW(),
-                last_test_status = 'passed', supersedes_id = $2, activated_by = $3
+          SET status = 'active', activated_at = NOW(),
+              last_test_status = 'passed', supersedes_id = $2, activated_by = $3
           WHERE id = $1`,
-        [created.id, priorActiveId, createdBy]
+        [id, priorActiveId, createdBy]
       );
+      const row = await this.findById(id, client);
+      if (!row) throw new Error('Failed to read rolled-back provider config');
+      return row;
     });
-
-    const row = await this.findById(created.id);
-    if (!row) throw new Error('Failed to read rolled-back provider config');
-    return row;
   }
 
   /* ---------------------------- Connection test ------------------------- */
@@ -685,41 +688,17 @@ export class EmailProviderConfigService {
   /* ------------------------- Transaction + helpers ----------------------- */
 
   /**
-   * Run a unit of work on a dedicated connection inside an explicit
-   * BEGIN/COMMIT/ROLLBACK transaction (matches repo convention). Re-maps the
-   * SQLSTATE 23505 unique violation to a domain-friendly 409.
-   */
-  private async runTransaction(work: (client: PoolClient) => Promise<void>): Promise<void> {
-    const pool = this.db;
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      await work(client);
-      await client.query('COMMIT');
-    } catch (error) {
-      try {
-        await client.query('ROLLBACK');
-      } catch {
-        /* rollback already failed / connection dropped */
-      }
-      if (error instanceof Error && (error as { code?: string }).code === '23505') {
-        throw new HttpException(ProviderErrors.alreadyActive(), 409);
-      }
-      throw error;
-    } finally {
-      client.release();
-    }
-  }
-
-  /**
    * Read the stored config for a row with secret fields decrypted. This is the
    * decryption boundary (T-05.06.05): ONLY consumers that actually send — the
    * SMTP/Resend connection testers and rollback (which re-encrypts on create)
    * — read via this helper. Never exposed in API results; `maskRow` attaches a
    * masked view instead.
    */
-  private async readConfig(id: string): Promise<ProviderConfigBody> {
-    const result = await this.db.query(
+  private async readConfig(
+    id: string,
+    query: Pick<ProviderPool, 'query'> = this.db
+  ): Promise<ProviderConfigBody> {
+    const result = await query.query(
       `SELECT config, transport FROM email_provider_configs WHERE id = $1`,
       [id]
     );

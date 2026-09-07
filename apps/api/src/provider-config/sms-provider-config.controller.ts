@@ -241,7 +241,7 @@ export class SmsProviderConfigController {
     @Param('id') id: string
   ): Promise<SmsProviderConfigResult> {
     this.assertProviderEditPermission(req);
-    return this.service.disable(id);
+    return this.service.disable(id, req.session.userId);
   }
 
   @Post(':id/rollback')

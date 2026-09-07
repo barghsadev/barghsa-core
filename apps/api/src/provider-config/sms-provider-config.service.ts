@@ -10,7 +10,7 @@ import {
   type ProviderMaskedConfig,
   type ProviderTransport,
 } from './provider-secrets.service';
-import { PROVIDER_CONFIG_POOL, type PoolClient, type ProviderPool } from './provider-config.di';
+import { PROVIDER_CONFIG_POOL, type ProviderPool } from './provider-config.di';
 
 /**
  * SMS provider configuration service (T-09.06.02).
@@ -183,8 +183,10 @@ export class SmsProviderConfigService {
    * to power the admin UI's event dropdown. Reads the `notification_templates`
    * table directly so the admin surface reflects real template availability.
    */
-  async availableTemplateEventKeys(): Promise<Set<string>> {
-    const result = await this.db.query(
+  async availableTemplateEventKeys(
+    query: Pick<ProviderPool, 'query'> = this.db
+  ): Promise<Set<string>> {
+    const result = await query.query(
       `SELECT DISTINCT event_key FROM notification_templates
         WHERE is_active = true AND channel = 'sms'`
     );
@@ -329,19 +331,19 @@ export class SmsProviderConfigService {
    * current active config transactionally.
    */
   async activate(id: string, activatedBy?: string): Promise<SmsProviderConfigResult> {
-    const existing = await this.findById(id);
-    if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
-    if (existing.status === 'active') return existing;
-    if (existing.status !== 'draft') {
-      throw new HttpException(SmsProviderErrors.notEditable(), 409);
-    }
-    if (existing.lastTestStatus !== 'passed') {
-      throw new HttpException(SmsProviderErrors.testRequired(), 409);
-    }
+    return mutateProvider(this.db, activatedBy, 'sms', 'activated', async (client) => {
+      const existing = await this.findById(id, client, true);
+      if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
+      if (existing.status === 'active') return existing;
+      if (existing.status !== 'draft') {
+        throw new HttpException(SmsProviderErrors.notEditable(), 409);
+      }
+      if (existing.lastTestStatus !== 'passed') {
+        throw new HttpException(SmsProviderErrors.testRequired(), 409);
+      }
 
-    await this.validateTemplateMappings(id);
+      await this.validateTemplateMappings(id, client);
 
-    await this.runTransaction(async (client) => {
       const before = await client.query(
         `UPDATE sms_provider_configs SET status = 'superseded'
           WHERE status = 'active' RETURNING id`
@@ -354,11 +356,11 @@ export class SmsProviderConfigService {
           WHERE id = $1 AND status = 'draft'`,
         [id, supersedesId, activatedBy ?? null]
       );
-    });
 
-    const row = await this.findById(id);
-    if (!row) throw new Error('Failed to read activated SMS provider config');
-    return row;
+      const row = await this.findById(id, client);
+      if (!row) throw new Error('Failed to read activated SMS provider config');
+      return row;
+    });
   }
 
   /**
@@ -369,8 +371,11 @@ export class SmsProviderConfigService {
    * `testConnection`'s live test-send, which activation requires to have
    * passed (`last_test_status = 'passed'`) — see `SmsirConnectionTesterService`.
    */
-  private async validateTemplateMappings(id: string): Promise<void> {
-    const saved = await this.readConfig(id);
+  private async validateTemplateMappings(
+    id: string,
+    query: Pick<ProviderPool, 'query'> = this.db
+  ): Promise<void> {
+    const saved = await this.readConfig(id, query);
     const parsed = parseSmsirConfig(saved);
     if (!parsed.ok) {
       throw new HttpException(
@@ -381,7 +386,7 @@ export class SmsProviderConfigService {
     const mappings = parsed.config.template_mappings ?? [];
     if (mappings.length === 0) return;
 
-    const available = await this.availableTemplateEventKeys();
+    const available = await this.availableTemplateEventKeys(query);
     const problems: string[] = [];
     for (const m of mappings) {
       if (!m.template_id || m.template_id.trim().length === 0) {
@@ -399,45 +404,45 @@ export class SmsProviderConfigService {
   }
 
   /** Disable a configuration (no sole-provider OTP guard for SMS — SMS is not an OTP out-of-band channel). */
-  async disable(id: string): Promise<SmsProviderConfigResult> {
-    const existing = await this.findById(id);
-    if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
-    if (existing.status === 'disabled') return existing;
-    if (existing.status === 'superseded') {
-      throw new HttpException(SmsProviderErrors.notEditable(), 409);
-    }
-    await this.db.query(`UPDATE sms_provider_configs SET status = 'disabled' WHERE id = $1`, [id]);
-    const row = await this.findById(id);
-    if (!row) throw new Error('Failed to read disabled SMS provider config');
-    return row;
+  async disable(id: string, actorUserId?: string): Promise<SmsProviderConfigResult> {
+    return mutateProvider(this.db, actorUserId, 'sms', 'disabled', async (client) => {
+      const existing = await this.findById(id, client, true);
+      if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
+      if (existing.status === 'disabled') return existing;
+      if (existing.status === 'superseded') {
+        throw new HttpException(SmsProviderErrors.notEditable(), 409);
+      }
+      await client.query(`UPDATE sms_provider_configs SET status = 'disabled' WHERE id = $1`, [id]);
+      const row = await this.findById(id, client);
+      if (!row) throw new Error('Failed to read disabled SMS provider config');
+      return row;
+    });
   }
 
   /** Rollback to a superseded/disabled version: clone its known-good params and activate it. */
   async rollback(supersededId: string, createdBy: string): Promise<SmsProviderConfigResult> {
-    const source = await this.findById(supersededId);
-    if (!source) throw new HttpException(SmsProviderErrors.notFound(), 404);
-    if (
-      (source.status !== 'superseded' && source.status !== 'disabled') ||
-      source.lastTestStatus !== 'passed' ||
-      !source.activatedAt
-    ) {
-      throw new HttpException(SmsProviderErrors.invalidRollbackSource(), 409);
-    }
-
-    const config = await this.readConfig(source.id);
-    const created = await this.create({
-      label: `${source.label} (rollback)`,
-      config,
-      createdBy,
-    });
-
-    // The rollback clone bypasses the live test-send (known-good source), but
-    // its template mappings must still point at live SMS templates — the same
-    // invariant activate() enforces — otherwise a rollback could activate a
-    // config whose event keys have since lost their notification templates.
-    await this.validateTemplateMappings(created.id);
-
-    await this.runTransaction(async (client) => {
+    return mutateProvider(this.db, createdBy, 'sms', 'rolled_back', async (client) => {
+      const source = await this.findById(supersededId, client, true);
+      if (!source) throw new HttpException(SmsProviderErrors.notFound(), 404);
+      if (
+        (source.status !== 'superseded' && source.status !== 'disabled') ||
+        source.lastTestStatus !== 'passed' ||
+        !source.activatedAt
+      ) {
+        throw new HttpException(SmsProviderErrors.invalidRollbackSource(), 409);
+      }
+      await this.validateTemplateMappings(source.id, client);
+      const config = this.secrets.encryptConfig(
+        SMS_PROVIDER_TRANSPORT,
+        await this.readConfig(source.id, client)
+      );
+      const id = uuidv7();
+      await client.query(
+        `INSERT INTO sms_provider_configs
+         (id, transport, label, status, config, created_by, supersedes_id)
+         VALUES ($1, $2, $3, 'draft', $4, $5, $6)`,
+        [id, SMS_PROVIDER_TRANSPORT, `${source.label} (rollback)`, config, createdBy, null]
+      );
       const before = await client.query(
         `UPDATE sms_provider_configs SET status = 'superseded'
           WHERE status = 'active' RETURNING id`
@@ -445,16 +450,15 @@ export class SmsProviderConfigService {
       const priorActiveId = (before.rows[0] as { id?: string } | undefined)?.id ?? null;
       await client.query(
         `UPDATE sms_provider_configs
-            SET status = 'active', activated_at = NOW(),
-                last_test_status = 'passed', supersedes_id = $2, activated_by = $3
+          SET status = 'active', activated_at = NOW(),
+              last_test_status = 'passed', supersedes_id = $2, activated_by = $3
           WHERE id = $1`,
-        [created.id, priorActiveId, createdBy]
+        [id, priorActiveId, createdBy]
       );
+      const row = await this.findById(id, client);
+      if (!row) throw new Error('Failed to read rolled-back provider config');
+      return row;
     });
-
-    const row = await this.findById(created.id);
-    if (!row) throw new Error('Failed to read rolled-back SMS provider config');
-    return row;
   }
 
   /* ---------------------------- Connection test ------------------------- */
@@ -516,38 +520,12 @@ export class SmsProviderConfigService {
 
   /* ------------------------- Transaction + helpers ----------------------- */
 
-  /**
-   * Run a unit of work on a dedicated connection inside an explicit
-   * BEGIN/COMMIT/ROLLBACK transaction (matches repo convention). Remaps the
-   * SQLSTATE 23505 unique violation (active SMS provider) to 409.
-   */
-  private async runTransaction(work: (client: PoolClient) => Promise<void>): Promise<void> {
-    const pool = this.db;
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      await work(client);
-      await client.query('COMMIT');
-    } catch (error) {
-      try {
-        await client.query('ROLLBACK');
-      } catch {
-        /* rollback already failed / connection dropped */
-      }
-      if (error instanceof Error && (error as { code?: string }).code === '23505') {
-        throw new HttpException(SmsProviderErrors.alreadyActive(), 409);
-      }
-      throw error;
-    } finally {
-      client.release();
-    }
-  }
-
   /** Read the stored config for a row with secret fields decrypted (send boundary only). */
-  private async readConfig(id: string): Promise<ProviderConfigBody> {
-    const result = await this.db.query(`SELECT config FROM sms_provider_configs WHERE id = $1`, [
-      id,
-    ]);
+  private async readConfig(
+    id: string,
+    query: Pick<ProviderPool, 'query'> = this.db
+  ): Promise<ProviderConfigBody> {
+    const result = await query.query(`SELECT config FROM sms_provider_configs WHERE id = $1`, [id]);
     const row = result.rows[0] as { config?: ProviderConfigBody } | undefined;
     if (!row) return {};
     return this.secrets.decryptConfig(SMS_PROVIDER_TRANSPORT, row.config ?? {});

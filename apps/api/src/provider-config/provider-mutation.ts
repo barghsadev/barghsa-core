@@ -1,3 +1,5 @@
+import { HttpException } from '@nestjs/common';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { v7 as uuidv7 } from 'uuid';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import type { PoolClient, ProviderPool } from './provider-config.di.js';
@@ -37,6 +39,20 @@ export async function mutateProvider<T extends { id: string; status: string }>(
     return result;
   } catch (error) {
     await client.query('ROLLBACK').catch(() => {});
+    if (
+      error instanceof Error &&
+      (error as { code?: string; constraint?: string }).code === '23505' &&
+      (error as { constraint?: string }).constraint === `uq_${channel}_provider_active`
+    ) {
+      throw new HttpException(
+        {
+          statusCode: 409,
+          error: ErrorCodes.CONFLICT_DUPLICATE.code,
+          message: `An active ${channel} provider configuration already exists; supersede it first`,
+        },
+        409
+      );
+    }
     throw error;
   } finally {
     client.release();

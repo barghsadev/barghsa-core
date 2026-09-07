@@ -72,7 +72,7 @@ async function waitForLock() {
 }
 for (const channel of ['email', 'sms']) {
   const table = `${channel}_provider_configs`;
-  for (const action of ['create', 'update']) {
+  for (const action of ['create', 'update', 'activate', 'disable', 'rollback']) {
     async function seed() {
       const id = randomUUID();
       if (action !== 'create')
@@ -80,9 +80,33 @@ for (const channel of ['email', 'sms']) {
           `INSERT INTO ${table}(id,transport,label,status,config,created_by) VALUES ($1,$2,'Fixture','draft','{}','provider-writer')`,
           [id, channel === 'email' ? 'smtp' : 'smsir']
         );
+      if (action === 'activate' || action === 'rollback')
+        await http.pool.query(
+          `UPDATE ${table} SET config=$2,last_test_status='passed',status=$3,activated_at=$4 WHERE id=$1`,
+          [
+            id,
+            channel === 'email'
+              ? {}
+              : {
+                  api_key: 'fixture-api-key',
+                  sender: '9830000000',
+                  timeout: 15,
+                  throughput_limit: 100,
+                  low_credit_threshold: 0,
+                },
+            action === 'rollback' ? 'superseded' : 'draft',
+            action === 'rollback' ? new Date() : null,
+          ]
+        );
       return id;
     }
     function write(id: string) {
+      if (action !== 'create' && action !== 'update')
+        return fetch(`${http.base}/api/admin/${channel}-providers/${id}/${action}`, {
+          method: 'POST',
+          headers,
+          body: '{}',
+        });
       const config =
         channel === 'email'
           ? { host: 'smtp.example.test', password: 'fixture-password' }
@@ -119,7 +143,7 @@ for (const channel of ['email', 'sms']) {
       const state = await snapshot(table);
       expect(state.audits).toHaveLength(1);
       expect(state.audits[0].event).toBe(
-        `${channel}_provider_${action === 'create' ? 'created' : 'updated'}`
+        `${channel}_provider_${({ create: 'created', update: 'updated', activate: 'activated', disable: 'disabled', rollback: 'rolled_back' } as Record<string, string>)[action]}`
       );
       expect(JSON.stringify(state.audits)).not.toMatch(/fixture-password|fixture-api-key/);
       if (action === 'create')
@@ -162,6 +186,44 @@ for (const channel of ['email', 'sms']) {
         await pending;
       }
     });
+    if (action === 'activate')
+      it(`${channel} activate: maps the active constraint and rolls back`, async () => {
+        const id = await seed(),
+          before = await snapshot(table);
+        await http.pool
+          .query(`CREATE OR REPLACE FUNCTION reject_provider_activation() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture active conflict' USING ERRCODE='23505',CONSTRAINT='uq_${channel}_provider_active'; END $$;
+          CREATE TRIGGER reject_provider_activation BEFORE UPDATE ON ${table} FOR EACH ROW EXECUTE FUNCTION reject_provider_activation()`);
+        try {
+          expect((await write(id)).status).toBe(409);
+          expect(await snapshot(table)).toEqual(before);
+        } finally {
+          await http.pool.query(`DROP TRIGGER reject_provider_activation ON ${table}`);
+        }
+      });
+    if (action === 'activate')
+      it(`${channel} activate: rejects test invalidation while waiting`, async () => {
+        const id = await seed();
+        const blocker = await http.pool.connect();
+        let pending: Promise<Response> | undefined;
+        try {
+          await blocker.query('BEGIN');
+          await blocker.query(`UPDATE ${table} SET last_test_status='pending' WHERE id=$1`, [id]);
+          pending = write(id);
+          await waitForLock();
+          await blocker.query('COMMIT');
+          expect((await pending).status).toBe(409);
+          const state = await snapshot(table);
+          expect(state.providers[0]).toMatchObject({
+            status: 'draft',
+            last_test_status: 'pending',
+          });
+          expect(state.audits).toHaveLength(0);
+        } finally {
+          await blocker.query('ROLLBACK');
+          blocker.release();
+          await pending;
+        }
+      });
     if (action === 'update')
       it(`${channel} update: rechecks a draft promoted while waiting`, async () => {
         const id = await seed();
@@ -188,3 +250,30 @@ for (const channel of ['email', 'sms']) {
       });
   }
 }
+
+it('sms rollback: invalid mappings leave no orphan clone or audit', async () => {
+  const id = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sms_provider_configs(id,transport,label,status,config,created_by,last_test_status,activated_at)
+    VALUES ($1,'smsir','History','superseded',$2,'provider-writer','passed',NOW())`,
+    [
+      id,
+      {
+        api_key: 'fixture-api-key',
+        sender: '9830000000',
+        timeout: 15,
+        throughput_limit: 100,
+        low_credit_threshold: 0,
+        template_mappings: [{ event_key: 'missing-event', template_id: '123' }],
+      },
+    ]
+  );
+  const before = await snapshot('sms_provider_configs');
+  const response = await fetch(`${http.base}/api/admin/sms-providers/${id}/rollback`, {
+    method: 'POST',
+    headers,
+    body: '{}',
+  });
+  expect(response.status).toBe(409);
+  expect(await snapshot('sms_provider_configs')).toEqual(before);
+});

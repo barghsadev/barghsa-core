@@ -225,7 +225,7 @@ export class EmailProviderConfigController {
     @Param('id') id: string
   ): Promise<EmailProviderConfigResult> {
     this.assertProviderEditPermission(req);
-    return this.service.disable(id);
+    return this.service.disable(id, req.session.userId);
   }
 
   @Post(':id/rollback')

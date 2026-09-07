@@ -1836,3 +1836,9 @@ Review and validation: 12 of the first 16 real HTTP checks failed before repair;
 ### Provider mutation query interface correction
 
 The staff permission helper now accepts the SQL query operation shared by both database pool interfaces, without an unsafe cast or a requirement for unused PostgreSQL overloads. Runtime permission checks are unchanged. Root typecheck passes all 11 tasks; root lint exits successfully. Reviewed the diff for changes to authorization behavior and found none.
+
+### Provider lifecycle transactions and rollback recovery
+
+Email/SMS activation, disable and rollback now use the same held staff capability, provider-family lock, row recheck and transactional audit as draft writes. Activation cannot rely on a passing result invalidated while it waits. Rollback validates its source and SMS mappings before inserting, then clones, supersedes, activates and audits on one connection. Failure leaves neither a clone nor a partial provider switch. Disable controllers pass the authenticated actor. Active-provider unique conflicts remain HTTP 409; unrelated database failures are not relabeled.
+
+Review and validation: initial expanded HTTP run exposed missing audits and stale authority. Its 14 failures included six incorrect test expectations for HTTP 201; lifecycle routes correctly return 200 and those expectations were corrected. Final provider regression passes 186 tests across 15 files, including 47 real HTTP checks for current/revoked permission, transactional audit failures, stale row/test state, invalid rollback mappings and active constraints. Root typecheck and lint pass; targeted formatting and whitespace checks pass. The sole-provider disable guard and live-test outcome binding remain separate pending repairs.
