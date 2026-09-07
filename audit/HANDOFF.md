@@ -101,6 +101,8 @@ Current step: permission-boundary evidence. Connection-security repair committed
 
 ## Evidence map
 
+- Permission follow-up: `apps/api/src/admin/admin-permission-boundaries.test.ts` adds 144 passing checks across 22 operations, covering denied/unrelated capabilities, explicit grants, wildcard/admin access, capability revocation and malformed privileged inputs. API typecheck and explicit lint pass. These controller checks supplement existing HTTP/step-up tests; they do not certify the complete historical role matrix. Full API coverage refresh remains pending.
+
 - `audit/final-repair-checkpoint.json`: final test/gate results with source revisions.
 - `audit/combined-coverage-checkpoint.json`: failed coverage gate details at the latest runtime revision.
 - `audit/authentication-window-review.md`: original rolling-window constraints, historical analysis before implementation.
