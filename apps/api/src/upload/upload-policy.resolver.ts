@@ -4,6 +4,7 @@ import {
   getDeploymentAllowedExtensions,
   getDeploymentAllowedMimeTypes,
   getDeploymentMaxSizeBytes,
+  getExtensionMimeTypes,
 } from './upload.config.js';
 
 /**
@@ -145,6 +146,18 @@ export function effectiveAllowsExtension(policy: EffectiveUploadPolicy, fileName
 /** Whether a (client-claimed) content type is allowed by an effective policy. */
 export function effectiveAllowsMime(policy: EffectiveUploadPolicy, contentType: string): boolean {
   return policy.allowedMimeTypes.includes(contentType);
+}
+
+/** Intersect category MIME limits with the required format for a permitted filename. */
+export function effectiveMimeTypesForFile(
+  policy: EffectiveUploadPolicy,
+  fileName: string
+): string[] {
+  if (!effectiveAllowsExtension(policy, fileName)) return [];
+  // The general category intentionally permits arbitrary extensions.
+  if (policy.allowedExtensions === null) return [...policy.allowedMimeTypes];
+  const types = getExtensionMimeTypes(fileName);
+  return policy.allowedMimeTypes.filter((type) => types.includes(type));
 }
 
 /** Whether a file size is within the effective limit. */

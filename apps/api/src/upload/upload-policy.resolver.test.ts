@@ -157,6 +157,7 @@ describe('effective policy check helpers (T-09.12.05)', () => {
   let helpers: {
     effectiveAllowsExtension: (policy: EffectiveUploadPolicy, fileName: string) => boolean;
     effectiveAllowsMime: (policy: EffectiveUploadPolicy, contentType: string) => boolean;
+    effectiveMimeTypesForFile: (policy: EffectiveUploadPolicy, fileName: string) => string[];
     effectiveAllowsSize: (policy: EffectiveUploadPolicy, fileSize: number) => boolean;
   };
 
@@ -198,6 +199,37 @@ describe('effective policy check helpers (T-09.12.05)', () => {
   it('effectiveAllowsMime checks membership', () => {
     expect(helpers.effectiveAllowsMime(policy, 'application/pdf')).toBe(true);
     expect(helpers.effectiveAllowsMime(policy, 'video/mp4')).toBe(false);
+  });
+
+  it('binds each filename to its format without widening category or active policy limits', () => {
+    const imagePolicy = {
+      ...policy,
+      allowedExtensions: ['.jpg', '.png'],
+      allowedMimeTypes: ['image/jpeg', 'image/png'],
+    };
+    expect(helpers.effectiveMimeTypesForFile(imagePolicy, 'PHOTO.JPG')).toEqual(['image/jpeg']);
+    expect(helpers.effectiveMimeTypesForFile(imagePolicy, 'photo.png')).toEqual(['image/png']);
+    expect(
+      helpers.effectiveMimeTypesForFile(
+        { ...imagePolicy, allowedExtensions: ['.jpg'] },
+        'photo.png'
+      )
+    ).toEqual([]);
+    expect(
+      helpers.effectiveMimeTypesForFile(
+        { ...imagePolicy, allowedMimeTypes: ['image/png'] },
+        'photo.jpg'
+      )
+    ).toEqual([]);
+    expect(
+      helpers.effectiveMimeTypesForFile(
+        { ...imagePolicy, allowedExtensions: ['.unknown'] },
+        'photo.unknown'
+      )
+    ).toEqual([]);
+    expect(
+      helpers.effectiveMimeTypesForFile({ ...policy, allowedExtensions: null }, 'arbitrary')
+    ).toEqual(policy.allowedMimeTypes);
   });
 
   it('effectiveAllowsSize checks the effective limit', () => {

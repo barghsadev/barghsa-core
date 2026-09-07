@@ -540,3 +540,57 @@ it('rechecks the current allowed extension before verifying a previously issued 
     expect((await request(`admin/upload-policies/${policy.id}/end`, 'POST', {})).status).toBe(200);
   }
 });
+
+it('rejects PNG content disguised as a permitted JPG before reservation and after storage upload', async () => {
+  const response = await request('admin/upload-policies', 'POST', {
+    category: 'image',
+    allowedExtensions: ['.jpg'],
+    maxSizeBytes: 2097152,
+  });
+  expect(response.status).toBe(201);
+  const policy = z.object({ id: z.string() }).parse(await response.json());
+  try {
+    const details = {
+      fileName: 'disguised.jpg',
+      contentType: 'image/jpeg',
+      fileSize: png.length,
+      category: 'image',
+    };
+    const before = await http.pool.query('SELECT count(*) FROM storage_records');
+    expect(
+      (
+        await request('upload/presigned-url', 'POST', {
+          ...details,
+          contentType: 'image/png',
+        })
+      ).status
+    ).toBe(400);
+    expect((await http.pool.query('SELECT count(*) FROM storage_records')).rows).toEqual(
+      before.rows
+    );
+    const issued = z
+      .object({ key: z.string(), presignedUrl: z.string() })
+      .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+    expect(
+      (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(png) })).status
+    ).toBe(200);
+    const path = `upload/${encodeURIComponent(issued.key)}`;
+    const verified = await request(`${path}/verify`, 'POST');
+    expect(verified.status).toBe(200);
+    expect(await verified.json()).toMatchObject({
+      status: 'type_mismatch',
+      detectedContentType: 'image/png',
+    });
+    expect(
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'branding_logo' })).status
+    ).toBe(400);
+    const row = (
+      await http.pool.query('SELECT metadata FROM storage_records WHERE storage_key=$1', [
+        issued.key,
+      ])
+    ).rows[0];
+    expect(row.metadata.verified).not.toBe(true);
+  } finally {
+    expect((await request(`admin/upload-policies/${policy.id}/end`, 'POST', {})).status).toBe(200);
+  }
+});

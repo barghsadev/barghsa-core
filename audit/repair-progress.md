@@ -2208,3 +2208,9 @@ Six of thirteen required coverage groups still fail: critical API (90.23% lines 
 ### Reject unsuccessful browser runs during coverage collection
 
 Coverage collection previously checked the count of records without rejecting failed test summaries. It now requires a positive integer passing-test count, zero failures/flaky/skipped cases and an empty global error list whenever a browser results file is provided. Invalid collection leaves an explicitly invalid report. The new regression failed before repair; all ten coverage pipeline tests pass afterward, including failed/malformed summaries and a valid summary. Targeted lint, formatting and diff review pass. The prior 280-case checkpoint already satisfies the stricter summary requirements.
+
+### Bind upload format restrictions to the filename and stored content
+
+Under a JPG-only administrator policy, the API previously issued a URL for PNG content named `.jpg`: extension and category MIME membership were checked independently. Permitted filename formats now narrow the category MIME set at both presign and stored-content inspection. A mismatched claim creates no reservation; disguised stored bytes return `type_mismatch` and cannot be sealed as a verified record. The unrestricted general category retains its documented extension behavior.
+
+The real migrated HTTP regression reproduced the bypass before repair. All 72 upload/policy/branding API checks and four live upload-policy/branding browser flows pass afterward. API types, targeted lint, formatting and diff review pass; the first type check caught a missing test-helper type declaration, corrected before completion. Container format detection remains a separate open defect: ZIP/OLE signatures alone do not distinguish their document formats. This step closes filename/content mismatches for unambiguous detected formats without claiming full document validation or upload-task acceptance.

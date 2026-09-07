@@ -16,6 +16,32 @@ interface UploadCategoryConfig {
 
 const MB = 1024 * 1024;
 
+const EXTENSION_MIME_TYPES: Readonly<Record<string, readonly string[]>> = {
+  '.pdf': ['application/pdf'],
+  '.doc': ['application/msword'],
+  '.docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  '.xls': ['application/vnd.ms-excel'],
+  '.xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+  '.txt': ['text/plain'],
+  '.csv': ['text/csv'],
+  '.jpg': ['image/jpeg'],
+  '.jpeg': ['image/jpeg'],
+  '.png': ['image/png'],
+  '.webp': ['image/webp'],
+  '.gif': ['image/gif'],
+  '.svg': ['image/svg+xml'],
+  '.avif': ['image/avif'],
+  '.mp4': ['video/mp4'],
+  '.webm': ['video/webm'],
+  '.mov': ['video/quicktime'],
+  '.mkv': ['video/x-matroska'],
+};
+
+/** Known deployment formats bound to the actual filename, never to a claimed MIME. */
+export function getExtensionMimeTypes(fileName: string): readonly string[] {
+  return EXTENSION_MIME_TYPES[extractExtension(fileName)] ?? [];
+}
+
 const DEFAULT_CATEGORIES: Record<string, UploadCategoryConfig> = {
   document: {
     allowedMimeTypes: [

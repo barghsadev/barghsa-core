@@ -30,7 +30,7 @@ import { getCategoryDescriptions, resolveCategory, UPLOAD_CATEGORIES } from './u
 import {
   UploadPolicyResolver,
   effectiveAllowsExtension,
-  effectiveAllowsMime,
+  effectiveMimeTypesForFile,
   effectiveAllowsSize,
 } from './upload-policy.resolver.js';
 import {
@@ -106,10 +106,11 @@ export class UploadController {
     }
 
     // Validate MIME type against the effective policy
-    if (!effectiveAllowsMime(policy, req.contentType)) {
+    const allowedMimeTypes = effectiveMimeTypesForFile(policy, req.fileName);
+    if (!allowedMimeTypes.includes(req.contentType)) {
       throw new BadRequestException({
         message: `Content type "${req.contentType}" not allowed for category "${category}"`,
-        allowedMimeTypes: policy.allowedMimeTypes,
+        allowedMimeTypes,
         policySource: policy.source,
       });
     }
@@ -374,14 +375,15 @@ export class UploadController {
     const object = await this.storage!.getObject(key);
     const sample = await this.readSample(object.body);
     const candidates = sniffContentTypes(sample);
-    const detected = pickDetectedContentType(candidates, policy.allowedMimeTypes);
+    const allowedMimeTypes = effectiveMimeTypesForFile(policy, key);
+    const detected = pickDetectedContentType(candidates, allowedMimeTypes);
     if (detected !== null) {
       return { kind: 'confirmed', detected, contentLength: object.contentLength };
     }
     return {
       kind: 'type_mismatch',
       detected: candidates[0] ?? null,
-      allowed: policy.allowedMimeTypes,
+      allowed: allowedMimeTypes,
     };
   }
 
