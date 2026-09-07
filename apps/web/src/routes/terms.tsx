@@ -14,6 +14,21 @@ interface CurrentTosResponse {
   publishedAt: string;
 }
 
+function isCurrentTos(value: unknown): value is CurrentTosResponse {
+  if (!value || typeof value !== 'object') return false;
+  const terms = value as Partial<CurrentTosResponse>;
+  const validDate = (value: unknown) =>
+    typeof value === 'string' && Number.isFinite(Date.parse(value));
+  return (
+    typeof terms.content === 'string' &&
+    !!terms.content.trim() &&
+    typeof terms.versionId === 'string' &&
+    !!terms.versionId.trim() &&
+    validDate(terms.updatedAt) &&
+    validDate(terms.publishedAt)
+  );
+}
+
 export const Route = createFileRoute('/terms')({
   component: TermsPage,
   validateSearch: (search: Record<string, unknown>): { lang?: 'fa' | 'en' } => ({
@@ -30,6 +45,7 @@ function TermsPage() {
   const [tos, setTos] = useState<CurrentTosResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -38,6 +54,7 @@ function TermsPage() {
     async function fetchTos() {
       try {
         setLoading(true);
+        setTos(null);
         setError(false);
         const res = await fetch(`/api/tos/current?locale=${locale}`, {
           signal: controller.signal,
@@ -47,7 +64,8 @@ function TermsPage() {
           if (!cancelled) setError(true);
           return;
         }
-        const data: CurrentTosResponse = await res.json();
+        const data: unknown = await res.json();
+        if (!isCurrentTos(data)) throw new Error('Invalid terms response');
         if (!cancelled) setTos(data);
       } catch {
         if (!cancelled) setError(true);
@@ -62,7 +80,7 @@ function TermsPage() {
       cancelled = true;
       controller.abort();
     };
-  }, [locale]);
+  }, [locale, attempt]);
 
   let formattedDate: string | null = null;
   if (tos?.updatedAt) {
@@ -125,6 +143,26 @@ function TermsPage() {
       {/* Content */}
       <main className="flex flex-1 items-start justify-center p-4 md:p-8 lg:p-12">
         <div className="w-full max-w-3xl">
+          <nav aria-label={t('tos.page.language', locale)} className="mb-6 flex flex-wrap gap-4">
+            <Link
+              to="/terms"
+              search={{ lang: 'fa' }}
+              lang="fa"
+              aria-current={locale === 'fa' ? 'page' : undefined}
+              className="underline underline-offset-4"
+            >
+              فارسی
+            </Link>
+            <Link
+              to="/terms"
+              search={{ lang: 'en' }}
+              lang="en"
+              aria-current={locale === 'en' ? 'page' : undefined}
+              className="underline underline-offset-4"
+            >
+              English
+            </Link>
+          </nav>
           {/* Loading state */}
           {loading && (
             <div className="flex flex-col items-center justify-center py-16">
@@ -136,7 +174,16 @@ function TermsPage() {
           {/* Error state */}
           {error && !loading && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <p className="text-sm text-destructive">{t('tos.page.error', locale)}</p>
+              <p role="alert" className="text-sm text-destructive">
+                {t('tos.page.error', locale)}
+              </p>
+              <button
+                type="button"
+                onClick={() => setAttempt((value) => value + 1)}
+                className="mt-4 rounded border border-border px-4 py-2 text-sm font-medium"
+              >
+                {t('tos.page.retry', locale)}
+              </button>
               <Link
                 to="/"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
@@ -148,7 +195,7 @@ function TermsPage() {
           )}
 
           {/* TOS content */}
-          {tos && !loading && (
+          {tos && !loading && !error && (
             <article className="prose prose-sm dark:prose-invert max-w-none">
               <header className="mb-8 not-prose">
                 <h1 className="text-2xl font-bold tracking-tight">{t('tos.page.title', locale)}</h1>

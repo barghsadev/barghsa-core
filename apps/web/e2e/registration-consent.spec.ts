@@ -95,3 +95,62 @@ for (const locale of ['fa', 'en']) {
     );
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`public terms reject malformed content and recover through retry (${locale})`, async ({
+    page,
+  }) => {
+    let valid = false;
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.route('**/api/tos/current?*', (route) =>
+      route.fulfill({
+        json: {
+          versionId: 'v1',
+          content: valid ? 'Recovered public terms' : { invalid: true },
+          updatedAt: '2026-09-01T00:00:00Z',
+          publishedAt: '2026-09-01T00:00:00Z',
+        },
+      })
+    );
+    await page.goto(`/terms?lang=${locale}`);
+    const retry = page.getByRole('button', {
+      name: locale === 'fa' ? 'دریافت دوباره شرایط' : 'Retry loading terms',
+      exact: true,
+    });
+    await expect(retry).toBeVisible();
+    await expect(page.getByRole('article')).toHaveCount(0);
+    expect(errors).toEqual([]);
+    valid = true;
+    await retry.click();
+    await expect(page.getByRole('article')).toContainText('Recovered public terms');
+    await expect(retry).toHaveCount(0);
+  });
+}
+
+test('public terms language changes discard stale content after a failed read', async ({
+  page,
+}) => {
+  await page.route('**/api/tos/current?*', (route) =>
+    new URL(route.request().url()).searchParams.get('locale') === 'en'
+      ? route.fulfill({ status: 503, json: {} })
+      : route.fulfill({
+          json: {
+            versionId: 'v1',
+            content: 'شرایط فارسی قبلی',
+            updatedAt: '2026-09-01T00:00:00Z',
+            publishedAt: '2026-09-01T00:00:00Z',
+          },
+        })
+  );
+  await page.goto('/terms');
+  await expect(page.getByRole('article')).toContainText('شرایط فارسی قبلی');
+  await page.getByRole('link', { name: 'English', exact: true }).click();
+  await expect(
+    page.getByRole('button', { name: 'Retry loading terms', exact: true })
+  ).toBeVisible();
+  await expect(page.getByRole('article')).toHaveCount(0);
+  await expect(page.getByText('شرایط فارسی قبلی')).toHaveCount(0);
+  await page.getByRole('link', { name: 'فارسی', exact: true }).click();
+  await expect(page.getByRole('article')).toContainText('شرایط فارسی قبلی');
+});

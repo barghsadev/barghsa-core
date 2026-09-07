@@ -2322,3 +2322,9 @@ The missing-route HTTP regression failed before repair. All 28 focused TOS/regis
 A failed or malformed user-status response now shows a localized, non-blocking retry instead of hiding consent for the entire mounted session. Navigation checks again. Request sequencing prevents obsolete reads from replacing newer status or a confirmed acceptance, and unauthenticated responses do not prompt consent. Support routes retain manual review after recovery.
 
 All four English/Persian outage and malformed-response cases failed before repair and pass afterward. The full 303-test production Chromium run passed 288 checks and exposed 15 page-wide status selectors that now matched both the new notice and the existing workflow result. Those assertions now target their page content. All 15 pass on recheck, with no product change between runs. All 31 i18n checks, web types, targeted lint, formatting, bundle budgets and diff review pass. This is functional evidence, not a new clean combined-coverage checkpoint.
+
+### Validate public terms and recover failed language loads
+
+The public document now validates content, version and timestamps before rendering. Malformed responses produce a localized error and retry instead of reaching the Markdown renderer. Each new load clears the previous document, and failed loads never display stale content. Visible Persian/English links switch the document language and direction without requiring an account.
+
+Both malformed-content browser cases failed before repair; the language-switch regression also exposed the missing control. All 25 focused production Chromium checks pass afterward, including public retry, language-switch failure/recovery, safe formatting, registration binding, consent loading and support exemptions. Web types, all 31 i18n checks, targeted lint, formatting, bundle limits and diff review pass.
