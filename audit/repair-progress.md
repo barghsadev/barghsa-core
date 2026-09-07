@@ -1942,3 +1942,9 @@ Review and validation: seven new shared checks reproduced stale/malformed cache 
 Added the required strict-peer and non-hoisted settings to .npmrc. README now uses the package-manager version declared by the project and runs the production migration command during setup. The database development task watches compilation instead of invoking schema push as a side effect of root development startup. Explicit schema tooling remains available separately.
 
 Review and validation: an initial noninteractive pnpm run exited zero at a reinstall prompt and was not counted as a successful install. Repeated with CI=true, which completed the fresh frozen installation of all ten workspace projects with the strict settings and unchanged lockfile. Root build passes after installation. The Turbo dry run resolves the database dev command to persistent compilation; formatting and whitespace checks pass. No database command was run against the developer's database.
+
+### Begin explicit per-task acceptance sign-off
+
+Added acceptance-closure.json with eight task-level sign-offs, exact reviewed source revision, requirement text/hash, source hashes, checks and limitations. The remaining 314 recorded task keys are explicitly pending; baseline PR and completion evidence remains unchanged in task-review.json. These eight records certify their task scope, not all sibling story requirements or operational rollout.
+
+TypeScript requirement review found that the root solution omitted the worker. Added its project reference; the root dry build now includes all seven runtime code projects, and normal root typechecking passes. Full library checking remains incomplete: enabling it for the database package produces 144 dependency declaration errors in the installed Drizzle types, saved in database-library-type-errors.txt. UI still relaxes exact optional properties and unchecked indexed access. These exceptions prevent blanket strict-mode acceptance and remain repair work.

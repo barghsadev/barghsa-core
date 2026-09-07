@@ -1,0 +1,582 @@
+{
+  "schema_version": 1,
+  "baseline_register": "audit/task-review.json",
+  "baseline_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
+  "scope": "Task-level repair acceptance. Story siblings, remote rollout and future features are not certified by an individual record.",
+  "reviewed_tasks": [
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 50,
+      "requirement": "- **T-01.01.01:** Create `pnpm-workspace.yaml` with `packages: ['apps/*', 'packages/*']` and verify `pnpm install` resolves correctly\n  - **Notes:** Must exclude root from workspace. Verify with `pnpm ls -r` that all packages are detected.\n  - **Dependencies:** None\n  - **Complexity:** S",
+      "requirement_sha256": "ce737cd28896abc779b488919ed8059baf152428bbdba93451efded27686611d",
+      "source_evidence": [
+        {
+          "path": "pnpm-workspace.yaml",
+          "sha256": "eb36fad2e05e70f49b13b5698190e6e030975ed931ed598597342ad08e39d9db"
+        }
+      ],
+      "checks": [
+        "pnpm list -r --depth -1: root plus nine packages detected; workspace globs select apps/* and packages/*",
+        "CI=true pnpm install --frozen-lockfile: ten workspace projects installed"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        1
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 55,
+      "requirement": "- **T-01.01.02:** Create root `turbo.json` pipeline definition\n  - **Notes:** Define outputs (`.next/`, `dist/`, `.turbo`), cache strategy, and dependency graph. Use `dependsOn: ['^build']` for build so upstream packages build first. `persistent: true` for `dev` task. Set `outputLogs: 'new-only'` to reduce noise.\n  - **Dependencies:** T-01.01.01\n  - **Complexity:** M",
+      "requirement_sha256": "a9a0df86a91ee0c025c4a3b850164958d838adc00213963cb9aa77595b640ee4",
+      "source_evidence": [
+        {
+          "path": "turbo.json",
+          "sha256": "910ad06ace9cac7b514e5f9803b5ef748a8286cbd802a0459e035c3929a5f2b4"
+        }
+      ],
+      "checks": [
+        "Root build passes; upstream build dependencies and declared output paths inspected",
+        "Turbo dev dry run confirms persistent uncached development tasks"
+      ],
+      "limitations": [
+        "Story prose calls typechecking independent, while T-01.02.04 explicitly requires ^build. The implementation follows the more specific task requirement."
+      ],
+      "merged_prs": [
+        2
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 60,
+      "requirement": "- **T-01.01.03:** Create root `.npmrc` with strict peer dependencies and no shameful hoisting\n  - **Notes:** Set `save-exact=true` to pin dependency versions. Set `auto-install-peers=false` so peer deps are explicit. Set `resolution-mode=highest` to get latest compatible.\n  - **Dependencies:** T-01.01.01\n  - **Complexity:** S",
+      "requirement_sha256": "52c257887893d88af68a41091ac9357931ce886b8e50fe9d3845ca42147c9086",
+      "source_evidence": [
+        {
+          "path": ".npmrc",
+          "sha256": "865983cbb3a1462253f4ee27032c775c8c4ec92234328f6c525de42d54f4d37c"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "296aeb8f0554cf63b7632da600a72c2bd409887229b9792a2f560fdbb5caa6a9"
+        }
+      ],
+      "checks": [
+        "Fresh frozen install passes with strict-peer-dependencies=true, shamefully-hoist=false, save-exact=true and auto-install-peers=false",
+        "Dependency lockfile unchanged"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        3
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 65,
+      "requirement": "- **T-01.01.04:** Create root `package.json` with `packageManager`, scripts, and engines constraint\n  - **Notes:** Scripts: `dev`, `build`, `test`, `lint`, `typecheck`, `format:check`, `format:write`. Set `engines.node >=20`, `engines.pnpm >=10`. Add corepack instructions in README.\n  - **Dependencies:** T-01.01.01\n  - **Complexity:** S",
+      "requirement_sha256": "1e690afacbe8e16172876f7e00fb936fad374e817314ca23444f3a5397f73d57",
+      "source_evidence": [
+        {
+          "path": "package.json",
+          "sha256": "0ba60d45e3fee9b2deef9cd77fdb6cdfef5dd2288a097231d8653366b5b1b559"
+        },
+        {
+          "path": "README.md",
+          "sha256": "e8e1c10e20ac0f8a54cc951284883141edf0e06e54ce9b4c783797fa2b7bdfb0"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        }
+      ],
+      "checks": [
+        "Required scripts and Node/pnpm engine constraints inspected",
+        "README selects project-pinned pnpm; root and CI use 10.11.1"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        4
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 70,
+      "requirement": "- **T-01.01.05:** Verify monorepo integrity: install deps, run `turbo build` across all packages, confirm no cross-package resolution errors\n  - **Notes:** CI must also run `pnpm install --frozen-lockfile` to detect lockfile drift. Validate that `pnpm build` exits 0 and produces correct `dist/` outputs.\n  - **Dependencies:** T-01.01.02, T-01.01.03, T-01.01.04\n  - **Complexity:** M\n  - **UI/UX:** N/A",
+      "requirement_sha256": "4c4646071d1471c23998d8594802120520bede97686bf4f68230dcf22a9c9f5a",
+      "source_evidence": [
+        {
+          "path": "pnpm-workspace.yaml",
+          "sha256": "eb36fad2e05e70f49b13b5698190e6e030975ed931ed598597342ad08e39d9db"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "910ad06ace9cac7b514e5f9803b5ef748a8286cbd802a0459e035c3929a5f2b4"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        }
+      ],
+      "checks": [
+        "Fresh frozen workspace install passes",
+        "pnpm build: seven tasks pass; compiled output and web asset emission verified",
+        "CI contains frozen installation and root build"
+      ],
+      "limitations": [
+        "This is local build verification, not a claim that remote CI ran this revision."
+      ],
+      "merged_prs": [
+        5
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.02.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 609,
+      "requirement": "- **T-04.02.01:** Create Redis connection factory with graceful fallback\n  - **Notes:** Factory `createRedisClient(config: RedisConfig)` returns a client or `null` if `REDIS_URL` is not configured. On connection error, log warning and return `null`. All app code checks `if (redis)` before using. Health endpoint reports Redis status but does not mark app non-ready if Redis is unavailable.\n  - **Dependencies:** None (standalone)\n  - **Complexity:** M",
+      "requirement_sha256": "4e9c86aff61139552c46e70fe5a4a757c80c7a63ef8e8e7ae0c06e6cf1915247",
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/redis/redis-factory.ts",
+          "sha256": "5322964b576a930e9cf7b4283a7f7ffc7a253aa71b27b261e9b0b55eefeec86a"
+        },
+        {
+          "path": "packages/shared/src/redis/redis-config.ts",
+          "sha256": "e6d49d912f64cf4add043bc3117ee5dcc56293e3c73dd2aa6d2ef8ac998aee29"
+        },
+        {
+          "path": "apps/api/src/redis/redis.module.ts",
+          "sha256": "5f84d0a4bb3af5bb342c02c67fe934f0b5782c43bc1e793b905ce7cbce37719c"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "ea95b1a232a229cec3b3bb37829d29dabd8d5034fd59cab8a2f6c0a53b3bcf9f"
+        },
+        {
+          "path": "packages/shared/src/redis/redis-factory.test.ts",
+          "sha256": "c22076609f5cac6af2e97d72bfcf42819719c93275ca57a0d1e624c78e85c4c2"
+        },
+        {
+          "path": "packages/shared/src/redis/redis-factory.integration.test.ts",
+          "sha256": "fc46bc3bdfea93179c8ff1a5d9d27b0d69ab2fe60aa2123484312fbb1502ecc6"
+        }
+      ],
+      "checks": [
+        "13 factory unit checks and one real TCP stalled-connection test pass",
+        "Redis absence/failure remains non-critical in readiness implementation",
+        "Production-image checkpoint at 2aeaf54 proves optional Redis outage boot; health behavior is unchanged"
+      ],
+      "limitations": [
+        "Current factory changes require the next production-image refresh; TLS option forwarding is tested, not a live Redis TLS deployment."
+      ],
+      "merged_prs": [
+        51
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.02.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 619,
+      "requirement": "- **T-04.02.03:** Implement configuration caching with clear invalidation\n  - **Notes:** Admin config settings (VAT rates, product prices, thresholds) are immutable and change infrequently. Cache them in Redis for 5 minutes with a key prefix `config:*`. On admin config version change, publish a Redis invalidation event or bump a version counter. Cache miss → read from PostgreSQL → populate Redis. Never serve stale config for financial calculations.\n  - **Dependencies:** T-04.02.01\n  - **Complexity:** M",
+      "requirement_sha256": "3788dedd881771b80071de1bb647d5be8bfaeeb1a4194825e774432eb6db56bc",
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/config-cache/config-cache.ts",
+          "sha256": "e58d2b6837cec2af58cb7793ee5a033267b2cfe81321b623e790b75cf2c9d7f0"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.service.ts",
+          "sha256": "0bb36e84ac721eafd6eb3fdfcdd57e6b93e7ad684977ed340861146dc53aed79"
+        },
+        {
+          "path": "packages/shared/src/config-cache/config-cache.test.ts",
+          "sha256": "627b63a633340301a773cb84dbe3152b4083ca7cb78ab81f48fe62b2461524aa"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
+          "sha256": "4703cec0c491dd5d5e4342d3a0388c4a07aca1ab46eb2d0f2ce5a0e3d99429fa"
+        }
+      ],
+      "checks": [
+        "37 shared cache tests pass",
+        "Five real PostgreSQL cache-service tests pass, including missed invalidation and a concurrent committed update",
+        "636 API cache/profile/wallet regression tests pass",
+        "Five-minute TTL, durable version equality and new cache namespace inspected"
+      ],
+      "limitations": [
+        "Requires each writer to increment the durable version in its transaction. Concurrent reads may return their earlier database snapshot; it is never labelled with a later version."
+      ],
+      "merged_prs": [
+        53
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 624,
+      "requirement": "- **T-04.02.04:** Document Redis architecture decision in ADR\n  - **Notes:** Create `docs/adr/002-redis-scope.md`: Redis is optional, disposable, never a source of truth. Its role: cache for read-heavy config, distributed rate-limit acceleration, short-lived coordination locks. Financial correctness, durable jobs, sessions, and authorization must remain correct if Redis is flushed or unavailable. Each cache entry has documented TTL and invalidation strategy.\n  - **Dependencies:** T-04.02.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
+      "requirement_sha256": "31d191097d5d1bb9a797050b281079137eaa4d73c8f69af900452bc807b22a08",
+      "source_evidence": [
+        {
+          "path": "docs/adr/002-redis-scope.md",
+          "sha256": "a862d8af19ef553c641d1815da02b6e643838b67b11c18cda55b286782bddddd"
+        }
+      ],
+      "checks": [
+        "Reviewed ADR against current factory/cache and PostgreSQL-backed session design",
+        "Updated cache namespace, TTL/invalidation, metadata lookup and timeout behavior"
+      ],
+      "limitations": [
+        "This certifies the documentation task. Planned coordination locks and operational deployment are not certified by the ADR."
+      ],
+      "merged_prs": [
+        54
+      ],
+      "historically_skipped": false
+    }
+  ],
+  "pending_task_keys": [
+    "01-platform-infrastructure.md#T-01.02.01",
+    "01-platform-infrastructure.md#T-01.02.02",
+    "01-platform-infrastructure.md#T-01.02.03",
+    "01-platform-infrastructure.md#T-01.02.04",
+    "01-platform-infrastructure.md#T-01.03.01",
+    "01-platform-infrastructure.md#T-01.03.02",
+    "01-platform-infrastructure.md#T-01.03.03",
+    "01-platform-infrastructure.md#T-01.03.04",
+    "01-platform-infrastructure.md#T-01.03.05",
+    "01-platform-infrastructure.md#T-01.04.01",
+    "01-platform-infrastructure.md#T-01.04.02",
+    "01-platform-infrastructure.md#T-01.04.03",
+    "01-platform-infrastructure.md#T-01.04.04",
+    "01-platform-infrastructure.md#T-01.04.05",
+    "01-platform-infrastructure.md#T-01.04.06",
+    "01-platform-infrastructure.md#T-01.05.01",
+    "01-platform-infrastructure.md#T-02.01.01",
+    "01-platform-infrastructure.md#T-02.01.02",
+    "01-platform-infrastructure.md#T-02.01.03",
+    "01-platform-infrastructure.md#T-02.01.04",
+    "01-platform-infrastructure.md#T-02.02.01",
+    "01-platform-infrastructure.md#T-02.02.02",
+    "01-platform-infrastructure.md#T-02.02.03",
+    "01-platform-infrastructure.md#T-02.02.04",
+    "01-platform-infrastructure.md#T-02.03.01",
+    "01-platform-infrastructure.md#T-02.03.02",
+    "01-platform-infrastructure.md#T-02.03.03",
+    "01-platform-infrastructure.md#T-02.03.04",
+    "01-platform-infrastructure.md#T-02.04.01",
+    "01-platform-infrastructure.md#T-02.04.02",
+    "01-platform-infrastructure.md#T-02.04.03",
+    "01-platform-infrastructure.md#T-02.04.04",
+    "01-platform-infrastructure.md#T-02.04.05",
+    "01-platform-infrastructure.md#T-02.04.06",
+    "01-platform-infrastructure.md#T-03.01.01",
+    "01-platform-infrastructure.md#T-03.01.02",
+    "01-platform-infrastructure.md#T-03.01.03",
+    "01-platform-infrastructure.md#T-03.01.04",
+    "01-platform-infrastructure.md#T-03.01.05",
+    "01-platform-infrastructure.md#T-03.02.01",
+    "01-platform-infrastructure.md#T-03.02.02",
+    "01-platform-infrastructure.md#T-03.02.03",
+    "01-platform-infrastructure.md#T-03.02.04",
+    "01-platform-infrastructure.md#T-03.03.01",
+    "01-platform-infrastructure.md#T-03.03.02",
+    "01-platform-infrastructure.md#T-03.03.03",
+    "01-platform-infrastructure.md#T-03.03.04",
+    "01-platform-infrastructure.md#T-04.01.01",
+    "01-platform-infrastructure.md#T-04.01.02",
+    "01-platform-infrastructure.md#T-04.01.03",
+    "01-platform-infrastructure.md#T-04.01.04",
+    "01-platform-infrastructure.md#T-04.01.05",
+    "01-platform-infrastructure.md#T-04.01.06",
+    "01-platform-infrastructure.md#T-04.01.07",
+    "01-platform-infrastructure.md#T-04.02.02",
+    "01-platform-infrastructure.md#T-04.03.01",
+    "01-platform-infrastructure.md#T-04.03.02",
+    "01-platform-infrastructure.md#T-04.03.03",
+    "01-platform-infrastructure.md#T-04.03.04",
+    "01-platform-infrastructure.md#T-04.03.05",
+    "01-platform-infrastructure.md#T-04.04.01",
+    "01-platform-infrastructure.md#T-04.04.02",
+    "01-platform-infrastructure.md#T-04.04.03",
+    "01-platform-infrastructure.md#T-04.04.04",
+    "01-platform-infrastructure.md#T-04.04.05",
+    "01-platform-infrastructure.md#T-05.01.01",
+    "01-platform-infrastructure.md#T-05.01.02",
+    "01-platform-infrastructure.md#T-05.01.03",
+    "01-platform-infrastructure.md#T-05.02.01",
+    "01-platform-infrastructure.md#T-05.02.02",
+    "01-platform-infrastructure.md#T-05.02.03",
+    "01-platform-infrastructure.md#T-05.02.04",
+    "01-platform-infrastructure.md#T-05.03.01",
+    "01-platform-infrastructure.md#T-05.03.02",
+    "01-platform-infrastructure.md#T-05.03.03",
+    "01-platform-infrastructure.md#T-05.03.04",
+    "01-platform-infrastructure.md#T-05.03.05",
+    "01-platform-infrastructure.md#T-05.04.01",
+    "01-platform-infrastructure.md#T-05.04.02",
+    "01-platform-infrastructure.md#T-05.04.03",
+    "01-platform-infrastructure.md#T-05.04.04",
+    "01-platform-infrastructure.md#T-05.05.01",
+    "01-platform-infrastructure.md#T-05.05.02",
+    "01-platform-infrastructure.md#T-05.05.03",
+    "01-platform-infrastructure.md#T-05.05.04",
+    "01-platform-infrastructure.md#T-06.01.01",
+    "01-platform-infrastructure.md#T-06.01.02",
+    "01-platform-infrastructure.md#T-06.01.03",
+    "01-platform-infrastructure.md#T-06.01.04",
+    "01-platform-infrastructure.md#T-06.01.05",
+    "01-platform-infrastructure.md#T-06.02.01",
+    "01-platform-infrastructure.md#T-06.02.02",
+    "01-platform-infrastructure.md#T-06.02.03",
+    "01-platform-infrastructure.md#T-06.02.04",
+    "01-platform-infrastructure.md#T-06.02.05",
+    "01-platform-infrastructure.md#T-06.03.01",
+    "01-platform-infrastructure.md#T-06.03.02",
+    "01-platform-infrastructure.md#T-06.03.03",
+    "01-platform-infrastructure.md#T-06.03.04",
+    "01-platform-infrastructure.md#T-06.03.05",
+    "01-platform-infrastructure.md#T-06.03.06",
+    "01-platform-infrastructure.md#T-06.04.01",
+    "01-platform-infrastructure.md#T-07.01.01",
+    "01-platform-infrastructure.md#T-07.01.02",
+    "01-platform-infrastructure.md#T-07.01.03",
+    "01-platform-infrastructure.md#T-07.01.04",
+    "01-platform-infrastructure.md#T-07.02.01",
+    "01-platform-infrastructure.md#T-07.02.02",
+    "01-platform-infrastructure.md#T-07.02.03",
+    "01-platform-infrastructure.md#T-07.02.04",
+    "01-platform-infrastructure.md#T-07.02.05",
+    "01-platform-infrastructure.md#T-07.03.01",
+    "01-platform-infrastructure.md#T-07.03.02",
+    "01-platform-infrastructure.md#T-07.03.03",
+    "01-platform-infrastructure.md#T-07.03.04",
+    "01-platform-infrastructure.md#T-07.04.01",
+    "01-platform-infrastructure.md#T-07.04.02",
+    "01-platform-infrastructure.md#T-07.04.03",
+    "01-platform-infrastructure.md#T-07.04.04",
+    "01-platform-infrastructure.md#T-07.05.01",
+    "01-platform-infrastructure.md#T-07.05.02",
+    "01-platform-infrastructure.md#T-07.05.03",
+    "01-platform-infrastructure.md#T-07.05.04",
+    "02-auth-users-admin.md#T-01.01.01",
+    "02-auth-users-admin.md#T-01.01.02",
+    "02-auth-users-admin.md#T-01.01.03",
+    "02-auth-users-admin.md#T-01.01.04",
+    "02-auth-users-admin.md#T-01.01.05",
+    "02-auth-users-admin.md#T-01.01.06",
+    "02-auth-users-admin.md#T-01.02.01",
+    "02-auth-users-admin.md#T-01.02.02",
+    "02-auth-users-admin.md#T-01.02.03",
+    "02-auth-users-admin.md#T-02.01.01",
+    "02-auth-users-admin.md#T-02.01.02",
+    "02-auth-users-admin.md#T-02.01.03",
+    "02-auth-users-admin.md#T-02.01.04",
+    "02-auth-users-admin.md#T-02.02.01",
+    "02-auth-users-admin.md#T-02.02.02",
+    "02-auth-users-admin.md#T-02.02.03",
+    "02-auth-users-admin.md#T-02.02.04",
+    "02-auth-users-admin.md#T-02.03.01",
+    "02-auth-users-admin.md#T-02.03.02",
+    "02-auth-users-admin.md#T-02.03.03",
+    "02-auth-users-admin.md#T-02.04.01",
+    "02-auth-users-admin.md#T-03.01.01",
+    "02-auth-users-admin.md#T-03.01.02",
+    "02-auth-users-admin.md#T-03.02.01",
+    "02-auth-users-admin.md#T-03.02.02",
+    "02-auth-users-admin.md#T-03.02.03",
+    "02-auth-users-admin.md#T-03.02.04",
+    "02-auth-users-admin.md#T-03.03.01",
+    "02-auth-users-admin.md#T-03.03.02",
+    "02-auth-users-admin.md#T-03.03.03",
+    "02-auth-users-admin.md#T-03.03.04",
+    "02-auth-users-admin.md#T-03.03.05",
+    "02-auth-users-admin.md#T-03.03.06",
+    "02-auth-users-admin.md#T-03.04.01",
+    "02-auth-users-admin.md#T-03.04.02",
+    "02-auth-users-admin.md#T-04.01.01",
+    "02-auth-users-admin.md#T-04.01.02",
+    "02-auth-users-admin.md#T-04.01.03",
+    "02-auth-users-admin.md#T-05.01.01",
+    "02-auth-users-admin.md#T-05.01.02",
+    "02-auth-users-admin.md#T-05.02.01",
+    "02-auth-users-admin.md#T-05.02.02",
+    "02-auth-users-admin.md#T-05.02.03",
+    "02-auth-users-admin.md#T-05.02.04",
+    "02-auth-users-admin.md#T-05.02.05",
+    "02-auth-users-admin.md#T-05.02.06",
+    "02-auth-users-admin.md#T-05.03.01",
+    "02-auth-users-admin.md#T-05.03.02",
+    "02-auth-users-admin.md#T-05.04.01",
+    "02-auth-users-admin.md#T-05.04.02",
+    "02-auth-users-admin.md#T-05.04.03",
+    "02-auth-users-admin.md#T-05.04.04",
+    "02-auth-users-admin.md#T-05.04.05",
+    "02-auth-users-admin.md#T-05.05.01",
+    "02-auth-users-admin.md#T-05.05.02",
+    "02-auth-users-admin.md#T-06.01.01",
+    "02-auth-users-admin.md#T-06.01.02",
+    "02-auth-users-admin.md#T-06.01.03",
+    "02-auth-users-admin.md#T-07.01.01",
+    "02-auth-users-admin.md#T-07.01.02",
+    "02-auth-users-admin.md#T-07.01.03",
+    "02-auth-users-admin.md#T-08.01.01",
+    "02-auth-users-admin.md#T-08.01.02",
+    "02-auth-users-admin.md#T-08.01.03",
+    "02-auth-users-admin.md#T-09.01.01",
+    "02-auth-users-admin.md#T-09.01.02",
+    "02-auth-users-admin.md#T-09.02.01",
+    "02-auth-users-admin.md#T-09.02.02",
+    "02-auth-users-admin.md#T-09.03.01",
+    "02-auth-users-admin.md#T-09.03.02",
+    "02-auth-users-admin.md#T-09.04.01",
+    "02-auth-users-admin.md#T-09.05.01",
+    "05-notifications-documents-ai.md#T-05.01.01",
+    "05-notifications-documents-ai.md#T-05.01.02",
+    "05-notifications-documents-ai.md#T-05.01.03",
+    "05-notifications-documents-ai.md#T-05.01.04",
+    "05-notifications-documents-ai.md#T-05.01.05",
+    "05-notifications-documents-ai.md#T-05.01.06",
+    "05-notifications-documents-ai.md#T-05.01.07",
+    "05-notifications-documents-ai.md#T-05.02.01",
+    "05-notifications-documents-ai.md#T-05.02.02",
+    "05-notifications-documents-ai.md#T-05.02.03",
+    "05-notifications-documents-ai.md#T-05.02.04",
+    "05-notifications-documents-ai.md#T-05.03.01",
+    "05-notifications-documents-ai.md#T-05.03.02",
+    "05-notifications-documents-ai.md#T-05.03.03",
+    "05-notifications-documents-ai.md#T-05.04.01",
+    "05-notifications-documents-ai.md#T-05.04.02",
+    "05-notifications-documents-ai.md#T-05.04.03",
+    "05-notifications-documents-ai.md#T-05.04.04",
+    "05-notifications-documents-ai.md#T-05.04.05",
+    "05-notifications-documents-ai.md#T-05.05.01",
+    "05-notifications-documents-ai.md#T-05.05.02",
+    "05-notifications-documents-ai.md#T-05.05.03",
+    "05-notifications-documents-ai.md#T-05.06.01",
+    "05-notifications-documents-ai.md#T-05.06.02",
+    "05-notifications-documents-ai.md#T-05.06.03",
+    "05-notifications-documents-ai.md#T-05.06.04",
+    "05-notifications-documents-ai.md#T-05.06.05",
+    "05-notifications-documents-ai.md#T-05.06.06",
+    "05-notifications-documents-ai.md#T-05.06.07",
+    "02-auth-users-admin.md#T-09.06.01",
+    "02-auth-users-admin.md#T-09.06.02",
+    "02-auth-users-admin.md#T-09.06.03",
+    "02-auth-users-admin.md#T-09.07.01",
+    "02-auth-users-admin.md#T-09.07.02",
+    "02-auth-users-admin.md#T-09.08.01",
+    "02-auth-users-admin.md#T-09.08.02",
+    "02-auth-users-admin.md#T-09.08.03",
+    "02-auth-users-admin.md#T-09.09.01",
+    "02-auth-users-admin.md#T-09.09.02",
+    "02-auth-users-admin.md#T-09.09.03",
+    "02-auth-users-admin.md#T-09.10.01",
+    "02-auth-users-admin.md#T-09.10.02",
+    "02-auth-users-admin.md#T-09.10.03",
+    "02-auth-users-admin.md#T-09.11.01",
+    "02-auth-users-admin.md#T-09.11.02",
+    "02-auth-users-admin.md#T-09.11.03",
+    "02-auth-users-admin.md#T-09.11.04",
+    "02-auth-users-admin.md#T-09.11.05",
+    "02-auth-users-admin.md#T-09.12.01",
+    "02-auth-users-admin.md#T-09.12.02",
+    "02-auth-users-admin.md#T-09.12.03",
+    "02-auth-users-admin.md#T-09.12.04",
+    "02-auth-users-admin.md#T-09.12.05",
+    "02-auth-users-admin.md#T-09.12.06",
+    "02-auth-users-admin.md#T-10.01.01",
+    "02-auth-users-admin.md#T-10.01.02",
+    "04-invoices-wallet-contracts.md#T-04.1.01.01",
+    "04-invoices-wallet-contracts.md#T-04.1.01.02",
+    "04-invoices-wallet-contracts.md#T-04.1.01.03",
+    "04-invoices-wallet-contracts.md#T-04.1.01.04",
+    "04-invoices-wallet-contracts.md#T-04.1.01.05",
+    "04-invoices-wallet-contracts.md#T-04.1.01.06",
+    "04-invoices-wallet-contracts.md#T-04.1.02.01",
+    "04-invoices-wallet-contracts.md#T-04.1.02.02",
+    "04-invoices-wallet-contracts.md#T-04.1.02.03",
+    "04-invoices-wallet-contracts.md#T-04.1.02.04",
+    "04-invoices-wallet-contracts.md#T-04.1.02.05",
+    "04-invoices-wallet-contracts.md#T-04.1.02.06",
+    "04-invoices-wallet-contracts.md#T-04.1.02.07",
+    "04-invoices-wallet-contracts.md#T-04.1.02.08",
+    "04-invoices-wallet-contracts.md#T-04.1.02.09",
+    "04-invoices-wallet-contracts.md#T-04.1.03.01",
+    "04-invoices-wallet-contracts.md#T-04.1.03.02",
+    "04-invoices-wallet-contracts.md#T-04.1.03.03",
+    "04-invoices-wallet-contracts.md#T-04.1.03.04",
+    "04-invoices-wallet-contracts.md#T-04.1.04.01",
+    "04-invoices-wallet-contracts.md#T-04.1.04.02",
+    "04-invoices-wallet-contracts.md#T-04.1.04.03",
+    "04-invoices-wallet-contracts.md#T-04.1.04.04",
+    "04-invoices-wallet-contracts.md#T-04.1.04.05",
+    "04-invoices-wallet-contracts.md#T-04.1.04.06",
+    "04-invoices-wallet-contracts.md#T-04.1.05.01",
+    "04-invoices-wallet-contracts.md#T-04.1.05.02",
+    "04-invoices-wallet-contracts.md#T-04.1.05.03",
+    "04-invoices-wallet-contracts.md#T-04.1.05.04",
+    "04-invoices-wallet-contracts.md#T-04.2.01.01",
+    "04-invoices-wallet-contracts.md#T-04.2.01.02",
+    "04-invoices-wallet-contracts.md#T-04.2.01.03",
+    "04-invoices-wallet-contracts.md#T-04.2.01.04",
+    "04-invoices-wallet-contracts.md#T-04.2.01.05",
+    "04-invoices-wallet-contracts.md#T-04.2.01.06",
+    "04-invoices-wallet-contracts.md#T-04.2.01.07",
+    "04-invoices-wallet-contracts.md#T-04.2.01.08",
+    "04-invoices-wallet-contracts.md#T-04.2.02.01",
+    "04-invoices-wallet-contracts.md#T-04.2.02.02",
+    "04-invoices-wallet-contracts.md#T-04.2.02.03",
+    "04-invoices-wallet-contracts.md#T-04.2.02.04",
+    "04-invoices-wallet-contracts.md#T-04.2.02.05",
+    "04-invoices-wallet-contracts.md#T-04.2.02.06",
+    "04-invoices-wallet-contracts.md#T-04.2.02.07",
+    "04-invoices-wallet-contracts.md#T-04.2.03.01",
+    "04-invoices-wallet-contracts.md#T-04.2.03.02",
+    "04-invoices-wallet-contracts.md#T-04.2.03.03",
+    "04-invoices-wallet-contracts.md#T-04.2.03.04",
+    "04-invoices-wallet-contracts.md#T-04.2.04.01",
+    "04-invoices-wallet-contracts.md#T-04.2.04.02",
+    "04-invoices-wallet-contracts.md#T-04.2.04.03",
+    "04-invoices-wallet-contracts.md#T-04.3.01.01",
+    "04-invoices-wallet-contracts.md#T-04.3.01.02",
+    "04-invoices-wallet-contracts.md#T-04.3.01.03",
+    "04-invoices-wallet-contracts.md#T-04.3.01.04",
+    "04-invoices-wallet-contracts.md#T-04.3.01.05",
+    "03-core-business.md#T-03.01.01.01",
+    "03-core-business.md#T-03.01.01.02",
+    "03-core-business.md#T-03.01.01.03",
+    "03-core-business.md#T-03.01.01.04",
+    "07-ui-ux-design.md#T-07.01.01.01",
+    "07-ui-ux-design.md#T-07.01.01.02",
+    "07-ui-ux-design.md#T-07.01.01.03"
+  ]
+}
