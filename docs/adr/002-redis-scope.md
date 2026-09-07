@@ -31,15 +31,15 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 
 ### Concrete guarantees
 
-| Area               | Redis Role                                              | Fallback                                                                      | TTL                                          | Invalidation                                                                     |
-| ------------------ | ------------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------- |
-| Config caching     | Accelerate reads, avoid PG round-trip for every request | Direct PostgreSQL read                                                        | 300 s (5 min)                                | Per-key eviction + global version bump on update. See `ConfigCache.invalidate()` |
-| Rate limiting      | Low-latency atomic counters                             | PostgreSQL upsert (`INSERT ... ON CONFLICT DO UPDATE`) + periodic row cleanup | Window duration (configurable per namespace) | Redis keys auto-expire after the window; PG cleanup is periodic                  |
-| Coordination locks | Distributed mutual exclusion                            | PG advisory locks or skip-operation                                           | 1–30 s (depending on use case)               | Automatic expiry (NX + PEXPIRE); never block on a stale lock                     |
+| Area               | Redis Role                                        | Fallback                                                                      | TTL                                          | Invalidation                                                      |
+| ------------------ | ------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------- |
+| Config caching     | Cache values; verify freshness against PostgreSQL | Direct PostgreSQL read                                                        | 300 s (5 min)                                | Transactional PostgreSQL version bump; best-effort Redis eviction |
+| Rate limiting      | Low-latency atomic counters                       | PostgreSQL upsert (`INSERT ... ON CONFLICT DO UPDATE`) + periodic row cleanup | Window duration (configurable per namespace) | Redis keys auto-expire after the window; PG cleanup is periodic   |
+| Coordination locks | Distributed mutual exclusion                      | PG advisory locks or skip-operation                                           | 1–30 s (depending on use case)               | Automatic expiry (NX + PEXPIRE); never block on a stale lock      |
 
 ### What Redis is NOT used for
 
-- **Persistent sessions** — session state is stored in an HTTP-only, signed, encrypted cookie. Redis is not consulted for auth or session validity.
+- **Persistent sessions** — session state and revocation are stored in PostgreSQL; an HTTP-only cookie identifies the session. Redis is not authoritative for session validity.
 - **Durable job queues** — background jobs are stored in PostgreSQL with their full payload and retry state. Redis is used solely for coordination (rate gates, locking).
 - **Financial calculations** — all VAT, pricing, and ledger computations read from PostgreSQL. Redis cached config is validated by the version-gate before use; a cache miss or stale entry triggers a fresh PG read.
 - **Authorization decisions** — RBAC rules are resolved from PostgreSQL directly; Redis may cache lookups but an empty cache produces correct (slower) results.
@@ -51,7 +51,7 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 ### Positive
 
 - **Operational simplicity:** Redis can be reconfigured, migrated, or replaced without application downtime or data loss.
-- **Fail-safe by default:** All Redis clients are created with `lazyConnect: true`, `maxRetriesPerRequest: null`, and a 10-second connect timeout. Connection failures log a warning and return `null`.
+- **Fail-safe by default:** All Redis clients are created with `lazyConnect: true`, offline queuing disabled, one reconnect attempt per command and a one-second command deadline by default. Initial connection timeout defaults to ten seconds. Construction and connection failures log a warning and return `null`.
 - **Horizontal scalability:** Rate-limit counters can share a single Redis instance across N API replicas, providing consistent enforcement without PG advisory-lock contention.
 
 ### Negative
@@ -61,7 +61,9 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 
 ### Migration
 
-No migration needed — this ADR describes existing architecture. Future introductions of Redis-based storage must be reviewed against the guarantees above and approved through the ADR process.
+Configuration entries now use `config:entry:v2:`. Old entries expire under their existing TTL and are never read by the repaired cache. A cache hit requires an equal, positive PostgreSQL version; population checks that version before and after reading the value. Missing version metadata forces a database value read without caching. Each hit adds a PostgreSQL metadata read.
+
+No database migration is required. Future introductions of Redis-based storage must be reviewed against the guarantees above and approved through the ADR process.
 
 ---
 
@@ -72,7 +74,7 @@ No migration needed — this ADR describes existing architecture. Future introdu
 - [x] Every existing Redis key has a documented TTL — config caching (300s), rate limiting (window duration). Coordination locks (planned) will follow the 1–30 s TTL convention.
 - [x] Every Redis key has a documented invalidation strategy.
 - [x] Financial, session, auth, and durable job logic have zero dependence on Redis availability.
-- [x] `createRedisClient()` returns `null` on connection failure — never throws or blocks startup.
+- [x] `createRedisClient()` returns `null` on connection failure for construction and initial connection errors; connection attempts remain bounded.
 - [x] Config cache uses version-gated staleness — TTL alone is insufficient for financial correctness.
 
 ---

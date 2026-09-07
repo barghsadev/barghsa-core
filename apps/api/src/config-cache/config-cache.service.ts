@@ -63,30 +63,16 @@ export class ConfigCacheService {
           version: Number(result.rows[0]['version']),
         };
       },
-      // fetchGlobalVersion — reads the global config version from Redis,
-      // or falls back to PG, or returns 0 if neither is available
+      // Redis can miss invalidation after a crash or outage. Only the durable
+      // version committed with app_config can authorize a cache hit.
       async () => {
-        // When Redis is available, read the global version from Redis
-        if (this.redis) {
-          try {
-            const raw = await this.redis.get(ConfigCache.GLOBAL_VERSION_KEY);
-            if (raw) return Number(raw);
-          } catch {
-            // Fall through to PG below
-          }
+        const pool = getDbPool();
+        const result = await pool.query("SELECT version FROM config_version WHERE id = 'global'");
+        const version = Number(result.rows[0]?.['version']);
+        if (!Number.isSafeInteger(version) || version <= 0) {
+          throw new Error('Configuration version unavailable');
         }
-        // Read from PostgreSQL as fallback
-        try {
-          const pool = getDbPool();
-          const result = await pool.query("SELECT version FROM config_version WHERE id = 'global'");
-          if (result.rows.length > 0) {
-            return Number(result.rows[0]['version']);
-          }
-        } catch {
-          // If PG is also unavailable, return 0 — all cached entries will be
-          // considered stale, forcing PG reads.  Degraded but correct.
-        }
-        return 0;
+        return version;
       },
       this.redis,
       cacheLogger

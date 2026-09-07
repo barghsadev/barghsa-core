@@ -35,47 +35,17 @@ export interface ConfigFetchResult<T = unknown> {
 // ---------------------------------------------------------------------------
 
 /**
- * Redis-backed configuration cache with version-gated staleness detection.
- *
- * ## Cache strategy
- *
- * - Each config entry is cached in Redis under `config:entry:<key>` with a
- *   5-minute TTL, storing both the value and its version number.
- * - A global version counter is stored in Redis under `config:global:version`.
- * - On every config write the global version is incremented and the affected
- *   entry's cached copy is evicted.
- *
- * ## Staleness guard
- *
- * When reading from cache the service compares the cached entry's version
- * against the global current version (fetched fresh from Redis).  If they
- * differ, the cache is treated as stale and the entry is re-read from
- * PostgreSQL — even if the 5-minute TTL has not expired.
- *
- * This guarantees that financial calculations and other version-sensitive
- * consumers always see the latest config without paying a PG round-trip on
- * every request during normal operation.
- *
- * ## Graceful degradation
- *
- * - `redis = null` → every call goes directly to PostgreSQL.
- * - Redis connection lost mid-operation → transparent PG fallback with a
- *   warning log.
- * - Global version key missing in Redis or stale cache entry → PG read.
- *
- * @example
- * ```ts
- * const cache = new ConfigCache(fetchFromPg, redis, logger);
- * const vatRate = await cache.get<number>('vat_rate');
- * ```
+ * Optional Redis cache. Freshness comes from a durable PostgreSQL version,
+ * incremented in the same transaction as each configuration write.
+ * Redis invalidation counters are hints, never proof that data is current.
  */
 export class ConfigCache {
   // -----------------------------------------------------------------------
   // Constants
   // -----------------------------------------------------------------------
 
-  /** Redis key prefix for individual config entries. */
-  static readonly ENTRY_PREFIX = 'config:entry:';
+  /** New namespace excludes entries certified by the former racy version check. */
+  static readonly ENTRY_PREFIX = 'config:entry:v2:';
 
   /** Redis key for the global version counter. */
   static readonly GLOBAL_VERSION_KEY = 'config:global:version';
@@ -91,11 +61,8 @@ export class ConfigCache {
    * @param fetchFromDb  Async callback that reads a config value + version
    *                     from PostgreSQL given a key. Returns `null` when the
    *                     key does not exist.
-   * @param fetchGlobalVersion  Async callback that reads the current global
-   *                     configuration version. When Redis is available this
-   *                     reads the `config:global:version` key; when Redis is
-   *                     not available it can query `config_version` from PG
-   *                     or return 0.
+   * @param fetchGlobalVersion Reads the authoritative committed version from
+   * PostgreSQL. Must throw when unavailable; never substitute a Redis counter.
    * @param redis        Redis client or `null` (Redis is optional — config
    *                     works without it, just without caching).
    * @param logger       Optional logger for warnings / errors.
@@ -147,28 +114,9 @@ export class ConfigCache {
           const entry: CachedConfigEntry<T> = JSON.parse(entryRaw);
           const globalVersion = await this.fetchGlobalVersion();
 
-          // Compare the global version stored at cache time against the
-          // current global version.  If cachedAtGlobalVersion >= current,
-          // nothing has changed since this entry was cached.
-          //
-          // This is a correct comparison because every config write bumps
-          // the global counter, and every cache population records the
-          // global version observed at that moment.  After a PG re-read
-          // the cached entry gets a fresh cachedAtGlobalVersion, so it
-          // passes the check until the next write.
-          //
-          // Using fetchGlobalVersion() here ensures that even if the
-          // global version key has expired from Redis (TTL expiry, flush),
-          // the fallback chain (PG read → 0) provides a correct value.
-          // Without this fallback, an expired global version key would
-          // yield globalVersion=0, making every cached entry appear fresh
-          // (cachedAtGlobalVersion >= 0 is always true), which would
-          // serve stale config to financial calculations.
-          if (entry.cachedAtGlobalVersion >= globalVersion) {
+          if (this.isFreshEntry(entry, globalVersion)) {
             return { value: entry.value, fresh: true, version: entry.version };
           }
-
-          // Global version advanced — cache is stale; fall through to PG
         }
       } catch (err) {
         this.logger?.warn(
@@ -180,18 +128,32 @@ export class ConfigCache {
     }
 
     // --- Cache miss or stale — read from PostgreSQL ---------------------------
+    // Read the version before the value. A later version cannot certify an
+    // older row fetched before a concurrent configuration commit.
+    let versionBefore: number | undefined;
+    if (this.redis) {
+      try {
+        const version = await this.fetchGlobalVersion();
+        if (Number.isSafeInteger(version) && version > 0) versionBefore = version;
+      } catch {
+        // Database reads can still succeed when version metadata is unavailable.
+      }
+    }
     const row = await this.fetchFromDb(key);
     if (!row) {
       return { value: null, fresh: true, version: null };
     }
 
     // --- Populate Redis cache -------------------------------------------------
-    if (this.redis) {
+    if (this.redis && versionBefore !== undefined) {
       try {
         // Fetch the current global version — this is the snapshot we record
         // with the cached entry so future staleness checks are correct.
         const currentGlobalVersion = await this.fetchGlobalVersion();
 
+        if (currentGlobalVersion !== versionBefore) {
+          return { value: row.value as T, fresh: false, version: row.version };
+        }
         await this.redis.setex(
           `${ConfigCache.ENTRY_PREFIX}${key}`,
           ConfigCache.ENTRY_TTL_SEC,
@@ -201,17 +163,6 @@ export class ConfigCache {
             cachedAtGlobalVersion: currentGlobalVersion,
           } satisfies CachedConfigEntry)
         );
-        // The global version key (config:global:version) is NOT explicitly
-        // set with a TTL here — it is a permanent counter managed by INCR
-        // in invalidate()/invalidateAll().  This avoids the NX+EX race
-        // where the global version key would expire after 1 hour, causing
-        // INCR to reset the counter to 1 and making old cached entries
-        // appear fresh (cachedAtGlobalVersion >= 1).
-        //
-        // fetchGlobalVersion() is used for staleness checks and has a
-        // PG fallback, so even if the global version key is missing from
-        // Redis (flush, restart), the correct version is read from the
-        // config_version table.
       } catch (err) {
         this.logger?.warn(
           '[config-cache] Redis write failed (non-fatal):',
@@ -226,9 +177,9 @@ export class ConfigCache {
   /**
    * Invalidate a single config entry across the entire fleet.
    *
-   * Deletes the cached entry from Redis and bumps the global version counter
-   * so that all API replicas know the config has changed, even for entries
-   * that were not directly evicted.
+   * Evicts the entry and updates the legacy Redis invalidation hint. The
+   * writer must also increment config_version in its PostgreSQL transaction;
+   * cache correctness does not depend on this best-effort eviction.
    *
    * Call this from the admin config update handler whenever a config value
    * is modified in PostgreSQL.
@@ -254,7 +205,7 @@ export class ConfigCache {
   /**
    * Invalidate ALL cached config entries across the fleet.
    *
-   * Deletes all `config:entry:*` keys and bumps the global version counter.
+   * Deletes current-namespace entries and bumps the Redis invalidation hint.
    * Use sparingly — prefer {@link invalidate} for individual updates.
    */
   async invalidateAll(): Promise<void> {
@@ -305,9 +256,21 @@ export class ConfigCache {
       const entry: CachedConfigEntry<T> = JSON.parse(entryRaw);
       const globalVersion = await this.fetchGlobalVersion();
 
-      return entry.cachedAtGlobalVersion >= globalVersion ? entry : null;
+      return this.isFreshEntry(entry, globalVersion) ? entry : null;
     } catch {
       return null;
     }
+  }
+  private isFreshEntry(entry: unknown, globalVersion: number): entry is CachedConfigEntry {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return false;
+    const value = entry as Partial<CachedConfigEntry>;
+    return (
+      Number.isSafeInteger(globalVersion) &&
+      globalVersion > 0 &&
+      Number.isSafeInteger(value.version) &&
+      Number(value.version) > 0 &&
+      Object.hasOwn(value, 'value') &&
+      value.cachedAtGlobalVersion === globalVersion
+    );
   }
 }

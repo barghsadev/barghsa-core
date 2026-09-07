@@ -99,7 +99,7 @@ describe('ConfigCache', () => {
     expect(fetchFromDb).toHaveBeenCalledWith('vat_rate');
     expect(fetchGlobalVersion).toHaveBeenCalled();
     expect(redis.setex).toHaveBeenCalledWith(
-      'config:entry:vat_rate',
+      'config:entry:v2:vat_rate',
       300,
       JSON.stringify(VAT_RATE_CACHED satisfies CachedConfigEntry)
     );
@@ -124,7 +124,7 @@ describe('ConfigCache', () => {
     expect(fetchFromDb).toHaveBeenCalledWith('vat_rate');
     // Should repopulate cache with fresh cachedAtGlobalVersion
     expect(redis.setex).toHaveBeenCalledWith(
-      'config:entry:vat_rate',
+      'config:entry:v2:vat_rate',
       300,
       JSON.stringify({
         value: 0.08,
@@ -249,7 +249,7 @@ describe('ConfigCache', () => {
     expect(fetchFromDb).toHaveBeenCalled();
   });
 
-  it('serves cached entry when fetchGlobalVersion returns >= cachedAtGlobalVersion', async () => {
+  it('serves cached entry when the authoritative version equals cachedAtGlobalVersion', async () => {
     redis.get.mockResolvedValue(JSON.stringify(VAT_RATE_CACHED));
     // fetchGlobalVersion returns same value as cachedAtGlobalVersion
     fetchGlobalVersion.mockResolvedValue(5);
@@ -270,7 +270,7 @@ describe('ConfigCache', () => {
 
     await cache.invalidate('vat_rate');
 
-    expect(redis.del).toHaveBeenCalledWith('config:entry:vat_rate');
+    expect(redis.del).toHaveBeenCalledWith('config:entry:v2:vat_rate');
     expect(redis.incr).toHaveBeenCalledWith('config:global:version');
   });
 
@@ -301,7 +301,7 @@ describe('ConfigCache', () => {
   it('scans all config entries and deletes them with pipeline', async () => {
     const mockStream = {
       async *[Symbol.asyncIterator]() {
-        yield ['config:entry:vat_rate', 'config:entry:min_price'];
+        yield ['config:entry:v2:vat_rate', 'config:entry:v2:min_price'];
         yield []; // second batch is empty
       },
     };
@@ -312,12 +312,12 @@ describe('ConfigCache', () => {
     await cache.invalidateAll();
 
     expect(redis.scanStream).toHaveBeenCalledWith({
-      match: 'config:entry:*',
+      match: 'config:entry:v2:*',
       count: 100,
     });
     expect(mockPipeline.del).toHaveBeenCalledWith(
-      'config:entry:vat_rate',
-      'config:entry:min_price'
+      'config:entry:v2:vat_rate',
+      'config:entry:v2:min_price'
     );
     expect(mockPipeline.incr).toHaveBeenCalledWith('config:global:version');
     expect(mockPipeline.exec).toHaveBeenCalled();
@@ -405,5 +405,44 @@ describe('ConfigCache', () => {
     const result = await cache.get<{ primary: string }>('theme');
 
     expect(result).toEqual({ primary: '#00ff00' });
+  });
+  it('does not cache an old row under a concurrently advanced version', async () => {
+    redis.get.mockResolvedValue(null);
+    fetchGlobalVersion.mockResolvedValueOnce(5).mockResolvedValueOnce(6);
+    fetchFromDb.mockResolvedValue(VAT_RATE_ROW);
+    expect(await cache.get('vat_rate')).toBe(0.09);
+    expect(redis.setex).not.toHaveBeenCalled();
+  });
+  for (const version of [0, -1, Number.NaN, Number.POSITIVE_INFINITY, 3, 5.5]) {
+    it(`rejects a cached entry against invalid or mismatched global version ${version}`, async () => {
+      redis.get.mockResolvedValue(JSON.stringify(VAT_RATE_CACHED));
+      fetchGlobalVersion.mockResolvedValue(version);
+      fetchFromDb.mockResolvedValue({ value: 0.12, version: 2 });
+      expect(await cache.peek('vat_rate')).toBeNull();
+      expect(await cache.get('vat_rate')).toBe(0.12);
+    });
+  }
+  for (const entry of [
+    null,
+    [],
+    { ...VAT_RATE_CACHED, version: '1' },
+    { ...VAT_RATE_CACHED, version: 0 },
+    { version: 1, cachedAtGlobalVersion: 5 },
+  ]) {
+    it(`rejects malformed cached entry ${JSON.stringify(entry)}`, async () => {
+      redis.get.mockResolvedValue(JSON.stringify(entry));
+      fetchGlobalVersion.mockResolvedValue(5);
+      fetchFromDb.mockResolvedValue(VAT_RATE_ROW);
+      expect(await cache.peek('vat_rate')).toBeNull();
+      expect(await cache.get('vat_rate')).toBe(0.09);
+      expect(fetchFromDb).toHaveBeenCalled();
+    });
+  }
+  it('returns the database value without populating cache when version lookup fails', async () => {
+    redis.get.mockResolvedValue(null);
+    fetchGlobalVersion.mockRejectedValue(new Error('version unavailable'));
+    fetchFromDb.mockResolvedValue(VAT_RATE_ROW);
+    expect(await cache.get('vat_rate')).toBe(0.09);
+    expect(redis.setex).not.toHaveBeenCalled();
   });
 });
