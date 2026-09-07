@@ -38,7 +38,7 @@ The [repair plan](fix-plan.md) contains 23 groups with evidence, concrete action
 
 ## Skipped work
 
-There are 58 history-confirmed skips. One later has a directly mapped merged PR, but still needs acceptance repair. Many others have partial implementation from later features. [The skipped-task register](skipped-tasks.md) lists all 58 and the existing pieces to preserve.
+There are 58 history-confirmed skips. Two now have verified task-level acceptance: timezone-aware display and number/currency formatting. The other 56 remain pending acceptance, which does not mean they have no implementation. [Current skipped-task dispositions](current-skipped-tasks.md) preserve every historical skip and identify work to retain before reviewing the unmet remainder. [The historical register](skipped-tasks.md) records the original audit evidence. Run `python3 audit/current_skipped_tasks.py` to check the current list against the acceptance ledger.
 
 There are also 737 unrecorded keys before the furthest merged task in today's queue, plus 296 later unstarted keys. These are listed separately to avoid confusing queue position with an intentional historical skip. Six earlier auth keys concern closure/export, staff/customer operating context, and the stricter staff-profile exception. F04 repairs permissions in already-built staff flows; it does not silently mark those separate context tasks done.
 
@@ -71,6 +71,7 @@ The initial review made no product, kanban, GitHub or scheduler changes. Its gen
 - [Current canonical task requirements](current-task-requirements.json)
 - [Readable task-by-task review](task-review.md)
 - [Task register CSV](task-review.csv) and [JSON with requirements and source evidence](task-review.json)
+- [Current skipped-task dispositions](current-skipped-tasks.md) and [JSON](current-skipped-tasks.json)
 - [History-confirmed skipped tasks](skipped-tasks.md), [CSV](skipped-tasks.csv), [JSON](skipped-tasks.json)
 - [All 737 earlier queue gaps](queue-gaps.csv)
 - [All 1,033 unrecorded current tasks](unstarted-backlog.csv)

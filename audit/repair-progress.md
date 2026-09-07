@@ -2685,3 +2685,12 @@ Reviewing the next database task exposed a reporting defect: make-report.py sele
 Added current-task-requirements.json as a source-hashed overlay for the same 322 historical keys in the same order. It uses the canonical parser, preserves multiline table tasks, rejects ambiguous/escaping identities, includes the approved Vite requirements changes and rejects stale output. The historical baseline report and its PR/completion evidence remain unchanged. The report generator now delegates to the same helper; it was not rerun over old findings. The acceptance ledger points to the current overlay and retains all 47 reviewed records, 34 verified, 13 partial and 275 pending. None of those 47 saved task extracts contains a following heading; their existing evidence is not replaced by this metadata repair.
 
 Review: six new requirement-binding tests pass, including repeated unqualified IDs across epics and all 322 keys. All six existing canonical backlog tests pass across every current task; backlog validation passes 1355 tasks and 116 traceability entries. The overlay check passes. Twenty-eight task extracts differ from the historical report in total; this includes boundary corrections and subsequent approved requirements edits, not 28 newly implemented tasks.
+
+
+### Reconcile the skipped-work list with completed acceptance reviews
+
+The historical 58-task skipped register still described timezone-aware date display and number/currency formatting as partial even though both now have explicit verified acceptance records. Added a current Markdown/JSON disposition report that retains all 58 qualified keys, historical skip commit and directly mapped PRs. It reads the acceptance ledger instead of inferring completion from files or merged PRs.
+
+Two tasks are marked to preserve rather than rebuild. The remaining 56 are acceptance_pending and require review of existing implementation before building only unmet requirements. This is not a queue or authorization to resume feature work. The original historical skip artifacts remain unchanged; source hashes make the new report stale when acceptance evidence changes.
+
+Review: five reconciliation tests pass, covering all 58 keys and original provenance, the two exact verified tasks, no mutation of inputs, rejection of duplicate/missing identities and overlapping reviewed/pending populations. The generated report check passes. No acceptance status or loop state changed.
