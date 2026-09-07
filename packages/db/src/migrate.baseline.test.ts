@@ -75,6 +75,7 @@ describe('complete production schema baseline', () => {
         '0114_effective_product_price',
         '0115_ai_model_test_jobs',
         '0116_ai_agent_group_links',
+        '0117_notification_template_lineage',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -209,6 +210,11 @@ describe('complete production schema baseline', () => {
       );
       await pool.query('ALTER TABLE legal_profiles DROP COLUMN documents');
       await pool.query('DROP TABLE profile_onboarding_drafts');
+      await pool.query(
+        'ALTER TABLE notification_templates DROP CONSTRAINT notification_template_supersedes_fk, DROP CONSTRAINT notification_template_version_positive, DROP CONSTRAINT notification_template_supersedes_older'
+      );
+      await pool.query('DROP INDEX uq_notification_templates_version');
+      await pool.query('ALTER TABLE notification_templates DROP COLUMN supersedes_version');
       await pool.query('DELETE FROM drizzle.__drizzle_migrations');
       await pool.query(
         'INSERT INTO drizzle.__drizzle_migrations(hash, created_at) VALUES ($1, $2)',

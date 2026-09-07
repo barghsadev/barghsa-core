@@ -236,7 +236,7 @@ it('keeps published content immutable through replacement and unpublication', as
   const first = { id: original.id, event: value.event };
   const published = await write('publish', first);
   expect(published.status).toBe(200);
-  expect(((await published.json()) as NotificationTemplateResult).version).toBe(1);
+  expect(await published.json()).toMatchObject({ version: 1, supersedesVersion: null });
   const replacement = await write('create', value);
   expect(replacement.status).toBe(201);
   const draft = (await replacement.json()) as NotificationTemplateResult;
@@ -247,17 +247,21 @@ it('keeps published content immutable through replacement and unpublication', as
   expect((await write('delete', first)).status).toBe(400);
   const second = { id: draft.id, event: value.event };
   expect((await write('update', second)).status).toBe(200);
-  expect((await write('publish', second)).status).toBe(200);
+  const secondPublished = await write('publish', second);
+  expect(secondPublished.status).toBe(200);
+  expect(await secondPublished.json()).toMatchObject({ version: 2, supersedesVersion: 1 });
   const history = (await snapshot()).templates;
   expect(history.find((row) => row.id === first.id)).toMatchObject({
     status: 'archived',
     version: 1,
+    supersedes_version: null,
     body_template: 'Original message',
     is_active: false,
   });
   expect(history.find((row) => row.id === second.id)).toMatchObject({
     status: 'active',
     version: 2,
+    supersedes_version: 1,
     body_template: 'Updated message',
     is_active: true,
   });

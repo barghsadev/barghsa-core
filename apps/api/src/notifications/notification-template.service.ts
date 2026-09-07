@@ -43,6 +43,7 @@ export interface NotificationTemplateResult {
   status: TemplateStatus;
   isActive: boolean;
   version: number;
+  supersedesVersion: number | null;
   publishedAt: Date | null;
   lastTestSentAt: Date | null;
   lastTestStatus: 'delivered' | 'failed' | null;
@@ -202,6 +203,7 @@ export class NotificationTemplateService {
       status: row.status as TemplateStatus,
       isActive: row.is_active as boolean,
       version: (row.version as number) ?? 1,
+      supersedesVersion: (row.supersedes_version as number) ?? null,
       publishedAt: (row.published_at as Date) ?? null,
       lastTestSentAt: (row.last_test_sent_at as Date) ?? null,
       lastTestStatus: (row.last_test_status as 'delivered' | 'failed') ?? null,
@@ -212,7 +214,7 @@ export class NotificationTemplateService {
   }
 
   private readonly SELECT_COLUMNS = `id, event_key, channel, locale, subject,
-      body_template, variables, status, is_active, version, published_at,
+      body_template, variables, status, is_active, version, supersedes_version, published_at,
       last_test_sent_at, last_test_status, created_by, created_at, updated_at`;
 
   /**
@@ -346,7 +348,7 @@ export class NotificationTemplateService {
   }
 
   /**
-   * Create a new notification template as a draft (version 1).
+   * Create the next notification template version as a draft.
    *
    * Rejects creation when an active or draft template already exists for the
    * same event_key+channel+locale (archived history does not block a new draft).
@@ -670,9 +672,9 @@ export class NotificationTemplateService {
       const template = await this.lockTemplate(client, id);
       if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
-      await client.query(
+      const previous = await client.query<{ version: number }>(
         `UPDATE notification_templates SET is_active=false,status='archived',updated_at=NOW()
-         WHERE event_key=$1 AND channel=$2 AND locale=$3 AND is_active=true`,
+         WHERE event_key=$1 AND channel=$2 AND locale=$3 AND is_active=true RETURNING version`,
         [template.event_key, template.channel, template.locale]
       );
       const version = await client.query<{ version: number }>(
@@ -681,9 +683,13 @@ export class NotificationTemplateService {
         [template.event_key, template.channel, template.locale, id]
       );
       const result = await client.query<Record<string, unknown>>(
-        `UPDATE notification_templates SET status='active',is_active=true,version=$1,
+        `UPDATE notification_templates SET status='active',is_active=true,version=$1,supersedes_version=$3,
          published_at=NOW(),updated_at=NOW() WHERE id=$2 RETURNING ${this.SELECT_COLUMNS}`,
-        [Math.max(Number(template.version), version.rows[0]!.version), id]
+        [
+          Math.max(Number(template.version), version.rows[0]!.version),
+          id,
+          previous.rows[0]?.version ?? null,
+        ]
       );
       const row = result.rows[0]!;
       await this.auditMutation(client, actorUserId, 'notification_template_published', row);

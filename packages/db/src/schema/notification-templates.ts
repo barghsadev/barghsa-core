@@ -1,4 +1,13 @@
-import { boolean, pgTable, text, jsonb, integer, uniqueIndex } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  pgTable,
+  text,
+  jsonb,
+  integer,
+  uniqueIndex,
+  foreignKey,
+  check,
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { uuidv7, timestamptz } from '../types.js';
 import { users } from './users.js';
@@ -10,7 +19,7 @@ import { users } from './users.js';
  * locale combination. Admins can create, edit, preview, and publish
  * notification templates.
  *
- * Versioning (mirrors brand_config): each publish increments `version` and the
+ * Versioning: each draft receives the next available version and the
  * previously-active template is demoted to `archived` (is_active=false) so
  * published history is retained. A partial unique index guarantees at most one
  * ACTIVE template per (event_key, channel, locale).
@@ -25,7 +34,7 @@ import { users } from './users.js';
  * - `status` — 'draft' (editable, not used in delivery), 'active' (used by the
  *   notification engine), or 'archived' (a superseded published version kept
  *   for history).
- * - `version` — Monotonically increasing per publish for this combo.
+ * - `version` — Unique, monotonically increasing per draft for this combo.
  * - `is_active` — Whether this template is the currently active one for the
  *   event+channel+locale combination.
  * - `published_at` — When this template was last published to active.
@@ -67,8 +76,11 @@ export const notificationTemplates = pgTable(
       .notNull()
       .default('draft'),
 
-    /** Monotonically increasing per publish for this event+channel+locale. */
+    /** Unique, monotonically increasing per draft for this event+channel+locale. */
     version: integer('version').notNull().default(1),
+
+    /** Previous active version in this same event/channel/locale family. */
+    supersedesVersion: integer('supersedes_version'),
 
     /** Whether this template is currently active for its event+channel+locale. */
     isActive: boolean('is_active').notNull().default(false),
@@ -106,6 +118,24 @@ export const notificationTemplates = pgTable(
      * (event_key, channel, locale). Inactive draft/archived versions
      * are allowed, enabling version history.
      */
+    uniqueIndex('uq_notification_templates_version').on(
+      table.eventKey,
+      table.channel,
+      table.locale,
+      table.version
+    ),
+    check('notification_template_version_positive', sql`${table.version} > 0`),
+    check(
+      'notification_template_supersedes_older',
+      sql`${table.supersedesVersion} IS NULL OR ${table.supersedesVersion} < ${table.version}`
+    ),
+    foreignKey({
+      name: 'notification_template_supersedes_fk',
+      columns: [table.eventKey, table.channel, table.locale, table.supersedesVersion],
+      foreignColumns: [table.eventKey, table.channel, table.locale, table.version],
+    })
+      .onDelete('restrict')
+      .onUpdate('restrict'),
     uniqueIndex('uq_notification_templates_active')
       .on(table.eventKey, table.channel, table.locale)
       .where(sql`is_active = true`),
