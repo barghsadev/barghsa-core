@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Compiled translation checks</title>
+  </head>
+  <body>
+    <main>
+      <label for="resolver">Dictionary</label
+      ><select id="resolver">
+        <option value="auth">Authentication</option>
+        <option value="templates">Contract templates</option>
+        <option value="limit">Wallet limit</option>
+        <option value="receipts">Wallet receipts</option>
+      </select>
+      <label for="locale">Language</label
+      ><select id="locale">
+        <option value="en">English</option>
+        <option value="fa">Persian</option>
+      </select>
+      <label for="message">Message key</label><input id="message" value="auth.login.submit" />
+      <output id="result" aria-label="Translated message"></output>
+    </main>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

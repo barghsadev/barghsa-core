@@ -2733,3 +2733,10 @@ Reviewed the exact canonical T-06.03.04 requirements against the shared picker, 
 All 70 focused production-built browser cases passed across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari. Existing cases cover single/range bounds, keyboard selection and focus restoration, Gregorian/Jalali switching without changing stored instants, account timezone independent of browser timezone, DST, new one-day ranges, numeral preference and mobile month navigation. UI typechecking, 43 unit tests including 28 date boundary cases, and explicit lint passed in this review sequence. The full 335-case product browser run at 4ba30c9 also passed before these additional tests; picker and consumer implementations have not changed since then.
 
 Recorded T-06.03.04 as acceptance_verified with exact source hashes and reviewed revision. Current ledger: 48 reviewed, 35 verified, 13 partial, 274 pending. Three of the 58 historical skips now have verified acceptance; 55 remain pending review. This closes one task, not the full shared-UI story or F20/F22.
+
+
+### Verify translation fallback after production compilation
+
+Added a separate browser fixture that imports the actual public authentication, contract-template, wallet-limit and wallet-receipt translation modules. It exercises known Persian/English messages, literal fallback for missing keys and object-prototype names, then returns to a known message to verify the dictionary is intact. The fixture is built outside product routes and does not add a debug page to the app.
+
+All 40 cases passed across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari; explicit lint passed. This checks the production compiler path in addition to the existing unit cases. No coverage counters were fabricated or source-map matching relaxed. Combined coverage will be refreshed separately before claiming this closes a coverage gate.
