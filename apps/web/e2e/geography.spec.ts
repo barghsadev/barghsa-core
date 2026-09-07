@@ -141,7 +141,9 @@ test('province list retries malformed data and applies pagination and filters', 
   await expect(page.getByRole('cell', { name: 'Second Page', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Previous', exact: true }).click();
   await expect(page.getByRole('cell', { name: 'Tehran', exact: true })).toBeVisible();
-  await page.getByRole('combobox', { name: 'Status', exact: true }).selectOption('inactive');
+  await page
+    .getByRole('combobox', { name: 'Filter by status', exact: true })
+    .selectOption('inactive');
   await expect.poll(() => new URLSearchParams(queries.at(-1)).get('status')).toBe('inactive');
   await page.getByRole('textbox', { name: 'Search provinces', exact: true }).fill('تهران');
   await expect.poll(() => new URLSearchParams(queries.at(-1)).get('search')).toBe('تهران');

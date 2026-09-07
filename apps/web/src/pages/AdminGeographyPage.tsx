@@ -258,7 +258,7 @@ export default function AdminGeographyPage() {
         />
         <select
           className={selectClass}
-          aria-label={t('status')}
+          aria-label={t('filterStatus')}
           value={status}
           onChange={(event) => {
             setStatus(event.target.value);

@@ -65,6 +65,8 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 - Registration challenge repair: reject non-string and blank challenge identifiers before navigation, preserving input for retry. Sixteen Chromium registration/recovery/consent checks and 12 invalid-challenge checks across the other four profiles pass. Web types, lint, build and all 41 route budgets pass. Logs `/tmp/barghsa-registration-start-green.log`, `/tmp/barghsa-registration-start-other.log`, `/tmp/barghsa-registration-start-budgets.log`.
 
+- Resumed full checkpoint at `0494ad4`: all 5,815 unit/integration tests in 461 files, all 11 workspace typechecks and root lint pass. Initial build stopped on a missing local injected UI copy; frozen-lockfile installation repaired it without tracked dependency changes. Log `/tmp/barghsa-resumed-full-coverage.log`. Browser run passed 376/378; two cases exposed a changed geography filter accessible name. Restored the existing distinct filter label in both languages; all 15 focused checks across five profiles now pass (`/tmp/barghsa-geography-label-green.log`). The failed browser run was not merged or credited as a full pass; refresh browser coverage on the corrected revision.
+
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
 - **5,634 unit/integration tests across 455 files pass**, using the full regression and affected refreshes: API3355, DB660, worker367, shared934, UI49, i18n50, web216, tsconfig3. The last two invoice checks were a targeted refresh of an existing test file; other source/test evidence remains valid.
