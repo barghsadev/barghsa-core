@@ -29,4 +29,4 @@ The full backing-service stack inherited from docker-compose.yml still contains 
 
 ## Current checkpoint
 
-The clean rebuild and complete runtime exercise were repeated at 2aeaf54 after updating pnpm to 10.11.1. All checks passed. Exact image identities are recorded in [production-image-checkpoint.json](production-image-checkpoint.json). The dependency lockfile is unchanged by the tool update.
+The clean rebuild and complete runtime exercise were repeated at 11d46d51fbd5fe19182cd3100c282f9f131df71b after the monitoring, title and payment-response repairs. All checks passed. Exact image identities are recorded in [production-image-checkpoint.json](production-image-checkpoint.json). This includes the pinned OpenTelemetry dependencies. The same revision's dependency audit reports zero known advisories; that result is a point-in-time registry check, not a full security certification.
