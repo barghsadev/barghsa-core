@@ -63,7 +63,12 @@ function ComboBoxInput({ className, ...props }: ComboboxPrimitive.Input.Props) {
   );
 }
 
-function ComboBoxPopup({ className, children, ...props }: ComboboxPrimitive.Popup.Props) {
+function ComboBoxPopup({
+  className,
+  children,
+  ...props
+}: Omit<ComboboxPrimitive.Popup.Props, 'children'> &
+  Pick<ComboboxPrimitive.List.Props, 'children'>) {
   return (
     <ComboboxPrimitive.Portal>
       <ComboboxPrimitive.Positioner className="isolate z-50">
@@ -87,7 +92,7 @@ function ComboBoxItem({ className, children, ...props }: ComboboxPrimitive.Item.
     <ComboboxPrimitive.Item
       data-slot="combobox-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded-md py-1.5 pr-8 pl-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "relative flex w-full cursor-default items-center gap-2 rounded-md py-1.5 pe-8 ps-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -95,7 +100,7 @@ function ComboBoxItem({ className, children, ...props }: ComboboxPrimitive.Item.
       <span className="flex flex-1 items-center gap-2">{children}</span>
       <ComboboxPrimitive.ItemIndicator
         render={
-          <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center">
+          <span className="pointer-events-none absolute end-2 flex size-4 items-center justify-center">
             <CheckIcon className="size-4" />
           </span>
         }
@@ -159,7 +164,14 @@ function ComboBoxChips({ className, children, ...props }: ComboboxPrimitive.Chip
   );
 }
 
-function ComboBoxChip({ className, children, ...props }: ComboboxPrimitive.Chip.Props) {
+function ComboBoxChip({
+  className,
+  children,
+  removeLabel,
+  ...props
+}: ComboboxPrimitive.Chip.Props & {
+  /** Localized accessible action, including the selected item. */ removeLabel: string;
+}) {
   return (
     <ComboboxPrimitive.Chip
       data-slot="combobox-chip"
@@ -171,10 +183,12 @@ function ComboBoxChip({ className, children, ...props }: ComboboxPrimitive.Chip.
     >
       {children}
       <ComboboxPrimitive.ChipRemove
-        render={
-          <XIcon className="ml-0.5 size-3 cursor-pointer text-muted-foreground hover:text-foreground" />
-        }
-      />
+        type="button"
+        aria-label={removeLabel}
+        className="ms-0.5 inline-flex size-6 items-center justify-center rounded text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <XIcon aria-hidden="true" className="size-3" />
+      </ComboboxPrimitive.ChipRemove>
     </ComboboxPrimitive.Chip>
   );
 }
