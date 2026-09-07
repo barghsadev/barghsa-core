@@ -265,7 +265,13 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
     const source = await svc.create({ label: 'old', config: sourceCfg, createdBy: 'a1' });
     await svc.recordTest(source.id, { passed: true });
     await svc.activate(source.id, 'a1');
-    await svc.disable(source.id);
+    const replacement = await svc.create({
+      label: 'Replacement',
+      config: VALID_CONFIG,
+      createdBy: 'a1',
+    });
+    await svc.recordTest(replacement.id, { passed: true });
+    await svc.activate(replacement.id, 'a1');
     h.activeTemplateEvents.delete('otp:login');
 
     // Rollbacks clone the stored config; without validation this would re-activate
@@ -285,8 +291,14 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
     const activated = await svc.activate(source.id, 'a1');
     expect(activated.status).toBe('active');
 
-    // Disable it, then roll back.
-    await svc.disable(source.id);
+    // Activate a replacement, then roll back without losing SMS delivery.
+    const replacement = await svc.create({
+      label: 'Replacement',
+      config: VALID_CONFIG,
+      createdBy: 'a1',
+    });
+    await svc.recordTest(replacement.id, { passed: true });
+    await svc.activate(replacement.id, 'a1');
     const rolledBack = await svc.rollback(source.id, 'admin-1');
     expect(rolledBack.status).toBe('active');
   });

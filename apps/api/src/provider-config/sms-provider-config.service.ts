@@ -124,6 +124,13 @@ export const SmsProviderErrors = {
       'An active SMS provider configuration already exists; supersede or disable it first'
     );
   },
+  soleOtpProvider(): ErrBody {
+    return errBody(
+      409,
+      ErrorCodes.CONFLICT_STATE.code,
+      'Cannot disable the only active SMS provider; OTP delivery depends on it'
+    );
+  },
   templateMappingInvalid(detail: string): ErrBody {
     return errBody(
       409,
@@ -403,7 +410,7 @@ export class SmsProviderConfigService {
     }
   }
 
-  /** Disable a configuration (no sole-provider OTP guard for SMS — SMS is not an OTP out-of-band channel). */
+  /** Disable a draft while preserving the active SMS OTP delivery channel. */
   async disable(id: string, actorUserId?: string): Promise<SmsProviderConfigResult> {
     return mutateProvider(this.db, actorUserId, 'sms', 'disabled', async (client) => {
       const existing = await this.findById(id, client, true);
@@ -411,6 +418,9 @@ export class SmsProviderConfigService {
       if (existing.status === 'disabled') return existing;
       if (existing.status === 'superseded') {
         throw new HttpException(SmsProviderErrors.notEditable(), 409);
+      }
+      if (existing.status === 'active') {
+        throw new HttpException(SmsProviderErrors.soleOtpProvider(), 409);
       }
       await client.query(`UPDATE sms_provider_configs SET status = 'disabled' WHERE id = $1`, [id]);
       const row = await this.findById(id, client);

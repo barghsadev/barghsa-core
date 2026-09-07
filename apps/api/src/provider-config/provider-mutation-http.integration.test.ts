@@ -277,3 +277,30 @@ it('sms rollback: invalid mappings leave no orphan clone or audit', async () => 
   expect(response.status).toBe(409);
   expect(await snapshot('sms_provider_configs')).toEqual(before);
 });
+
+for (const channel of ['email', 'sms']) {
+  for (const history of ['none', 'superseded', 'disabled']) {
+    it(`${channel}: inactive ${history} history cannot replace the sole OTP provider`, async () => {
+      const table = `${channel}_provider_configs`,
+        id = randomUUID();
+      await http.pool.query(
+        `INSERT INTO ${table}(id,transport,label,status,config,created_by,last_test_status,activated_at) VALUES ($1,$2,'Active','active','{}','provider-writer','passed',NOW())`,
+        [id, channel === 'email' ? 'smtp' : 'smsir']
+      );
+      if (history !== 'none')
+        await http.pool.query(
+          `INSERT INTO ${table}(id,transport,label,status,config,created_by,last_test_status,activated_at) VALUES ($1,$2,'History',$3,'{}','provider-writer','passed',NOW())`,
+          [randomUUID(), channel === 'email' ? 'smtp' : 'smsir', history]
+        );
+      const before = await snapshot(table);
+      const response = await fetch(`${http.base}/api/admin/${channel}-providers/${id}/disable`, {
+        method: 'POST',
+        headers,
+        body: '{}',
+      });
+      expect(response.status).toBe(409);
+      expect((await response.json()).error.code).toBe('CONFLICT:INVALID_STATE');
+      expect(await snapshot(table)).toEqual(before);
+    });
+  }
+}

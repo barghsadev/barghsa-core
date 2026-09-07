@@ -410,7 +410,7 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
     });
   });
 
-  it('allows disabling when another provider can cover the channel', async () => {
+  it('blocks disabling when the other provider is inactive history', async () => {
     const { service } = buildHarness();
     const a = await service.create({ transport: 'smtp', label: 'A', config: {}, createdBy: 'a' });
     await service.recordTest(a.id, { passed: true });
@@ -418,9 +418,8 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
     const b = await service.create({ transport: 'resend', label: 'B', config: {}, createdBy: 'a' });
     await service.recordTest(b.id, { passed: true });
     const activeB = await service.activate(b.id);
-    // b is active, a is superseded. Disabling b leaves a (superseded) — allowed.
-    const disabled = await service.disable(activeB.id);
-    expect(disabled.status).toBe('disabled');
+    // A superseded row cannot deliver an OTP.
+    await expect(service.disable(activeB.id)).rejects.toMatchObject({ status: 409 });
   });
 
   it('rolls back to a superseded version', async () => {

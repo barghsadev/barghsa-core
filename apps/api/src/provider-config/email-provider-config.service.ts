@@ -392,28 +392,10 @@ export class EmailProviderConfigService {
         throw new HttpException(ProviderErrors.notEditable(), 409);
       }
 
+      // Each channel has one active provider. Inactive history cannot deliver OTPs.
+      // Activate a tested replacement or roll back atomically to preserve delivery.
       if (existing.status === 'active') {
-        const count = await client.query(
-          `SELECT COUNT(*) AS n FROM email_provider_configs WHERE status = 'active'`
-        );
-        const activeCount = parseInt((count.rows[0] as { n?: string } | undefined)?.n ?? '0', 10);
-        if (activeCount <= 1) {
-          // Block only when this is the sole active provider AND no recovery path
-          // (a superseded/disabled version to roll back to) exists — otherwise an
-          // out-of-band OTP recovery route would be lost.
-          const recovery = await client.query(
-            `SELECT COUNT(*) AS n FROM email_provider_configs
-            WHERE id <> $1 AND status IN ('superseded', 'disabled')`,
-            [id]
-          );
-          const recoveryCount = parseInt(
-            (recovery.rows[0] as { n?: string } | undefined)?.n ?? '0',
-            10
-          );
-          if (recoveryCount === 0) {
-            throw new HttpException(ProviderErrors.soleOtpProvider(), 409);
-          }
-        }
+        throw new HttpException(ProviderErrors.soleOtpProvider(), 409);
       }
 
       await client.query(`UPDATE email_provider_configs SET status = 'disabled' WHERE id = $1`, [
