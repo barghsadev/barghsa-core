@@ -1,6 +1,7 @@
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
+import { z } from 'zod';
 import { getDbPool } from '@barghsa/db';
 import {
   GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES,
@@ -51,10 +52,9 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
  * `change_recorded` event (the epic's audit contract) with actor, ip,
  * and the change summary.
  *
- * Permission `admin:uploads:edit` is enforced at the controller boundary
- * (mapped to platform admin today, per the S-09 convention). The admin
- * web UI slice (table: category, formats, max size; edit modal with
- * security warning; fa/en dicts, RTL/a11y) is deferred.
+ * Permission `admin:uploads:edit` is checked at the controller boundary
+ * and revalidated against current grants inside each mutation transaction.
+ * The administrator UI provides localized history, edits and confirmation.
  */
 
 // ─── Public types ──────────────────────────────────────────────────────────
@@ -236,6 +236,11 @@ export class UploadPolicyService {
       );
     }
 
+    if (
+      input.effectiveFrom !== undefined &&
+      !z.string().datetime({ offset: true }).safeParse(input.effectiveFrom).success
+    )
+      throw this.invalidEffectiveDate('effectiveFrom');
     const effectiveFrom =
       input.effectiveFrom !== undefined ? new Date(input.effectiveFrom) : new Date();
     if (Number.isNaN(effectiveFrom.getTime())) {
@@ -355,6 +360,11 @@ export class UploadPolicyService {
    * already-ended policy is a no-op (no audit).
    */
   async end(input: EndUploadPolicyInput): Promise<UploadPolicyDto> {
+    if (
+      input.effectiveUntil !== undefined &&
+      !z.string().datetime({ offset: true }).safeParse(input.effectiveUntil).success
+    )
+      throw this.invalidEffectiveDate('effectiveUntil');
     const effectiveUntil =
       input.effectiveUntil !== undefined ? new Date(input.effectiveUntil) : new Date();
     if (Number.isNaN(effectiveUntil.getTime())) {

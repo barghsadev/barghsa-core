@@ -220,3 +220,36 @@ it('never issues an upload URL when the saved policy cannot be read', async () =
   }
   expect((await presign()).status).not.toBe(503);
 });
+
+it('requires explicit offsets for policy scheduling and persists the intended UTC instants', async () => {
+  const input = { ...policy, category: 'video', allowedExtensions: ['.mp4'] };
+  const before = (
+    await http.pool.query("SELECT count(*) FROM upload_policies WHERE category='video'")
+  ).rows;
+  expect(
+    (await request('', 'POST', { ...input, effectiveFrom: '2035-01-01T12:00:00' })).status
+  ).toBe(400);
+  expect(
+    (await http.pool.query("SELECT count(*) FROM upload_policies WHERE category='video'")).rows
+  ).toEqual(before);
+  const created = await request('', 'POST', {
+    ...input,
+    effectiveFrom: '2035-01-01T12:00:00+03:30',
+  });
+  expect(created.status).toBe(201);
+  const { id } = (await created.json()) as { id: string };
+  expect(
+    (await request(`/${id}/end`, 'POST', { effectiveUntil: '2035-01-02T12:00:00' })).status
+  ).toBe(400);
+  expect(
+    (await request(`/${id}/end`, 'POST', { effectiveUntil: '2035-01-02T12:00:00-08:00' })).status
+  ).toBe(200);
+  const row = (
+    await http.pool.query(
+      'SELECT effective_from, effective_until FROM upload_policies WHERE id=$1',
+      [id]
+    )
+  ).rows[0];
+  expect(row.effective_from.toISOString()).toBe('2035-01-01T08:30:00.000Z');
+  expect(row.effective_until.toISOString()).toBe('2035-01-02T20:00:00.000Z');
+});

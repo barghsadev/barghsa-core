@@ -32,11 +32,7 @@ import { UploadPolicyService } from './upload-policy.service.js';
 // ─── Validation schemas ────────────────────────────────────────────────────
 
 const categorySchema = z.enum([...UPLOAD_POLICY_CATEGORIES]);
-const effectiveDateSchema = z
-  .string()
-  .datetime({ offset: true })
-  .or(z.string().datetime({ local: true }))
-  .optional();
+const effectiveDateSchema = z.string().datetime({ offset: true }).optional();
 
 export const CreateUploadPolicySchema = z
   .object({
@@ -118,9 +114,8 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *   are a security boundary (they determine what file formats and sizes
  *   the platform accepts), so writes are guarded.
  *
- * The admin web UI slice (table: category, formats, max size; edit modal
- * with a security-implications warning; fa/en dicts, RTL/a11y) is
- * deferred.
+ * The administrator UI uses these endpoints for version history, editing
+ * format/size limits and ending a policy, with localized confirmation.
  */
 @ApiTags('Admin · Upload Policies')
 @ApiBearerAuth()
