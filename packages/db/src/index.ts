@@ -1,6 +1,7 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool, Client, type PoolConfig } from 'pg';
 import * as fs from 'node:fs';
+import { X509Certificate } from 'node:crypto';
 
 let pool: Pool | null = null;
 let directPool: Pool | null = null;
@@ -340,14 +341,30 @@ function resolveSslConfig(
   if (caPath) {
     try {
       const ca = fs.readFileSync(caPath, 'utf-8');
+      // Reject empty/malformed bundles before a connection can fall back to an
+      // unintended trust store. Node accepts PEM bundles with multiple certs.
+      new X509Certificate(ca);
       return { rejectUnauthorized, ca };
-    } catch {
-      structuredLog('error', 'ssl_ca_read_error', { path: caPath });
-      return { rejectUnauthorized };
+    } catch (cause) {
+      throw new Error('Unable to load configured database CA certificate', { cause });
     }
   }
 
   return { rejectUnauthorized };
+}
+
+function poolConnectionConfig(url: string | undefined, config: DbPoolConfig): PoolConfig {
+  const ssl = resolveSslConfig(config.ssl);
+  let connectionString = buildConnectionString(url, config);
+  if (ssl !== undefined && connectionString) {
+    const parsed = new URL(connectionString);
+    // pg parses URL TLS parameters after the object options. Remove competing
+    // URL settings only when application/environment TLS is explicitly selected.
+    for (const key of ['ssl', 'sslmode', 'sslcert', 'sslkey', 'sslrootcert', 'sslnegotiation'])
+      parsed.searchParams.delete(key);
+    connectionString = parsed.toString();
+  }
+  return { connectionString, ssl };
 }
 
 export function createDbPool(config: DbPoolConfig = {}): Pool {
@@ -363,21 +380,22 @@ export function createDbPool(config: DbPoolConfig = {}): Pool {
     process.env['PGBOUNCER_URL'] ??
     process.env['DATABASE_URL'];
 
+  const timeoutPolicy = poolTimeoutPolicy(config);
+
   pool = new Pool({
-    connectionString: buildConnectionString(connectionUrl, config),
+    ...poolConnectionConfig(connectionUrl, config),
     min: config.poolMin ?? (Number(process.env.DB_POOL_MIN) || 2),
     max: config.poolMax ?? (Number(process.env.DB_POOL_MAX) || 20),
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
     connectionTimeoutMillis:
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
-    ssl: resolveSslConfig(config.ssl),
   } satisfies PoolConfig);
 
   pool.on('error', (err) => {
     structuredLog('error', 'pool_error', { message: err.message });
   });
 
-  attachClientQueryHooks(pool, poolTimeoutPolicy(config));
+  attachClientQueryHooks(pool, timeoutPolicy);
 
   return pool;
 }
@@ -409,17 +427,18 @@ export function createDirectDbPool(
   const directUrl =
     config.pgdirectUrl ?? process.env['PGDIRECT_URL'] ?? process.env['DATABASE_URL'];
 
+  const timeoutPolicy = poolTimeoutPolicy(config);
+
   const created = new Pool({
-    connectionString: buildConnectionString(directUrl, config),
+    ...poolConnectionConfig(directUrl, config),
     min: config.poolMin ?? 1,
     max: config.poolMax ?? 5,
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
     connectionTimeoutMillis:
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
-    ssl: resolveSslConfig(config.ssl),
   } satisfies PoolConfig);
 
-  attachClientQueryHooks(created, poolTimeoutPolicy(config));
+  attachClientQueryHooks(created, timeoutPolicy);
   if (shared) directPool = created;
   return created;
 }

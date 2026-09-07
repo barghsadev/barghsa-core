@@ -1,6 +1,6 @@
 # Repair handoff
 
-Updated 2026-09-07 after the bounded repair checkpoint. Read this file first; do not reload the full repair-progress archive.
+Updated 2026-09-08. Repairs resumed at user request; the prior checkpoint is historical. Read this file first; do not reload the full repair-progress archive.
 
 ## Workspace and authority
 
@@ -95,7 +95,9 @@ External: provider delivery/identity-provider availability; real TLS/DNS/backups
 
 Outstanding original-plan work: the four coverage deficits above, upstream Drizzle declaration debt/skipLibCheck, remaining shared UI/build-format and eager-route requirements, broader role/localization/accessibility acceptance, AI chat/KB and policy-test acceptance, remaining branding consumers, and future refund/contract/document-processing dependencies. No blanket acceptance or coverage sign-off was issued. Exhaustive historical task/skip review remains deferred under the approved finish scope.
 
-The local runtime repair checkpoint is finished. Do not restart the audit, rebuild previously verified skips or repeat full suites without a new change/failure/concern. Select a specific remaining requirement before expanding this scope.
+User requested continued local blocker repair and building on 2026-09-08. Work is active: close locally fixable blockers and failed coverage gates, then remaining known build gaps. External/remote restrictions still apply. Do not restart exhaustive historical acceptance.
+
+Current step: connection-security repair. Real pg configuration proved URL sslmode=disable overrode explicit TLS enablement. Explicit application/environment TLS now removes competing URL TLS parameters. Missing/empty/malformed CA files fail startup, and timeout validation precedes singleton creation. Eighteen focused connection checks, database types and explicit lint pass. Full database coverage refresh is next; broader affected regression will follow shared changes.
 
 ## Evidence map
 
