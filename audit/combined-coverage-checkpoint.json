@@ -136,10 +136,10 @@
         "apps/api/src/wallet/wallet.module.ts",
         "apps/api/src/wallet/wallet.service.ts"
       ],
-      "lines": 9080,
-      "covered_lines": 8193,
-      "branches": 6085,
-      "covered_branches": 4641,
+      "lines": 9085,
+      "covered_lines": 8196,
+      "branches": 6093,
+      "covered_branches": 4648,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -278,6 +278,8 @@
         "apps/api/src/tos/tos.module.ts",
         "apps/api/src/tos/tos.service.ts",
         "apps/api/src/upload/content-type-sniffer.ts",
+        "apps/api/src/upload/document-content-type.ts",
+        "apps/api/src/upload/document-parser.cjs",
         "apps/api/src/upload/index.ts",
         "apps/api/src/upload/upload-policy.resolver.ts",
         "apps/api/src/upload/upload-reservations.ts",
@@ -288,10 +290,10 @@
         "apps/api/src/user-settings/user-settings.controller.ts",
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
-      "lines": 4198,
-      "covered_lines": 3890,
-      "branches": 3244,
-      "covered_branches": 2548,
+      "lines": 4352,
+      "covered_lines": 4038,
+      "branches": 3394,
+      "covered_branches": 2691,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -427,9 +429,9 @@
         "apps/web/src/routes/terms.tsx"
       ],
       "lines": 6507,
-      "covered_lines": 4128,
+      "covered_lines": 4113,
       "branches": 8000,
-      "covered_branches": 4733,
+      "covered_branches": 4711,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -861,5 +863,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "3fd042175e506822180ead17badff01bfcf8feca"
+  "head_sha": "656e91f29c0c4c2fbcc667a03b40be8490b075f6"
 }

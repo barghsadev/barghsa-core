@@ -61,6 +61,7 @@ The initial review made no product, kanban, GitHub or scheduler changes. Its gen
 ## Files
 
 - [Repair plan](fix-plan.md)
+- [Current acceptance evidence](acceptance-closure.json)
 - [Readable task-by-task review](task-review.md)
 - [Task register CSV](task-review.csv) and [JSON with requirements and source evidence](task-review.json)
 - [History-confirmed skipped tasks](skipped-tasks.md), [CSV](skipped-tasks.csv), [JSON](skipped-tasks.json)

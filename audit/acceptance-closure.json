@@ -870,8 +870,8 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
-      "status": "partial",
-      "reviewed_sha": "df62d17d69d844d84dd07c190effa13371594406",
+      "status": "acceptance_verified",
+      "reviewed_sha": "656e91f29c0c4c2fbcc667a03b40be8490b075f6",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1047,
       "requirement": "- **T-06.02.03:** Create timezone-aware date/time display utilities\n  - **Notes:** All timestamps stored as UTC `timestamptz`. When displaying, convert to user's configured timezone (default: `Asia/Tehran`, UTC+3:30). Use `Intl.DateTimeFormat` with `timeZone` option. Functions: `formatInTimezone(utcDate, timezone, locale, format)`, `formatTime(utcDate, timezone)`, `formatDate(utcDate, timezone, locale)`. User can change timezone in profile settings.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M",
@@ -886,23 +886,145 @@
           "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
         },
         {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "574f0d6c80e2fe2ac4cecebe64cc5da9c2bd8e38e9e612c8b000f770c4cf9b02"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
+        },
+        {
           "path": "apps/web/src/hooks/useTimezone.ts",
           "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
         },
         {
-          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
-          "sha256": "b63f9e2ee52e84c0a91a09306d97158188d88570511ee4bbdddff183380a7600"
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "e39d2933b0c5750eb2d78e43b2605abaf90c7a60e63d8fb7171dc9e7c928fd78"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "364dea0197a3bb364c954fe56768624fe12949d39c4b6b53ee6e32b024661cf1"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "c4bde862d6ff487a06839c4bbb0d537261f58461d00fdf892a0a506f0f831d61"
+        },
+        {
+          "path": "apps/web/e2e/finance-timestamps.spec.ts",
+          "sha256": "e1662fbc625c100d27f3cd9f3051c096a2c497d3e360e3d2104cc5fe315e8a4f"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "f9567b582effb007ab0a2d7fae728f282da63b08f9df91fc738307ded7b1cecf"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "c9a282eab4a75f2a2146e2172881237fd38598dd8a44ec60a5bc385515399f4a"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "397fd04e376884ee30fe6f38927ac1d9b8a2ded6c0e72fb8b1d20cf46b6c4cf3"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "cd2e193df082b24213dd8bf6922d2e0b8ce6af52f9b450a6cc0a47bc1bb1b5e3"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0119_snapshot.json",
+          "sha256": "8b4cedb0d76788f1b71e6fcca366fe25c46ef1625a59dc420badaf1291b0de9c"
         }
       ],
       "checks": [
-        "27 i18n tests pass, including UTC offsets, midnight rollover, Persian dates and DST boundaries",
-        "Real account-timezone branding display and failure/retry pass in both browser locales"
+        "All 5,172 unit/database checks and 280 production Chromium checks pass at the reviewed revision.",
+        "All three required Intl-based format utilities default explicitly to Asia/Tehran; malformed instants and invalid zones fail instead of falling back to the host timezone.",
+        "Account-timezone settings persist through the real migrated API; failure/retry and changed preferences are covered in both locales.",
+        "Current absolute timestamp consumers were reviewed and migrated or retain an explicit account timezone; browser cases cover date boundaries, future expiry, DST gaps/folds and both locales. Date-only payment values retain their business calendar date; public unauthenticated terms use the explicit Tehran default.",
+        "Every Drizzle timestamp declaration uses withTimezone and snapshot 0119 contains no timestamp-without-time-zone columns."
       ],
       "limitations": [
-        "Several non-picker timestamp displays still use browser-local time. The shared utilities and branding consumer are implemented, but the all-displays requirement remains incomplete."
+        "Production database deployment is not certified by this local review. Global coverage and broader F20 localization/numeral requirements remain separate open gates."
       ],
       "merged_prs": [],
       "historically_skipped": true
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "656e91f29c0c4c2fbcc667a03b40be8490b075f6",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 906,
+      "requirement": "**T-09.12.05 — Upload policies configuration**\n\n- Description: Admin configures file upload policies: allowed formats and size limits per category (documents, images, videos). Within deployment-safe boundaries.\n- Technical notes: Category → allowed extensions[], max file size. Validate both extension and detected content type at upload. Config versioned. System enforces both DB config and deployment-level limits.\n- UI/UX: Table: category, formats, max size. Edit modal. Warning about security implications.\n- Dependencies: admin config framework, file storage module\n- Complexity: M",
+      "requirement_sha256": "c0bb58260adb26fbc1bf52f239dbdc07de875444c9537ce0f19b3fd864594be4",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/upload-policy.controller.ts",
+          "sha256": "998901b454568869ea063eed0aae52874265cb91a0a46620cf5ac28ad15aebbb"
+        },
+        {
+          "path": "apps/api/src/admin/upload-policy.service.ts",
+          "sha256": "7ea1f892fbdfc2dd78f96e2f597c2ba3ec8e32163805c2a2d79f114be397d25b"
+        },
+        {
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "47856f91db129eff5416bddbe247f1fb450e07f63a09d0ee1a7aacb8045b24fb"
+        },
+        {
+          "path": "apps/api/src/upload/upload-policy.resolver.ts",
+          "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+        },
+        {
+          "path": "apps/api/src/upload/upload.controller.ts",
+          "sha256": "7154434ba8cd2f118910608cbff9bb60365e8fd1151e5346f20fdc9bdd2d310d"
+        },
+        {
+          "path": "apps/api/src/upload/upload.config.ts",
+          "sha256": "f5fdd73ae14ae87c859a9c192e0d89281df6b29e2607d36fd3cb825b27b1251f"
+        },
+        {
+          "path": "apps/api/src/upload/content-type-sniffer.ts",
+          "sha256": "b73e7c2e3c6fbab3ee6cd8cef1b499e9bc8658b24823b030cd251a91b99fe521"
+        },
+        {
+          "path": "apps/api/src/upload/document-content-type.ts",
+          "sha256": "addcd46a97e3c1e16fb33764fba7d33ef4365e0dad9e21863da905b674e0aba4"
+        },
+        {
+          "path": "apps/api/src/upload/document-parser.cjs",
+          "sha256": "c32bb44d54090d3ee7f4947f4a86dd22286095645f4b11da8e068c9c6f93e43c"
+        },
+        {
+          "path": "apps/api/src/public/branding-http.integration.test.ts",
+          "sha256": "8671d335b01aa6c83ac9b5708151cd0de52a4002c615bbce7eb961389f55e8dc"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "334773e87ac7606cc943232a7059c354096d898c6673f93892c440c1f65ec81f"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "cd2e193df082b24213dd8bf6922d2e0b8ce6af52f9b450a6cc0a47bc1bb1b5e3"
+        },
+        {
+          "path": "packages/db/src/schema/upload-policies.ts",
+          "sha256": "17e2642b59a12cead8aa4850de6683686201eeaf8ff474142ba6fdbc2c2ca45d"
+        }
+      ],
+      "checks": [
+        "Canonical category/format/size table, edit confirmation warning, history and policy end flows pass with the real migrated API in English and Persian.",
+        "HTTP checks enforce current capabilities, CSRF, step-up, transactional audit rollback and deployment-safe limits. Revoked authority while waiting for the actor lock is rejected.",
+        "DB and deployment limits intersect; failed policy reads return 503. Current extension restrictions are rechecked at verification and recording.",
+        "Filename and claimed/detected MIME must agree. Real HTTP verify/record tests cover renamed images, plain ZIP, cross-format Office containers, legacy Office headers, valid/malformed CSV and recognized/invalid video containers.",
+        "Complete document parsing enforces byte limits, concurrency and deadlines; compiled worker execution and process coverage are verified.",
+        "Scheduled start/end timestamps require explicit offsets and persist exact UTC instants.",
+        "Full checkpoint: 5,172 unit/database checks and 280 production Chromium checks pass; global combined coverage still has six failing groups."
+      ],
+      "limitations": [
+        "Content detection identifies supported formats and is not malware scanning, full document/media integrity validation or certification of a deployed object-storage service. Global quality and operational gates remain open."
+      ],
+      "merged_prs": [
+        216
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -1139,7 +1261,6 @@
     "02-auth-users-admin.md#T-09.12.02",
     "02-auth-users-admin.md#T-09.12.03",
     "02-auth-users-admin.md#T-09.12.04",
-    "02-auth-users-admin.md#T-09.12.05",
     "02-auth-users-admin.md#T-09.12.06",
     "02-auth-users-admin.md#T-10.01.01",
     "02-auth-users-admin.md#T-10.01.02",
