@@ -244,13 +244,13 @@ test('late old-profile responses cannot overwrite the switched page or notificat
     await expect.poll(() => oldReads).toBeGreaterThanOrEqual(3);
     await page.getByRole('combobox').selectOption('second');
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
-    await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('3');
+    await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('۳');
     const settled = page.waitForResponse((response) => response.url().endsWith('/api/dashboard'));
     releaseOld();
     await settled;
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.locator('main')).not.toContainText('۱۲۳٬۴۵۶');
-    await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('3');
+    await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('۳');
   } finally {
     releaseOld();
   }
