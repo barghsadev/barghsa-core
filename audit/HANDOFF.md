@@ -72,7 +72,7 @@ These are carry-forward limits and next review targets, not a newly completed pe
 | Group | Remaining concern |
 | --- | --- |
 | F01 loop identity/state | Local protocol and completion-correction protections built/tested. Generic recovery and remote operations/PR304 reconciliation remain unverified; remote actions outside current authority. |
-| F02 migrations/database | Clean/upgrade paths through migration 0119 tested. Production restore evidence and distinct 10-second read / 30-second write defaults remain open. |
+| F02 migrations/database | Clean/upgrade paths through migration 0120 tested. Distinct 10-second read / 30-second write server deadlines repaired. Production restore and live proxy evidence remain external. |
 | F03 sessions/CSRF | Core repair exists; remaining legacy rotation/session edge acceptance. |
 | F04 staff permissions | Core repair exists; full privileged-role matrix and real staff-data review remain. |
 | F05 registration/OTP | Delivery/consent repairs exist; external delivery and crash/operations acceptance remain. |
@@ -103,7 +103,7 @@ Migration 0120 adds the rolling store and functions. Legacy buckets are consumed
 
 Reviewed locks/snapshots, reset ordering, truncation/expiry, Retry-After, namespace/window separation and migration journal ordering. Targeted evidence: 8 real PostgreSQL rolling tests, 83 shared limiter tests, 17 authentication HTTP/Redis cases, clean/legacy-upgrade and lineage migration checks, database snapshot check, API/shared/database types and explicit changed-path ESLint pass. One historical-upgrade fixture initially retained new objects while simulating an old schema; corrected its rollback fixture and reran successfully. SMS limiter mock updated for the new database response. Full final regression pending.
 
-Next confirmed code gap: F02 distinct read/write query timeout defaults. F13 legacy receipt requests already deliberately fail closed without trusted initiation fingerprints; manual reconciliation is an external blocker, not an unimplemented approval bypass. Evidence: repair-progress F13.4.
+F02 timeout repair now sets server statement_timeout per SQL command, default read 10s/write 30s, and retains cancellation guards. Adjacent SET/query pairs prevent concurrent callers exchanging deadlines. Explicit uniform overrides remain supported. Three new PostgreSQL policy checks and 25 existing pool/cancellation/health/options checks pass; types and explicit lint pass. Live PgBouncer transaction pooling is not certified; per-session SET requires session-affine routing. Production restore evidence remains external. F13 legacy receipt requests already deliberately fail closed without trusted initiation fingerprints; manual reconciliation is an external blocker, not an unimplemented approval bypass. Evidence: repair-progress F13.4.
 
 ## Evidence map and efficient validation
 
@@ -137,3 +137,11 @@ Do not rebuild shared/API packages while browser fixtures are running. Never col
 If acceptance records change, regenerate/check current skipped dispositions. The current requirement and skip generators have 11 combined tests. Preserve historical evidence and exact source-revision bindings.
 
 Maintain this compact handoff as current state. Add brief historical evidence to the progress archive only when needed. Do not restart the original audit or repeat completed repairs. Finish the approved bounded pass and clearly list deferred requirements; do not claim full original-plan acceptance.
+
+## Bounded-pass disposition before final checkpoint
+
+Locally actionable confirmed carry-forward defects F23 rolling windows and F02 timeout defaults are implemented and reviewed. F13 legacy receipt approvals already fail closed; do not invent missing initiation evidence. Remaining original-plan acceptance is not certified.
+
+External blockers: live provider delivery and identity provider availability; production TLS/DNS/backup-restore/proxy behavior; legacy notification secrets/attempt reconciliation, address/order/upload inventories, and receipt approval reconciliation; remote loop recovery and PR304/scheduler state. No remote actions authorized or performed.
+
+Deferred work: exhaustive 322-task acceptance and 55 historical-skip reviews; broader role/translation/accessibility matrices and legacy edge acceptance; four existing coverage gates and upstream Drizzle declaration debt; missing shared UI/build-format requirements, eager route loading, AI chat/KB and policy-test acceptance, branding consumers, and future refund/contract/document-processing dependencies. These remain open requirements, not verified implementation. Final regression is the next step, with no new broad audit.

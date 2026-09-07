@@ -40,3 +40,9 @@ A cancellation-network failure still relies on the configured server timeout and
 Real PostgreSQL tests reproduced two URL-construction errors. Appending a second options parameter discarded the configured search_path and application_name. Appending after a URL fragment left statement, lock and idle-transaction timeouts at zero. The builder now parses the URL, keeps the driver's effective last options value, appends the configured guards within that value and writes one options parameter before any fragment. Existing credentials and unrelated URL fields remain intact.
 
 Three regression cases pass, including actual server setting readback, server-side cancellation and connection reuse. The focused connection/cancellation suite passes 21 tests; database typechecking and explicit lint pass. This repair does not add the still-missing distinct ten-second read and thirty-second write defaults.
+
+## F02 timeout defaults, bounded repair pass
+
+The application pool now sets PostgreSQL statement_timeout before each SQL command, defaulting to 10 seconds for reads and 30 seconds for writes, including modifying CTEs. SET/query pairs are enqueued together so concurrent callers cannot exchange deadlines. The cancellation guard uses the same budget. Explicit uniform timeout overrides retain their previous behavior. Transaction control remains usable after cancellation, including commented ROLLBACK.
+
+Three real PostgreSQL policy checks pass alongside 25 existing pool, cancellation, health and connection-option checks. Database typechecking and explicit lint pass. This closes the confirmed local default-timeout defect. Unknown SQL commands and multi-statement batches conservatively use the write budget. Function side effects cannot be inferred from SELECT text. Live PgBouncer behavior remains an operational prerequisite; this implementation requires session-affine routing for session SET. No production deployment or proxy certification was performed.

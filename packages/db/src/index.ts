@@ -17,6 +17,9 @@ export interface DbPoolConfig {
   lockTimeout?: string;
   idleTransactionTimeout?: string;
   queryTimeout?: number;
+  /** Per-statement defaults. Explicit statementTimeout/queryTimeout keep uniform overrides. */
+  readTimeoutMs?: number;
+  writeTimeoutMs?: number;
   /** Enable TLS for the PostgreSQL connection. Overrides any sslmode in the URL. */
   ssl?: boolean | { rejectUnauthorized: boolean; ca?: string };
 }
@@ -26,6 +29,43 @@ const DEFAULT_LOCK_TIMEOUT = '5s';
 const DEFAULT_IDLE_TX_TIMEOUT = '60s';
 const SLOW_QUERY_THRESHOLD_MS = 200;
 const DEFAULT_QUERY_TIMEOUT = 30_000;
+const DEFAULT_READ_TIMEOUT = 10_000;
+
+type QueryTimeoutPolicy = number | { read: number; write: number };
+
+/** Classify SQL commands conservatively. Unknown commands and write CTEs get the write budget. */
+function isReadQuery(text: unknown): boolean {
+  if (typeof text !== 'string') return false;
+  // Remove quoted content and comments before examining command words. Multi-
+  // statement batches use the write budget; this is timeout selection, not authorization.
+  const commands = text
+    .replace(
+      /'(?:''|[^'])*'|"(?:""|[^"])*"|\$([a-zA-Z_][a-zA-Z_0-9]*|)\$[\s\S]*?\$\1\$|--[^\n]*|\/\*[\s\S]*?\*\//g,
+      ' '
+    )
+    .trim()
+    .replace(/;\s*$/, '');
+  return (
+    /^(SELECT|SHOW|VALUES|TABLE|WITH)\b/i.test(commands) &&
+    !/;|\b(INSERT|UPDATE|DELETE|MERGE|INTO|CALL|CREATE|ALTER|DROP|TRUNCATE|LOCK)\b/i.test(commands)
+  );
+}
+
+function poolTimeoutPolicy(config: DbPoolConfig): QueryTimeoutPolicy {
+  if (config.queryTimeout !== undefined || config.statementTimeout !== undefined)
+    return config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT;
+  const policy = {
+    read: config.readTimeoutMs ?? DEFAULT_READ_TIMEOUT,
+    write: config.writeTimeoutMs ?? DEFAULT_QUERY_TIMEOUT,
+  };
+  if (
+    Object.values(policy).some(
+      (value) => !Number.isSafeInteger(value) || value < 1 || value > 2147483647
+    )
+  )
+    throw new Error('Database read/write timeouts must be positive integer milliseconds');
+  return policy;
+}
 
 /**
  * Emit a structured (single-line JSON) log entry. Development keeps plain
@@ -124,7 +164,17 @@ function cancelRunningQuery(client: QueryClient, query: PendingQuery): () => voi
  * call, which is where pg stores the just-created Query.
  */
 
-export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof client.query {
+export function wrapClientQuery(
+  client: Client,
+  timeoutPolicy: QueryTimeoutPolicy
+): typeof client.query {
+  if (
+    typeof timeoutPolicy !== 'number' &&
+    Object.values(timeoutPolicy).some(
+      (value) => !Number.isSafeInteger(value) || value < 1 || value > 2147483647
+    )
+  )
+    throw new Error('Database read/write timeouts must be positive integer milliseconds');
   const originalQuery = client.query.bind(client);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,6 +182,12 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
     const startedAt = Date.now();
     const first = args[0];
     const text = typeof first === 'string' ? first : first?.text;
+    const queryTimeoutMs =
+      typeof timeoutPolicy === 'number'
+        ? timeoutPolicy
+        : isReadQuery(text)
+          ? timeoutPolicy.read
+          : timeoutPolicy.write;
 
     // Detect callback-passing usage (last arg is a function).
     const cbIndex = args.findIndex((a: unknown) => typeof a === 'function');
@@ -177,6 +233,28 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
       }
     };
 
+    if (
+      typeof timeoutPolicy !== 'number' &&
+      !/^\s*(BEGIN|START\s+TRANSACTION|COMMIT|END|ROLLBACK|ABORT|SAVEPOINT|RELEASE|SET|RESET)\b/i.test(
+        text ?? ''
+      )
+    ) {
+      // Queue SET and its query synchronously as one adjacent pair. Awaiting SET
+      // here would allow another caller's SET to change this query's timeout.
+      // Transaction-control commands must remain usable in an aborted transaction.
+      originalQuery(`SET statement_timeout = ${queryTimeoutMs}`, (error) => {
+        // Let ROLLBACK, including commented SQL, recover an aborted transaction.
+        // Every other statement will itself fail with 25P02 until recovery.
+        if (!error || ('code' in error && error.code === '25P02') || !capturedQuery) return;
+        const target = client as QueryClient;
+        const index = target._queryQueue?.indexOf(capturedQuery) ?? -1;
+        if (index >= 0) {
+          target._queryQueue!.splice(index, 1);
+          capturedQuery.handleError(error, client.connection);
+        }
+      });
+    }
+
     if (hasCallback) {
       const originalCb = args[cbIndex];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -220,11 +298,16 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
  * Attach the slow-query logging and query-timeout guard to a pool. Registered
  * per-client via the pool's `connect` event.
  */
-function attachClientQueryHooks(pool: Pool, queryTimeoutMs: number): void {
-  if (process.env.NODE_ENV !== 'production' && queryTimeoutMs <= 0) return;
+function attachClientQueryHooks(pool: Pool, timeoutPolicy: QueryTimeoutPolicy): void {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    typeof timeoutPolicy === 'number' &&
+    timeoutPolicy <= 0
+  )
+    return;
 
   pool.on('connect', (client: Client) => {
-    client.query = wrapClientQuery(client, queryTimeoutMs);
+    client.query = wrapClientQuery(client, timeoutPolicy);
   });
 }
 
@@ -296,7 +379,7 @@ export function createDbPool(config: DbPoolConfig = {}): Pool {
     structuredLog('error', 'pool_error', { message: err.message });
   });
 
-  attachClientQueryHooks(pool, config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT);
+  attachClientQueryHooks(pool, poolTimeoutPolicy(config));
 
   return pool;
 }
@@ -338,7 +421,7 @@ export function createDirectDbPool(
     ssl: resolveSslConfig(config.ssl),
   } satisfies PoolConfig);
 
-  attachClientQueryHooks(created, config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT);
+  attachClientQueryHooks(created, poolTimeoutPolicy(config));
   if (shared) directPool = created;
   return created;
 }
