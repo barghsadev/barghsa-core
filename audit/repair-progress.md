@@ -2084,3 +2084,9 @@ Contract counts still derive from confirmed orders until the separate contract m
 ### Record dashboard acceptance boundaries
 
 The task register now has 19 assessed tasks: 14 verified, five partial, and 303 pending individual review. The wallet balance card is verified against its current requirements using real API/browser evidence. Dashboard layout and quick-status parents remain partial because dedicated contract counts and future filtered order/contract pages are not complete. Original merged PR evidence remains separate and unchanged.
+
+### Keep unpublished branding out of public responses
+
+The brand configuration service now returns active values or safe defaults unless a staff caller explicitly requests draft fallback. The permission-checked administrator read retains preview access; the unauthenticated public read cannot publish the first draft implicitly.
+
+Review and validation: a real HTTP regression exposed the first draft before activation. All 16 brand service/controller and migrated HTTP checks pass after repair, including staff preview, activation and retaining published values while the next draft is edited. Two initial unit failures came from obsolete queued mock responses after the public query stopped reading drafts; corrected the expectations and reset mocks between tests. Root typechecking, targeted lint and formatting pass. Existing activation/version-history concurrency and audit behavior still require review; this bounded repair does not certify the whole branding task.

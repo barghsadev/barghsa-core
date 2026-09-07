@@ -48,10 +48,10 @@ export class BrandConfigService {
   }
 
   /**
-   * Get the active brand config, or the latest draft if none active.
-   * Returns a default config if no config exists at all.
+   * Read published branding. Staff may explicitly request draft fallback for preview.
+   * Public reads use safe defaults until a version has been activated.
    */
-  async getActiveConfig(): Promise<BrandConfigDto> {
+  async getActiveConfig(includeDraft = false): Promise<BrandConfigDto> {
     const pool = getDbPool();
 
     // Try active first
@@ -66,16 +66,18 @@ export class BrandConfigService {
       return this.rowToDto(activeResult.rows[0]);
     }
 
-    // Fall back to latest draft
-    const draftResult = await pool.query(
-      `SELECT id, config, version, status, created_by, created_at, updated_at
-       FROM brand_config
-       ORDER BY version DESC, created_at DESC
-       LIMIT 1`
-    );
+    if (includeDraft) {
+      // Fall back to latest draft
+      const draftResult = await pool.query(
+        `SELECT id, config, version, status, created_by, created_at, updated_at
+         FROM brand_config
+         ORDER BY version DESC, created_at DESC
+         LIMIT 1`
+      );
 
-    if (draftResult.rows.length > 0) {
-      return this.rowToDto(draftResult.rows[0]);
+      if (draftResult.rows.length > 0) {
+        return this.rowToDto(draftResult.rows[0]);
+      }
     }
 
     // Return default config

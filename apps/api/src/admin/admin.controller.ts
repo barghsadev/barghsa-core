@@ -807,7 +807,7 @@ export class AdminController {
         403
       );
     }
-    return this.brandConfigService.getActiveConfig();
+    return this.brandConfigService.getActiveConfig(true);
   }
 
   /**

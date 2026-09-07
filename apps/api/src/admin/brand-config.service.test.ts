@@ -34,7 +34,7 @@ describe('BrandConfigService', () => {
   let service: BrandConfigService;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
     service = new BrandConfigService();
   });
 
@@ -54,7 +54,7 @@ describe('BrandConfigService', () => {
         .mockResolvedValueOnce({ rows: [] }) // no active
         .mockResolvedValueOnce({ rows: [makeRow({ status: 'draft' })] }); // latest draft
 
-      const result = await service.getActiveConfig();
+      const result = await service.getActiveConfig(true);
 
       expect(result.status).toBe('draft');
       expect(result.config.appTitle).toBe('Barghsa');
@@ -62,12 +62,11 @@ describe('BrandConfigService', () => {
     });
 
     it('returns default config when no configs exist at all', async () => {
-      mockQuery
-        .mockResolvedValueOnce({ rows: [] }) // no active
-        .mockResolvedValueOnce({ rows: [] }); // no draft
+      mockQuery.mockResolvedValueOnce({ rows: [] }); // no active
 
       const result = await service.getActiveConfig();
 
+      expect(mockQuery).toHaveBeenCalledTimes(1);
       expect(result.id).toBe('default');
       expect(result.version).toBe(0);
       expect(result.config.appTitle).toBe('Barghsa');
