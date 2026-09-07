@@ -1908,3 +1908,9 @@ Review and validation: three new HTTP cases reproduced missing reservations and 
 ### Verify SMTP destination guard boundaries
 
 Added direct guard coverage for IPv4 reserved-range edges, IPv6 local/multicast/documentation addresses, mapped IPv4 spellings, malformed input, mixed DNS answers, resolver failures, IP-literal bypass of DNS and explicit host allowlist behavior. All 60 guard checks plus four existing SMTP delivery tests pass. Shared typecheck and targeted lint pass. No destination policy changed in this step; this verifies the currently documented blocked ranges rather than certifying every special-purpose Internet allocation.
+
+### Repair frozen production packaging with dependency overrides
+
+The current image rebuild failed in `pnpm deploy` with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`, although frozen installation succeeded. The pinned pnpm 10.8.1 deployment path discarded overrides. Updated the package-manager and CI pins together to 10.11.1, which includes the upstream correction documented in [pnpm's release notes](https://github.com/pnpm/pnpm/releases/tag/v10.11.1) and [fix #9546](https://github.com/pnpm/pnpm/pull/9546).
+
+Review and validation: frozen workspace installation passes with no dependency lockfile changes. The API image rebuild, including both API and worker production packaging stages, now succeeds. Snapshot generation guard and its negative test pass with the new tool version. Runtime image boot and shutdown checks follow this packaging checkpoint. No legacy deployment mode or dependency re-resolution was enabled.
