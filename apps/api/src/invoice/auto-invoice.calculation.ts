@@ -96,7 +96,7 @@ export interface AutoInvoiceCalculation {
 /** Calculation error messages (guarded in the service to 4xx). */
 export const AUTO_INVOICE_ERRORS = {
   NO_LINES: () => 'Cannot auto-generate an invoice without any lines',
-  BAD_QUANTITY: () => 'Line quantity must be a positive integer',
+  BAD_QUANTITY: () => 'Line quantity must be a positive safe integer',
   NEGATIVE_UNIT_PRICE: () => 'Line unit price cannot be negative',
   BAD_VAT_RATE: () => 'Line VAT rate must be between 0 and 10000 basis points',
   NEGATIVE_DISCOUNT: () => 'Gift discount cannot be negative',
@@ -111,7 +111,7 @@ export const AUTO_INVOICE_ERRORS = {
 
 /** Validate one input line, throwing a RangeError on the first violation. */
 export function assertValidAutoLine(line: AutoInvoiceLineInput): void {
-  if (!Number.isInteger(line.quantity) || line.quantity <= 0) {
+  if (!Number.isSafeInteger(line.quantity) || line.quantity <= 0) {
     throw new RangeError(AUTO_INVOICE_ERRORS.BAD_QUANTITY());
   }
   if (typeof line.unitPrice !== 'bigint' || line.unitPrice < 0n) {

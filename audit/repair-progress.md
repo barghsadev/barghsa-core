@@ -2592,3 +2592,9 @@ The committed full browser run passed all 975 desktop cases but stopped on eight
 ### Complete local browser matrix evidence
 
 All 650 mobile tests pass after the menu-test correction. All 975 desktop tests passed with the identical product source tree before that test-only correction, and the changed profile cases passed twice in every project. The combined 1,625-case evidence, exact revisions and limitations are saved in `audit/browser-nightly-checkpoint.json`. No skipped or flaky cases are counted as passed. Remote execution and future business-flow acceptance remain open.
+
+### Reject unsupported invoice replay inputs
+
+Snapshot replay now requires its supported version, half-up rule and basis-point scale. It rejects manual order discounts instead of ignoring them. Manual and automatic calculations reject unsafe numeric quantities before BigInt conversion. Valid snapshot arithmetic and exact money strings are unchanged; no financial records were rewritten.
+
+All 23 new negative regressions failed before repair, while the two safe-boundary cases passed. The repaired invoice group passes all 444 tests across 33 files, including the 25 new cases and real PostgreSQL replay/VAT tests. API typechecking, targeted lint, formatting and diff review pass. Review covered snapshot writers for manual, automatic, replacement and adjustment invoices. Detailed findings and limitations remain in `audit/finance-review-followups.md`.

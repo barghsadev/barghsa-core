@@ -23,7 +23,8 @@
  * `roundHalfUpDiv` (manual-invoice.calculation.ts) so there is exactly one
  * rounding implementation in the codebase.
  *
- * @throws RangeError when `value` is negative, not a bigint, or
+ * @throws TypeError when `value` is not a bigint.
+ * @throws RangeError when `value` is negative or
  *   `precision` is not an integer in `[0, MAX_ROUNDING_PRECISION]`.
  */
 

@@ -23,7 +23,7 @@
 export interface ManualInvoiceLineInput {
   /** Human-readable line description (e.g. "مشاوره تخصصی برق — جلسه اول"). */
   description: string;
-  /** Quantity of the priced unit. Must be a positive integer. */
+  /** Quantity of the priced unit. Must be a positive safe integer. */
   quantity: number;
   /** Unit price in IRR (bigint). Never negative. */
   unitPrice: bigint;
@@ -54,7 +54,7 @@ export interface ManualInvoiceCalculation {
  *
  * Half-up means a fractional part of exactly 0.5 rounds away from zero.
  * All financial inputs here are non-negative, so this equals
- * `ceil(numerator/denominator - 0.5)`, implemented with pure BigInt
+ * `floor(numerator/denominator + 0.5)`, implemented with pure BigInt
  * arithmetic (no floats) and correct for ANY positive denominator —
  * the formula `(2n + d) / 2d` is exact for odd denominators too, where
  * `numerator + denominator/2` would floor and round 0.5 down. The common
@@ -80,7 +80,7 @@ export function roundHalfUpDiv(numerator: bigint, denominator: bigint): bigint {
 export const MANUAL_LINE_ERRORS = {
   NO_LINES: () => 'Manual invoice must contain at least one line',
   EMPTY_DESCRIPTION: () => 'Each line needs a non-empty description',
-  BAD_QUANTITY: () => 'Line quantity must be a positive integer',
+  BAD_QUANTITY: () => 'Line quantity must be a positive safe integer',
   NEGATIVE_UNIT_PRICE: () => 'Line unit price cannot be negative',
   BAD_VAT_RATE: () => 'Line VAT rate must be between 0 and 10000 basis points',
   ZERO_TOTAL: () => 'Manual invoice total must be positive',
@@ -91,7 +91,7 @@ export function assertValidManualLine(line: ManualInvoiceLineInput): void {
   if (typeof line.description !== 'string' || line.description.trim() === '') {
     throw new RangeError(MANUAL_LINE_ERRORS.EMPTY_DESCRIPTION());
   }
-  if (!Number.isInteger(line.quantity) || line.quantity <= 0) {
+  if (!Number.isSafeInteger(line.quantity) || line.quantity <= 0) {
     throw new RangeError(MANUAL_LINE_ERRORS.BAD_QUANTITY());
   }
   if (typeof line.unitPrice !== 'bigint' || line.unitPrice < 0n) {

@@ -414,16 +414,31 @@ export function parseSnapshotTotals(totals: InvoiceCalculationSnapshotTotals): {
  * Replay invoice calculation inputs stored on a snapshot and produce
  * the same bigint totals the original issue used.
  *
- * Only `snapshot.inputs` is consumed. Stored `steps` / `totals` are
+ * The version and rounding header must match the supported format.
+ * Calculations consume `snapshot.inputs`; stored `steps` / `totals` are
  * ignored so this is a true reproduction, not a copy of cached results.
  *
- * @throws RangeError when the snapshot source is unknown, auto lines
- *   lack product identity, or any IRR field is not a digit string.
+ * @throws RangeError for unsupported format/source, nonzero manual
+ *   discounts, missing auto product identity or invalid calculation inputs.
  */
 export function replayInvoiceCalculation(
   snapshot: InvoiceCalculationSnapshot
 ): ReplayedInvoiceCalculation {
+  if (
+    snapshot?.version !== INVOICE_CALCULATION_SNAPSHOT_VERSION ||
+    snapshot.rounding?.rule !== INVOICE_ROUNDING_RULE ||
+    snapshot.rounding?.vatScale !== VAT_BASIS_POINT_SCALE
+  ) {
+    throw new RangeError(
+      'replayInvoiceCalculation: unsupported snapshot version or rounding metadata'
+    );
+  }
   if (snapshot.source === 'manual') {
+    if (parseIrrJson(snapshot.inputs.orderDiscount) !== 0n) {
+      throw new RangeError(
+        'replayInvoiceCalculation: manual snapshots cannot contain an order discount'
+      );
+    }
     const calc = calculateManualInvoice(snapshot.inputs.lines.map(snapshotLineToManualInput));
     return {
       source: 'manual',
