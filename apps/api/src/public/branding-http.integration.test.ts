@@ -666,3 +666,49 @@ it('verifies and records CSV text while rejecting invalid encoding and malformed
     ).toBe(valid ? 200 : 400);
   }
 });
+
+it('requires a recognized video container brand or structured document type', async () => {
+  for (const [bytes, extension, contentType, valid] of [
+    [Buffer.from('\x00\x00\x00\x10ftypheic\x00\x00\x00\x00', 'binary'), 'mp4', 'video/mp4', false],
+    [Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x84, 1, 2, 3, 4]), 'mkv', 'video/x-matroska', false],
+    [Buffer.from('\x00\x00\x00\x10ftypisom\x00\x00\x00\x00', 'binary'), 'mp4', 'video/mp4', true],
+    [
+      Buffer.concat([
+        Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x87, 0x42, 0x82, 0x84]),
+        Buffer.from('webm'),
+      ]),
+      'webm',
+      'video/webm',
+      true,
+    ],
+    [
+      Buffer.concat([
+        Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x8b, 0x42, 0x82, 0x88]),
+        Buffer.from('matroska'),
+      ]),
+      'mkv',
+      'video/x-matroska',
+      true,
+    ],
+  ] as const) {
+    const details = {
+      fileName: `video.${extension}`,
+      contentType,
+      fileSize: bytes.length,
+      category: 'video',
+    };
+    const issued = z
+      .object({ key: z.string(), presignedUrl: z.string() })
+      .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+    expect(
+      (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(bytes) })).status
+    ).toBe(200);
+    const path = `upload/${encodeURIComponent(issued.key)}`;
+    expect(await (await request(`${path}/verify`, 'POST')).json()).toMatchObject({
+      status: valid ? 'confirmed' : 'type_mismatch',
+    });
+    expect(
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' })).status
+    ).toBe(valid ? 200 : 400);
+  }
+});

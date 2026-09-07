@@ -455,9 +455,9 @@ describe('UploadController', () => {
           fileName: 'file.mp4',
           contentType: 'video/mp4',
           object: {
-            body: streamOfBytes([0x00, 0x00, 0x00, 0x18, 'ftypisom']),
+            body: streamOfBytes([0x00, 0x00, 0x00, 0x10, 'ftypisom', 0, 0, 0, 0]),
             contentType: 'video/mp4',
-            contentLength: 12,
+            contentLength: 16,
             metadata: {},
             etag: '"mp4"',
           },

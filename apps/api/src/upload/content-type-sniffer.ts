@@ -28,6 +28,49 @@
 /** How many leading bytes the caller should sample from the object. */
 export const SNIFF_SAMPLE_BYTES = 4096;
 
+function ebmlInteger(bytes: Uint8Array, offset: number, id = false) {
+  const first = bytes[offset];
+  if (first === undefined || first === 0) return null;
+  let marker = 0x80;
+  let length = 1;
+  while ((first & marker) === 0) {
+    marker >>= 1;
+    length++;
+  }
+  if (length > (id ? 4 : 8) || offset + length > bytes.length) return null;
+  let value = id ? first : first & (marker - 1);
+  for (let i = 1; i < length; i++) value = value * 256 + bytes[offset + i]!;
+  if (!Number.isSafeInteger(value) || (!id && value === 2 ** (7 * length) - 1)) return null;
+  return { value, length };
+}
+
+/** Read actual header elements; strings elsewhere do not establish an EBML document type. */
+function ebmlDocumentType(bytes: Uint8Array): string | null {
+  const size = ebmlInteger(bytes, 4);
+  if (!size) return null;
+  let offset = 4 + size.length;
+  const end = offset + size.value;
+  if (end > Math.min(bytes.length, SNIFF_SAMPLE_BYTES)) return null;
+  let type: string | null = null;
+  while (offset < end) {
+    const id = ebmlInteger(bytes, offset, true);
+    if (!id) return null;
+    offset += id.length;
+    const length = ebmlInteger(bytes, offset);
+    if (!length) return null;
+    offset += length.length;
+    if (offset + length.value > end) return null;
+    if (id.value === 0x4282) {
+      if (type !== null || length.value > 32) return null;
+      let valueEnd = offset + length.value;
+      while (valueEnd > offset && bytes[valueEnd - 1] === 0) valueEnd--;
+      type = String.fromCharCode(...bytes.subarray(offset, valueEnd));
+    }
+    offset += length.value;
+  }
+  return type;
+}
+
 function bytesAt(bytes: Uint8Array, offset: number, signature: string): boolean {
   if (offset + signature.length > bytes.length) return false;
   for (let i = 0; i < signature.length; i++) {
@@ -111,14 +154,33 @@ export function sniffContentTypes(bytes: Uint8Array): string[] {
   }
 
   // ISO BMFF container (mp4/mov/avif): 'ftyp' brand at bytes 4..12.
-  if (bytes.length >= 12 && bytesAt(bytes, 4, 'ftyp')) {
+  if (bytesAt(bytes, 4, 'ftyp')) {
+    if (bytes.length < 16) return [];
+    const boxSize = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(0);
+    if (boxSize < 16 || boxSize > bytes.length || boxSize % 4 !== 0) return [];
     const brand = String.fromCharCode(bytes[8]!, bytes[9]!, bytes[10]!, bytes[11]!);
     if (brand === 'avif' || brand === 'avis') return ['image/avif'];
     if (brand === 'qt  ') return ['video/quicktime'];
-    return ['video/mp4'];
+    if (
+      [
+        'isom',
+        'iso2',
+        'iso3',
+        'iso4',
+        'iso5',
+        'iso6',
+        'mp41',
+        'mp42',
+        'avc1',
+        'av01',
+        'dash',
+      ].includes(brand)
+    )
+      return ['video/mp4'];
+    return [];
   }
 
-  // EBML container: webm (contains 'webm' marker) vs mkv.
+  // EBML requires its DocType header, not merely the generic EBML signature.
   if (
     bytes.length >= 4 &&
     bytes[0] === 0x1a &&
@@ -126,7 +188,8 @@ export function sniffContentTypes(bytes: Uint8Array): string[] {
     bytes[2] === 0xdf &&
     bytes[3] === 0xa3
   ) {
-    return hasAscii(bytes, 'webm', SNIFF_SAMPLE_BYTES) ? ['video/webm'] : ['video/x-matroska'];
+    const type = ebmlDocumentType(bytes);
+    return type === 'webm' ? ['video/webm'] : type === 'matroska' ? ['video/x-matroska'] : [];
   }
 
   // A leading ZIP signature proves only a container. Office uploads require

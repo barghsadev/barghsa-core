@@ -48,24 +48,53 @@ describe('sniffContentTypes (T-09.12.05)', () => {
   });
 
   it('detects AVIF from the ftyp brand', () => {
-    expect(sniffContentTypes(bytes('\x00\x00\x00\x20ftypavif\x00\x00\x00\x00'))).toEqual([
+    expect(sniffContentTypes(bytes('\x00\x00\x00\x10ftypavif\x00\x00\x00\x00'))).toEqual([
       'image/avif',
     ]);
   });
 
   it('detects MP4 vs QuickTime from the ftyp brand', () => {
-    expect(sniffContentTypes(bytes('\x00\x00\x00\x18ftypisom\x00\x00\x00\x00'))).toEqual([
+    expect(sniffContentTypes(bytes('\x00\x00\x00\x10ftypisom\x00\x00\x00\x00'))).toEqual([
       'video/mp4',
     ]);
-    expect(sniffContentTypes(bytes('\x00\x00\x00\x18ftypqt  \x00\x00\x00\x00'))).toEqual([
+    expect(sniffContentTypes(bytes('\x00\x00\x00\x10ftypqt  \x00\x00\x00\x00'))).toEqual([
       'video/quicktime',
     ]);
   });
 
   it('detects WebM vs Matroska from EBML', () => {
     const webm = [0x1a, 0x45, 0xdf, 0xa3] as number[];
-    expect(sniffContentTypes(hex([...webm, ...'webm...']))).toEqual(['video/webm']);
-    expect(sniffContentTypes(hex([...webm, ...'random-mkv-body']))).toEqual(['video/x-matroska']);
+    expect(sniffContentTypes(hex([...webm, 0x87, 0x42, 0x82, 0x84, ...'webm']))).toEqual([
+      'video/webm',
+    ]);
+    expect(sniffContentTypes(hex([...webm, 0x8b, 0x42, 0x82, 0x88, ...'matroska']))).toEqual([
+      'video/x-matroska',
+    ]);
+  });
+
+  it('does not guess MP4 from an unrelated ISO container brand', () => {
+    expect(sniffContentTypes(bytes('\x00\x00\x00\x10ftypheic\x00\x00\x00\x00'))).toEqual([]);
+    expect(sniffContentTypes(bytes('\x00\x00\x00\x10ftypzzzz\x00\x00\x00\x00'))).toEqual([]);
+  });
+
+  it('does not guess Matroska or WebM from generic EBML bytes or embedded text', () => {
+    expect(sniffContentTypes(hex([0x1a, 0x45, 0xdf, 0xa3, 0x84, ...'junk']))).toEqual([]);
+    expect(sniffContentTypes(hex([0x1a, 0x45, 0xdf, 0xa3, 0x87, 0xec, 0x85, ...'webm!']))).toEqual(
+      []
+    );
+  });
+
+  it('rejects truncated, unbounded and duplicate video type headers', () => {
+    const ebml = [0x1a, 0x45, 0xdf, 0xa3];
+    for (const header of [
+      [...ebml, 0xff],
+      [...ebml, 0],
+      [...ebml, 0x87, 0x42, 0x82, 0x84, ...'web'],
+      [...ebml, 0x83, 0x42, 0x82, 0xff],
+      [...ebml, 0x8e, 0x42, 0x82, 0x84, ...'webm', 0x42, 0x82, 0x84, ...'webm'],
+    ])
+      expect(sniffContentTypes(hex(header))).toEqual([]);
+    expect(sniffContentTypes(bytes('\x00\x00\x00\x18ftypisom\x00\x00\x00\x00'))).toEqual([]);
   });
 
   it('does not infer an Office format from a ZIP signature', () => {
@@ -154,8 +183,8 @@ describe('pickDetectedContentType (T-09.12.05)', () => {
 
   it('video category allows mp4/webm/quicktime and rejects image bytes', () => {
     const videoAllowed = ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-matroska'];
-    expect(pick(bytes('\x00\x00\x00\x18ftypisom\x00\x00\x00\x00'), videoAllowed)).toBe('video/mp4');
-    expect(pick(bytes('\x00\x00\x00\x18ftypqt  \x00\x00\x00\x00'), videoAllowed)).toBe(
+    expect(pick(bytes('\x00\x00\x00\x10ftypisom\x00\x00\x00\x00'), videoAllowed)).toBe('video/mp4');
+    expect(pick(bytes('\x00\x00\x00\x10ftypqt  \x00\x00\x00\x00'), videoAllowed)).toBe(
       'video/quicktime'
     );
     expect(pick(hex([0xff, 0xd8, 0xff, 0xe0]), videoAllowed)).toBeNull();
