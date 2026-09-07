@@ -1986,3 +1986,9 @@ Review and validation: twelve negative cases failed before the repair. Final sha
 Both PostgreSQL increment paths now reject missing, non-positive, fractional, unsafe or malformed returned counts instead of granting quota or returning invalid remaining counts. Decimal bigint strings remain supported. Peeking returns zero for an absent row only; a malformed existing row fails. Fixed-window comments now describe the actual boundary behavior without claiming sliding-window enforcement.
 
 Review and validation: 33 new cases failed before the repair. All 59 shared rate-limit tests pass afterward, including cleanup start/stop/restart and recovery after a failed cleanup query. API login, proxy and OTP regressions pass 17 cases across three files. Shared typechecking, targeted lint and whitespace checks pass. SQL and quota windows are unchanged; full sliding-window acceptance remains open.
+
+### Make suppression scanning fail on incomplete inspection
+
+Replaced the shell find/grep pipeline, which discarded scan failures, with a Node scanner. It detects all three TypeScript suppression directives and module-source extensions, handles paths with spaces, and fails on missing scan roots or source symlinks. The only generated-file exemption is nocheck in the exact TanStack route-tree file; other directives and other generated filenames remain checked. Existing conservative text matching is retained, so directive mentions in strings also require removal.
+
+Review and validation: the root command runs eight negative/positive fixture tests before scanning the repository. All pass, including missing-root and broken-link failure cases, exact generated exemption, test/build exclusions and line reporting. Repository scan, targeted lint, shell syntax and whitespace checks pass. No production handwritten suppression was added or exempted.
