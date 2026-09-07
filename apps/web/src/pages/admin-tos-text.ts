@@ -2,6 +2,10 @@ const en = {
   invalidHistory: 'Invalid TOS history response.',
   historyFailed: 'Failed to load TOS versions',
   retry: 'Retry',
+  draftChanged:
+    'Another editor changed this draft. Your text is preserved. Reload the saved draft before continuing.',
+  reloadDraft: 'Reload saved draft',
+  unconfirmedWrite: 'The saved result could not be confirmed. Reload history before continuing.',
   currentVersion: 'Current published version',
   proposedVersion: 'Draft preview',
   noCurrent: 'No published version yet.',
@@ -33,6 +37,10 @@ const fa: Record<keyof typeof en, string> = {
   invalidHistory: 'پاسخ تاریخچه شرایط معتبر نیست.',
   historyFailed: 'بارگذاری تاریخچه شرایط انجام نشد.',
   retry: 'تلاش دوباره',
+  draftChanged:
+    'ویرایشگر دیگری این پیش‌نویس را تغییر داده است. متن شما حفظ شده است. برای ادامه، پیش‌نویس ذخیره‌شده را دوباره بارگذاری کنید.',
+  reloadDraft: 'بارگذاری پیش‌نویس ذخیره‌شده',
+  unconfirmedWrite: 'نتیجه ذخیره تأیید نشد. پیش از ادامه، تاریخچه را دوباره بارگذاری کنید.',
   currentVersion: 'نسخه منتشرشده فعلی',
   proposedVersion: 'پیش‌نمایش پیش‌نویس',
   noCurrent: 'هنوز نسخه‌ای منتشر نشده است.',

@@ -149,6 +149,9 @@ it('preserves published content when draft edits race publication', async () => 
     'X-CSRF-Token': token,
     'Content-Type': 'application/json',
   };
+  const draftSnapshot = (await (
+    await fetch(`${fixture.base}/api/admin/tos/versions/${draftTerms}`, { headers })
+  ).json()) as { revision: string };
   const client = await fixture.pool.connect();
   let edit: Promise<Response> | undefined;
   try {
@@ -157,7 +160,10 @@ it('preserves published content when draft edits race publication', async () => 
     edit = fetch(`${fixture.base}/api/admin/tos/versions/${draftTerms}`, {
       method: 'PUT',
       headers,
-      body: JSON.stringify({ contentEn: 'Racing edit must not overwrite published text' }),
+      body: JSON.stringify({
+        contentEn: 'Racing edit must not overwrite published text',
+        expectedRevision: draftSnapshot.revision,
+      }),
     });
     await expect
       .poll(

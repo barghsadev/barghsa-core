@@ -49,7 +49,7 @@ export interface UpdateTosVersionInput {
 
 export type UpdateTosVersionFields = Partial<
   Pick<UpdateTosVersionInput, 'versionId' | 'contentFa' | 'contentEn'>
->;
+> & { expectedRevision: string };
 
 export interface PublishTosVersionInput {
   changeType: 'major' | 'minor';
@@ -315,6 +315,8 @@ export class TosService {
   ): Promise<TosVersionDetail> {
     return this.adminTransaction(actorUserId, async (client) => {
       const current = await this.lockDraft(client, id, 'TOS_VERSION_NOT_DRAFT');
+      if (withRevision(current).revision !== input.expectedRevision)
+        throw new HttpException({ statusCode: 409, error: 'TOS_DRAFT_CHANGED' }, 409);
       const result = await client.query<TosVersionDetail>(
         `UPDATE tos_versions SET version_id=$1, content_fa=$2, content_en=$3, created_by=$4, updated_at=NOW()
          WHERE id=$5 AND status='draft' RETURNING ${ADMIN_VERSION_COLUMNS}`,
@@ -355,9 +357,16 @@ export class TosService {
     });
   }
 
-  async deleteVersion(id: string, actorUserId: string, ip = 'unknown'): Promise<void> {
+  async deleteVersion(
+    id: string,
+    actorUserId: string,
+    ip: string,
+    expectedRevision: string
+  ): Promise<void> {
     await this.adminTransaction(actorUserId, async (client) => {
       const version = await this.lockDraft(client, id, 'TOS_VERSION_PUBLISHED');
+      if (withRevision(version).revision !== expectedRevision)
+        throw new HttpException({ statusCode: 409, error: 'TOS_DRAFT_CHANGED' }, 409);
       await client.query("DELETE FROM tos_versions WHERE id=$1 AND status='draft'", [id]);
       await this.auditAdminWrite(client, actorUserId, ip, 'discard', version);
     });

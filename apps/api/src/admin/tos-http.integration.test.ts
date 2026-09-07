@@ -38,6 +38,18 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 async function request(path = '', method = 'GET', body?: unknown, actor = 'editor') {
+  if (method === 'PUT' && body && typeof body === 'object' && !('expectedRevision' in body)) {
+    const current = (await (await request(path, 'GET', undefined, actor)).json()) as {
+      revision: string;
+    };
+    body = { ...body, expectedRevision: current.revision };
+  }
+  if (method === 'DELETE' && !path.includes('?')) {
+    const current = (await (await request(path, 'GET', undefined, actor)).json()) as {
+      revision: string;
+    };
+    path += `?expectedRevision=${current.revision}`;
+  }
   if (
     method === 'POST' &&
     path.endsWith('/publish') &&
@@ -45,9 +57,10 @@ async function request(path = '', method = 'GET', body?: unknown, actor = 'edito
     typeof body === 'object' &&
     !('expectedRevision' in body)
   ) {
-    const current = await request(path.slice(0, -8), 'GET', undefined, actor);
-    const version = (await current.json()) as { revision: string };
-    body = { ...body, expectedRevision: version.revision };
+    const current = (await (await request(path.slice(0, -8), 'GET', undefined, actor)).json()) as {
+      revision: string;
+    };
+    body = { ...body, expectedRevision: current.revision };
   }
   return fetch(`${http.base}/api/admin/tos/versions${path}`, {
     method,
@@ -232,4 +245,24 @@ it('rejects publication after the previewed draft changed', async () => {
     (await http.pool.query("SELECT id FROM audit_log WHERE metadata::jsonb->>'action'='publish'"))
       .rows
   ).toHaveLength(0);
+});
+
+it('preserves a newer draft against stale edits and discard', async () => {
+  const created = await create();
+  const snapshot = (await (await request(`/${created.id}`)).json()) as { revision: string };
+  expect((await request(`/${created.id}`, 'PUT', { contentEn: 'Newer draft' })).status).toBe(200);
+  expect(
+    (
+      await request(`/${created.id}`, 'PUT', {
+        contentEn: 'Stale overwrite',
+        expectedRevision: snapshot.revision,
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (await request(`/${created.id}?expectedRevision=${snapshot.revision}`, 'DELETE')).status
+  ).toBe(409);
+  expect(
+    (await http.pool.query('SELECT content_en FROM tos_versions WHERE id=$1', [created.id])).rows
+  ).toEqual([{ content_en: 'Newer draft' }]);
 });

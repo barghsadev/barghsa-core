@@ -7106,6 +7106,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "expectedRevision",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7117,6 +7125,9 @@
           },
           "404": {
             "description": "Version not found"
+          },
+          "409": {
+            "description": "Draft changed since it was opened"
           }
         },
         "summary": "Delete (discard) a draft TOS version",
@@ -7176,11 +7187,18 @@
                     "description": "Persian TOS content (Markdown)",
                     "type": "string"
                   },
+                  "expectedRevision": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "versionId": {
                     "description": "Human-readable version ID",
                     "type": "string"
                   }
                 },
+                "required": [
+                  "expectedRevision"
+                ],
                 "type": "object"
               }
             }
@@ -7196,6 +7214,9 @@
           },
           "404": {
             "description": "Version not found"
+          },
+          "409": {
+            "description": "Draft changed since it was opened"
           }
         },
         "summary": "Update a draft TOS version",

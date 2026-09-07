@@ -69,6 +69,10 @@ export default function AdminTosPage() {
   // Draft editor state
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [editRevision, setEditRevision] = useState<string | null>(null);
+  const [editConflict, setEditConflict] = useState(false);
+  const [discarding, setDiscarding] = useState(false);
+  const discardInFlight = useRef(false);
   const [versionId, setVersionId] = useState('');
   const [contentFa, setContentFa] = useState('');
   const [contentEn, setContentEn] = useState('');
@@ -132,6 +136,8 @@ export default function AdminTosPage() {
   function openCreate() {
     if (!historyReady || loading) return;
     setEditId(null);
+    setEditRevision(null);
+    setEditConflict(false);
     setVersionId('');
     setContentFa('');
     setContentEn('');
@@ -140,7 +146,13 @@ export default function AdminTosPage() {
 
   function openEdit(v: TosVersion) {
     if (!historyReady || loading) return;
+    if (!v.revision) {
+      setError(text.previewRequired);
+      return;
+    }
     setEditId(v.id);
+    setEditRevision(v.revision);
+    setEditConflict(false);
     setVersionId(v.versionId);
     setContentFa(v.contentFa);
     setContentEn(v.contentEn);
@@ -158,7 +170,7 @@ export default function AdminTosPage() {
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
-    if (saveInFlight.current || !historyReady || loading) return;
+    if (saveInFlight.current || !historyReady || loading || editConflict) return;
     if (!contentFa.trim() || !contentEn.trim()) {
       setError(text.requiredContent);
       return;
@@ -169,7 +181,8 @@ export default function AdminTosPage() {
     try {
       if (editId) {
         // Update existing draft
-        const body: Record<string, string> = {};
+        if (!editRevision) throw new Error(text.previewRequired);
+        const body: Record<string, string> = { expectedRevision: editRevision };
         if (versionId) body.versionId = versionId;
         if (contentFa) body.contentFa = contentFa;
         if (contentEn) body.contentEn = contentEn;
@@ -179,9 +192,26 @@ export default function AdminTosPage() {
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(body),
         });
+        if (res.status === 409) {
+          setEditConflict(true);
+          throw new Error(text.draftChanged);
+        }
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
           throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
+        }
+        const result: unknown = await res.json().catch(() => null);
+        if (
+          !isVersion(result) ||
+          !result.revision ||
+          result.status !== 'draft' ||
+          result.versionId !== versionId ||
+          result.contentFa !== contentFa ||
+          result.contentEn !== contentEn ||
+          (editId && result.id !== editId)
+        ) {
+          setHistoryReady(false);
+          throw new Error(text.unconfirmedWrite);
         }
       } else {
         // Create new draft
@@ -190,9 +220,26 @@ export default function AdminTosPage() {
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ versionId, contentFa, contentEn }),
         });
+        if (res.status === 409) {
+          setEditConflict(true);
+          throw new Error(text.draftChanged);
+        }
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
           throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
+        }
+        const result: unknown = await res.json().catch(() => null);
+        if (
+          !isVersion(result) ||
+          !result.revision ||
+          result.status !== 'draft' ||
+          result.versionId !== versionId ||
+          result.contentFa !== contentFa ||
+          result.contentEn !== contentEn ||
+          (editId && result.id !== editId)
+        ) {
+          setHistoryReady(false);
+          throw new Error(text.unconfirmedWrite);
         }
       }
 
@@ -200,6 +247,30 @@ export default function AdminTosPage() {
       await fetchVersions();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save');
+    } finally {
+      saveInFlight.current = false;
+      setSaving(false);
+    }
+  }
+
+  async function reloadDraft() {
+    if (!editId || saveInFlight.current) return;
+    saveInFlight.current = true;
+    setSaving(true);
+    try {
+      const response = await fetch(`/api/admin/tos/versions/${editId}`);
+      const result: unknown = await response.json();
+      if (!response.ok || !isVersion(result) || result.id !== editId || !result.revision)
+        throw new Error(text.unconfirmedWrite);
+      if (result.status !== 'draft') {
+        setShowEditor(false);
+        await fetchVersions();
+        return;
+      }
+      openEdit(result);
+      setError(null);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : text.historyFailed);
     } finally {
       saveInFlight.current = false;
       setSaving(false);
@@ -231,6 +302,20 @@ export default function AdminTosPage() {
         throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
 
+      const result: unknown = await res.json().catch(() => null);
+      if (
+        !isVersion(result) ||
+        result.id !== publishVersion.id ||
+        result.status !== 'published' ||
+        !result.isActive ||
+        result.changeType !== changeType ||
+        result.versionId !== publishVersion.versionId ||
+        result.contentFa !== publishVersion.contentFa ||
+        result.contentEn !== publishVersion.contentEn
+      ) {
+        setPreviewReady(false);
+        throw new Error(text.unconfirmedWrite);
+      }
       setPublishVersion(null);
       await fetchVersions();
     } catch (err) {
@@ -241,22 +326,38 @@ export default function AdminTosPage() {
     }
   }
 
-  async function handleDiscard(id: string) {
-    if (!historyReady || loading) return;
+  async function handleDiscard(version: TosVersion) {
+    if (!historyReady || loading || discardInFlight.current) return;
+    if (!version.revision) {
+      setError(text.previewRequired);
+      return;
+    }
     if (!window.confirm('Discard this draft? This cannot be undone.')) return;
 
+    discardInFlight.current = true;
+    setDiscarding(true);
     try {
-      const res = await fetch(`/api/admin/tos/versions/${id}`, {
-        headers: withCsrf(),
-        method: 'DELETE',
-      });
-      if (!res.ok) {
+      const res = await fetch(
+        `/api/admin/tos/versions/${version.id}?expectedRevision=${encodeURIComponent(version.revision)}`,
+        {
+          headers: withCsrf(),
+          method: 'DELETE',
+        }
+      );
+      if (res.status === 409) {
+        setHistoryReady(false);
+        throw new Error(text.draftChanged);
+      }
+      if (res.status !== 204) {
         const errData = await res.json().catch(() => ({}));
         throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
       await fetchVersions();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to discard');
+    } finally {
+      discardInFlight.current = false;
+      setDiscarding(false);
     }
   }
 
@@ -333,7 +434,7 @@ export default function AdminTosPage() {
             <div className="space-y-2">
               <p className="font-medium">{text.persian} *</p>
               <TosRichText
-                key={`${editId ?? 'new'}-fa`}
+                key={`${editId ?? 'new'}-${editRevision}-fa`}
                 value={contentFa}
                 onChange={setContentFa}
                 label={text.persian}
@@ -345,7 +446,7 @@ export default function AdminTosPage() {
             <div className="space-y-2">
               <p className="font-medium">{text.english} *</p>
               <TosRichText
-                key={`${editId ?? 'new'}-en`}
+                key={`${editId ?? 'new'}-${editRevision}-en`}
                 value={contentEn}
                 onChange={setContentEn}
                 label={text.english}
@@ -356,10 +457,20 @@ export default function AdminTosPage() {
             </div>
           </Suspense>
 
+          {editConflict && (
+            <button
+              type="button"
+              onClick={reloadDraft}
+              disabled={saving}
+              className="rounded border px-4 py-2"
+            >
+              {text.reloadDraft}
+            </button>
+          )}
           <div className="flex gap-3">
             <button
               type="submit"
-              disabled={saving || !historyReady || loading}
+              disabled={saving || !historyReady || loading || editConflict}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {saving ? 'Saving...' : editId ? 'Update Draft' : 'Create Draft'}
@@ -643,7 +754,9 @@ export default function AdminTosPage() {
                     <>
                       <button
                         onClick={() => openEdit(v)}
-                        disabled={!historyReady || loading || showEditor || !!publishVersion}
+                        disabled={
+                          !historyReady || loading || showEditor || !!publishVersion || discarding
+                        }
                         className="text-blue-600 hover:text-blue-800"
                       >
                         Edit
@@ -656,14 +769,18 @@ export default function AdminTosPage() {
                           setPreviewReady(false);
                           if (!v.revision) setError(text.previewRequired);
                         }}
-                        disabled={!historyReady || loading || showEditor || !!publishVersion}
+                        disabled={
+                          !historyReady || loading || showEditor || !!publishVersion || discarding
+                        }
                         className="text-green-600 hover:text-green-800"
                       >
                         Publish
                       </button>
                       <button
-                        onClick={() => handleDiscard(v.id)}
-                        disabled={!historyReady || loading || showEditor || !!publishVersion}
+                        onClick={() => handleDiscard(v)}
+                        disabled={
+                          !historyReady || loading || showEditor || !!publishVersion || discarding
+                        }
                         className="text-red-600 hover:text-red-800"
                       >
                         Discard

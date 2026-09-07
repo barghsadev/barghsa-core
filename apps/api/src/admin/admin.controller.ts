@@ -1083,7 +1083,9 @@ export class AdminController {
   @ApiBody({
     schema: {
       type: 'object',
+      required: ['expectedRevision'],
       properties: {
+        expectedRevision: { type: 'string', pattern: '^[a-f0-9]{64}$' },
         versionId: { type: 'string', description: 'Human-readable version ID' },
         contentFa: { type: 'string', description: 'Persian TOS content (Markdown)' },
         contentEn: { type: 'string', description: 'English TOS content (Markdown)' },
@@ -1093,6 +1095,7 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Draft TOS version updated.' })
   @ApiResponse({ status: 400, description: 'Version is not a draft' })
   @ApiResponse({ status: 404, description: 'Version not found' })
+  @ApiResponse({ status: 409, description: 'Draft changed since it was opened' })
   async updateTosVersion(
     @Param('id') id: string,
     @Body() rawBody: unknown,
@@ -1106,6 +1109,7 @@ export class AdminController {
     }
 
     const schema = z.object({
+      expectedRevision: z.string().regex(/^[a-f0-9]{64}$/),
       versionId: z.string().min(1).max(50).optional(),
       contentFa: z.string().min(1).optional(),
       contentEn: z.string().min(1).optional(),
@@ -1137,6 +1141,7 @@ export class AdminController {
       );
     }
 
+    updateFields.expectedRevision = parsed.data.expectedRevision;
     return this.tosService.updateVersion(
       id,
       updateFields as UpdateTosVersionFields,
@@ -1218,12 +1223,18 @@ export class AdminController {
    */
   @Delete('tos/versions/:id')
   @HttpCode(204)
+  @ApiQuery({ name: 'expectedRevision', required: true, type: String })
+  @ApiResponse({ status: 409, description: 'Draft changed since it was opened' })
   @ApiOperation({ summary: 'Delete (discard) a draft TOS version' })
   @ApiParam({ name: 'id', description: 'TOS version UUID' })
   @ApiResponse({ status: 204, description: 'Draft discarded.' })
   @ApiResponse({ status: 400, description: 'Version is published and cannot be deleted' })
   @ApiResponse({ status: 404, description: 'Version not found' })
-  async deleteTosVersion(@Param('id') id: string, @Req() req: AuthenticatedRequest): Promise<void> {
+  async deleteTosVersion(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+    @Query('expectedRevision') expectedRevision: string
+  ): Promise<void> {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -1231,10 +1242,16 @@ export class AdminController {
       );
     }
 
+    if (!/^[a-f0-9]{64}$/.test(expectedRevision ?? ''))
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
     await this.tosService.deleteVersion(
       id,
       req.session.userId,
-      req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+      req.ip ?? req.socket?.remoteAddress ?? 'unknown',
+      expectedRevision
     );
   }
 

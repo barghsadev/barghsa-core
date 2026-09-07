@@ -2381,6 +2381,7 @@ test('TOS editor preserves unsupported existing formatting when editing another 
   const original = '| Name | Value |\n| --- | --- |\n| Fee | 10 |';
   const version = {
     id: 'table-draft',
+    revision: 'a'.repeat(64),
     versionId: 'table-v1',
     contentFa: 'شرایط',
     contentEn: original,
@@ -2484,4 +2485,71 @@ test('TOS preview renders safely, shows changes and blocks stale publication', a
   await publish.click();
   await expect.poll(() => writes.length).toBe(2);
   expect(writes[1]).toEqual({ changeType: 'minor', expectedRevision: 'b'.repeat(64) });
+});
+
+test('TOS edit conflicts preserve local text and reload the newer revision explicitly', async ({
+  page,
+}) => {
+  await shell(page);
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  const original = {
+    id: 'edit-draft',
+    versionId: 'edit-v1',
+    contentFa: 'Terms',
+    contentEn: 'Original text',
+    revision: 'a'.repeat(64),
+    status: 'draft',
+    isActive: false,
+    publishedAt: null,
+    changeType: 'minor',
+    createdBy: null,
+    createdAt: '2026-09-01T00:00:00Z',
+    updatedAt: '2026-09-01T00:00:00Z',
+  };
+  const newer = { ...original, contentEn: 'Another editor text', revision: 'b'.repeat(64) };
+  const writes: Record<string, string>[] = [];
+  await page.route('**/api/admin/tos/versions', (route) => route.fulfill({ json: [original] }));
+  await page.route('**/api/admin/tos/versions/edit-draft', (route) => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: newer });
+    writes.push(route.request().postDataJSON());
+    return route.fulfill({ status: writes.length === 1 ? 409 : 503, json: {} });
+  });
+  await page.goto('/admin/tos');
+  await page.getByRole('button', { name: 'Edit', exact: true }).click();
+  const english = page.getByRole('textbox', { name: 'English content', exact: true });
+  await english.fill('My unsaved text');
+  await page.getByRole('button', { name: 'Update Draft', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('Another editor');
+  await expect(english).toHaveText('My unsaved text');
+  await expect(page.getByRole('button', { name: 'Update Draft', exact: true })).toBeDisabled();
+  expect(writes[0]?.expectedRevision).toBe('a'.repeat(64));
+  await page.getByRole('button', { name: 'Reload saved draft', exact: true }).click();
+  await expect(english).toHaveText('Another editor text');
+  await english.fill('Reviewed new edit');
+  await page.getByRole('button', { name: 'Update Draft', exact: true }).click();
+  await expect.poll(() => writes.length).toBe(2);
+  expect(writes[1]?.expectedRevision).toBe('b'.repeat(64));
+});
+
+test('TOS creation does not report malformed success as a saved draft', async ({ page }) => {
+  await shell(page);
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  await page.route('**/api/admin/tos/versions', (route) =>
+    route.fulfill({ json: route.request().method() === 'GET' ? [] : {} })
+  );
+  await page.goto('/admin/tos');
+  await page.getByRole('button', { name: 'New Draft', exact: true }).click();
+  await page.getByLabel('Version ID').fill('uncertain-save');
+  await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('Terms');
+  await page.getByRole('textbox', { name: 'English content', exact: true }).fill('Unsaved terms');
+  await page.getByRole('button', { name: 'Create Draft', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('could not be confirmed');
+  await expect(page.getByRole('textbox', { name: 'English content', exact: true })).toHaveText(
+    'Unsaved terms'
+  );
+  await expect(page.getByRole('button', { name: 'Create Draft', exact: true })).toBeDisabled();
 });
