@@ -18,6 +18,7 @@ const intervals = [
 async function startWorker(overrides: Record<string, string> = {}) {
   const database = `test_worker_${randomUUID().replaceAll('-', '')}`;
   const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
+  const fixtureClientEnds: Promise<void>[] = [];
   let created = false,
     child: ChildProcess | undefined,
     pool: Pool | undefined,
@@ -47,6 +48,9 @@ async function startWorker(overrides: Record<string, string> = {}) {
     try {
       if (child) await stop();
       await pool?.end();
+      // pg-pool resolves end after removing clients from its list, before their
+      // sockets necessarily close. Wait before DROP ... FORCE can kill them.
+      await Promise.all(fixtureClientEnds);
     } finally {
       try {
         if (created) await management.query(`DROP DATABASE "${database}" WITH (FORCE)`);
@@ -90,6 +94,9 @@ async function startWorker(overrides: Record<string, string> = {}) {
     pool = new Pool({
       connectionString: url.toString(),
       application_name: 'worker-process-fixture',
+    });
+    pool.on('connect', (client) => {
+      fixtureClientEnds.push(new Promise<void>((done) => client.once('end', done)));
     });
     await pool.query(
       "INSERT INTO users(user_id,username,password_hash,is_admin) VALUES ('worker-process-actor','worker@example.test','fixture-only',true)"

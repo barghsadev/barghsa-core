@@ -1992,3 +1992,9 @@ Review and validation: 33 new cases failed before the repair. All 59 shared rate
 Replaced the shell find/grep pipeline, which discarded scan failures, with a Node scanner. It detects all three TypeScript suppression directives and module-source extensions, handles paths with spaces, and fails on missing scan roots or source symlinks. The only generated-file exemption is nocheck in the exact TanStack route-tree file; other directives and other generated filenames remain checked. Existing conservative text matching is retained, so directive mentions in strings also require removal.
 
 Review and validation: the root command runs eight negative/positive fixture tests before scanning the repository. All pass, including missing-root and broken-link failure cases, exact generated exemption, test/build exclusions and line reporting. Repository scan, targeted lint, shell syntax and whitespace checks pass. No production handwritten suppression was added or exempted.
+
+### Wait for worker fixture connections before dropping its database
+
+The next full coverage attempt failed despite all 367 worker assertions passing: PostgreSQL emitted an unhandled administrator-termination error on a fixture connection. Inspection of the installed pg-pool implementation showed end resolves after removing clients from its internal list, before client sockets necessarily close. The subsequent forced database drop could therefore terminate an idle fixture socket.
+
+Fixture teardown now records each connection's end event and waits for all connections after pool.end, before dropping its isolated database. No error listener swallows unexpected failures. All six compiled-worker lifecycle tests pass after repair, including database outage, in-flight shutdown and forced deadline. Targeted lint, formatting and whitespace review pass. The failed coverage attempt is not counted as a successful regression checkpoint.
