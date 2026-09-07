@@ -19,6 +19,13 @@ async function shell(page: Page) {
     route.fulfill({ json: { data: [], unread_count: 0 } })
   );
 }
+async function openProfileMenu(page: Page) {
+  const menu = page.locator('button[aria-controls="dashboard-navigation"]');
+  await expect(menu).toBeAttached();
+  if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) === 'false') {
+    await menu.click();
+  }
+}
 for (const locale of ['fa', 'en'] as const) {
   test(`selecting the only remaining profile clears old page data (${locale})`, async ({
     page,
@@ -59,6 +66,7 @@ for (const locale of ['fa', 'en'] as const) {
       return route.fulfill({ json: { activeProfileId: active } });
     });
     await page.goto('/dashboard');
+    await openProfileMenu(page);
     const selector = page.getByRole('combobox', {
       name: locale === 'fa' ? 'تغییر پروفایل فعال' : 'Switch active profile',
     });
@@ -74,7 +82,7 @@ for (const locale of ['fa', 'en'] as const) {
     await selector.selectOption('remaining');
     await expect(page.locator('main')).toContainText(locale === 'fa' ? '۹۸۷٬۶۵۴' : '987,654');
     await expect(page.locator('main')).not.toContainText(locale === 'fa' ? '۱۲۳٬۴۵۶' : '123,456');
-    await expect(page.getByRole('combobox')).toHaveCount(0);
+    await expect(page.locator('#dashboard-navigation select')).toHaveCount(0);
     expect(dashboardReads).toBeGreaterThanOrEqual(2);
     expect(documentRequests).toBe(0);
     expect(
@@ -100,7 +108,9 @@ test('a failed switch keeps the existing selection and reports the error', async
     route.fulfill({ status: 403, json: { error: 'forbidden' } })
   );
   await page.goto('/dashboard');
+  await openProfileMenu(page);
   await page.getByRole('combobox').selectOption('second');
+  await openProfileMenu(page);
   await expect(page.getByRole('combobox')).toHaveValue('first');
   await expect(page.getByRole('complementary').getByRole('alert')).toHaveText(
     'تغییر پروفایل با خطا مواجه شد'
@@ -130,6 +140,7 @@ test('the initial radio selection submits from the required profile dialog', asy
   await dialog.getByRole('button').click();
   await switched;
   await expect(dialog).toHaveCount(0);
+  await openProfileMenu(page);
   await expect(page.getByRole('combobox')).toHaveValue('first');
 });
 
@@ -174,8 +185,10 @@ test('switching refreshes another open tab without reloading either document', a
     active = 'second';
     return route.fulfill({ json: { activeProfileId: active } });
   });
+  await openProfileMenu(pages[0]!);
   await pages[0]!.getByRole('combobox').selectOption('second');
   for (const page of pages) {
+    await openProfileMenu(page);
     await expect(page.getByRole('combobox')).toHaveValue('second');
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.locator('main')).not.toContainText('۱۲۳٬۴۵۶');
@@ -243,6 +256,7 @@ test('late old-profile responses cannot overwrite the switched page or notificat
   try {
     await page.goto('/dashboard');
     await expect.poll(() => oldReads).toBeGreaterThanOrEqual(3);
+    await openProfileMenu(page);
     await page.getByRole('combobox').selectOption('second');
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('۳');

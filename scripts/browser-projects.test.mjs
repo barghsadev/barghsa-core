@@ -18,6 +18,8 @@ test('rejects invalid or incompatible coverage browser selection', () => {
   }
   for (const args of [
     ['--project', 'firefox'],
+    ['--project', 'chromium', 'firefox'],
+    ['--project=chromium', 'firefox'],
     ['--project=chromium', '--project=webkit'],
     ['--project=chrom*'],
   ])

@@ -28,3 +28,11 @@ The first combined five-project run stopped with 1,118 passed, four failed, thre
 - The Persian mobile invoice page widened from 393 to 511 pixels. Absolutely positioned screen-reader labels inside the horizontally scrolling reminder table lacked a containing block, allowing them to extend the root scroll area and shift hit targets. Positioning the table's scroll wrapper contains those labels. A regression checks document width and ordinary button clicks; no forced clicks are used.
 
 All sixty affected cases pass across five projects with two repetitions. Eighteen reminder-panel/invoice unit tests, web typechecking, targeted lint, formatting and diff review pass. All 41 route budgets still pass after the fresh production build. Full cross-browser validation is still required. These are local fixture/build checks, not remote CI execution or certification of future saving-plan/solar/commercial-order flows.
+
+## Mobile profile-selection follow-up
+
+At committed revision `5a495f670c6a21593ead2006edcca1d112e2266f`, the next matrix passed 1,429 tests, failed eight, interrupted three and left 185 unrun at the failure limit. All eight failures were profile-switch checks reaching into a closed mobile menu. The required dialog itself completed correctly. Tests now wait for the menu control to mount, open it when collapsed, and check actual selector removal even when navigation is hidden. All sixty profile checks pass across five projects with two repetitions. The first helper attempt raced mounting and failed twelve cases; the final helper awaits attachment and all sixty pass.
+
+Review also found that Playwright accepts several project names after one flag. Coverage validation now inspects every name, including the equals form, and rejects a mixed Chromium/Firefox request before running. Both new mixed-project regressions failed before this correction.
+
+Chromium, Firefox and desktop WebKit each completed all 325 cases in the committed run. Remaining validation is a complete run of both mobile projects after the profile test correction. Product code is unchanged since that run.
