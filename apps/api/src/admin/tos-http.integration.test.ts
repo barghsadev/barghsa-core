@@ -148,3 +148,53 @@ it('rejects editor authority revoked while a draft mutation waits for the actor 
     await pending;
   }
 });
+
+async function publish(versionId: string, changeType: 'major' | 'minor') {
+  const created = await request('', 'POST', { ...draft, versionId, contentEn: versionId });
+  expect(created.status).toBe(201);
+  const { id } = (await created.json()) as { id: string };
+  expect((await request(`/${id}/publish`, 'POST', { changeType })).status).toBe(200);
+  return id;
+}
+async function acceptanceRequired(actor = 'other') {
+  const response = await fetch(`${http.base}/api/auth/user`, { headers: headers[actor]! });
+  expect(response.status).toBe(200);
+  return ((await response.json()) as { requiresTosAcceptance: boolean }).requiresTosAcceptance;
+}
+async function acceptVersion(versionId: string) {
+  return fetch(`${http.base}/api/tos/accept`, {
+    method: 'POST',
+    headers: headers.other!,
+    body: JSON.stringify({ versionId }),
+  });
+}
+it('publishes minor corrections without losing material consent requirements', async () => {
+  const first = await publish('material-one', 'major');
+  expect(await acceptanceRequired()).toBe(true);
+  expect((await acceptVersion(first)).status).toBe(200);
+  expect(await acceptanceRequired()).toBe(false);
+  const minor = await publish('correction-one', 'minor');
+  const current = await fetch(`${http.base}/api/tos/current?locale=en`);
+  expect(await current.json()).toMatchObject({ id: minor, content: 'correction-one' });
+  expect(await acceptanceRequired()).toBe(false);
+  expect(await acceptanceRequired('editor')).toBe(true);
+  expect((await acceptVersion(first)).status).toBe(400);
+  const major = await publish('material-two', 'major');
+  expect(await acceptanceRequired()).toBe(true);
+  const latest = await publish('correction-two', 'minor');
+  expect(await acceptanceRequired()).toBe(true);
+  expect((await acceptVersion(major)).status).toBe(400);
+  expect((await acceptVersion(latest)).status).toBe(200);
+  expect(await acceptanceRequired()).toBe(false);
+  expect((await http.pool.query('SELECT id FROM tos_versions WHERE is_active=true')).rows).toEqual([
+    { id: latest },
+  ]);
+});
+it('makes an initial minor release available and requires first consent', async () => {
+  const first = await publish('initial-minor', 'minor');
+  expect((await fetch(`${http.base}/api/tos/current`)).status).toBe(200);
+  expect(await acceptanceRequired()).toBe(true);
+  expect((await acceptVersion(first)).status).toBe(200);
+  await publish('next-minor', 'minor');
+  expect(await acceptanceRequired()).toBe(false);
+});

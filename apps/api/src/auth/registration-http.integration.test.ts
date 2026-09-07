@@ -12,10 +12,10 @@ beforeEach(async () => {
   if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
   fixture = await startHttpFixture(process.env.TEST_DATABASE_URL);
   await fixture.pool.query(
-    `INSERT INTO tos_versions(id,version_id,content_fa,content_en,status,is_active,published_at)
-    VALUES ($1,'consent-v1','قوانین اول','First terms','published',true,NOW()),
-           ($2,'consent-v2','قوانین دوم','Second terms','published',false,NOW()),
-           ($3,'consent-draft','پیش نویس','Draft terms','draft',false,NULL)`,
+    `INSERT INTO tos_versions(id,version_id,content_fa,content_en,status,is_active,published_at,change_type)
+    VALUES ($1,'consent-v1','قوانین اول','First terms','published',true,NOW(),'major'),
+           ($2,'consent-v2','قوانین دوم','Second terms','published',false,NOW(),'major'),
+           ($3,'consent-draft','پیش نویس','Draft terms','draft',false,NULL,'minor')`,
     [oldTerms, newTerms, draftTerms]
   );
 }, 40000);
@@ -159,7 +159,7 @@ it('preserves published content when draft edits race publication', async () => 
         async () =>
           (
             await fixture.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
-      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'UPDATE tos_versions%'`)
+      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM tos_versions WHERE id=$1 FOR UPDATE%'`)
           ).rows[0].count
       )
       .toBe(1);
@@ -169,7 +169,7 @@ it('preserves published content when draft edits race publication', async () => 
     );
     await client.query('COMMIT');
     const response = await edit;
-    expect(response.status, await response.text()).toBe(409);
+    expect(response.status, await response.text()).toBe(400);
     expect(
       (await fixture.pool.query('SELECT content_en FROM tos_versions WHERE id=$1', [draftTerms]))
         .rows[0].content_en

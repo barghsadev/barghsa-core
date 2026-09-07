@@ -104,8 +104,8 @@ export class TosService {
   /**
    * Check if a user needs to re-accept the Terms of Service (T-04.01.03).
    *
-   * Returns `true` when the user's `last_accepted_tos_version` is behind the
-   * currently active TOS version (or when they have never accepted).
+   * Returns `true` when the accepted document predates the latest material
+   * publication, or the user has never accepted a published document.
    *
    * Exempt routes where TOS check does NOT apply:
    *   auth/*, account-recovery, support, legal/*, tos/*
@@ -115,35 +115,29 @@ export class TosService {
   async requiresReAcceptance(userId: string): Promise<boolean> {
     const pool = getDbPool();
 
-    // Get the current active TOS version id
-    const activeResult = await pool.query<{ id: string }>(
-      `SELECT id FROM tos_versions
-       WHERE is_active = true AND status = 'published' AND published_at IS NOT NULL
-       ORDER BY published_at DESC
-       LIMIT 1`
-    );
-
-    if (activeResult.rows.length === 0) {
-      // No active TOS version — nothing to accept
-      return false;
-    }
-
-    const activeVersionId = activeResult.rows[0]!.id;
-
-    // Get the user's last accepted version
-    const userResult = await pool.query<{ last_accepted_tos_version: string | null }>(
-      `SELECT last_accepted_tos_version FROM users WHERE user_id = $1`,
+    // One snapshot binds the active document, material boundary and accepted version.
+    const result = await pool.query<{ required: boolean }>(
+      `WITH active AS (
+         SELECT id,published_at FROM tos_versions
+         WHERE is_active=true AND status='published' AND published_at IS NOT NULL
+         ORDER BY published_at DESC LIMIT 1
+       ), material AS (
+         SELECT v.id,v.published_at FROM tos_versions v, active a
+         WHERE v.status='published' AND COALESCE(v.change_type,'major')='major'
+           AND v.published_at <= a.published_at
+         ORDER BY v.published_at DESC,(v.id=a.id) DESC,v.id DESC LIMIT 1
+       )
+       SELECT (accepted.id IS NULL OR
+         (accepted.id<>active.id AND accepted.id<>material.id
+           AND material.published_at IS NOT NULL AND accepted.published_at <= material.published_at)
+       ) AS required
+       FROM users u CROSS JOIN active LEFT JOIN material ON true
+       LEFT JOIN tos_versions accepted ON accepted.id::text=u.last_accepted_tos_version
+         AND accepted.status='published' AND accepted.published_at IS NOT NULL
+       WHERE u.user_id=$1`,
       [userId]
     );
-
-    if (userResult.rows.length === 0) {
-      return false;
-    }
-
-    const userAccepted = userResult.rows[0]!.last_accepted_tos_version;
-
-    // If never accepted, or accepted a different version, re-acceptance is needed
-    return userAccepted !== activeVersionId;
+    return result.rows[0]?.required ?? false;
   }
 
   /**
@@ -326,13 +320,12 @@ export class TosService {
   ): Promise<TosVersionDetail> {
     return this.adminTransaction(actorUserId, async (client) => {
       await this.lockDraft(client, id, 'TOS_VERSION_ALREADY_PUBLISHED');
-      if (input.changeType === 'major')
-        await client.query('UPDATE tos_versions SET is_active=false WHERE is_active=true');
+      await client.query('UPDATE tos_versions SET is_active=false WHERE is_active=true');
       const result = await client.query<TosVersionDetail>(
         `UPDATE tos_versions SET status='published',change_type=$1,is_active=$2,
-         published_at=NOW(),created_by=$3,updated_at=NOW() WHERE id=$4
+         published_at=clock_timestamp(),created_by=$3,updated_at=clock_timestamp() WHERE id=$4
          RETURNING ${ADMIN_VERSION_COLUMNS}`,
-        [input.changeType, input.changeType === 'major', actorUserId, id]
+        [input.changeType, true, actorUserId, id]
       );
       const version = result.rows[0]!;
       await this.auditAdminWrite(client, actorUserId, ip, 'publish', version);

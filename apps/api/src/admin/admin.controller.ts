@@ -1149,8 +1149,8 @@ export class AdminController {
    * POST /api/admin/tos/versions/:id/publish
    *
    * Publishes a draft TOS version.
-   * If changeType is 'major', the new version becomes active and users must re-accept.
-   * If changeType is 'minor', the current active version stays active.
+   * Every publication becomes active. Major changes require renewed consent;
+   * minor corrections preserve consent to the current material version.
    */
   @Post('tos/versions/:id/publish')
   @HttpCode(200)
