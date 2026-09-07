@@ -505,16 +505,23 @@ describe('UploadController', () => {
 
     it('returns not_found when object does not exist', async () => {
       vi.mocked(storage.getObject).mockRejectedValue(
-        new StorageObjectNotFound('uploads/document/missing.jpg')
+        new StorageObjectNotFound('uploads/document/missing.pdf')
       );
 
-      const result = await controller.verifyUpload('uploads/document/missing.jpg', actorRequest);
+      const result = await controller.verifyUpload('uploads/document/missing.pdf', actorRequest);
 
       expect(result).toEqual({
-        key: 'uploads/document/missing.jpg',
+        key: 'uploads/document/missing.pdf',
         exists: false,
         status: 'not_found',
       });
+    });
+
+    it('rejects a disallowed category extension before opening storage', async () => {
+      await expect(
+        controller.verifyUpload('uploads/document/missing.jpg', actorRequest)
+      ).rejects.toThrow(BadRequestException);
+      expect(storage.getObject).not.toHaveBeenCalled();
     });
 
     it('rejects keys that do not start with uploads/', async () => {

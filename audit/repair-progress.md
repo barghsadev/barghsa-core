@@ -2190,3 +2190,7 @@ Review and validation: seven production browser checks pass for both public/sign
 Provider and contract-template administration dictionaries now load with those routes. Their messages and fallback lookup behavior are preserved, including the shared navigation title. The complete electricity-ordering payload is 249.45 KB gzip against the unchanged 250 KB limit, down from 252.02 KB. Root build/types, targeted lint, formatting, all 27 i18n checks and seven focused production browser checks pass. The bundle has little headroom, so subsequent shared additions still require measurement.
 
 The full regression attempted during this work found one upload unit fixture using a JPG key in the document category. Policy validation now rejects that extension before storage reads. That failed run is not a clean coverage checkpoint; the next repair corrects its missing-object setup and verifies rejection before storage access. The last complete combined coverage report remains the earlier branding checkpoint.
+
+### Correct missing-object coverage after upload policy enforcement
+
+The missing-object unit fixture now uses a deployment-permitted PDF key in the document category. A separate assertion proves a disallowed JPG key is rejected before storage is opened. This preserves both expected behaviors rather than weakening policy enforcement to satisfy the old fixture. All 32 controller checks, targeted lint, formatting and diff review pass. No production behavior changed in this step.
