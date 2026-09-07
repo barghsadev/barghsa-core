@@ -2251,6 +2251,68 @@
         22
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "99e3c89658a322137e3986342d5699f839891b5b",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1098,
+      "requirement": "- **T-06.03.04:** Create localized DatePicker component\n  - **Notes:** Single and range date selection. When locale is `fa`, uses Jalali calendar; when `en`, uses Gregorian. Keyboard accessible: arrow keys navigate days, Enter selects, Escape closes. Props: `value`, `onChange`, `minDate`, `maxDate`, `locale`, `timezone`. Displays currently selected date in full format. For range/period selection, uses half-open `[start, end)` semantics in UI. Uses `datepicker-*` accessible patterns (dialog role, grid for days).\n  - **Dependencies:** T-06.02.02, T-06.03.02\n  - **Complexity:** L\n  - **UI/UX:** DatePicker switches calendar system when language changes. Displays Hijri month names in Persian, Western month names in English. Shows current Jalali year alongside Gregorian year in Persian mode. Responsive: full calendar on desktop, simplified month selector on mobile.",
+      "requirement_sha256": "d0c5a4c7c54d6f32bb835ec4993c7f0f65996c6ec56385331806355fa395f486",
+      "source_evidence": [
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+          "sha256": "e9ac9cbca36c6997ba48741b377a1b52cd02d1f9fecf868d27e3de449c8d5302"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.test.ts",
+          "sha256": "dcf84843131b62be1636e63080f316d0edaf41687192e30b81218c474f71ebb4"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "d7abb37d1fc2650d8a7cdeae03a9d9f2a534246b4ef310b42fe6b49a998c1b9f"
+        },
+        {
+          "path": "apps/web/e2e/date-picker-component.spec.ts",
+          "sha256": "b6ce74ba2e1909a9b58e36763461aaac9aa7b5f0d5d1b1a940fa3fac292897ea"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
+          "sha256": "8dc0eb039a8ed26822fda4647ba7d6c7d83ce320a7fa0b5fea4ddf24a3d77012"
+        },
+        {
+          "path": "apps/web/src/components/StaffPermissionHistory.tsx",
+          "sha256": "4e51513c19de9d4135388eeaab2fb001493e574c051b6cf3d1630ee87350def4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+          "sha256": "251097cb290b6c9ff9f6b5a508575ff1e8119c680e3fd01acd022805fa0ea536"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "2b563bb934b65ac16fb651288dff661994c6d3c9c5c70d97b5b80345087c99c3"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+          "sha256": "fe3c90fb78e0230ae31cb90cdaa9b4103f0ed03a5565c714797497ca16fb493a"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileList.tsx",
+          "sha256": "63fb5c7be8664574e515618fedb19f4ee39c5d51a8837f08f1c8d2be277146ee"
+        }
+      ],
+      "checks": [
+        "70 production-built date-picker component browser cases passed across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari. Includes Gregorian/Jalali selection, min/max, keyboard arrows/Enter/Escape and focus restoration, locale switching, Tehran selection with UTC/Los Angeles browser zones, DST, one-day half-open intervals, Persian range endpoints, default locale/zone, numeral preference and mobile month selection.",
+        "10 Persian range dialog accessibility scans across light/dark and five browser profiles returned zero violations. Inspected generated Persian mobile calendar screenshot; calendar fits the 390px viewport.",
+        "43 shared UI unit tests passed, including 28 calendar timestamp/filter boundary cases. UI typecheck and explicit ESLint passed.",
+        "All five current consumers use the shared picker and supply the account timezone; their broader workflows passed in the prior 335-case production Chromium suite at 4ba30c9. The picker/consumer implementations are unchanged since that checkpoint."
+      ],
+      "limitations": [
+        "This certifies the localized shared DatePicker task. It does not certify every shared UI component, every screen-reader/browser/device combination, live deployment or remaining coverage gates."
+      ],
+      "merged_prs": [],
+      "historically_skipped": true
     }
   ],
   "pending_task_keys": [
@@ -2328,7 +2390,6 @@
     "01-platform-infrastructure.md#T-06.03.01",
     "01-platform-infrastructure.md#T-06.03.02",
     "01-platform-infrastructure.md#T-06.03.03",
-    "01-platform-infrastructure.md#T-06.03.04",
     "01-platform-infrastructure.md#T-06.03.05",
     "01-platform-infrastructure.md#T-06.03.06",
     "01-platform-infrastructure.md#T-06.04.01",

@@ -3,10 +3,10 @@
   "scope": "Historical skips reconciled with recorded acceptance; not a dispatch queue",
   "source_sha256": {
     "audit/skipped-tasks.json": "e4394d905111e9f5d319185eb47aeb26bd75927b6fc2ac99c449b10cd42e4947",
-    "audit/acceptance-closure.json": "2fbcba4480df88b04109b65714df4ad6efc25151c92067b941d563bfff174b80"
+    "audit/acceptance-closure.json": "07fdf241e19ab1555ffedc695cc2748271dc731b796240776f62972ad94cbe0d"
   },
   "historically_skipped": 58,
-  "acceptance_verified": 2,
+  "acceptance_verified": 3,
   "tasks": [
     {
       "task_key": "01-platform-infrastructure.md#T-05.01.01",
@@ -383,10 +383,12 @@
       "historical_skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
       "historical_assessment": "partial",
       "direct_merged_prs": [],
-      "acceptance_status": "acceptance_pending",
-      "reviewed_sha": null,
-      "limitations": [],
-      "next_action": "Review current implementation against requirements; build only unmet remainder"
+      "acceptance_status": "acceptance_verified",
+      "reviewed_sha": "99e3c89658a322137e3986342d5699f839891b5b",
+      "limitations": [
+        "This certifies the localized shared DatePicker task. It does not certify every shared UI component, every screen-reader/browser/device combination, live deployment or remaining coverage gates."
+      ],
+      "next_action": "Preserve verified implementation; do not rebuild this task"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.03.05",

@@ -26,9 +26,10 @@ class SkippedTaskTests(unittest.TestCase):
         self.assertEqual({r["task_key"] for r in verified}, {
             "01-platform-infrastructure.md#T-06.02.03",
             "01-platform-infrastructure.md#T-06.02.05",
+            "01-platform-infrastructure.md#T-06.03.04",
         })
         self.assertTrue(all("do not rebuild" in r["next_action"] for r in verified))
-        self.assertEqual(sum(r["acceptance_status"] == "acceptance_pending" for r in rows), 56)
+        self.assertEqual(sum(r["acceptance_status"] == "acceptance_pending" for r in rows), 55)
 
     def test_historical_partial_or_merged_claim_is_not_acceptance(self):
         rows = reconcile(self.skips, self.closure)

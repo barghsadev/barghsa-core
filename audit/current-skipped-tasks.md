@@ -1,6 +1,6 @@
 # Current disposition of historically skipped tasks
 
-58 historical skips remain in the record. 2 now have verified task-level acceptance.
+58 historical skips remain in the record. 3 now have verified task-level acceptance.
 The rest have the statuses shown below. Pending acceptance does not mean no code exists.
 Review current requirements and preserve working implementation before planning any remaining build.
 This list does not authorize dispatch or resume the feature loop.
@@ -42,7 +42,7 @@ Use [current canonical requirements](current-task-requirements.json) and [accept
 | 01-platform-infrastructure.md#T-06.03.01 | Initialize `packages/ui` with shadcn/ui and Base UI | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.03.02 | Create themed component set with RTL support | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.03.03 | Implement WCAG 2.2 AA accessibility in all shared components | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
-| 01-platform-infrastructure.md#T-06.03.04 | Create localized DatePicker component | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
+| 01-platform-infrastructure.md#T-06.03.04 | Create localized DatePicker component | acceptance_verified | Preserve verified implementation; do not rebuild this task |
 | 01-platform-infrastructure.md#T-06.03.05 | Implement theme system with admin overrides | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.03.06 | Create loading/empty/error state components | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.04.01 | Create privacy-safe analytics abstraction with consent gate and redaction | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
