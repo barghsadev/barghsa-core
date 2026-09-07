@@ -21,7 +21,7 @@ vi.mock('pg', () => ({
     end = state.end;
   },
 }));
-import { setup } from './globalSetup';
+import { setup, startTestPostgres } from './globalSetup';
 function project(env?: Record<string, string>) {
   return { config: { env } } as unknown as TestProject;
 }
@@ -66,3 +66,15 @@ for (const operation of ['query', 'end'] as const) {
     expect(target.config.env).toBeUndefined();
   });
 }
+
+it('gives standalone callers an explicit URL and owned cleanup without global environment mutation', async () => {
+  const started = container('postgres://standalone');
+  state.start.mockResolvedValue(started);
+  const previous = process.env.TEST_DATABASE_URL;
+  const database = await startTestPostgres();
+  expect(database.connectionString).toBe('postgres://standalone');
+  expect(process.env.TEST_DATABASE_URL).toBe(previous);
+  expect(started.stop).not.toHaveBeenCalled();
+  await database.close();
+  expect(started.stop).toHaveBeenCalledOnce();
+});

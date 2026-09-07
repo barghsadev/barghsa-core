@@ -1,15 +1,15 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { Pool } from 'pg';
-import { setup, teardown } from '../src/test/globalSetup';
+import { startTestPostgres } from '../src/test/globalSetup';
 import { runMigrations } from '../src/migrate';
 
 async function main() {
-  await setup();
-  const pool = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
+  const database = await startTestPostgres();
+  const pool = new Pool({ connectionString: database.connectionString });
   try {
     const result = await runMigrations({
-      connection: { pgdirectUrl: process.env.TEST_DATABASE_URL },
+      connection: { pgdirectUrl: database.connectionString },
     });
     if (!result.ok) throw new Error(JSON.stringify(result));
     const path = resolve(__dirname, '../../../audit/legacy-inline-constraints.json');
@@ -67,8 +67,11 @@ async function main() {
       )
     );
   } finally {
-    await pool.end();
-    await teardown();
+    try {
+      await pool.end();
+    } finally {
+      await database.close();
+    }
   }
 }
 main().catch((error) => {

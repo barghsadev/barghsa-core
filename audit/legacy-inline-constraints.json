@@ -532,7 +532,7 @@
     "table": "wallet_topup_callback_events",
     "name": "chk_wallet_topup_callback_events_status",
     "definition": "CHECK (status IN ('credited', 'unpaid', 'duplicate'))",
-    "actual": "CHECK ((status = ANY (ARRAY['credited'::text, 'unpaid'::text, 'duplicate'::text])))",
+    "actual": "CHECK ((status = ANY (ARRAY['processing'::text, 'credited'::text, 'unpaid'::text, 'duplicate'::text])))",
     "actualName": "chk_wallet_topup_callback_events_status",
     "missingBeforeRepair": true
   },

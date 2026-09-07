@@ -1840,11 +1840,6 @@
     "definition": "CHECK ((\"offset\" = ANY (ARRAY['-7'::integer, '-3'::integer, '-1'::integer, 0, 1, 7])))"
   },
   {
-    "table": "wallet_topup_callback_events",
-    "name": "chk_wallet_topup_callback_events_status",
-    "definition": "CHECK ((status = ANY (ARRAY['credited'::text, 'unpaid'::text, 'duplicate'::text])))"
-  },
-  {
     "table": "wallet_chargeback_events",
     "name": "chk_wallet_chargeback_events_status",
     "definition": "CHECK ((status = ANY (ARRAY['processing'::text, 'reversed'::text, 'unmatched'::text, 'unresolved'::text, 'duplicate'::text])))"
@@ -1853,5 +1848,165 @@
     "table": "wallet_chargeback_events",
     "name": "chk_wallet_chargeback_events_match_method",
     "definition": "CHECK (((match_method IS NULL) OR (match_method = ANY (ARRAY['merchant_order_id'::text, 'provider_ref_id'::text, 'authority'::text]))))"
+  },
+  {
+    "table": "otp_challenges",
+    "name": "otp_challenges_previous_challenge_id_fkey",
+    "definition": "FOREIGN KEY (previous_challenge_id) REFERENCES otp_challenges(challenge_id)"
+  },
+  {
+    "table": "otp_challenges",
+    "name": "otp_username_pair",
+    "definition": "CHECK (((previous_challenge_id IS NULL) OR ((purpose = 'change_username'::text) AND (previous_challenge_id <> challenge_id))))"
+  },
+  {
+    "table": "legal_profiles",
+    "name": "legal_profiles_representative_province_id_fkey",
+    "definition": "FOREIGN KEY (representative_province_id) REFERENCES provinces(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "legal_profiles",
+    "name": "legal_profiles_representative_city_id_fkey",
+    "definition": "FOREIGN KEY (representative_city_id) REFERENCES cities(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "profile_onboarding_drafts",
+    "name": "onboarding_draft_version",
+    "definition": "CHECK ((version > 0))"
+  },
+  {
+    "table": "profile_onboarding_drafts",
+    "name": "onboarding_draft_object",
+    "definition": "CHECK (((jsonb_typeof(data) = 'object'::text) AND (octet_length((data)::text) <= 16384)))"
+  },
+  {
+    "table": "profile_onboarding_drafts",
+    "name": "profile_onboarding_drafts_pkey",
+    "definition": "PRIMARY KEY (profile_id)"
+  },
+  {
+    "table": "profile_onboarding_drafts",
+    "name": "profile_onboarding_drafts_profile_id_fkey",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "account_login_identifiers",
+    "name": "account_login_identifiers_kind_check",
+    "definition": "CHECK ((kind = ANY (ARRAY['primary'::text, 'email'::text, 'mobile'::text])))"
+  },
+  {
+    "table": "account_login_identifiers",
+    "name": "account_login_identifiers_destination_check",
+    "definition": "CHECK (((destination = lower(destination)) AND (length(destination) > 0)))"
+  },
+  {
+    "table": "account_login_identifiers",
+    "name": "account_login_identifiers_proof_check",
+    "definition": "CHECK ((((kind = 'primary'::text) AND (verified_at IS NULL)) OR ((kind <> 'primary'::text) AND (verified_at IS NOT NULL))))"
+  },
+  {
+    "table": "account_login_identifiers",
+    "name": "account_login_identifiers_pkey",
+    "definition": "PRIMARY KEY (destination)"
+  },
+  {
+    "table": "account_login_identifiers",
+    "name": "account_login_identifiers_user_kind_key",
+    "definition": "UNIQUE (user_id, kind)"
+  },
+  {
+    "table": "account_login_identifiers",
+    "name": "account_login_identifiers_user_id_fkey",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "wallet_topup_callback_events",
+    "name": "chk_wallet_topup_callback_events_status",
+    "definition": "CHECK ((status = ANY (ARRAY['processing'::text, 'credited'::text, 'unpaid'::text, 'duplicate'::text])))"
+  },
+  {
+    "table": "ai_model_test_jobs",
+    "name": "ai_model_test_status",
+    "definition": "CHECK ((status = ANY (ARRAY['pending'::text, 'leased'::text, 'completed'::text, 'failed'::text, 'cancelled'::text])))"
+  },
+  {
+    "table": "ai_model_test_jobs",
+    "name": "ai_model_test_attempts",
+    "definition": "CHECK (((attempts >= 0) AND (attempts <= 2)))"
+  },
+  {
+    "table": "ai_model_test_jobs",
+    "name": "ai_model_test_lease",
+    "definition": "CHECK ((((status = 'leased'::text) AND (lease_token IS NOT NULL) AND (lease_until IS NOT NULL)) OR ((status <> 'leased'::text) AND (lease_token IS NULL) AND (lease_until IS NULL))))"
+  },
+  {
+    "table": "ai_model_test_jobs",
+    "name": "ai_model_test_result",
+    "definition": "CHECK (((status = 'completed'::text) = (result IS NOT NULL)))"
+  },
+  {
+    "table": "ai_model_test_jobs",
+    "name": "ai_model_test_deadline",
+    "definition": "CHECK ((deadline_at > created_at))"
+  },
+  {
+    "table": "ai_model_test_jobs",
+    "name": "ai_model_test_jobs_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "ai_model_test_jobs",
+    "name": "ai_model_test_jobs_model_id_fkey",
+    "definition": "FOREIGN KEY (model_id) REFERENCES ai_models(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "ai_model_test_jobs",
+    "name": "ai_model_test_jobs_actor_user_id_fkey",
+    "definition": "FOREIGN KEY (actor_user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_agent_kb_groups",
+    "name": "ai_agent_kb_groups_agent_id_group_id_pk",
+    "definition": "PRIMARY KEY (agent_id, group_id)"
+  },
+  {
+    "table": "ai_agent_kb_groups",
+    "name": "ai_agent_kb_groups_agent_id_fkey",
+    "definition": "FOREIGN KEY (agent_id) REFERENCES ai_agents(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_agent_kb_groups",
+    "name": "ai_agent_kb_groups_group_id_fkey",
+    "definition": "FOREIGN KEY (group_id) REFERENCES kb_groups(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_agent_policy_groups",
+    "name": "ai_agent_policy_groups_agent_id_group_id_pk",
+    "definition": "PRIMARY KEY (agent_id, group_id)"
+  },
+  {
+    "table": "ai_agent_policy_groups",
+    "name": "ai_agent_policy_groups_agent_id_fkey",
+    "definition": "FOREIGN KEY (agent_id) REFERENCES ai_agents(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_agent_policy_groups",
+    "name": "ai_agent_policy_groups_group_id_fkey",
+    "definition": "FOREIGN KEY (group_id) REFERENCES ai_policy_groups(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "notification_templates",
+    "name": "notification_template_supersedes_fk",
+    "definition": "FOREIGN KEY (event_key, channel, locale, supersedes_version) REFERENCES notification_templates(event_key, channel, locale, version) ON UPDATE RESTRICT ON DELETE RESTRICT"
+  },
+  {
+    "table": "notification_templates",
+    "name": "notification_template_version_positive",
+    "definition": "CHECK ((version > 0))"
+  },
+  {
+    "table": "notification_templates",
+    "name": "notification_template_supersedes_older",
+    "definition": "CHECK (((supersedes_version IS NULL) OR (supersedes_version < version)))"
   }
 ]

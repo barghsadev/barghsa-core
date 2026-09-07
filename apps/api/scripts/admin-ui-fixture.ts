@@ -1,10 +1,24 @@
 import { createServer } from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../src/test/http-fixture';
-import { setup, teardown } from '../../../packages/db/src/test/globalSetup';
+import { startTestPostgres } from '../../../packages/db/src/test/globalSetup';
+
+const cleanups: Array<() => Promise<unknown>> = [];
+async function cleanup() {
+  const errors: unknown[] = [];
+  while (cleanups.length) {
+    try {
+      await cleanups.pop()!();
+    } catch (error) {
+      errors.push(error);
+    }
+  }
+  if (errors.length) throw new AggregateError(errors, 'Fixture cleanup failed');
+}
 
 async function main() {
-  await setup();
+  const database = await startTestPostgres();
+  cleanups.push(database.close);
   const storage = createServer((_request, response) => {
     response.setHeader('Content-Type', 'application/xml');
     response.end(
@@ -12,14 +26,16 @@ async function main() {
     );
   });
   await new Promise<void>((done) => storage.listen(0, '127.0.0.1', done));
+  cleanups.push(() => new Promise<void>((done) => storage.close(() => done())));
   const http = await startHttpFixture(
-    process.env.TEST_DATABASE_URL!,
+    database.connectionString,
     `http://127.0.0.1:${(storage.address() as { port: number }).port}`,
     '',
     10,
     '',
     true
   );
+  cleanups.push(() => http.close());
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(`INSERT INTO users(user_id,username,password_hash,is_admin,is_staff) VALUES
@@ -96,20 +112,27 @@ async function main() {
   const close = async () => {
     if (closing) return;
     closing = true;
-    await http.close();
+    await cleanup();
     // The browser runner captures this output and attaches it only on failure.
     process.stderr.write(http.logs());
-    await new Promise<void>((done) => storage.close(() => done()));
-    await teardown();
     process.exit(0);
   };
-  process.once('message', () => void close());
-  process.once('disconnect', () => void close());
-  process.once('SIGTERM', () => void close());
+  const requestClose = () =>
+    void close().catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+  process.once('message', requestClose);
+  process.once('disconnect', requestClose);
+  process.once('SIGTERM', requestClose);
   process.send?.({ base: http.base, session, csrf, jobs });
 }
 main().catch(async (error) => {
   console.error(error);
-  await teardown();
+  try {
+    await cleanup();
+  } catch (cleanupError) {
+    console.error(cleanupError);
+  }
   process.exit(1);
 });

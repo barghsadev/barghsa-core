@@ -18,7 +18,10 @@ import { Pool } from 'pg';
  * Called once before all test workers start.
  * Starts a PostgreSQL container and exposes the connection string.
  */
-export async function setup(project: TestProject): Promise<() => Promise<void>> {
+export async function startTestPostgres(): Promise<{
+  connectionString: string;
+  close: () => Promise<void>;
+}> {
   const started = await new PostgreSqlContainer('postgres:17-alpine')
     .withDatabase('barghsa_test')
     .withUsername('barghsa')
@@ -34,17 +37,26 @@ export async function setup(project: TestProject): Promise<() => Promise<void>> 
     } finally {
       await bootstrap.end();
     }
-    // Each project gets its own worker environment. A shared process.env
-    // value would point every project at the last container started.
-    project.config.env = { ...project.config.env, TEST_DATABASE_URL: connectionString };
+    return {
+      connectionString,
+      close: async () => {
+        await started.stop();
+      },
+    };
   } catch (error) {
     await started.stop();
     throw error;
   }
+}
 
-  // Capture this container in the returned teardown. Module-level state would
-  // be overwritten when several projects load this same global setup module.
-  return async () => {
-    await started.stop();
-  };
+/** Vitest adapter; standalone fixtures use startTestPostgres directly. */
+export async function setup(project: TestProject): Promise<() => Promise<void>> {
+  const database = await startTestPostgres();
+  try {
+    project.config.env = { ...project.config.env, TEST_DATABASE_URL: database.connectionString };
+    return database.close;
+  } catch (error) {
+    await database.close();
+    throw error;
+  }
 }
