@@ -10,8 +10,34 @@ import json
 import os
 import subprocess
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+
+def completion_correction(snapshot: dict[str, Any], revision: str,
+                          review: dict[str, Any]) -> dict[str, Any]:
+    """Prepare one reviewed correction without clearing assignment or history."""
+    fields = {"expected_revision", "task_key", "reason", "review_reference", "reviewed_by"}
+    if not isinstance(review, dict) or set(review) != fields:
+        raise ValueError("correction review must contain exactly the documented fields")
+    if any(not isinstance(review[field], str) or not review[field].strip() for field in fields):
+        raise ValueError("correction review fields must be non-empty strings")
+    if review["expected_revision"] != revision:
+        raise ValueError("correction review belongs to a different state revision")
+    if snapshot.get("status") != "blocked":
+        raise ValueError("completion correction requires blocked state")
+    key = review["task_key"]
+    if "#" not in key or key not in snapshot.get("build_completed_tasks", []):
+        raise ValueError("correction must name an existing qualified completion")
+    state = json.loads(json.dumps(snapshot))
+    state["build_completed_tasks"] = [item for item in state["build_completed_tasks"] if item != key]
+    at = datetime.now(timezone.utc).isoformat()
+    state["task_events"].append({"task_key": key, "disposition": "partial", "at": at,
+                                 "correction": dict(review)})
+    state["last_updated"] = at
+    state["last_error"] = f"Completion corrected for {key}; acceptance repair and explicit recovery required"
+    return state
 
 
 def atomic_json(path: Path, value: Any) -> None:
@@ -83,6 +109,17 @@ class StateStore:
         return json.loads(json.dumps(snapshot))
 
     def save(self, state: dict[str, Any], *, bootstrap: bool = False) -> None:
+        self._save(state, bootstrap=bootstrap)
+
+    def correct_completion(self, review: dict[str, Any]) -> dict[str, Any]:
+        if self.snapshot is None or self.revision is None:
+            raise RuntimeError("read remote state before correcting a completion")
+        state = completion_correction(self.snapshot, self.revision, review)
+        self._save(state, removed_completion=review["task_key"])
+        return state
+
+    def _save(self, state: dict[str, Any], *, bootstrap: bool = False,
+              removed_completion: str | None = None) -> None:
         current = self.remote_revision()
         if current != self.revision:
             raise RuntimeError("remote state advanced; stale supervisor cannot publish or dispatch")
@@ -93,7 +130,9 @@ class StateStore:
         old_events = previous.get("task_events", [])
         if not isinstance(events, list) or events[:len(old_events)] != old_events:
             raise ValueError("task event history cannot be removed or rewritten")
-        if not set(previous.get("build_completed_tasks", [])).issubset(state.get("build_completed_tasks", [])):
+        removed = set(previous.get("build_completed_tasks", [])) - set(state.get("build_completed_tasks", []))
+        permitted = {removed_completion} if removed_completion is not None else set()
+        if removed != permitted:
             raise ValueError("completion removal requires a reconciled correction, not a state overwrite")
         payload = json.dumps(state, sort_keys=True, indent=2, ensure_ascii=False) + "\n"
         blob = self.git("hash-object", "-w", "--stdin", data=payload)

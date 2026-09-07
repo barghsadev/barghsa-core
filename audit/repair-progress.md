@@ -2520,3 +2520,9 @@ All 1,355 task identities and their order are preserved. Generated backlog/trace
 At revision 564d141, the fresh Vite production build, route-budget regression checks and all complete-route payload gates pass. Source review confirms the client React root, TanStack Router route splitting, hashed assets, CSS splitting and HTML/static serving required by the approved architecture. Task 01-platform-infrastructure.md#T-01.03.01 is now acceptance_verified against its revised canonical text and source hashes.
 
 Its previous partial assessment is retained under superseded_assessments instead of being erased. The current ledger still has 30 assessed tasks: 23 verified, seven partial and 292 pending. Other F19 and localization obligations remain open.
+
+### Add a reviewed completion-correction transaction
+
+The new correct_completion.py command previews by default and publishes only with an explicit apply flag. It requires blocked state and a review bound to the current remote state commit, an existing qualified completion key, a reason, evidence reference and reviewer attribution. It removes only that key, appends a partial correction event, preserves previous events and active assignment/PR fields, and leaves dispatch blocked. Ordinary state saves cannot bypass removal protection with a correction-looking event. Reviewer attribution is operator-supplied, not independently authenticated.
+
+All 55 kanban checks pass. New cases cover durable restart, preservation of assignment/history, malformed or stale reviews, active-state refusal, replay, failed push, preview versus apply, shared lock contention and rejection of state directories inside the product checkout. Backlog validation and diff review pass. Only disposable local Git remotes were used. General recovery to runnable state still requires acceptance closure and active-PR reconciliation.

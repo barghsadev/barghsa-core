@@ -26,6 +26,24 @@ The obsolete `transition_state.py` entry point refuses every command with exit s
 
 Task events distinguish `partial`, `merged`, `acceptance_verified`, `deferred`, `blocked` and `retired`. Historical events cannot be removed or rewritten. Ordinary state saves cannot remove completed identities. An incorrect historical completion needs a reviewed reconciliation/correction procedure; editing the completion array is rejected.
 
-The initial repair has not implemented a general correction/recovery command. Keep state blocked until that procedure and acceptance closure are reviewed. This is intentional: an ad hoc edit must not silently restart old work.
+`correct_completion.py` implements the narrow correction of one inaccurate completion claim. It requires already-blocked state, a review bound to the exact remote state revision, an existing qualified completion key, a reason, a review reference and reviewer attribution. It appends a `partial` event carrying that review, removes only that completion key, and preserves all previous events, active assignment and PR fields. State remains blocked. Ordinary saves still cannot remove completions, even if supplied a correction-looking event.
+
+Prepare an external JSON review file with exactly these fields:
+
+```json
+{
+  "expected_revision": "<full commit SHA of the reviewed kanban-state snapshot>",
+  "task_key": "<epic-file.md>#<task-id>",
+  "reason": "<what the completion claim got wrong>",
+  "review_reference": "<reviewed evidence location>",
+  "reviewed_by": "<reviewer attribution>"
+}
+```
+
+Preview with `python3 kanban/scripts/correct_completion.py --state-dir <external-directory> --remote <state-remote> --review <external-review.json>`. The state directory must be outside the product checkout. Preview reads remote state and refreshes its local cache but does not publish. Add `--apply` only after reviewing the preview and referenced evidence. Reviewer attribution is operator-supplied; the command verifies the state revision, not the authenticity of external review content.
+
+Both modes hold the supervisor's OS lock. Apply uses the same remote compare-and-swap transaction and readback as ordinary state saves. A stale/replayed review, lock conflict or failed push refuses the correction. A second checkout recovers the appended event from the dedicated state branch.
+
+This command does not reopen a PR, clear an assignment or resume dispatch. General recovery to a runnable state remains blocked until acceptance closure and active-PR reconciliation are reviewed. An ad hoc edit must not silently restart old work.
 
 The existing exact-HEAD Codex review, durable comment binding, later merge tick and post-merge verification remain mandatory. PRs cannot include historical or external runtime state.
