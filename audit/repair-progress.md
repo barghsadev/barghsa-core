@@ -2348,3 +2348,9 @@ Authorized history reads now validate the version UUID and return 400 for malfor
 ### Close the five implemented TOS task requirements
 
 Acceptance evidence now covers public terms, acceptance storage, re-acceptance, administrator editing and version history at `5b9ac7efd94a9e7dae93135f25c86f9abc30a3df`. Each record retains its canonical requirement, original PR provenance, source hashes, real HTTP/browser checks and scope limits. The register now has 28 individually assessed tasks: 21 verified and 7 partial, with 294 still pending. Global coverage and production-image checkpoints remain unchanged and are not represented as current. The complete fix plan remains unfinished.
+
+### Add exact, configurable number and IRR formatting utilities
+
+The new i18n numbers entry point formats decimals, percentages and whole-rial currency with locale-default, Persian or Western digits. Digit selection does not change the currency language. Integer amounts use BigInt and retain values above JavaScript's safe-number range; fractional/exponent currency input and already-lossy numeric integers are rejected. Currency output always includes IRR or ریال.
+
+All 45 i18n checks pass, including exact large amounts, localized separators, ratio percentages, numeral overrides and invalid-input rejection. Package build/types, targeted lint, formatting and diff review pass. Administrator persistence and consumer wiring are the next step; this utility alone does not close the number-formatting requirement.

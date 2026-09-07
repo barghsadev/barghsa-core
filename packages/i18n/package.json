@@ -91,6 +91,11 @@
       "types": "./dist/crm.d.ts",
       "import": "./dist/crm.js",
       "default": "./dist/crm.js"
+    },
+    "./numbers": {
+      "types": "./dist/numbers.d.ts",
+      "import": "./dist/numbers.js",
+      "default": "./dist/numbers.js"
     }
   },
   "scripts": {
