@@ -2740,3 +2740,10 @@ Recorded T-06.03.04 as acceptance_verified with exact source hashes and reviewed
 Added a separate browser fixture that imports the actual public authentication, contract-template, wallet-limit and wallet-receipt translation modules. It exercises known Persian/English messages, literal fallback for missing keys and object-prototype names, then returns to a known message to verify the dictionary is intact. The fixture is built outside product routes and does not add a debug page to the app.
 
 All 40 cases passed across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari; explicit lint passed. This checks the production compiler path in addition to the existing unit cases. No coverage counters were fabricated or source-map matching relaxed. Combined coverage will be refreshed separately before claiming this closes a coverage gate.
+
+
+### Wait for successful live-settings reloads before test teardown
+
+The next coverage refresh passed all 5351 unit/integration tests and root lint, but its browser run had 349 passes and one green-electricity-rules failure. Trace review shows the final successful save closed its dialog, started config/safety reloads, and immediately entered afterEach while proxy route fulfillment was still active. A route then reported already handled and interrupted cleanup. No coverage was collected or merged from that failed run.
+
+The green-rules test now waits for both successful config and safety-status reload responses to finish after each successful save, before a page reload or teardown. It still checks their HTTP status and propagates errors; no exception suppression, arbitrary sleep or retry allowance was added. All 30 focused cases passed over three repetitions across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari. Explicit lint passed. A full browser rerun remains necessary for a new combined-coverage claim.

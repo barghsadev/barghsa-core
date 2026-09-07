@@ -813,6 +813,32 @@ for (const locale of ['en', 'fa'])
       });
       await route.fulfill({ response });
     });
+    async function confirmAndWaitForSavedRules() {
+      const refreshed = Promise.all([
+        page.waitForResponse(
+          (response) =>
+            new URL(response.url()).pathname === '/api/admin/config/green-electricity-rules' &&
+            response.request().method() === 'GET'
+        ),
+        page.waitForResponse(
+          (response) =>
+            new URL(response.url()).pathname ===
+              '/api/admin/config/green-electricity-rules/safety-status' &&
+            response.request().method() === 'GET'
+        ),
+      ]);
+      await page
+        .getByRole('dialog')
+        .getByRole('button', {
+          name: locale === 'fa' ? 'تأیید' : 'Confirm',
+          exact: true,
+        })
+        .click();
+      for (const response of await refreshed) {
+        expect(response.status()).toBe(200);
+        expect(await response.finished()).toBeNull();
+      }
+    }
     const headers = {
         cookie: `barghsa_session=${http.session}`,
         'x-csrf-token': http.csrf,
@@ -853,10 +879,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
       .click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
-      .click();
+    await confirmAndWaitForSavedRules();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await page.reload();
     await expect(simple.getByRole('spinbutton')).toHaveValue('1500');
@@ -912,10 +935,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
       .click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
-      .click();
+    await confirmAndWaitForSavedRules();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(simple.getByRole('alert')).toHaveCount(0);
   });
