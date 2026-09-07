@@ -100,7 +100,7 @@ for (const locale of ['fa', 'en'] as const) {
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ارسال دعوت‌نامه' : 'Send invitation' })
       .click();
-    await expect(page.getByRole('status')).toContainText(
+    await expect(page.locator('#dashboard-content').getByRole('status')).toContainText(
       locale === 'fa' ? 'دعوت‌نامه ارسال شد' : 'Invitation sent'
     );
     const member = page
@@ -265,7 +265,9 @@ for (const action of [
     await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(requests).toBe(1);
-    await expect(page.getByRole('status')).toContainText('Change saved');
+    await expect(page.locator('#dashboard-content').getByRole('status')).toContainText(
+      'Change saved'
+    );
   });
 }
 

@@ -65,7 +65,7 @@ for (const locale of ['fa', 'en']) {
     await expect(dialog).toHaveCount(0);
     expect(actions).toHaveLength(2);
     expect(actions[0]).toBe(actions[1]);
-    await expect(page.getByRole('status')).toContainText(
+    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
       locale === 'fa' ? 'باید در روند مربوط به خود تکمیل شود' : 'must still be completed'
     );
   });

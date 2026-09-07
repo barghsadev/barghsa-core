@@ -105,7 +105,7 @@ for (const locale of ['en', 'fa'])
     expect(attempts).toHaveLength(3);
     expect(new Set(attempts).size).toBe(1);
     await expect(page.locator('tbody button')).toHaveCount(0);
-    await expect(page.getByRole('status')).toContainText(
+    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
       fa ? 'تحویل هنوز' : 'Delivery is not yet confirmed'
     );
     canView = false;

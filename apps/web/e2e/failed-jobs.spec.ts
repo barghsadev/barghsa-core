@@ -115,7 +115,7 @@ for (const locale of ['en', 'fa'])
     expect(attempts).toHaveLength(3);
     for (const value of attempts) expect(value).toEqual({ ids: [jobs[0]!.id, jobs[1]!.id] });
     await expect(page.getByRole('checkbox')).toHaveCount(0);
-    await expect(page.getByRole('status')).toContainText(
+    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
       fa ? '۱ مورد دیگر' : '1 selections were skipped'
     );
     canView = false;

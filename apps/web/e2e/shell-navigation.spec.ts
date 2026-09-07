@@ -205,3 +205,55 @@ test('malformed terms never enable consent', async ({ page }) => {
   await expect(dialog).toContainText('An error occurred while loading the terms of service');
   await expect(dialog.getByRole('button', { name: 'I Accept', exact: true })).toBeDisabled();
 });
+
+for (const locale of ['en', 'fa']) {
+  for (const failure of ['unavailable', 'malformed']) {
+    test(`terms status retry recovers consent without blocking support (${locale}, ${failure})`, async ({
+      page,
+    }) => {
+      await page.addInitScript((value) => {
+        new MutationObserver(() => {
+          if (document.documentElement) document.documentElement.lang = value;
+        }).observe(document, { childList: true });
+      }, locale);
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      let recovered = false;
+      await page.route('**/api/auth/user', (route) =>
+        recovered
+          ? route.fulfill({ json: { userId: 'retry-user', requiresTosAcceptance: true } })
+          : failure === 'unavailable'
+            ? route.fulfill({ status: 503, json: {} })
+            : route.fulfill({ json: { userId: 'retry-user' } })
+      );
+      await page.route('**/api/tos/current?*', (route) =>
+        route.fulfill({
+          json: {
+            id: 'retry-terms',
+            versionId: 'v1',
+            content: 'Recovered terms',
+            updatedAt: '2026-09-01T00:00:00Z',
+            publishedAt: '2026-09-01T00:00:00Z',
+          },
+        })
+      );
+      await page.goto('/tickets');
+      const retry = page.getByRole('button', {
+        name: locale === 'fa' ? 'بررسی دوباره پذیرش شرایط' : 'Retry terms check',
+        exact: true,
+      });
+      await expect(retry).toBeVisible();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      recovered = true;
+      await retry.click();
+      await expect(retry).toHaveCount(0);
+      const review = page.getByRole('button', {
+        name: locale === 'fa' ? 'مشاهده' : 'Review',
+        exact: true,
+      });
+      await expect(review).toBeVisible();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await review.click();
+      await expect(page.getByRole('dialog')).toContainText('Recovered terms');
+    });
+  }
+}

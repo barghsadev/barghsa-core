@@ -18,14 +18,6 @@ const TosContent = lazy(() => import('./TosContent.js'));
 
 // ─── Types ────────────────────────────────────────────────────────────
 
-interface UserInfo {
-  userId: string;
-  username: string;
-  email: string | null;
-  mobile: string | null;
-  requiresTosAcceptance: boolean;
-}
-
 interface CurrentTosResponse {
   id: string;
   content: string;
@@ -52,9 +44,8 @@ interface TosBannerProps {
  * re-acceptance is required, with an explicit dismiss from the user suppressing
  * further auto-opens within the same session.
  *
- * The banner does NOT appear on exempt pages: auth/*, account recovery,
- * support, or the TOS page itself — but since this component is rendered
- * inside DashboardLayout and AdminLayout those are already authenticated pages.
+ * Support and legal-record routes retain manual review without an automatic modal.
+ * Status failures offer a non-blocking retry; navigation checks status again.
  */
 export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
@@ -63,9 +54,11 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
       pathname
     );
   const reviewRequest = useRef(0);
+  const statusRequest = useRef(0);
   const time = useAccountTime(locale);
   const [requiresAcceptance, setRequiresAcceptance] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [statusFailed, setStatusFailed] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [currentTos, setCurrentTos] = useState<CurrentTosResponse | null>(null);
   const [loadingTos, setLoadingTos] = useState(false);
@@ -80,24 +73,47 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   // ── Check TOS acceptance status ─────────────────────────────────
 
   const checkTosStatus = useCallback(async () => {
+    const request = ++statusRequest.current;
+    setChecking(true);
     try {
       const response = await fetch('/api/auth/user');
-      if (!response.ok) {
-        setChecking(false);
+      if (request !== statusRequest.current) return;
+      if (response.status === 401) {
+        setRequiresAcceptance(false);
+        setStatusFailed(false);
+        setShowModal(false);
         return;
       }
-      const data: UserInfo = await response.json();
-      setRequiresAcceptance(data.requiresTosAcceptance === true);
+      if (!response.ok) throw new Error('Consent status unavailable');
+      const data: unknown = await response.json();
+      if (request !== statusRequest.current) return;
+      if (
+        !data ||
+        typeof data !== 'object' ||
+        !('userId' in data) ||
+        typeof data.userId !== 'string' ||
+        !data.userId ||
+        !('requiresTosAcceptance' in data) ||
+        typeof data.requiresTosAcceptance !== 'boolean'
+      ) {
+        throw new Error('Invalid consent status');
+      }
+      setRequiresAcceptance(data.requiresTosAcceptance);
+      setStatusFailed(false);
+      if (!data.requiresTosAcceptance) setShowModal(false);
     } catch {
-      // Silently fail — banner is non-critical UI
+      if (request === statusRequest.current) setStatusFailed(true);
     } finally {
-      setChecking(false);
+      if (request === statusRequest.current) setChecking(false);
     }
   }, []);
 
   useEffect(() => {
-    checkTosStatus();
-  }, [checkTosStatus]);
+    void checkTosStatus();
+    return () => {
+      statusRequest.current++;
+    };
+  }, [checkTosStatus, pathname]);
 
   // ── Fetch current TOS content for modal ─────────────────────────
 
@@ -180,6 +196,9 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
         return;
       }
 
+      statusRequest.current++;
+      setChecking(false);
+      setStatusFailed(false);
       setAccepted(true);
       setRequiresAcceptance(false);
 
@@ -196,6 +215,21 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   }, [currentTos, locale, renderedVersion, renderKey]);
 
   // ── Render ──────────────────────────────────────────────────────
+
+  if (statusFailed) {
+    return (
+      <div
+        role="status"
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        className="flex flex-wrap items-center justify-between gap-3 border-b bg-amber-50 px-4 py-3 text-sm"
+      >
+        <span>{t('tos.banner.checkFailed', locale)}</span>
+        <Button size="sm" variant="outline" disabled={checking} onClick={checkTosStatus}>
+          {t('tos.banner.retry', locale)}
+        </Button>
+      </div>
+    );
+  }
 
   if (checking || !requiresAcceptance) {
     return null;

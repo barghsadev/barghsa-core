@@ -1448,9 +1448,9 @@ for (const locale of ['en', 'fa']) {
     await save.click();
     await expect.poll(() => writes).toBe(2);
     await expect(page.getByRole('alert')).toBeVisible();
-    await expect(page.getByRole('status')).toHaveCount(0);
+    await expect(page.locator('#admin-content').getByRole('status')).toHaveCount(0);
     await save.click();
-    await expect(page.getByRole('status')).toContainText(
+    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
       locale === 'fa' ? 'به‌روزرسانی شد' : 'updated'
     );
     await expect(save).toBeDisabled();

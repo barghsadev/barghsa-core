@@ -2316,3 +2316,9 @@ All 15 focused production Chromium checks pass, including real migrated-API crea
 The client now submits to the canonical `POST /api/tos/accept/:versionId` route. It uses the same authenticated, CSRF-protected acceptance transaction as the existing body-based endpoint. The URL identifies the displayed immutable publication; a conflicting body cannot replace it. Old clients remain compatible. The generated OpenAPI contract includes the new path.
 
 The missing-route HTTP regression failed before repair. All 28 focused TOS/registration API checks pass afterward, including guest and CSRF rejection, stale/malformed version rejection and exact version, actor, timestamp, IP and user-agent persistence. Ten production Chromium checks pass; the live Persian flow confirms successful submission through the canonical URL. API/web types, lint, formatting, generated contract, bundle budgets and diff review pass.
+
+### Recover failed TOS status checks without blocking critical entry points
+
+A failed or malformed user-status response now shows a localized, non-blocking retry instead of hiding consent for the entire mounted session. Navigation checks again. Request sequencing prevents obsolete reads from replacing newer status or a confirmed acceptance, and unauthenticated responses do not prompt consent. Support routes retain manual review after recovery.
+
+All four English/Persian outage and malformed-response cases failed before repair and pass afterward. The full 303-test production Chromium run passed 288 checks and exposed 15 page-wide status selectors that now matched both the new notice and the existing workflow result. Those assertions now target their page content. All 15 pass on recheck, with no product change between runs. All 31 i18n checks, web types, targeted lint, formatting, bundle budgets and diff review pass. This is functional evidence, not a new clean combined-coverage checkpoint.
