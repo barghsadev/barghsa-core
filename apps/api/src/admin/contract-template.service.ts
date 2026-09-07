@@ -1,3 +1,4 @@
+import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -128,8 +129,8 @@ const TEMPLATE_STORAGE_DISABLED = 'CONTRACT_TEMPLATE_STORAGE_DISABLED';
 const TEMPLATE_INVALID_NAME = 'CONTRACT_TEMPLATE_INVALID_NAME';
 
 /** Storage key prefix for contract template files (kept separate from
- * general `uploads/` so template history is never garbage-collected by
- * generic upload tooling). */
+ * general `uploads/`. Only failed provisional writes carry deletion intent;
+ * committed template history is immutable). */
 const TEMPLATE_STORAGE_PREFIX = 'contract-templates/';
 
 /** Maximum template file size accepted (bytes) — guards memory pressure. */
@@ -298,107 +299,118 @@ export class ContractTemplateService {
     const effectiveContentType = input.contentType ?? 'text/plain';
     const storageKey = this.buildStorageKey(name);
 
-    // Cheap pre-transaction existence check so an unknown template id
-    // never touches object storage (the reviewer r2 minor; the FOR UPDATE
-    // read inside the transaction remains authoritative for races).
-    const pool = getDbPool();
-    const exists = await pool.query('SELECT 1 FROM contract_templates WHERE id = $1', [id]);
-    if (exists.rows.length === 0) throw this.notFound(id);
-
-    try {
-      await this.storage.putObject(storageKey, content, effectiveContentType, {
-        fileName: this.asciiMetadataValue(name),
-        templateId: id,
-      });
-    } catch (err) {
-      this.logger.error(`Contract template file upload failed:`, err);
-      if (err instanceof StorageProviderError) {
-        throw new HttpException(
-          {
-            statusCode: 503,
-            error: TEMPLATE_STORAGE_DISABLED,
-            message: 'Object storage write failed',
-          },
-          503
-        );
-      }
-      throw err;
-    }
-
+    const storage = this.storage;
     const fileSize = Buffer.byteLength(content, 'utf8');
-    try {
-      return await this.withTransaction(input.actorUserId, async (q) => {
-        const current = await this.findById(q, id, true);
-        if (!current) throw this.notFound(id);
+    return this.withTransaction(input.actorUserId, async (q) => {
+      const current = await this.findById(q, id, true);
+      if (!current) throw this.notFound(id);
+      const metadata = {
+        purpose: 'contract_template',
+        templateId: id,
+        uploadedBy: input.actorUserId,
+      };
+      await reserveStorageCopy(storageKey, metadata);
+      const reservation = await q.query(
+        `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed'
+         AND metadata->>'provisionalCopy'='true' AND metadata->>'deletionRequested'='true' FOR UPDATE`,
+        [storageKey]
+      );
+      if (!reservation.rows.length)
+        throw new HttpException('Template reservation expired; retry the upload', 503);
+      // Cleanup skips the locked reservation through PUT and commit. Rollback or
+      // process loss leaves its independently committed deletion request intact.
+      try {
+        await storage.putObject(storageKey, content, effectiveContentType, {
+          fileName: this.asciiMetadataValue(name),
+          templateId: id,
+        });
+      } catch (err) {
+        if (err instanceof StorageProviderError)
+          throw new HttpException(
+            {
+              statusCode: 503,
+              error: TEMPLATE_STORAGE_DISABLED,
+              message: 'Object storage write failed',
+            },
+            503
+          );
+        throw err;
+      }
+      await q.query(
+        `UPDATE storage_records SET status='immutable',metadata=$2::jsonb,file_size=$3,
+         content_type=$4,category='document',file_name=$5,signed_at=NOW(),signed_by=$6,
+         removed_at=NULL,updated_at=NOW() WHERE storage_key=$1`,
+        [
+          storageKey,
+          JSON.stringify(metadata),
+          fileSize,
+          effectiveContentType,
+          name,
+          input.actorUserId,
+        ]
+      );
 
-        // The locked template read serializes version allocation and metadata changes.
-        const maxSeq = await q.query<{ n: number }>(
-          'SELECT COALESCE(MAX(version_number), 0)::int AS n FROM contract_template_versions WHERE template_id = $1',
-          [id]
-        );
-        const versionNumber = (maxSeq.rows[0]?.n ?? 0) + 1;
-        const versionId = uuidv7();
-        const inserted = await q.query<{ created_at: string | Date }>(
-          `INSERT INTO contract_template_versions
+      // The locked template read serializes version allocation and metadata changes.
+      const maxSeq = await q.query<{ n: number }>(
+        'SELECT COALESCE(MAX(version_number), 0)::int AS n FROM contract_template_versions WHERE template_id = $1',
+        [id]
+      );
+      const versionNumber = (maxSeq.rows[0]?.n ?? 0) + 1;
+      const versionId = uuidv7();
+      const inserted = await q.query<{ created_at: string | Date }>(
+        `INSERT INTO contract_template_versions
             (id, template_id, version_number, storage_key, file_name, content_type,
              file_size, placeholders, created_by, created_at)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
            RETURNING created_at`,
-          [
-            versionId,
-            id,
-            versionNumber,
-            storageKey,
-            name,
-            effectiveContentType,
-            fileSize,
-            placeholders,
-            input.actorUserId,
-            new Date(),
-          ]
-        );
-        // Ensure the template is active once it has its first version (a
-        // newly-uploaded file makes the template usable).
-        if (current.status === 'inactive' && versionNumber === 1) {
-          await q.query("UPDATE contract_templates SET status = 'active' WHERE id = $1", [id]);
-        }
-        await this.recordChange(q, {
-          actorUserId: input.actorUserId,
-          ip: input.ip,
-          entity: 'contract_template',
-          action: 'version_uploaded',
-          meta: {
-            templateId: id,
-            versionNumber,
-            storageKey,
-            fileName: name,
-            fileSize,
-            placeholders,
-          },
-        });
-        this.logger.log(
-          `Contract template v${versionNumber} uploaded: template=${id}, file=${name}, placeholders=${placeholders.length}`
-        );
-        return {
+        [
+          versionId,
+          id,
+          versionNumber,
+          storageKey,
+          name,
+          effectiveContentType,
+          fileSize,
+          placeholders,
+          input.actorUserId,
+          new Date(),
+        ]
+      );
+      // Ensure the template is active once it has its first version (a
+      // newly-uploaded file makes the template usable).
+      if (current.status === 'inactive' && versionNumber === 1) {
+        await q.query("UPDATE contract_templates SET status = 'active' WHERE id = $1", [id]);
+      }
+      await this.recordChange(q, {
+        actorUserId: input.actorUserId,
+        ip: input.ip,
+        entity: 'contract_template',
+        action: 'version_uploaded',
+        meta: {
+          templateId: id,
           versionNumber,
           storageKey,
           fileName: name,
-          contentType: effectiveContentType,
           fileSize,
           placeholders,
-          createdBy: input.actorUserId,
-          createdAt: inserted.rows[0]?.created_at
-            ? new Date(inserted.rows[0].created_at).toISOString()
-            : new Date().toISOString(),
-        };
+        },
       });
-    } catch (err) {
-      // Roll the orphaned object back out of storage if the DB insert
-      // failed and we know the key (best-effort; the object alone is
-      // harmless garbage, but shouldn't linger).
-      this.storage.deleteObject(storageKey).catch(() => {});
-      throw err;
-    }
+      this.logger.log(
+        `Contract template v${versionNumber} uploaded: template=${id}, file=${name}, placeholders=${placeholders.length}`
+      );
+      return {
+        versionNumber,
+        storageKey,
+        fileName: name,
+        contentType: effectiveContentType,
+        fileSize,
+        placeholders,
+        createdBy: input.actorUserId,
+        createdAt: inserted.rows[0]?.created_at
+          ? new Date(inserted.rows[0].created_at).toISOString()
+          : new Date().toISOString(),
+      };
+    });
   }
 
   /**

@@ -1,3 +1,6 @@
+vi.mock('../storage/reserve-storage-copy.js', () => ({
+  reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -108,6 +111,9 @@ beforeEach(() => {
   vi.resetModules();
   vi.restoreAllMocks();
   db = makeDb();
+  db.router.on('SELECT storage_key FROM storage_records', () => ({
+    rows: [{ storage_key: 'reserved' }],
+  }));
 });
 
 function createInput(over: Record<string, unknown> = {}) {
@@ -228,7 +234,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
   });
 
   it('returns 503 (with no version row) when object storage write fails', async () => {
-    db.router.on('SELECT 1 FROM contract_templates WHERE id = $1', () => ({
+    db.router.on('FROM contract_templates', () => ({
       rows: [templateRow()],
     }));
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => db.pool }));
@@ -253,7 +259,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
     expect(db.router.queries('INSERT INTO contract_template_versions').length).toBe(0);
   });
 
-  it('rolls the orphaned object back out of storage when the DB insert fails', async () => {
+  it('leaves failed version writes for durable worker cleanup', async () => {
     const putKeys: string[] = [];
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => db.pool }));
     const { ContractTemplateService: Svc } = await import('./contract-template.service.js');
@@ -280,7 +286,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
       })
     ).rejects.toThrow('insert boom');
     expect(putKeys.length).toBe(1);
-    expect(storage.deleteObject).toHaveBeenCalledWith(putKeys[0]);
+    expect(storage.deleteObject).not.toHaveBeenCalled();
   });
 
   it('sanitizes the file name to its base — storage key cannot escape the prefix', async () => {
@@ -347,7 +353,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
   });
 
   it('rejects an unknown template on upload with 404 before touching storage', async () => {
-    db.router.on('SELECT 1 FROM contract_templates WHERE id = $1', () => ({ rows: [] }));
+    db.router.on('FROM contract_templates', () => ({ rows: [] }));
     const { service, storage } = await loadService(db.pool);
     const error = await expectError(
       service.uploadVersion(TEMPLATE_ID, {

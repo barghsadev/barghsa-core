@@ -1,3 +1,5 @@
+import { createRequire } from 'node:module';
+import { createStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
 import { beforeAll, afterAll, beforeEach, it, expect } from 'vitest';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
@@ -6,6 +8,14 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>,
   headers: Record<string, string>,
   templateId: string;
+const requireWorker = createRequire(require.resolve('@barghsa/worker/package.json'));
+const { cleanupStorageObjects } = requireWorker('./dist/storage/cleanup.js') as {
+  cleanupStorageObjects(
+    pool: typeof http.pool,
+    storage: StorageProvider
+  ): Promise<{ deleted: number; failed: number }>;
+};
+let cleanupProvider: StorageProvider;
 const objects = new Set<string>();
 const storage = createServer(async (req, res) => {
   for await (const chunk of req) void chunk;
@@ -18,6 +28,15 @@ beforeAll(async () => {
   await once(storage, 'listening');
   const address = storage.address() as { port: number };
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!, `http://127.0.0.1:${address.port}`);
+  cleanupProvider = createStorageProvider({
+    type: 's3',
+    bucket: 'test-evidence',
+    region: 'test',
+    endpoint: `http://127.0.0.1:${address.port}`,
+    accessKeyId: 'test',
+    secretAccessKey: 'test',
+    forcePathStyle: true,
+  });
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('template-editor','Slot editor','Test','["admin:documents:edit"]'); INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ('template-admin','template-admin@example.test','test-only',true); INSERT INTO user_roles(user_id,role_id) VALUES ('template-admin','template-editor')`
   );
@@ -39,7 +58,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   await http.pool.query(
-    "DELETE FROM contract_template_versions; DELETE FROM contract_templates; DELETE FROM audit_log WHERE event='change_recorded'"
+    "DELETE FROM contract_template_versions; DELETE FROM contract_templates; DELETE FROM storage_records; DELETE FROM audit_log WHERE event='change_recorded'"
   );
   objects.clear();
   templateId = (
@@ -89,7 +108,19 @@ it.each(['create', 'update', 'delete', 'upload'] as const)(
       expect(
         (await http.pool.query('SELECT id FROM contract_template_versions')).rows
       ).toHaveLength(0);
-      await expect.poll(() => objects.size).toBe(0);
+      if (action === 'upload') {
+        const records = (await http.pool.query('SELECT status,metadata FROM storage_records')).rows;
+        expect(records).toMatchObject([
+          { status: 'removed', metadata: { provisionalCopy: true, deletionRequested: true } },
+        ]);
+        expect(objects.size).toBe(1);
+        await http.pool.query("UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes'");
+        expect(await cleanupStorageObjects(http.pool, cleanupProvider)).toEqual({
+          deleted: 1,
+          failed: 0,
+        });
+      }
+      expect(objects.size).toBe(0);
     } finally {
       await http.pool.query('DROP TRIGGER reject_template_audit ON audit_log');
     }
@@ -256,4 +287,35 @@ it('retains the ordinary JSON body limit outside version uploads', async () => {
   expect((await http.pool.query('SELECT name FROM contract_templates')).rows).toEqual([
     { name: 'Original' },
   ]);
+});
+
+it('makes committed version files immutable and ineligible for cleanup', async () => {
+  expect((await mutation('upload')).status).toBe(201);
+  const records = (await http.pool.query('SELECT status,signed_by,metadata FROM storage_records'))
+    .rows;
+  expect(records).toMatchObject([
+    {
+      status: 'immutable',
+      signed_by: 'template-admin',
+      metadata: { purpose: 'contract_template', templateId, uploadedBy: 'template-admin' },
+    },
+  ]);
+  await http.pool.query("UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes'");
+  expect(await cleanupStorageObjects(http.pool, cleanupProvider)).toEqual({
+    deleted: 0,
+    failed: 0,
+  });
+  expect(objects.size).toBe(1);
+});
+it('does not write storage when the durable reservation cannot commit', async () => {
+  await http.pool.query(
+    "CREATE FUNCTION reject_template_reservation() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test reservation failure'; END $$; CREATE TRIGGER reject_template_reservation BEFORE INSERT ON storage_records FOR EACH ROW EXECUTE FUNCTION reject_template_reservation()"
+  );
+  try {
+    expect((await mutation('upload')).status).toBe(500);
+    expect(objects.size).toBe(0);
+    expect((await http.pool.query('SELECT id FROM contract_template_versions')).rows).toEqual([]);
+  } finally {
+    await http.pool.query('DROP TRIGGER reject_template_reservation ON storage_records');
+  }
 });
