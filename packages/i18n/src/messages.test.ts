@@ -7,6 +7,7 @@ const allDictionaries = {
   en: { ...dictionaries.en, ...adminEn, ...crmEn },
 };
 import { t as authText } from './auth.js';
+import { t as termsText } from './terms.js';
 import { tCatalogue } from './catalogue.js';
 import { tGift } from './gifts.js';
 import { tVat } from './vat.js';
@@ -33,6 +34,7 @@ it('keeps full Persian/English keys and interpolation placeholders consistent', 
 for (const [name, resolve] of Object.entries({
   t,
   authText,
+  termsText,
   adminText,
   crmText,
   tCatalogue,
@@ -63,5 +65,16 @@ it('uses Persian by default and English for unsupported runtime locales', () => 
     expect(Reflect.apply(resolve, undefined, ['missing.translation', 'invalid'])).toBe(
       'missing.translation'
     );
+  }
+});
+
+it('keeps terms available through the dedicated and existing public dictionaries', () => {
+  for (const locale of ['fa', 'en'] as const) {
+    for (const [key, message] of Object.entries(dictionaries[locale])) {
+      if (!key.startsWith('tos.')) continue;
+      expect(termsText(key, locale)).toBe(message);
+      expect(authText(key, locale)).toBe(message);
+    }
+    expect(termsText('tos.page.lastUpdated', locale)).toContain('{date}');
   }
 });

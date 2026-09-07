@@ -2646,3 +2646,11 @@ Review: full database suite 84 files / 627 tests passed; both telemetry/readines
 ### Close database health acceptance after resource verification
 
 At 9392159, T-02.01.04 is acceptance_verified, with its prior partial assessment preserved. The task ledger now has 47 reviewed records: 34 verified, 13 partial, and 275 pending. Source hashes and HTTP/database checks bind the updated status to the reviewed local revision.
+
+### Restore terms translations after the application dictionary split
+
+Full Chromium coverage at 0dde44b caught a regression I introduced: TosBanner imported the reduced application dictionary, but its tos.* keys belonged to auth.ts. The browser run had 319 passes and 15 failures and is not eligible for coverage collection or merging. Terms now have an explicit dictionary dependency, while existing auth/root dictionary values remain unchanged.
+
+Review: 185 consent/team/feedback checks plus ten live-API rich-terms checks pass across five projects. All 48 translation tests, web types, both 41-route budget checks, formatting and diff review pass. Ordering remains under its unchanged limit at 249.89 KB / 250 KB. Direct ESLint passed for web, API, database, UI and translations.
+
+Audit correction: earlier application-feedback and payment-amount entries incorrectly credited package-level lint commands that reported missing scripts. Those were no-ops. Current source has now passed explicit ESLint. Earlier explicit UI/database/finance lint evidence remains valid. The 5316-test unit-coverage run at 0dde44b passed, but combined coverage remains stale until a complete passing browser run is available at the repaired revision.

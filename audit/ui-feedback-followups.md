@@ -27,3 +27,13 @@ At the application checkpoint, the UI package still exposed a Sonner Toaster wit
 A real DOM regression reproduced both `toast.success` and `toast.error` as missing functions when imported alongside the public Toaster. The public `toast` now uses Sonner, matching that renderer. Base UI is exported explicitly as `BaseToaster` and `baseToast`, with its provider, components and manager helpers exported as runtime values rather than type-only names. No current application caller used the mismatched root manager.
 
 Review: all 13 UI tests pass, including actual success/error rendering and dismissal through the public exports and independent rendering through a Base UI manager. UI and web types, targeted lint, formatting, a fresh Vite build and all 41 complete-route budgets pass. Existing browser evidence in the preceding section applies to the unchanged application renderer. The export repair adds no application route behavior.
+
+## Terms dependency correction
+
+Full production Chromium coverage at 0dde44b exposed a regression introduced by the application dictionary split: TosBanner used keys beginning with tos., which were stored in the auth dictionary. The split's auth-prefix screen had missed them. The run had 319 passes and 15 failures and was not collected or merged as coverage.
+
+Terms now have a dedicated dictionary consumed by TosBanner and re-exported through the existing auth dictionaries. Both old public dictionaries retain the same values, including all 909 root keys per language. A dedicated compatibility check covers terms through their new and existing entry points.
+
+Validation: 185 consent/team/feedback browser checks and ten actual-API rich-terms publication checks pass across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari. All 48 translation tests and web types pass. All 41 complete-route limits pass both gzip checks; ordering is 249.89 KB against 250 KB. Direct ESLint passes across web, API, database, UI and translation source, with the new feedback browser test included.
+
+Lint record correction: the application-feedback step's package-level web lint invocation reported no lint script; it did not perform linting. The payment-amount step's package-level API lint invocation likewise did nothing. Their earlier lint claims must be read with this correction. Direct ESLint has now checked all those current source changes. The UI export and database repairs used explicit ESLint invocations. Finance's earlier explicit lint log was also inspected and is not affected by this correction.
