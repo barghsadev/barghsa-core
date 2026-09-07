@@ -17,6 +17,14 @@ import { withCsrf } from './csrf.js';
 
 export { INVOICE_BANK_RECEIPT_FILE_ACCEPT };
 
+/** Malformed server JSON is an unavailable acknowledgement, never a typed record. */
+async function readResponseObject(response: Response): Promise<Record<string, unknown>> {
+  const value: unknown = await response.json().catch(() => null);
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
 export type InvoiceReceiptError =
   | 'invalid-amount'
   | 'invalid-date'
@@ -133,10 +141,7 @@ async function uploadVerifiedAttachment(
       metadata: { recordType: 'receipt' },
     }),
   });
-  const presign = (await presignRes.json().catch(() => ({}))) as {
-    key?: string;
-    presignedUrl?: string;
-  };
+  const presign = await readResponseObject(presignRes);
   if (
     !presignRes.ok ||
     typeof presign.key !== 'string' ||
@@ -160,7 +165,7 @@ async function uploadVerifiedAttachment(
     credentials: 'include',
     headers: withCsrf({ Accept: 'application/json' }),
   });
-  const verify = (await verifyRes.json().catch(() => ({}))) as { status?: string };
+  const verify = await readResponseObject(verifyRes);
   if (!verifyRes.ok || verify.status !== 'confirmed') return null;
 
   const recordRes = await fetch(`/api/upload/${encodedKey}/record`, {
@@ -206,10 +211,7 @@ export async function submitInvoiceBankReceipt(input: {
       customerNote: input.customerNote,
     }),
   });
-  const payload = (await res.json().catch(() => ({}))) as {
-    state?: string;
-    amount?: unknown;
-  };
+  const payload = await readResponseObject(res);
   const confirmedAmount = parseInvoiceBankReceiptAmountIrR(payload.amount);
   if (!res.ok || payload.state !== 'Submitted' || confirmedAmount !== input.amountIrR) {
     return { ok: false, status: res.status };
@@ -220,7 +222,7 @@ export async function submitInvoiceBankReceipt(input: {
 export async function fetchActiveProfileId(): Promise<string | null> {
   const res = await fetch('/api/profiles', { credentials: 'include' });
   if (!res.ok) return null;
-  const data = (await res.json().catch(() => ({}))) as { activeProfileId?: unknown };
+  const data = await readResponseObject(res);
   return typeof data.activeProfileId === 'string' && data.activeProfileId.length > 0
     ? data.activeProfileId
     : null;
