@@ -136,8 +136,8 @@
       ],
       "lines": 9021,
       "covered_lines": 8118,
-      "branches": 7044,
-      "covered_branches": 5295,
+      "branches": 6038,
+      "covered_branches": 4588,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -242,6 +242,7 @@
         "apps/api/src/provider-config/index.ts",
         "apps/api/src/provider-config/provider-config.di.ts",
         "apps/api/src/provider-config/provider-config.module.ts",
+        "apps/api/src/provider-config/provider-mutation.ts",
         "apps/api/src/provider-config/provider-secrets.service.ts",
         "apps/api/src/provider-config/resend-config.schema.ts",
         "apps/api/src/provider-config/resend-connection-tester.service.ts",
@@ -285,13 +286,13 @@
         "apps/api/src/user-settings/user-settings.controller.ts",
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
-      "lines": 4102,
-      "covered_lines": 3736,
-      "branches": 3592,
-      "covered_branches": 2645,
+      "lines": 4176,
+      "covered_lines": 3860,
+      "branches": 3204,
+      "covered_branches": 2500,
       "required_lines": 80,
       "required_branches": 75,
-      "passed": false
+      "passed": true
     },
     {
       "package": "apps/web",
@@ -421,9 +422,9 @@
         "apps/web/src/routes/terms.tsx"
       ],
       "lines": 6375,
-      "covered_lines": 3912,
+      "covered_lines": 3935,
       "branches": 7683,
-      "covered_branches": 4396,
+      "covered_branches": 4452,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -513,13 +514,13 @@
         "apps/worker/src/service-targets/escalation-scanner.ts",
         "apps/worker/src/storage/cleanup.ts"
       ],
-      "lines": 679,
-      "covered_lines": 577,
-      "branches": 746,
-      "covered_branches": 535,
+      "lines": 747,
+      "covered_lines": 707,
+      "branches": 818,
+      "covered_branches": 649,
       "required_lines": 80,
       "required_branches": 75,
-      "passed": false
+      "passed": true
     },
     {
       "package": "apps/worker",
@@ -534,13 +535,13 @@
         "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
         "apps/worker/src/wallet/reconciliation-scanner.ts"
       ],
-      "lines": 417,
-      "covered_lines": 369,
-      "branches": 306,
-      "covered_branches": 215,
+      "lines": 462,
+      "covered_lines": 454,
+      "branches": 331,
+      "covered_branches": 282,
       "required_lines": 90,
       "required_branches": 85,
-      "passed": false
+      "passed": true
     },
     {
       "package": "packages/db",
@@ -658,10 +659,10 @@
         "packages/i18n/src/wallet-limit.ts",
         "packages/i18n/src/wallet-receipts.ts"
       ],
-      "lines": 16,
-      "covered_lines": 16,
-      "branches": 20,
-      "covered_branches": 16,
+      "lines": 15,
+      "covered_lines": 15,
+      "branches": 24,
+      "covered_branches": 20,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -673,14 +674,15 @@
         "packages/i18n/src/catalogue.ts",
         "packages/i18n/src/gifts.ts",
         "packages/i18n/src/index.ts",
+        "packages/i18n/src/lookup.ts",
         "packages/i18n/src/preferences.ts",
         "packages/i18n/src/timezone.ts",
         "packages/i18n/src/vat.ts"
       ],
-      "lines": 15,
-      "covered_lines": 15,
-      "branches": 16,
-      "covered_branches": 13,
+      "lines": 17,
+      "covered_lines": 17,
+      "branches": 30,
+      "covered_branches": 27,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -788,7 +790,7 @@
         "packages/shared/src/validation/legal-national-identifier.ts",
         "packages/shared/src/validation/normalize-username.ts"
       ],
-      "lines": 607,
+      "lines": 608,
       "covered_lines": 504,
       "branches": 678,
       "covered_branches": 495,
@@ -848,5 +850,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "28a0934721cc5f3cc6493c3adfb41af2db7793ec"
+  "head_sha": "39498a01a3275ac6e490b9f0589befda86093ded"
 }
