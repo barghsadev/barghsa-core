@@ -65,7 +65,8 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "src/styles.css"
+    "src/styles.css",
+    "tailwind.config.ts"
   ],
   "sideEffects": [
     "**/*.css"
