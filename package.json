@@ -30,6 +30,7 @@
     "@barghsa/eslint-config": "workspace:*",
     "@bcoe/v8-coverage": "1.0.2",
     "@jridgewell/remapping": "2.3.5",
+    "@size-limit/file": "12.1.0",
     "@types/node": "26.2.0",
     "@vitest/coverage-v8": "4.1.11",
     "acorn": "8.18.0",
@@ -38,6 +39,7 @@
     "istanbul-lib-coverage": "3.2.2",
     "jsdom": "28.1.0",
     "prettier": "3.9.6",
+    "size-limit": "12.1.0",
     "turbo": "2.10.11",
     "typescript": "7.0.2",
     "vitest": "4.1.11"

@@ -1,7 +1,10 @@
-import { readFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { promisify } from 'node:util';
 import { gzipSync } from 'node:zlib';
 import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 // Count each emitted file once, including the bootstrap, layout, and every
 // static dependency. Lazy components required at first render are explicit
@@ -64,6 +67,44 @@ export async function checkBudgets(dist, config) {
   return results;
 }
 
+// Feed the complete manifest-resolved payload to the required Size Limit CLI.
+// Keep the existing default-gzip check too: Size Limit uses level 9, so it must
+// not weaken the current gate by granting credit for stronger compression.
+export async function verifyWithSizeLimit(dist, results) {
+  if (!results.length) throw new Error('No route budgets to verify with Size Limit');
+  const assets = new Set(
+    results.flatMap((result) => result.files.map((file) => resolve(dist, file)))
+  );
+  for (const asset of assets) {
+    const info = await stat(asset).catch(() => null);
+    if (!info?.isFile()) throw new Error(`Unavailable Size Limit asset: ${asset}`);
+  }
+  const temporary = await mkdtemp(resolve(tmpdir(), 'barghsa-size-limit-'));
+  try {
+    const config = results.map((result) => ({
+      name: result.name,
+      path: result.files.map((file) => resolve(dist, file)),
+      limit: `${result.limit} B`,
+      gzip: true,
+    }));
+    const configPath = resolve(temporary, '.size-limit.json');
+    await writeFile(configPath, JSON.stringify(config));
+    const cli = fileURLToPath(new URL('./bin.js', import.meta.resolve('size-limit/package.json')));
+    try {
+      await promisify(execFile)(process.execPath, [cli, '--config', configPath, '--json'], {
+        maxBuffer: 2 * 1024 * 1024,
+        timeout: 60_000,
+      });
+    } catch (error) {
+      throw new Error(
+        `Size Limit rejected route budgets: ${error.stdout?.trim() || error.stderr?.trim() || error.message}`
+      );
+    }
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   try {
     const config = JSON.parse(await readFile('.size-limit.json', 'utf8'));
@@ -73,6 +114,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
         `${result.pass ? 'PASS' : 'FAIL'} ${result.name}: ${(result.bytes / 1000).toFixed(2)} KB gzip / ${result.limit / 1000} KB (${result.files.length} files)`
       );
     }
+    await verifyWithSizeLimit('apps/web/dist', results);
+    console.log(`PASS Size Limit: ${results.length} complete-route gzip budgets`);
     if (results.some((result) => !result.pass)) process.exitCode = 1;
   } catch (error) {
     console.error(error.message);

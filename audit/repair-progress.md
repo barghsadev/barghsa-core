@@ -2562,3 +2562,9 @@ Six other tasks remain partial with explicit evidence and unmet requirements: ea
 Nest's default error labels such as Bad Request and Forbidden were being returned as machine-readable codes, and default messages bypassed translation. The filter now maps the status's standard label through shared error definitions and translates default messages. Explicit application codes and explanatory business messages keep their existing behavior. All five new built-in-exception cases failed before repair.
 
 All 700 HTTP/filter checks across 55 files pass after the change. API typechecking, targeted lint, formatting and diff review pass. Application-specific raw messages, generated route-not-found details and complete downstream correlation remain separate acceptance work; this change does not certify every error response.
+
+### Connect Size Limit to complete-route budget enforcement
+
+The route-budget gate now invokes the actual Size Limit CLI with every manifest-resolved route's complete asset list, explicit byte limit and gzip enabled. Size Limit and its file plugin are pinned to 12.1.0 to retain the supported Node 20 baseline. The existing default-gzip measurement also remains mandatory because Size Limit's level-9 compression can report fewer bytes. No limits were raised.
+
+All 41 production route budgets pass both checks. The regression fixture runs the real CLI, passes a small route and rejects an oversized shared chunk. Review reproduced Size Limit silently omitting a missing asset; the wrapper now validates every supplied file before running it, and that case rejects. The tool has a bounded timeout and its temporary configuration is removed after success or failure. Targeted lint, formatting, frozen-lockfile install and diff review pass. The current dependency scan reports zero known advisories.

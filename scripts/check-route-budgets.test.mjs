@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
-import { checkBudgets, measureRoute } from './check-route-budgets.mjs';
+import { checkBudgets, measureRoute, verifyWithSizeLimit } from './check-route-budgets.mjs';
 
 test('common dependencies count once, an oversized common chunk fails, and missing routes fail closed', async () => {
   const dist = await mkdtemp(join(tmpdir(), 'barghsa-budget-'));
@@ -30,10 +30,16 @@ test('common dependencies count once, an oversized common chunk fails, and missi
       Object.values(contents).reduce((sum, content) => sum + gzipSync(content).length, 0)
     );
     const rules = [{ name: 'login', entries: ['login'], limitKB: 1 }];
-    assert.equal((await checkBudgets(dist, rules))[0].pass, true);
+    const passing = await checkBudgets(dist, rules);
+    assert.equal(passing[0].pass, true);
+    await verifyWithSizeLimit(dist, passing);
     await writeFile(join(dist, 'common.js'), randomBytes(3000));
-    assert.equal((await checkBudgets(dist, rules))[0].pass, false);
+    const failing = await checkBudgets(dist, rules);
+    assert.equal(failing[0].pass, false);
+    await assert.rejects(verifyWithSizeLimit(dist, failing), /Size Limit rejected route budgets/);
     await assert.rejects(measureRoute(dist, manifest, ['missing']), /Missing manifest entry/);
+    await rm(join(dist, 'common.js'));
+    await assert.rejects(verifyWithSizeLimit(dist, passing), /Unavailable Size Limit asset/);
   } finally {
     await rm(dist, { recursive: true, force: true });
   }
