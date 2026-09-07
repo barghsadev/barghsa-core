@@ -2754,3 +2754,17 @@ The green-rules test now waits for both successful config and safety-status relo
 All three new regressions failed against the previous connection-string builder. Real PostgreSQL showed search_path/application_name disappearing when an existing options value was overwritten. With a fragment, the appended guards became fragment text and all three server timeouts stayed zero. The builder now uses URL parsing, preserves the last effective startup-options value, applies timeout guards last and emits one options parameter. A synthetic encoded-credential case verifies unrelated URL fields and the fragment are preserved.
 
 Review: 21 focused connection/cancellation tests pass, including actual setting readback, server-side statement cancellation and subsequent connection reuse. Database typechecking and explicit lint pass. Broader suites are being refreshed; distinct read/write timeout defaults remain a separate open requirement.
+
+
+### Refresh complete suites after database startup-option repair
+
+At 46346b2340850a44e50feb4375c75eac595b8680, all 5354 unit/integration tests in 446 files passed, including 630 database tests. All 350 production Chromium browser cases then passed with no skips or flaky results. The repaired green-rules test passed in that full run. Validated browser coverage was collected and merged on the clean reviewed revision.
+
+Critical translation coverage now passes at 100% lines and branches, using actual production-compiled fallback executions. Shared UI coverage also passes. Four of thirteen groups still fail; no missing/invalid-report errors were reported. Thresholds and conservative source-map alignment are unchanged.
+
+- apps/api critical: 90.40% lines; 76.65% branches. Required 90%/85%.
+- apps/web general: 64.94% lines; 62.54% branches. Required 80%/75%.
+- apps/web critical: 76.87% lines; 74.24% branches. Required 90%/85%.
+- packages/db general: 87.70% lines; 70.55% branches. Required 80%/75%.
+
+The full repair plan remains open. Acceptance ledger remains 48 reviewed: 35 verified, 13 partial, 274 pending. Three historical skips are verified and must not be rebuilt. Rolling authentication counters, remaining coverage and broader task/operational acceptance remain outstanding.

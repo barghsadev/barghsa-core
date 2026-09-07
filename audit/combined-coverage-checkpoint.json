@@ -293,9 +293,9 @@
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
       "lines": 4481,
-      "covered_lines": 4196,
+      "covered_lines": 4194,
       "branches": 3505,
-      "covered_branches": 2835,
+      "covered_branches": 2830,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -438,9 +438,9 @@
         "apps/web/src/routes/terms.tsx"
       ],
       "lines": 6775,
-      "covered_lines": 4382,
+      "covered_lines": 4400,
       "branches": 8345,
-      "covered_branches": 5169,
+      "covered_branches": 5219,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -629,8 +629,8 @@
         "packages/db/src/seed/notification-templates.ts",
         "packages/db/src/types.ts"
       ],
-      "lines": 494,
-      "covered_lines": 433,
+      "lines": 496,
+      "covered_lines": 435,
       "branches": 326,
       "covered_branches": 230,
       "required_lines": 80,
@@ -681,10 +681,10 @@
       "lines": 21,
       "covered_lines": 21,
       "branches": 36,
-      "covered_branches": 30,
+      "covered_branches": 36,
       "required_lines": 90,
       "required_branches": 85,
-      "passed": false
+      "passed": true
     },
     {
       "package": "packages/i18n",
@@ -706,9 +706,9 @@
         "packages/i18n/src/timezone.ts",
         "packages/i18n/src/vat.ts"
       ],
-      "lines": 63,
+      "lines": 64,
       "covered_lines": 63,
-      "branches": 111,
+      "branches": 113,
       "covered_branches": 93,
       "required_lines": 80,
       "required_branches": 75,
@@ -834,6 +834,7 @@
         "packages/ui/src/components/base-ui/data-table.tsx",
         "packages/ui/src/components/base-ui/date-picker.tsx",
         "packages/ui/src/components/base-ui/multi-select.tsx",
+        "packages/ui/src/components/base-ui/number-field.labels.ts",
         "packages/ui/src/components/base-ui/number-field.tsx",
         "packages/ui/src/components/ui/alert.tsx",
         "packages/ui/src/components/ui/avatar.tsx",
@@ -868,10 +869,10 @@
         "packages/ui/src/index.ts",
         "packages/ui/src/lib/utils.ts"
       ],
-      "lines": 210,
-      "covered_lines": 179,
-      "branches": 349,
-      "covered_branches": 270,
+      "lines": 215,
+      "covered_lines": 185,
+      "branches": 355,
+      "covered_branches": 279,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -879,5 +880,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "4ba30c905ab442a5f6f2ec1897303dc1bfb15219"
+  "head_sha": "46346b2340850a44e50feb4375c75eac595b8680"
 }
