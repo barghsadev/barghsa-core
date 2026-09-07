@@ -34,10 +34,13 @@ const BLOCKED_KEYS: ReadonlySet<string> = new Set([
 ]);
 
 /** Characters allowed in a variable name (matches the DB schema contract). */
-const NAME_RE = /^[A-Za-z0-9_.]+$/;
+const NAME_RE = /^[A-Za-z0-9_]+$/;
+function isSafePath(name: string): boolean {
+  return name.split('.').every((segment) => NAME_RE.test(segment) && !BLOCKED_KEYS.has(segment));
+}
 
 /** Matches a single `{{...}}` placeholder (captures the raw inner name). */
-const PLACEHOLDER_RE = /{{([^{}]+)}}/g;
+const PLACEHOLDER_RE = /{{([^{}]*)}}/g;
 
 /**
  * Escape a string for safe HTML/text output, preventing injection of
@@ -109,7 +112,7 @@ export function collectVariables(template: string): string[] {
   let m: RegExpExecArray | null;
   while ((m = re.exec(template)) !== null) {
     const raw = m[1]!.trim();
-    if (NAME_RE.test(raw)) names.add(raw);
+    if (isSafePath(raw)) names.add(raw);
   }
   return [...names];
 }
@@ -138,7 +141,7 @@ export function renderTemplate(
 
   const output = template.replace(PLACEHOLDER_RE, (match, raw: string) => {
     const name = raw.trim();
-    if (!NAME_RE.test(name) || !allowed.has(name)) {
+    if (!isSafePath(name) || !allowed.has(name)) {
       // Unknown placeholder: never substitute, echo escaped literal.
       unknown.add(name);
       return escapeHtml(match);
@@ -148,7 +151,7 @@ export function renderTemplate(
       missing.add(name);
       return '';
     }
-    if (typeof value === 'object' || typeof value === 'function') {
+    if (typeof value === 'object' || typeof value === 'function' || typeof value === 'symbol') {
       // Never stringify internal object/function shapes into a message.
       missing.add(name);
       return '';
@@ -174,17 +177,19 @@ export function validateTemplate(
   const allowed = new Set<string>(allowList);
   const problems: { message: string; variable?: string }[] = [];
 
-  const opens = (template.match(/\{\{/g) ?? []).length;
-  const closes = (template.match(/\}\}/g) ?? []).length;
-  if (opens !== closes) {
-    problems.push({ message: 'Template contains an unclosed {{...}} placeholder' });
+  const delimiters = template.match(/\{\{|\}\}/g) ?? [];
+  const placeholders = [...template.matchAll(/\{\{([^{}]*)\}\}/g)];
+  if (
+    delimiters.length % 2 !== 0 ||
+    placeholders.length * 2 !== delimiters.length ||
+    delimiters.some((token, index) => token !== (index % 2 === 0 ? '{{' : '}}'))
+  ) {
+    problems.push({ message: 'Template contains malformed or unclosed {{...}} placeholder' });
   }
 
-  const re = /\{\{([^{}]+)\}\}/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(template)) !== null) {
+  for (const m of placeholders) {
     const name = m[1]!.trim();
-    if (!NAME_RE.test(name)) {
+    if (!isSafePath(name)) {
       problems.push({ message: `Invalid variable name "${name}" in template`, variable: name });
     } else if (!allowed.has(name)) {
       problems.push({ message: `Variable "${name}" is not in the allow-list`, variable: name });

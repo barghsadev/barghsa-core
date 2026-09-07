@@ -359,6 +359,7 @@ export class NotificationTemplateService {
   ): Promise<NotificationTemplateResult> {
     return this.mutate(actorUserId, async (client) => {
       this.validateVariables(input.bodyTemplate, input.variables ?? []);
+      this.validateVariables(input.subject ?? '', input.variables ?? []);
       const variables = NotificationTemplateService.normalizeVariables(input.variables);
       await this.lockFamily(client, input.eventKey, input.channel, input.locale);
       const existing = await client.query(
@@ -412,6 +413,12 @@ export class NotificationTemplateService {
       const nextBody = input.bodyTemplate ?? (template.body_template as string);
       const variables = input.variables ?? (template.variables as TemplateVariableInput[]);
       this.validateVariables(nextBody, variables);
+      this.validateVariables(
+        input.subject !== undefined
+          ? (input.subject ?? '')
+          : ((template.subject as string | null) ?? ''),
+        variables
+      );
       const normalized = NotificationTemplateService.normalizeVariables(variables);
       const fields: string[] = [];
       const params: unknown[] = [];
@@ -672,6 +679,14 @@ export class NotificationTemplateService {
       const template = await this.lockTemplate(client, id);
       if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
+      this.validateVariables(
+        template.body_template as string,
+        template.variables as TemplateVariableInput[]
+      );
+      this.validateVariables(
+        (template.subject as string | null) ?? '',
+        template.variables as TemplateVariableInput[]
+      );
       const previous = await client.query<{ version: number }>(
         `UPDATE notification_templates SET is_active=false,status='archived',updated_at=NOW()
          WHERE event_key=$1 AND channel=$2 AND locale=$3 AND is_active=true RETURNING version`,

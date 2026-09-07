@@ -133,11 +133,12 @@ describe('renderTemplate — allow-list + escaping', () => {
     expect(r.output).not.toContain('topsecret');
   });
 
-  it('renders an unknown allow-listed key present as internal-state cursor as empty, never leaked', () => {
+  it('keeps a blocked allow-listed key literal without exposing internal state', () => {
     const r = renderTemplate('{{__proto__}}', ['__proto__'], { data: {} });
     // __proto__ is blocked by safe traversal even if admin mistakenly allows it.
-    expect(r.output).toBe('');
-    expect(r.missing).toEqual(['__proto__']);
+    expect(r.output).toBe('{{__proto__}}');
+    expect(r.missing).toEqual([]);
+    expect(r.unknown).toEqual(['__proto__']);
   });
 
   it('reports both missing and unknown placeholders together', () => {

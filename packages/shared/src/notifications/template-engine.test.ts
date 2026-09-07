@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { renderTemplate, resolvePath } from './template-engine.js';
+import {
+  collectVariables,
+  renderTemplate,
+  resolvePath,
+  validateTemplate,
+} from './template-engine.js';
 
 describe('shared notification rendering', () => {
   it('escapes HTML bodies but preserves literal characters in subjects and SMS', () => {
@@ -37,4 +42,74 @@ describe('shared notification rendering', () => {
       unknown: ['secret'],
     });
   });
+});
+
+for (const name of ['constructor', '__proto__', 'user.prototype', 'user..name', '.name', 'name.']) {
+  it(`rejects unsafe or malformed variable path ${name} even if allowlisted`, () => {
+    expect(validateTemplate('{{' + name + '}}', [name])).not.toEqual([]);
+    expect(renderTemplate('{{' + name + '}}', [name], { data: {} })).toEqual({
+      output: '{{' + name + '}}',
+      missing: [],
+      unknown: [name],
+    });
+    expect(collectVariables('{{' + name + '}}')).toEqual([]);
+  });
+}
+for (const template of [
+  '{{}}',
+  '{{   }}',
+  '}} {{name}} {{',
+  '{{ outer {{name}} }}',
+  '{{foo{bar}}',
+  '{{foo}bar}}',
+  '{{name',
+  'name}}',
+]) {
+  it(`rejects malformed placeholder structure ${template}`, () =>
+    expect(validateTemplate(template, ['name'])).not.toEqual([]));
+}
+it('collects distinct permitted paths and accepts a plain or valid template', () => {
+  expect(collectVariables('{{ user.name }} {{amount}} {{user.name}} {{bad-name}}')).toEqual([
+    'user.name',
+    'amount',
+  ]);
+  expect(validateTemplate('Plain text', [])).toEqual([]);
+  expect(validateTemplate('{{ user.name }} {{amount}}', ['user.name', 'amount'])).toEqual([]);
+  expect(validateTemplate('{{secret}}', [])).toEqual([
+    { message: 'Variable "secret" is not in the allow-list', variable: 'secret' },
+  ]);
+});
+it('keeps missing-value diagnostics distinct and never serializes internal values', () => {
+  const data = {
+    object: {},
+    callable: () => 'secret',
+    symbol: Symbol('secret'),
+    empty: null,
+    flag: false,
+    count: 0,
+    nested: { value: 'yes' },
+  };
+  expect(
+    renderTemplate(
+      '{{object}}{{callable}}{{symbol}}{{empty}}{{flag}}/{{count}}/{{nested.value}}',
+      Object.keys(data).concat('nested.value'),
+      { data }
+    )
+  ).toEqual({
+    output: 'false/0/yes',
+    missing: ['object', 'callable', 'symbol', 'empty'],
+    unknown: [],
+  });
+  expect(renderTemplate('{{missing}} {{missing}}', ['missing'])).toEqual({
+    output: ' ',
+    missing: ['missing'],
+    unknown: [],
+  });
+});
+it('refuses traversal through primitive, null, hidden and empty properties', () => {
+  const hidden = Object.defineProperty({}, 'name', { value: 'hidden', enumerable: false });
+  for (const root of [null, undefined, 'text', 4, true, hidden])
+    expect(resolvePath(root, 'name')).toBeUndefined();
+  expect(resolvePath({ name: 'value' }, '')).toBeUndefined();
+  expect(resolvePath({ nested: null }, 'nested.name')).toBeUndefined();
 });

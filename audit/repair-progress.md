@@ -1918,3 +1918,9 @@ Review and validation: frozen workspace installation passes with no dependency l
 ### Refresh production image boot and shutdown evidence
 
 Rebuilt API, worker and web images from clean commit 2aeaf54 after the pnpm packaging correction. All isolated runtime checks pass: non-root/read-only startup using packaged migrations, optional Redis failure, database readiness loss/recovery with continued liveness, simultaneous notification and finance drain, forced deadline rollback, restart with one committed result, and clean web/API SIGTERM. Image identities and exact source revision are saved in `production-image-checkpoint.json`. The test's lease shortening and disconnected-session termination remain explicit fixture controls. No deployed service or existing database was touched.
+
+### Validate notification subjects and persisted publication content
+
+Template validation now rejects empty, unclosed, reversed and nested delimiters, malformed dotted paths and prototype-related names even when allowlisted. Rendering does not serialize symbol values. Creation and editing validate subjects as well as bodies; publication revalidates stored content before replacing the active version. Removing a variable referenced by a retained subject leaves the draft unchanged.
+
+Review and validation: ten new shared checks and six HTTP checks reproduced gaps before repair. Final runs pass 20 shared renderer tests, 130 API notification tests across seven files, and 138 worker notification tests across twelve files. Review added two cases for stray braces inside placeholders; shared and worker checks and the final API rerun include that change. Root types and lint pass. Reviewed the changed blocked-placeholder diagnostic contract, transaction ordering, formatting and whitespace. These changes are not yet included in the saved production image checkpoint.

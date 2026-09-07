@@ -331,3 +331,47 @@ it('rejects template tests without current step-up or CSRF proof', async () => {
     );
   }
 });
+
+for (const field of ['bodyTemplate', 'subject'])
+  for (const content of ['{{}}', '}} {{name}} {{', '{{user..name}}', '{{constructor}}']) {
+    it(`rejects invalid ${field} before creating a template: ${content}`, async () => {
+      const value = await seed('create');
+      const response = await fetch(`${http.base}/api/admin/notifications/templates`, {
+        method: 'POST',
+        headers: headers.editor!,
+        body: JSON.stringify({
+          eventKey: value.event,
+          channel: 'email',
+          locale: 'en',
+          bodyTemplate: 'Valid body',
+          variables: ['name', 'user..name', 'constructor'],
+          [field]: content,
+        }),
+      });
+      expect(response.status).toBe(400);
+      expect((await snapshot()).templates).toEqual([]);
+      expect((await snapshot()).audits).toEqual([]);
+    });
+  }
+it('revalidates the retained subject when a draft update removes an allowed variable', async () => {
+  const value = await seed('update');
+  await http.pool.query(
+    "UPDATE notification_templates SET subject='Hello {{name}}',variables='[\"name\"]' WHERE id=$1",
+    [value.id]
+  );
+  const before = await snapshot();
+  const response = await fetch(`${http.base}/api/admin/notifications/templates/${value.id}`, {
+    method: 'PUT',
+    headers: headers.editor!,
+    body: JSON.stringify({ variables: [] }),
+  });
+  expect(response.status).toBe(400);
+  expect(await snapshot()).toEqual(before);
+});
+it('rejects publishing an invalid legacy draft before replacing the active template', async () => {
+  const value = await seed('publish');
+  await http.pool.query("UPDATE notification_templates SET subject='{{}}' WHERE id=$1", [value.id]);
+  const before = await snapshot();
+  expect((await write('publish', value)).status).toBe(400);
+  expect(await snapshot()).toEqual(before);
+});
