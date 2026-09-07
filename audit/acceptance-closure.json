@@ -1888,6 +1888,201 @@
         29
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 117,
+      "requirement": "| T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |",
+      "requirement_sha256": "6ec92b767cb174cd0735f2239a23ff949e8cac3ff2296f687c50e5dafd5c08c2",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "5827b960e7408cc2df27cff3bb1843b21061500a943b94bdc18ea57c4110abf8"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.service.ts",
+          "sha256": "71bc80ab74c5bfdadc8ae728795c8a001d95fac0e8ee8ad527f8e0194811de58"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "981545cadb8645fb4e55bfaa0124d4b65c40968e0cdaa6a6952aa52ecdbb1adc"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "592c8b2ed1d6bb06516a7a639179d5d5e7c0470c387c984849fc9f8638f0b290"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice.module.ts",
+          "sha256": "bc791df8597276ba7bc5ac6b42b8c1166437278a60ebca2253ee213cb837291a"
+        },
+        {
+          "path": "packages/shared/src/finance/vat-config.ts",
+          "sha256": "d587c5317ca4de0db5bfc9b6f9b8a2b84b48a95a69e6758533d31749ddc67f8f"
+        }
+      ],
+      "checks": [
+        "Real PostgreSQL precedence: active product override, category default and zero fallback; exclusive interval endpoint and caller-owned transaction executor.",
+        "Taxable net-base VAT uses integer half-up rounding; non-taxable lines carry zero.",
+        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
+        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
+      ],
+      "limitations": [
+        "Future commercial order/contract integrations are separate tasks."
+      ],
+      "merged_prs": [
+        226
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 120,
+      "requirement": "| T-04.1.02.07 | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements | M |",
+      "requirement_sha256": "83c0a0012af20a1aa36257231b743c2604a891aa2a09e1605211a99206decf30",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice.module.ts",
+          "sha256": "bc791df8597276ba7bc5ac6b42b8c1166437278a60ebca2253ee213cb837291a"
+        }
+      ],
+      "checks": [
+        "Table-driven scaled-integer examples include exact half ties, precision bounds, large BigInt values and canonical 55,055 IRR at 10% = 5,506 IRR VAT.",
+        "RoundingService is registered and exported from InvoiceModule; its sole division primitive uses integer arithmetic.",
+        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
+        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        229
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 121,
+      "requirement": "| T-04.1.02.08 | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility | S |",
+      "requirement_sha256": "2acd410ffd73eabb4adfc4611d0795b00c3f744c80dd43f56dcbca65bab5f7de",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "135e37e673450ea7a3d4a6f37024b0bc9feeb11ce00ac1b611872cc7ca36bb2b"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "592c8b2ed1d6bb06516a7a639179d5d5e7c0470c387c984849fc9f8638f0b290"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "849c90d23b18a2d09e9fef16c9c25d2aadf977286122904276bbae1302b072ed"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "f9deb1032c938d059b86b9d1df96f4d453163dbddea0de1bb8ee7f6b4b719f46"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql",
+          "sha256": "49b1be38f5ca3f0ca8632f9e036c839577b5d2d32cfa231a479728056edfafe7"
+        }
+      ],
+      "checks": [
+        "Production migrations add the JSONB column. Manual/automatic invoices persist input strings, line rounding steps and totals with the invoice transaction.",
+        "Replacement and adjustment writers also create calculation snapshots. Header/input validation rejects unsupported formats and unsafe quantities.",
+        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
+        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
+      ],
+      "limitations": [
+        "Existing invoices without a snapshot remain nullable; historical inputs were not invented or reconstructed."
+      ],
+      "merged_prs": [
+        232,
+        231
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.09",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 122,
+      "requirement": "| T-04.1.02.09 | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals | M |",
+      "requirement_sha256": "cf573088462298c5554560d1043fd66523e5183ebac42e39aa92ac9984b609cd",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        }
+      ],
+      "checks": [
+        "Six real PostgreSQL replay scenarios cover manual/automatic invoices, mixed taxability, exact-half and canonical VAT, large int8 amounts, and gift discount before VAT.",
+        "Replay uses stored inputs rather than copying cached totals; unsupported versions/rules/scales and manual discounts reject.",
+        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
+        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
+      ],
+      "limitations": [
+        "This verifies the implemented invoice calculation paths, not future order/refund product flows."
+      ],
+      "merged_prs": [
+        233
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -2121,12 +2316,8 @@
     "04-invoices-wallet-contracts.md#T-04.1.02.01",
     "04-invoices-wallet-contracts.md#T-04.1.02.02",
     "04-invoices-wallet-contracts.md#T-04.1.02.03",
-    "04-invoices-wallet-contracts.md#T-04.1.02.04",
     "04-invoices-wallet-contracts.md#T-04.1.02.05",
     "04-invoices-wallet-contracts.md#T-04.1.02.06",
-    "04-invoices-wallet-contracts.md#T-04.1.02.07",
-    "04-invoices-wallet-contracts.md#T-04.1.02.08",
-    "04-invoices-wallet-contracts.md#T-04.1.02.09",
     "04-invoices-wallet-contracts.md#T-04.1.03.01",
     "04-invoices-wallet-contracts.md#T-04.1.03.02",
     "04-invoices-wallet-contracts.md#T-04.1.03.03",

@@ -2602,3 +2602,9 @@ All 23 new negative regressions failed before repair, while the two safe-boundar
 ### Correct the finance test fixture and validation record
 
 The new automatic-invoice fixture omitted its required product title. Runtime tests passed, but TypeScript correctly rejected the fixture. The earlier types/lint success statement was premature and has been corrected. The fixture now includes its title; API typechecking, targeted lint and all 25 boundary cases pass. Product calculation code is unchanged from the 444-test invoice run.
+
+### Verify four individual finance requirements
+
+At revision f42235b, VAT resolution, RoundingService, calculation-snapshot storage and snapshot replay are acceptance_verified against their exact canonical task rows. Evidence includes the 444-test invoice run, final 25 boundary cases, real PostgreSQL replay/precedence checks, source digests and original merged-PR provenance. Legacy invoices without snapshots and future business flows remain outside these four claims.
+
+The acceptance ledger now has 42 reviewed tasks: 30 verified, 12 partial, and 280 pending. This is task-level review progress, not a claim that the entire repair plan is complete.
