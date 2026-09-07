@@ -2042,3 +2042,7 @@ Review and validation: browser checks reproduced the missing RTL context and dro
 Built all three production images from clean b6c646c using pnpm 10.11.1. The disposable production-image suite passes all four checks: non-root/read-only boot and packaged migrations, database outage/recovery, concurrent finance/notification shutdown, and interrupted-job retry with one committed result. Web and API terminate cleanly. Exact image identities are recorded in production-image-checkpoint.json.
 
 The forced-deadline fixture explicitly terminates orphaned PostgreSQL sessions and shortens the durable lease before retry. It does not establish natural disconnect or production lease timing. No deployment, existing database, external provider or scheduler was changed.
+
+### Review four more infrastructure task requirements
+
+Recorded two verified tasks for typecheck/suppression enforcement and Turbo test orchestration, using their exact canonical task blocks and source hashes. Recorded two partial tasks for the absent TanStack Start pipeline and six remaining combined coverage failures. Passing builds do not satisfy the missing server-rendering requirement, and passing test assertions do not satisfy failing coverage gates. The register now contains 16 assessed tasks: 13 verified, three partial, and 306 still pending individual acceptance review.

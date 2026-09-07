@@ -409,19 +409,199 @@
         15
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 107,
+      "requirement": "- **T-01.02.04:** Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck`\n  - **Notes:** `turbo.json` gets a `typecheck` task that depends on `^build` (upstream compsited builds emit declarations). CI enforces zero new suppressed errors via a custom check. Any `// @ts-expect-error` or `// @ts-ignore` in production source must be approved in PR review.\n  - **Dependencies:** T-01.01.02, T-01.02.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
+      "requirement_sha256": "9faf27d5d2f6f1a416e1c8bf86374b95b11682d6ee8571c8e945f6acdaa3f2f0",
+      "source_evidence": [
+        {
+          "path": "turbo.json",
+          "sha256": "910ad06ace9cac7b514e5f9803b5ef748a8286cbd802a0459e035c3929a5f2b4"
+        },
+        {
+          "path": "package.json",
+          "sha256": "978396026c03745809af475092049fc948028e3bccc7807e4d76c0f824b20520"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        },
+        {
+          "path": "scripts/check-suppressed-errors.mjs",
+          "sha256": "94cb8818a9c5b25abdb2f17fd313ac9114bb121bc555a908f8cda8f3d5dcdcce"
+        },
+        {
+          "path": "scripts/check-suppressed-errors.test.mjs",
+          "sha256": "992e2c40b4725ecdb4b05a22c992109934322d301169c979ca07a5e6cdef0a26"
+        }
+      ],
+      "checks": [
+        "Root typechecking passed at b6c646c; no source changes since that check",
+        "Eight suppression scanner tests and repository scan pass at this review",
+        "Typechecking depends on upstream builds and CI invokes the root typecheck and suppression checks"
+      ],
+      "limitations": [
+        "Hosted CI execution is not claimed; workflow wiring and equivalent local commands were reviewed."
+      ],
+      "merged_prs": [
+        9
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 192,
+      "requirement": "- **T-01.04.05:** Wire `test` and `test:coverage` tasks in `turbo.json`\n  - **Notes:** `test` depends on `^build` (upstream packages must compile first). `test:coverage` passes `--coverage` flag. CI runs `turbo test` with `--filter` for affected packages on PR, full suite on main.\n  - **Dependencies:** T-01.04.01, T-01.01.02\n  - **Complexity:** S",
+      "requirement_sha256": "729993d5e7c653cc5e8dd2c410267528316305f7508c742fe5f66fab22bb238a",
+      "source_evidence": [
+        {
+          "path": "turbo.json",
+          "sha256": "910ad06ace9cac7b514e5f9803b5ef748a8286cbd802a0459e035c3929a5f2b4"
+        },
+        {
+          "path": "package.json",
+          "sha256": "978396026c03745809af475092049fc948028e3bccc7807e4d76c0f824b20520"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "fdb44d2dbaa476b869b8f87de8b0e55ff9b32d8e56308c029cf83d90f8dd1ce8"
+        },
+        {
+          "path": "apps/api/package.json",
+          "sha256": "73b19a815a9810012cac4ff5ce12446064a213da5e262b44b32f38824e6a70ef"
+        },
+        {
+          "path": "apps/worker/package.json",
+          "sha256": "13abf75f2158b3d423ff5fed9321621682eccc0fb5c5489f53e0daa3f2aac139"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "2599323df314119abce7eb39396d8f63455a9ac80bbedb9a7b04fadc2115379e"
+        },
+        {
+          "path": "packages/tsconfig/package.json",
+          "sha256": "9ca9ac0d50bdd285b8b1a68af36afd74dfc5c18f2486b0e6337f9b16c9810ff4"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "ac3c7018a4da6145876286a50fc257defbf8a75a35b6be0bc3014eec534d4eec"
+        },
+        {
+          "path": "packages/eslint-config/package.json",
+          "sha256": "0d6fdb6f217b2b58b95bca593995eeab1c2863b2347d9a31d9efac7e5c772aff"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "07ea6c59a78be70fe5812a1337d8c92c65fd7a43669e8265c28df31fdd56a373"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "22e48da2fd9db1c8ce30c7d30708cc09355ef8abefadfd67c67341e4734ba758"
+        }
+      ],
+      "checks": [
+        "Full uncached Turbo coverage completed 12 tasks at 711ad50, with 5049 passing assertions across 423 files",
+        "Both test tasks depend on upstream builds; package coverage scripts invoke Vitest --coverage",
+        "PR filter includes dependents of changed packages; main invokes the full root task"
+      ],
+      "limitations": [
+        "This verifies test orchestration, not passing domain coverage thresholds. Hosted workflow execution is not claimed."
+      ],
+      "merged_prs": [
+        26
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.01",
+      "status": "partial",
+      "reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 129,
+      "requirement": "- **T-01.03.01:** Configure TanStack Start build pipeline in `apps/web`\n  - **Notes:** Use `@tanstack/start` build command. Ensure SSR configuration does not add server-side business logic duplication. Set `build.inlineDynamicImports: false` for route-level CSS/JS splitting. Configure `server.functions` as thin BFF only — authorization, pricing, state transitions stay in backend modules.\n  - **Dependencies:** S-01.02, packages/i18n, packages/shared, packages/ui\n  - **Complexity:** L",
+      "requirement_sha256": "53d92bb4b757e8260045f31dc3f0f47b77a7517dccf060b2987f80cf2e5b5e6c",
+      "source_evidence": [
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "2a4a5b13fe68f9b93fb7516dde50931a4e966871792f6015e0ebef3c200fb9dc"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "fdb44d2dbaa476b869b8f87de8b0e55ff9b32d8e56308c029cf83d90f8dd1ce8"
+        },
+        {
+          "path": "apps/web/src/client.tsx",
+          "sha256": "17253729b0f69149dcb41e8915834b14b39ffd0e614d21a8ce8b7fba13a68590"
+        }
+      ],
+      "checks": [
+        "Production Vite build and route bundle gates pass at b6c646c",
+        "Source review confirms a client-rendered Vite application using TanStack Router"
+      ],
+      "limitations": [
+        "Required TanStack Start server rendering is absent. Architecture decision requested; no exception approved."
+      ],
+      "merged_prs": [
+        10
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.02",
+      "status": "partial",
+      "reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 177,
+      "requirement": "- **T-01.04.02:** Configure per-package Vitest with coverage thresholds\n  - **Notes:** Minimum thresholds: 80% line / 75% branch for changed code. Auth, authorization, payments, wallet, refunds, pricing, contracts, and state-machine domain packages: 90% line / 85% branch. Exceptions require tech lead approval. Coverage checks in `vitest.config.ts` via `coverage.thresholds`.\n  - **Dependencies:** T-01.04.01\n  - **Complexity:** M",
+      "requirement_sha256": "36013018d53384a8ba285ec35fe6cd14159cb6e40c540394a521f4dfe73e66c8",
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "7ca06cbf6d96704555a45d43ce54c26c3fb7348268f2df2e82716f42d1008f3b"
+        },
+        {
+          "path": "audit/combined-coverage-checkpoint.json",
+          "sha256": "3ac9e021a8c5121a497233a696d49ef385cb45294ef1f7cf587128dd77be3f19"
+        }
+      ],
+      "checks": [
+        "Combined coverage checkpoint at 89e71e8 has no checker errors and six of thirteen groups fail",
+        "Changed source gates enforce 80/75 and critical file gates enforce 90/85"
+      ],
+      "limitations": [
+        "Latest combined coverage predates subsequent wallet and shared UI repairs",
+        "API critical, both web groups, database general, i18n critical and UI general remain failing at the latest checkpoint",
+        "Diff-aware combined checker implements thresholds outside native Vitest per-package thresholds; no lowered-threshold exception approved."
+      ],
+      "merged_prs": [
+        16
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
-    "01-platform-infrastructure.md#T-01.02.04",
-    "01-platform-infrastructure.md#T-01.03.01",
     "01-platform-infrastructure.md#T-01.03.02",
     "01-platform-infrastructure.md#T-01.03.03",
     "01-platform-infrastructure.md#T-01.03.04",
     "01-platform-infrastructure.md#T-01.03.05",
-    "01-platform-infrastructure.md#T-01.04.02",
     "01-platform-infrastructure.md#T-01.04.03",
     "01-platform-infrastructure.md#T-01.04.04",
-    "01-platform-infrastructure.md#T-01.04.05",
     "01-platform-infrastructure.md#T-01.04.06",
     "01-platform-infrastructure.md#T-01.05.01",
     "01-platform-infrastructure.md#T-02.01.01",
