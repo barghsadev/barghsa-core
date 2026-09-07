@@ -42,6 +42,8 @@ function stepUpForbidden(): Response {
 async function defaultFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   const url = String(input);
   const method = (init?.method ?? 'GET').toUpperCase();
+  if (url.endsWith('/api/user/settings/timezone'))
+    return new Response(JSON.stringify({ timezone: 'America/Los_Angeles' }));
   if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'GET') {
     return { ok: true, json: async () => ({ limitIrR: 2_000_000_000, version: 0 }) } as Response;
   }
@@ -134,6 +136,8 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
 
     expect(container.textContent).toContain('Staff wallet receipt review');
     expect(container.textContent).toContain('TRK-aaaa');
+    expect(container.textContent).toContain('15 Aug 2026');
+    expect(container.textContent).toContain('Sep 1, 2026, 3:00 AM');
     expect(container.textContent).toContain('250,000');
     expect(
       container.querySelector('[data-testid="admin-wallet-receipts-page"]')?.getAttribute('dir')

@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
   useCallback,
   useEffect,
@@ -170,7 +171,7 @@ function inertOutside(keep: HTMLElement): () => void {
   };
 }
 
-function formatDate(value: string | null, locale: Locale): string {
+function formatPaymentDate(value: string | null, locale: Locale): string {
   if (!value) return t('admin.walletReceipts.none', locale);
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     const parts = value.split('-');
@@ -184,16 +185,11 @@ function formatDate(value: string | null, locale: Locale): string {
       timeZone: 'UTC',
     }).format(d);
   }
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fa-IR', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'UTC',
-  }).format(d);
+  return t('admin.walletReceipts.none', locale);
 }
 
 export default function AdminWalletReceiptsPage() {
+  const time = useAccountTime();
   const locale = useLocale();
   const isRtl = locale === 'fa';
   const [items, setItems] = useState<BankReceiptReviewDto[]>([]);
@@ -519,6 +515,7 @@ export default function AdminWalletReceiptsPage() {
       dir={isRtl ? 'rtl' : 'ltr'}
       data-testid="admin-wallet-receipts-page"
     >
+      {time.notice}
       <header>
         <h1 className="text-2xl font-bold">{t('admin.walletReceipts.title', locale)}</h1>
         <p className="text-gray-600 mt-2">{t('admin.walletReceipts.description', locale)}</p>
@@ -610,7 +607,7 @@ export default function AdminWalletReceiptsPage() {
                 </div>
                 <div>
                   <dt className="text-gray-500">{t('admin.walletReceipts.paymentDate', locale)}</dt>
-                  <dd>{formatDate(selected.paymentDate, locale)}</dd>
+                  <dd>{formatPaymentDate(selected.paymentDate, locale)}</dd>
                 </div>
                 <div>
                   <dt className="text-gray-500">
@@ -628,7 +625,7 @@ export default function AdminWalletReceiptsPage() {
                 </div>
                 <div>
                   <dt className="text-gray-500">{t('admin.walletReceipts.submittedAt', locale)}</dt>
-                  <dd>{formatDate(selected.submittedAt, locale)}</dd>
+                  <dd>{time.format(selected.submittedAt)}</dd>
                 </div>
                 <div>
                   <dt className="text-gray-500">{t('admin.walletReceipts.note', locale)}</dt>

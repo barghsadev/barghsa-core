@@ -1,0 +1,111 @@
+import { test, expect, type Page } from './coverage-fixture';
+
+const id = '11111111-1111-4111-8111-111111111111';
+const stamp = '2026-09-01T01:00:00Z';
+const zone = 'America/Los_Angeles';
+async function shell(page: Page, locale: string) {
+  await page.addInitScript((value) => {
+    new MutationObserver(() => {
+      if (document.documentElement) document.documentElement.lang = value;
+    }).observe(document, { childList: true });
+  }, locale);
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: zone } })
+  );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: [{ id, profileType: 'INDIVIDUAL', title: 'Date account' }],
+        activeProfileId: id,
+        hasDefault: true,
+      },
+    })
+  );
+  await page.route('**/api/invitations/pending', (route) =>
+    route.fulfill({ json: { invitations: [] } })
+  );
+  await page.route('**/api/profiles/ownership-transfers', (route) =>
+    route.fulfill({ json: { transfers: [] } })
+  );
+  await page.route('**/api/v1/notifications**', (route) =>
+    route.fulfill({ json: { data: [], unread_count: 0 } })
+  );
+}
+const expected = (locale: string) =>
+  new Intl.DateTimeFormat(locale, {
+    timeZone: zone,
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(stamp));
+for (const locale of ['en', 'fa']) {
+  test(`invoice list and correction chain show saved account time (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const invoice = {
+      invoiceId: id,
+      role: 'original',
+      state: 'Paid',
+      totalAmount: '100000',
+      paidAmount: '100000',
+      issuedAt: stamp,
+      dueAt: stamp,
+      explanation: null,
+      lines: [],
+      adjustmentKind: null,
+    };
+    await page.route('**/api/invoices', (route) =>
+      route.fulfill({ json: { invoices: [invoice] } })
+    );
+    await page.route(`**/api/invoices/${id}`, (route) =>
+      route.fulfill({
+        json: { invoice, chain: [invoice], viewedInvoiceId: id, originalInvoiceId: id },
+      })
+    );
+    await page.goto('/invoices');
+    await expect(page.locator('main')).toContainText(expected(locale));
+    await page.locator(`main a[href="/invoices/${id}"]`).click();
+    const card = page.getByTestId(`invoice-card-${id}`);
+    await expect(card).toContainText(expected(locale));
+    await expect(card.locator('dd').filter({ hasText: expected(locale) })).toHaveCount(2);
+  });
+  test(`receipt submission uses account time while payment day stays fixed (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const receipt = {
+      transactionId: id,
+      walletId: id,
+      amount: '100000',
+      currency: 'IRR',
+      state: 'Released',
+      paymentDate: '2026-09-01',
+      submittedAt: stamp,
+      payerReference: 'TRK-date',
+      canDecide: false,
+      attachmentKey: null,
+      attachmentUrl: null,
+      customerNote: null,
+      staffDecision: null,
+    };
+    await page.route('**/api/admin/config/wallet-top-up-limit', (route) =>
+      route.fulfill({ json: { limitIrR: 2000000, version: 0 } })
+    );
+    await page.route('**/api/admin/wallet/bank-receipt-top-ups', (route) =>
+      route.fulfill({ json: { items: [receipt] } })
+    );
+    await page.route(`**/api/admin/wallet/bank-receipt-top-ups/${id}`, (route) =>
+      route.fulfill({ json: receipt })
+    );
+    await page.goto('/admin/wallet-receipts');
+    const details = page.locator('section[aria-labelledby="receipt-review-heading"]');
+    await expect(details).toContainText(expected(locale));
+    await expect(details).toContainText(
+      new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fa-IR', {
+        timeZone: 'UTC',
+        dateStyle: 'medium',
+      }).format(new Date('2026-09-01T00:00:00Z'))
+    );
+  });
+}

@@ -148,6 +148,8 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
         const url = String(input);
+        if (url.endsWith('/api/user/settings/timezone'))
+          return new Response(JSON.stringify({ timezone: 'America/Los_Angeles' }));
         if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`)) {
           return { ok: true, status: 200, json: async () => payload };
         }
@@ -167,6 +169,8 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     expect(container.textContent).toContain('Original invoice');
     expect(container.textContent).toContain('Replacement');
     expect(container.textContent).toContain('Corrected usage');
+    expect(container.textContent).toContain('Aug 1, 2026, 3:00 AM');
+    expect(container.textContent).toContain('Aug 8, 2026, 3:00 AM');
   });
 
   it('shows linked post-payment adjustments with explanations', async () => {

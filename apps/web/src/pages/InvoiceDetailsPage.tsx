@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n';
@@ -7,7 +8,6 @@ import { useLocale } from '../hooks/useLocale.js';
 import {
   InvoiceRequestError,
   fetchInvoiceDetails,
-  formatInvoiceInstant,
   formatIrr,
   roleI18nKey,
   stateI18nKey,
@@ -28,6 +28,7 @@ interface InvoiceDetailsPageProps {
  * the change. RTL-aware, profile-scoped via the details API.
  */
 export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
+  const time = useAccountTime();
   const locale = useLocale();
   const isRtl = locale === 'fa';
   const [details, setDetails] = useState<CustomerInvoiceDetails | null>(null);
@@ -61,6 +62,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
+      {time.notice}
       <nav aria-label={t('invoices.details.back', locale)}>
         <Link
           to="/invoices"
@@ -90,13 +92,19 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {t('invoices.details.error', locale)}
         </p>
       ) : details ? (
-        <InvoiceDetailsBody details={details} />
+        <InvoiceDetailsBody details={details} formatTimestamp={time.format} />
       ) : null}
     </div>
   );
 }
 
-function InvoiceDetailsBody({ details }: { details: CustomerInvoiceDetails }) {
+function InvoiceDetailsBody({
+  details,
+  formatTimestamp,
+}: {
+  details: CustomerInvoiceDetails;
+  formatTimestamp: (value: string | null) => string;
+}) {
   const locale = useLocale();
   const viewed = details.invoice;
   const original = details.chain.find((node) => node.invoiceId === details.originalInvoiceId);
@@ -115,12 +123,14 @@ function InvoiceDetailsBody({ details }: { details: CustomerInvoiceDetails }) {
 
       {original ? (
         <InvoiceCard
+          formatTimestamp={formatTimestamp}
           node={original}
           heading={t('invoices.details.original', locale)}
           current={original.invoiceId === details.viewedInvoiceId}
         />
       ) : (
         <InvoiceCard
+          formatTimestamp={formatTimestamp}
           node={viewed}
           heading={t(roleI18nKey(viewed.role), locale)}
           current
@@ -130,6 +140,7 @@ function InvoiceDetailsBody({ details }: { details: CustomerInvoiceDetails }) {
 
       {linked.map((node) => (
         <InvoiceCard
+          formatTimestamp={formatTimestamp}
           key={node.invoiceId}
           node={node}
           heading={t(roleI18nKey(node.role), locale)}
@@ -153,8 +164,10 @@ function InvoiceCard({
   heading,
   current,
   showExplanation = false,
+  formatTimestamp,
 }: {
   node: CustomerInvoiceNode;
+  formatTimestamp: (value: string | null) => string;
   heading: string;
   current: boolean;
   showExplanation?: boolean;
@@ -201,11 +214,11 @@ function InvoiceCard({
         </div>
         <div>
           <dt className="text-gray-500">{t('invoices.details.issuedAt', locale)}</dt>
-          <dd>{formatInvoiceInstant(node.issuedAt, locale)}</dd>
+          <dd>{formatTimestamp(node.issuedAt)}</dd>
         </div>
         <div>
           <dt className="text-gray-500">{t('invoices.details.dueAt', locale)}</dt>
-          <dd>{formatInvoiceInstant(node.dueAt, locale)}</dd>
+          <dd>{formatTimestamp(node.dueAt)}</dd>
         </div>
       </dl>
 

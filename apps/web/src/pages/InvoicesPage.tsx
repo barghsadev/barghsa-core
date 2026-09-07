@@ -1,3 +1,4 @@
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n';
@@ -5,7 +6,6 @@ import { Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import {
   fetchInvoiceList,
-  formatInvoiceInstant,
   formatIrr,
   roleI18nKey,
   stateI18nKey,
@@ -19,6 +19,7 @@ import {
  * page that shows the original plus linked corrections/replacements.
  */
 export function InvoicesPage() {
+  const time = useAccountTime();
   const locale = useLocale();
   const isRtl = locale === 'fa';
   const [items, setItems] = useState<CustomerInvoiceListItem[] | null>(null);
@@ -40,6 +41,7 @@ export function InvoicesPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
+      {time.notice}
       <header className="flex items-center gap-2">
         <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />
         <div>
@@ -81,7 +83,7 @@ export function InvoicesPage() {
                   </span>
                 </p>
                 <p className="mt-1 text-sm text-gray-500">
-                  {t('invoices.list.issued', locale)}: {formatInvoiceInstant(item.issuedAt, locale)}
+                  {t('invoices.list.issued', locale)}: {time.format(item.issuedAt)}
                 </p>
                 {item.explanation ? (
                   <p className="mt-2 text-sm text-gray-700">{item.explanation}</p>

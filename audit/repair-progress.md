@@ -2160,3 +2160,9 @@ Review and validation: six production browser cases pass for both languages, ass
 Ownership-transfer deadlines, member join dates and customer/staff ticket timestamps now use the saved account timezone. Team rows share the screen's single preference read. A failed preference read offers retry without displaying device-local guesses. Ticket related-record, SLA and comment timestamps use the same formatter.
 
 Review and validation: six added assertions failed before repair, reproducing wrong calendar days in both languages and a device-local ownership deadline. All 15 team/ticket production browser checks pass after repair, preserving invitation/role confirmation, transfer decisions/sign-out, attachment retries, internal notes and stale-result behavior. Root build, types, targeted lint, formatting and bundle checks pass.
+
+### Separate finance timestamps from payment calendar dates
+
+Customer invoice lists and correction chains now display issue/due instants in the saved account timezone. Every correction card shares the page's formatter. Staff receipt submission times follow the same preference; the payment's date-only business value stays on its original calendar day. The obsolete browser-local invoice helper was removed.
+
+Review and validation: 24 invoice/receipt unit checks and four production browser checks pass. Browser cases verify issue/due/submission instants crossing midnight in both languages while the payment day remains fixed. The initial browser fixture had no profile and correctly redirected invoice navigation to onboarding; providing its active profile fixed the fixture. Root build, types, targeted lint, formatting and bundle checks pass. Staff due-date editor conversion still requires a separate repair.

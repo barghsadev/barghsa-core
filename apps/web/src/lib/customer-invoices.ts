@@ -112,20 +112,6 @@ export function formatIrr(amount: string, locale: Locale): string {
   }
 }
 
-export function formatInvoiceInstant(iso: string | null, locale: Locale): string {
-  if (!iso) return '—';
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '—';
-  try {
-    return new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-GB', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    }).format(date);
-  } catch {
-    return iso;
-  }
-}
-
 export function roleI18nKey(role: InvoiceCorrectionRole): string {
   return `invoices.details.role.${role}`;
 }
