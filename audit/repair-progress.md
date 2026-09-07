@@ -2450,3 +2450,9 @@ All four service regressions failed before repair. The first implementation expo
 Replication monitoring now aggregates every streaming replica. The worst reported lag is returned; an unknown lag on any streaming replica, negative lag or no streaming replica returns unavailable. The earlier first-row query could hide a slower replica and reported unknown lag as zero.
 
 Three SQL regressions failed before repair. All fifteen collector checks and all five API monitoring checks pass afterward. The replica cases run the actual query against controlled PostgreSQL rows, covering multiple replicas, missing replay lag with write-lag fallback, unknown lag and negative lag. They do not claim a live streaming-replication exercise. Database types, targeted lint, formatting and diff review pass.
+
+### Export query-call and table-scan counters and refresh HTTP test dependencies
+
+The collector now reports current-database top-level query calls and sequential/index scan counts. Prometheus exposes these counters and removes them when their source is unavailable. Query rate can be derived from pg_query_calls_total; PostgreSQL statistics resets and entry eviction remain relevant to interpreting that series.
+
+Both collector assertions failed before implementation. All fifteen collector checks and all five service/HTTP checks pass after repair. The first HTTP run exposed stale compiled database code: its setup rebuilt shared/i18n, worker and API, but omitted the database package. Setup now builds that package before the application, which also fixes the shared live-browser fixture path. Root types, targeted lint, formatting and diff review pass. OpenTelemetry export is the next missing part of the canonical monitoring requirement.

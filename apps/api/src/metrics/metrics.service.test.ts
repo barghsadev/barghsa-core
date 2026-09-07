@@ -10,6 +10,8 @@ import { MetricsService } from './metrics.service.js';
 
 function snapshot(): DatabaseMetrics {
   return {
+    queryCalls: 55,
+    tableScans: { sequential: 12, index: 34 },
     database: {
       xact_commit: 10,
       xact_rollback: 1,
@@ -90,8 +92,19 @@ it.each(['failed', 'thrown'])(
 );
 
 it('removes unavailable optional samples instead of publishing zero or the previous sample', async () => {
-  expect(await service.collect()).toMatch(/^pg_checkpoints_timed_total 12$/m);
-  const missing = { ...snapshot(), wal: null, bgwriter: null, topQueries: null };
+  const healthy = await service.collect();
+  expect(healthy).toMatch(/^pg_checkpoints_timed_total 12$/m);
+  expect(healthy).toMatch(/^pg_query_calls_total 55$/m);
+  expect(healthy).toMatch(/^pg_sequential_scans_total 12$/m);
+  expect(healthy).toMatch(/^pg_index_scans_total 34$/m);
+  const missing = {
+    ...snapshot(),
+    wal: null,
+    bgwriter: null,
+    topQueries: null,
+    queryCalls: null,
+    tableScans: null,
+  };
   collector.performance.mockResolvedValue({ ok: true, metrics: missing, latencyMs: 1 });
   collector.replication.mockResolvedValue(null);
   const text = await service.collect();
@@ -99,6 +112,9 @@ it('removes unavailable optional samples instead of publishing zero or the previ
   expect(text).not.toMatch(/^pg_checkpoints_timed_total /m);
   expect(text).not.toMatch(/^pg_wal_bytes_total /m);
   expect(text).not.toMatch(/^pg_replication_lag_seconds /m);
+  expect(text).not.toMatch(/^pg_query_calls_total /m);
+  expect(text).not.toMatch(/^pg_sequential_scans_total /m);
+  expect(text).not.toMatch(/^pg_index_scans_total /m);
 });
 
 it('shares one in-flight database snapshot between concurrent scrapes', async () => {

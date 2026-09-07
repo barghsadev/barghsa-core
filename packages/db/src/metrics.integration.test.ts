@@ -34,6 +34,9 @@ it('collects PostgreSQL 17 checkpoints and exposes an absent query extension as 
   expect(result.metrics?.maxConnections).toBeGreaterThan(0);
   expect(result.metrics?.wal?.wal_bytes).toBeGreaterThanOrEqual(0);
   expect(result.metrics?.topQueries).toBeNull();
+  expect(result.metrics?.queryCalls).toBeNull();
+  expect(result.metrics?.tableScans?.sequential).toBeGreaterThanOrEqual(0);
+  expect(result.metrics?.tableScans?.index).toBeGreaterThanOrEqual(0);
 });
 
 it('returns failure instead of healthy zeros when all database reads fail', async () => {
@@ -87,6 +90,7 @@ it('collects query timings when pg_stat_statements is enabled on PostgreSQL 17',
     expect(result.metrics?.topQueries).not.toBeNull();
     const probe = result.metrics?.topQueries?.find((query) => query.query.includes('metric_probe'));
     expect(probe?.calls).toBeGreaterThanOrEqual(1);
+    expect(result.metrics?.queryCalls).toBeGreaterThanOrEqual(1);
     expect(probe?.rows).toBeGreaterThanOrEqual(25);
     expect(probe?.blkReadTimeMs).toBeGreaterThanOrEqual(0);
     expect(probe?.blkWriteTimeMs).toBeGreaterThanOrEqual(0);

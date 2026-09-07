@@ -5,10 +5,22 @@ import { resolve } from 'node:path';
 /** HTTP integration tests must never silently exercise stale compiled code. */
 export function setup(): void {
   const require = createRequire(__filename);
-  execFileSync('pnpm', ['--filter', '@barghsa/shared', '--filter', '@barghsa/i18n', 'build'], {
-    cwd: resolve(__dirname, '../../../..'),
-    stdio: 'pipe',
-  });
+  execFileSync(
+    'pnpm',
+    [
+      '--filter',
+      '@barghsa/shared',
+      '--filter',
+      '@barghsa/i18n',
+      '--filter',
+      '@barghsa/db',
+      'build',
+    ],
+    {
+      cwd: resolve(__dirname, '../../../..'),
+      stdio: 'pipe',
+    }
+  );
   execFileSync('pnpm', ['--filter', '@barghsa/worker', 'build'], {
     cwd: resolve(__dirname, '../../../..'),
     stdio: 'pipe',

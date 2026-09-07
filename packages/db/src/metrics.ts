@@ -7,6 +7,10 @@ import { getDbPool } from './index.js';
 // ---------------------------------------------------------------------------
 
 export interface DatabaseMetrics {
+  /** Top-level query calls retained by pg_stat_statements; use rate for queries/second. */
+  queryCalls: number | null;
+  /** User-table scan counters, unavailable when the statistics view cannot be read. */
+  tableScans: { sequential: number; index: number } | null;
   /** Global database-level counters from pg_stat_database */
   database: {
     xact_commit: number;
@@ -258,6 +262,7 @@ export async function collectPerformanceMetrics(
       `
       SELECT
         queryid,
+        SUM(calls) FILTER (WHERE toplevel) OVER () AS total_calls,
         left(query, 200) AS query,
         calls,
         total_exec_time,
@@ -282,6 +287,12 @@ export async function collectPerformanceMetrics(
       [String(topN)]
     );
 
+    const tableStats = pool.query(`
+      SELECT COALESCE(SUM(seq_scan), 0) AS sequential_scans,
+             COALESCE(SUM(idx_scan), 0) AS index_scans
+      FROM pg_stat_user_tables
+    `);
+
     // Query server max_connections from pg_settings
     const maxConnResult = pool.query(`
       SELECT setting::integer AS max_connections
@@ -298,6 +309,7 @@ export async function collectPerformanceMetrics(
       walStats,
       queryStats,
       maxConnResult,
+      tableStats,
     ]);
 
     const [
@@ -308,6 +320,7 @@ export async function collectPerformanceMetrics(
       walResultSettled,
       queryResultSettled,
       maxConnResultSettled,
+      tableResultSettled,
     ] = settled;
 
     // Core views must succeed. Otherwise zeros would hide outages and suppress alerts.
@@ -342,7 +355,13 @@ export async function collectPerformanceMetrics(
     const totalConnections = Number(actRow?.total_connections ?? 0);
     const connectionSaturation = maxConnections > 0 ? totalConnections / maxConnections : 0;
 
+    const tableRow =
+      tableResultSettled.status === 'fulfilled' ? tableResultSettled.value.rows[0] : null;
     const metrics: DatabaseMetrics = {
+      queryCalls: queryResult ? Number(queryResult.rows[0]?.total_calls ?? 0) : null,
+      tableScans: tableRow
+        ? { sequential: Number(tableRow.sequential_scans), index: Number(tableRow.index_scans) }
+        : null,
       database: {
         xact_commit: Number(dbRow?.xact_commit ?? 0),
         xact_rollback: Number(dbRow?.xact_rollback ?? 0),

@@ -147,6 +147,18 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     labelNames: ['queryid'] as const,
   });
 
+  private readonly queryCalls = new promClient.Gauge({
+    name: 'pg_query_calls_total',
+    help: 'Top-level query calls retained by pg_stat_statements',
+  });
+  private readonly sequentialScans = new promClient.Gauge({
+    name: 'pg_sequential_scans_total',
+    help: 'User-table sequential scans',
+  });
+  private readonly indexScans = new promClient.Gauge({
+    name: 'pg_index_scans_total',
+    help: 'User-table index scans',
+  });
   private readonly collectionSuccess = new promClient.Gauge({
     name: 'pg_metrics_collection_success',
     help: 'Whether the latest core PostgreSQL metrics collection succeeded (1 or 0)',
@@ -179,6 +191,9 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     this.tupleUpdatedTotal,
     this.tupleDeletedTotal,
     this.replicationLag,
+    this.queryCalls,
+    this.sequentialScans,
+    this.indexScans,
   ];
 
   private clearDatabaseMetrics(): void {
@@ -251,6 +266,15 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       const m = result.metrics;
       this.lastMetrics = m;
 
+      this.queryCalls.remove();
+      if (m.queryCalls !== null) this.queryCalls.set(m.queryCalls);
+      this.sequentialScans.remove();
+      this.indexScans.remove();
+      this.viewAvailable.set({ view: 'table_scans' }, m.tableScans ? 1 : 0);
+      if (m.tableScans) {
+        this.sequentialScans.set(m.tableScans.sequential);
+        this.indexScans.set(m.tableScans.index);
+      }
       this.cacheHitRatio.set(m.cacheHitRatio);
       this.connectionSaturation.set(m.connectionSaturation);
       this.activeConnections.set(m.activeConnections);
