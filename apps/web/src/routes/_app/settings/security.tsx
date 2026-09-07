@@ -1,3 +1,4 @@
+import { useAccountTime } from '../../../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { createFileRoute } from '@tanstack/react-router';
@@ -102,43 +103,17 @@ function getDeviceName(userAgent: string | undefined, locale: Locale): string {
 }
 
 /**
- * Format a date string to a locale-aware, relative-ish string.
- */
-function formatDate(dateStr: string, locale: Locale): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60_000);
-
-  if (diffMins < 1) return locale === 'fa' ? 'همین حالا' : 'just now';
-  if (diffMins < 60) {
-    const num = diffMins;
-    return locale === 'fa' ? `${num} دقیقه پیش` : `${num}m ago`;
-  }
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) {
-    const num = diffHours;
-    return locale === 'fa' ? `${num} ساعت پیش` : `${num}h ago`;
-  }
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) {
-    const num = diffDays;
-    return locale === 'fa' ? `${num} روز پیش` : `${num}d ago`;
-  }
-
-  return date.toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-/**
  * Small component that renders session details (IP, created/updated/expires/idle).
  */
-function SessionDetails({ session, locale }: { session: SessionItem; locale: Locale }) {
+function SessionDetails({
+  session,
+  locale,
+  formatTimestamp,
+}: {
+  session: SessionItem;
+  locale: Locale;
+  formatTimestamp: (value: string) => string;
+}) {
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
       {session.deviceInfo?.ip && (
@@ -148,16 +123,20 @@ function SessionDetails({ session, locale }: { session: SessionItem; locale: Loc
         </span>
       )}
       <span>
-        {t('settings.security.createdAt', locale)}: {formatDate(session.createdAt, locale)}
+        {t('settings.security.createdAt', locale)}:{' '}
+        <time dateTime={session.createdAt}>{formatTimestamp(session.createdAt)}</time>
       </span>
       <span>
-        {t('settings.security.updatedAt', locale)}: {formatDate(session.updatedAt, locale)}
+        {t('settings.security.updatedAt', locale)}:{' '}
+        <time dateTime={session.updatedAt}>{formatTimestamp(session.updatedAt)}</time>
       </span>
       <span>
-        {t('settings.security.expiresAt', locale)}: {formatDate(session.expiresAt, locale)}
+        {t('settings.security.expiresAt', locale)}:{' '}
+        <time dateTime={session.expiresAt}>{formatTimestamp(session.expiresAt)}</time>
       </span>
       <span>
-        {t('settings.security.idleDeadline', locale)}: {formatDate(session.idleDeadline, locale)}
+        {t('settings.security.idleDeadline', locale)}:{' '}
+        <time dateTime={session.idleDeadline}>{formatTimestamp(session.idleDeadline)}</time>
       </span>
     </div>
   );
@@ -166,6 +145,7 @@ function SessionDetails({ session, locale }: { session: SessionItem; locale: Loc
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsSecurityPage() {
+  const time = useAccountTime();
   const locale = useLocale();
   const revokingRef = useRef(false);
   const revokeTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -315,6 +295,7 @@ function SettingsSecurityPage() {
 
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <h1 className="text-2xl font-bold mb-6">{t('settings.security.title', locale)}</h1>
 
       {/* Sessions section */}
@@ -369,7 +350,11 @@ function SettingsSecurityPage() {
                 </span>
               </div>
             </div>
-            <SessionDetails session={currentSession} locale={locale} />
+            <SessionDetails
+              session={currentSession}
+              locale={locale}
+              formatTimestamp={time.format}
+            />
           </div>
         )}
 
@@ -402,7 +387,7 @@ function SettingsSecurityPage() {
                       : t('settings.security.revoke', locale)}
                   </Button>
                 </div>
-                <SessionDetails session={session} locale={locale} />
+                <SessionDetails session={session} locale={locale} formatTimestamp={time.format} />
               </div>
             ))}
           </div>
@@ -472,7 +457,7 @@ function SettingsSecurityPage() {
               )}
               <p className="text-muted-foreground">
                 {t('settings.security.createdAt', locale)}:{' '}
-                {formatDate(revokeConfirmSession.createdAt, locale)}
+                {time.format(revokeConfirmSession.createdAt)}
               </p>
             </div>
 

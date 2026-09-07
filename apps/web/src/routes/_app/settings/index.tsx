@@ -1,3 +1,4 @@
+import { useAccountTime } from '../../../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { preferencesText } from '@barghsa/i18n/preferences';
@@ -74,6 +75,7 @@ function readConsent(body: unknown): Record<MarketingChannels, ConsentChannelSta
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsIndexPage() {
+  const time = useAccountTime();
   const locale = useLocale();
 
   const [channels, setChannels] = useState<NotificationChannel[]>([]);
@@ -219,9 +221,7 @@ function SettingsIndexPage() {
 
   const formatConsentDate = (iso: string | null): string | null => {
     if (!iso) return null;
-    const date = new Date(iso);
-    if (Number.isNaN(date.getTime())) return null;
-    return date.toLocaleString(locale === 'fa' ? 'fa-IR' : 'en-US');
+    return time.format(iso);
   };
 
   const renderMarketingToggle = (
@@ -302,6 +302,7 @@ function SettingsIndexPage() {
 
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      {time.notice}
       <h1 className="text-2xl font-bold mb-6">{t('dashboard.nav.settings', locale)}</h1>
 
       {/* Settings navigation links */}

@@ -1018,13 +1018,18 @@ for (const locale of ['en', 'fa']) {
     page,
   }) => {
     await shell(page, locale);
+    await page.clock.setFixedTime(new Date('2026-09-07T00:00:00Z'));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
+    const expiry = '2030-01-01T01:00:00Z';
     const time = '2026-09-01T12:00:00.000Z';
     const sessions = [true, false].map((isCurrentSession, index) => ({
       sessionId: 'session-' + index,
       deviceInfo: { userAgent: 'Windows', ip: '192.0.2.1' },
       createdAt: time,
       updatedAt: time,
-      expiresAt: time,
+      expiresAt: expiry,
       idleDeadline: time,
       isCurrentSession,
     }));
@@ -1049,6 +1054,20 @@ for (const locale of ['en', 'fa']) {
       await route.fulfill({ status: 503, json: {} });
     });
     await page.goto('/settings/security');
+    await expect(page.locator('main')).toContainText(
+      new Intl.DateTimeFormat(locale, {
+        timeZone: 'America/Los_Angeles',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date(expiry))
+    );
+    await expect(page.locator('main')).not.toContainText('settings.security.');
+    await expect(page.locator('main')).toContainText(
+      locale === 'fa' ? 'آخرین فعالیت' : 'Last activity'
+    );
+    await expect(page.locator('main')).toContainText(
+      locale === 'fa' ? 'انقضای عدم فعالیت' : 'Idle expiry'
+    );
     const single = page.getByRole('button', {
       name: locale === 'fa' ? 'قطع دسترسی' : 'Revoke',
       exact: true,
@@ -1105,6 +1124,9 @@ for (const locale of ['en', 'fa']) {
     }
     await dialog.getByRole('button', { name, exact: true }).click();
     await expect.poll(() => writes).toBe(1);
+    await expect(dialog).toContainText(
+      locale === 'fa' ? 'در حال قطع دسترسی همه نشست‌های دیگر…' : 'Revoking all other sessions…'
+    );
     await page.keyboard.press('Escape');
     await expect(dialog).toBeVisible();
     await expect(password).toBeDisabled();
@@ -1129,6 +1151,9 @@ for (const locale of ['en', 'fa']) {
       page,
     }) => {
       await shell(page, locale);
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+      );
       const marketing = kind === 'marketing-consent';
       const original = marketing
         ? {
@@ -1218,6 +1243,14 @@ for (const locale of ['en', 'fa']) {
       await save.click();
       await expect(card.getByRole('status')).toBeVisible();
       await expect(card.getByRole('alert')).toHaveCount(0);
+      if (marketing)
+        await expect(card).toContainText(
+          new Intl.DateTimeFormat(locale, {
+            timeZone: 'America/Los_Angeles',
+            dateStyle: 'medium',
+            timeStyle: 'short',
+          }).format(new Date('2026-09-01T12:00:00Z'))
+        );
       expect(writes).toBe(3);
       expect(reads).toBe(2);
     });
