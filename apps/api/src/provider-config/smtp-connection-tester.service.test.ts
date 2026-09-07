@@ -60,6 +60,23 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
     expect(result.error).toContain('••••');
   });
 
+  for (const diagnostic of ['', 'x'.repeat(3000)]) {
+    it(`bounds SMTP diagnostic length ${diagnostic.length}`, async () => {
+      const service = new SmtpConnectionTesterService(
+        () => ({
+          verify: async () => {
+            throw new Error(diagnostic);
+          },
+        }),
+        new SmtpNetworkGuard({ resolve: async () => ['93.184.216.34'] })
+      );
+      const result = await service.test(baseConfig);
+      expect(result).toMatchObject({
+        ok: false,
+        error: diagnostic ? diagnostic.slice(0, 1000) : 'SMTP handshake failed',
+      });
+    });
+  }
   it('rejects a private destination before any transport is created', async () => {
     const createTransport = vi.fn();
     const guard = new SmtpNetworkGuard({ resolve: async () => ['10.0.0.1'] });

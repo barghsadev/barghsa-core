@@ -57,7 +57,7 @@ function sanitizeError(err: unknown, config: SmtpConfig): string {
   if (config.password) message = message.split(config.password).join('••••');
   if (config.username) message = message.split(config.username).join('***');
   const trimmed = message.slice(0, 1000);
-  return trimmed || err instanceof Error ? message : 'SMTP handshake failed';
+  return trimmed || 'SMTP handshake failed';
 }
 
 @Injectable()
