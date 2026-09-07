@@ -2,6 +2,21 @@ import { Client } from 'pg';
 import { expect, it } from 'vitest';
 import { createDirectDbPool, wrapClientQuery } from './index.js';
 
+it('restores the write deadline for transaction completion after a read', async () => {
+  const client = new Client({ connectionString: process.env.TEST_DATABASE_URL });
+  await client.connect();
+  const inspect = client.query.bind(client);
+  try {
+    client.query = wrapClientQuery(client, { read: 100, write: 1000 });
+    await client.query('BEGIN');
+    await client.query('SELECT 1');
+    await client.query('COMMIT');
+    expect((await inspect('SHOW statement_timeout')).rows[0].statement_timeout).toBe('1s');
+  } finally {
+    await client.end();
+  }
+});
+
 it('applies 10-second read and 30-second write server defaults through the pool', async () => {
   const pool = createDirectDbPool(
     { pgdirectUrl: process.env.TEST_DATABASE_URL! },

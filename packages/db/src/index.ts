@@ -233,12 +233,7 @@ export function wrapClientQuery(
       }
     };
 
-    if (
-      typeof timeoutPolicy !== 'number' &&
-      !/^\s*(BEGIN|START\s+TRANSACTION|COMMIT|END|ROLLBACK|ABORT|SAVEPOINT|RELEASE|SET|RESET)\b/i.test(
-        text ?? ''
-      )
-    ) {
+    if (typeof timeoutPolicy !== 'number') {
       // Queue SET and its query synchronously as one adjacent pair. Awaiting SET
       // here would allow another caller's SET to change this query's timeout.
       // Transaction-control commands must remain usable in an aborted transaction.
