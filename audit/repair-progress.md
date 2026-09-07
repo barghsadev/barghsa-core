@@ -2660,3 +2660,12 @@ Audit correction: earlier application-feedback and payment-amount entries incorr
 At clean revision b63ef48375cc285751c0a3df4a400d99498093a2, all 5319 unit/integration tests across 444 files and all 334 production Chromium cases pass. The collector validated 334 revision-bound browser records, mapped 228 source files, and merged them with unit reports. No browser failures, retries, skips or unmapped-source errors were accepted as passing evidence.
 
 The current combined checkpoint still fails six of thirteen groups, with no missing-report errors: API critical 90.40% lines / 76.65% branches; web general 64.83 / 62.43; web critical 76.87 / 74.24; database general 87.65 / 70.55; i18n critical 100 / 75; UI general 78.57 / 69.45. Required floors remain 80/75 for general and 90/85 for critical code. The prior failed 0dde44b browser run was not merged. This checkpoint confirms current passing execution, not completion of the coverage gate or entire fix plan.
+
+
+### Honor disabled table sorting and test public behavior
+
+The shared table still applied its initial sort after `sortable={false}` hid its controls and sort announcement. A real DOM regression reproduced the unexpected row order. Sorting now observes that flag on every render; disabling it restores caller order, and re-enabling it restores the saved sort without emitting a user-change event.
+
+Six new unit cases cover numeric, natural-text and date sorting, null placement, restoring input order, controlled selection across pages, uncontrolled row toggles and loading-state selection. The initial run had one product failure and one test selector error; the selector now targets the actual checkbox. Added contract-template translation fallback/prototype-key cases in both languages.
+
+Review: all 19 UI tests and 50 translation tests passed. UI typechecking and explicit ESLint passed. All 45 shared-table browser cases passed across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari, including the new disable/re-enable regression. An initial multi-project invocation used incorrect mobile project names and did not execute tests; the corrected run supplies the evidence. Production web build and all 41 unchanged route budgets passed. This is local implementation evidence, not overall acceptance closure or a refreshed combined-coverage result.

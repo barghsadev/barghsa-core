@@ -8,6 +8,7 @@ const allDictionaries = {
 };
 import { t as authText } from './auth.js';
 import { t as termsText } from './terms.js';
+import { contractTemplatesText } from './contract-templates.js';
 import { tCatalogue } from './catalogue.js';
 import { tGift } from './gifts.js';
 import { tVat } from './vat.js';
@@ -35,6 +36,7 @@ for (const [name, resolve] of Object.entries({
   t,
   authText,
   termsText,
+  contractTemplatesText,
   adminText,
   crmText,
   tCatalogue,

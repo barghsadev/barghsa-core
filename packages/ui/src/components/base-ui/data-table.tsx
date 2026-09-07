@@ -56,14 +56,15 @@ function useTableSort<T>(
   columns: ColumnDef<T>[],
   initialSort?: { column: string; direction: SortDirection },
   onSortChange?: (sort: SortState | null) => void,
-  locale: 'en' | 'fa' = 'en'
+  locale: 'en' | 'fa' = 'en',
+  enabled = true
 ) {
   const [sort, setSort] = React.useState<SortState | null>(
     initialSort?.direction ? (initialSort as SortState) : null
   );
 
   const sortedData = React.useMemo(() => {
-    if (!sort || !sort.direction) return data;
+    if (!enabled || !sort || !sort.direction) return data;
     const col = columns.find((c) => c.id === sort.column);
     if (!col || col.sortable === false) return data;
 
@@ -88,7 +89,7 @@ function useTableSort<T>(
 
       return sort.direction === 'desc' ? -cmp : cmp;
     });
-  }, [data, sort, columns, locale]);
+  }, [data, sort, columns, locale, enabled]);
 
   const toggleSort = React.useCallback(
     (columnId: string) => {
@@ -199,7 +200,8 @@ function DataTable<T extends Record<string, unknown>>({
       ? { column: initialSortColumn, direction: initialSortDirection ?? false }
       : undefined,
     onSortChange,
-    locale
+    locale,
+    enableSort
   );
 
   const { selected, allSelected, someSelected, toggleRow, toggleAll } = useTableSelection(

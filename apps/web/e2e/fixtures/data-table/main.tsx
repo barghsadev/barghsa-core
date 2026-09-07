@@ -12,6 +12,7 @@ function Fixture() {
   const [locale, setLocale] = React.useState<'en' | 'fa'>(
     params.get('locale') === 'fa' ? 'fa' : 'en'
   );
+  const [sortable, setSortable] = React.useState(!params.has('no-sort'));
   const [mode, setMode] = React.useState(params.get('state') ?? 'rows');
   const [selected, setSelected] = React.useState<Set<string | number>>(new Set());
   const [sortEvents, setSortEvents] = React.useState(0);
@@ -27,7 +28,12 @@ function Fixture() {
       <button onClick={() => setMode('loading')}>Show loading</button>
       <button onClick={() => setMode('empty')}>Show empty</button>
       <button onClick={() => setMode('rows')}>Show rows</button>
+      <button onClick={() => setSortable((value) => !value)}>Toggle sorting</button>
       <DataTable
+        sortable={sortable}
+        {...(params.has('initial-sort')
+          ? { initialSortColumn: 'name', initialSortDirection: 'asc' as const }
+          : {})}
         locale={locale}
         {...(params.has('latin') ? { numerals: 'latn' as const } : {})}
         loading={mode === 'loading'}

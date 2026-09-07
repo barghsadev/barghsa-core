@@ -157,3 +157,19 @@ test('Persian labels support an explicit Latin numeral preference', async ({ pag
   await expect(page.getByRole('status', { name: 'Selected keys' })).toHaveText('b');
   await expect(page.getByRole('checkbox', { name: 'انتخاب ردیف 1', exact: true })).toBeChecked();
 });
+
+test('disabled sorting preserves input order and toggling restores the saved sort', async ({
+  page,
+}) => {
+  await page.goto(`${url}?no-sort&initial-sort`);
+  const header = page.getByRole('columnheader', { name: 'Name', exact: true });
+  await expect(header.getByRole('button')).toHaveCount(0);
+  await expect(page.locator('tbody tr').first()).toContainText('Beta');
+  await page.getByRole('button', { name: 'Toggle sorting', exact: true }).click();
+  await expect(header).toHaveAttribute('aria-sort', 'ascending');
+  await expect(page.locator('tbody tr').first()).toContainText('Alpha');
+  await page.getByRole('button', { name: 'Toggle sorting', exact: true }).click();
+  await expect(header.getByRole('button')).toHaveCount(0);
+  await expect(page.locator('tbody tr').first()).toContainText('Beta');
+  await expect(page.getByRole('status', { name: 'Sort events' })).toHaveText('0');
+});
