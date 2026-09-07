@@ -99,7 +99,7 @@ jobs:
       - name: Verify actual cold authentication transfers
         run: node scripts/check-auth-transfer.mjs
       - name: Verify browser retry failure gate
-        run: node --test scripts/test-browser-flake-gate.mjs
+        run: node --test scripts/test-browser-flake-gate.mjs scripts/browser-projects.test.mjs
 
       - name: Test process coverage merging
         run: node --test scripts/align-process-coverage.test.mjs

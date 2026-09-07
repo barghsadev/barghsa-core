@@ -1,8 +1,10 @@
 import { spawn, execFileSync } from 'node:child_process';
 import { createStaticServer } from '../apps/web/server.js';
 import { fileURLToPath } from 'node:url';
+import { browserArguments } from './browser-projects.mjs';
 
 const collecting = process.env.BARGHSA_BROWSER_COVERAGE === '1';
+const args = browserArguments(process.argv.slice(2), collecting);
 const root = fileURLToPath(new URL('..', import.meta.url));
 const revision = collecting
   ? execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
@@ -20,16 +22,7 @@ try {
   const code = await new Promise((resolve, reject) => {
     const child = spawn(
       'pnpm',
-      [
-        '--filter',
-        '@barghsa/web',
-        'exec',
-        'playwright',
-        'test',
-        ...process.argv.slice(2),
-        '--project',
-        'chromium',
-      ],
+      ['--filter', '@barghsa/web', 'exec', 'playwright', 'test', ...args],
       {
         stdio: 'inherit',
         env: {

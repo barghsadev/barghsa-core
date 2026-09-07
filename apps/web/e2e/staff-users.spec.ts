@@ -7,6 +7,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -121,6 +122,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -263,6 +265,7 @@ for (const locale of ['en', 'fa'] as const) {
   }) => {
     await page.clock.install();
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });

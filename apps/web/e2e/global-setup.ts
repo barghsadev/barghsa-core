@@ -6,24 +6,24 @@
  * - Provides isolated test identity pattern
  */
 import type { FullConfig } from '@playwright/test';
+import { setup as buildApi } from '../../api/src/test/build-http-app';
 
 async function globalSetup(_config: FullConfig): Promise<void> {
   // Guard: never run against production
   const baseURL = process.env['PLAYWRIGHT_BASE_URL'] ?? 'http://localhost:5173';
   const hostname = new URL(baseURL).hostname;
 
-  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local')) {
-    // Local/test environments are safe
-    return;
-  }
-
-  // For staging/CI environments, verify the PLAYWRIGHT_TEST_ENV marker
-  if (process.env['PLAYWRIGHT_TEST_ENV'] !== 'test') {
+  const local = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local');
+  // For staging/CI environments, verify the PLAYWRIGHT_TEST_ENV marker.
+  if (!local && process.env['PLAYWRIGHT_TEST_ENV'] !== 'test') {
     throw new Error(
       `E2E tests would target ${baseURL} which is not localhost. ` +
         'Set PLAYWRIGHT_TEST_ENV=test to confirm this is a safe test environment.'
     );
   }
+  // Compile once before workers start. Per-project fixture builds can overwrite
+  // shared dist files while another browser's API process is using them.
+  buildApi();
 }
 
 export default globalSetup;

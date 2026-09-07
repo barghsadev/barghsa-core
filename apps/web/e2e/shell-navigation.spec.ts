@@ -4,6 +4,7 @@ for (const locale of ['en', 'fa'])
     test(`shell navigation works on mobile and desktop (${area}, ${locale})`, async ({ page }) => {
       const fa = locale === 'fa';
       await page.addInitScript((value) => {
+        if (document.documentElement) document.documentElement.lang = value;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = value;
         }).observe(document, { childList: true });
@@ -67,6 +68,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`admin terms dialog uses the active language (${locale})`, async ({ page }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -105,6 +107,7 @@ for (const locale of ['en', 'fa'])
 
 test('terms acceptance waits for the document renderer to load', async ({ page }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'en';
     }).observe(document, { childList: true });
@@ -151,6 +154,7 @@ for (const path of ['/tickets', '/invoices', '/invoices/record-one', '/admin/tic
     page,
   }) => {
     await page.addInitScript(() => {
+      if (document.documentElement) document.documentElement.lang = 'en';
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = 'en';
       }).observe(document, { childList: true });
@@ -189,6 +193,7 @@ for (const path of ['/tickets', '/invoices', '/invoices/record-one', '/admin/tic
 
 test('malformed terms never enable consent', async ({ page }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'en';
     }).observe(document, { childList: true });
@@ -212,6 +217,7 @@ for (const locale of ['en', 'fa']) {
       page,
     }) => {
       await page.addInitScript((value) => {
+        if (document.documentElement) document.documentElement.lang = value;
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = value;
         }).observe(document, { childList: true });

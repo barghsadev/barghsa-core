@@ -31,7 +31,7 @@ Every CI run produces a flaky-test report:
 
 - The total number of known flaky tests (active quarantine records) is reported as a CI annotation.
 - The report is displayed in the CI run summary but does not block the PR pipeline by itself — blocking is handled by the production promotion gate.
-- The README's Scheduled quality gates define a nightly flaky-test report job. The CI schedule trigger for nightly runs is tracked in T-05.05.01.
+- The nightly browser workflow runs Firefox, WebKit and both mobile projects, reports observed outcomes and checks the quarantine registry. Other scheduled quality gates remain tracked in T-05.05.01.
 
 ### 4. Quarantine Lifecycle
 
@@ -117,3 +117,5 @@ source for known quarantines across runners; browser counts describe that run on
 
 - `README.md` — Quality gates section (release-candidate and production-promotion gates reference the flaky-test policy)
 - `.github/workflows/ci.yml` — CI pipeline with flaky-test reporting step
+
+The nightly browser workflow is `.github/workflows/browser-nightly.yml`. Each browser project runs in its own job against a locally served production build and disposable test fixtures. It retains failure traces and outcome/quarantine reports for 14 days. The workflow also supports manual dispatch. A local workflow file does not prove that GitHub has executed it; deployment of this configuration and remote run evidence are separate from local verification.

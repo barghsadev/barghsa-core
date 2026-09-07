@@ -21,6 +21,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.addInitScript((language) => {
+      if (document.documentElement) document.documentElement.lang = language;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = language;
       }).observe(document, { childList: true });
@@ -106,6 +107,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.addInitScript((language) => {
+      if (document.documentElement) document.documentElement.lang = language;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = language;
       }).observe(document, { childList: true });

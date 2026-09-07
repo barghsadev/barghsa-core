@@ -1,3 +1,4 @@
+import { formatBrowserDate } from './browser-date';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -7,6 +8,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -73,11 +75,16 @@ for (const locale of ['en', 'fa'])
     await expect(page.locator('tbody tr')).toHaveCount(25);
     await expect(page.locator('tbody tr').first()).toContainText(fa ? '5 / 5' : '۵ / ۵');
     await expect(page.locator('tbody tr').first()).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }).format(new Date(jobs[0]!.firstFailedAt))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        },
+        jobs[0]!.firstFailedAt
+      )
     );
     await expect(page.getByRole('checkbox')).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();

@@ -1,3 +1,4 @@
+import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 for (const locale of ['en', 'fa'])
@@ -6,6 +7,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -66,11 +68,16 @@ for (const locale of ['en', 'fa'])
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
     await expect(page.locator('tbody tr')).toHaveCount(25);
     await expect(page.locator('tbody tr').first()).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }).format(new Date(rows[0]!.createdAt))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        },
+        rows[0]!.createdAt
+      )
     );
     await expect(page.locator('tbody button')).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();

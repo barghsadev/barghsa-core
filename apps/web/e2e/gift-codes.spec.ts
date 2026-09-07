@@ -3,6 +3,7 @@ for (const locale of ['en', 'fa'])
   test(`gift-code editor retries captured settings (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -76,6 +77,7 @@ test('gift windows display account time, preserve untouched instants and convert
   page,
 }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       document.documentElement.lang = 'en';
     }).observe(document, { childList: true });

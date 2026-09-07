@@ -3,6 +3,7 @@ for (const locale of ['en', 'fa'])
   test(`VAT editor retries captured percentage (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -59,6 +60,7 @@ for (const skippedTime of [false, true]) {
   test(`VAT schedules account-zone time and rejects DST gaps: ${skippedTime}`, async ({ page }) => {
     const zone = skippedTime ? 'America/New_York' : 'Asia/Tehran';
     await page.addInitScript(() => {
+      if (document.documentElement) document.documentElement.lang = 'en';
       new MutationObserver(() => {
         document.documentElement.lang = 'en';
       }).observe(document, { childList: true });

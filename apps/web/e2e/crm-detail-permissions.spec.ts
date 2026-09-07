@@ -1,3 +1,4 @@
+import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
 const id = '11111111-1111-4111-8111-111111111111';
 function detail(targetAdmin: boolean, allowed: boolean) {
@@ -36,6 +37,7 @@ for (const allowed of [true, false])
     page,
   }) => {
     await page.addInitScript(() => {
+      if (document.documentElement) document.documentElement.lang = 'en';
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = 'en';
       }).observe(document, { childList: true });
@@ -63,6 +65,7 @@ test('session expiry preserves customer and reason through password confirmation
   page,
 }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'en';
     }).observe(document, { childList: true });
@@ -104,6 +107,7 @@ test('verification requires a reason when removing approval and archive blockers
   page,
 }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'en';
     }).observe(document, { childList: true });
@@ -152,6 +156,7 @@ for (const locale of ['fa', 'en'] as const)
     page,
   }) => {
     await page.addInitScript((lang) => {
+      if (document.documentElement) document.documentElement.lang = lang;
       new MutationObserver(() => {
         document.documentElement.lang = lang;
       }).observe(document, { childList: true });
@@ -180,11 +185,16 @@ for (const locale of ['fa', 'en'] as const)
       })
       .click();
     await expect(page.getByRole('tabpanel')).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }).format(new Date(current.profile.createdAt))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        },
+        current.profile.createdAt
+      )
     );
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })

@@ -15,6 +15,7 @@ const request = {
 };
 async function shell(page: Page, locale = 'en') {
   await page.addInitScript((value) => {
+    if (document.documentElement) document.documentElement.lang = value;
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = value;
     }).observe(document, { childList: true });

@@ -5,6 +5,7 @@ for (const locale of ['fa', 'en'] as const)
     page,
   }) => {
     await page.addInitScript((lang) => {
+      if (document.documentElement) document.documentElement.lang = lang;
       new MutationObserver(() => {
         document.documentElement.lang = lang;
       }).observe(document, { childList: true });

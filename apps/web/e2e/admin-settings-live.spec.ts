@@ -3,7 +3,6 @@ import { test, expect } from './coverage-fixture';
 import { fork, type ChildProcess } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { setup as buildApi } from '../../api/src/test/build-http-app';
 let child: ChildProcess;
 let fixtureLogs = '';
 let http: {
@@ -45,7 +44,8 @@ async function publishNumericPreference(
   ).toBe(200);
 }
 
-test.afterEach(async () => {
+test.afterEach(async ({ page }) => {
+  await page.unrouteAll({ behavior: 'wait' });
   const restore = restoreNumberPreference;
   restoreNumberPreference = null;
   if (restore) await restore();
@@ -53,7 +53,6 @@ test.afterEach(async () => {
 
 test.beforeAll(async () => {
   test.setTimeout(90000);
-  buildApi();
   const require = createRequire(
     fileURLToPath(new URL('../../../packages/db/package.json', import.meta.url))
   );
@@ -103,6 +102,7 @@ test.afterAll(async ({}, testInfo) => {
 for (const locale of ['en', 'fa'])
   test(`team UI persists through the migrated API (${locale})`, async ({ page }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -207,6 +207,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -252,6 +253,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -358,6 +360,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -417,6 +420,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -497,6 +501,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -562,6 +567,7 @@ for (const locale of ['en', 'fa'])
       category = fa ? 'image' : 'document',
       name = fa ? 'تصاویر' : 'Documents';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -641,6 +647,7 @@ for (const locale of ['en', 'fa'])
   test(`storage configuration persists through the real API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -709,6 +716,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`reconciliation review persists through the migrated API (${locale})`, async ({ page }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -785,6 +793,7 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -914,6 +923,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`contract limits save and reload through the migrated API (${locale})`, async ({ page }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -983,6 +993,7 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`AI model UI persists through the migrated API (${locale})`, async ({ page }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -1073,6 +1084,7 @@ for (const locale of ['en', 'fa'])
   test(`knowledge-base UI persists through the migrated API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -1230,6 +1242,7 @@ for (const locale of ['en', 'fa'])
   test(`AI policy UI persists through the migrated API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -1363,6 +1376,7 @@ for (const locale of ['en', 'fa'])
   test(`agent slot UI persists through the migrated API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -1473,6 +1487,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -1596,6 +1611,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -1721,6 +1737,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -1855,6 +1872,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -1995,6 +2013,7 @@ for (const locale of ['en', 'fa'])
   test(`catalogue UI persists products, prices and system limits (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -2221,6 +2240,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -2281,6 +2301,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`branding publishes only the saved reviewed version (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -2348,7 +2369,7 @@ for (const locale of ['en', 'fa'] as const) {
       name: 'brand.png',
       mimeType: 'image/png',
       buffer: Buffer.from(
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aT0kAAAAASUVORK5CYII=',
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=',
         'base64'
       ),
     });
@@ -2373,11 +2394,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(savedTime).toHaveCount(1);
     const instant = await savedTime.getAttribute('datetime');
     expect(instant).toBeTruthy();
-    const formatted = new Intl.DateTimeFormat(locale, {
-      timeZone: accountTimezone,
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    }).format(new Date(instant!));
+    const formatted = await page.evaluate(
+      ({ language, zone, date }) =>
+        new Intl.DateTimeFormat(language, {
+          timeZone: zone,
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        }).format(new Date(date)),
+      { language: locale, zone: accountTimezone, date: instant! }
+    );
     await expect(savedTime).toContainText(formatted);
     failTimezone = true;
     await page.evaluate(() => window.dispatchEvent(new Event('barghsa:timezone-changed')));
@@ -2449,6 +2474,7 @@ for (const locale of ['en', 'fa'])
     const fa = locale === 'fa';
     const versionId = `live-terms-${locale}`;
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });

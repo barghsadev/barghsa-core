@@ -3,6 +3,7 @@ for (const locale of ['en', 'fa'])
   test(`agent editor retries captured group selections (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });

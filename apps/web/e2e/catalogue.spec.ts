@@ -3,6 +3,7 @@ for (const locale of ['en', 'fa'])
   test(`catalogue editor retries captured settings (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -77,6 +78,7 @@ for (const locale of ['en', 'fa'])
   test(`catalogue tabs support keyboard navigation (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });

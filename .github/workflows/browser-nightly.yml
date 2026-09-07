@@ -1,0 +1,57 @@
+name: Nightly browser checks
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-nightly-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  browsers:
+    name: Production browser / ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [firefox, webkit, mobile-chrome, mobile-safari]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Install browser runtimes
+        run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium firefox webkit
+      - name: Verify browser selection and result handling
+        run: |
+          node --test scripts/browser-projects.test.mjs
+          python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
+      - name: Exercise the production app in the selected browser
+        run: node scripts/run-production-browser.mjs --project "${{ matrix.project }}"
+      - name: Report observed browser outcomes
+        if: always()
+        run: python3 scripts/check-browser-results.py --input apps/web/test-results/results.json --report "${{ runner.temp }}/browser-outcomes.json"
+      - name: Check known quarantines
+        if: always()
+        run: python3 scripts/check-flaky-tests.py --report "${{ runner.temp }}/quarantine.json"
+      - name: Upload outcomes and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-${{ matrix.project }}
+          path: |
+            ${{ runner.temp }}/browser-outcomes.json
+            ${{ runner.temp }}/quarantine.json
+            apps/web/test-results/
+          retention-days: 14

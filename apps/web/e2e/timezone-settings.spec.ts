@@ -6,6 +6,7 @@ for (const locale of ['en', 'fa'] as const) {
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -43,7 +44,7 @@ for (const locale of ['en', 'fa'] as const) {
     const search = main.getByRole('searchbox');
     await search.fill('Europe/Istanbul');
     await zones.focus();
-    await zones.press('Home');
+    await zones.press('ArrowDown');
     await expect(zones).toHaveValue('Europe/Istanbul');
     await save.click();
     await expect(

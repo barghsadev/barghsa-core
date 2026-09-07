@@ -4,6 +4,7 @@ test('target validation and confirmation preserve settings through a failed save
   page,
 }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'en';
     }).observe(document, { childList: true });

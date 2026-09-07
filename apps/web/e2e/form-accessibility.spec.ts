@@ -1,3 +1,4 @@
+import { formatBrowserDate } from './browser-date';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
@@ -109,6 +110,7 @@ for (const locale of ['en', 'fa']) {
 
 async function shell(page: Page, locale = 'en') {
   await page.addInitScript((value) => {
+    if (document.documentElement) document.documentElement.lang = value;
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = value;
     }).observe(document, { childList: true });
@@ -211,7 +213,14 @@ test('TOS detail has a name, contains keyboard focus and restores its trigger', 
   await page.keyboard.press('Enter');
   const dialog = page.getByRole('dialog', { name: 'TOS Version: v1' });
   await expect(dialog).toBeVisible();
-  await expect(dialog).toContainText('Aug 31, 2026, 5:00 PM');
+  await expect(dialog).toContainText(
+    await formatBrowserDate(
+      page,
+      'en',
+      { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
+      '2026-09-01T00:00:00Z'
+    )
+  );
   await dialog.getByRole('button', { name: 'English', exact: true }).click();
   await expect(dialog.getByText('Terms', { exact: true })).toBeVisible();
   for (let index = 0; index < 5; index++) {
@@ -1069,11 +1078,16 @@ for (const locale of ['en', 'fa']) {
     });
     await page.goto('/settings/security');
     await expect(page.locator('main')).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }).format(new Date(expiry))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        },
+        expiry
+      )
     );
     await expect(page.locator('main')).not.toContainText('settings.security.');
     await expect(page.locator('main')).toContainText(
@@ -1259,11 +1273,16 @@ for (const locale of ['en', 'fa']) {
       await expect(card.getByRole('alert')).toHaveCount(0);
       if (marketing)
         await expect(card).toContainText(
-          new Intl.DateTimeFormat(locale, {
-            timeZone: 'America/Los_Angeles',
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          }).format(new Date('2026-09-01T12:00:00Z'))
+          await formatBrowserDate(
+            page,
+            locale,
+            {
+              timeZone: 'America/Los_Angeles',
+              dateStyle: 'medium',
+              timeStyle: 'short',
+            },
+            '2026-09-01T12:00:00Z'
+          )
         );
       expect(writes).toBe(3);
       expect(reads).toBe(2);
@@ -1295,11 +1314,16 @@ for (const locale of ['en', 'fa']) {
     );
     await page.goto('/admin/providers');
     await expect(page.locator('tbody tr').first()).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }).format(new Date(stamp))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        },
+        stamp
+      )
     );
     await page
       .getByRole('button', {
@@ -1433,6 +1457,11 @@ for (const locale of ['en', 'fa']) {
       await expect
         .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
         .toBe(darkMode);
+      await expect
+        .poll(() =>
+          page.evaluate(() => document.documentElement.style.getPropertyValue('--primary'))
+        )
+        .toBe('#2563eb');
       const checkContrast = async () => {
         const result = await new AxeBuilder({ page })
           .include('#admin-content')
@@ -1452,6 +1481,8 @@ for (const locale of ['en', 'fa']) {
         name: locale === 'fa' ? 'ذخیره تنظیمات' : 'Save Configuration',
         exact: true,
       });
+      await save.hover();
+      await checkContrast();
       await save.click();
       await expect(page.getByRole('alert')).toBeVisible();
       await checkContrast();

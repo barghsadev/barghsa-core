@@ -1,3 +1,4 @@
+import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`reconciliation handles paging, denied access and failed actions (${locale})`, async ({
@@ -5,6 +6,7 @@ for (const locale of ['en', 'fa'])
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -44,11 +46,16 @@ for (const locale of ['en', 'fa'])
     fail = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Retry', exact: true }).click();
     await expect(page.locator('tbody tr').first()).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }).format(new Date('2026-09-01T00:00:00Z'))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        },
+        '2026-09-01T00:00:00Z'
+      )
     );
     await page.getByRole('button', { name: 'Mismatch 0', exact: true }).click();
     await expect(

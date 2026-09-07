@@ -1,9 +1,11 @@
+import { formatBrowserDate } from './browser-date';
 import { test, expect, type Page } from './coverage-fixture';
 
 const profileId = '00000000-0000-4000-8000-000000000001';
 const transferId = '00000000-0000-4000-8000-000000000002';
 async function shell(page: Page, locale = 'en', canTransfer = true) {
   await page.addInitScript((value) => {
+    if (document.documentElement) document.documentElement.lang = value;
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = value;
     }).observe(document, { childList: true });
@@ -107,10 +109,15 @@ for (const locale of ['fa', 'en'] as const) {
       .getByRole('article')
       .filter({ has: page.getByRole('heading', { name: 'member@example.test' }) });
     await expect(member.locator('time')).toHaveText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-      }).format(new Date('2026-08-01T01:00:00Z'))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+        },
+        '2026-08-01T01:00:00Z'
+      )
     );
     await member
       .getByRole('checkbox', { name: locale === 'fa' ? 'مالی' : 'Finance', exact: true })
@@ -183,7 +190,12 @@ test('incoming ownership is visible and acceptance sends the bound transfer then
   await page.goto('/dashboard');
   await page.getByRole('link', { name: /pending ownership request/ }).click();
   await expect(page.locator('time[datetime="2026-09-13T00:00:00Z"]')).toHaveText(
-    'Sep 12, 2026, 5:00 PM'
+    await formatBrowserDate(
+      page,
+      'en',
+      { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
+      '2026-09-13T00:00:00Z'
+    )
   );
   await page.getByRole('button', { name: 'Accept ownership' }).click();
   await expect(page.getByRole('dialog')).toContainText('signs both owners out');
@@ -312,19 +324,29 @@ for (const locale of ['en', 'fa']) {
     await page.goto('/settings/team');
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'long',
-      }).format(new Date(stamp))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'long',
+        },
+        stamp
+      )
     );
     await page.keyboard.press('Escape');
     await expect(dialog).not.toBeVisible();
     const banner = page.getByRole('alert').filter({ hasText: 'Inviting company' });
     await expect(banner).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-      }).format(new Date(stamp))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+        },
+        stamp
+      )
     );
   });
 }

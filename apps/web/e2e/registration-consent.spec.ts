@@ -1,3 +1,4 @@
+import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
 
 // Client contract checks; real publication/acceptance is covered by the API HTTP suite.
@@ -58,9 +59,7 @@ for (const locale of ['en', 'fa']) {
     );
     await page.goto(`/terms?lang=${locale}`);
     await expect(page.getByRole('article')).toContainText(
-      new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Tehran', dateStyle: 'long' }).format(
-        new Date(stamp)
-      )
+      await formatBrowserDate(page, locale, { timeZone: 'Asia/Tehran', dateStyle: 'long' }, stamp)
     );
     expect(timezoneReads).toBe(0);
   });

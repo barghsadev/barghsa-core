@@ -2572,3 +2572,15 @@ All 41 production route budgets pass both checks. The regression fixture runs th
 ### Close the specified bundle-budget tooling requirement
 
 At clean revision e545153, a fresh Vite build and all 41 complete-route budgets pass both the existing gzip gate and Size Limit. Task T-01.03.04 is now acceptance_verified with the previous partial assessment retained under superseded_assessments. The ledger has 38 reviewed tasks: 26 verified, 12 partial, and 284 pending. The current raw dependency scan is saved under audit and reports zero known advisories across 1,355 dependencies.
+
+### Repository-wide follow-up checkpoint
+
+After the error and route-budget repairs, root lint, formatting and all eleven workspace typecheck tasks pass. Canonical validation still reports 1,355 tasks and 116 traceability entries. These checks do not replace the older combined coverage or production-image checkpoints.
+
+### Wire nightly browser checks and repair reproduced browser failures
+
+The production browser runner honors explicit browser projects and keeps Chromium as the only source-coverage project. A local nightly workflow covers Firefox, WebKit and both mobile projects with strict outcome and quarantine checks. Nothing has been pushed or activated remotely.
+
+Cross-browser review corrected locale initialization, browser-native date expectations, an invalid PNG fixture checksum, the smoke identity assertion and overlapping API compilation. It also fixed two product defects: verification-button hover contrast and hidden reminder labels escaping their scroll container on Persian mobile pages. Live-API test teardown now waits for outstanding request handlers, and native-select keyboard checks use ArrowDown.
+
+Twenty language/theme/hover checks and sixty repeated timezone, invoice and reconciliation cases pass across all five projects. Eighteen related unit tests, web typechecking, targeted lint, formatting, both 41-route budget checks and runner gate tests pass. The first full matrix's failures and repairs are preserved in `audit/browser-nightly-review.md`; final full-matrix confirmation is next. Future business journeys, remote nightly execution and production promotion are not certified.

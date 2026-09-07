@@ -19,6 +19,7 @@ const user = {
 for (const locale of ['en', 'fa'])
   test(`CRM filters, profile links and cursor navigation (${locale})`, async ({ page }) => {
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
@@ -79,6 +80,7 @@ for (const locale of ['en', 'fa'])
   });
 test('CRM access errors remain errors and can be retried', async ({ page }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'en';
     }).observe(document, { childList: true });
@@ -103,6 +105,7 @@ test('Persian picker uses Jalali month boundaries and sends Gregorian API dates'
   page,
 }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'fa';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'fa';
     }).observe(document, { childList: true });
@@ -135,6 +138,7 @@ test('Persian picker uses Jalali month boundaries and sends Gregorian API dates'
 });
 test('Jalali leap-day selection and keyboard dismissal preserve the date', async ({ page }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'fa';
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = 'fa';
     }).observe(document, { childList: true });
@@ -171,6 +175,7 @@ test('CRM waits for account timezone, retries and displays registration in that 
   page,
 }) => {
   await page.addInitScript(() => {
+    if (document.documentElement) document.documentElement.lang = 'en';
     new MutationObserver(() => {
       document.documentElement.lang = 'en';
     }).observe(document, { childList: true });

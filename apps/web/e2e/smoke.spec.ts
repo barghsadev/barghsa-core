@@ -20,8 +20,9 @@ test.describe('Application smoke tests', () => {
     await expect(root.locator('h1')).toHaveCount(1);
   });
 
-  test('fixture provides a deterministic test identity', async ({ identity }) => {
-    expect(identity).toMatch(/^e2e-chromium-w\d+-/);
-    expect(identity.length).toBeGreaterThan('e2e-chromium-w0-'.length);
+  test('fixture provides a deterministic test identity', async ({ identity }, testInfo) => {
+    const prefix = `e2e-${testInfo.project.name}-w${testInfo.workerIndex}-`;
+    expect(identity.startsWith(prefix)).toBe(true);
+    expect(identity.slice(prefix.length)).toBe('fixture-provides-a-deterministic-test-identity');
   });
 });

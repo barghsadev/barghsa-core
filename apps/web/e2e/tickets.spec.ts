@@ -1,3 +1,4 @@
+import { formatBrowserDate } from './browser-date';
 import { test, expect, type Page } from './coverage-fixture';
 const profileId = '11111111-1111-4111-8111-111111111111',
   ticketId = '22222222-2222-4222-8222-222222222222';
@@ -18,6 +19,7 @@ const item = {
 };
 async function shell(page: Page, locale = 'en') {
   await page.addInitScript((value) => {
+    if (document.documentElement) document.documentElement.lang = value;
     new MutationObserver(() => {
       if (document.documentElement) document.documentElement.lang = value;
     }).observe(document, { childList: true });
@@ -125,11 +127,16 @@ for (const locale of ['en', 'fa'])
         .getByRole('row')
         .filter({ has: page.getByRole('button', { name: item.subject, exact: true }) })
     ).toContainText(
-      new Intl.DateTimeFormat(locale, {
-        timeZone: 'America/Los_Angeles',
-        dateStyle: 'medium',
-        timeStyle: 'short',
-      }).format(new Date(item.updatedAt))
+      await formatBrowserDate(
+        page,
+        locale,
+        {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        },
+        item.updatedAt
+      )
     );
     expect(uploads).toBe(1);
     expect(submits).toBe(2);
@@ -191,7 +198,12 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await page.getByRole('button', { name: 'Send reply', exact: true }).click();
   await expect(page.getByText('Private reasoning', { exact: true })).toBeVisible();
   await expect(page.getByText('Private reasoning', { exact: true }).locator('..')).toContainText(
-    'Aug 31, 2026, 6:00 PM'
+    await formatBrowserDate(
+      page,
+      'en',
+      { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
+      item.updatedAt
+    )
   );
   await expect(page.getByText('Private reasoning', { exact: true }).locator('..')).toHaveClass(
     /bg-amber-50/

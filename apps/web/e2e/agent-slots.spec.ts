@@ -3,6 +3,7 @@ for (const locale of ['en', 'fa'])
   test(`slot assignment retries after password verification (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         document.documentElement.lang = value;
       }).observe(document, { childList: true });

@@ -402,7 +402,7 @@ export default function ReminderOffsetTogglePanel() {
       )}
 
       {toggles && (
-        <div className="overflow-x-auto">
+        <div className="relative overflow-x-auto">
           <table className="min-w-full text-sm border-collapse">
             <caption className="sr-only">{t('admin.invoices.reminders.title', locale)}</caption>
             <thead>
