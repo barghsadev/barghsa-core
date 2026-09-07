@@ -39,6 +39,9 @@ fixture are not included.
 Standalone component-test servers are also outside the production-app source map.
 Their scripts are counted separately as ignored non-application scripts; missing
 assets from the application origin still fail collection.
+Chromium occasionally discards a script's optional source text after navigation.
+Those ranges receive no coverage credit and are reported as unmeasured. Supplied
+source that differs from the built asset still fails collection.
 
 A separate CI job combines unit and browser artifacts for the same HEAD. PR coverage
 always includes the web, UI, shared and i18n packages, even when the changed package

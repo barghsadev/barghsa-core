@@ -9,17 +9,31 @@ import coverageLibrary from 'istanbul-lib-coverage';
 
 const sourcePattern = /^(apps\/web|packages\/(ui|i18n|shared))\/src\//;
 
-export async function collectBrowserCoverage({ root, distDir, rawDir, output }) {
+export async function collectBrowserCoverage({
+  root,
+  distDir,
+  rawDir,
+  output,
+  minimumRecords = 0,
+  resultsPath,
+}) {
   await mkdir(resolve(output, '..'), { recursive: true });
   await writeFile(output, JSON.stringify({ schema_version: 1, status: 'invalid' }) + '\n');
+  if (resultsPath) {
+    const results = JSON.parse(await readFile(resultsPath, 'utf8'));
+    minimumRecords = results.stats?.expected;
+  }
   const files = (await readdir(rawDir)).filter((name) => name.endsWith('.json'));
   if (!files.length) throw new Error('No browser coverage records');
+  if (!Number.isSafeInteger(minimumRecords) || minimumRecords < 0 || files.length < minimumRecords)
+    throw new Error('Missing coverage records for completed browser tests');
   const scripts = new Map();
   const headSha = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], {
     encoding: 'utf8',
   }).trim();
   let recordedDirty = false;
   let ignoredScripts = 0;
+  let missingSources = 0;
   let merged = { result: [] };
   for (const name of files) {
     const record = JSON.parse(await readFile(join(rawDir, name), 'utf8'));
@@ -48,6 +62,12 @@ export async function collectBrowserCoverage({ root, distDir, rawDir, output }) 
       const filename = resolve(distDir, '.' + decodeURIComponent(url.pathname));
       if (!filename.startsWith(resolve(distDir) + sep)) throw new Error('Invalid asset path');
       const code = await readFile(filename, 'utf8');
+      // Chromium may discard source text after navigation. Such ranges cannot
+      // prove execution against this build, so they contribute no coverage.
+      if (entry.source === undefined) {
+        missingSources++;
+        continue;
+      }
       if (entry.source !== code)
         throw new Error(`Browser source differs from built asset: ${filename}`);
       if (!Array.isArray(entry.functions)) throw new Error('Missing V8 functions');
@@ -111,6 +131,7 @@ export async function collectBrowserCoverage({ root, distDir, rawDir, output }) 
     browser_record_count: files.length,
     asset_count: merged.result.length,
     ignored_non_application_scripts: ignoredScripts,
+    unmeasured_missing_source_scripts: missingSources,
     coverage: JSON.parse(JSON.stringify(coverage.toJSON())),
   };
   await writeFile(output, JSON.stringify(report) + '\n');
@@ -124,6 +145,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     distDir: resolve(root, 'apps/web/dist-coverage'),
     rawDir: resolve(root, 'apps/web/test-results/v8-coverage'),
     output: process.argv[2] || resolve(root, 'apps/web/test-results/browser-coverage.json'),
+    resultsPath: resolve(root, 'apps/web/test-results/results.json'),
   });
   console.log(
     `Mapped ${report.browser_record_count} browser records to ${Object.keys(report.coverage).length} source files`

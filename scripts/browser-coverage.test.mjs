@@ -135,6 +135,20 @@ test('separate component servers are excluded from application coverage explicit
   });
 });
 
+test('optional discarded source contributes no hits and is reported as unmeasured', async () => {
+  await fixture(async (options) => {
+    options.entries[0].functions[0].ranges[0].count = 0;
+    const discarded = structuredClone(options.entries[0]);
+    delete discarded.source;
+    discarded.functions[0].ranges[0].count = 100;
+    options.entries.push(discarded);
+    await writeFile(options.raw, JSON.stringify(options.record));
+    const report = await collectBrowserCoverage(options);
+    assert.equal(report.unmeasured_missing_source_scripts, 1);
+    assert.ok(Object.values(report.coverage[options.source].s).every((hit) => hit === 0));
+  });
+});
+
 test('dirty or wrong revision and absent unit coverage fail without overwriting reports', async () => {
   await fixture(async (options) => {
     const report = await collectBrowserCoverage(options);
@@ -147,5 +161,18 @@ test('dirty or wrong revision and absent unit coverage fail without overwriting 
       await assert.rejects(mergeBrowserCoverage({ ...options, report: { ...report, ...patch } }));
     }
     await assert.rejects(mergeBrowserCoverage({ ...options, report }));
+  });
+});
+
+test('requires a coverage record for every completed browser check', async () => {
+  await fixture(async (options) => {
+    await assert.rejects(collectBrowserCoverage({ ...options, minimumRecords: 2 }));
+    assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
+    await assert.rejects(
+      collectBrowserCoverage({
+        ...options,
+        resultsPath: join(options.root, 'missing-results.json'),
+      })
+    );
   });
 });

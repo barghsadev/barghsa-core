@@ -1,4 +1,4 @@
-import { test as base, type Page } from '@playwright/test';
+import { test as base, type Page } from './coverage-fixture';
 
 /**
  * Extended test fixture providing isolated test context.
