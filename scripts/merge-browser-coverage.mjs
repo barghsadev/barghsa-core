@@ -3,6 +3,7 @@ import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import coverageLibrary from 'istanbul-lib-coverage';
+import { alignProcessBranches } from './align-process-coverage.mjs';
 
 export async function mergeBrowserCoverage({ root, report, headSha }) {
   if (
@@ -30,7 +31,9 @@ export async function mergeBrowserCoverage({ root, report, headSha }) {
         throw new Error('Missing package unit coverage');
       packages.set(packagePath, { target, coverage: coverageLibrary.createCoverageMap(unit) });
     }
-    packages.get(packagePath).coverage.merge({ [path]: entry });
+    const coverage = packages.get(packagePath).coverage;
+    const reference = coverage.files().includes(path) ? coverage.fileCoverageFor(path) : null;
+    coverage.merge({ [path]: reference ? alignProcessBranches(reference, entry) : entry });
   }
   // Validate all inputs before replacing any package report.
   for (const { target, coverage } of packages.values()) {

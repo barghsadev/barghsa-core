@@ -2472,3 +2472,9 @@ Task 01-platform-infrastructure.md#T-04.01.04 now has a partial acceptance recor
 The collector now requires effective pg_read_all_stats privileges before accepting a snapshot. Restricted visibility returns structured failure instead of misleading zero activity. Documentation explains administrator provisioning; application code grants no privileges. The real PostgreSQL regression exercises an unprivileged role and recovery after its monitoring grant. Its connection startup options preserve that role even when an optional-query error replaces the pooled connection.
 
 All sixteen collector checks and sixteen API monitoring/OTLP checks pass. Database types, targeted lint, formatting and diff review pass. Production role provisioning remains unverified.
+
+### Align unambiguous browser and unit coverage branches
+
+Review of localization coverage found duplicate branch counters where the two compilers reported different end columns for the same branch. Browser merging now uses the existing conservative alignment rule: identical type, start and ordered arm starts, with exactly one match on each side and matching arm counts. Differing starts and ambiguous mappings remain separate. No thresholds or unexecuted-arm counts are changed.
+
+The new merge regression failed before the fix. All 21 browser-mapping and branch-alignment tests pass after repair, including ambiguity and unexecuted-arm checks. Targeted lint, formatting and diff review pass. The prior combined checkpoint remains historical; fresh full evidence is still needed.

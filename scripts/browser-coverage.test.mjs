@@ -105,6 +105,30 @@ test('maps real V8 ranges and merges hits while retaining uncovered unit source'
   });
 });
 
+test('merges compiler end-column differences without duplicating branch denominators', async () => {
+  await fixture(async (options) => {
+    const report = await collectBrowserCoverage(options);
+    const browser = report.coverage[options.source];
+    const loc = { start: { line: 1, column: 0 }, end: { line: 1, column: 20 } };
+    browser.branchMap = {
+      0: { type: 'if', loc, locations: [loc, { start: {}, end: {} }] },
+    };
+    browser.b = { 0: [2, 0] };
+    const unit = structuredClone(browser);
+    unit.branchMap[0].loc.end.column = null;
+    unit.branchMap[0].locations[0].end.column = null;
+    unit.b[0] = [0, 3];
+    const target = join(options.root, 'apps/web/coverage/coverage-final.json');
+    await mkdir(join(options.root, 'apps/web/coverage'));
+    await writeFile(target, JSON.stringify({ [options.source]: unit }));
+    await mergeBrowserCoverage({ ...options, report });
+    const merged = JSON.parse(await readFile(target, 'utf8'))[options.source];
+    assert.deepEqual(Object.values(merged.b), [[2, 3]]);
+    assert.equal(Object.keys(merged.branchMap).length, 1);
+    assert.deepEqual(browser.b[0], [2, 0]);
+  });
+});
+
 test('missing maps, empty records and source mismatches invalidate previous output', async () => {
   for (const failure of ['asset', 'map', 'empty', 'mismatch', 'range', 'revision']) {
     await fixture(async (options) => {
