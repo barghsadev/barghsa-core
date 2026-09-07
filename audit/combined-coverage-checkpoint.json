@@ -12,6 +12,8 @@
         "apps/api/src/admin/approval-notifications.ts",
         "apps/api/src/admin/approval-permissions.ts",
         "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+        "apps/api/src/admin/brand-asset.controller.ts",
+        "apps/api/src/admin/brand-asset.service.ts",
         "apps/api/src/admin/brand-config.service.ts",
         "apps/api/src/admin/chargeback-alert.controller.ts",
         "apps/api/src/admin/contract-electricity-limits.controller.ts",
@@ -134,10 +136,10 @@
         "apps/api/src/wallet/wallet.module.ts",
         "apps/api/src/wallet/wallet.service.ts"
       ],
-      "lines": 9022,
-      "covered_lines": 8120,
-      "branches": 6040,
-      "covered_branches": 4596,
+      "lines": 9080,
+      "covered_lines": 8193,
+      "branches": 6085,
+      "covered_branches": 4641,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -286,10 +288,10 @@
         "apps/api/src/user-settings/user-settings.controller.ts",
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
-      "lines": 4180,
-      "covered_lines": 3871,
-      "branches": 3218,
-      "covered_branches": 2517,
+      "lines": 4192,
+      "covered_lines": 3884,
+      "branches": 3242,
+      "covered_branches": 2546,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -333,6 +335,7 @@
         "apps/web/src/hooks/useUnreadDocumentTitle.ts",
         "apps/web/src/index.ts",
         "apps/web/src/lib/bank-receipt-confirmation.ts",
+        "apps/web/src/lib/branding-logo-upload.ts",
         "apps/web/src/lib/due-at-override.ts",
         "apps/web/src/lib/notifications.ts",
         "apps/web/src/lib/profile-context.ts",
@@ -422,10 +425,10 @@
         "apps/web/src/routes/support.tsx",
         "apps/web/src/routes/terms.tsx"
       ],
-      "lines": 6381,
-      "covered_lines": 3935,
-      "branches": 7685,
-      "covered_branches": 4447,
+      "lines": 6480,
+      "covered_lines": 4044,
+      "branches": 7850,
+      "covered_branches": 4589,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -672,7 +675,9 @@
       "package": "packages/i18n",
       "critical": false,
       "files": [
+        "packages/i18n/src/branding.ts",
         "packages/i18n/src/catalogue.ts",
+        "packages/i18n/src/date-time.ts",
         "packages/i18n/src/gifts.ts",
         "packages/i18n/src/index.ts",
         "packages/i18n/src/lookup.ts",
@@ -680,10 +685,10 @@
         "packages/i18n/src/timezone.ts",
         "packages/i18n/src/vat.ts"
       ],
-      "lines": 17,
-      "covered_lines": 17,
-      "branches": 30,
-      "covered_branches": 27,
+      "lines": 27,
+      "covered_lines": 27,
+      "branches": 46,
+      "covered_branches": 43,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -853,5 +858,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "f23841829229e3f596ae794c8a09371e9006ae9e"
+  "head_sha": "df62d17d69d844d84dd07c190effa13371594406"
 }

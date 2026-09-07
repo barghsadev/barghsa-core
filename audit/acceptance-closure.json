@@ -785,6 +785,124 @@
         154
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.01.01",
+      "status": "partial",
+      "reviewed_sha": "df62d17d69d844d84dd07c190effa13371594406",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 632,
+      "requirement": "**T-09.01.01 — Branding settings page**\n\n- Description: Admin can configure brand logo (upload), colors, favicon, app title. Changes reflected across customer-facing UI.\n- Technical notes: Store brand config as JSON in DB (versioned). Logo stored as file in object storage. CDN URLs for assets on frontend. Theme: primary color, secondary color, accent color. Config is Draft → Active lifecycle.\n- UI/UX: Form with image upload (logo), color pickers (primary/secondary/accent), text inputs (app title, slogan). Preview of changes. \"Activate\" button with version info.\n- Dependencies: admin config framework, file storage\n- Complexity: M",
+      "requirement_sha256": "b65dba36c7f59b00ade75da87826f27611b6b83ab2d840ea3120c6ecb1372771",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/brand-config.service.ts",
+          "sha256": "64485cf69276e6fb48250a79a7d61bc43662a2c6827de145c996c2df34fab85d"
+        },
+        {
+          "path": "apps/api/src/admin/brand-asset.service.ts",
+          "sha256": "ab58af099832958e4594af48a9ea290a249f8a208474b5639b8276a9384afac9"
+        },
+        {
+          "path": "apps/api/src/public/branding-http.integration.test.ts",
+          "sha256": "21f00d98a96e99edd8b3dbc97b893aeef86bcc59083aecf14ab6cf30237b210e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "b63f9e2ee52e84c0a91a09306d97158188d88570511ee4bbdddff183380a7600"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "cd2e193df082b24213dd8bf6922d2e0b8ce6af52f9b450a6cc0a47bc1bb1b5e3"
+        }
+      ],
+      "checks": [
+        "27 branding API tests; 3 production browser checks including real uploads and publication in both languages",
+        "Full current suite: 5148 tests and 270 production browser flows pass"
+      ],
+      "limitations": [
+        "Stable application image endpoints are implemented; deployed CDN URLs and caching are not established.",
+        "Customer-facing theme consumers remain subject to the separate theme task review."
+      ],
+      "merged_prs": [
+        155
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.01.02",
+      "status": "partial",
+      "reviewed_sha": "df62d17d69d844d84dd07c190effa13371594406",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 640,
+      "requirement": "**T-09.01.02 — Theme application**\n\n- Description: Branding settings applied to auth pages, public pages, email templates, and notification templates. Full light/dark theme support.\n- Technical notes: CSS custom properties injected from brand config. Email templates reference brand colors. Both themes independently configurable or derived from primary.\n- UI/UX: Instant preview on dashboard. Consistent across all touchpoints.\n- Dependencies: T-09.01.01\n- Complexity: M",
+      "requirement_sha256": "fd368c04fb88320bbf32b5db7b103671790f38a2cf6e8df57d35b9b4d8586f81",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "4f23ee8ac8deadda0917000554ce3c81c6b7d6149bedeca604e1a6edeb03716c"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
+          "sha256": "197efbf763c137d9009620395b372e5b74fbefde516fabe834211a891980724f"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "eecc68905394eabb1b9017f3d51c5e4477739fad69e99a1deac05e3b464c800c"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "cd2e193df082b24213dd8bf6922d2e0b8ce6af52f9b450a6cc0a47bc1bb1b5e3"
+        }
+      ],
+      "checks": [
+        "Seven provider regression tests pass; all four initial cases failed before repair",
+        "Real activation refreshes title and component colors immediately in both languages"
+      ],
+      "limitations": [
+        "Email and notification renderers do not yet read active branding.",
+        "Full light/dark and contrast acceptance across all pages is not certified."
+      ],
+      "merged_prs": [
+        156
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.03",
+      "status": "partial",
+      "reviewed_sha": "df62d17d69d844d84dd07c190effa13371594406",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1047,
+      "requirement": "- **T-06.02.03:** Create timezone-aware date/time display utilities\n  - **Notes:** All timestamps stored as UTC `timestamptz`. When displaying, convert to user's configured timezone (default: `Asia/Tehran`, UTC+3:30). Use `Intl.DateTimeFormat` with `timeZone` option. Functions: `formatInTimezone(utcDate, timezone, locale, format)`, `formatTime(utcDate, timezone)`, `formatDate(utcDate, timezone, locale)`. User can change timezone in profile settings.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M",
+      "requirement_sha256": "dd2bfd6ca7b3548d7bee21886f5e583a8e4d591c6911042836e5a0134c326230",
+      "source_evidence": [
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "b63f9e2ee52e84c0a91a09306d97158188d88570511ee4bbdddff183380a7600"
+        }
+      ],
+      "checks": [
+        "27 i18n tests pass, including UTC offsets, midnight rollover, Persian dates and DST boundaries",
+        "Real account-timezone branding display and failure/retry pass in both browser locales"
+      ],
+      "limitations": [
+        "Several non-picker timestamp displays still use browser-local time. The shared utilities and branding consumer are implemented, but the all-displays requirement remains incomplete."
+      ],
+      "merged_prs": [],
+      "historically_skipped": true
     }
   ],
   "pending_task_keys": [
@@ -872,7 +990,6 @@
     "01-platform-infrastructure.md#T-06.01.05",
     "01-platform-infrastructure.md#T-06.02.01",
     "01-platform-infrastructure.md#T-06.02.02",
-    "01-platform-infrastructure.md#T-06.02.03",
     "01-platform-infrastructure.md#T-06.02.04",
     "01-platform-infrastructure.md#T-06.02.05",
     "01-platform-infrastructure.md#T-06.03.01",
@@ -964,8 +1081,6 @@
     "02-auth-users-admin.md#T-07.01.01",
     "02-auth-users-admin.md#T-07.01.02",
     "02-auth-users-admin.md#T-07.01.03",
-    "02-auth-users-admin.md#T-09.01.01",
-    "02-auth-users-admin.md#T-09.01.02",
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
     "02-auth-users-admin.md#T-09.03.01",
