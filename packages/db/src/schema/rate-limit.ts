@@ -1,5 +1,15 @@
 import { sql } from 'drizzle-orm';
-import { bigint, integer, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+import {
+  bigint,
+  boolean,
+  index,
+  integer,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
 
 /**
  * Rate-limit counter rows stored in PostgreSQL.
@@ -98,3 +108,23 @@ export const createSecurityRateLimitCountersTable = sql`
   CREATE UNIQUE INDEX IF NOT EXISTS security_rate_limit_counters_pk
     ON security_rate_limit_counters (key, window_start);
 `;
+
+/** Serialized rolling history. Retain the latest quota + 1 attempts per key.
+ * overflowUntil preserves conservative protection if a quota increases.
+ */
+export const rateLimitWindows = pgTable(
+  'rate_limit_windows',
+  {
+    security: boolean('security').notNull(),
+    key: text('key').notNull(),
+    windowMs: integer('window_ms').notNull(),
+    events: bigint('events', { mode: 'number' }).array().notNull(),
+    capacity: integer('capacity').notNull(),
+    overflowUntil: bigint('overflow_until', { mode: 'number' }).notNull(),
+    expiresAt: bigint('expires_at', { mode: 'number' }).notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.security, table.key, table.windowMs] }),
+    index('rate_limit_windows_expiry_idx').on(table.expiresAt),
+  ]
+);

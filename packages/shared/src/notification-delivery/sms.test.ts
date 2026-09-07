@@ -25,8 +25,8 @@ afterAll(async () => {
 });
 function setup(count = 1) {
   const query = vi.fn(async (sql: string) => ({
-    rows: sql.includes('security_rate_limit_counters')
-      ? [{ count }]
+    rows: sql.includes('rate_limit_rolling(')
+      ? [{ count, reset_ms: 1000 }]
       : [
           {
             id: 'sms-provider',

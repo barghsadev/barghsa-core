@@ -47,7 +47,7 @@ async function count(key: string) {
   return Number(
     (
       await http.pool.query(
-        'SELECT COALESCE(SUM(count),0) AS count FROM security_rate_limit_counters WHERE key=$1',
+        'SELECT COALESCE(SUM(cardinality(events)),0) AS count FROM rate_limit_windows WHERE security AND key=$1',
         [key]
       )
     ).rows[0].count
@@ -76,12 +76,12 @@ it('atomically counts concurrent failures and expires the account delay window',
   expect(responses.map((response) => response.status)).toEqual(Array(6).fill(401));
   expect(await count(failureKey(username))).toBe(6);
   await http.pool.query(
-    'UPDATE security_rate_limit_counters SET window_start=window_start-1800000 WHERE key=$1',
+    'UPDATE rate_limit_windows SET events=ARRAY(SELECT t-1800000 FROM unnest(events) t) WHERE security AND key=$1',
     [failureKey(username)]
   );
   expect((await login()).status).toBe(401);
   const current = await http.pool.query(
-    'SELECT count FROM security_rate_limit_counters WHERE key=$1 ORDER BY window_start DESC LIMIT 1',
+    'SELECT cardinality(events) AS count FROM rate_limit_windows WHERE security AND key=$1',
     [failureKey(username)]
   );
   expect(Number(current.rows[0].count)).toBe(1);
@@ -104,7 +104,7 @@ it('limits broad password spraying in PostgreSQL and returns Retry-After without
   expect(
     (
       await http.pool.query(
-        "SELECT count(*)::int AS count FROM security_rate_limit_counters WHERE key LIKE 'login:failures:%'"
+        "SELECT count(*)::int AS count FROM rate_limit_windows WHERE security AND key LIKE 'login:failures:%'"
       )
     ).rows[0].count
   ).toBe(0);

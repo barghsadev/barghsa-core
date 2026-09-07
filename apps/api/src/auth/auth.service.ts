@@ -209,7 +209,9 @@ export class AuthService {
       if (!userFound || !passwordValid) {
         // Atomic increment counts only credential failures, including simultaneous
         // failures. The sixth failure waits even when all six started together.
-        const ceiling = 2_147_483_647;
+        // Ten failures already reach the maximum delay. Retaining the latest
+        // eleven preserves every lower threshold as older failures expire.
+        const ceiling = 10;
         const counter = await this.rateLimitService.checkSecurityRateLimit(
           rateLimitKeyStr,
           ceiling,

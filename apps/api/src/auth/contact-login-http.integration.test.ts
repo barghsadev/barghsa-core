@@ -35,7 +35,7 @@ const login = (username: string, secret = password) =>
 const user = async () => (await fetch(`${http.base}/api/auth/user`, { headers })).json();
 async function expireOtpCooldown(destination: string) {
   // Simulate the minute between contact verification, login, and recovery in this local fixture.
-  await http.pool.query('DELETE FROM security_rate_limit_counters WHERE key=$1', [
+  await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
     `otp:dest:${destination}:60s`,
   ]);
 }
@@ -109,7 +109,7 @@ it('shares failed-login counters across aliases and clears them after successful
     Number(
       (
         await http.pool.query(
-          'SELECT COALESCE(sum(count),0) AS count FROM security_rate_limit_counters WHERE key=$1',
+          'SELECT COALESCE(sum(cardinality(events)),0) AS count FROM rate_limit_windows WHERE security AND key=$1',
           [key]
         )
       ).rows[0].count

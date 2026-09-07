@@ -78,6 +78,7 @@ describe('complete production schema baseline', () => {
         '0117_notification_template_lineage',
         '0118_reconcile_schema_snapshot',
         '0119_brand_history',
+        '0120_rolling_rate_limits',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -217,6 +218,9 @@ describe('complete production schema baseline', () => {
       );
       await pool.query('DROP INDEX uq_notification_templates_version');
       await pool.query('ALTER TABLE notification_templates DROP COLUMN supersedes_version');
+      await pool.query(
+        'DROP FUNCTION rate_limit_rolling(boolean,text,integer,integer,boolean); DROP FUNCTION rate_limit_rolling_reset(boolean,text); DROP TABLE rate_limit_windows'
+      );
       await pool.query('DELETE FROM drizzle.__drizzle_migrations');
       await pool.query(
         'INSERT INTO drizzle.__drizzle_migrations(hash, created_at) VALUES ($1, $2)',

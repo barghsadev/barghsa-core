@@ -281,6 +281,13 @@
       "when": 1791331200022,
       "tag": "0119_brand_history",
       "breakpoints": true
+    },
+    {
+      "idx": 120,
+      "version": "7",
+      "when": 1791331200023,
+      "tag": "0120_rolling_rate_limits",
+      "breakpoints": true
     }
   ]
 }

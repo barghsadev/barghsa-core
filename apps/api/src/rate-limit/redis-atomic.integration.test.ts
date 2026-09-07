@@ -42,10 +42,10 @@ it('admits exactly the quota under concurrent requests and keeps a bounded expir
   expect(await redis.pttl(key)).toBeGreaterThan(0);
   expect(await redis.pttl(key)).toBeLessThanOrEqual(60_000);
   const { rows } = await fixture.pool.query(
-    'SELECT SUM(count)::int AS count FROM rate_limit_counters WHERE key = $1',
+    'SELECT cardinality(events) AS count FROM rate_limit_windows WHERE NOT security AND key = $1',
     [key]
   );
-  expect(rows[0].count).toBe(100);
+  expect(rows[0].count).toBe(21);
 });
 
 it('preserves the existing deadline instead of extending it for later requests', async () => {

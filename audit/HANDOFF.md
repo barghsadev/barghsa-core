@@ -93,22 +93,17 @@ These are carry-forward limits and next review targets, not a newly completed pe
 | F20 localization/UI | Many repairs and focused browser tests; broader translation/a11y acceptance remains. Shared package dual ESM/CJS TSUP output and required shared EmptyState/PageLoading/ErrorBoundary were noted as missing, not newly implemented. DatePicker task verified. |
 | F21 duplicates/drift | Mostly reviewed/consolidated; public toast manager/renderer mismatch fixed. Do not rebuild repeated task IDs without qualified identity. |
 | F22 acceptance | 274 pending, 13 partial. Exhaustive review now explicitly deferred. Continue critical-path evidence needed for the bounded repair pass; no blanket completion from test counts. |
-| F23 auth limits | Account+IP failure identity, threshold and PostgreSQL fallback repaired. Fixed epoch windows still need correct rolling-window behavior. **Next concrete code repair.** |
+| F23 auth limits | Account+IP failure identity, threshold and PostgreSQL fallback repaired. Rolling histories repaired in migration 0120. Targeted checks pass; final checkpoint pending. |
 
-## Next repair: F23 rolling authentication limits
+## F23 rolling authentication limits, repaired locally
 
-Read `audit/authentication-window-review.md` first. It is analysis only; no rolling-window code was implemented.
+PostgreSQL now serializes rolling histories, peeks and resets per namespace/key using transaction advisory locks and server time. Histories retain the latest quota + 1 attempts. Login uses ceiling 10 because ten failures already saturate the existing delay; retaining eleven preserves every lower threshold during expiry. No token-bucket refill is used.
 
-Relevant code:
+Migration 0120 adds the rolling store and functions. Legacy buckets are consumed once using their latest possible timestamp, conservatively preserving protection across old boundaries. Truncated history stays conservative if a quota increases. Quotas support 1–100000 attempts; storage is bounded by quota + 1 per key/window. Expired keys are reaped with server time. Old writers must be drained before deployment; no deployment was performed.
 
-- `packages/shared/src/rate-limit/postgres-rate-limiter.ts`
-- `packages/shared/src/rate-limit/composite-rate-limiter.ts`
-- `apps/api/src/rate-limit/rate-limit.service.ts`
-- `apps/api/src/auth/auth.service.ts`
+Reviewed locks/snapshots, reset ordering, truncation/expiry, Retry-After, namespace/window separation and migration journal ordering. Targeted evidence: 8 real PostgreSQL rolling tests, 83 shared limiter tests, 17 authentication HTTP/Redis cases, clean/legacy-upgrade and lineage migration checks, database snapshot check, API/shared/database types and explicit changed-path ESLint pass. One historical-upgrade fixture initially retained new objects while simulating an old schema; corrected its rollback fixture and reran successfully. SMS limiter mock updated for the new database response. Full final regression pending.
 
-Current PostgreSQL counter uses atomic fixed-epoch upserts. Failed login increments a normalized account+IP counter with ceiling 2147483647 and 900000 ms window. Progressive delay uses the returned count; the sixth concurrent failure must still delay. Valid credentials consult the count and successful login resets it. PostgreSQL remains authoritative when Redis is lost.
-
-Do not replace atomic increments with an unsynchronized rolling SUM. Do not turn the huge failure-count ceiling into a token-bucket refill capacity. Legacy bucket data has no per-attempt timestamps. A correct replacement needs per-key serialization, bounded storage, server time, conservative migration and tests for concurrent sixth failure, window boundaries, reset and Redis loss.
+Next confirmed code gap: F02 distinct read/write query timeout defaults. F13 legacy receipt requests already deliberately fail closed without trusted initiation fingerprints; manual reconciliation is an external blocker, not an unimplemented approval bypass. Evidence: repair-progress F13.4.
 
 ## Evidence map and efficient validation
 

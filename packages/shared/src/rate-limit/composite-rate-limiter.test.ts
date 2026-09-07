@@ -16,7 +16,7 @@ describe('CompositeRateLimiterStore', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockQuery = vi.fn().mockResolvedValue({ rows: [{ count: 1 }] });
+    mockQuery = vi.fn().mockResolvedValue({ rows: [{ reset_ms: 1000, count: 1 }] });
     mockRedis = createMockRedis();
     pgStore = new PostgresRateLimiterStore(mockQuery as unknown as DbQueryFn, logger);
     store = new CompositeRateLimiterStore(pgStore, mockRedis as unknown as null, logger);
@@ -24,7 +24,9 @@ describe('CompositeRateLimiterStore', () => {
 
   it('does not grant another quota after Redis loss or recovery', async () => {
     let durableCount = 0;
-    mockQuery.mockImplementation(async () => ({ rows: [{ count: ++durableCount }] }));
+    mockQuery.mockImplementation(async () => ({
+      rows: [{ reset_ms: 1000, count: ++durableCount }],
+    }));
     mockRedis.eval.mockResolvedValue([1, 60_000]);
     expect((await store.increment('durable', 2, 60_000)).allowed).toBe(true);
     expect((await store.increment('durable', 2, 60_000)).allowed).toBe(true);
@@ -60,7 +62,7 @@ describe('CompositeRateLimiterStore', () => {
 
     it('falls back to PostgreSQL when Redis throws', async () => {
       mockRedis.eval.mockRejectedValue(new Error('ECONNREFUSED'));
-      mockQuery.mockResolvedValueOnce({ rows: [{ count: 1 }] });
+      mockQuery.mockResolvedValueOnce({ rows: [{ reset_ms: 1000, count: 1 }] });
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
 
@@ -84,7 +86,7 @@ describe('CompositeRateLimiterStore', () => {
       null,
     ])('falls back when Redis returns an invalid count %s', async (count) => {
       mockRedis.eval.mockResolvedValue([count, 30_000]);
-      mockQuery.mockResolvedValueOnce({ rows: [{ count: 101 }] });
+      mockQuery.mockResolvedValueOnce({ rows: [{ reset_ms: 1000, count: 101 }] });
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
 
@@ -106,7 +108,7 @@ describe('CompositeRateLimiterStore', () => {
       null,
     ])('falls back when Redis returns an invalid TTL %s', async (ttl) => {
       mockRedis.eval.mockResolvedValue([2, ttl]);
-      mockQuery.mockResolvedValueOnce({ rows: [{ count: 101 }] });
+      mockQuery.mockResolvedValueOnce({ rows: [{ reset_ms: 1000, count: 101 }] });
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
 
@@ -120,7 +122,7 @@ describe('CompositeRateLimiterStore', () => {
       'rejects malformed script reply %j',
       async (reply) => {
         mockRedis.eval.mockResolvedValue(reply);
-        mockQuery.mockResolvedValueOnce({ rows: [{ count: 101 }] });
+        mockQuery.mockResolvedValueOnce({ rows: [{ reset_ms: 1000, count: 101 }] });
         expect((await store.increment('api:1.2.3.4', 100, 60_000)).allowed).toBe(false);
         expect(mockQuery).toHaveBeenCalledOnce();
       }
@@ -143,7 +145,7 @@ describe('CompositeRateLimiterStore', () => {
     });
 
     it('goes directly to PostgreSQL for increment', async () => {
-      mockQuery.mockResolvedValueOnce({ rows: [{ count: 1 }] });
+      mockQuery.mockResolvedValueOnce({ rows: [{ reset_ms: 1000, count: 1 }] });
 
       const result = await store.increment('api:1.2.3.4', 100, 60_000);
 
@@ -155,14 +157,15 @@ describe('CompositeRateLimiterStore', () => {
   describe('incrementSecurity', () => {
     it('writes to PostgreSQL first and mirrors to Redis', async () => {
       store = new CompositeRateLimiterStore(pgStore, mockRedis as unknown as null, logger);
-      mockQuery.mockResolvedValueOnce({ rows: [{ count: 1 }] });
+      mockQuery.mockResolvedValueOnce({ rows: [{ reset_ms: 1000, count: 1 }] });
       mockRedis.setex.mockResolvedValue('OK');
 
       const result = await store.incrementSecurity('login:admin', 5, 300_000);
 
       // PG called first
       const pgCall = mockQuery.mock.calls[0];
-      expect(pgCall?.[0]).toContain('INSERT INTO security_rate_limit_counters');
+      expect(pgCall?.[0]).toContain('rate_limit_rolling(');
+      expect(pgCall?.[1]?.[0]).toBe(true);
       // Redis mirror called
       expect(mockRedis.setex).toHaveBeenCalledWith(
         'security:login:admin',
@@ -174,7 +177,7 @@ describe('CompositeRateLimiterStore', () => {
 
     it('still works when Redis mirror fails', async () => {
       store = new CompositeRateLimiterStore(pgStore, mockRedis as unknown as null, logger);
-      mockQuery.mockResolvedValueOnce({ rows: [{ count: 1 }] });
+      mockQuery.mockResolvedValueOnce({ rows: [{ reset_ms: 1000, count: 1 }] });
       mockRedis.setex.mockRejectedValue(new Error('Redis down'));
 
       const result = await store.incrementSecurity('login:admin', 5, 300_000);
@@ -186,7 +189,7 @@ describe('CompositeRateLimiterStore', () => {
 
     it('does not mirror when Redis is null', async () => {
       store = new CompositeRateLimiterStore(pgStore, null, logger);
-      mockQuery.mockResolvedValueOnce({ rows: [{ count: 1 }] });
+      mockQuery.mockResolvedValueOnce({ rows: [{ reset_ms: 1000, count: 1 }] });
 
       await store.incrementSecurity('login:admin', 5, 300_000);
 
@@ -204,7 +207,7 @@ describe('CompositeRateLimiterStore', () => {
 
       expect(mockRedis.del).toHaveBeenCalledWith('api:1.2.3.4');
       const pgCall = mockQuery.mock.calls[0];
-      expect(pgCall?.[0]).toContain('DELETE FROM rate_limit_counters');
+      expect(pgCall?.[0]).toContain('rate_limit_rolling_reset(');
     });
 
     it('skips Redis when redis is null', async () => {
