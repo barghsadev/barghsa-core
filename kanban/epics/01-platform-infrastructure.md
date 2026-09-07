@@ -11,7 +11,7 @@
 
 This domain owns every piece of platform infrastructure the Barghsa energy platform runs on. It delivers:
 
-1. **Monorepo & Toolchain** — TypeScript pnpm/Turborepo monorepo with `apps/web` (TanStack Start), `apps/api` (NestJS modular monolith), and four shared packages (`db`, `shared`, `i18n`, `ui`). Build orchestration, test runners (Vitest, Playwright), linting, formatting, type checking, and bundle budgets.
+1. **Monorepo & Toolchain** — TypeScript pnpm/Turborepo monorepo with `apps/web` (Vite + TanStack Router SPA), `apps/api` (NestJS modular monolith), and four shared packages (`db`, `shared`, `i18n`, `ui`). Build orchestration, test runners (Vitest, Playwright), linting, formatting, type checking, and bundle budgets.
 2. **Database & Migrations** — Drizzle ORM schema for PostgreSQL, expand/migrate/contract migration pipeline, seed data (4 default electricity products, admin bootstrap), UUIDv7 defaults, `timestamptz`/half-open-range conventions, integer IRR financial types.
 3. **Containerization & Deployment** — Dockerfiles for web, API, and worker processes (API and worker share one image with different CMDs). Docker Compose for local dev with PostgreSQL, Redis, and MinIO. Health checks, graceful `SIGTERM` handling, readiness/liveness probes.
 4. **Infrastructure Services** — PostgreSQL with automated backups + PITR, Redis (optional, disposable, never source of truth), S3/MinIO object storage with versioning + lifecycle policies, reverse proxy/load balancer with TLS termination.
@@ -126,8 +126,8 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 
 **Tasks:**
 
-- **T-01.03.01:** Configure TanStack Start build pipeline in `apps/web`
-  - **Notes:** Use `@tanstack/start` build command. Ensure SSR configuration does not add server-side business logic duplication. Set `build.inlineDynamicImports: false` for route-level CSS/JS splitting. Configure `server.functions` as thin BFF only — authorization, pricing, state transitions stay in backend modules.
+- **T-01.03.01:** Configure Vite SPA build pipeline in `apps/web`
+  - **Notes:** Use the Vite build command with TanStack Router and client-side React rendering, as approved in ADR 004. Keep route-level CSS/JS splitting and avoid inlining all dynamic imports. The production server serves the HTML shell and static assets; authorization, pricing and state transitions stay in backend modules. TanStack Start and server-side React rendering are not required.
   - **Dependencies:** S-01.02, packages/i18n, packages/shared, packages/ui
   - **Complexity:** L
 
@@ -148,7 +148,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **Complexity:** M
 
 - **T-01.03.05:** Configure hashed filenames and CDN-ready public asset output
-  - **Notes:** TanStack Start config sets `build.assetsDir: 'assets'` with content-hash filenames. Set `build.cssCodeSplit: true`. Output manifest for CDN cache invalidation. Ensure public assets set `Cache-Control: public, immutable, max-age=31536000`. Authenticated API responses set `private, no-cache`.
+  - **Notes:** Vite config sets `build.assetsDir: 'assets'` with content-hash filenames. Set `build.cssCodeSplit: true`. Output manifest for CDN cache invalidation. Ensure public assets set `Cache-Control: public, immutable, max-age=31536000`. Authenticated API responses set `private, no-cache`.
   - **Dependencies:** T-01.03.01
   - **Complexity:** S
   - **UI/UX:** N/A
@@ -405,7 +405,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 **Description:** As a platform engineer, I want optimized, multi-stage Docker builds for the three process types so that images are small, secure, and reproducible.
 
 **Acceptance Criteria:**
-- `Dockerfile.web` builds the TanStack Start frontend: dev → build → deploy stage
+- `Dockerfile.web` builds the Vite SPA frontend: dev → build → deploy stage
 - `Dockerfile.api` builds the NestJS API with SWC or webpack
 - `Dockerfile.worker` uses the same build stage as API but CMD differs (`CMD ["node", "dist/apps/api/main"]` vs `CMD ["node", "dist/apps/api/worker"]`)
 - Multi-stage builds with a `dependencies` stage, `build` stage, and `production` stage
@@ -459,7 +459,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 - Environment variables default to development-safe values in `.env.example`
 - Service dependencies: app processes depend on `postgres` being healthy
 - `pnpm dev` runs Turborepo dev mode with hot reload
-- Hot reload uses `tsx watch` or SWC for NestJS and TanStack Start dev server for web
+- Hot reload uses `tsx watch` or SWC for NestJS and Vite dev server for web
 - `.env.example` contains all required variables with sensible development defaults; `DATABASE_URL`, `REDIS_URL`, `MINIO_*`, `SESSION_SECRET`, `CSRF_SECRET`, etc.
 - OTP codes are printed to API console in dev environment
 - SWC or webpack watch mode recompiles on save within ~500ms
@@ -477,7 +477,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **Complexity:** M
 
 - **T-03.02.03:** Create root `pnpm dev` script for hot-reload local development across all apps
-  - **Notes:** `turbo dev` runs `dev` in packages/db (watch mode for schema changes), apps/api (NestJS with `tsx watch src/main.ts` or SWC), apps/web (TanStack Start dev server). For `packages/ui` and `packages/shared`, use a watch mode that recompiles on file change. Dev starts all three processes in parallel.
+  - **Notes:** `turbo dev` runs `dev` in packages/db (watch mode for schema changes), apps/api (NestJS with `tsx watch src/main.ts` or SWC), apps/web (Vite dev server). For `packages/ui` and `packages/shared`, use a watch mode that recompiles on file change. Dev starts all three processes in parallel.
   - **Dependencies:** T-03.02.02, S-01.01
   - **Complexity:** M
 
@@ -499,7 +499,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 - A non-critical provider outage must NOT remove the whole API from service — readiness degrades gracefully
 - On `SIGTERM`: stop accepting new HTTP requests (drain connections), finish in-flight work with a configurable deadline (default 30s), release any held leases, close database pool, close Redis, close object storage client, then exit
 - Worker: on `SIGTERM`, stop leasing new jobs, finish running job with deadline, release lease, close pool, exit
-- Web: on `SIGTERM`, drain HTTP keep-alive connections, flush SSR responses, close
+- Web: on `SIGTERM`, drain HTTP keep-alive connections, finish active HTML/static responses, close
 - Processes exit with code 0 on clean shutdown, code 1 on forced kill after deadline
 - Health endpoints are excluded from authentication, rate limiting, and audit
 
@@ -516,7 +516,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **Complexity:** M
 
 - **T-03.03.03:** Implement graceful shutdown for web frontend server
-  - **Notes:** TanStack Start dev server handles this in dev mode. Production Node.js server handles `SIGTERM`: stop accepting connections, drain existing keep-alive connections up to deadline, flush pending SSR responses, close server. If connections remain, force-close them after deadline.
+  - **Notes:** Vite dev server handles this in dev mode. Production Node.js server handles `SIGTERM`: stop accepting connections, drain existing keep-alive connections up to deadline, finish pending HTML/static responses, close server. If connections remain, force-close them after deadline.
   - **Dependencies:** S-03.01
   - **Complexity:** M
 

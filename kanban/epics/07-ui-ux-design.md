@@ -229,8 +229,8 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-07.03.02.01** | Build LanguageSwitcher component: button/dropdown showing "FA" / "EN" labels. Changes language, toggles direction, persists in cookie (for SSR) and localStorage. | M |
-| **T-07.03.02.02** | Implement SSR-friendly language detection: read `Accept-Language` header and language cookie. Set `dir` and `lang` attributes on `<html>` during server render. No flash of wrong direction on hydration. | M |
+| **T-07.03.02.01** | Build LanguageSwitcher component: button/dropdown showing "FA" / "EN" labels. Changes language, toggles direction, persists in cookie and localStorage for subsequent client visits. | M |
+| **T-07.03.02.02** | Implement early client language detection for the approved Vite SPA: read the persisted language preference from cookie/localStorage, falling back to browser language preferences. Set `dir` and `lang` attributes on `<html>` before React renders. No flash of the wrong direction during initial client rendering. | M |
 | **T-07.03.02.03** | ⚠️ When language changes: (1) update `dir` on `<html>`, (2) update `lang` attribute, (3) reload i18n resources, (4) re-translate current page without full browser reload. Animations should not be required to transition direction. | M |
 | **T-07.03.02.04** | ⚠️ Date and number formatting must change with language — Persian uses Jalali calendar, Arabic numerals with Persian separators; English uses Gregorian calendar and Western numerals. Direction change is decoupled from locale data change but both happen together. | M |
 

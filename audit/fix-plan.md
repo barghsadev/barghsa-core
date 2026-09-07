@@ -423,7 +423,7 @@ Actions:
 
 - Restore meaningful changed-code and critical-domain coverage checks, or record an explicit approved exception with expiry. Do not raise coverage through implementation-mirroring tests.
 - Add actual lint/format, clean+upgrade migration and OpenAPI contract-drift gates. Audit PR affected-package filtering against shared dependency changes.
-- Measure the complete route payload including common chunks; split auth as needed. Resolve TanStack Start versus Vite SPA and skipLibCheck differences through an architecture/requirements decision.
+- Measure the complete route payload including common chunks; split auth as needed. The owner approved retaining Vite SPA on 2026-09-07; [ADR 004](../docs/adr/004-web-spa.md) and canonical requirements record that decision. The skipLibCheck discrepancy remains open.
 
 Acceptance checks:
 
@@ -522,4 +522,3 @@ Acceptance checks:
 - Changing IP does not bypass destination/account quotas; Redis loss preserves the PostgreSQL-backed protection.
 
 Task scope is enumerated in [findings.json](findings.json) and the per-task register.
-

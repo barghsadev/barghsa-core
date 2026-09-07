@@ -140,7 +140,7 @@
 | T-06.02.02.01 | Design CSP directive set for web app (nonce-based scripts, hashed styles where needed) | M |
 | T-06.02.02.02 | Implement CSP middleware in web process; support Report-Only mode toggle via config | M |
 | T-06.02.02.03 | Configure CSP reporting endpoint (e.g. `csp-reports` route or external `report-uri`) | S |
-| T-06.02.02.04 | Ensure nonce generation and propagation for inline scripts/styles across SSR and client | L |
+| T-06.02.02.04 | Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client | L |
 | T-06.02.02.05 | Add CI test that verifies CSP headers in production build | S |
 | T-06.02.02.06 | Roll out: 1 week Report-Only monitoring → analyze violations → switch to Enforce | S |
 | T-06.02.02.07 | Verify no `unsafe-eval` usage across codebase (replace `eval`, `new Function`, string setTimeout) | S |

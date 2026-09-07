@@ -2508,3 +2508,9 @@ Ten initial regressions failed before repair, including the actual adapter paire
 At clean revision 11d46d51fbd5fe19182cd3100c282f9f131df71b, all three production images rebuilt successfully with the frozen lockfile and current telemetry dependencies. All four isolated runtime checks pass: non-root/read-only startup and packaged migrations with optional Redis, database readiness failure/recovery, draining concurrent notification/finance commits, and bounded shutdown with retryable recovery. Exact images are recorded in production-image-checkpoint.json. The forced-deadline fixture still explicitly closes sleeping database sessions and shortens a test lease; natural network-loss timing is not claimed.
 
 The current dependency audit reports zero known advisories across 1,349 resolved dependencies. Its raw result is retained in dependency-scan-current.json. No deployment, payment, production database or remote state was changed.
+
+### Record the approved Vite SPA architecture
+
+The owner explicitly chose to retain Vite SPA and update requirements. ADR 004, the root/web documentation and canonical infrastructure, authentication, localization and CSP tasks now describe Vite with TanStack Router and client rendering. First-load budgets, early language/direction selection, accessible loading/error handling, caching, CSP and shutdown obligations remain. Obsolete claims about current TanStack package incompatibility were removed. The separate skipLibCheck issue remains open.
+
+All 1,355 task identities and their order are preserved. Generated backlog/traceability validation and all 48 protocol checks pass. Formatting and diff review pass. Historical audit requirement hashes remain tied to their original revisions; this decision does not claim outstanding acceptance checks passed or resume a stale assignment.

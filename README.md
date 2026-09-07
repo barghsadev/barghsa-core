@@ -211,11 +211,11 @@ Tool calls, inputs, authorization decision, confirmation evidence, outcome, and 
 - Shadcn UI with "BASE UI".
 - Full support for both Light and Dark themes across all pages and components.
 - Flexible theming. the admin users must be able to set theme options on dashboard.
-- Use TanStack Start. Server functions/BFF remain thin transport and rendering adapters; authorization, pricing, state transitions, and business logic live in backend modules.
+- Use Vite with TanStack Router as a client-rendered SPA. The production web server serves the HTML shell and static assets; authorization, pricing, state transitions, and business logic live in backend modules. See [ADR 004](docs/adr/004-web-spa.md).
 - Use TanStack Query or the framework's equivalent for server-state caching, request deduplication, cancellation, and targeted invalidation.
 - Optimistic UI is allowed only for low-risk, easily reversible actions such as marking a notification read. Payments, wallet changes, order submission, contract acceptance/signature, refunds, role changes, and status transitions show Pending until the authoritative backend response arrives.
 - Code-split by route and lazy-load heavy editors, charts, AI UI, video tooling, and admin-only features. Avoid large client bundles on customer purchase paths.
-- Use SSR only where it materially improves first load, public discoverability, or authenticated shell rendering. Do not add server-side data duplication or business logic for SSR.
+- Server-side React rendering and TanStack Start are outside the approved frontend architecture. Keep first-load performance, public metadata, accessible loading/error states and route splitting as explicit requirements; any future SSR migration requires a separate architecture decision.
 - Use analytics through a provider abstraction. Google Analytics is optional and enabled only with the appropriate consent; operational product events are sent to Barghsa's own backend when correctness requires them.
 - react-hook-form and zod everywhere that is needed. all forms must be validated.
 - small animations.
@@ -1215,14 +1215,14 @@ Unit tests cover configuration validation, secret masking, event/parameter mappi
 
 Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 
-| Path              | Role                                                           |
-| ----------------- | -------------------------------------------------------------- |
-| `apps/web`        | TanStack Start frontend (shadcn/ui + Base UI, RTL, light/dark) |
-| `apps/api`        | NestJS API gateway / modular monolith                          |
-| `packages/db`     | Drizzle ORM schema + seed                                      |
-| `packages/shared` | Shared Zod schemas / username helpers                          |
-| `packages/i18n`   | FA (default) + EN dictionaries                                 |
-| `packages/ui`     | Shared shadcn/Base UI components                               |
+| Path              | Role                                                              |
+| ----------------- | ----------------------------------------------------------------- |
+| `apps/web`        | Vite + TanStack Router SPA (shadcn/ui + Base UI, RTL, light/dark) |
+| `apps/api`        | NestJS API gateway / modular monolith                             |
+| `packages/db`     | Drizzle ORM schema + seed                                         |
+| `packages/shared` | Shared Zod schemas / username helpers                             |
+| `packages/i18n`   | FA (default) + EN dictionaries                                    |
+| `packages/ui`     | Shared shadcn/Base UI components                                  |
 
 ### Prerequisites
 

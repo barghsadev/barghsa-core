@@ -205,7 +205,7 @@
 **T-03.01.01 — App-level profile check middleware**
 
 - Description: After login, app checks if user has any profiles. If none, redirect to `/onboarding`. If exactly one profile, set it as default and proceed to dashboard. If multiple, show profile selector to choose default, then proceed.
-- Technical notes: Implemented as route guard/loader in TanStack Start. Query GET `/api/profiles` returns `{ profiles: [...], hasDefault: boolean, activeProfileId }`. Profile switch is persistent in DB (not just session). API must never return profiles belonging to another user.
+- Technical notes: Implemented as client route guard/loader in TanStack Router, with independent API authorization. Query GET `/api/profiles` returns `{ profiles: [...], hasDefault: boolean, activeProfileId }`. Profile switch is persistent in DB (not just session). API must never return profiles belonging to another user.
 - UI/UX: Brief loading state while fetching profiles. If no profiles, redirect to `/onboarding`. If multiple profiles, show a selection modal/dropdown briefly.
 - Dependencies: T-01.02.03, T-04.01.01
 - Complexity: M
