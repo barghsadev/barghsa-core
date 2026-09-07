@@ -9,7 +9,8 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
-    "./styles.css": "./src/styles.css"
+    "./styles.css": "./src/styles.css",
+    "./direction-provider": "./src/direction-provider.ts"
   },
   "scripts": {
     "build": "tsc",

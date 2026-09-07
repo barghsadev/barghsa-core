@@ -12,6 +12,7 @@ const DefaultProfileModal = lazy(() =>
     default: module.DefaultProfileModal,
   }))
 );
+import { UiDirectionProvider } from '../providers/UiDirectionProvider.js';
 import { BrandThemeProvider } from '../providers/BrandThemeProvider.js';
 
 export const Route = createRootRoute({
@@ -105,7 +106,7 @@ function RootComponent() {
   }, [pathname, router, profileRevision]);
 
   return (
-    <>
+    <UiDirectionProvider>
       <BrandThemeProvider key={profileRevision}>
         {!AUTH_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) && (
           <Suspense fallback={null}>
@@ -120,6 +121,6 @@ function RootComponent() {
         <Outlet />
         {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
       </BrandThemeProvider>
-    </>
+    </UiDirectionProvider>
   );
 }
