@@ -1347,6 +1347,126 @@
         160
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "28a50ef109a6801ae3a6a94b368d1c2a847e184c",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1057,
+      "requirement": "- **T-06.02.05:** Localize number/currency formatting\n  - **Notes:** IRR amounts displayed as `XX,XXX,XXX,XXX ریال` or `IRR XX,XXX`. Admin-configurable: use Persian numerals (۱۲۳٬۴۵۶٬۷۸۹) or Western digits (123,456,789). Use `Intl.NumberFormat` with `currency: 'IRR'` and locale `fa` or `en`. For Persian: set `useGrouping: true`. Percentages and decimals follow locale conventions.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M\n  - **UI/UX:** All monetary values show the currency symbol/tail (ریال or IRR). Date picker switches between Jalali and Gregorian based on locale. Direction flips seamlessly without visual glitches.",
+      "requirement_sha256": "b93bda2361fb2d982e32594d37b597965217deac9f4918e762097fd3199f1ca4",
+      "source_evidence": [
+        {
+          "path": "packages/i18n/src/numbers.ts",
+          "sha256": "a504aae6353acb7d4d02352346f005ee0d8708fd07becb5b5a5704ea7090a986"
+        },
+        {
+          "path": "packages/i18n/src/numbers.test.ts",
+          "sha256": "3913ce6487cd7dd7088bd8588589ba26438da9cc73c950da2c2d2a12e6b4a588"
+        },
+        {
+          "path": "apps/web/src/hooks/useNumberFormatting.ts",
+          "sha256": "ddcb9242317d3ef9f4b87f6b7946f36e0a69ec935180913fdb49d447d1eeb0b2"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "24ab7aa70df4edd5c7ad94c1bd1f82ad77e9cd19c7c1d5d48aa392b6f96379fe"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "ac4191e5d8c4f9ac65a4970094e9cf82a6298f081e69a37c61d76e783a9fbffc"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "cd3688d6434338db9aa5e02977c148f1f8f7045c1fb54aa51a12ec877c2e9390"
+        },
+        {
+          "path": "apps/api/src/admin/brand-config.service.ts",
+          "sha256": "38ed5912ba8b306183711181da56cb620e94ebe33c9cc25a873b7fc99778bee4"
+        },
+        {
+          "path": "apps/api/src/public/branding-http.integration.test.ts",
+          "sha256": "a0a8fdc0af4f18d22ec6c438038fa9fb1acfd1b68ba38004549735d044f8825a"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "6d0aab22eeaf2a5ecd99851325357ab778bcfdd205bc33842fff34f8c70a2abc"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "9cf5f1e92a0ec535b5367607ca66061ded9e71a04b8ad5c5967f21acc15ecbea"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "668c6f3694d260568028510279c7138144ce4d9d1f4c206385609a73290df2a0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "07ee2036238deb8753df59e02160f9b2e876678647a66bb8cd8cc6bbe1b55cc6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "28167ee43a59b65eb56a23b7b73f5af577d7982e40319627057340cc1369048d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+          "sha256": "fe3c90fb78e0230ae31cb90cdaa9b4103f0ed03a5565c714797497ca16fb493a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "2b563bb934b65ac16fb651288dff661994c6d3c9c5c70d97b5b80345087c99c3"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+          "sha256": "251097cb290b6c9ff9f6b5a508575ff1e8119c680e3fd01acd022805fa0ea536"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "5fd6c62189b584d70fad1798a5790c710cddb1d1e9e956131ccc74b89509016f"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "1c951d2e67bc689e4fdb4f4a669ffb1143952fe330cf3bd402e2c33e59652b5a"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+          "sha256": "e9ac9cbca36c6997ba48741b377a1b52cd02d1f9fecf868d27e3de449c8d5302"
+        },
+        {
+          "path": "apps/web/e2e/number-preferences.spec.ts",
+          "sha256": "13257e67818a258270cb9cd2405a72ed6943c6b77e7186012b4da37ebe577191"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "365ed8e073ca77032ba0acde93ed76e57379e6eae5a5fa68ca6a60318b60c6ed"
+        },
+        {
+          "path": "apps/web/e2e/notification-numerals.spec.ts",
+          "sha256": "485fb470d2ea13e7343a40492fef72f97b56408eaa051ea36df1da2de8d38ba1"
+        },
+        {
+          "path": "apps/web/e2e/date-picker-component.spec.ts",
+          "sha256": "3300121e6e70505a70ad40664aec2f3f80db89375c54d6435dd05441eea8d4ac"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "ee7956e13a25e285bfc33c13e32107603176dfa5c09a354166fdd8c213cb2acc"
+        }
+      ],
+      "checks": [
+        "All 5,206 unit/database checks across 433 files and all 321 production Chromium checks pass at the reviewed revision.",
+        "All 45 i18n tests cover exact large integer rials, explicit currency labels, grouping, decimal/percentage conventions, numeral overrides and rejection of lossy monetary inputs.",
+        "Real migrated branding HTTP tests enforce permission, enum validation and draft/public version separation. Both live browser languages publish each preference and preserve unsaved draft isolation.",
+        "Production browser workflows verify opposite numeral choices in both locales, exact financial displays and unchanged submitted numeric values across wallet, invoices, receipts, approvals, catalogue, VAT, gifts, electricity and administrator settings.",
+        "Shared date-picker browser checks verify locale calendar switching, preserved UTC values, Persian/Western numerals, date boundaries, keyboard behavior and a narrow mobile popup.",
+        "Root lint, formatting and typechecking pass."
+      ],
+      "limitations": [
+        "This certifies the implemented numeral-formatting task, not every F20 localization or screen-reader requirement. Identifiers, customer-authored content, canonical input values and business date strings retain their own semantics. Production deployment and failing combined coverage groups remain separate gates."
+      ],
+      "merged_prs": [],
+      "historically_skipped": true
     }
   ],
   "pending_task_keys": [
@@ -1435,7 +1555,6 @@
     "01-platform-infrastructure.md#T-06.02.01",
     "01-platform-infrastructure.md#T-06.02.02",
     "01-platform-infrastructure.md#T-06.02.04",
-    "01-platform-infrastructure.md#T-06.02.05",
     "01-platform-infrastructure.md#T-06.03.01",
     "01-platform-infrastructure.md#T-06.03.02",
     "01-platform-infrastructure.md#T-06.03.03",

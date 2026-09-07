@@ -2424,3 +2424,11 @@ Both new unit regressions failed before repair. All 934 shared tests pass, inclu
 ### Recheck the full browser suite after numeral and geography repairs
 
 The full 321-case production browser run returned 320 passes and one failure. The old-profile response race expected a Western notification count on a Persian page after badges were localized. Both before/after late-response assertions now require the Persian digit while preserving the stale-response checks. All six profile-switch browser cases pass on rerun; targeted lint, formatting and diff review pass. This is a focused clean rerun, not a claim that the failed full run passed. The next combined coverage checkpoint will repeat the full suite.
+
+### Refresh combined coverage and close numeral task acceptance
+
+At reviewed revision `28a50ef109a6801ae3a6a94b368d1c2a847e184c`, all 5,206 unit/database tests across 433 files and all 321 production Chromium checks pass. The collector accepts all 321 browser records, maps them to 224 source files and merges four package reports. Root lint, formatting and all eleven typechecking tasks pass.
+
+The strict changed-code gate still fails six of thirteen groups with no missing-source or malformed-report errors. API critical branches are 76.31%; web general is 63.91% lines / 59.78% branches; web critical is 76.87% / 73.56%; database general branches are 59.52%; i18n critical branches are 76.32%; UI general is 51.18% / 64.82%. Thresholds remain unchanged. The updated combined checkpoint records this revision, not later changes.
+
+Canonical `01-platform-infrastructure.md#T-06.02.05` now has requirement-bound acceptance evidence for exact IRR, published administrator numeral preferences, formatted consumers and calendar behavior. The ledger contains 29 assessed tasks: 22 verified, seven partial and 293 pending. Other F20 localization/accessibility work remains open. Review of uncovered database monitoring found PostgreSQL 17 checkpoint-query incompatibility and failure-to-zero reporting; those are the next repair.
