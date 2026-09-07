@@ -61,6 +61,16 @@
       "types": "./dist/wallet-receipts.d.ts",
       "import": "./dist/wallet-receipts.js",
       "default": "./dist/wallet-receipts.js"
+    },
+    "./branding": {
+      "types": "./dist/branding.d.ts",
+      "import": "./dist/branding.js",
+      "default": "./dist/branding.js"
+    },
+    "./date-time": {
+      "types": "./dist/date-time.d.ts",
+      "import": "./dist/date-time.js",
+      "default": "./dist/date-time.js"
     }
   },
   "scripts": {

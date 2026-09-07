@@ -1,6 +1,8 @@
 import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
-import { t } from '@barghsa/i18n';
+import { brandingText } from '@barghsa/i18n/branding';
+import { formatInTimezone } from '@barghsa/i18n/date-time';
+import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 
@@ -68,6 +70,7 @@ function ColorInput({
   onChange: (v: string) => void;
 }) {
   const controlId = useId();
+  const locale = useLocale();
   return (
     <div className="flex items-center gap-3">
       <label htmlFor={controlId} className="text-sm font-medium text-gray-700 w-32">
@@ -81,7 +84,7 @@ function ColorInput({
         className="w-10 h-10 rounded border border-gray-300 cursor-pointer p-0.5"
       />
       <input
-        aria-label={`${label} hex value`}
+        aria-label={brandingText('hex', locale).replace('{label}', label)}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -101,7 +104,12 @@ export default function AdminBrandingConfig() {
   const [config, setConfig] = useState<BrandConfig>(DEFAULT_CONFIG);
   const [activeConfig, setActiveConfig] = useState<BrandConfigDto | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const locale = useLocale();
+  const text = (key: Parameters<typeof brandingText>[0]) => brandingText(key, locale);
+  const timezone = useTimezone();
+  const versionText = (version: number) =>
+    new Intl.NumberFormat(locale, { useGrouping: false }).format(version);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [revision, setRevision] = useState(0);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -126,6 +134,7 @@ export default function AdminBrandingConfig() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setLoadError(false);
     setLogoFile(null);
     setLogoUploadKey(null);
     setMessage(null);
@@ -136,9 +145,8 @@ export default function AdminBrandingConfig() {
         setActiveConfig(dto);
         setConfig({ ...DEFAULT_CONFIG, ...dto.config });
       })
-      .catch((err) => {
-        if (!cancelled)
-          setMessage({ type: 'error', text: `Failed to load config: ${err.message}` });
+      .catch(() => {
+        if (!cancelled) setLoadError(true);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -155,8 +163,8 @@ export default function AdminBrandingConfig() {
   const handleSave = () => {
     if (!activeConfig) return;
     setAction({
-      title: 'Save Draft',
-      description: t('admin.branding.saveConfirm', locale),
+      title: text('save'),
+      description: text('saveConfirm'),
       path: '/api/admin/branding/config',
       method: 'PUT',
       body: {
@@ -164,22 +172,19 @@ export default function AdminBrandingConfig() {
         expectedVersion: activeConfig.version,
         ...(logoUploadKey ? { logoUploadKey } : {}),
       },
-      conflictMessage: t('admin.branding.changed', locale),
+      conflictMessage: text('changed'),
     });
   };
 
   const handleActivate = () => {
     if (!draftInfo || draftInfo.version < 1) return;
     setAction({
-      title: 'Activate',
-      description: t('admin.branding.activateConfirm', locale).replace(
-        '{version}',
-        String(draftInfo.version)
-      ),
+      title: text('activate'),
+      description: text('activateConfirm').replace('{version}', versionText(draftInfo.version)),
       path: '/api/admin/branding/activate',
       method: 'POST',
       body: { draftId: draftInfo.id, expectedVersion: draftInfo.version },
-      conflictMessage: t('admin.branding.changed', locale),
+      conflictMessage: text('changed'),
     });
   };
 
@@ -199,8 +204,7 @@ export default function AdminBrandingConfig() {
       setLogoUploadKey(key);
       setLogoFile(file);
     } catch {
-      if (!controller.signal.aborted)
-        setMessage({ type: 'error', text: t('admin.branding.uploadFailed', locale) });
+      if (!controller.signal.aborted) setMessage({ type: 'error', text: text('uploadFailed') });
     } finally {
       if (!controller.signal.aborted) setUploading(false);
     }
@@ -209,6 +213,9 @@ export default function AdminBrandingConfig() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
+        <span role="status" className="sr-only">
+          {text('loading')}
+        </span>
         <div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -237,7 +244,7 @@ export default function AdminBrandingConfig() {
             setLogoUploadKey(null);
             setActiveConfig(dto);
             setConfig({ ...DEFAULT_CONFIG, ...dto.config });
-            setMessage({ type: 'success', text: t('admin.branding.saved', locale) });
+            setMessage({ type: 'success', text: text('saved') });
             setAction(null);
           }}
         />
@@ -247,27 +254,49 @@ export default function AdminBrandingConfig() {
         onClick={() => setRevision((value) => value + 1)}
         disabled={action !== null || uploading}
       >
-        {t('admin.branding.refresh', locale)}
+        {text('refresh')}
       </button>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Branding Settings</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{text('title')}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Configure your brand identity — logo, colors, and app name.
+            {text('description')}
             {draftInfo && (
-              <span className="ml-2 text-amber-600">
-                (Draft v{draftInfo.version} — last saved{' '}
-                {new Date(draftInfo.updatedAt).toLocaleString()})
+              <span className="ms-2 text-amber-600">
+                {text('draftVersion').replace('{version}', versionText(draftInfo.version))}
+                {timezone.status === 'ready' && (
+                  <>
+                    {' '}
+                    ·{' '}
+                    <time dateTime={draftInfo.updatedAt}>
+                      {text('savedAt').replace(
+                        '{date}',
+                        formatInTimezone(draftInfo.updatedAt, timezone.timezone, locale)
+                      )}
+                    </time>
+                  </>
+                )}
               </span>
             )}
-            {activeConfig?.status === 'active' && !draftInfo && (
-              <span className="ml-2 text-green-600">(Active v{activeConfig.version})</span>
+            {activeConfig?.status === 'active' && (
+              <span className="ms-2 text-green-600">
+                {text('activeVersion').replace('{version}', versionText(activeConfig.version))}
+              </span>
             )}
           </p>
         </div>
       </div>
 
-      {uploading && <p role="status">{t('admin.branding.uploading', locale)}</p>}
+      {loadError && <p role="alert">{text('loadFailed')}</p>}
+      {timezone.status === 'error' && (
+        <div role="alert">
+          {text('timezoneFailed')}{' '}
+          <button type="button" onClick={timezone.retry}>
+            {text('retryTimezone')}
+          </button>
+        </div>
+      )}
+      {uploading && <p role="status">{text('uploading')}</p>}
       {message && (
         <div
           role={message.type === 'error' ? 'alert' : 'status'}
@@ -283,14 +312,14 @@ export default function AdminBrandingConfig() {
 
       {/* ── App Identity ──────────────────────────────────────────────── */}
       <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-800">App Identity</h2>
+        <h2 className="text-lg font-semibold text-gray-800">{text('identity')}</h2>
 
         <div>
           <label
             htmlFor="adminbrandingconfig-field-2"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            App Title
+            {text('appTitle')}
           </label>
           <input
             id="adminbrandingconfig-field-2"
@@ -307,7 +336,7 @@ export default function AdminBrandingConfig() {
             htmlFor="adminbrandingconfig-field-3"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Slogan
+            {text('slogan')}
           </label>
           <input
             id="adminbrandingconfig-field-3"
@@ -315,27 +344,27 @@ export default function AdminBrandingConfig() {
             value={config.slogan}
             onChange={(e) => updateConfig('slogan', e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-            placeholder="Your electricity companion"
+            placeholder={text('sloganPlaceholder')}
           />
         </div>
       </section>
 
       {/* ── Colors ────────────────────────────────────────────────────── */}
       <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-800">Colors</h2>
+        <h2 className="text-lg font-semibold text-gray-800">{text('colors')}</h2>
 
         <ColorInput
-          label="Primary"
+          label={text('primary')}
           value={config.primaryColor}
           onChange={(v) => updateConfig('primaryColor', v)}
         />
         <ColorInput
-          label="Secondary"
+          label={text('secondary')}
           value={config.secondaryColor}
           onChange={(v) => updateConfig('secondaryColor', v)}
         />
         <ColorInput
-          label="Accent"
+          label={text('accent')}
           value={config.accentColor}
           onChange={(v) => updateConfig('accentColor', v)}
         />
@@ -343,7 +372,7 @@ export default function AdminBrandingConfig() {
 
       {/* ── Logo ──────────────────────────────────────────────────────── */}
       <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-800">Logo</h2>
+        <h2 className="text-lg font-semibold text-gray-800">{text('logo')}</h2>
 
         <div className="flex items-start gap-6">
           <div className="flex-1">
@@ -351,7 +380,7 @@ export default function AdminBrandingConfig() {
               htmlFor="adminbrandingconfig-field-4"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Upload logo
+              {text('upload')}
             </label>
             <input
               id="adminbrandingconfig-field-4"
@@ -359,16 +388,16 @@ export default function AdminBrandingConfig() {
               accept="image/png,image/jpeg,image/webp"
               disabled={action !== null}
               onChange={handleLogoUpload}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
-            <p className="text-xs text-gray-400 mt-1">PNG, JPG, or WebP. Max 2MB.</p>
+            <p className="text-xs text-gray-400 mt-1">{text('logoHint')}</p>
           </div>
 
           {displayedLogo && (
             <div className="shrink-0">
               <img
                 src={displayedLogo}
-                alt="Logo preview"
+                alt={text('logoPreview')}
                 className="max-w-32 max-h-16 object-contain border border-gray-200 rounded"
               />
               <button
@@ -381,7 +410,7 @@ export default function AdminBrandingConfig() {
                 }}
                 className="text-xs text-red-500 hover:text-red-700 mt-1"
               >
-                Remove
+                {text('remove')}
               </button>
             </div>
           )}
@@ -392,7 +421,7 @@ export default function AdminBrandingConfig() {
             htmlFor="adminbrandingconfig-field-5"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Favicon URL (optional)
+            {text('favicon')}
           </label>
           <input
             id="adminbrandingconfig-field-5"
@@ -409,11 +438,11 @@ export default function AdminBrandingConfig() {
       <section className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-800">Dark Mode</h2>
-            <p className="text-sm text-gray-500">Enable dark mode theme for the app</p>
+            <h2 className="text-lg font-semibold text-gray-800">{text('darkMode')}</h2>
+            <p className="text-sm text-gray-500">{text('darkHint')}</p>
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
-            <span className="sr-only">Dark mode</span>
+            <span className="sr-only">{text('darkMode')}</span>
             <input
               type="checkbox"
               checked={config.darkMode}
@@ -427,7 +456,7 @@ export default function AdminBrandingConfig() {
 
       {/* ── Preview ───────────────────────────────────────────────────── */}
       <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-800">Preview</h2>
+        <h2 className="text-lg font-semibold text-gray-800">{text('preview')}</h2>
         <div
           className="rounded-lg p-6 border"
           style={{
@@ -436,7 +465,7 @@ export default function AdminBrandingConfig() {
           }}
         >
           <div className="flex items-center gap-4 mb-4">
-            {displayedLogo && <img src={displayedLogo} alt="Logo" className="h-10" />}
+            {displayedLogo && <img src={displayedLogo} alt={text('logo')} className="h-10" />}
             <div>
               <h3 className="text-xl font-bold" style={{ color: config.primaryColor }}>
                 {config.appTitle || 'Barghsa'}
@@ -454,21 +483,21 @@ export default function AdminBrandingConfig() {
               className="px-4 py-2 rounded-lg text-white text-sm font-medium"
               style={{ backgroundColor: config.primaryColor }}
             >
-              Primary
+              {text('primary')}
             </button>
             <button
               type="button"
               className="px-4 py-2 rounded-lg text-white text-sm font-medium"
               style={{ backgroundColor: config.secondaryColor }}
             >
-              Secondary
+              {text('secondary')}
             </button>
             <button
               type="button"
               className="px-4 py-2 rounded-lg text-white text-sm font-medium"
               style={{ backgroundColor: config.accentColor }}
             >
-              Accent
+              {text('accent')}
             </button>
           </div>
         </div>
@@ -482,7 +511,7 @@ export default function AdminBrandingConfig() {
           disabled={uploading || action !== null || !activeConfig || !isDirty}
           className="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          Save Draft
+          {text('save')}
         </button>
 
         <button
@@ -491,11 +520,13 @@ export default function AdminBrandingConfig() {
           disabled={uploading || action !== null || !draftInfo || isDirty}
           className="px-6 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          Activate
+          {text('activate')}
         </button>
 
         {activeConfig?.status === 'active' && (
-          <span className="text-xs text-green-600 ml-auto">Active v{activeConfig.version}</span>
+          <span className="text-xs text-green-600 ms-auto">
+            {text('activeVersion').replace('{version}', versionText(activeConfig.version))}
+          </span>
         )}
       </div>
     </div>

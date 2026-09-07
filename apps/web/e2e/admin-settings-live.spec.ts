@@ -2223,14 +2223,33 @@ for (const locale of ['en', 'fa'] as const) {
 
 for (const locale of ['en', 'fa'] as const) {
   test(`branding publishes only the saved reviewed version (${locale})`, async ({ page }) => {
+    const fa = locale === 'fa';
     await page.addInitScript((value) => {
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
     }, locale);
+    let failTimezone = false;
+    const accountTimezone = fa ? 'Asia/Tokyo' : 'America/Los_Angeles';
+    expect(
+      (
+        await page.request.put(`${http.base}/api/user/settings/timezone`, {
+          headers: {
+            cookie: `barghsa_session=${http.session}`,
+            'x-csrf-token': http.csrf,
+            origin: 'https://app.example.test',
+          },
+          data: { timezone: accountTimezone },
+        })
+      ).status()
+    ).toBe(200);
     await page.route('**/api/**', async (route) => {
       const request = route.request();
       const url = new URL(request.url());
+      if (url.pathname === '/api/user/settings/timezone' && failTimezone) {
+        await route.fulfill({ status: 503, json: { error: 'fixture-timezone-unavailable' } });
+        return;
+      }
       const response = await route.fetch({
         url: `${http.base}${url.pathname}${url.search}`,
         headers: {
@@ -2247,10 +2266,16 @@ for (const locale of ['en', 'fa'] as const) {
       (await (await page.request.get(`${http.base}/api/public/branding/config`)).json()).appTitle;
     const before = await publicTitle();
     await page.goto('/admin/branding');
-    const title = page.getByLabel('App Title', { exact: true });
+    const title = page.getByLabel(fa ? 'نام برنامه' : 'App Title', { exact: true });
     const savedTitle = `Brand published ${locale}`;
     await title.fill(savedTitle);
-    await page.getByLabel('Upload logo', { exact: true }).setInputFiles({
+    await page
+      .getByLabel(fa ? 'بارگذاری نشان' : 'Upload logo', { exact: true })
+      .setInputFiles({ name: 'bad.svg', mimeType: 'image/svg+xml', buffer: Buffer.from('<svg/>') });
+    await expect(page.getByRole('alert')).toContainText(
+      fa ? 'بارگذاری نشان ناموفق بود' : 'Logo upload failed'
+    );
+    await page.getByLabel(fa ? 'بارگذاری نشان' : 'Upload logo', { exact: true }).setInputFiles({
       name: 'brand.png',
       mimeType: 'image/png',
       buffer: Buffer.from(
@@ -2258,12 +2283,13 @@ for (const locale of ['en', 'fa'] as const) {
         'base64'
       ),
     });
-    await expect(page.getByRole('img', { name: 'Logo preview', exact: true })).toHaveAttribute(
-      'src',
-      /^blob:/
-    );
+    await expect(
+      page.getByRole('img', { name: fa ? 'پیش‌نمایش نشان' : 'Logo preview', exact: true })
+    ).toHaveAttribute('src', /^blob:/);
 
-    await page.getByRole('button', { name: 'Save Draft', exact: true }).click();
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره پیش‌نویس' : 'Save Draft', exact: true })
+      .click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
@@ -2272,16 +2298,46 @@ for (const locale of ['en', 'fa'] as const) {
     expect(await publicTitle()).toBe(before);
     await page.reload();
     await expect(title).toHaveValue(savedTitle);
-    const preview = page.getByRole('img', { name: 'Logo preview', exact: true });
+    const savedTime = page.locator('main time');
+    await expect(savedTime).toHaveCount(1);
+    const instant = await savedTime.getAttribute('datetime');
+    expect(instant).toBeTruthy();
+    const formatted = new Intl.DateTimeFormat(locale, {
+      timeZone: accountTimezone,
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(new Date(instant!));
+    await expect(savedTime).toContainText(formatted);
+    failTimezone = true;
+    await page.evaluate(() => window.dispatchEvent(new Event('barghsa:timezone-changed')));
+    await expect(page.getByRole('alert')).toContainText(
+      fa ? 'دریافت منطقه زمانی ناموفق بود' : 'Could not load your timezone'
+    );
+    await expect(savedTime).toHaveCount(0);
+    failTimezone = false;
+    await page
+      .getByRole('button', {
+        name: fa ? 'تلاش دوباره برای منطقه زمانی' : 'Retry timezone',
+        exact: true,
+      })
+      .click();
+    await expect(savedTime).toContainText(formatted);
+
+    const preview = page.getByRole('img', {
+      name: fa ? 'پیش‌نمایش نشان' : 'Logo preview',
+      exact: true,
+    });
     await expect(preview).toHaveAttribute('src', /^\/api\/admin\/branding\/assets\//);
     await expect
       .poll(() => preview.evaluate((image: HTMLImageElement) => image.naturalWidth))
       .toBe(1);
 
     await title.fill('Unsaved change');
-    await expect(page.getByRole('button', { name: 'Activate', exact: true })).toBeDisabled();
+    await expect(
+      page.getByRole('button', { name: fa ? 'انتشار' : 'Activate', exact: true })
+    ).toBeDisabled();
     await title.fill(savedTitle);
-    await page.getByRole('button', { name: 'Activate', exact: true }).click();
+    await page.getByRole('button', { name: fa ? 'انتشار' : 'Activate', exact: true }).click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
@@ -2289,7 +2345,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(await publicTitle()).toBe(savedTitle);
     await title.fill(`Next draft ${locale}`);
-    await page.getByRole('button', { name: 'Save Draft', exact: true }).click();
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره پیش‌نویس' : 'Save Draft', exact: true })
+      .click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
