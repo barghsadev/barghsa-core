@@ -593,6 +593,198 @@
         16
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.01",
+      "status": "partial",
+      "reviewed_sha": "469a96777f93d9af4606c8aabfd3d462b6fd2b0e",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 602,
+      "requirement": "**T-08.01.01 — Dashboard page layout**\n\n- Description: `/app/dashboard` — overview of everything related to current active profile. Summary cards: wallet balance, active orders, pending invoices, open tickets, contract status.\n- Technical notes: GET `/api/dashboard` returns aggregated data for active profile. Data scoped by active profile only. Refresh on profile switch.\n- UI/UX: Welcome message with profile name. Cards in responsive grid. Each card is clickable (navigates to relevant section). \"Quick actions\" section. Profile badge.\n- Dependencies: T-03.01.01\n- Complexity: M",
+      "requirement_sha256": "571534d67eff18401c61778c1512542e6bdded53e0e0f64b210af5e631ee8d99",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "ae8d15ee7a3470b6aef7475907393102300d3fa2ce4305a501967f2bda5bc584"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.service.ts",
+          "sha256": "4e17fafcdea722cbd3ae22dd8e359ef1e3de6de66493baf6414d6ebedbbc17d7"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.module.ts",
+          "sha256": "94a10a3ecfff82439ba4b504e477e92e22e58c44719048eb1ff56908caccd2c9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "cacc56895bafdd0f45f41765aadbbe06a72f441e8af8f7fcc4255771186a21d0"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "ff04f269af3ff78106ea7382fdba7452909e4273cf5c4b651160c9f7ea4ff8f5"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "b1675d1aacd40bcebfdbe1e2adf43aca6d39fc7e69fcbec6bf1e8f17fc442956"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "621909b3e68f50d3596a53c78978e84eb007e285d80b72a60da883f65c69249a"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "bc86df4daf603f456396788455a6fd9092bc60455db55dd7ef6c545b5bfd6cf2"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "4a09a3b4432384152695bbf7083632dba664b0ca03d3ce1cf2aec4e43383bbbd"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "95cec6919597c507c506578951c1bd1febff652dbf3a63122857e77dd8e082db"
+        }
+      ],
+      "checks": [
+        "15 dashboard/profile API tests pass against migrated AppModule, including permissions, exact money, due liabilities and read failures",
+        "42 live API browser flows pass, including both dashboard locales and recovery",
+        "Six profile-switch browser checks pass, including cross-tab refresh and late-response isolation",
+        "Root build, types, lint, formatting, contract and bundle checks pass"
+      ],
+      "limitations": [
+        "Wallet, profile identity, error recovery and profile-switch behavior are verified. Contract summaries still derive from confirmed orders; future order/contract list consumers remain incomplete."
+      ],
+      "merged_prs": [
+        143
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "469a96777f93d9af4606c8aabfd3d462b6fd2b0e",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 610,
+      "requirement": "**T-08.01.02 — Wallet balance card**\n\n- Description: Shows available wallet balance in IRR and toman. Link to wallet page. Alert if balance is low relative to pending invoices.\n- Technical notes: Calls wallet service for balance. Format IRR with locale-aware number formatting.\n- UI/UX: Card with balance prominently displayed. Currency label (IRR/تومان). Button: \"Charge wallet\". Warning banner if low balance for due invoices.\n- Dependencies: wallet module\n- Complexity: S",
+      "requirement_sha256": "0ae7ccd5841717e0263307f72c0a84b6845cf7f43a07f8c068b3bb06dcf45bb2",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "ae8d15ee7a3470b6aef7475907393102300d3fa2ce4305a501967f2bda5bc584"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.service.ts",
+          "sha256": "4e17fafcdea722cbd3ae22dd8e359ef1e3de6de66493baf6414d6ebedbbc17d7"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.module.ts",
+          "sha256": "94a10a3ecfff82439ba4b504e477e92e22e58c44719048eb1ff56908caccd2c9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "cacc56895bafdd0f45f41765aadbbe06a72f441e8af8f7fcc4255771186a21d0"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "ff04f269af3ff78106ea7382fdba7452909e4273cf5c4b651160c9f7ea4ff8f5"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "b1675d1aacd40bcebfdbe1e2adf43aca6d39fc7e69fcbec6bf1e8f17fc442956"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "621909b3e68f50d3596a53c78978e84eb007e285d80b72a60da883f65c69249a"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "bc86df4daf603f456396788455a6fd9092bc60455db55dd7ef6c545b5bfd6cf2"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "4a09a3b4432384152695bbf7083632dba664b0ca03d3ce1cf2aec4e43383bbbd"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "95cec6919597c507c506578951c1bd1febff652dbf3a63122857e77dd8e082db"
+        }
+      ],
+      "checks": [
+        "15 dashboard/profile API tests pass against migrated AppModule, including permissions, exact money, due liabilities and read failures",
+        "42 live API browser flows pass, including both dashboard locales and recovery",
+        "Six profile-switch browser checks pass, including cross-tab refresh and late-response isolation",
+        "Root build, types, lint, formatting, contract and bundle checks pass"
+      ],
+      "limitations": [
+        "Dashboard reads are informational snapshots, not payment authorization. External wallet HTTP consumers must accept decimal-string money."
+      ],
+      "merged_prs": [
+        153
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.03",
+      "status": "partial",
+      "reviewed_sha": "469a96777f93d9af4606c8aabfd3d462b6fd2b0e",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 618,
+      "requirement": "**T-08.01.03 — Quick status cards**\n\n- Description: Cards showing counts: \"Active contracts\", \"Pending orders\", \"Open tickets\", \"Unpaid invoices\". Each with link to relevant list page.\n- Technical notes: Aggregated queries across modules, scoped to active profile.\n- UI/UX: Icon + count + label. Color coding: green (good), yellow (attention), red (action needed). Click navigates to filtered list.\n- Dependencies: T-08.01.01\n- Complexity: M",
+      "requirement_sha256": "2675e3c81390fdaa945e764f9b633e3f8bc55edd23cc76ddfb8cdc5da7191b60",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "ae8d15ee7a3470b6aef7475907393102300d3fa2ce4305a501967f2bda5bc584"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.service.ts",
+          "sha256": "4e17fafcdea722cbd3ae22dd8e359ef1e3de6de66493baf6414d6ebedbbc17d7"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.module.ts",
+          "sha256": "94a10a3ecfff82439ba4b504e477e92e22e58c44719048eb1ff56908caccd2c9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "cacc56895bafdd0f45f41765aadbbe06a72f441e8af8f7fcc4255771186a21d0"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "ff04f269af3ff78106ea7382fdba7452909e4273cf5c4b651160c9f7ea4ff8f5"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "b1675d1aacd40bcebfdbe1e2adf43aca6d39fc7e69fcbec6bf1e8f17fc442956"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "621909b3e68f50d3596a53c78978e84eb007e285d80b72a60da883f65c69249a"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "bc86df4daf603f456396788455a6fd9092bc60455db55dd7ef6c545b5bfd6cf2"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "4a09a3b4432384152695bbf7083632dba664b0ca03d3ce1cf2aec4e43383bbbd"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "95cec6919597c507c506578951c1bd1febff652dbf3a63122857e77dd8e082db"
+        }
+      ],
+      "checks": [
+        "15 dashboard/profile API tests pass against migrated AppModule, including permissions, exact money, due liabilities and read failures",
+        "42 live API browser flows pass, including both dashboard locales and recovery",
+        "Six profile-switch browser checks pass, including cross-tab refresh and late-response isolation",
+        "Root build, types, lint, formatting, contract and bundle checks pass"
+      ],
+      "limitations": [
+        "Localized counts and ticket navigation repaired. Dedicated contract counts and future order/contract filtered-list consumers remain incomplete."
+      ],
+      "merged_prs": [
+        154
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -772,9 +964,6 @@
     "02-auth-users-admin.md#T-07.01.01",
     "02-auth-users-admin.md#T-07.01.02",
     "02-auth-users-admin.md#T-07.01.03",
-    "02-auth-users-admin.md#T-08.01.01",
-    "02-auth-users-admin.md#T-08.01.02",
-    "02-auth-users-admin.md#T-08.01.03",
     "02-auth-users-admin.md#T-09.01.01",
     "02-auth-users-admin.md#T-09.01.02",
     "02-auth-users-admin.md#T-09.02.01",
