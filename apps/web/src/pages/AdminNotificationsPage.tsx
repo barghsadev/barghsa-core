@@ -164,6 +164,7 @@ export default function AdminNotificationsPage() {
   // Editor state
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [viewOnly, setViewOnly] = useState(false);
   const [eventKey, setEventKey] = useState('');
   const [channel, setChannel] = useState<TemplateChannel>('email');
   const [locale, setLocale] = useState<TemplateLocale>('en');
@@ -208,6 +209,7 @@ export default function AdminNotificationsPage() {
   }, [fetchTemplates]);
 
   function openCreate() {
+    setViewOnly(false);
     setEditId(null);
     setEventKey(KNOWN_EVENT_KEYS[0]!);
     setChannel('email');
@@ -220,8 +222,9 @@ export default function AdminNotificationsPage() {
     setShowEditor(true);
   }
 
-  function openEdit(template: NotificationTemplate) {
-    setEditId(template.id);
+  function openEdit(template: NotificationTemplate, copy = false) {
+    setViewOnly(!copy && (template.status !== 'draft' || template.publishedAt != null));
+    setEditId(copy ? null : template.id);
     setEventKey(template.eventKey);
     setChannel(template.channel);
     setLocale(template.locale);
@@ -291,6 +294,7 @@ export default function AdminNotificationsPage() {
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
+    if (viewOnly || saving) return;
     setSaving(true);
 
     const variables = parseVariablesText(variablesStr);
@@ -485,7 +489,8 @@ export default function AdminNotificationsPage() {
         >
           <option value="">{t('admin.notifications.allStatus', uiLocale)}</option>
           <option value="draft">Draft</option>
-          <option value="active">Active</option>
+          <option value="active">{t('admin.notifications.active', uiLocale)}</option>
+          <option value="archived">{t('admin.notifications.archived', uiLocale)}</option>
         </select>
       </div>
 
@@ -496,9 +501,11 @@ export default function AdminNotificationsPage() {
           className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
         >
           <h2 className="text-lg font-semibold">
-            {editId
-              ? t('admin.notifications.editTitle', uiLocale)
-              : t('admin.notifications.createTitle', uiLocale)}
+            {viewOnly
+              ? t('admin.notifications.view', uiLocale)
+              : editId
+                ? t('admin.notifications.editTitle', uiLocale)
+                : t('admin.notifications.createTitle', uiLocale)}
           </h2>
 
           {/* Event key */}
@@ -524,6 +531,9 @@ export default function AdminNotificationsPage() {
                 className="w-full border border-gray-300 rounded px-3 py-2"
                 required
               >
+                {!KNOWN_EVENT_KEYS.includes(eventKey) && (
+                  <option value={eventKey}>{eventKey}</option>
+                )}
                 {KNOWN_EVENT_KEYS.map((key) => (
                   <option key={key} value={key}>
                     {key}
@@ -609,6 +619,7 @@ export default function AdminNotificationsPage() {
               <input
                 type="text"
                 id="notification-template-subject"
+                readOnly={viewOnly}
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2"
@@ -636,6 +647,7 @@ export default function AdminNotificationsPage() {
                   aria-describedby="notification-body-hint"
                   ref={bodyRef}
                   id="notification-template-bodyTemplate"
+                  readOnly={viewOnly}
                   value={bodyTemplate}
                   onChange={(e) => setBodyTemplate(e.target.value)}
                   className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
@@ -657,6 +669,7 @@ export default function AdminNotificationsPage() {
                       <li key={v.name}>
                         <button
                           type="button"
+                          disabled={viewOnly}
                           onClick={() => insertVariable(v.name)}
                           className="w-full text-left px-2 py-1 text-xs font-mono bg-white border border-gray-200 rounded hover:bg-blue-50 hover:border-blue-300"
                           title={v.description ?? undefined}
@@ -711,6 +724,7 @@ export default function AdminNotificationsPage() {
             </p>
             <textarea
               id="notification-template-variablesLabel"
+              readOnly={viewOnly}
               value={variablesStr}
               onChange={(e) => setVariablesStr(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
@@ -756,7 +770,7 @@ export default function AdminNotificationsPage() {
             )}
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || viewOnly}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {saving
@@ -839,7 +853,13 @@ export default function AdminNotificationsPage() {
             )}
             {templates.map((template) => (
               <tr key={template.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 text-sm font-mono">{template.eventKey}</td>
+                <td className="px-4 py-3 text-sm font-mono">
+                  {template.eventKey}
+                  <div className="text-xs text-gray-500">
+                    {t('admin.notifications.preview.version', uiLocale)}{' '}
+                    {new Intl.NumberFormat(uiLocale).format(template.version)}
+                  </div>
+                </td>
                 <td className="px-4 py-3 text-sm">
                   <span
                     className={`inline-block px-2 py-0.5 text-xs rounded ${
@@ -866,7 +886,9 @@ export default function AdminNotificationsPage() {
                         : 'bg-green-100 text-green-800'
                     }`}
                   >
-                    {template.status}
+                    {template.status === 'archived'
+                      ? t('admin.notifications.archived', uiLocale)
+                      : template.status}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 max-w-[200px] truncate">
@@ -882,7 +904,7 @@ export default function AdminNotificationsPage() {
                   )}
                 </td>
                 <td className="px-4 py-3 text-right text-sm space-x-2">
-                  {template.status === 'draft' && (
+                  {template.status === 'draft' && template.publishedAt == null && (
                     <>
                       <button
                         onClick={() => openEdit(template)}
@@ -904,7 +926,7 @@ export default function AdminNotificationsPage() {
                       </button>
                     </>
                   )}
-                  {template.status === 'active' && (
+                  {(template.status !== 'draft' || template.publishedAt != null) && (
                     <>
                       <button
                         onClick={() => openEdit(template)}
@@ -913,11 +935,19 @@ export default function AdminNotificationsPage() {
                         {t('admin.notifications.view', uiLocale)}
                       </button>
                       <button
-                        onClick={() => handleUnpublish(template.id)}
-                        className="text-orange-600 hover:underline"
+                        onClick={() => openEdit(template, true)}
+                        className="text-blue-600 hover:underline"
                       >
-                        {t('admin.notifications.unpublish', uiLocale)}
+                        {t('admin.notifications.newVersion', uiLocale)}
                       </button>
+                      {template.status === 'active' && (
+                        <button
+                          onClick={() => handleUnpublish(template.id)}
+                          className="text-orange-600 hover:underline"
+                        >
+                          {t('admin.notifications.unpublish', uiLocale)}
+                        </button>
+                      )}
                     </>
                   )}
                 </td>

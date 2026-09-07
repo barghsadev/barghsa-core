@@ -1659,6 +1659,8 @@ export const fa: I18nDictionary = {
   'admin.notifications.view': 'مشاهده',
   'admin.notifications.delete': 'حذف',
   'admin.notifications.unpublish': 'غیرفعال‌سازی',
+  'admin.notifications.archived': 'بایگانی‌شده',
+  'admin.notifications.newVersion': 'نسخه جدید',
   'admin.notifications.active': 'فعال',
   'admin.notifications.unpublishConfirm':
     'این قالب غیرفعال شود؟ اعلان‌های فعال تا انتشار نسخه جدید دیگر از آن استفاده نمی‌کنند.',
@@ -3646,6 +3648,8 @@ export const en: I18nDictionary = {
   'admin.notifications.view': 'View',
   'admin.notifications.delete': 'Delete',
   'admin.notifications.unpublish': 'Unpublish',
+  'admin.notifications.archived': 'Archived',
+  'admin.notifications.newVersion': 'New version',
   'admin.notifications.active': 'Active',
   'admin.notifications.unpublishConfirm':
     'Unpublish this template? Active notifications will stop using it until a new version is published.',

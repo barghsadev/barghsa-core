@@ -1844,3 +1844,93 @@ for (const locale of ['en', 'fa']) {
     expect(cities).toBe(3);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`notification version history stays read-only and copies into a new draft (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const versions = ['active', 'archived', 'draft'].map((status, index) => ({
+      id: `version-${index}`,
+      eventKey: 'profile_verified',
+      channel: 'email',
+      locale: 'en',
+      subject: `Published subject ${index}`,
+      bodyTemplate: `Published body ${index} {{userName}}`,
+      variables: [{ name: 'userName', description: 'Name' }],
+      status,
+      isActive: status === 'active',
+      version: index + 1,
+      publishedAt: '2026-09-01T00:00:00.000Z',
+    }));
+    const writes: unknown[] = [];
+    await page.route('**/api/admin/notifications/templates*', async (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: versions });
+      writes.push(route.request().postDataJSON());
+      return route.fulfill({ status: 503, json: { message: 'Unavailable' } });
+    });
+    await page.route('**/api/admin/config/delivery-window', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 } })
+    );
+    await page.goto('/admin/notifications');
+    const editor = page
+      .locator('form')
+      .filter({ has: page.locator('#notification-template-eventKey') });
+    for (const [index, version] of versions.entries()) {
+      const row = page.getByRole('row').filter({ hasText: version.subject });
+      await expect(
+        row.getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+      ).toHaveCount(0);
+      await row
+        .getByRole('button', { name: locale === 'fa' ? 'مشاهده' : 'View', exact: true })
+        .click();
+      for (const id of ['subject', 'bodyTemplate', 'variablesLabel']) {
+        await expect(editor.locator(`#notification-template-${id}`)).toHaveAttribute(
+          'readonly',
+          ''
+        );
+      }
+      await expect(editor.locator('button[type="submit"]')).toBeDisabled();
+      await expect(
+        editor.getByRole('button', { name: '{{userName}}', exact: true })
+      ).toBeDisabled();
+      await expect(editor.locator('#notification-template-bodyTemplate')).toHaveValue(
+        version.bodyTemplate
+      );
+      await editor
+        .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+        .click();
+      if (index === 1) {
+        await row
+          .getByRole('button', { name: locale === 'fa' ? 'نسخه جدید' : 'New version', exact: true })
+          .click();
+        await expect(editor.locator('#notification-template-bodyTemplate')).not.toHaveAttribute(
+          'readonly',
+          ''
+        );
+        await expect(editor.locator('#notification-template-bodyTemplate')).toHaveValue(
+          version.bodyTemplate
+        );
+        await editor
+          .locator('#notification-template-bodyTemplate')
+          .fill('Replacement {{userName}}');
+        await editor.locator('button[type="submit"]').click();
+        await expect(page.getByRole('alert').filter({ hasText: 'Unavailable' })).toBeVisible();
+        expect(writes).toEqual([
+          {
+            eventKey: version.eventKey,
+            channel: 'email',
+            locale: 'en',
+            subject: version.subject,
+            bodyTemplate: 'Replacement {{userName}}',
+            variables: version.variables,
+          },
+        ]);
+        await expect(editor).toBeVisible();
+        await editor
+          .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+          .click();
+      }
+    }
+  });
+}

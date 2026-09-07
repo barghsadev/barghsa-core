@@ -361,15 +361,20 @@ export class NotificationTemplateService {
       await this.lockFamily(client, input.eventKey, input.channel, input.locale);
       const existing = await client.query(
         `SELECT 1 FROM notification_templates WHERE event_key=$1 AND channel=$2 AND locale=$3
-         AND status IN ('draft','active') LIMIT 1`,
+         AND status='draft' AND published_at IS NULL LIMIT 1`,
         [input.eventKey, input.channel, input.locale]
       );
       if (existing.rows.length)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_EXISTS' }, 409);
+      const nextVersion = await client.query<{ version: number }>(
+        `SELECT COALESCE(MAX(version),0)+1 AS version FROM notification_templates
+         WHERE event_key=$1 AND channel=$2 AND locale=$3`,
+        [input.eventKey, input.channel, input.locale]
+      );
       const result = await client.query<Record<string, unknown>>(
         `INSERT INTO notification_templates(id,event_key,channel,locale,subject,body_template,variables,
          status,is_active,version,created_by,created_at,updated_at)
-         VALUES($1,$2,$3,$4,$5,$6,$7::jsonb,'draft',false,1,$8,NOW(),NOW())
+         VALUES($1,$2,$3,$4,$5,$6,$7::jsonb,'draft',false,$9,$8,NOW(),NOW())
          RETURNING ${this.SELECT_COLUMNS}`,
         [
           uuidv7(),
@@ -380,6 +385,7 @@ export class NotificationTemplateService {
           input.bodyTemplate,
           JSON.stringify(variables),
           actorUserId,
+          nextVersion.rows[0]!.version,
         ]
       );
       const row = result.rows[0]!;
@@ -399,7 +405,7 @@ export class NotificationTemplateService {
   ): Promise<NotificationTemplateResult> {
     return this.mutate(actorUserId, async (client) => {
       const template = await this.lockTemplate(client, id);
-      if (template.status !== 'draft')
+      if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
       const nextBody = input.bodyTemplate ?? (template.body_template as string);
       const variables = input.variables ?? (template.variables as TemplateVariableInput[]);
@@ -693,12 +699,13 @@ export class NotificationTemplateService {
    *
    * Versioning: the previously-active template for the same
    * event+channel+locale is archived (is_active=false, status='archived') and
-   * this template becomes the new active version with a bumped `version`.
+   * this template becomes the new active version. Legacy drafts with a reused
+   * version number advance beyond existing history before their first publish.
    */
   async publish(id: string, actorUserId: string): Promise<NotificationTemplateResult> {
     return this.mutate(actorUserId, async (client) => {
       const template = await this.lockTemplate(client, id);
-      if (template.status !== 'draft')
+      if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
       await client.query(
         `UPDATE notification_templates SET is_active=false,status='archived',updated_at=NOW()
@@ -707,13 +714,13 @@ export class NotificationTemplateService {
       );
       const version = await client.query<{ version: number }>(
         `SELECT COALESCE(MAX(version),0)+1 AS version FROM notification_templates
-         WHERE event_key=$1 AND channel=$2 AND locale=$3`,
-        [template.event_key, template.channel, template.locale]
+         WHERE event_key=$1 AND channel=$2 AND locale=$3 AND id<>$4`,
+        [template.event_key, template.channel, template.locale, id]
       );
       const result = await client.query<Record<string, unknown>>(
         `UPDATE notification_templates SET status='active',is_active=true,version=$1,
          published_at=NOW(),updated_at=NOW() WHERE id=$2 RETURNING ${this.SELECT_COLUMNS}`,
-        [version.rows[0]!.version, id]
+        [Math.max(Number(template.version), version.rows[0]!.version), id]
       );
       const row = result.rows[0]!;
       await this.auditMutation(client, actorUserId, 'notification_template_published', row);
@@ -722,7 +729,7 @@ export class NotificationTemplateService {
   }
 
   /**
-   * Unpublish an active template: revert it to draft.
+   * Unpublish an active template while retaining its immutable published content.
    */
   async unpublish(id: string, actorUserId: string): Promise<NotificationTemplateResult> {
     return this.mutate(actorUserId, async (client) => {
@@ -730,7 +737,7 @@ export class NotificationTemplateService {
       if (template.status !== 'active')
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_ACTIVE' }, 400);
       const result = await client.query<Record<string, unknown>>(
-        `UPDATE notification_templates SET status='draft',is_active=false,updated_at=NOW()
+        `UPDATE notification_templates SET status='archived',is_active=false,updated_at=NOW()
          WHERE id=$1 RETURNING ${this.SELECT_COLUMNS}`,
         [id]
       );
@@ -746,7 +753,7 @@ export class NotificationTemplateService {
   async delete(id: string, actorUserId: string): Promise<void> {
     return this.mutate(actorUserId, async (client) => {
       const template = await this.lockTemplate(client, id);
-      if (template.status !== 'draft')
+      if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_ACTIVE' }, 400);
       await client.query('DELETE FROM notification_templates WHERE id=$1', [id]);
       await this.auditMutation(client, actorUserId, 'notification_template_deleted', template);

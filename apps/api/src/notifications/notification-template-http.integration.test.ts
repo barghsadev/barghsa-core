@@ -1,5 +1,6 @@
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import type { NotificationTemplateResult } from './notification-template.service.js';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -215,3 +216,61 @@ it('does not edit a draft that became active while its update waited', async () 
     await pending;
   }
 });
+
+it('keeps published content immutable through replacement and unpublication', async () => {
+  const value = await seed('create');
+  const created = await write('create', value);
+  expect(created.status).toBe(201);
+  const original = (await created.json()) as NotificationTemplateResult;
+  expect(original.version).toBe(1);
+  const first = { id: original.id, event: value.event };
+  const published = await write('publish', first);
+  expect(published.status).toBe(200);
+  expect(((await published.json()) as NotificationTemplateResult).version).toBe(1);
+  const replacement = await write('create', value);
+  expect(replacement.status).toBe(201);
+  const draft = (await replacement.json()) as NotificationTemplateResult;
+  expect(draft.id).not.toBe(original.id);
+  expect(draft.version).toBe(2);
+  expect((await write('create', value)).status).toBe(409);
+  expect((await write('update', first)).status).toBe(400);
+  expect((await write('delete', first)).status).toBe(400);
+  const second = { id: draft.id, event: value.event };
+  expect((await write('update', second)).status).toBe(200);
+  expect((await write('publish', second)).status).toBe(200);
+  const history = (await snapshot()).templates;
+  expect(history.find((row) => row.id === first.id)).toMatchObject({
+    status: 'archived',
+    version: 1,
+    body_template: 'Original message',
+    is_active: false,
+  });
+  expect(history.find((row) => row.id === second.id)).toMatchObject({
+    status: 'active',
+    version: 2,
+    body_template: 'Updated message',
+    is_active: true,
+  });
+  expect((await write('unpublish', second)).status).toBe(200);
+  for (const row of [first, second]) {
+    expect((await write('update', row)).status).toBe(400);
+    expect((await write('delete', row)).status).toBe(400);
+    expect((await write('publish', row)).status).toBe(400);
+  }
+  const next = await write('create', value);
+  expect(next.status).toBe(201);
+  expect(((await next.json()) as NotificationTemplateResult).version).toBe(3);
+  expect((await snapshot()).templates.filter((row) => row.status === 'archived')).toHaveLength(2);
+});
+
+for (const action of ['update', 'publish', 'delete'] as const) {
+  it(`${action}: rejects a legacy draft that was previously published`, async () => {
+    const value = await seed('update');
+    await http.pool.query('UPDATE notification_templates SET published_at=NOW() WHERE id=$1', [
+      value.id,
+    ]);
+    const before = await snapshot();
+    expect((await write(action, value)).status).toBe(400);
+    expect(await snapshot()).toEqual(before);
+  });
+}
