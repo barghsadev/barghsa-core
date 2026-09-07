@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { Pool } from 'pg';
+import { randomUUID } from 'node:crypto';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 
 let pool: Pool;
@@ -10,7 +11,7 @@ vi.mock('./index.js', () => ({
     return pool;
   },
 }));
-import { collectPerformanceMetrics } from './metrics.js';
+import { collectPerformanceMetrics, collectReplicationLag } from './metrics.js';
 
 beforeAll(() => {
   pool = new Pool({ connectionString: process.env.TEST_DATABASE_URL, max: 8 });
@@ -95,3 +96,55 @@ it('collects query timings when pg_stat_statements is enabled on PostgreSQL 17',
     await container.stop();
   }
 }, 60_000);
+
+it.each([
+  {
+    name: 'slowest streaming replica',
+    rows: [
+      ['streaming', '5 seconds', null, null],
+      ['streaming', '45 seconds', null, null],
+      ['catchup', '99 seconds', null, null],
+    ],
+    expected: 45,
+  },
+  {
+    name: 'unknown lag on any streaming replica',
+    rows: [
+      ['streaming', '5 seconds', null, null],
+      ['streaming', null, null, null],
+    ],
+    expected: null,
+  },
+  {
+    name: 'write lag when replay lag is missing',
+    rows: [['streaming', null, '12 seconds', '8 seconds']],
+    expected: 12,
+  },
+  { name: 'negative lag', rows: [['streaming', '-2 seconds', null, null]], expected: null },
+  { name: 'no streaming replica', rows: [['catchup', '99 seconds', null, null]], expected: null },
+])('reports $name without inventing a healthy zero', async ({ rows, expected }) => {
+  const previous = pool;
+  const schema = `test_metrics_lag_${randomUUID().replaceAll('-', '')}`;
+  await previous.query(`CREATE SCHEMA "${schema}"`);
+  const scoped = new Pool({
+    connectionString: process.env.TEST_DATABASE_URL,
+    options: `-c search_path=${schema},pg_catalog`,
+    max: 1,
+  });
+  try {
+    pool = scoped;
+    // Controlled system-view rows exercise the actual SQL aggregation on PostgreSQL.
+    await scoped.query(`CREATE TABLE pg_stat_replication (
+      state text, replay_lag interval, write_lag interval, flush_lag interval)`);
+    for (const row of rows)
+      await scoped.query(
+        'INSERT INTO pg_stat_replication VALUES ($1, $2::interval, $3::interval, $4::interval)',
+        row
+      );
+    expect(await collectReplicationLag()).toBe(expected);
+  } finally {
+    pool = previous;
+    await scoped.end();
+    await previous.query(`DROP SCHEMA "${schema}" CASCADE`);
+  }
+});

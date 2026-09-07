@@ -102,26 +102,32 @@ const SLOW_QUERY_THRESHOLD_SECONDS = 30;
 
 /**
  * Collect replication lag from pg_stat_replication.
- * Returns the lag in seconds, or null if no replica is configured / not streaming.
+ * Returns the worst streaming-replica lag, or null when lag is unavailable.
  * This is queried separately from the main metrics to isolate failures.
  */
 export async function collectReplicationLag(): Promise<number | null> {
   try {
     const pool = getDbPool();
     const result = await pool.query(`
-      SELECT
-        COALESCE(
+      SELECT CASE
+        WHEN COUNT(*) = 0 OR COUNT(lag_seconds) <> COUNT(*) OR MIN(lag_seconds) < 0
+          THEN NULL
+        ELSE MAX(lag_seconds)
+      END AS lag_seconds
+      FROM (
+        SELECT COALESCE(
           EXTRACT(EPOCH FROM replay_lag),
           EXTRACT(EPOCH FROM write_lag),
-          EXTRACT(EPOCH FROM flush_lag),
-          0
+          EXTRACT(EPOCH FROM flush_lag)
         ) AS lag_seconds
-      FROM pg_stat_replication
-      WHERE state = 'streaming'
-      LIMIT 1
+        FROM pg_stat_replication
+        WHERE state = 'streaming'
+      ) replicas
     `);
-    if (result.rows.length === 0) return null;
-    return Number(result.rows[0].lag_seconds);
+    const raw = result.rows[0]?.lag_seconds;
+    if (raw === null || raw === undefined) return null;
+    const lag = Number(raw);
+    return Number.isFinite(lag) && lag >= 0 ? lag : null;
   } catch {
     return null;
   }
