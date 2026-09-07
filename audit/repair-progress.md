@@ -2344,3 +2344,7 @@ All three new conflict cases failed before repair. All 16 focused production Chr
 ### Reject malformed TOS history identifiers before querying PostgreSQL
 
 Authorized history reads now validate the version UUID and return 400 for malformed input. Valid unknown IDs return 404; missing sessions and missing TOS capability remain rejected. The generated contract documents the validation response. The malformed-ID regression returned 500 before repair. All 30 focused TOS/registration API checks pass afterward, as do API types, targeted lint, formatting, contract comparison and diff review.
+
+### Close the five implemented TOS task requirements
+
+Acceptance evidence now covers public terms, acceptance storage, re-acceptance, administrator editing and version history at `5b9ac7efd94a9e7dae93135f25c86f9abc30a3df`. Each record retains its canonical requirement, original PR provenance, source hashes, real HTTP/browser checks and scope limits. The register now has 28 individually assessed tasks: 21 verified and 7 partial, with 294 still pending. Global coverage and production-image checkpoints remain unchanged and are not represented as current. The complete fix plan remains unfinished.

@@ -1025,6 +1025,328 @@
         216
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 348,
+      "requirement": "**T-04.01.01 — Public TOS page**\n\n- Description: `/terms` page displaying current Terms of Service content. Shows last update date. Simple layout, readable typography.\n- Technical notes: GET `/api/tos/current` returns `{ content, versionId, updatedAt, publishedAt }`. Versioned. Supports Persian and English content.\n- UI/UX: Clean document layout. Date displayed prominently. Supports both RTL (Persian default) and LTR (English).\n- Dependencies: E-09 (admin TOS editing)\n- Complexity: S",
+      "requirement_sha256": "2c3535f953584089a3f139116975d3950dddc4ce4feaedada5a440272090bb25",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+        },
+        {
+          "path": "apps/api/src/tos/tos.controller.ts",
+          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+        },
+        {
+          "path": "apps/api/src/admin/tos-http.integration.test.ts",
+          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "4e26f56381350a5f2eb1a7c0fcd38a083c6f248e162056d0f346c6df73a185aa"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "7ceaa3b9b5f2fb64a1e0361ae4ea239d625307c3af4eb47fc3759f3004208f94"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "245d45051ac8e904a926da5b557e007616b9b055345d8ca2e23c29f18976cac3"
+        }
+      ],
+      "checks": [
+        "Public document is read through the migrated API after clearing authentication in both live language flows.",
+        "Public response includes version and publication timestamps; every publication, including minor corrections, becomes active.",
+        "Production browser cases verify explicit Tehran dates, Persian default/RTL and English/LTR, language switching, safe Markdown rendering, malformed/outage retry and absence of stale content after a failed language load.",
+        "Final focused API run: 30 tests across 3 files pass. Latest TOS editor/live browser run: 16 pass; public/shell run: 25 pass. Tests are tied to the source hashes above, not a new combined-coverage result."
+      ],
+      "limitations": [
+        "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
+      ],
+      "merged_prs": [
+        117
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 356,
+      "requirement": "**T-04.01.02 — TOS acceptance storage**\n\n- Description: On registration and re-acceptance, store: exact version accepted, timestamp, user ID, IP address, device metadata. Acceptance is legally significant.\n- Technical notes: `tos_acceptances` table with user_id, version_id, accepted_at, ip_address, user_agent. Queries are immutable. Registration requires acceptance of the CURRENT active version.\n- UI/UX: N/A (backend + registration checkbox)\n- Dependencies: T-01.01.04, T-04.01.01\n- Complexity: S",
+      "requirement_sha256": "85ef61125e3c3f8052e3104510b2bcdd24c9aebb46944876c2c6128c3d7d013f",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+        },
+        {
+          "path": "apps/api/src/tos/tos.controller.ts",
+          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+        },
+        {
+          "path": "apps/api/src/admin/tos-http.integration.test.ts",
+          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "b37924c1a5f4309a5a62f1a201c2ea77ed4f1f0a4fd16e2073bf308e378fee6c"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "64672f9f68261b6d1ea56168b49c6396b75606d32fba8284cc03443ad4ebc55d"
+        },
+        {
+          "path": "packages/db/src/schema/tos-acceptances.ts",
+          "sha256": "91b8f545716ff6bb01d7cbc3714b7602ca246e2959b5e877cd8b10a439500e1c"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "7ceaa3b9b5f2fb64a1e0361ae4ea239d625307c3af4eb47fc3759f3004208f94"
+        }
+      ],
+      "checks": [
+        "Registration binds the challenge to the exact current displayed publication and preserves it if a newer document is published before OTP completion.",
+        "Real HTTP tests verify account, exact version, timestamp, source IP and user-agent for registration and re-acceptance.",
+        "Acceptance uses an append-only application write. An injected account-update failure rolls back the new acceptance and preserves the earlier record; successful retry appends a new record without changing earlier evidence.",
+        "Unknown, placeholder, draft and stale re-acceptance identities are rejected; published documents cannot be edited or discarded through the application.",
+        "Final focused API run: 30 tests across 3 files pass. Latest TOS editor/live browser run: 16 pass; public/shell run: 25 pass. Tests are tied to the source hashes above, not a new combined-coverage result."
+      ],
+      "limitations": [
+        "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
+      ],
+      "merged_prs": [
+        118
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 364,
+      "requirement": "**T-04.01.03 — TOS re-acceptance flow**\n\n- Description: When a materially changed TOS version is published, users must re-accept at next safe entry point. Does not block: login, account recovery, support, or legal record access. Show banner: \"Terms of Service have been updated. [Review]\"\n- Technical notes: Backend endpoint or middleware checks `user.lastAcceptedTosVersion < activeTosVersion` for non-exempt routes. Re-acceptance: POST `/api/tos/accept/:versionId`. API returns flag `requiresTosAcceptance` in user profile.\n- UI/UX: Banner across all pages until accepted (on allowed pages). Modal on first non-exempt action. Full TOS displayed with \"I accept\" button. Non-intrusive, doesn't block critical paths.\n- Dependencies: T-04.01.01, T-04.01.02\n- Complexity: M\n\n---",
+      "requirement_sha256": "caca18039ba8e7bf0770b42bae0368e8f13e93494255aa86e5ec6b1a0a3626d8",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+        },
+        {
+          "path": "apps/api/src/tos/tos.controller.ts",
+          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+        },
+        {
+          "path": "apps/api/src/admin/tos-http.integration.test.ts",
+          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "01746d06c71fe3afabec11d0103a541e54fab80d23b96355bee276fdbe26bbbb"
+        },
+        {
+          "path": "apps/web/e2e/shell-navigation.spec.ts",
+          "sha256": "9cf1d7c385219a197a0bf9a0be06f49e3a10133698b704bfb4cc865edec0329d"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "245d45051ac8e904a926da5b557e007616b9b055345d8ca2e23c29f18976cac3"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "66a5a1541053c79a69cd1fe4837e9d06a7776a1d7b39c1dc460f067da4fca243"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "1a5c3628deaf6694603a1649cde42033a136d451bfecb91c5cd6d5ad077f1ee8"
+        }
+      ],
+      "checks": [
+        "Real HTTP checks cover first consent and two material/minor cycles. Minor corrections preserve material consent; a user who missed a material publication still needs the latest document.",
+        "Canonical POST /api/tos/accept/:versionId uses the actual authenticated/CSRF-protected transaction. A conflicting body cannot substitute another publication; guest, missing-CSRF and stale-ID requests are rejected.",
+        "Browser cases verify automatic review on normal entry, manual review without automatic blocking on customer/staff support and invoice routes, complete localized rendering before acceptance, malformed document rejection and failed-status retry.",
+        "Current standalone login/recovery/public-terms routes do not mount this modal. The live Persian workflow accepts an actual newer publication through the canonical endpoint.",
+        "Final focused API run: 30 tests across 3 files pass. Latest TOS editor/live browser run: 16 pass; public/shell run: 25 pass. Tests are tied to the source hashes above, not a new combined-coverage result."
+      ],
+      "limitations": [
+        "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
+        "Future contract workflow implementations still require their own route and interaction acceptance tests."
+      ],
+      "merged_prs": [
+        119
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.03.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 668,
+      "requirement": "**T-09.03.01 — TOS editor**\n\n- Description: Admin can edit Terms of Service content. Rich text editor. Versioned with publish date and language (Persian/English). Publishing a materially changed version can trigger re-acceptance flag.\n- Technical notes: Permissions: `admin:tos:edit`. Versioned with `major` (material change → re-acceptance) and `minor` (typo/clarification → no re-acceptance). Preview before publish. Draft → Published. Last editor recorded. Audit: tos_updated.\n- UI/UX: Rich text editor (TipTap or similar). Side-by-side with current active version diff. \"Mark as material change\" checkbox. Publish button. Version history list.\n- Dependencies: T-04.01.01, admin config framework\n- Complexity: M",
+      "requirement_sha256": "91c804201d84cd144bbb1e327893227cb673704ba1a9a7f355476a2a9f7e5b59",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+        },
+        {
+          "path": "apps/api/src/tos/tos.controller.ts",
+          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+        },
+        {
+          "path": "apps/api/src/admin/tos-http.integration.test.ts",
+          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "c18460a0fef0eed6051674ba830ee804ce1a334604e36ddb88cb7b562b408c35"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "68cc5f3d2dc55a0a440b901e9da5de811fb4a96bc7eef210c80991e25d20acbd"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "546a19686edcd37d14f1df9b66c0c50cfad52ce7c3ed01a537fd954a050fe47d"
+        },
+        {
+          "path": "apps/web/src/pages/admin-tos-text.ts",
+          "sha256": "108dde981ec56b56818b59bc117e1ac2c02468edc443971e3c0d75ff727a257d"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "245d45051ac8e904a926da5b557e007616b9b055345d8ca2e23c29f18976cac3"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "ba953b1fe0f38d8099082d8341eb1e59aa29d32d736a002f1a3b2291a03beff2"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "0a76c952f37f2e96ae3ea823b27822f3a9e237a8c1c3db25db9c31389b47e816"
+        }
+      ],
+      "checks": [
+        "Current admin:tos:edit authority is checked under the mutation transaction lock; a revoked grant while waiting cannot mutate.",
+        "Draft create/edit/publish/discard and actual actor/IP audit are atomic. Concurrent different editors cannot create two drafts. Published content stays immutable.",
+        "Bilingual rich-text editing, current/proposed preview and bounded diff, material checkbox, history, actor and date display complete the required UI flow against the migrated API.",
+        "Publication requires the rendered draft revision; stale publication, edit and discard requests cannot change newer content. Save responses must match the requested identity/content/state.",
+        "Browser cases verify failed-history blocking, saved-response validation, local-text preservation, explicit stale-draft replacement and duplicate version-ID recovery in both live language flows.",
+        "Final focused API run: 30 tests across 3 files pass. Latest TOS editor/live browser run: 16 pass; public/shell run: 25 pass. Tests are tied to the source hashes above, not a new combined-coverage result."
+      ],
+      "limitations": [
+        "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
+        "Unsupported imported Markdown constructs retain explicit source editing to avoid silently dropping content."
+      ],
+      "merged_prs": [
+        159
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.03.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 676,
+      "requirement": "**T-09.03.02 — TOS version history**\n\n- Description: List of all TOS versions with publish date, material change flag, published by. Admin can view any previous version.\n- Technical notes: GET `/api/admin/tos/versions`. Versions are immutable after publish. Display-only.\n- UI/UX: Table: version #, date, material change badge, author. View link opens read-only version.\n- Dependencies: T-09.03.01\n- Complexity: S",
+      "requirement_sha256": "373a0de7e12edc3bd716923a3e1679c2ed0af611034f2ab5e58bbb8cc39cd89b",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+        },
+        {
+          "path": "apps/api/src/tos/tos.controller.ts",
+          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+        },
+        {
+          "path": "apps/api/src/admin/tos-http.integration.test.ts",
+          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "c18460a0fef0eed6051674ba830ee804ce1a334604e36ddb88cb7b562b408c35"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "68cc5f3d2dc55a0a440b901e9da5de811fb4a96bc7eef210c80991e25d20acbd"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "546a19686edcd37d14f1df9b66c0c50cfad52ce7c3ed01a537fd954a050fe47d"
+        },
+        {
+          "path": "apps/web/src/pages/admin-tos-text.ts",
+          "sha256": "108dde981ec56b56818b59bc117e1ac2c02468edc443971e3c0d75ff727a257d"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "245d45051ac8e904a926da5b557e007616b9b055345d8ca2e23c29f18976cac3"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "ba953b1fe0f38d8099082d8341eb1e59aa29d32d736a002f1a3b2291a03beff2"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "0a76c952f37f2e96ae3ea823b27822f3a9e237a8c1c3db25db9c31389b47e816"
+        }
+      ],
+      "checks": [
+        "History lists version, publication date, material/minor badge and complete recorded author identity in Persian/English.",
+        "Named, keyboard-contained read-only detail renders both stored language documents and restores focus on close. Published rows expose no edit/publish/discard controls.",
+        "Real API checks reject published mutation, unauthorized reads and malformed/unknown history identifiers; live browser flows reopen the persisted published document.",
+        "Final focused API run: 30 tests across 3 files pass. Latest TOS editor/live browser run: 16 pass; public/shell run: 25 pass. Tests are tied to the source hashes above, not a new combined-coverage result."
+      ],
+      "limitations": [
+        "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
+      ],
+      "merged_prs": [
+        160
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -1177,9 +1499,6 @@
     "02-auth-users-admin.md#T-03.03.06",
     "02-auth-users-admin.md#T-03.04.01",
     "02-auth-users-admin.md#T-03.04.02",
-    "02-auth-users-admin.md#T-04.01.01",
-    "02-auth-users-admin.md#T-04.01.02",
-    "02-auth-users-admin.md#T-04.01.03",
     "02-auth-users-admin.md#T-05.01.01",
     "02-auth-users-admin.md#T-05.01.02",
     "02-auth-users-admin.md#T-05.02.01",
@@ -1205,8 +1524,6 @@
     "02-auth-users-admin.md#T-07.01.03",
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
-    "02-auth-users-admin.md#T-09.03.01",
-    "02-auth-users-admin.md#T-09.03.02",
     "02-auth-users-admin.md#T-09.04.01",
     "02-auth-users-admin.md#T-09.05.01",
     "05-notifications-documents-ai.md#T-05.01.01",
