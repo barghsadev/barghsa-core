@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 /**
  * Admin dashboard page — heavy module, lazy-loaded.
  */
@@ -46,6 +47,7 @@ export default function AdminDashboard() {
   const [chargebacksLoading, setChargebacksLoading] = useState(true);
   const [chargebacksError, setChargebacksError] = useState(false);
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
   useEffect(() => {
@@ -136,9 +138,9 @@ export default function AdminDashboard() {
               </h2>
               <p className="text-sm text-red-800">
                 {t('dashboard.admin.chargebackWarning.summary', locale)
-                  .replace('{count}', String(chargebacks.count))
-                  .replace('{unmatched}', String(chargebacks.unmatchedCount))
-                  .replace('{failed}', String(chargebacks.reversalFailedCount))}
+                  .replace('{count}', numbers.number(chargebacks.count))
+                  .replace('{unmatched}', numbers.number(chargebacks.unmatchedCount))
+                  .replace('{failed}', numbers.number(chargebacks.reversalFailedCount))}
               </p>
             </div>
           </div>
@@ -150,9 +152,7 @@ export default function AdminDashboard() {
               >
                 <p className="font-medium">
                   {t(`dashboard.admin.chargebackWarning.status.${item.status}`, locale)}
-                  {item.amountIrR
-                    ? ` · ${t('dashboard.admin.chargebackWarning.amount', locale).replace('{amount}', item.amountIrR)}`
-                    : ''}
+                  {item.amountIrR ? ` · ${numbers.money(item.amountIrR)}` : ''}
                 </p>
                 <p className="text-xs text-gray-600">
                   {t('dashboard.admin.chargebackWarning.eventId', locale).replace('{id}', '')}
@@ -193,7 +193,7 @@ export default function AdminDashboard() {
                   className="text-2xl font-bold text-gray-900"
                   aria-label={t('dashboard.admin.pendingVerification.aria.count', locale)}
                 >
-                  {data?.count ?? 0}
+                  {numbers.number(data?.count ?? 0)}
                 </p>
                 <p className="text-sm text-gray-500">
                   {t('dashboard.admin.pendingVerification.label', locale)}

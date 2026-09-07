@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
@@ -30,6 +31,7 @@ const emptyFilters = {
 };
 export default function CrmProfileList() {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const preference = useTimezone();
   const search = useSearch({ from: '/admin/crm/' });
   const [filters, setFilters] = useState({
@@ -291,7 +293,7 @@ export default function CrmProfileList() {
                   }))
                 }
               >
-                {t('crm.list.profiles', locale)}: {user.profileCount}
+                {t('crm.list.profiles', locale)}: {numbers.number(user.profileCount)}
               </Button>
               {expanded[user.userId] && (
                 <ul id={`profiles-${user.userId}`} className="space-y-2">

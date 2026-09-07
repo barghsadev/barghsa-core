@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import {
@@ -151,6 +152,7 @@ export default function CrmProfileDetail() {
 function CrmProfileDetailContent() {
   const time = useAccountTime();
   const locale: Locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' });
   const [data, setData] = useState<ProfileDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -605,7 +607,7 @@ function CrmProfileDetailContent() {
             />
             <SummaryCard
               title={t('crm.profile.summary.activeSessions', locale)}
-              value={String(sessions.count)}
+              value={numbers.number(sessions.count)}
               icon="⚡"
               colorClass="text-blue-600"
             />
@@ -617,13 +619,13 @@ function CrmProfileDetailContent() {
             />
             <SummaryCard
               title={t('crm.profile.summary.addresses', locale)}
-              value={String(addresses.length)}
+              value={numbers.number(addresses.length)}
               icon="📍"
               colorClass="text-purple-600"
             />
             <SummaryCard
               title={t('crm.profile.summary.otherProfiles', locale)}
-              value={String(siblingProfiles.length)}
+              value={numbers.number(siblingProfiles.length)}
               icon="👤"
               colorClass="text-teal-600"
             />
@@ -802,7 +804,7 @@ function CrmProfileDetailContent() {
       {activeTab === 'sessions' && (
         <div id="panel-sessions" role="tabpanel" aria-labelledby="tab-sessions">
           <div className="mb-4 text-sm text-gray-500">
-            {sessions.count} {t('crm.profile.tab.sessions', locale)} |{' '}
+            {numbers.number(sessions.count)} {t('crm.profile.tab.sessions', locale)} |{' '}
             {t('crm.profile.summary.lastActivity', locale)}:{' '}
             {sessions.lastActive ? time.format(sessions.lastActive) : '—'}
           </div>

@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useState, useEffect, useCallback } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import type { Locale } from '@barghsa/i18n';
@@ -80,6 +81,7 @@ export default function TemplatePreviewPanel({
   templates,
   loading,
 }: TemplatePreviewPanelProps) {
+  const numbers = useNumberFormatting(uiLocale);
   // Selection state (filters)
   const [eventKey, setEventKey] = useState<string>('');
   const [channel, setChannel] = useState<TemplateChannel | ''>('');
@@ -280,7 +282,7 @@ export default function TemplatePreviewPanel({
                 {versions.length === 0 && <option value="">—</option>}
                 {versions.map((v) => (
                   <option key={v.id} value={v.id}>
-                    v{v.version} · {STATUS_LABELS[v.status] ?? v.status}
+                    v{numbers.number(v.version)} · {STATUS_LABELS[v.status] ?? v.status}
                     {v.isActive ? ' ✓' : ''}
                   </option>
                 ))}
@@ -299,7 +301,7 @@ export default function TemplatePreviewPanel({
               <div className="text-xs text-gray-500 space-y-0.5">
                 <p>
                   {selected.eventKey} · {CHANNEL_LABELS[selected.channel]} ·{' '}
-                  {LOCALE_LABELS[selected.locale]} · v{selected.version} ·{' '}
+                  {LOCALE_LABELS[selected.locale]} · v{numbers.number(selected.version)} ·{' '}
                   {STATUS_LABELS[selected.status]}
                 </p>
               </div>

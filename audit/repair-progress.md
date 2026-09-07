@@ -2396,3 +2396,9 @@ Seven targeted assertions failed against the preceding production build. The ful
 Login, registration, OTP verification and password recovery now format rate-limit messages and resend countdowns with the published numeral preference. The shared error formatter retains locale-default behavior for callers without an override. Retry-After parsing and the numeric cooldown state are unchanged.
 
 All ten preference assertions failed on the preceding production build. All 22 focused production browser checks pass after repair, including both languages, retained credentials, the full server-specified 125-second lockout, registration consent and password recovery. Both auth-error unit checks, web types, targeted lint, formatting, route budgets and diff review pass.
+
+### Format dashboard chargebacks, notification badges and CRM summaries
+
+Administrator chargeback warnings now preserve exact IRR amounts with localized currency, and their counts use the published numeral preference. Notification badges and accessible names use matching digits, including the capped 99+ display after polling. CRM profile/session/address counts and notification preview versions use the same formatter. Record identifiers and customer-authored content are unchanged.
+
+Three dashboard/CRM checks and the English badge check failed against the preceding bundle. All 18 focused browser checks pass after repair, covering exact large chargebacks, polling from 12 to 101 unread items, both languages, CRM permissions and template history. The existing dashboard unit assertion required an update from raw digits to grouped IRR. The final web unit rerun, web types, targeted lint, formatting, route budgets and diff review pass.

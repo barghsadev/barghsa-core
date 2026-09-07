@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n';
@@ -35,6 +36,7 @@ const DROPDOWN_SIZE = 10;
  */
 export function NotificationBell() {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<NotificationItem[]>([]);
@@ -105,8 +107,11 @@ export function NotificationBell() {
     }
   };
 
-  const badgeLabel = unreadCount > 99 ? '99+' : String(unreadCount);
-  const bellAria = t('notifications.bellAria', locale).replace('{count}', String(unreadCount));
+  const badgeLabel = unreadCount > 99 ? `${numbers.number(99)}+` : numbers.number(unreadCount);
+  const bellAria = t('notifications.bellAria', locale).replace(
+    '{count}',
+    numbers.number(unreadCount)
+  );
 
   return (
     <DropdownMenu open={open} onOpenChange={handleOpenChange}>

@@ -92,7 +92,8 @@ describe('AdminDashboard chargeback warning (T-04.2.04.03)', () => {
     expect(banner).toBeTruthy();
     expect(banner?.textContent).toContain('Unresolved chargebacks');
     expect(banner?.textContent).toContain('evt-unmatched');
-    expect(banner?.textContent).toContain('150000');
+    expect(banner?.textContent).toContain('150,000');
+    expect(banner?.textContent).toContain('IRR');
     expect(banner?.getAttribute('aria-live')).toBe('assertive');
     expect(container.querySelector('div[dir="ltr"]')).toBeTruthy();
     const eventId = container.querySelector('span[dir="ltr"]');

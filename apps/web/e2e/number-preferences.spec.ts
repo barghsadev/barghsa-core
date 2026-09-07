@@ -112,6 +112,29 @@ for (const locale of ['en', 'fa']) {
         ],
       })
     );
+    await page.route('**/api/crm/dashboard/pending-verification', (route) =>
+      route.fulfill({ json: { count: 12, profiles: [] } })
+    );
+    await page.route('**/api/admin/wallet/chargebacks/unresolved-warning', (route) =>
+      route.fulfill({
+        json: {
+          count: 1,
+          unmatchedCount: 1,
+          reversalFailedCount: 0,
+          items: [
+            {
+              eventId: id,
+              status: 'unmatched',
+              amountIrR: amount,
+              walletId: id,
+              originalTransactionId: null,
+              reason: null,
+              createdAt: '2026-09-01T00:00:00Z',
+            },
+          ],
+        },
+      })
+    );
     let limit = { limitIrR: 2000000000, version: 0 };
     const writes: unknown[] = [];
     await page.route('**/api/admin/config/wallet-top-up-limit', (route) => {
@@ -127,6 +150,7 @@ for (const locale of ['en', 'fa']) {
       `/invoices/${id}`,
       '/admin/approval-requests',
       '/electricity/order',
+      '/admin',
     ]) {
       await page.goto(path);
       await expect(page.locator('main')).toContainText(digits);

@@ -1,3 +1,4 @@
+import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 const user = {
   userId: 'user-one',
@@ -23,6 +24,7 @@ for (const locale of ['en', 'fa'])
       }).observe(document, { childList: true });
     }, locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockOppositeNumerals(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'Asia/Tehran' } })
     );
@@ -45,7 +47,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('heading', { name: user.username })).toBeVisible();
     expect(requests.at(-1)!.searchParams.get('verification')).toBe('PENDING');
     await page
-      .getByRole('button', { name: locale === 'fa' ? 'پروفایل‌ها: 1' : 'Profiles: 1' })
+      .getByRole('button', { name: locale === 'fa' ? 'پروفایل‌ها: 1' : 'Profiles: ۱' })
       .click();
     await expect(page.getByRole('link', { name: /Example profile/ })).toHaveAttribute(
       'href',
