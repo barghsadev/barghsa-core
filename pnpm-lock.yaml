@@ -11,6 +11,11 @@ overrides:
 
 packageExtensionsChecksum: sha256-+pfGgSaWrB3YX7j0hX/eUjSH1DDb4tH1jNTckjzZZr4=
 
+patchedDependencies:
+  '@types/nodemailer@8.0.1':
+    hash: 2baaabc79c51ec5619de38107935553db8835f899ffed0fb1813f3302de6eab4
+    path: patches/@types__nodemailer@8.0.1.patch
+
 importers:
 
   .:
@@ -141,7 +146,7 @@ importers:
         version: 5.0.6
       '@types/nodemailer':
         specifier: 8.0.1
-        version: 8.0.1
+        version: 8.0.1(patch_hash=2baaabc79c51ec5619de38107935553db8835f899ffed0fb1813f3302de6eab4)
       '@types/pg':
         specifier: ^8.11.0
         version: 8.23.1
@@ -239,7 +244,7 @@ importers:
         version: 12.1.0
       '@types/nodemailer':
         specifier: 8.0.1
-        version: 8.0.1
+        version: 8.0.1(patch_hash=2baaabc79c51ec5619de38107935553db8835f899ffed0fb1813f3302de6eab4)
       '@types/pg':
         specifier: ^8.11.0
         version: 8.23.1
@@ -343,7 +348,7 @@ importers:
         version: link:../tsconfig
       '@types/nodemailer':
         specifier: 8.0.1
-        version: 8.0.1
+        version: 8.0.1(patch_hash=2baaabc79c51ec5619de38107935553db8835f899ffed0fb1813f3302de6eab4)
 
   packages/tsconfig:
     dependencies:
@@ -8208,7 +8213,7 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
-  '@types/nodemailer@8.0.1':
+  '@types/nodemailer@8.0.1(patch_hash=2baaabc79c51ec5619de38107935553db8835f899ffed0fb1813f3302de6eab4)':
     dependencies:
       '@types/node': 26.2.0
 

@@ -2,7 +2,7 @@
   "name": "barghsa-core",
   "private": true,
   "version": "0.0.0",
-  "description": "Barghsa \u2014 Iranian electricity market intelligence platform",
+  "description": "Barghsa — Iranian electricity market intelligence platform",
   "packageManager": "pnpm@10.11.1",
   "engines": {
     "node": ">=20",
@@ -57,6 +57,9 @@
           "chokidar": "5.0.0"
         }
       }
+    },
+    "patchedDependencies": {
+      "@types/nodemailer@8.0.1": "patches/@types__nodemailer@8.0.1.patch"
     }
   }
 }
