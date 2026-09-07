@@ -6,7 +6,8 @@ import {
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
-import { ErrorCodes } from '@barghsa/shared/errors';
+import type { PoolClient } from 'pg';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { NotificationsService } from './notifications.service.js';
 import { escapeHtml, renderTemplate, validateTemplate } from './template-engine.js';
 
@@ -86,13 +87,81 @@ export interface RenderedTemplate {
  * Security: template variables are allow-listed and all variable values are
  * HTML-escaped on render to prevent injection into delivered messages.
  *
- * Permission model: all methods require admin context (enforced in controller).
+ * Permission model: controllers enforce access; mutations hold current grants through commit.
  */
 @Injectable()
 export class NotificationTemplateService {
   private readonly logger = new Logger(NotificationTemplateService.name);
 
   constructor(private readonly notificationsService: NotificationsService) {}
+
+  private async mutate<T>(
+    actorUserId: string,
+    work: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:notifications:edit');
+      const result = await work(client);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private async lockFamily(client: PoolClient, eventKey: string, channel: string, locale: string) {
+    await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
+      JSON.stringify(['notification-template', eventKey, channel, locale]),
+    ]);
+  }
+
+  private async lockTemplate(client: PoolClient, id: string): Promise<Record<string, unknown>> {
+    const identity = await client.query<{ event_key: string; channel: string; locale: string }>(
+      'SELECT event_key,channel,locale FROM notification_templates WHERE id=$1',
+      [id]
+    );
+    const group = identity.rows[0];
+    if (!group) throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_FOUND' }, 404);
+    await this.lockFamily(client, group.event_key, group.channel, group.locale);
+    const current = await client.query<Record<string, unknown>>(
+      `SELECT ${this.SELECT_COLUMNS} FROM notification_templates WHERE id=$1 FOR UPDATE`,
+      [id]
+    );
+    const row = current.rows[0];
+    if (!row) throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_FOUND' }, 404);
+    return row;
+  }
+
+  private async auditMutation(
+    client: PoolClient,
+    actorUserId: string,
+    event: string,
+    row: Record<string, unknown>
+  ) {
+    await client.query(
+      `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+       VALUES($1,$2,$3,$4::jsonb,$5,NOW())`,
+      [
+        uuidv7(),
+        actorUserId,
+        event,
+        JSON.stringify({
+          templateId: row.id,
+          eventKey: row.event_key,
+          channel: row.channel,
+          locale: row.locale,
+          version: row.version,
+          status: row.status,
+        }),
+        uuidv7(),
+      ]
+    );
+  }
 
   /**
    * Normalize a list of variable inputs (either `{name, description}` objects or
@@ -286,64 +355,37 @@ export class NotificationTemplateService {
     input: CreateNotificationTemplateInput,
     actorUserId: string
   ): Promise<NotificationTemplateResult> {
-    const pool = getDbPool();
-
-    // Validate template variables against the allow-list before persisting.
-    this.validateVariables(input.bodyTemplate, input.variables ?? []);
-
-    // Canonicalize variable names + optional descriptions (accepts legacy strings).
-    const normalizedVariables = NotificationTemplateService.normalizeVariables(input.variables);
-
-    // Enforce at most one draft/active template per event+channel+locale.
-    // The DB partial unique index (uq_notification_templates_active) only
-    // covers active rows (is_active=true), so duplicate-draft prevention must
-    // be app-level. Archived history does not block a new draft.
-    const existing = await pool.query(
-      `SELECT 1 FROM notification_templates
-       WHERE event_key = $1 AND channel = $2 AND locale = $3
-         AND status IN ('draft', 'active')
-       LIMIT 1`,
-      [input.eventKey, input.channel, input.locale]
-    );
-    if (existing.rows.length > 0) {
-      throw new HttpException(
-        {
-          statusCode: 409,
-          error: 'NOTIFICATION_TEMPLATE_EXISTS',
-          message: `A template already exists for event "${input.eventKey}" (${input.channel}/${input.locale})`,
-        },
-        409
+    return this.mutate(actorUserId, async (client) => {
+      this.validateVariables(input.bodyTemplate, input.variables ?? []);
+      const variables = NotificationTemplateService.normalizeVariables(input.variables);
+      await this.lockFamily(client, input.eventKey, input.channel, input.locale);
+      const existing = await client.query(
+        `SELECT 1 FROM notification_templates WHERE event_key=$1 AND channel=$2 AND locale=$3
+         AND status IN ('draft','active') LIMIT 1`,
+        [input.eventKey, input.channel, input.locale]
       );
-    }
-
-    const id = uuidv7();
-    const now = new Date();
-
-    const result = await pool.query<Record<string, unknown>>(
-      `INSERT INTO notification_templates
-       (id, event_key, channel, locale, subject, body_template, variables,
-        status, is_active, version, created_by, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, 'draft', false, 1, $8, $9, $9)
-       RETURNING ${this.SELECT_COLUMNS}`,
-      [
-        id,
-        input.eventKey,
-        input.channel,
-        input.locale,
-        input.subject ?? null,
-        input.bodyTemplate,
-        JSON.stringify(normalizedVariables),
-        actorUserId,
-        now,
-      ]
-    );
-
-    this.logger.log(
-      `Notification template created: id=${id} event=${input.eventKey} ` +
-        `channel=${input.channel} locale=${input.locale} by ${actorUserId}`
-    );
-
-    return this.mapRow(result.rows[0]!);
+      if (existing.rows.length)
+        throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_EXISTS' }, 409);
+      const result = await client.query<Record<string, unknown>>(
+        `INSERT INTO notification_templates(id,event_key,channel,locale,subject,body_template,variables,
+         status,is_active,version,created_by,created_at,updated_at)
+         VALUES($1,$2,$3,$4,$5,$6,$7::jsonb,'draft',false,1,$8,NOW(),NOW())
+         RETURNING ${this.SELECT_COLUMNS}`,
+        [
+          uuidv7(),
+          input.eventKey,
+          input.channel,
+          input.locale,
+          input.subject ?? null,
+          input.bodyTemplate,
+          JSON.stringify(variables),
+          actorUserId,
+        ]
+      );
+      const row = result.rows[0]!;
+      await this.auditMutation(client, actorUserId, 'notification_template_created', row);
+      return this.mapRow(row);
+    });
   }
 
   /**
@@ -355,88 +397,34 @@ export class NotificationTemplateService {
     input: UpdateNotificationTemplateInput,
     actorUserId: string
   ): Promise<NotificationTemplateResult> {
-    const pool = getDbPool();
-
-    // Verify the template exists and is a draft
-    const template = await pool.query(
-      `SELECT id, status, body_template, variables FROM notification_templates WHERE id = $1`,
-      [id]
-    );
-
-    if (template.rows.length === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: 'NOTIFICATION_TEMPLATE_NOT_FOUND',
-          message: 'Notification template not found',
-        },
-        404
+    return this.mutate(actorUserId, async (client) => {
+      const template = await this.lockTemplate(client, id);
+      if (template.status !== 'draft')
+        throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
+      const nextBody = input.bodyTemplate ?? (template.body_template as string);
+      const variables = input.variables ?? (template.variables as TemplateVariableInput[]);
+      this.validateVariables(nextBody, variables);
+      const normalized = NotificationTemplateService.normalizeVariables(variables);
+      const fields: string[] = [];
+      const params: unknown[] = [];
+      const set = (column: string, value: unknown, cast = '') => {
+        params.push(value);
+        fields.push(`${column}=$${params.length}${cast}`);
+      };
+      if (input.subject !== undefined) set('subject', input.subject);
+      if (input.bodyTemplate !== undefined) set('body_template', input.bodyTemplate);
+      if (input.variables !== undefined) set('variables', JSON.stringify(normalized), '::jsonb');
+      if (!fields.length) return this.mapRow(template);
+      params.push(id);
+      const result = await client.query<Record<string, unknown>>(
+        `UPDATE notification_templates SET ${fields.join(',')},updated_at=NOW()
+         WHERE id=$${params.length} RETURNING ${this.SELECT_COLUMNS}`,
+        params
       );
-    }
-
-    if (template.rows[0]!.status !== 'draft') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT',
-          message: 'Only draft templates can be edited',
-        },
-        400
-      );
-    }
-
-    // Validate the resulting body against the (possibly updated) allow-list.
-    const nextBody =
-      input.bodyTemplate !== undefined
-        ? input.bodyTemplate
-        : (template.rows[0]!.body_template as string);
-    const nextVariablesRaw =
-      input.variables !== undefined
-        ? input.variables
-        : ((template.rows[0]!.variables as TemplateVariableInput[]) ?? []);
-    this.validateVariables(nextBody, nextVariablesRaw);
-    const normalizedVariables = NotificationTemplateService.normalizeVariables(nextVariablesRaw);
-
-    // Build dynamic SET clause
-    const setClauses: string[] = [];
-    const params: unknown[] = [];
-    let paramIndex = 1;
-
-    if (input.subject !== undefined) {
-      setClauses.push(`subject = $${paramIndex++}`);
-      params.push(input.subject);
-    }
-    if (input.bodyTemplate !== undefined) {
-      setClauses.push(`body_template = $${paramIndex++}`);
-      params.push(input.bodyTemplate);
-    }
-    if (input.variables !== undefined) {
-      setClauses.push(`variables = $${paramIndex++}::jsonb`);
-      params.push(JSON.stringify(normalizedVariables));
-    }
-
-    if (setClauses.length === 0) {
-      // Nothing to update — return current state
-      return this.getById(id);
-    }
-
-    setClauses.push(`updated_at = $${paramIndex++}`);
-    const now = new Date();
-    params.push(now);
-
-    params.push(id);
-
-    const result = await pool.query<Record<string, unknown>>(
-      `UPDATE notification_templates
-       SET ${setClauses.join(', ')}
-       WHERE id = $${paramIndex}
-       RETURNING ${this.SELECT_COLUMNS}`,
-      params
-    );
-
-    this.logger.log(`Notification template updated: id=${id} by ${actorUserId}`);
-
-    return this.mapRow(result.rows[0]!);
+      const row = result.rows[0]!;
+      await this.auditMutation(client, actorUserId, 'notification_template_updated', row);
+      return this.mapRow(row);
+    });
   }
 
   /**
@@ -708,197 +696,60 @@ export class NotificationTemplateService {
    * this template becomes the new active version with a bumped `version`.
    */
   async publish(id: string, actorUserId: string): Promise<NotificationTemplateResult> {
-    const pool = getDbPool();
-
-    // Verify the template exists and is a draft
-    const template = await pool.query(
-      `SELECT id, status, event_key, channel, locale FROM notification_templates WHERE id = $1`,
-      [id]
-    );
-
-    if (template.rows.length === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: 'NOTIFICATION_TEMPLATE_NOT_FOUND',
-          message: 'Notification template not found',
-        },
-        404
-      );
-    }
-
-    if (template.rows[0]!.status !== 'draft') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT',
-          message: 'Only draft templates can be published',
-        },
-        400
-      );
-    }
-
-    const tpl = template.rows[0]!;
-    const now = new Date();
-    const client = await pool.connect();
-
-    try {
-      await client.query('BEGIN');
-
-      // Archive any currently active template for this event+channel+locale.
+    return this.mutate(actorUserId, async (client) => {
+      const template = await this.lockTemplate(client, id);
+      if (template.status !== 'draft')
+        throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
       await client.query(
-        `UPDATE notification_templates
-         SET is_active = false, status = 'archived', updated_at = $1
-         WHERE event_key = $2 AND channel = $3 AND locale = $4 AND is_active = true`,
-        [now, tpl.event_key, tpl.channel, tpl.locale]
+        `UPDATE notification_templates SET is_active=false,status='archived',updated_at=NOW()
+         WHERE event_key=$1 AND channel=$2 AND locale=$3 AND is_active=true`,
+        [template.event_key, template.channel, template.locale]
       );
-
-      // Next version = max(version) + 1 for this combo.
-      const maxVer = await client.query(
-        `SELECT COALESCE(MAX(version), 0) AS v
-         FROM notification_templates
-         WHERE event_key = $1 AND channel = $2 AND locale = $3`,
-        [tpl.event_key, tpl.channel, tpl.locale]
+      const version = await client.query<{ version: number }>(
+        `SELECT COALESCE(MAX(version),0)+1 AS version FROM notification_templates
+         WHERE event_key=$1 AND channel=$2 AND locale=$3`,
+        [template.event_key, template.channel, template.locale]
       );
-      const nextVersion = Number(maxVer.rows[0]!.v) + 1;
-
-      // Publish this template as the new active version.
       const result = await client.query<Record<string, unknown>>(
-        `UPDATE notification_templates
-         SET status = 'active',
-             is_active = true,
-             version = $1,
-             published_at = $2,
-             updated_at = $2
-         WHERE id = $3
-         RETURNING ${this.SELECT_COLUMNS}`,
-        [nextVersion, now, id]
+        `UPDATE notification_templates SET status='active',is_active=true,version=$1,
+         published_at=NOW(),updated_at=NOW() WHERE id=$2 RETURNING ${this.SELECT_COLUMNS}`,
+        [version.rows[0]!.version, id]
       );
-
-      // Record audit event
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [
-          uuidv7(),
-          actorUserId,
-          'notification_template_published',
-          JSON.stringify({
-            templateId: id,
-            eventKey: tpl.event_key,
-            channel: tpl.channel,
-            locale: tpl.locale,
-            version: nextVersion,
-          }),
-          uuidv7(),
-          'admin',
-          now,
-        ]
-      );
-
-      await client.query('COMMIT');
-
-      this.logger.log(
-        `Notification template published: id=${id} event=${tpl.event_key} ` +
-          `channel=${tpl.channel} locale=${tpl.locale} v${nextVersion} by ${actorUserId}`
-      );
-
-      return this.mapRow(result.rows[0]!);
-    } catch (err) {
-      await client.query('ROLLBACK').catch(() => {});
-      if (err instanceof HttpException) throw err;
-      this.logger.error(`Failed to publish notification template ${id}: ${String(err)}`);
-      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
-    } finally {
-      client.release();
-    }
+      const row = result.rows[0]!;
+      await this.auditMutation(client, actorUserId, 'notification_template_published', row);
+      return this.mapRow(row);
+    });
   }
 
   /**
    * Unpublish an active template: revert it to draft.
    */
   async unpublish(id: string, actorUserId: string): Promise<NotificationTemplateResult> {
-    const pool = getDbPool();
-
-    const template = await pool.query(
-      `SELECT id, status FROM notification_templates WHERE id = $1`,
-      [id]
-    );
-
-    if (template.rows.length === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: 'NOTIFICATION_TEMPLATE_NOT_FOUND',
-          message: 'Notification template not found',
-        },
-        404
+    return this.mutate(actorUserId, async (client) => {
+      const template = await this.lockTemplate(client, id);
+      if (template.status !== 'active')
+        throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_ACTIVE' }, 400);
+      const result = await client.query<Record<string, unknown>>(
+        `UPDATE notification_templates SET status='draft',is_active=false,updated_at=NOW()
+         WHERE id=$1 RETURNING ${this.SELECT_COLUMNS}`,
+        [id]
       );
-    }
-
-    if (template.rows[0]!.status !== 'active') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: 'NOTIFICATION_TEMPLATE_NOT_ACTIVE',
-          message: 'Only active templates can be unpublished',
-        },
-        400
-      );
-    }
-
-    const now = new Date();
-
-    const result = await pool.query<Record<string, unknown>>(
-      `UPDATE notification_templates
-       SET status = 'draft',
-           is_active = false,
-           updated_at = $1
-       WHERE id = $2
-       RETURNING ${this.SELECT_COLUMNS}`,
-      [now, id]
-    );
-
-    this.logger.log(`Notification template unpublished: id=${id} by ${actorUserId}`);
-
-    return this.mapRow(result.rows[0]!);
+      const row = result.rows[0]!;
+      await this.auditMutation(client, actorUserId, 'notification_template_unpublished', row);
+      return this.mapRow(row);
+    });
   }
 
   /**
    * Delete a draft notification template.
    */
   async delete(id: string, actorUserId: string): Promise<void> {
-    const pool = getDbPool();
-
-    const template = await pool.query(
-      `SELECT id, status FROM notification_templates WHERE id = $1`,
-      [id]
-    );
-
-    if (template.rows.length === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: 'NOTIFICATION_TEMPLATE_NOT_FOUND',
-          message: 'Notification template not found',
-        },
-        404
-      );
-    }
-
-    if (template.rows[0]!.status !== 'draft') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: 'NOTIFICATION_TEMPLATE_ACTIVE',
-          message: 'Active templates cannot be deleted. Unpublish first.',
-        },
-        400
-      );
-    }
-
-    await pool.query(`DELETE FROM notification_templates WHERE id = $1`, [id]);
-
-    this.logger.log(`Notification template deleted: id=${id} by ${actorUserId}`);
+    return this.mutate(actorUserId, async (client) => {
+      const template = await this.lockTemplate(client, id);
+      if (template.status !== 'draft')
+        throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_ACTIVE' }, 400);
+      await client.query('DELETE FROM notification_templates WHERE id=$1', [id]);
+      await this.auditMutation(client, actorUserId, 'notification_template_deleted', template);
+    });
   }
 }
