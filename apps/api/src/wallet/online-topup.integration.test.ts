@@ -26,7 +26,7 @@ import { BadRequestException, ConflictException, HttpException } from '@nestjs/c
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { WalletService, type WalletQueryClient } from './wallet.service.js';
 import { OnlineTopUpService } from './online-topup.service.js';
-import type { PaymentGateway } from './payment-gateway.js';
+import { createZarinpalPaymentGateway, type PaymentGateway } from './payment-gateway.js';
 import { AdminService } from '../admin/admin.service.js';
 import { WALLET_TOP_UP_LIMIT_CONFIG_KEY } from '@barghsa/shared/finance';
 
@@ -543,6 +543,50 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         providerIdempotencyKey: transactionId,
       },
     });
+  });
+
+  it('preserves an ambiguous malformed provider success and recovers without another create', async () => {
+    let creates = 0;
+    let created: { amount: number; callback_url: string };
+    const provider = createZarinpalPaymentGateway({
+      merchantId: 'test-merchant',
+      fetchImpl: async (url, init) => {
+        if (url.endsWith('/request.json')) {
+          creates++;
+          created = JSON.parse(init!.body!);
+          return { ok: true, status: 200, json: async () => ({ data: { code: 100 } }) };
+        }
+        expect(url).toContain('/unVerified.json');
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            data: {
+              code: 100,
+              authorities: [{ ...created, authority: 'created-before-response-loss' }],
+            },
+          }),
+        };
+      },
+    });
+    const repairedService = new OnlineTopUpService(walletService, provider);
+    const input = {
+      profileId: PROFILE_A,
+      amountIrR: 11_000n,
+      idempotencyKey: 'malformed-provider-response',
+    };
+    await expect(repairedService.initiate(input)).rejects.toBeInstanceOf(HttpException);
+    const pending = (await fetchLedger(PROFILE_A)).find(
+      (row) => row.idempotency_key === input.idempotencyKey
+    )!;
+    expect(pending.metadata).toMatchObject({ gateway: { status: 'initializing' } });
+    const recovered = await repairedService.initiate(input);
+    expect(recovered.transactionId).toBe(pending.id);
+    expect(recovered.redirectUrl).toContain('created-before-response-loss');
+    expect(creates).toBe(1);
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === input.idempotencyKey)
+    ).toHaveLength(1);
   });
 
   it('recovers the provider session after a client timeout and cannot create a second authority', async () => {

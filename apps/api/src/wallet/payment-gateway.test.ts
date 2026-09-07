@@ -289,6 +289,49 @@ describe('ZarinPal payment gateway (T-04.2.02.01)', () => {
     });
   });
 
+  it.each([
+    null,
+    [],
+    {},
+    { data: { code: 100 } },
+    { data: { code: 100, authority: ' ' } },
+    { data: { code: '100', authority: 'created' } },
+    { data: { code: 999 } },
+    { errors: { code: '-9', message: 'Untrusted shape' } },
+    {
+      data: { code: 100, authority: 'created' },
+      errors: { code: -9, message: 'Conflicting result' },
+    },
+  ])('keeps malformed or conflicting initiation responses ambiguous: %j', async (body) => {
+    const gateway = createZarinpalPaymentGateway({
+      merchantId: 'merchant',
+      fetchImpl: vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => body }),
+    });
+    const result = await gateway.startPayment(START_REQUEST).catch((error: unknown) => error);
+    expect(result).toBeInstanceOf(Error);
+    expect(result).not.toBeInstanceOf(PaymentGatewayRejectedError);
+  });
+
+  it.each([400, 408, 429, 500])(
+    'retains a conflicting success even with HTTP %s',
+    async (status) => {
+      const gateway = createZarinpalPaymentGateway({
+        merchantId: 'merchant',
+        fetchImpl: vi.fn().mockResolvedValue({
+          ok: false,
+          status,
+          json: async () => ({
+            data: { code: 100, authority: 'possibly-created' },
+            errors: { code: -9 },
+          }),
+        }),
+      });
+      const error = await gateway.startPayment(START_REQUEST).catch((value: unknown) => value);
+      expect(error).toBeInstanceOf(Error);
+      expect(error).not.toBeInstanceOf(PaymentGatewayRejectedError);
+    }
+  );
+
   it('rejects a provider error payload', async () => {
     const gateway = createZarinpalPaymentGateway({
       merchantId: '11111111-1111-1111-1111-111111111111',

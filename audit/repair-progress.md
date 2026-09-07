@@ -2496,3 +2496,9 @@ Three of four new DOM regressions failed before repair. All 155 web checks acros
 The unused legacy transition_state.py still allowed callers to record merged completion or change task identity directly in kanban/loop-state.json, bypassing the durable supervisor protocol. It now exits with status 2 for every invocation and changes no files. Its error points callers to the external builder handoff and state protocol. This does not resume the loop or modify runtime state.
 
 The new subprocess tests reproduced eight failing legacy-command assertions before repair. All 48 kanban tests now pass, including every retired command, missing snapshots, durable-state races and exact-HEAD review gates. Backlog validation and diff review pass. The general reviewed correction/recovery procedure remains open.
+
+### Preserve payment claims after malformed provider responses
+
+ZarinPal initiation no longer treats every successful HTTP response with an unusable body as a definite business rejection. Malformed or conflicting payloads retain the durable initializing claim. Retrying the same top-up performs recovery instead of issuing another create request. An HTTP client-error status cannot override a returned authority or success code. Explicit structured negative business responses still permit the existing rejection path.
+
+Ten initial regressions failed before repair, including the actual adapter paired with a migrated PostgreSQL top-up. Review reproduced one additional conflicting HTTP-status case before the final guard. All 99 focused gateway, initiation and callback checks across five files pass. API types, targeted lint, formatting and diff review pass. Tests use controlled provider responses; no live payment was submitted. The provider response shape was checked against the [official request example](https://github.com/ZarinPal-Lab/Zarinpal-RestAPI-Sample-php/blob/master/Request.php).

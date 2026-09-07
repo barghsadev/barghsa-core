@@ -753,14 +753,33 @@ export function createZarinpalPaymentGateway(options: {
       const errorRecord = readJsonObject(errors);
       const code = data?.code;
       const authority = typeof data?.authority === 'string' ? data.authority.trim() : '';
+      const hasErrors =
+        errors != null &&
+        (Array.isArray(errors)
+          ? errors.length > 0
+          : !errorRecord || Object.keys(errorRecord).length > 0);
 
-      if (!res.ok || (code !== 100 && code !== 101) || !authority) {
+      if (!res.ok || (code !== 100 && code !== 101) || !authority || hasErrors) {
         const message =
           (typeof errorRecord?.message === 'string' && errorRecord.message) ||
           (typeof data?.message === 'string' && data.message) ||
           `HTTP ${res.status} code=${String(code ?? 'missing')}`;
-        const detail = `ZarinPal request rejected: ${message}`;
-        if (res.ok || isDefiniteHttpClientRejection(res.status)) {
+        const detail = `ZarinPal request failed: ${message}`;
+        const rejectionCode = errorRecord?.code ?? code;
+        // Malformed or conflicting success can follow an actual session creation.
+        // Keep its durable claim so retries inquire instead of creating again.
+        const definiteBusinessRejection =
+          !authority &&
+          code !== 100 &&
+          code !== 101 &&
+          typeof rejectionCode === 'number' &&
+          Number.isInteger(rejectionCode) &&
+          rejectionCode < 0;
+        const mayHaveCreatedSession = !!authority || code === 100 || code === 101;
+        if (
+          !mayHaveCreatedSession &&
+          ((res.ok && definiteBusinessRejection) || isDefiniteHttpClientRejection(res.status))
+        ) {
           throw new PaymentGatewayRejectedError(detail);
         }
         throw new Error(detail);
