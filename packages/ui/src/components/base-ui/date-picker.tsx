@@ -156,6 +156,7 @@ function DatePicker({
 
   const dayStart = (date: Date) => startOfDay(new TZDate(date.getTime(), timezone));
   const interval = calendarMode === 'range' ? (value as DateRange | undefined) : undefined;
+  const defaultMonth = calendarMode === 'range' ? interval?.from : (value as Date | undefined);
   const calendarRange = interval
     ? {
         from: interval.from && dayStart(interval.from),
@@ -228,7 +229,7 @@ function DatePicker({
             captionLayout="dropdown-months"
             formatters={calendarFormatters}
             locale={calendarLocale}
-            defaultMonth={value ? (value as DateRange).from : undefined}
+            {...(defaultMonth ? { defaultMonth } : {})}
           />
         ) : (
           <Calendar
@@ -246,7 +247,7 @@ function DatePicker({
             captionLayout="dropdown-months"
             formatters={calendarFormatters}
             locale={calendarLocale}
-            defaultMonth={value as Date | undefined}
+            {...(defaultMonth ? { defaultMonth } : {})}
           />
         )}
       </PopoverContent>

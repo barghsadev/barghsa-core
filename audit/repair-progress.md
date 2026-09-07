@@ -1948,3 +1948,9 @@ Review and validation: an initial noninteractive pnpm run exited zero at a reins
 Added acceptance-closure.json with eight task-level sign-offs, exact reviewed source revision, requirement text/hash, source hashes, checks and limitations. The remaining 314 recorded task keys are explicitly pending; baseline PR and completion evidence remains unchanged in task-review.json. These eight records certify their task scope, not all sibling story requirements or operational rollout.
 
 TypeScript requirement review found that the root solution omitted the worker. Added its project reference; the root dry build now includes all seven runtime code projects, and normal root typechecking passes. Full library checking remains incomplete: enabling it for the database package produces 144 dependency declaration errors in the installed Drizzle types, saved in database-library-type-errors.txt. UI still relaxes exact optional properties and unchecked indexed access. These exceptions prevent blanket strict-mode acceptance and remain repair work.
+
+### Restore strict optional-property and indexed-access checks in UI
+
+Removed the UI package's two strictness overrides. Calendar/date-picker wrappers now omit unset optional properties, and the toast wrapper normalizes unsupported theme names to the supported system theme while preserving explicit caller overrides. No type assertions or compiler suppressions were added.
+
+Review and validation: enabling both checks initially reported four component errors. The repaired UI and downstream root typechecks pass. All ten UI tests pass, including six toast-theme checks. All twelve Chromium date-picker interaction checks pass, covering single/range selection, locale switching, focus, mobile presentation and account timezone/DST behavior. Root build, targeted lint, formatting and whitespace checks pass. Library checking exceptions in API, web, worker, database and shared packages remain open.
