@@ -1549,17 +1549,335 @@
         46
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 134,
+      "requirement": "- **T-01.03.02:** Configure NestJS build pipeline in `apps/api`\n  - **Notes:** Use `@nestjs/cli` webpack or SWC builder. Set `preserveSymlinks: false` for monorepo compatibility. Output to `dist/`. Ensure decorator metadata emission is preserved. Generate OpenAPI specification at build time via `nest build` + configured swagger plugin.\n  - **Dependencies:** S-01.02, packages/db, packages/shared\n  - **Complexity:** M",
+      "requirement_sha256": "dba96b3573939f4e8dc49bbe3cca1d4a842a7d0955ec9cad5f06ab6cdb4c9a9a",
+      "source_evidence": [
+        {
+          "path": "apps/api/nest-cli.json",
+          "sha256": "6224f84398d9211d89c87590173841d24fc4949460cc717616e82a806bfb2ba8"
+        },
+        {
+          "path": "apps/api/package.json",
+          "sha256": "7bba66c9aed0224d3eb147ef98ff53c6b5da482e283e30d53f85e898365e4a7e"
+        },
+        {
+          "path": "apps/api/src/generate-openapi.ts",
+          "sha256": "ecf3ca2ef8daa0c2e75e9656570fc0436269cced7fdff2deb39f61f74f2e28bb"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "3fc16e0d706d8cb732466132e258149c6b36661b307e1ca936ff5865204d7ea8"
+        }
+      ],
+      "checks": [
+        "Fresh pnpm --filter @barghsa/api build succeeds, including build-time OpenAPI generation.",
+        "pnpm check:contract passes its regression checks and the generated specification matches the committed contract.",
+        "SWC builder, preserveSymlinks:false and dist output are configured. Compiled SessionController retains design:paramtypes metadata; actual compiled AppModule boots in the passing HTTP fixtures."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        11
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.03",
+      "status": "partial",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 139,
+      "requirement": "- **T-01.03.03:** Implement route-level code splitting and lazy loading for heavy modules\n  - **Notes:** Lazy-load: admin dashboards, AI chat UI, document editors, chart visualizations, video upload viewers. Use dynamic `import()` with React.lazy or TanStack Router's lazy routes. Customer purchase paths (electricity ordering, saving plans, wallet top-up) must NOT be lazy-loaded. Verify that lazy boundaries don't cause layout shift.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M\n  - **UI/UX:** Loading states for lazy routes must match the app skeleton and respect `prefers-reduced-motion`. Show a skeleton or minimal spinner, never a blank page.",
+      "requirement_sha256": "5c7e1919a0cca0788bb42a0d744cda2e095c248eef553b07019fafc57e3b8d3f",
+      "source_evidence": [
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "2a4a5b13fe68f9b93fb7516dde50931a4e966871792f6015e0ebef3c200fb9dc"
+        },
+        {
+          "path": "apps/web/src/routes/_app/wallet.tsx",
+          "sha256": "0fe8d0ec6fb90d3c90cda3ef22ebb3e525bc1ba04ca179dfa96b56c923806124"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/order.tsx",
+          "sha256": "2274b7d14958780fae9fcf3bce6b4d192a3ecaa5ca06497148fd3fddc449eb4e"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "53bce2b60af2a2d354b122da485256512d4c40631682836d2346e0b8ab3d21a3"
+        }
+      ],
+      "checks": [
+        "Fresh Vite production build succeeds and emits split route chunks; complete-route bundle budgets pass."
+      ],
+      "limitations": [
+        "TanStack autoCodeSplitting still splits customer wallet and electricity purchase components, contrary to the explicit eager-loading requirement.",
+        "No complete layout-shift and reduced-motion acceptance evidence for every heavy lazy boundary. Future saving-plan, video and AI consumers are not certified."
+      ],
+      "merged_prs": [
+        12
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.04",
+      "status": "partial",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 145,
+      "requirement": "- **T-01.03.04:** Implement bundle budget checking in CI\n  - **Notes:** Use `size-limit` or `@size-limit/preset-app` to set per-route budgets. Initial budgets: login/register pages under 150 KB JS gzip, dashboard under 300 KB JS gzip, electricity ordering under 250 KB JS gzip, admin pages under 500 KB JS gzip. CI compares against a committed `.size-limit.json`. Budget regression fails the PR gate.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M",
+      "requirement_sha256": "4438f57ddaa016eb62feb0acfe88a8de5a1eefa9482cd834930632b0bfe03854",
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "b25a082188c27f00e3ca2f5578fb2cf2fb8c0f4fdc97f99d8a311745e2ccbe65"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "04db366d34158c153dd1bee973e9a78ad2608bc2a3fb50cad099bdfec9ed224d"
+        },
+        {
+          "path": "scripts/check-route-budgets.test.mjs",
+          "sha256": "0c6cec0a8f2f93fce6a00762d72124c0d24329a1003d2834adb93d5165ec64bb"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        }
+      ],
+      "checks": [
+        "Fresh pnpm check:bundle passes its regression tests and all configured complete-route payload budgets. CI calls this check after building."
+      ],
+      "limitations": [
+        "The implementation uses a custom manifest-aware checker rather than the explicitly named size-limit or @size-limit/preset-app tooling. Functional budget enforcement is present; the tooling requirement has no recorded owner exception."
+      ],
+      "merged_prs": [
+        13
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 150,
+      "requirement": "- **T-01.03.05:** Configure hashed filenames and CDN-ready public asset output\n  - **Notes:** Vite config sets `build.assetsDir: 'assets'` with content-hash filenames. Set `build.cssCodeSplit: true`. Output manifest for CDN cache invalidation. Ensure public assets set `Cache-Control: public, immutable, max-age=31536000`. Authenticated API responses set `private, no-cache`.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
+      "requirement_sha256": "b562e7ac7743875746f2225a0a2e9a1b099027a6d6a1375128b3c005f607881b",
+      "source_evidence": [
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "2a4a5b13fe68f9b93fb7516dde50931a4e966871792f6015e0ebef3c200fb9dc"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "dcfcda14e2f86914a8863e3bfb5817cdcc94610efbd80e3718db9498f5076c0c"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "44066f741c773c3426927cfc3d4765f8596d31e12b891709adf6015ddd2fd0c7"
+        },
+        {
+          "path": "apps/api/src/common/cache-control.interceptor.ts",
+          "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "4c5e7d19eb5dd56c5494af981d804ee15bd187b27032ac66639e959d5b4674bb"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "64f4834b1f79f44ace0c45ae0c5915a6faf0a0a723a3322fbb8fbc6a5fd042f1"
+        }
+      ],
+      "checks": [
+        "Fresh Vite build produces a manifest whose 226 referenced JS/CSS asset files exist under hashed assets paths. CSS splitting is enabled.",
+        "All ten production static-server tests pass, including immutable hashed caching and revalidation of HTML/unhashed resources.",
+        "Global interceptor sets private/no-cache on API responses. Newly reproduced guard, missing-route and JSON-parser error regressions now pass with private/no-store headers and matching correlation IDs.",
+        "The 691 HTTP/filter checkpoint passed before parser-message sanitization; the final 52 selected checks passed after that repair."
+      ],
+      "limitations": [
+        "CDN-ready output and local server behavior are verified; this is not evidence of deployment to a live CDN."
+      ],
+      "merged_prs": [
+        14
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.03",
+      "status": "partial",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 182,
+      "requirement": "- **T-01.04.03:** Configure backend integration test setup with real PostgreSQL\n  - **Notes:** Each parallel worker receives an isolated database schema via `test.globalSetup` or a testcontainers-based PostgreSQL. Never use SQLite or in-memory substitutes — they do not reproduce PostgreSQL transactions, constraints, locking, or SQL behavior. Provider calls are replaced only at the adapter boundary with deterministic fake servers or signed webhook fixtures (nock, MSW, or custom fakes). Mandatory concurrency tests: simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission.\n  - **Dependencies:** T-01.04.01, S-02.01\n  - **Complexity:** L",
+      "requirement_sha256": "4feb79bf344a2e4d4ecd9d9c80f16726c5bb46152ca46b0e0290c1d6b55cccaf",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/test/globalSetup.ts",
+          "sha256": "94fd995eb3081145856eb13e62ee3ea69641e8696570ddd1b4fccc957de58d05"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "ca6cb822bf01591c0c1d776cec763e12091f8d86f2072387de0e84bb01a94861"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "576f6079eac1fa00cda4173ba4b33c0572c5366a96287a727af4a47eb29b2e6d"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "f5b0c5f5508145a2a068752b696e856c6d36b11a5af08d9f3027d98bd5316e13"
+        }
+      ],
+      "checks": [
+        "Testcontainers starts real PostgreSQL 17. Each HTTP fixture creates a unique database, runs production migrations and boots compiled AppModule, with cleanup on success/failure.",
+        "The 691 HTTP/filter checkpoint across 55 files passed; final parser/auth/template checks passed after sanitization. Prior finance concurrency evidence remains in repair-progress.md."
+      ],
+      "limitations": [
+        "The mandatory concurrent refund-worker and full repeated commercial-order-submission flows are future consumers and have not been built or exercised. Existing transaction tests do not substitute for those requirements."
+      ],
+      "merged_prs": [
+        21
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.04",
+      "status": "partial",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 187,
+      "requirement": "- **T-01.04.04:** Configure Playwright for E2E testing\n  - **Notes:** Install `@playwright/test`. Configure `playwright.config.ts` with: projects for Chromium (PR), Firefox/WebKit (nightly), mobile viewports (iPhone, Android). Base URL configurable per environment. Record trace on failure (`trace: 'retain-on-failure'`). Use isolated accounts/profiles and deterministic seed data. Never call production payment, SMS, email, storage, bill-data, or AI providers. Critical flows: registration, login/MFA, legal onboarding, electricity ordering + wallet funding, saving-plan order, solar construction, admin config changes.\n  - **Dependencies:** T-01.04.01\n  - **Complexity:** L",
+      "requirement_sha256": "411a9a47e717e5d129bc4eda90bac2e47b9b21fe6669383c0935787b3cde1d89",
+      "source_evidence": [
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "1d52198a6384a38484c6d8180ad6afa1c31fdc1f0343f1a97ec4c25d76d3e0ad"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "d41a5c06c229b982f0c59ddfed0e4a832fd7356e844106ebc0858af76436a6da"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "cba94fa39149520fb7f05072aef2dd5fff7486f672ddc2fc8315b9442b816172"
+        }
+      ],
+      "checks": [
+        "Configuration declares Chromium, Firefox, WebKit, Pixel 5 and iPhone 13, an environment-controlled base URL, retained failure traces and CI flaky-test failure.",
+        "The saved full browser checkpoint records 321 passing production Chromium tests before subsequent changes; the later six verification/navigation checks passed."
+      ],
+      "limitations": [
+        "CI has PR/main triggers but no nightly execution of Firefox/WebKit/mobile projects.",
+        "Required saving-plan and solar-construction flows and full commercial ordering are future implementations. A configured browser project is not evidence that its flows passed."
+      ],
+      "merged_prs": [
+        25
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.06",
+      "status": "partial",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 197,
+      "requirement": "- **T-01.04.06:** Configure flaky-test quarantine process\n  - **Notes:** Flaky test is treated as a defect. Quarantine requires owner, issue link, and expiry. Quarantined critical tests must not silently allow production promotion. CI reports flaky count per run.\n  - **Dependencies:** T-01.04.04\n  - **Complexity:** S\n  - **UI/UX:** N/A",
+      "requirement_sha256": "28970fd6684031856b9002a9aee9b6dd9af338e8c7d5701af5c09f9433d40e77",
+      "source_evidence": [
+        {
+          "path": "scripts/check-flaky-tests.py",
+          "sha256": "597702d9d4e76e981a12face1dc088d8be32a10ddb6f3272db0cd52ad669e5b7"
+        },
+        {
+          "path": "scripts/test_check_flaky_tests.py",
+          "sha256": "1ed1b5d2647003bc9428223f40c4a40b955912823d57921350c8e208334bfbc0"
+        },
+        {
+          "path": "scripts/quarantine-registry.json",
+          "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "6ac57ca7fc7fd27d4de64aee87c6e920efe2ee5be1ef2b2ebae70c95dc3cedc3"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a2519d627de6d1cc009cc6d625cd33e0962d13130efa19ad81cadd6e1da19fe1"
+        }
+      ],
+      "checks": [
+        "All eight quarantine-validation tests and both browser-outcome tests pass. The current empty registry is valid and reports runtime flakes as unknown rather than zero.",
+        "CI reports browser outcomes and fails observed flakes. Invalid registry and expired critical records block the quarantine check."
+      ],
+      "limitations": [
+        "The separate production-promotion gate is documented as future T-05.04.01; no executed release-gate evidence is available. Nightly reporting also remains unwired."
+      ],
+      "merged_prs": [
+        28
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.05.01",
+      "status": "partial",
+      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 217,
+      "requirement": "- **T-01.05.01:** Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware`\n  - **Notes:** Filter catches `HttpException`, `ZodError` (validation), and unhandled `Error`. Maps to codes from `@barghsa/shared/errors`. Resolves localized messages via i18n service. Logs the error with correlation ID and request metadata at appropriate severity (debug for 4xx, error for 5xx). Middleware generates UUIDv7 correlation ID on every request, stores in `cls-rtracer` or `AsyncLocalStorage`, and sets `X-Correlation-ID` response header. Backend services log correlation ID for traceability.\n  - **Dependencies:** T-06.01.04 (error codes), S-06.02 (i18n)\n  - **Complexity:** M",
+      "requirement_sha256": "2b33d7de5e8e1e323a8fb578b17cadefca11629138b2e7a7d609c2b28b9541b5",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "4c5e7d19eb5dd56c5494af981d804ee15bd187b27032ac66639e959d5b4674bb"
+        },
+        {
+          "path": "apps/api/src/common/correlation-id.middleware.ts",
+          "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+        },
+        {
+          "path": "apps/api/src/common/body-parser-errors.ts",
+          "sha256": "e8f59c9c9d3aecbe7d28d773d0d4ee92d1b206d4a4687563dce248aa21e9c0ef"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "64f4834b1f79f44ace0c45ae0c5915a6faf0a0a723a3322fbb8fbc6a5fd042f1"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "9adbaf8883d43187081809d22700f39fda4b73cf399f34fd173a630abcb0d5f4"
+        }
+      ],
+      "checks": [
+        "Generated UUIDv7 and valid inbound-ID propagation are tested. The filter now generates an ID for parser failures outside AsyncLocalStorage and binds response header/body/log.",
+        "Malformed JSON no longer echoes submitted text, and both JSON parsers return stable localized validation errors in English/Persian. All 52 selected HTTP/filter checks pass."
+      ],
+      "limitations": [
+        "Generic Nest 4xx responses can still expose raw English messages and framework error labels instead of shared stable codes.",
+        "Complete downstream outbox/worker correlation propagation and all-service logging are not verified."
+      ],
+      "merged_prs": [
+        29
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
-    "01-platform-infrastructure.md#T-01.03.02",
-    "01-platform-infrastructure.md#T-01.03.03",
-    "01-platform-infrastructure.md#T-01.03.04",
-    "01-platform-infrastructure.md#T-01.03.05",
-    "01-platform-infrastructure.md#T-01.04.03",
-    "01-platform-infrastructure.md#T-01.04.04",
-    "01-platform-infrastructure.md#T-01.04.06",
-    "01-platform-infrastructure.md#T-01.05.01",
     "01-platform-infrastructure.md#T-02.01.01",
     "01-platform-infrastructure.md#T-02.01.02",
     "01-platform-infrastructure.md#T-02.01.03",
