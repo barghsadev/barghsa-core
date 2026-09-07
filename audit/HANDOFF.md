@@ -101,6 +101,8 @@ Current step: permission-boundary evidence. Connection-security repair committed
 
 ## Evidence map
 
+- Clean web image review found missing UI output in pnpm's injected dependency copy after TSUP created new files. Added `syncInjectedDepsAfterScripts: [build]`; the clean web production image now builds successfully (`/tmp/barghsa-web-image-synced.log`). UI CSS's required Tailwind config is included in package files. Frontend package refresh and all 11 types pass after the dictionary rollback. Final current browser rerun and image smoke checks are next.
+
 - Final budget review: purchase dictionary extraction was reverted after the complete route payload measured 250.84 KB against the 250 KB ordering budget. All 41 budgets now pass again (ordering249.62 KB). Eager purchase loading remains deferred; no threshold change. The final browser command stopped at this failed budget gate, so its stale pre-existing log is not new browser evidence. A fresh run is required after this correction.
 - Local production API and worker images built at `081eccd`. The web image exposed a missing packaged Tailwind config referenced by UI CSS; it is being added to the package files and rebuilt. Logs `/tmp/barghsa-final-api-image.log`, `/tmp/barghsa-final-worker-image.log`, `/tmp/barghsa-final-web-image.log`.
 

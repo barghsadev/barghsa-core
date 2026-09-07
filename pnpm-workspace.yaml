@@ -4,3 +4,6 @@ packages:
 
 # Produce self-contained deployments from the frozen workspace lockfile.
 injectWorkspacePackages: true
+# Builds replace/add output files; refresh injected copies before consumers build.
+syncInjectedDepsAfterScripts:
+  - build
