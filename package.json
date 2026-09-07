@@ -23,7 +23,8 @@
     "check:contract": "node --test scripts/check-openapi.test.mjs && node scripts/check-openapi.mjs",
     "contract:update": "pnpm --filter @barghsa/api build && node scripts/check-openapi.mjs --write",
     "check:bundle": "node --test scripts/check-route-budgets.test.mjs && node scripts/check-route-budgets.mjs",
-    "db:seed": "pnpm --filter @barghsa/db db:seed"
+    "db:seed": "pnpm --filter @barghsa/db db:seed",
+    "check:db-snapshot": "node --test packages/db/scripts/check-snapshot.test.mjs && node packages/db/scripts/check-snapshot.mjs"
   },
   "devDependencies": {
     "@barghsa/eslint-config": "workspace:*",

@@ -92,7 +92,10 @@ const definitions: Record<string, Array<[string, string]>> = {
     ['chk_invoice_reminder_offset_toggles_offset', '("offset" IN (-7, -3, -1, 0, 1, 7))'],
   ],
   wallet_topup_callback_events: [
-    ['chk_wallet_topup_callback_events_status', "(status IN ('credited', 'unpaid', 'duplicate'))"],
+    [
+      'chk_wallet_topup_callback_events_status',
+      "(status IN ('processing', 'credited', 'unpaid', 'duplicate'))",
+    ],
   ],
   wallet_chargeback_events: [
     [

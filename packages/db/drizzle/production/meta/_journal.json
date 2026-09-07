@@ -267,6 +267,13 @@
       "when": 1791331200020,
       "tag": "0117_notification_template_lineage",
       "breakpoints": true
+    },
+    {
+      "idx": 118,
+      "version": "7",
+      "when": 1791331200021,
+      "tag": "0118_reconcile_schema_snapshot",
+      "breakpoints": true
     }
   ]
 }

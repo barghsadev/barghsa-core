@@ -4,7 +4,7 @@ import { defineConfig } from 'drizzle-kit';
  * Drizzle Kit configuration for the @barghsa/db package.
  *
  * - Schema source: `src/schema/** /*.ts`
- * - Output directory: `./drizzle`
+ * - Output directory: `./drizzle/production`
  * - PostgreSQL dialect with camelCase introspection
  * - Connection string from `DATABASE_URL` environment variable
  */
