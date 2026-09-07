@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useId } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -59,6 +60,7 @@ function statusLabel(status: DeadLetterRow['status'], uiLocale: Locale): string 
 
 export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
   const time = useAccountTime(uiLocale);
+  const numbers = useNumberFormatting(uiLocale);
   const filterId = useId();
   const label = (key: string) => t(`admin.notifications.deadLetter.${key}`, uiLocale);
   const [rows, setRows] = useState<DeadLetterRow[]>([]);
@@ -296,8 +298,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                     </details>
                   </td>
                   <td className="px-4 py-3">
-                    {new Intl.NumberFormat(uiLocale).format(row.attempts)}/
-                    {new Intl.NumberFormat(uiLocale).format(row.maxAttempts)}
+                    {numbers.number(row.attempts)}/{numbers.number(row.maxAttempts)}
                   </td>
                   <td className="px-4 py-3 text-xs text-gray-500">{time.format(row.createdAt)}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
@@ -347,7 +348,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
           >
             {t('admin.jobs.previous', uiLocale)}
           </Button>
-          <span>{new Intl.NumberFormat(uiLocale).format(offset / 25 + 1)}</span>
+          <span>{numbers.number(offset / 25 + 1)}</span>
           <Button
             variant="outline"
             disabled={loading || !hasMore}

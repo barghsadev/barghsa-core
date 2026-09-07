@@ -1,3 +1,4 @@
+import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 for (const locale of ['en', 'fa'])
@@ -16,6 +17,7 @@ for (const locale of ['en', 'fa'])
       failSave = true;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockOppositeNumerals(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -28,7 +30,7 @@ for (const locale of ['en', 'fa'])
           {
             category: 'document',
             allowedExtensions: ['.pdf', '.docx'],
-            maxSizeBytes: 10 * 1024 * 1024,
+            maxSizeBytes: 10.5 * 1024 * 1024,
           },
         ],
       })
@@ -54,6 +56,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toBeVisible();
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
+    await expect(page.locator('main')).toContainText(fa ? '10.5' : '۱۰٫۵');
     await page
       .getByRole('button', { name: fa ? 'ویرایش اسناد' : 'Edit Documents', exact: true })
       .click();

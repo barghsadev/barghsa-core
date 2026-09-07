@@ -1,3 +1,4 @@
+import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 for (const locale of ['en', 'fa'])
@@ -31,6 +32,7 @@ for (const locale of ['en', 'fa'])
     const queries: URLSearchParams[] = [],
       attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockOppositeNumerals(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -69,6 +71,7 @@ for (const locale of ['en', 'fa'])
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
     await expect(page.locator('tbody tr')).toHaveCount(25);
+    await expect(page.locator('tbody tr').first()).toContainText(fa ? '5 / 5' : '۵ / ۵');
     await expect(page.locator('tbody tr').first()).toContainText(
       new Intl.DateTimeFormat(locale, {
         timeZone: 'America/Los_Angeles',
@@ -116,7 +119,7 @@ for (const locale of ['en', 'fa'])
     for (const value of attempts) expect(value).toEqual({ ids: [jobs[0]!.id, jobs[1]!.id] });
     await expect(page.getByRole('checkbox')).toHaveCount(0);
     await expect(page.locator('#admin-content').getByRole('status')).toContainText(
-      fa ? '۱ مورد دیگر' : '1 selections were skipped'
+      fa ? '1 مورد دیگر' : '۱ selections were skipped'
     );
     canView = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();

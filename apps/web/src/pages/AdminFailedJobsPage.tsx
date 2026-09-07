@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -23,8 +24,9 @@ const statuses = ['failed', 'retrying', 'dead_letter', 'resolved', 'all'];
 const pageSize = 25;
 export default function AdminFailedJobsPage() {
   const time = useAccountTime();
-  const locale = useLocale(),
-    label = (key: string) => t(`admin.jobs.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => t(`admin.jobs.${key}`, locale);
   const [status, setStatus] = useState('failed'),
     [jobType, setJobType] = useState('');
   const [offset, setOffset] = useState(0),
@@ -104,7 +106,7 @@ export default function AdminFailedJobsPage() {
       description:
         label(kind === 'resolve' ? 'resolveConfirm' : 'retryConfirm').replace(
           '{count}',
-          new Intl.NumberFormat(locale).format(ids.length)
+          numbers.number(ids.length)
         ) +
         ' ' +
         ids.map((id) => jobName(jobs.find((job) => job.id === id)!.jobType)).join(', '),
@@ -132,8 +134,8 @@ export default function AdminFailedJobsPage() {
           {notice.kind === 'resolve'
             ? label('resolvedNotice')
             : label('retryNotice')
-                .replace('{count}', new Intl.NumberFormat(locale).format(notice.count))
-                .replace('{skipped}', new Intl.NumberFormat(locale).format(notice.skipped))}
+                .replace('{count}', numbers.number(notice.count))
+                .replace('{skipped}', numbers.number(notice.skipped))}
         </p>
       )}
       {loading && <p role="status">{label('loading')}</p>}
@@ -192,7 +194,7 @@ export default function AdminFailedJobsPage() {
               disabled={loading || error || !selected.length}
               onClick={() => act('retry', selected)}
             >
-              {label('bulk')} ({new Intl.NumberFormat(locale).format(selected.length)})
+              {label('bulk')} ({numbers.number(selected.length)})
             </Button>
           )}
           {loading || error ? null : !jobs.length ? (
@@ -276,8 +278,7 @@ export default function AdminFailedJobsPage() {
                         </details>
                       </td>
                       <td className="whitespace-nowrap p-3">
-                        {new Intl.NumberFormat(locale).format(job.attempts)} /{' '}
-                        {new Intl.NumberFormat(locale).format(job.maxAttempts)}
+                        {numbers.number(job.attempts)} / {numbers.number(job.maxAttempts)}
                       </td>
                       <td className="whitespace-nowrap p-3">{date(job.lastRunAt)}</td>
                       <td className="p-3">
@@ -316,12 +317,7 @@ export default function AdminFailedJobsPage() {
             >
               {label('previous')}
             </Button>
-            <span>
-              {label('page').replace(
-                '{page}',
-                new Intl.NumberFormat(locale).format(offset / pageSize + 1)
-              )}
-            </span>
+            <span>{label('page').replace('{page}', numbers.number(offset / pageSize + 1))}</span>
             <Button
               variant="outline"
               disabled={loading || error || !hasMore}

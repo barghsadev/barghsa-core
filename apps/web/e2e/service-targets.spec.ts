@@ -1,3 +1,4 @@
+import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 test('target validation and confirmation preserve settings through a failed save', async ({
   page,
@@ -8,6 +9,7 @@ test('target validation and confirmation preserve settings through a failed save
     }).observe(document, { childList: true });
   });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await mockOppositeNumerals(page, 'en');
   let values = { ticket: 24, verification_case: null },
     verified = false,
     fail = true;
@@ -34,7 +36,7 @@ test('target validation and confirmation preserve settings through a failed save
   await input.fill('72');
   await page.getByRole('button', { name: 'Save response targets', exact: true }).click();
   const dialog = page.getByRole('dialog');
-  await expect(dialog).toContainText('Tickets: 72 Hours');
+  await expect(dialog).toContainText('Tickets: ۷۲ Hours');
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
   await dialog.getByLabel('Confirm your password').fill('Test-password');
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();

@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -35,8 +36,9 @@ const emptyDraft = () => ({
 });
 
 export default function AdminStaffTeamsPage() {
-  const locale = useLocale(),
-    label = (key: string) => t(`admin.teams.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => t(`admin.teams.${key}`, locale);
   const [teams, setTeams] = useState<Team[]>([]),
     [rules, setRules] = useState<StaffAssignmentRules>(DEFAULT_STAFF_ASSIGNMENT_RULES);
   const [loading, setLoading] = useState(true),
@@ -204,8 +206,7 @@ export default function AdminStaffTeamsPage() {
                     <h3 className="font-medium">{team.name}</h3>
                     <p className="text-sm text-gray-600">{team.description}</p>
                     <p className="text-sm">
-                      {label('memberCount')}:{' '}
-                      {new Intl.NumberFormat(locale).format(team.memberUserIds.length)}
+                      {label('memberCount')}: {numbers.number(team.memberUserIds.length)}
                       {!team.isActive ? ` · ${label('inactive')}` : ''}
                     </p>
                   </div>

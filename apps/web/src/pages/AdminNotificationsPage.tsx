@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
@@ -152,6 +153,7 @@ function variablesToText(variables: NotificationVariable[]): string {
  */
 export default function AdminNotificationsPage() {
   const uiLocale = useLocale();
+  const numbers = useNumberFormatting(uiLocale);
   const [templates, setTemplates] = useState<NotificationTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -913,7 +915,7 @@ export default function AdminNotificationsPage() {
                   {template.eventKey}
                   <div className="text-xs text-gray-500">
                     {t('admin.notifications.preview.version', uiLocale)}{' '}
-                    {new Intl.NumberFormat(uiLocale).format(template.version)}
+                    {numbers.number(template.version)}
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm">

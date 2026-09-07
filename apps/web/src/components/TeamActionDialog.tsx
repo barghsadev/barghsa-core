@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -38,6 +39,7 @@ export function TeamActionDialog({
   onSuccess: (result: unknown) => Promise<void>;
 }) {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
   const [needsPassword, setNeedsPassword] = useState(false);
@@ -159,10 +161,7 @@ export function TeamActionDialog({
           )}
           {remaining > 0 && (
             <p role="status">
-              {t('team.retryAfter', locale).replace(
-                '{seconds}',
-                new Intl.NumberFormat(locale).format(remaining)
-              )}
+              {t('team.retryAfter', locale).replace('{seconds}', numbers.number(remaining))}
             </p>
           )}
           {error && (

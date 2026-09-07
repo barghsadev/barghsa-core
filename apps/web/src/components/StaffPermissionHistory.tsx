@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, DatePicker, datePickerDayBounds, Label } from '@barghsa/ui';
@@ -23,8 +24,9 @@ export function StaffPermissionHistory({
   onClose: () => void;
 }) {
   const zone = useTimezone();
-  const locale = useLocale(),
-    label = (key: string) => t(`admin.staff.audit.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => t(`admin.staff.audit.${key}`, locale);
   const [from, setFrom] = useState<Date>(),
     [to, setTo] = useState<Date>();
   const [filters, setFilters] = useState<{ from?: string; to?: string }>({});
@@ -209,9 +211,7 @@ export function StaffPermissionHistory({
             >
               {label('previous')}
             </Button>
-            <span>
-              {label('total').replace('{count}', new Intl.NumberFormat(locale).format(data.total))}
-            </span>
+            <span>{label('total').replace('{count}', numbers.number(data.total))}</span>
             <Button
               variant="outline"
               disabled={offset + 25 >= data.total}

@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label } from '@barghsa/ui';
@@ -10,8 +11,9 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useLocale } from '../hooks/useLocale.js';
 
 export default function AdminServiceTargetsPage() {
-  const locale = useLocale(),
-    label = (key: string) => t(`admin.targets.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => t(`admin.targets.${key}`, locale);
   const [targets, setTargets] = useState<ServiceResponseTargets>({
     ticket: null,
     verification_case: null,
@@ -51,7 +53,7 @@ export default function AdminServiceTargetsPage() {
       title: label('save'),
       description: SERVICE_RESPONSE_TARGET_TYPES.map(
         (type) =>
-          `${t(`admin.teams.${type}`, locale)}: ${targets[type] === null ? label('disabled') : `${new Intl.NumberFormat(locale).format(targets[type]!)} ${label('hours')}`}`
+          `${t(`admin.teams.${type}`, locale)}: ${targets[type] === null ? label('disabled') : `${numbers.number(targets[type]!)} ${label('hours')}`}`
       ).join('; '),
       path: '/api/admin/config/service-response-targets',
       method: 'PUT',

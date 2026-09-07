@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -44,8 +45,9 @@ const blank = () => ({
 
 export default function AdminStaffUsersPage() {
   const time = useAccountTime();
-  const locale = useLocale(),
-    label = (key: string) => t(`admin.staff.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => t(`admin.staff.${key}`, locale);
   const [access, setAccess] = useState<Access | null>(null),
     [roles, setRoles] = useState<Role[]>([]);
   const [list, setList] = useState<StaffList>({ items: [], total: 0 });
@@ -344,12 +346,7 @@ export default function AdminStaffUsersPage() {
                 >
                   {label('previous')}
                 </Button>
-                <span>
-                  {label('total').replace(
-                    '{count}',
-                    new Intl.NumberFormat(locale).format(list.total)
-                  )}
-                </span>
+                <span>{label('total').replace('{count}', numbers.number(list.total))}</span>
                 <Button
                   variant="outline"
                   disabled={disabled || offset + 25 >= list.total}

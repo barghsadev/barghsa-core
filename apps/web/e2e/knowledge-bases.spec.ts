@@ -1,3 +1,4 @@
+import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`Knowledge-base form retries captured input after password verification (${locale})`, async ({
@@ -14,6 +15,7 @@ for (const locale of ['en', 'fa'])
       denied = false;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockOppositeNumerals(page, locale);
     await page.route('**/api/admin/knowledge-bases', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
@@ -81,6 +83,7 @@ for (const locale of ['en', 'fa'])
     let linked = false;
     let attached = true;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockOppositeNumerals(page, locale);
     await page.route('**/api/admin/**', (route) => {
       const path = new URL(route.request().url()).pathname;
       if (path.endsWith('/members') && route.request().method() === 'POST') {
@@ -132,6 +135,7 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ status: 404, json: {} });
     });
     await page.goto('/admin/knowledge-bases');
+    await expect(page.locator('main')).toContainText(fa ? '1' : '۱');
     await page
       .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
       .click();

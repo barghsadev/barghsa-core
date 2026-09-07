@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Input, Label } from '@barghsa/ui';
@@ -23,8 +24,9 @@ const textFields = [
   'publicEndpointUrl',
 ] as const;
 export default function AdminStorageConfig() {
-  const locale = useLocale(),
-    label = (key: string) => t(`admin.storage.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => t(`admin.storage.${key}`, locale);
   const [config, setConfig] = useState<StorageConfig | null>(null);
   const [secret, setSecret] = useState(''),
     [clearSecret, setClearSecret] = useState(false);
@@ -129,7 +131,7 @@ export default function AdminStorageConfig() {
           <p className="text-sm text-muted-foreground">
             {label(config.version ? 'savedVersion' : 'deploymentVersion').replace(
               '{version}',
-              new Intl.NumberFormat(locale).format(config.version)
+              numbers.number(config.version)
             )}
           </p>
           <p className="rounded-md border bg-muted/30 p-3 text-sm">{label('locationWarning')}</p>

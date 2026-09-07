@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n';
 import type { JSX } from 'react';
@@ -178,6 +179,7 @@ export function QuickStatusCards({
   unpaidInvoices,
   locale = 'fa',
 }: QuickStatusCardsProps) {
+  const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
   const cards: CardDef[] = [
@@ -237,9 +239,7 @@ export function QuickStatusCards({
                 <p className="text-sm text-gray-500 mb-1">
                   {t(card.labelKey as keyof typeof t, locale)}
                 </p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {new Intl.NumberFormat(locale).format(card.count)}
-                </p>
+                <p className="text-2xl font-semibold text-gray-900">{numbers.number(card.count)}</p>
               </div>
             </div>
           </Link>

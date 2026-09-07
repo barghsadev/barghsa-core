@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { parseBrandConfig } from '../providers/BrandThemeProvider.js';
 import { formatCurrencyIrr, type NumberStyle } from '@barghsa/i18n/numbers';
 import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
@@ -136,8 +137,8 @@ export default function AdminBrandingConfig() {
   const locale = useLocale();
   const text = (key: Parameters<typeof brandingText>[0]) => brandingText(key, locale);
   const timezone = useTimezone();
-  const versionText = (version: number) =>
-    new Intl.NumberFormat(locale, { useGrouping: false }).format(version);
+  const numbers = useNumberFormatting(locale);
+  const versionText = (version: number) => numbers.number(version, { useGrouping: false });
   const [action, setAction] = useState<TeamAction | null>(null);
   const [revision, setRevision] = useState(0);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);

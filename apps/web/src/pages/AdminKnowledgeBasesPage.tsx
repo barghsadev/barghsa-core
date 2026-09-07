@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
 import { KnowledgeBaseDocumentPicker } from '../components/KnowledgeBaseDocumentPicker.js';
@@ -17,8 +18,9 @@ interface Detail extends Entry {
 }
 type Kind = 'knowledge-bases' | 'kb-groups';
 export default function AdminKnowledgeBasesPage() {
-  const locale = useLocale(),
-    label = (key: string) => t(`admin.kb.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => t(`admin.kb.${key}`, locale);
   const [kind, setKind] = useState<Kind>('knowledge-bases');
   const [rows, setRows] = useState<Entry[]>([]),
     [kbs, setKbs] = useState<Entry[]>([]);
@@ -185,9 +187,7 @@ export default function AdminKnowledgeBasesPage() {
                   <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
                   <p className="text-sm text-muted-foreground">
                     {label(kind === 'knowledge-bases' ? 'documents' : 'members')}:{' '}
-                    {new Intl.NumberFormat(locale).format(
-                      row.documentCount ?? row.memberCount ?? 0
-                    )}
+                    {numbers.number(row.documentCount ?? row.memberCount ?? 0)}
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">

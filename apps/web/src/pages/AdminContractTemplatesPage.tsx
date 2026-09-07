@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
@@ -10,8 +11,9 @@ type Upload = { fileName: string; contentType: string; content: string };
 const MAX_BYTES = 10 * 1024 * 1024;
 export default function AdminContractTemplatesPage() {
   const time = useAccountTime();
-  const locale = useLocale(),
-    label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
   const [rows, setRows] = useState<ContractTemplateDto[]>([]),
     [detail, setDetail] = useState<ContractTemplateDetailDto | null>(null);
   const [selected, setSelected] = useState<string | null>(null),
@@ -270,7 +272,7 @@ export default function AdminContractTemplatesPage() {
                 {detail.versions.map((version) => (
                   <li key={version.versionNumber} className="flex flex-col gap-2 py-4">
                     <h3 className="font-semibold">
-                      {label('version')} {version.versionNumber.toLocaleString(locale)}
+                      {label('version')} {numbers.number(version.versionNumber)}
                     </h3>
                     <p className="break-words">{version.fileName}</p>
                     <time dateTime={version.createdAt}>{time.format(version.createdAt)}</time>
@@ -296,8 +298,7 @@ export default function AdminContractTemplatesPage() {
                   <h2 className="break-words font-semibold">{row.name}</h2>
                   <p className="whitespace-pre-wrap break-words text-sm">{row.description}</p>
                   <p>
-                    {label(row.status)} · {label('versions')}:{' '}
-                    {row.versionCount.toLocaleString(locale)}
+                    {label(row.status)} · {label('versions')}: {numbers.number(row.versionCount)}
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
