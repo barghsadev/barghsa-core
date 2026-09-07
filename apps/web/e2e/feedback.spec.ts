@@ -90,7 +90,14 @@ for (const trusted of [false, true]) {
         trustDevice: trusted,
       });
       submitted = true;
-      return route.fulfill({ json: {} });
+      return route.fulfill({
+        json: {
+          userId: 'feedback-user',
+          sessionId: 'feedback-session',
+          csrfToken: 'feedback-csrf',
+          expiresAt: '2030-01-01T00:00:00.000Z',
+        },
+      });
     });
     await page.goto('/login');
     await page.locator('#username').fill('feedback@example.test');

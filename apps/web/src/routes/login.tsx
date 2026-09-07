@@ -1,6 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { rateLimitMessage, retryAfterSeconds, authErrorCode } from '../lib/auth-errors.js';
+import { hasSessionAcknowledgement, parseLoginAcknowledgement } from '../lib/auth-responses.js';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
@@ -233,14 +234,13 @@ function LoginPage() {
         }
 
         // ── Check if password change is required (T-02.01.04) ──
-        if (body?.mustChangePassword) {
-          const token = body?.passwordChangeToken as string | undefined;
-          if (!token) {
-            const msg = t('auth.login.error.generic', locale);
-            setFormError(msg);
-            return;
-          }
-          setPasswordChangeToken(token);
+        const acknowledged = parseLoginAcknowledgement(body);
+        if (!acknowledged) {
+          setFormError(t('auth.login.error.generic', locale));
+          return;
+        }
+        if (acknowledged.kind === 'password-change') {
+          setPasswordChangeToken(acknowledged.token);
           setPasswordChangeStep(true);
           setNewPassword('');
           setConfirmPassword('');
@@ -249,14 +249,8 @@ function LoginPage() {
         }
 
         // ── Check if OTP step-up is required ──────────────────
-        if (body?.requiresOtp) {
-          const cid = body?.challengeId as string | undefined;
-          if (!cid) {
-            const msg = t('auth.login.error.generic', locale);
-            setFormError(msg);
-            return;
-          }
-          setChallengeId(cid);
+        if (acknowledged.kind === 'otp') {
+          setChallengeId(acknowledged.challengeId);
           setOtpDestination(normalized.formatted ?? normalized.normalized);
           setOtpStep(true);
           setResendTimer(60);
@@ -393,6 +387,12 @@ function LoginPage() {
         }
 
         // ── Success — OTP verified, session set ─────────────────
+        if (!hasSessionAcknowledgement(body)) {
+          setOtpError(t('auth.otp.error.generic', locale));
+          setOtpCode('');
+          otpRef.current?.reset();
+          return;
+        }
         toast.success(t('auth.login.otpSuccess', locale));
         router.navigate({ to: '/' });
       } catch {
