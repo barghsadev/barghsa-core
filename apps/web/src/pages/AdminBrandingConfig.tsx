@@ -240,6 +240,8 @@ export default function AdminBrandingConfig() {
           onClose={() => setAction(null)}
           onSuccess={async (result) => {
             const dto = result as BrandConfigDto;
+            if (dto.status === 'active')
+              window.dispatchEvent(new Event('barghsa:branding-activated'));
             setLogoFile(null);
             setLogoUploadKey(null);
             setActiveConfig(dto);

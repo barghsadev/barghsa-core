@@ -2270,6 +2270,9 @@ for (const locale of ['en', 'fa'] as const) {
     const savedTitle = `Brand published ${locale}`;
     await title.fill(savedTitle);
     await page
+      .getByLabel(fa ? 'کد هگز رنگ اصلی' : 'Primary hex value', { exact: true })
+      .fill('#777777');
+    await page
       .getByLabel(fa ? 'بارگذاری نشان' : 'Upload logo', { exact: true })
       .setInputFiles({ name: 'bad.svg', mimeType: 'image/svg+xml', buffer: Buffer.from('<svg/>') });
     await expect(page.getByRole('alert')).toContainText(
@@ -2344,6 +2347,15 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(await publicTitle()).toBe(savedTitle);
+    await expect(page).toHaveTitle(savedTitle);
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.style.getPropertyValue('--primary')))
+      .toBe('#777777');
+    await expect
+      .poll(() =>
+        page.evaluate(() => document.documentElement.style.getPropertyValue('--primary-foreground'))
+      )
+      .toBe('#000000');
     await title.fill(`Next draft ${locale}`);
     await page
       .getByRole('button', { name: fa ? 'ذخیره پیش‌نویس' : 'Save Draft', exact: true })
