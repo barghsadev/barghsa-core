@@ -4,6 +4,10 @@ import * as React from 'react';
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react/number-field';
 
 import { cn } from '../../lib/utils';
+import { numberFieldLabels } from './number-field.labels';
+
+const NumberFieldLocale = /* @__PURE__ */ React.createContext('fa-IR');
+const isPersian = (locale: string) => /^fa(?:-|$)/i.test(locale);
 
 function NumberField({
   className,
@@ -17,13 +21,17 @@ function NumberField({
   const resolvedLocale = locale ?? 'fa-IR';
 
   return (
-    <NumberFieldPrimitive.Root
-      data-slot="number-field"
-      format={format}
-      locale={resolvedLocale}
-      className={cn('flex flex-col gap-1.5', className)}
-      {...props}
-    />
+    <NumberFieldLocale.Provider value={resolvedLocale}>
+      <NumberFieldPrimitive.Root
+        lang={resolvedLocale}
+        dir={isPersian(resolvedLocale) ? 'rtl' : 'ltr'}
+        data-slot="number-field"
+        format={format}
+        locale={resolvedLocale}
+        className={cn('flex flex-col gap-1.5', className)}
+        {...props}
+      />
+    </NumberFieldLocale.Provider>
   );
 }
 
@@ -54,16 +62,19 @@ function NumberFieldInput({ className, ...props }: NumberFieldPrimitive.Input.Pr
 }
 
 function NumberFieldIncrement({ className, ...props }: NumberFieldPrimitive.Increment.Props) {
+  const locale = React.useContext(NumberFieldLocale);
   return (
     <NumberFieldPrimitive.Increment
+      aria-label={numberFieldLabels[isPersian(locale) ? 'fa' : 'en'].increase}
       data-slot="number-field-increment"
       className={cn(
-        'flex h-9 min-w-9 items-center justify-center border-l border-input px-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:bg-accent/80 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-9 min-w-9 items-center justify-center border-s border-input px-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:bg-accent/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       {...props}
     >
       <svg
+        aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="16"
         height="16"
@@ -82,16 +93,19 @@ function NumberFieldIncrement({ className, ...props }: NumberFieldPrimitive.Incr
 }
 
 function NumberFieldDecrement({ className, ...props }: NumberFieldPrimitive.Decrement.Props) {
+  const locale = React.useContext(NumberFieldLocale);
   return (
     <NumberFieldPrimitive.Decrement
+      aria-label={numberFieldLabels[isPersian(locale) ? 'fa' : 'en'].decrease}
       data-slot="number-field-decrement"
       className={cn(
-        'flex h-9 min-w-9 items-center justify-center border-r border-input px-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:bg-accent/80 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-9 min-w-9 items-center justify-center border-e border-input px-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:bg-accent/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       {...props}
     >
       <svg
+        aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="16"
         height="16"

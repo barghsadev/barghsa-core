@@ -2715,3 +2715,12 @@ The shared UI group now passes both required thresholds. Five of thirteen covera
 - packages/shared critical: 90.32% lines, 88.10% branches, pass.
 - packages/shared general: 86.83% lines, 76.64% branches, pass.
 - packages/ui general: 85.24% lines, 77.36% branches, pass.
+
+
+### Localize number-field controls and mirror their borders
+
+The public number field formatted Persian values but inherited English Increase/Decrease accessible names from Base UI. Its stepper separators used physical left/right borders, and the root did not set language/direction from its own locale. The field now provides locale context to both controls, supplies Persian/English action dictionaries, sets matching root language/direction, uses logical borders and explicit themed keyboard-focus rings. Caller-provided accessible names and root attributes still override defaults; decorative icons are hidden from assistive technology.
+
+The first five-case browser run had four failures and one passing caller-label override. Persian cases reproduced missing translated action names; English cases exposed reliance on the browser's default outline rather than the explicit shared focus ring. The final tests check the visible ring without prescribing removal of the browser outline. All 25 final cases pass across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari. They verify logical border sides, min/max bounds, Space/Enter stepper actions, input ArrowUp, Persian/Latin digits, locale changes without value loss and caller label overrides. All 20 scoped accessibility scans have zero violations.
+
+Review: 43 UI unit tests, UI typechecking and explicit ESLint pass. Production web build and all 41 unchanged route budgets pass. No current product page consumes NumberField; this repairs the exported shared component and does not certify every shared-control acceptance criterion. Combined coverage remains the earlier 4ba30c9 checkpoint and was not relabeled as covering this change.
