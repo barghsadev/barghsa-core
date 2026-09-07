@@ -2694,3 +2694,24 @@ The historical 58-task skipped register still described timezone-aware date disp
 Two tasks are marked to preserve rather than rebuild. The remaining 56 are acceptance_pending and require review of existing implementation before building only unmet requirements. This is not a queue or authorization to resume feature work. The original historical skip artifacts remain unchanged; source hashes make the new report stale when acceptance evidence changes.
 
 Review: five reconciliation tests pass, covering all 58 keys and original provenance, the two exact verified tasks, no mutation of inputs, rejection of duplicate/missing identities and overlapping reviewed/pending populations. The generated report check passes. No acceptance status or loop state changed.
+
+
+### Refresh combined coverage after table and boundary review
+
+At 4ba30c905ab442a5f6f2ec1897303dc1bfb15219, all 5351 unit/integration tests in 445 files passed, followed by all 335 production Chromium browser cases with no skips, flaky results or failures. Unit coverage ran while audit-only documentation/report changes were committed; runtime and test sources stayed unchanged. The clean current browser revision produced 335 validated records mapped to 228 sources. Reports were collected and merged before any subsequent source edits.
+
+The shared UI group now passes both required thresholds. Five of thirteen coverage groups still fail; no report-validation errors occurred. Required thresholds remain unchanged.
+
+- apps/api critical: 90.40% lines, 76.65% branches, fail.
+- apps/api general: 93.64% lines, 80.88% branches, pass.
+- apps/web general: 64.68% lines, 61.94% branches, fail.
+- apps/web critical: 76.87% lines, 74.24% branches, fail.
+- apps/worker general: 94.65% lines, 79.34% branches, pass.
+- apps/worker critical: 98.27% lines, 85.20% branches, pass.
+- packages/db general: 87.65% lines, 70.55% branches, fail.
+- packages/db critical: 93.62% lines, 100.00% branches, pass. No branch counters exist in this group.
+- packages/i18n critical: 100.00% lines, 83.33% branches, fail.
+- packages/i18n general: 100.00% lines, 83.78% branches, pass.
+- packages/shared critical: 90.32% lines, 88.10% branches, pass.
+- packages/shared general: 86.83% lines, 76.64% branches, pass.
+- packages/ui general: 85.24% lines, 77.36% branches, pass.

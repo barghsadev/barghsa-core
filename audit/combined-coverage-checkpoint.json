@@ -293,9 +293,9 @@
         "apps/api/src/user-settings/user-settings.module.ts"
       ],
       "lines": 4481,
-      "covered_lines": 4197,
+      "covered_lines": 4196,
       "branches": 3505,
-      "covered_branches": 2836,
+      "covered_branches": 2835,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -438,9 +438,9 @@
         "apps/web/src/routes/terms.tsx"
       ],
       "lines": 6775,
-      "covered_lines": 4392,
+      "covered_lines": 4382,
       "branches": 8345,
-      "covered_branches": 5210,
+      "covered_branches": 5169,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -681,7 +681,7 @@
       "lines": 21,
       "covered_lines": 21,
       "branches": 36,
-      "covered_branches": 27,
+      "covered_branches": 30,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -869,15 +869,15 @@
         "packages/ui/src/lib/utils.ts"
       ],
       "lines": 210,
-      "covered_lines": 165,
-      "branches": 347,
-      "covered_branches": 241,
+      "covered_lines": 179,
+      "branches": 349,
+      "covered_branches": 270,
       "required_lines": 80,
       "required_branches": 75,
-      "passed": false
+      "passed": true
     }
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "b63ef48375cc285751c0a3df4a400d99498093a2"
+  "head_sha": "4ba30c905ab442a5f6f2ec1897303dc1bfb15219"
 }
