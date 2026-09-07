@@ -179,11 +179,16 @@ export default function AdminNotificationsPage() {
 
   // Test-send state
   const [testSending, setTestSending] = useState(false);
+  const testSendInFlight = useRef(false);
+  const editorGeneration = useRef(0);
+  const [savedContent, setSavedContent] = useState('');
   const [testSendMsg, setTestSendMsg] = useState<string | null>(null);
   const [testDestination, setTestDestination] = useState('');
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
 
   const parsedVariables = parseVariablesText(variablesStr);
+  const contentSignature = JSON.stringify([subject, bodyTemplate, variablesStr]);
+  const unsavedContent = contentSignature !== savedContent;
 
   const fetchTemplates = useCallback(async () => {
     try {
@@ -209,6 +214,8 @@ export default function AdminNotificationsPage() {
   }, [fetchTemplates]);
 
   function openCreate() {
+    editorGeneration.current++;
+    setSavedContent('');
     setViewOnly(false);
     setEditId(null);
     setEventKey(KNOWN_EVENT_KEYS[0]!);
@@ -223,6 +230,14 @@ export default function AdminNotificationsPage() {
   }
 
   function openEdit(template: NotificationTemplate, copy = false) {
+    editorGeneration.current++;
+    setSavedContent(
+      JSON.stringify([
+        template.subject ?? '',
+        template.bodyTemplate,
+        variablesToText(template.variables),
+      ])
+    );
     setViewOnly(!copy && (template.status !== 'draft' || template.publishedAt != null));
     setEditId(copy ? null : template.id);
     setEventKey(template.eventKey);
@@ -237,6 +252,7 @@ export default function AdminNotificationsPage() {
   }
 
   function closeEditor() {
+    editorGeneration.current++;
     setShowEditor(false);
     setEditId(null);
   }
@@ -263,10 +279,14 @@ export default function AdminNotificationsPage() {
   }
 
   async function handleTestSend() {
-    if (!editId) {
+    if (!editId || unsavedContent || testSendInFlight.current) {
       setTestSendMsg(null);
       return;
     }
+    setError(null);
+    testSendInFlight.current = true;
+    const generation = editorGeneration.current;
+    const expectedChannel = channel;
     setTestSending(true);
     setTestSendMsg(null);
     try {
@@ -282,12 +302,37 @@ export default function AdminNotificationsPage() {
         const errData = await res.json().catch(() => ({}));
         throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
-      setTestSendMsg(t('admin.notifications.testSent', uiLocale));
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : t('admin.notifications.error.testSend', uiLocale)
+      const result: unknown = await res.json();
+      if (generation !== editorGeneration.current) return;
+      if (
+        !result ||
+        typeof result !== 'object' ||
+        !('ok' in result) ||
+        result.ok !== true ||
+        !('destination' in result) ||
+        result.destination !== expectedChannel ||
+        !('lastTestStatus' in result) ||
+        result.lastTestStatus !== 'delivered'
+      ) {
+        throw new Error(t('admin.notifications.error.testSend', uiLocale));
+      }
+      setTestSendMsg(
+        t(
+          expectedChannel === 'email'
+            ? 'admin.notifications.testSentEmail'
+            : expectedChannel === 'sms'
+              ? 'admin.notifications.testSentSms'
+              : 'admin.notifications.testSent',
+          uiLocale
+        )
       );
+    } catch (err) {
+      if (generation === editorGeneration.current)
+        setError(
+          err instanceof Error ? err.message : t('admin.notifications.error.testSend', uiLocale)
+        );
     } finally {
+      testSendInFlight.current = false;
       setTestSending(false);
     }
   }
@@ -619,7 +664,7 @@ export default function AdminNotificationsPage() {
               <input
                 type="text"
                 id="notification-template-subject"
-                readOnly={viewOnly}
+                readOnly={viewOnly || testSending}
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2"
@@ -647,7 +692,7 @@ export default function AdminNotificationsPage() {
                   aria-describedby="notification-body-hint"
                   ref={bodyRef}
                   id="notification-template-bodyTemplate"
-                  readOnly={viewOnly}
+                  readOnly={viewOnly || testSending}
                   value={bodyTemplate}
                   onChange={(e) => setBodyTemplate(e.target.value)}
                   className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
@@ -669,7 +714,7 @@ export default function AdminNotificationsPage() {
                       <li key={v.name}>
                         <button
                           type="button"
-                          disabled={viewOnly}
+                          disabled={viewOnly || testSending}
                           onClick={() => insertVariable(v.name)}
                           className="w-full text-left px-2 py-1 text-xs font-mono bg-white border border-gray-200 rounded hover:bg-blue-50 hover:border-blue-300"
                           title={v.description ?? undefined}
@@ -724,7 +769,7 @@ export default function AdminNotificationsPage() {
             </p>
             <textarea
               id="notification-template-variablesLabel"
-              readOnly={viewOnly}
+              readOnly={viewOnly || testSending}
               value={variablesStr}
               onChange={(e) => setVariablesStr(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
@@ -744,9 +789,13 @@ export default function AdminNotificationsPage() {
                   </label>
                   <input
                     id="test-destination"
+                    disabled={testSending}
                     type="text"
                     value={testDestination}
-                    onChange={(e) => setTestDestination(e.target.value)}
+                    onChange={(e) => {
+                      setTestSendMsg(null);
+                      setTestDestination(e.target.value);
+                    }}
                     placeholder={t('admin.notifications.testDestinationPlaceholder', uiLocale)}
                     className="border border-gray-300 rounded px-3 py-2 text-sm"
                     dir="ltr"
@@ -758,19 +807,26 @@ export default function AdminNotificationsPage() {
                 <button
                   type="button"
                   onClick={handleTestSend}
-                  disabled={testSending || saving}
+                  disabled={testSending || saving || unsavedContent}
                   className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50"
                 >
                   {testSending
                     ? t('admin.notifications.sending', uiLocale)
                     : t('admin.notifications.testSend', uiLocale)}
                 </button>
-                {testSendMsg && <span className="text-sm text-green-600">{testSendMsg}</span>}
+                {unsavedContent && (
+                  <span className="text-sm text-amber-700">
+                    {t('admin.notifications.saveBeforeTest', uiLocale)}
+                  </span>
+                )}
+                {testSendMsg && !unsavedContent && (
+                  <span className="text-sm text-green-600">{testSendMsg}</span>
+                )}
               </>
             )}
             <button
               type="submit"
-              disabled={saving || viewOnly}
+              disabled={saving || viewOnly || testSending}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {saving

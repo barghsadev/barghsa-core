@@ -1573,9 +1573,9 @@ export class AdminController {
    * (or an allow-listed dev test address). The destination must belong to the
    * acting admin's contact (users.email/mobile/username) or match
    * TEST_SEND_ALLOWLIST (dev/test only) — see T-05.04.04. When no destination
-   * is supplied, the in-app default (the admin's own inbox) is used.
-   * Out-of-app email/SMS transport is pending E-05 (T-05.06), so delivery is
-   * in-app today. Permission: admin:notifications:edit .
+   * is supplied, only an in-app template can use the admin's own inbox.
+   * Email and SMS use their configured provider and require a destination.
+   * Permission: admin:notifications:edit.
    */
   @Post('notifications/templates/:id/test-send')
   @HttpCode(200)

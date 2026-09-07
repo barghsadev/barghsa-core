@@ -2065,3 +2065,147 @@ for (const locale of ['en', 'fa']) {
     );
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`notification tests confirm the actual channel and reject unsaved or invalid results (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const templates = ['email', 'sms', 'in_app'].map((channel) => ({
+      id: channel,
+      eventKey: `test.${channel}`,
+      channel,
+      locale: 'en',
+      subject: 'Subject',
+      bodyTemplate: 'Saved body',
+      variables: [],
+      status: 'draft',
+      isActive: false,
+      version: 1,
+      publishedAt: null,
+    }));
+    await page.route('**/api/admin/notifications/templates*', (route) =>
+      route.fulfill({ json: templates })
+    );
+    await page.route('**/api/admin/config/delivery-window', (route) =>
+      route.fulfill({ json: { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 } })
+    );
+    let response: unknown = {};
+    let writes = 0;
+    let delayed = false;
+    let finish!: () => void;
+    await page.route('**/api/admin/notifications/templates/*/test-send', async (route) => {
+      writes++;
+      if (delayed)
+        await new Promise<void>((done) => {
+          finish = done;
+        });
+      return route.fulfill({ json: response });
+    });
+    await page.goto('/admin/notifications');
+    const editor = page
+      .locator('form')
+      .filter({ has: page.locator('#notification-template-eventKey') });
+    for (const template of templates) {
+      await page
+        .getByRole('row')
+        .filter({ hasText: template.eventKey })
+        .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+        .click();
+      const send = editor.getByRole('button', {
+        name: locale === 'fa' ? 'ارسال آزمایشی' : 'Test Send',
+        exact: true,
+      });
+      await expect(send).toBeEnabled();
+      await editor.locator('#notification-template-bodyTemplate').fill('Unsaved body');
+      await expect(send).toBeDisabled();
+      await expect(
+        editor.getByText(
+          locale === 'fa'
+            ? 'پیش از ارسال آزمایشی، تغییرات را ذخیره کنید.'
+            : 'Save changes before sending a test.',
+          { exact: true }
+        )
+      ).toBeVisible();
+      await editor.locator('#notification-template-bodyTemplate').fill('Saved body');
+      if (template.channel !== 'in_app')
+        await editor
+          .locator('#test-destination')
+          .fill(template.channel === 'email' ? 'own@example.test' : '+989121234567');
+      const message =
+        template.channel === 'email'
+          ? locale === 'fa'
+            ? 'ایمیل آزمایشی ارسال شد.'
+            : 'Test email sent.'
+          : template.channel === 'sms'
+            ? locale === 'fa'
+              ? 'پیامک آزمایشی ارسال شد.'
+              : 'Test SMS sent.'
+            : locale === 'fa'
+              ? 'پیام آزمایشی به صندوق اعلان داخل برنامه شما ارسال شد.'
+              : 'Test message delivered to your in-app inbox.';
+      for (const invalid of [
+        {},
+        { ok: true, destination: 'wrong', lastTestStatus: 'delivered' },
+        { ok: true, destination: template.channel, lastTestStatus: 'failed' },
+      ]) {
+        response = invalid;
+        const before = writes;
+        await send.click();
+        await expect.poll(() => writes).toBe(before + 1);
+        await expect(send).toBeEnabled();
+        await expect(editor.getByText(message, { exact: true })).toHaveCount(0);
+      }
+      response = { ok: true, destination: template.channel, lastTestStatus: 'delivered' };
+      await send.click();
+      await expect(editor.getByText(message, { exact: true })).toBeVisible();
+      await editor.locator('#notification-template-bodyTemplate').fill('Changed after test');
+      await expect(editor.getByText(message, { exact: true })).toHaveCount(0);
+      await editor
+        .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+        .click();
+    }
+    expect(writes).toBe(12);
+    delayed = true;
+    response = { ok: true, destination: 'in_app', lastTestStatus: 'delivered' };
+    const edit = (event: string) =>
+      page
+        .getByRole('row')
+        .filter({ hasText: event })
+        .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+        .click();
+    await edit('test.in_app');
+    const send = editor.getByRole('button', {
+      name: locale === 'fa' ? 'ارسال آزمایشی' : 'Test Send',
+      exact: true,
+    });
+    try {
+      await send.evaluate((button: HTMLButtonElement) => {
+        button.click();
+        button.click();
+      });
+      await expect.poll(() => writes).toBe(13);
+      await expect(editor.locator('#notification-template-bodyTemplate')).toHaveAttribute(
+        'readonly',
+        ''
+      );
+      await expect(editor.locator('#test-destination')).toBeDisabled();
+      await editor
+        .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+        .click();
+      await edit('test.email');
+    } finally {
+      finish();
+    }
+    await expect(send).toBeEnabled();
+    await expect(
+      editor.getByText(
+        locale === 'fa'
+          ? 'پیام آزمایشی به صندوق اعلان داخل برنامه شما ارسال شد.'
+          : 'Test message delivered to your in-app inbox.',
+        { exact: true }
+      )
+    ).toHaveCount(0);
+    expect(writes).toBe(13);
+  });
+}

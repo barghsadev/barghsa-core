@@ -1666,6 +1666,9 @@ export const fa: I18nDictionary = {
     'این قالب غیرفعال شود؟ اعلان‌های فعال تا انتشار نسخه جدید دیگر از آن استفاده نمی‌کنند.',
   'admin.notifications.deleteConfirm': 'این پیش‌نویس حذف شود؟ این کار قابل بازگشت نیست.',
   'admin.notifications.testSent': 'پیام آزمایشی به صندوق اعلان داخل برنامه شما ارسال شد.',
+  'admin.notifications.testSentEmail': 'ایمیل آزمایشی ارسال شد.',
+  'admin.notifications.testSentSms': 'پیامک آزمایشی ارسال شد.',
+  'admin.notifications.saveBeforeTest': 'پیش از ارسال آزمایشی، تغییرات را ذخیره کنید.',
   'admin.notifications.testDestinationLabel': 'مقصد ارسال آزمایشی (اختیاری)',
   'admin.notifications.testDestinationPlaceholder': 'ایمیل یا شماره موبایل خودتان',
   'admin.notifications.testDestinationHint':
@@ -3655,6 +3658,9 @@ export const en: I18nDictionary = {
     'Unpublish this template? Active notifications will stop using it until a new version is published.',
   'admin.notifications.deleteConfirm': 'Delete this draft? This cannot be undone.',
   'admin.notifications.testSent': 'Test message delivered to your in-app inbox.',
+  'admin.notifications.testSentEmail': 'Test email sent.',
+  'admin.notifications.testSentSms': 'Test SMS sent.',
+  'admin.notifications.saveBeforeTest': 'Save changes before sending a test.',
   'admin.notifications.testDestinationLabel': 'Test destination (optional)',
   'admin.notifications.testDestinationPlaceholder': 'Your own email or phone',
   'admin.notifications.testDestinationHint':
