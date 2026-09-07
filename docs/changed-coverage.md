@@ -1,6 +1,7 @@
 # Changed source coverage
 
-CI runs package coverage first, then `scripts/check-changed-coverage.py` against the
+CI runs package coverage and production-browser checks, merges their reports, then runs
+`scripts/check-changed-coverage.py` against the
 pull request base or the preceding main commit. The checker uses the merge base and
 committed HEAD, recording both hashes in its JSON artifact. Test failures remain
 failures even when the coverage artifact passes.
@@ -26,10 +27,23 @@ General line coverage follows Istanbul statement-start line semantics; branches
 are included when their source extent intersects the change. An empty executable
 line or branch set adds no artificial hits or failures.
 
-This gate does not certify unchanged critical files, runtime behavior or production
-operations. Browser checks without instrumentation do not contribute coverage.
-Coverage reports must come from the same checkout, after coverage execution; CI's
-Turbo cache includes source inputs and restores the package coverage artifacts.
+The browser job builds a separate `dist-coverage` directory with hidden source maps.
+Normal production output stays in `dist` without maps. Chromium collects V8 ranges
+through the shared test fixture. Collection verifies the executed JavaScript against
+the built asset before mapping it back to workspace source. Missing maps or records
+fail; source-map failure never becomes zero reported flakes or successful coverage.
+Every record captures the tested revision and whether the checkout was dirty. The
+merge rejects stale revisions and dirty runs. Unit coverage is retained for source
+not exercised in the browser. Additional browser contexts outside the shared page
+fixture are not included.
+
+A separate CI job combines unit and browser artifacts for the same HEAD. PR coverage
+always includes the web, UI, shared and i18n packages, even when the changed package
+set is smaller, so each mapped browser consumer has a unit baseline.
+
+This gate does not certify unchanged critical files or production operations.
+Coverage reports must come from the same checkout, after coverage execution. CI's
+Turbo cache includes shared configuration and source inputs and restores package artifacts.
 Existing package-wide Vitest floors remain in force. Passing a fixture test of this
 checker is not evidence that the application meets its thresholds.
 

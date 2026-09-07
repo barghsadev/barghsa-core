@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 test('target validation and confirmation preserve settings through a failed save', async ({
   page,
 }) => {

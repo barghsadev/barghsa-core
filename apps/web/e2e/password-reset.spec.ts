@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 
 for (const locale of ['fa', 'en'] as const) {
   test(`password recovery submits the issued challenge and clears secrets (${locale})`, async ({

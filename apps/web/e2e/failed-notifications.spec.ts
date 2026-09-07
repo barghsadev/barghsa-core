@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 for (const locale of ['en', 'fa'])
   test(`notification triage handles permissions, paging and step-up failures (${locale})`, async ({

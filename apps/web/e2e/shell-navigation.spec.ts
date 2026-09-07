@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   for (const area of ['admin', 'customer']) {
     test(`shell navigation works on mobile and desktop (${area}, ${locale})`, async ({ page }) => {

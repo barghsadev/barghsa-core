@@ -1,0 +1,120 @@
+import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
+import { resolve, sep, join } from 'node:path';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import { parse } from 'acorn';
+import { mergeProcessCovs } from '@bcoe/v8-coverage';
+import { convert } from 'ast-v8-to-istanbul';
+import coverageLibrary from 'istanbul-lib-coverage';
+
+const sourcePattern = /^(apps\/web|packages\/(ui|i18n|shared))\/src\//;
+
+export async function collectBrowserCoverage({ root, distDir, rawDir, output }) {
+  await mkdir(resolve(output, '..'), { recursive: true });
+  await writeFile(output, JSON.stringify({ schema_version: 1, status: 'invalid' }) + '\n');
+  const files = (await readdir(rawDir)).filter((name) => name.endsWith('.json'));
+  if (!files.length) throw new Error('No browser coverage records');
+  const scripts = new Map();
+  const headSha = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], {
+    encoding: 'utf8',
+  }).trim();
+  let recordedDirty = false;
+  let merged = { result: [] };
+  for (const name of files) {
+    const record = JSON.parse(await readFile(join(rawDir, name), 'utf8'));
+    if (
+      record.schema_version !== 1 ||
+      record.head_sha !== headSha ||
+      typeof record.working_tree_dirty !== 'boolean'
+    )
+      throw new Error('Browser records belong to an unknown or different revision');
+    recordedDirty ||= record.working_tree_dirty;
+    const entries = record.entries;
+    if (!Array.isArray(entries)) throw new Error('Invalid browser coverage records');
+    const result = [];
+    for (const entry of entries) {
+      const url = new URL(entry.url);
+      if (!url.pathname.startsWith('/assets/') || !url.pathname.endsWith('.js')) continue;
+      const filename = resolve(distDir, '.' + decodeURIComponent(url.pathname));
+      if (!filename.startsWith(resolve(distDir) + sep)) throw new Error('Invalid asset path');
+      const code = await readFile(filename, 'utf8');
+      if (entry.source !== code)
+        throw new Error(`Browser source differs from built asset: ${filename}`);
+      if (!Array.isArray(entry.functions)) throw new Error('Missing V8 functions');
+      for (const fn of entry.functions) {
+        if (!Array.isArray(fn.ranges) || !fn.ranges.length) throw new Error('Missing V8 ranges');
+        for (const range of fn.ranges) {
+          if (
+            ![range.startOffset, range.endOffset, range.count].every(Number.isSafeInteger) ||
+            range.count < 0 ||
+            range.startOffset < 0 ||
+            range.endOffset < range.startOffset ||
+            range.endOffset > code.length
+          )
+            throw new Error('Invalid V8 range');
+        }
+      }
+      const scriptUrl = pathToFileURL(filename).href;
+      scripts.set(scriptUrl, code);
+      result.push({ ...entry, url: scriptUrl });
+    }
+    merged = mergeProcessCovs([merged, { result }]);
+  }
+  if (!merged.result.length) throw new Error('No application assets in browser coverage');
+  const coverage = coverageLibrary.createCoverageMap({});
+  for (const entry of merged.result) {
+    const filename = fileURLToPath(entry.url);
+    const code = scripts.get(entry.url);
+    const sourceMap = JSON.parse(await readFile(filename + '.map', 'utf8'));
+    if (sourceMap.version !== 3 || !Array.isArray(sourceMap.sources))
+      throw new Error('Invalid asset source map');
+    sourceMap.sources = sourceMap.sources.map((source) => {
+      const url = new URL(source, entry.url);
+      // Split route modules map back to their canonical source file.
+      url.search = '';
+      return url.href;
+    });
+    coverage.merge(
+      await convert({
+        code,
+        sourceMap,
+        coverage: entry,
+        ast: parse(code, { ecmaVersion: 'latest', sourceType: 'module', locations: true }),
+      })
+    );
+  }
+  coverage.filter(
+    (filename) =>
+      sourcePattern.test(filename.slice(resolve(root).length + 1)) &&
+      filename.startsWith(resolve(root) + sep)
+  );
+  if (!coverage.files().length) throw new Error('No workspace source mapped from browser coverage');
+  const report = {
+    schema_version: 1,
+    status: 'mapped',
+    head_sha: headSha,
+    working_tree_dirty:
+      recordedDirty ||
+      execFileSync('git', ['-C', root, 'status', '--porcelain'], {
+        encoding: 'utf8',
+      }).trim() !== '',
+    browser_record_count: files.length,
+    asset_count: merged.result.length,
+    coverage: JSON.parse(JSON.stringify(coverage.toJSON())),
+  };
+  await writeFile(output, JSON.stringify(report) + '\n');
+  return report;
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const root = fileURLToPath(new URL('..', import.meta.url));
+  const report = await collectBrowserCoverage({
+    root,
+    distDir: resolve(root, 'apps/web/dist-coverage'),
+    rawDir: resolve(root, 'apps/web/test-results/v8-coverage'),
+    output: process.argv[2] || resolve(root, 'apps/web/test-results/browser-coverage.json'),
+  });
+  console.log(
+    `Mapped ${report.browser_record_count} browser records to ${Object.keys(report.coverage).length} source files`
+  );
+}

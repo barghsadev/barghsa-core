@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`contract limits recover from failures without losing the proposal (${locale})`, async ({
     page,

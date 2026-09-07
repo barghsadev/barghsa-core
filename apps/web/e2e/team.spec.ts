@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './coverage-fixture';
 
 const profileId = '00000000-0000-4000-8000-000000000001';
 const transferId = '00000000-0000-4000-8000-000000000002';

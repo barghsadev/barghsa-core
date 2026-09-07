@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['fa', 'en'] as const) {
   test(`canonical inbox renders preserved text and safe profile navigation (${locale})`, async ({
     page,

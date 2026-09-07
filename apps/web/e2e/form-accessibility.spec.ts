@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './coverage-fixture';
 
 for (const locale of ['en', 'fa']) {
   test(`ordering address save freezes its draft and rejects malformed success (${locale})`, async ({

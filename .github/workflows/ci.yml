@@ -99,8 +99,24 @@ jobs:
         run: node scripts/check-auth-transfer.mjs
       - name: Verify browser retry failure gate
         run: node --test scripts/test-browser-flake-gate.mjs
+      - name: Build isolated browser coverage assets
+        run: pnpm --filter @barghsa/web build
+        env:
+          BARGHSA_BROWSER_COVERAGE: '1'
       - name: Exercise all production browser flows and shared components
         run: node scripts/run-production-browser.mjs
+        env:
+          BARGHSA_BROWSER_COVERAGE: '1'
+      - name: Map browser coverage to workspace source
+        if: always()
+        run: node scripts/collect-browser-coverage.mjs
+      - name: Upload mapped browser coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-source-coverage
+          path: apps/web/test-results/browser-coverage.json
+          retention-days: 14
       - name: Report observed browser flakes and failures
         if: always()
         run: |
@@ -148,25 +164,10 @@ jobs:
         id: coverage
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            pnpm turbo run test:coverage --filter="...[origin/main]"
+            pnpm turbo run test:coverage --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
           else
             pnpm test:coverage
           fi
-      - name: Verify changed coverage gate
-        if: always()
-        run: python3 -m unittest discover -s scripts -p 'test_check_changed_coverage.py'
-      - name: Enforce changed source and critical file coverage
-        if: always() && steps.coverage.outcome != 'skipped'
-        env:
-          COVERAGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: python3 scripts/check-changed-coverage.py --base "$COVERAGE_BASE" --report "$RUNNER_TEMP/changed-coverage.json"
-      - name: Upload changed coverage results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: changed-coverage
-          path: ${{ runner.temp }}/changed-coverage.json
-          retention-days: 14
       - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -189,3 +190,46 @@ jobs:
           name: flaky-test-report
           path: ${{ runner.temp }}/flaky-test-report.json
           retention-days: 7
+
+  coverage:
+    name: Verify combined source coverage
+    needs: [test, integrity]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-reports
+          path: .
+      - uses: actions/download-artifact@v4
+        with:
+          name: browser-source-coverage
+          path: ${{ runner.temp }}/browser-source
+      - name: Verify coverage collection and failure handling
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_check_changed_coverage.py'
+          node --test scripts/browser-coverage.test.mjs
+      - name: Merge browser and unit coverage for the same revision
+        run: node scripts/merge-browser-coverage.mjs "$RUNNER_TEMP/browser-source/browser-coverage.json"
+      - name: Enforce changed source and critical file coverage
+        env:
+          COVERAGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 scripts/check-changed-coverage.py --base "$COVERAGE_BASE" --report "$RUNNER_TEMP/changed-coverage.json"
+      - name: Upload changed coverage results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: changed-coverage
+          path: ${{ runner.temp }}/changed-coverage.json
+          retention-days: 14

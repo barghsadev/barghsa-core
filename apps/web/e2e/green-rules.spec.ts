@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`green rule editor recovers from unavailable config and step-up (${locale})`, async ({
     page,

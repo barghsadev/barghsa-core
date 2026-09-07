@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 const user = {
   userId: 'user-one',
   username: 'person@example.test',

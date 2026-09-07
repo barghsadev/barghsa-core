@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`Knowledge-base form retries captured input after password verification (${locale})`, async ({
     page,

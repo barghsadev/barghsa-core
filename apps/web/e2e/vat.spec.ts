@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`VAT editor retries captured percentage (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';

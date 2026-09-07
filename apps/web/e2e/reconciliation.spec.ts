@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`reconciliation handles paging, denied access and failed actions (${locale})`, async ({
     page,

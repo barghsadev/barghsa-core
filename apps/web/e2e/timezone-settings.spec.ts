@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 
 for (const locale of ['en', 'fa'] as const) {
   test(`timezone load, keyboard selection and failed save remain recoverable (${locale})`, async ({

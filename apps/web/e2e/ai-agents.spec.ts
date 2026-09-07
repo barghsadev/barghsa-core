@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`agent editor retries captured group selections (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';

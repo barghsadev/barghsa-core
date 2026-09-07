@@ -58,8 +58,8 @@ export default defineConfig({
       },
     },
     // Output directory
-    outDir: 'dist',
-    sourcemap: false,
+    outDir: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist',
+    sourcemap: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'hidden' : false,
     minify: 'esbuild',
   },
   ssr: {

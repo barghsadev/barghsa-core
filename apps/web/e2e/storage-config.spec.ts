@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
   test(`storage editor retains a versioned save through step-up and failure (${locale})`, async ({
     page,

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 
 for (const locale of ['en', 'fa'] as const) {
   test(`username change requires both codes and preserves them after rejection (${locale})`, async ({

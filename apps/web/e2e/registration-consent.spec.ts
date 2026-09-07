@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 
 // Client contract checks; real publication/acceptance is covered by the API HTTP suite.
 test('registration shows and submits the same terms version', async ({ page }) => {

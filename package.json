@@ -26,16 +26,19 @@
     "db:seed": "pnpm --filter @barghsa/db db:seed"
   },
   "devDependencies": {
+    "@barghsa/eslint-config": "workspace:*",
     "@bcoe/v8-coverage": "1.0.2",
     "@types/node": "26.2.0",
     "@vitest/coverage-v8": "4.1.11",
+    "acorn": "8.18.0",
+    "ast-v8-to-istanbul": "1.0.5",
+    "eslint": "9.39.5",
+    "istanbul-lib-coverage": "3.2.2",
     "jsdom": "28.1.0",
     "prettier": "3.9.6",
     "turbo": "2.10.11",
     "typescript": "7.0.2",
-    "vitest": "4.1.11",
-    "eslint": "9.39.5",
-    "@barghsa/eslint-config": "workspace:*"
+    "vitest": "4.1.11"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 for (const locale of ['en', 'fa'])
   test(`job filters and retry failures preserve selection and current permissions (${locale})`, async ({

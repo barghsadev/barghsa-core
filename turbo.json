@@ -4,8 +4,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", ".turbo/**"],
-      "env": ["NODE_ENV", "DATABASE_URL", "REDIS_URL", "CDN_URL"],
+      "outputs": ["dist/**", ".next/**", ".turbo/**", "dist-coverage/**"],
+      "env": ["NODE_ENV", "DATABASE_URL", "REDIS_URL", "CDN_URL", "BARGHSA_BROWSER_COVERAGE"],
       "outputLogs": "new-only"
     },
     "dev": {

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage-fixture';
 
 for (const locale of ['fa', 'en'] as const)
   test(`verification banner explains unavailable automatic approval and permits support (${locale})`, async ({

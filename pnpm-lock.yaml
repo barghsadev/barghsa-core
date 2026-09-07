@@ -27,9 +27,18 @@ importers:
       '@vitest/coverage-v8':
         specifier: 4.1.11
         version: 4.1.11(vitest@4.1.11)
+      acorn:
+        specifier: 8.18.0
+        version: 8.18.0
+      ast-v8-to-istanbul:
+        specifier: 1.0.5
+        version: 1.0.5
       eslint:
         specifier: 9.39.5
         version: 9.39.5(jiti@2.7.0)
+      istanbul-lib-coverage:
+        specifier: 3.2.2
+        version: 3.2.2
       jsdom:
         specifier: 28.1.0
         version: 28.1.0
