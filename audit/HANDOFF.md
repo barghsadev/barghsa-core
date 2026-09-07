@@ -9,7 +9,7 @@ Updated 2026-09-08. Read this file first; do not reload the repair-progress arch
 - Original audit baseline: `2f80d92df51556d47f778b5230e5eea577e2a8d4`.
 - Local edits/commits only. No push, PR, merge, deployment, remote scheduler/state or PR304 action. User authorized direct Codex building and review, overriding the Cursor/Codex split.
 - AGENTS.md and `/Users/majid/.codex/RTK.md` were read. Prefix commands with `rtk`; stage explicit paths. Prefer codebase-memory project `Users-majid-www-barghsa-barghsa-core`; transport later closed, requiring file-search fallback.
-- The bounded runtime/build repair pass and regression checkpoint are complete. This is not full original-plan acceptance: two coverage gates and the deferred work below remain open. Do not restart exhaustive historical acceptance or claim unavailable external checks passed.
+- Work is active. The prior regression checkpoint was not completion of the fix plan. Continue local API critical and web general coverage gaps, then eager purchase-route loading and remaining confirmed plan defects. Review each step, reuse valid evidence and keep external/historical acceptance limits explicit. Do not restart exhaustive historical acceptance or claim unavailable checks passed.
 - Automatic identity verification remains unavailable/fail closed; manual verification is supported. Retain Vite SPA under ADR004. User waived the dependency license allowlist restriction.
 - Historical ledger unchanged: 35 verified, 13 partial, 274 pending. Of 58 historical skips, 3 were verified and must not be rebuilt; 55 await acceptance. Use qualified `<epic filename>#<task ID>` identities.
 
@@ -46,6 +46,11 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 - **Route experiment:** eager purchase loading exceeded authentication's unchanged 150 KB budget. A dictionary split also pushed ordering above 250 KB and was reverted (`0aa4c97`). Final ordering is 249.62 KB; all 41 budgets pass. Eager loading remains open, and no threshold was weakened.
 
 ## Final checkpoint
+
+### Resumed work after ed3f7fd
+
+- Added 49 verification-case controller boundary checks: independent read/create/review capabilities, denial before service access, immediate revocation, malformed correction/decision input, audit actor binding, missing resources and terminal conflicts. All 49 pass; the existing 11 real HTTP cases also pass. API types and explicit lint pass. No production change was needed for this step; coverage checkpoint remains the previous revision until refreshed.
+- Do not run API typechecking concurrently with Vitest global setup, which rebuilds shared packages. One such race produced transient missing-declaration errors; the sequential typecheck passed after fixture build completion.
 
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
