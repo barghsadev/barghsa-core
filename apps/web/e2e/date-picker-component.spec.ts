@@ -1,4 +1,5 @@
 import { test, expect, registerComponentCoverage } from './coverage-fixture';
+import AxeBuilder from '@axe-core/playwright';
 import { build, preview, type PreviewServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
@@ -199,3 +200,38 @@ test('default picker uses Persian and Tehran while keeping UTC instants', async 
     '2026-03-21T20:30:00.000Z'
   );
 });
+
+for (const theme of ['light', 'dark']) {
+  test(`Persian range preserves Tehran half-open bounds and accessible calendar (${theme})`, async ({
+    page,
+  }) => {
+    await page.goto(`${url}?range&fa&timezone=Asia%2FTehran`);
+    await page.evaluate(
+      (dark) => document.documentElement.classList.toggle('dark', dark),
+      theme === 'dark'
+    );
+    const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+    await trigger.click();
+    const dialog = page.getByRole('dialog', { name: 'Delivery date' });
+    await dialog.getByRole('button', { name: / ۲-ام فروردین ۱۴۰۵/ }).press('Enter');
+    await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(
+      '{"from":"2026-03-20T20:30:00.000Z","to":"2026-03-22T20:30:00.000Z"}'
+    );
+    await expect(trigger).toContainText('۳ فروردین ۱۴۰۵');
+    await expect(trigger).toContainText('(پایان بازه شامل نمی‌شود)');
+    await expect(
+      dialog
+        .getByRole('gridcell')
+        .filter({ has: page.getByRole('button', { name: / ۲-ام فروردین ۱۴۰۵/ }) })
+    ).toHaveAttribute('aria-selected', 'true');
+    await expect(
+      dialog
+        .getByRole('gridcell')
+        .filter({ has: page.getByRole('button', { name: / ۳-ام فروردین ۱۴۰۵/ }) })
+    ).not.toHaveAttribute('aria-selected', 'true');
+    const scan = await new AxeBuilder({ page }).include('[role="dialog"]').analyze();
+    expect(scan.violations).toEqual([]);
+    await page.keyboard.press('Escape');
+    await expect(trigger).toBeFocused();
+  });
+}
