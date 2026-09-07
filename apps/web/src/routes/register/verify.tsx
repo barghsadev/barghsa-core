@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js';
 import { useState, useCallback, useRef, useEffect } from 'react';
@@ -24,6 +25,7 @@ function OtpVerifyPage() {
   const router = useRouter();
   const { challengeId, destination } = useSearch({ from: '/register/verify' });
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
 
   const [otp, setOtp] = useState('');
   const [otpError, setOtpError] = useState<string | null>(null);
@@ -92,7 +94,7 @@ function OtpVerifyPage() {
               msg = t('auth.otp.error.generic', locale);
           }
 
-          setOtpError(rateLimitMessage(response, locale) ?? msg);
+          setOtpError(rateLimitMessage(response, locale, numbers.numberStyle) ?? msg);
           setOtp('');
           // Clear OTP input on error and shake
           if (otpRef.current?.reset) {
@@ -132,7 +134,7 @@ function OtpVerifyPage() {
       });
 
       if (!response.ok) {
-        const retry = rateLimitMessage(response, locale);
+        const retry = rateLimitMessage(response, locale, numbers.numberStyle);
         const message = retry ?? t('auth.otp.error.resend', locale);
         setOtpError(message);
         toast.error(message);
@@ -236,7 +238,7 @@ function OtpVerifyPage() {
               <p className="text-sm text-muted-foreground">
                 {t('auth.otp.resendTimer', locale).replace(
                   '{seconds}',
-                  new Intl.NumberFormat(locale, { useGrouping: false }).format(resendTimer)
+                  numbers.number(resendTimer, { useGrouping: false })
                 )}
               </p>
             )}

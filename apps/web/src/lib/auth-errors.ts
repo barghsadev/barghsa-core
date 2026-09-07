@@ -1,3 +1,4 @@
+import { formatNumber, type NumberStyle } from '@barghsa/i18n/numbers';
 import { t, type Locale } from '@barghsa/i18n/auth';
 
 export function authErrorCode(body: unknown): string | undefined {
@@ -22,7 +23,8 @@ export function retryAfterSeconds(response: Pick<Response, 'headers'>): number |
 
 export function rateLimitMessage(
   response: Pick<Response, 'status' | 'headers'>,
-  locale: Locale
+  locale: Locale,
+  numberStyle: NumberStyle = 'locale'
 ): string | null {
   if (response.status !== 429) return null;
   const seconds = retryAfterSeconds(response);
@@ -30,6 +32,6 @@ export function rateLimitMessage(
     ? t('error.rate_limit.exceeded', locale)
     : t('error.rate_limit.retry_after', locale).replace(
         '{seconds}',
-        new Intl.NumberFormat(locale, { useGrouping: false }).format(seconds)
+        formatNumber(seconds, locale, { useGrouping: false, numberStyle })
       );
 }

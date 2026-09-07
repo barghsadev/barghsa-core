@@ -12,6 +12,8 @@ it('renders finite retry durations in the selected locale and ignores malformed 
   const response = new Response('', { status: 429, headers: { 'Retry-After': '125' } });
   expect(rateLimitMessage(response, 'en')).toContain('125 seconds');
   expect(rateLimitMessage(response, 'fa')).toContain('۱۲۵ ثانیه');
+  expect(rateLimitMessage(response, 'fa', 'western')).toContain('125 ثانیه');
+  expect(rateLimitMessage(response, 'en', 'persian')).toContain('۱۲۵ seconds');
   for (const value of ['Infinity', '-10', '99999999999999', 'garbage', '']) {
     const invalid = new Response('', { status: 429, headers: { 'Retry-After': value } });
     expect(retryAfterSeconds(invalid)).toBeNull();

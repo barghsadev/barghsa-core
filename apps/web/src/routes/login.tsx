@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { rateLimitMessage, retryAfterSeconds, authErrorCode } from '../lib/auth-errors.js';
 import { useState, useCallback, useRef, useEffect } from 'react';
@@ -87,6 +88,7 @@ function resolveErrorMessage(errorCode: string | undefined, locale: Locale): str
 function LoginPage() {
   const router = useRouter();
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
 
   // ── Login form state ──────────────────────────────────
   const [username, setUsername] = useState('');
@@ -223,7 +225,9 @@ function LoginPage() {
             typeof rawError === 'string'
               ? rawError
               : ((rawError as Record<string, unknown>)?.code as string | undefined);
-          const msg = rateLimitMessage(response, locale) ?? resolveErrorMessage(errorCode, locale);
+          const msg =
+            rateLimitMessage(response, locale, numbers.numberStyle) ??
+            resolveErrorMessage(errorCode, locale);
           setFormError(msg);
           toast.error(msg);
           return;
@@ -315,7 +319,7 @@ function LoginPage() {
           const body: Record<string, unknown> = await response.json().catch(() => ({}));
           const errorCode = authErrorCode(body);
 
-          const retry = rateLimitMessage(response, locale);
+          const retry = rateLimitMessage(response, locale, numbers.numberStyle);
           if (retry) {
             setChangeError(retry);
           } else if (errorCode === 'AUTH:LOGIN:PASSWORD_REUSED') {
@@ -384,7 +388,7 @@ function LoginPage() {
               msg = t('auth.otp.error.generic', locale);
           }
 
-          setOtpError(rateLimitMessage(response, locale) ?? msg);
+          setOtpError(rateLimitMessage(response, locale, numbers.numberStyle) ?? msg);
           setOtpCode('');
           if (otpRef.current?.reset) {
             otpRef.current.reset();
@@ -422,7 +426,7 @@ function LoginPage() {
       });
 
       if (!response.ok) {
-        const retry = rateLimitMessage(response, locale);
+        const retry = rateLimitMessage(response, locale, numbers.numberStyle);
         const message = retry ?? t('auth.otp.error.resend', locale);
         setOtpError(message);
         toast.error(message);
@@ -596,7 +600,7 @@ function LoginPage() {
                 <p className="text-sm text-muted-foreground">
                   {t('auth.otp.resendTimer', locale).replace(
                     '{seconds}',
-                    new Intl.NumberFormat(locale, { useGrouping: false }).format(resendTimer)
+                    numbers.number(resendTimer, { useGrouping: false })
                   )}
                 </p>
               )}

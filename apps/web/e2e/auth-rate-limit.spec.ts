@@ -1,8 +1,10 @@
+import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['fa', 'en'] as const) {
   for (const path of ['login', 'register', 'forgot-password'] as const) {
     test(`${path} keeps input and shows localized retry timing (${locale})`, async ({ page }) => {
+      await mockOppositeNumerals(page, locale);
       await page.route('**/api/tos/current?*', (route) =>
         route.fulfill({
           json: {
@@ -30,7 +32,7 @@ for (const locale of ['fa', 'en'] as const) {
       if (path === 'register') await page.getByRole('checkbox').click();
       await page.locator('button[type="submit"]').click();
       await expect(page.getByRole('alert').first()).toContainText(
-        locale === 'fa' ? '۱۲۵ ثانیه' : '125 seconds'
+        locale === 'fa' ? '125 ثانیه' : '۱۲۵ seconds'
       );
       await expect(page.locator('#username')).toHaveValue('rate@example.test');
       if (path === 'forgot-password')
@@ -40,6 +42,7 @@ for (const locale of ['fa', 'en'] as const) {
   }
   for (const flow of ['login', 'register'] as const) {
     test(`${flow} resend respects server cooldown (${locale})`, async ({ page }) => {
+      await mockOppositeNumerals(page, locale);
       await page.clock.install();
       await page.route('**/api/auth/login', (route) =>
         route.fulfill({
@@ -77,8 +80,13 @@ for (const locale of ['fa', 'en'] as const) {
       });
       await resend.click();
       await expect(page.getByRole('alert').first()).toContainText(
-        locale === 'fa' ? '۱۲۵ ثانیه' : '125 seconds'
+        locale === 'fa' ? '125 ثانیه' : '۱۲۵ seconds'
       );
+      await expect(
+        page.getByText(locale === 'fa' ? 'ارسال مجدد در 125 ثانیه' : 'Resend in ۱۲۵s', {
+          exact: true,
+        })
+      ).toBeVisible();
       await expect(resend).toHaveCount(0);
       await page.clock.runFor(60000);
       await expect(resend).toHaveCount(0);

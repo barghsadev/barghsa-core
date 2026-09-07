@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
@@ -82,6 +83,7 @@ function maskDestination(destination: string): string {
 
 function ForgotPasswordPage() {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const [username, setUsername] = useState('');
   const [challengeId, setChallengeId] = useState('');
   const [otp, setOtp] = useState('');
@@ -120,7 +122,7 @@ function ForgotPasswordPage() {
     };
     if (response.status === 429) {
       setCooldown(retryAfterSeconds(response) ?? 60);
-      setError(rateLimitMessage(response, locale));
+      setError(rateLimitMessage(response, locale, numbers.numberStyle));
     } else {
       setError(t(messages[code ?? ''] ?? 'auth.forgotPassword.error.generic', locale));
     }
@@ -262,7 +264,10 @@ function ForgotPasswordPage() {
               onClick={() => void start()}
             >
               {cooldown > 0
-                ? t('auth.otp.resendTimer', locale).replace('{seconds}', String(cooldown))
+                ? t('auth.otp.resendTimer', locale).replace(
+                    '{seconds}',
+                    numbers.number(cooldown, { useGrouping: false })
+                  )
                 : t('auth.otp.resend', locale)}
             </Button>
           </form>
@@ -289,7 +294,10 @@ function ForgotPasswordPage() {
             </Button>
             {cooldown > 0 && (
               <p role="status">
-                {t('auth.otp.resendTimer', locale).replace('{seconds}', String(cooldown))}
+                {t('auth.otp.resendTimer', locale).replace(
+                  '{seconds}',
+                  numbers.number(cooldown, { useGrouping: false })
+                )}
               </p>
             )}
           </form>

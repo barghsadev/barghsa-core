@@ -2390,3 +2390,9 @@ Both malformed-read cases reproduced a crashed editor on the preceding bundle. A
 Job attempts, pagination, retry notices, team/staff counts, knowledge-base counts, response-target confirmations, upload size decimals, template/settings versions and dashboard summary cards now use published numeral preferences. Confirmation cooldowns follow the same formatter. Canonical input values, IDs, timestamps and request payloads remain unchanged.
 
 Seven targeted assertions failed against the preceding production build. The full production Chromium suite now passes all 311 checks, including those regressions, migrated-API administrator workflows and appearance/TOS recovery. All 149 web unit checks, web types, targeted lint, formatting, route budgets and diff review pass. Electricity ordering is 249.25 KB gzip against its unchanged 250 KB ceiling. Raw notification/CRM counters and authentication cooldown messages remain under review; this checkpoint does not close global numeral acceptance or update the older combined coverage report.
+
+### Apply numeral preferences to authentication recovery timing
+
+Login, registration, OTP verification and password recovery now format rate-limit messages and resend countdowns with the published numeral preference. The shared error formatter retains locale-default behavior for callers without an override. Retry-After parsing and the numeric cooldown state are unchanged.
+
+All ten preference assertions failed on the preceding production build. All 22 focused production browser checks pass after repair, including both languages, retained credentials, the full server-specified 125-second lockout, registration consent and password recovery. Both auth-error unit checks, web types, targeted lint, formatting, route budgets and diff review pass.

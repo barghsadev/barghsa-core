@@ -1,3 +1,4 @@
+import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { rateLimitMessage } from '../../lib/auth-errors.js';
 import { lazy, Suspense, useRef, useState, useCallback, useEffect } from 'react';
@@ -97,6 +98,7 @@ function RegisterPage() {
   const termsTrigger = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
 
   const [username, setUsername] = useState('');
   const [usernameError, setUsernameError] = useState<string | null>(null);
@@ -235,7 +237,9 @@ function RegisterPage() {
             typeof rawError === 'string'
               ? rawError
               : ((rawError as Record<string, unknown>)?.code as string | undefined);
-          const msg = rateLimitMessage(response, locale) ?? resolveErrorMessage(errorCode, locale);
+          const msg =
+            rateLimitMessage(response, locale, numbers.numberStyle) ??
+            resolveErrorMessage(errorCode, locale);
           setFormError(msg);
           toast.error(msg);
           return;
