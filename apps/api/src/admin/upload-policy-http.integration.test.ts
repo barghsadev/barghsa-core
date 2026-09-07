@@ -186,3 +186,37 @@ it('rejects authority revoked while waiting for the actor lock', async () => {
     );
   }
 });
+
+it('never issues an upload URL when the saved policy cannot be read', async () => {
+  const input = {
+    fileName: 'policy.pdf',
+    contentType: 'application/pdf',
+    fileSize: 3000,
+    category: 'document',
+  };
+  const presign = () =>
+    fetch(`${http.base}/api/upload/presigned-url`, {
+      method: 'POST',
+      headers: headers.operator!,
+      body: JSON.stringify(input),
+    });
+  const before = Number(
+    (await http.pool.query('SELECT COUNT(*) AS count FROM storage_records')).rows[0].count
+  );
+  await http.pool.query(
+    'ALTER TABLE upload_policies RENAME TO upload_policies_fixture_unavailable'
+  );
+  try {
+    const response = await presign();
+    expect(response.status).toBe(503);
+    expect(await response.json()).not.toHaveProperty('presignedUrl');
+    expect(
+      Number((await http.pool.query('SELECT COUNT(*) AS count FROM storage_records')).rows[0].count)
+    ).toBe(before);
+  } finally {
+    await http.pool.query(
+      'ALTER TABLE upload_policies_fixture_unavailable RENAME TO upload_policies'
+    );
+  }
+  expect((await presign()).status).not.toBe(503);
+});

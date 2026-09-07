@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import {
   getDeploymentAllowedExtensions,
@@ -26,14 +26,12 @@ import {
  * - `maxSizeBytes` — `min(DB max, deployment cap)`. An admin cannot
  *   raise a category's limit beyond the deployment cap.
  *
- * Degraded mode: when no DB policy is active for the category (or the DB
- * is unavailable), the deployment config alone applies — the pre-existing
- * baseline. This is a documented fail-open-to-baseline: the deployment
- * limits are the hard floor, and a DB outage must not freeze all uploads.
- * The DB lookup error is logged for observability.
+ * A successful read with no active policy uses deployment limits. A failed
+ * policy read rejects the operation: deployment limits may be less restrictive
+ * than the unavailable administrator policy.
  *
  * Categories without an admin-configurable policy (`contract`, `general`)
- * always resolve to the deployment config (the admin API only writes
+ * use deployment limits after a successful read (the admin API only writes
  * `document` | `image` | `video`).
  */
 
@@ -67,8 +65,7 @@ export class UploadPolicyResolver {
 
   /**
    * Resolve the effective upload policy for a category (see module docs).
-   * Never throws for a missing policy or a DB outage — deployment limits
-   * always stand.
+   * A missing active policy uses deployment limits. Read failures return 503.
    */
   async resolveEffective(category: string): Promise<EffectiveUploadPolicy> {
     const deploymentExtensions = getDeploymentAllowedExtensions(category);
@@ -84,11 +81,10 @@ export class UploadPolicyResolver {
     try {
       dbPolicy = await this.findActivePolicy(category);
     } catch (error) {
-      // DB outage → deployment baseline. Logged; uploads must not freeze
-      // because the admin config store is temporarily unreachable.
-      this.logger.warn(
-        `Upload policy lookup failed for category "${category}"; falling back to deployment limits: ${String(error)}`
-      );
+      this.logger.error(`Upload policy lookup failed for category "${category}"`);
+      throw new ServiceUnavailableException('Upload policy is temporarily unavailable', {
+        cause: error,
+      });
     }
 
     if (dbPolicy === null) {

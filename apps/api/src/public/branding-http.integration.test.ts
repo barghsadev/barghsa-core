@@ -470,3 +470,73 @@ it('refuses corrupted stored image bytes instead of serving them as a trusted im
   objects.set(sealed, Buffer.alloc(png.length));
   expect((await fetch(`${http.base}${url}`)).status).toBe(503);
 });
+
+it('keeps unrecorded uploads unverified while the policy store is unavailable', async () => {
+  const details = {
+    fileName: 'logo.png',
+    contentType: 'image/png',
+    fileSize: png.length,
+    category: 'image',
+  };
+  const issued = z
+    .object({ key: z.string(), presignedUrl: z.string() })
+    .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+  expect(
+    (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(png) })).status
+  ).toBe(200);
+  const path = `upload/${encodeURIComponent(issued.key)}`;
+  await http.pool.query(
+    'ALTER TABLE upload_policies RENAME TO upload_policies_fixture_unavailable'
+  );
+  try {
+    expect((await request(`${path}/verify`, 'POST')).status).toBe(503);
+    expect(
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'branding_logo' })).status
+    ).toBe(503);
+    const row = (
+      await http.pool.query('SELECT metadata FROM storage_records WHERE storage_key=$1', [
+        issued.key,
+      ])
+    ).rows[0];
+    expect(row.metadata.verified).not.toBe(true);
+  } finally {
+    await http.pool.query(
+      'ALTER TABLE upload_policies_fixture_unavailable RENAME TO upload_policies'
+    );
+  }
+  expect((await request(`${path}/verify`, 'POST')).status).toBe(200);
+  expect(
+    (await request(`${path}/record`, 'POST', { ...details, purpose: 'branding_logo' })).status
+  ).toBe(200);
+});
+
+it('rechecks the current allowed extension before verifying a previously issued upload', async () => {
+  const details = {
+    fileName: 'logo.png',
+    contentType: 'image/png',
+    fileSize: png.length,
+    category: 'image',
+  };
+  const issued = z
+    .object({ key: z.string(), presignedUrl: z.string() })
+    .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+  expect(
+    (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(png) })).status
+  ).toBe(200);
+  const response = await request('admin/upload-policies', 'POST', {
+    category: 'image',
+    allowedExtensions: ['.jpg'],
+    maxSizeBytes: 2097152,
+  });
+  expect(response.status).toBe(201);
+  const policy = z.object({ id: z.string() }).parse(await response.json());
+  try {
+    const path = `upload/${encodeURIComponent(issued.key)}`;
+    expect((await request(`${path}/verify`, 'POST')).status).toBe(400);
+    expect(
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'branding_logo' })).status
+    ).toBe(400);
+  } finally {
+    expect((await request(`admin/upload-policies/${policy.id}/end`, 'POST', {})).status).toBe(200);
+  }
+});

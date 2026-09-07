@@ -126,22 +126,17 @@ describe('UploadPolicyResolver.resolveEffective (T-09.12.05)', () => {
     expect(policy.maxSizeBytes).toBe(10 * 1024 * 1024);
   });
 
-  it('falls back to the deployment baseline on a DB outage (fail-open-to-baseline)', async () => {
-    const { pool, router } = makeDb();
-    router.on('FROM upload_policies', () => {
-      throw new Error('connection refused');
-    });
-    const resolver = await loadResolver(pool);
-
-    const policy = await resolver.resolveEffective('document');
-
-    expect(policy).toMatchObject({
-      source: 'deployment',
-      policyId: null,
-      maxSizeBytes: 10 * 1024 * 1024,
-    });
-    expect(policy.allowedExtensions).toContain('.pdf');
-  });
+  it.each(['document', 'image', 'video'])(
+    'rejects %s uploads when the administrator policy cannot be read',
+    async (category) => {
+      const { pool, router } = makeDb();
+      router.on('FROM upload_policies', () => {
+        throw new Error('connection refused');
+      });
+      const resolver = await loadResolver(pool);
+      await expect(resolver.resolveEffective(category)).rejects.toMatchObject({ status: 503 });
+    }
+  );
 
   it('resolves non-admin categories (contract/general) to the deployment baseline', async () => {
     const { pool, router } = makeDb();

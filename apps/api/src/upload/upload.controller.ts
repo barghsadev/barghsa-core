@@ -368,8 +368,10 @@ export class UploadController {
     | { kind: 'confirmed'; detected: string; contentLength: number | undefined }
     | { kind: 'type_mismatch'; detected: string | null; allowed: readonly string[] }
   > {
-    const object = await this.storage!.getObject(key);
     const policy = await this.policyResolver.resolveEffective(category);
+    if (!effectiveAllowsExtension(policy, key))
+      throw new BadRequestException('Upload extension is no longer permitted by the active policy');
+    const object = await this.storage!.getObject(key);
     const sample = await this.readSample(object.body);
     const candidates = sniffContentTypes(sample);
     const detected = pickDetectedContentType(candidates, policy.allowedMimeTypes);
