@@ -621,6 +621,58 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "T-05.02.01 remains partial for remaining whole-page theme/accessibility acceptance. Old documents without valid immutable storage records stay unavailable pending support review. Live provider availability and physical object recovery are not certified. Staff address editing is next."
+    },
+    {
+      "id": "R01-crm-address-edit",
+      "date": "2026-09-08",
+      "source_revision": "4d2b231e1d527b651d31fa88391cf0a94465cd0c",
+      "summary": "Added inline staff editing of existing profile addresses with confirmation, live crm:edit permission, geography validation, stale-version protection and atomic before/after audit.",
+      "review": "Reviewed profile, actor, address and geography lock order; target ownership, archived profiles, permission revocation, unchanged inactive geography, audit rollback and simultaneous writes. Address updates cannot alter identity, main-address status or account sign-in contacts. UI retains drafts through tab changes, retries and conflicts, validates the saved target/fields/version before reporting success and offers explicit reload/discard. Reviewed Persian mobile and English desktop layouts.",
+      "checks": [
+        "46 distinct API cases have passing evidence across4 files:34 passed in the initial3-file batch;19 passed in the subsequent address/permission batch, overlapping7. Includes8 new address cases and11 current mutation-permission cases.",
+        "64 distinct production Chromium desktop/mobile cases have passing evidence in fa/en. Initial run56 passed and8 new cases failed on modal-hidden accessibility selectors and incorrect existing translation text. Test-only corrections produced16 passing address cases; all48 prior CRM cases passed in the first run.",
+        "50 dictionary tests, API/web types, focused lint/format, API/web/i18n builds,41 route budgets and reviewed OpenAPI update/check pass. Final formatting corrected the new browser test only; no browser rerun was needed for formatting. Earlier failed logs are retained."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "2d6c9b7e4a06dfd2fda6e2be47995c9d94cd678f09385c41ff536ec471aa6dfb"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "28fd8365550635f2890218f2f21b122b79757c17c163a30912d438fd4af2b717"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-address.ts",
+          "sha256": "5fa7eb59336c66cd3c9a7d3b5e418252d8c54a89b96068a8c2d47ad54e9f3a24"
+        },
+        {
+          "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
+          "sha256": "9149aa45e5d1a75007c899be592fe7ad2d13d3439519bafd39b1c08ecc92c91d"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "fb2f0d2c92d962334e401be3af54b2a087c328dcfd62879440c23e0506ed56ea"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "91e7a5bd147cbc58fccc5ffe52202084d6bd42ab580f707701f0ff32add6bf85"
+        },
+        {
+          "path": "apps/web/src/components/CrmAddressEditor.tsx",
+          "sha256": "a59135433c8a5aef91d99356d77e144a65f66f41dcca29bd3426bd5baf6a2c3a"
+        },
+        {
+          "path": "apps/web/e2e/crm-address-edit.spec.ts",
+          "sha256": "38330cd0a675cfb1e25028e322155ef3035c0ce86e7fad7448da204bae34b033"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "8a0b17faf8a77d423c6eb30d3440b4f84f9e699adf132b24b38da5789b68f209"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "T-05.02.02 remains partial for required legal nonidentity contacts/address review and editing. T-05.02.01 still needs whole-page theme/accessibility acceptance. Correction/archive review follows; no whole-group acceptance claimed."
     }
   ]
 }

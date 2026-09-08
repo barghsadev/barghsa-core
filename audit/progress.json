@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "f74fd83266d1292c468a6db43d289e2515bf4903",
+  "source_revision": "4d2b231e1d527b651d31fa88391cf0a94465cd0c",
   "active_step": "R01",
-  "next_action": "R01: implement T-05.02.02 staff address editing with current crm:edit permission, geography validation, confirmation and before/after audit; then review correction/archive and remaining CRM page acceptance. Full legal fields and authorized document viewing now have focused passing evidence. Continue critical role/session/finance review; preserve pending lost-contact policy question.",
+  "next_action": "R01: review T-05.02.05 correction and T-05.02.06 archive against exact requirements, reusing valid evidence; repair confirmed gaps one at a time. Then finish legal nonidentity contact/address editing and whole-page CRM acceptance. General staff address editing is reviewed. Continue critical role/session/finance review; preserve pending lost-contact policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Full-profile data, localized fields/location names, authorized documents, mobile actions, record tabs and required URL are implemented. Finish staff address editing, remaining page acceptance and correction/archive/list review."
+        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Full-profile data, authorized documents, record tabs, required URL and general staff address editing are implemented and checked. Finish legal nonidentity contact/address editing, remaining page acceptance and correction/archive/list review."
       ]
     },
     {
@@ -284,7 +284,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review17 partial and268 pending records; retain37 verified task assessments. Reconcile301 PRs,170 deferrals and58 historical skips;1033 unrecorded backlog tasks remain a separate population."
+        "Review19 partial and264 pending records; retain39 verified task assessments. Reconcile301 PRs,170 deferrals and58 historical skips;1033 unrecorded backlog tasks remain a separate population."
       ]
     },
     {
@@ -374,6 +374,10 @@
     {
       "id": "R01-crm-legal-documents",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+    },
+    {
+      "id": "R01-crm-address-edit",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-address-edit"
     }
   ],
   "deferred_improvements": [],
