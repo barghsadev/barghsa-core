@@ -3,7 +3,7 @@
   "scope": "Historical skips reconciled with recorded acceptance; not a dispatch queue",
   "source_sha256": {
     "audit/skipped-tasks.json": "e4394d905111e9f5d319185eb47aeb26bd75927b6fc2ac99c449b10cd42e4947",
-    "audit/acceptance-closure.json": "da309c22d6c25bff781ea7c9b8d4a2c94109785f890872320066038cf45bef43"
+    "audit/acceptance-closure.json": "72e8c40e2d0aaa84161c5f5f45b4015b3cd0801aa6cff17ebb2c30f992179cd7"
   },
   "historically_skipped": 58,
   "acceptance_verified": 3,

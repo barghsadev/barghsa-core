@@ -2724,6 +2724,118 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-build.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-build.log.gz",
+      "sha256": "c4125e511195c8f0bd908d2232eea4634fe245612928918041012a47d9ca141c",
+      "encoding": "gzip",
+      "stored_sha256": "c0879553ac629356b6ab0d3712f1f49a1f73e7fa0b1d44320acbcea194eee643"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-diff-check.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-final.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-final.log.gz",
+      "sha256": "f07218298c4bd57f773308474d0ee0ed26479aa5210e9294f7e7f4120537365b",
+      "encoding": "gzip",
+      "stored_sha256": "5df1ae9cc67d7107e647a3525fee1cd5c466ae15055e963694ceb20d6bed160f"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-first.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-first.log.gz",
+      "sha256": "da9855eb917e870811509f9ff586d693db6ee2c6f8a0c011fcd1a82798f89711",
+      "encoding": "gzip",
+      "stored_sha256": "654e88c8230d21f1d34c1c86db678d327950c242303ffeedca017965f3d24472"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-format-2.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-format-2.log.gz",
+      "sha256": "f3326ede8510127b5933e6620bbc6be0bb6c550c2b4dddbf4e989a055e19c7db",
+      "encoding": "gzip",
+      "stored_sha256": "ef6dfc013fff3c0f1aae00417cc21f4a5e063d3d1392c93e88a292835ed3b3eb"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-format-final.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-format-final.log.gz",
+      "sha256": "a9e2299f544798bd17d376dd62040c18acedddf07612856c7e1769800038cf30",
+      "encoding": "gzip",
+      "stored_sha256": "4f5c393d05a2a606d5035dfdf5bfed470b7e552215f2b84bcc20d21be825142f"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-format-verified.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-format.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-format.log.gz",
+      "sha256": "dc60191687f306392245ad5fc909ce675b500e884be755f1b8a2a0d4a14daa75",
+      "encoding": "gzip",
+      "stored_sha256": "42ccf0c9a9a254a5ff40d6d22750bbb9a4115c78844abd66fcde64ee94a561d2"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-integration.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-integration.log.gz",
+      "sha256": "99114a05361566fb710817d8d3e268d284e56a403a05ec3979bd8f2d31898d44",
+      "encoding": "gzip",
+      "stored_sha256": "696cbdd9910a8ab8fd37e538b4b1f44aa5dffa878c3f0af14416c8045590fa60"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-openapi.log",
+      "path": "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+      "sha256": "135329686d2878faa2e19fe4a091501fbc48ad6c6463fb6530841b5e33657567",
+      "encoding": "gzip",
+      "stored_sha256": "c694a0d88e6bea88c484ed9dba8a4c032dfac224c3193ce3a97d61879e8b9b7a"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-regression.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-regression.log.gz",
+      "sha256": "cbb567cd1269a8c2da115cf2bf5e5797b211d2d279dfce3b2ab3e02b9d6bb361",
+      "encoding": "gzip",
+      "stored_sha256": "c830f6743353f785d2c1cf2240e0f586d3ec92cfaa2d3cb9b973b12c1d21865f"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-test-format-final.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-test-format-final.log.gz",
+      "sha256": "c93cb8cf4077ffa68110b302edde011714998214d4e6c040c5182533abddcd77",
+      "encoding": "gzip",
+      "stored_sha256": "79b65765120e6dc824e7c628b203de15443fb9aceabddc1ffbc7eee625d96aca"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-types.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-types.log.gz",
+      "sha256": "eebf142d2308db5d766001d0d1fa9af5225293352270de9f7fe3af082d89e7b4",
+      "encoding": "gzip",
+      "stored_sha256": "87b8f640de309aa08cde8f55584e501c6152877f475bb1bbaf37654e5f05e4d0"
+    },
+    {
+      "original_path": "/tmp/barghsa-archive-wallet-unit-final.log",
+      "path": "audit/evidence/r01/barghsa-archive-wallet-unit-final.log.gz",
+      "sha256": "b2b2eabec9ecee29380edaca9b3fb2d2920f9b32129aaa5a310a6b97fc6682cc",
+      "encoding": "gzip",
+      "stored_sha256": "4f362dcebd1876bfbc72de89c7f0878496c585ead909b82ac319cdced46a4126"
     }
   ]
 }

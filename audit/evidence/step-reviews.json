@@ -1235,6 +1235,99 @@
         "Review canonical legal-owner refusal, the required archive confirmation checklist, success acknowledgement validation and explicit blocker messages. The current UI redirects after any successful response without checking its target or archived timestamp.",
         "Retention currently preserves data and an audit note. Required local handling and the operational retention procedure still need disposition; no production retention exercise is certified."
       ]
+    },
+    {
+      "id": "R01-archive-wallet-writers",
+      "date": "2026-09-08",
+      "source_revision": "7af0a7697f86b89339fea04a8c79078f14b78d95",
+      "summary": "Coordinated wallet balance writers and payment transaction owners with profile archival while retaining safe completed retries.",
+      "review": [
+        "Credit, debit, reserve, release and reversal now hold a shared profile lock through commit. Transaction/receipt selectors recheck the locked child's profile binding. The balance-delta primitive and wallet creation use a materialized active-profile CTE, preserving their one-statement behavior. PostgreSQL tests establish that these operations wait for archival and that archival waits for in-flight writers.",
+        "Invoice wallet payment locks the profile before its idempotency claim, wallet and invoice. Both receipt confirmation/rejection transaction owners lock the profile before staff and financial rows. New confirmations reject archived targets; completed confirmation and wallet retries remain readable. Receipt rejection can resolve a pending record without changing balances.",
+        "Confirmed provider payments against legacy archived profiles cannot create credit; the pending intent and processing claim remain retryable. An archived-profile chargeback becomes unresolved and invokes the existing finance-alert path, including retries, without rewriting the original ledger.",
+        "38 new real PostgreSQL/HTTP tests cover seven writer paths, archive/writer lock races, queued real archival, canonical UUIDs, no-op retries, independent posted/reserved constraints and three payment transaction owners. Two additional provider tests cover paid callback recovery and chargeback visibility. No profile-lock mock is used in these integration tests.",
+        "Initial integration fixtures used two balances rejected by the database's available-balance constraint. Later caller fixtures needed explicit UUID-to-text casts and the canonical idempotency_key column. API types caught missing required fixture customerNote/ip fields. Existing wallet unit fixtures isolate the new profile boundary; payment/receipt unit SQL adapters now return the actual profile shape. Failed logs are retained.",
+        "Only wallet.service.ts among the verified wallet-card task's sources changed. Compared getWallet against its recorded revision and verified every other recorded source hash still matches. Balance reads and formatting are unchanged; preserve that task's acceptance without rerunning its browser suite."
+      ],
+      "checks": [
+        "pnpm --filter @barghsa/api exec vitest run src/crm/profile-archive-wallet.integration.test.ts: final 38/38 pass, exit 0.",
+        "Related wallet, receipt, dual-approval and provider regression: 612/648 passed initially; all 36 failures were in two outdated unit fixtures. Rerunning those two files passed all 42 cases. Combined 648 distinct cases pass across focused runs, not one green 648-case invocation.",
+        "API typecheck, explicit changed-file lint, formatting, production API build, OpenAPI drift and staged diff checks pass, exit 0.",
+        "No dependency, migration, frontend, coverage-floor or remote-state change. Global regression, coverage, production browser and image evidence are not renewed."
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": [
+        "Review canonical legal-owner refusal, the required archive confirmation checklist, target/timestamp success validation and explicit blocker messages. The current UI redirects after any successful response without validating the acknowledgement.",
+        "No production contracts table or creation writer was identified. Reconcile the future contract dependency before claiming contract acceptance.",
+        "Retention preserves records and an audit note. The required local handling and operational retention procedure still need disposition."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "504887e043c134ad58cd24bc40c02058d5c17b9d9d6c193d2680cf2705abe523"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "7498588c1230d5d6b5f3825507225c114dacf382bbd83c0d86bfc646c26b1365"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "0d4418455db6feaa966b515f6d57d31a7d76c86548971315d7696b5ff9dcf02f"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
+          "sha256": "2e0571b2d79d940dbe05c6d7231e59f0fa521c3edf33a971137b35dd43c3294b"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "743cb28243c7aa159c2b144fa60ee1dc92da075784b5776b07a36284d37e1692"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+          "sha256": "a49cbf0f20f3933228858678b54bafeaded5f2c16d8abbb566e833fa6803103b"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+          "sha256": "da240bb00c709b835946afb1980fcdab1c16822ccbd97b74a688ce73c9dcd448"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "04fcc6315d3d792ebb1e2ae1a942f5da3588b1d759d4e588732a074a282a9af4"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-wallet.integration.test.ts",
+          "sha256": "a86297fc893a41ece9f8ab2a4dffb50b475cedfd75ef7ca36a9a4c563e7f028d"
+        }
+      ],
+      "logs": [
+        "audit/evidence/r01/barghsa-archive-wallet-build.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-final.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-first.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-format-2.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-format-final.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-format.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-integration.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-regression.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-test-format-final.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-types.log.gz",
+        "audit/evidence/r01/barghsa-archive-wallet-unit-final.log.gz"
+      ]
     }
   ]
 }

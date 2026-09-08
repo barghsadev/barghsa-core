@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "8f86af00b02185cf0e4173681d167e8de4a421b6",
+  "source_revision": "7af0a7697f86b89339fea04a8c79078f14b78d95",
   "active_step": "R01",
-  "next_action": "R01: continue 02-auth-users-admin.md#T-05.02.06 with wallet balance writers and callers. Invoice creation and all nine invoice-state archival constraints are now checked at 8f86af0. Establish profile-before-staff/ledger/wallet order at transaction boundaries; do not add a late profile lock only inside WalletService. Then verify posted/reserved balances, canonical legal owner protection, archive checklist, target-bound success acknowledgement and blocker details, plus retention disposition. Contracts have no implemented production writer/table identified; preserve that dependency gap. T-05.02.01 profile/list review follows. Lost-contact policy question remains pending.",
+  "next_action": "R01: finish 02-auth-users-admin.md#T-05.02.06 with canonical legal-owner protection, archive confirmation checklist, target/timestamp acknowledgement validation, blocker details and retention disposition. Invoice writers are checked at 8f86af0; wallet writers and payment transaction owners are checked at 7af0a76, including nonzero posted/reserved constraints and safe retries. Reuse these passing tests. Contracts have no implemented production writer/table identified; preserve that dependency gap. T-05.02.01 profile/list review follows. Lost-contact policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "T-05.02.03/.04/.05 are verified locally. Finish legal nonidentity direct editing, whole-profile/list acceptance and archive writer/checklist/retention review. Preserve current address, identity correction, permission and confirmation evidence."
+        "T-05.02.02/.03/.04/.05 are verified locally. Invoice/wallet archival writers and balance constraints are checked. Finish whole-profile/list acceptance, canonical owner protection, archive checklist/acknowledgement, blocker details and retention disposition. Preserve current address, identity correction and permission evidence."
       ]
     },
     {
@@ -285,7 +285,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review20 partial and262 pending records; retain40 verified task assessments. Reconcile301 PRs,170 deferrals and58 historical skips. The1033 unrecorded backlog tasks remain separate."
+        "Review 19 partial and 262 pending records; retain 41 verified task assessments. Reconcile 301 PRs, 170 deferrals and 58 historical skips. The 1,033 unrecorded backlog tasks remain separate."
       ]
     },
     {
@@ -411,6 +411,10 @@
     {
       "id": "R01-archive-invoice-writers",
       "review_record": "audit/evidence/step-reviews.json#R01-archive-invoice-writers"
+    },
+    {
+      "id": "R01-archive-wallet-writers",
+      "review_record": "audit/evidence/step-reviews.json#R01-archive-wallet-writers"
     }
   ],
   "deferred_improvements": [
