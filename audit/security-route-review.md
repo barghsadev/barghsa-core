@@ -1,6 +1,6 @@
 # CSRF and sensitive-action review
 
-Current through product `640108c`, 2026-09-08. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
+Current through product `a4cd929`, 2026-09-08. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
 
 The inventory reflects compiled Nest module/controller metadata without starting the application. It follows imports and forward references from AppModule, reads global/controller/method guards and route decorators, and expands registered paths. There are 33 modules, 63 controllers and 342 routes. Global guards are RateLimitGuard and CsrfGuard.
 
@@ -31,7 +31,7 @@ Fourteen unsafe routes have SkipCsrf:11 public-auth, refresh and two payment cal
 
 | Required action family | Route evidence / next acceptance work |
 | --- | --- |
-| Existing staff and profile role changes | PUT staff roles; PUT/DELETE profile agents have step-up. Credential revocation checks are recorded in the session caller matrix. Verify current audit flag/timestamp and UI recovery for the whole operation. |
+| Existing staff and profile role changes | Staff roles repaired ata4cd929: current authentication through writes, verified-session audit and intended self sign-out pass. PUT/DELETE profile agents have step-up; consolidate their audit/UI requirements with saved credential evidence. |
 | New staff role grants | Fixed at640108c: guarded creation checks the current session/CSRF/deadlines through commit and records verified time/correlation. The canonical creation permission remains admin:users:create. Whole task/lifecycle review remains. |
 | Storage and provider credentials | All four storage mutations/probes and email/SMS/AI-model mutations have step-up metadata. Verification-provider config has no step-up decorator but no production adapter is registered, so the controller cannot reach its writer. Five registration checks confirm production refuses the stub. Before a real provider is enabled, require current authorization/step-up, encrypted config, audit and atomic version persistence. This is a future integration prerequisite, consistent with the no-provider decision. |
 | Payment confirmation, prices and finance configuration | Invoice/wallet receipt decisions, catalogue prices, VAT and configured finance limits have step-up metadata. Domain authorization, audit, expiry during waits and UI retry remain in finance review. |
@@ -53,4 +53,4 @@ At `640108c`, 215 distinct API/unit cases pass across recorded runs, including f
 
 The route inventory was refreshed from compiled AdminController metadata and current source hashes; other controller behavior is unchanged. Declaration-source bindings were also corrected for 9 controllers/78 routes where the initial runtime export-cache lookup had selected re-export files. The indexed class declarations now identify actual controller files before hashing;62 controllers own the 342 routes out of 63 registered controller classes. Eight old authority fixtures were corrected to pause after request authentication at the actual service boundary. They now verify their exact blocker and query before changing authority. Actor-session revocation and CSRF-change cases also pass. See [step evidence](evidence/step-reviews.json#R01-staff-creation-step-up) for failure history and scope.
 
-Next finish step-up audit/deadline checks for built staff role changes, disablement and activation resend. Their route decorators alone do not certify current authorization through commit. Then continue the remaining domain and CSRF dispositions above.
+Staff role changes, disablement and activation resend are now repaired at`a4cd929`. All231 selected API/unit cases pass across recorded runs, including15 action-boundary cases and17 authority races. The source hash for AdminController is refreshed; its registered route metadata is unchanged. Consolidate whole staff-task acceptance using existing UI evidence, then continue remaining domain and CSRF dispositions. See [step review](evidence/step-reviews.json#R01-staff-sensitive-actions).

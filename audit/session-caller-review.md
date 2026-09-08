@@ -1,6 +1,6 @@
 # Session caller review
 
-Reviewed through product `5543cc2`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
+Reviewed through product `a4cd929`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
 
 | Caller / event | Current credential behavior | Evidence / disposition |
 | --- | --- | --- |
@@ -11,8 +11,9 @@ Reviewed through product `5543cc2`. Scope: session creation/rotation/revocation 
 | Password-reset recovery | Consumes reset authorization and revokes all credentials atomically; returns to login. | `resetPassword` unchanged from `9827e96`; OTP-first and reset-grant evidence reused. Lost-contact recovery policy remains separate. |
 | Staff creation | Creates target credentials, initial roles and verified individual profile after current creator step-up, with atomic audit and delivery outbox. No target session is started. | `640108c`:8 creation HTTP cases,11 authority/race cases and4 browser cases; deadline expiry or changed actor credentials prevents creation. Whole lifecycle acceptance remains separate. |
 | Staff activation | Consumes activation link, changes password and invalidates old credentials together; requires login afterward. | `a60cce6`:11 selected HTTP cases including expiry across lock/write waits, one-time use and rollback. |
-| Staff role assignment/removal | Changed roles revoke target sessions and refresh credentials; unchanged role sets preserve them. | `staff-http.integration.test.ts` role-change case passes; old session receives401, refresh credential is consumed. |
-| Staff disablement | Disable flag, all target sessions, refresh consumption and audit commit together. | `ee5beb2`: two focused HTTP cases verify commit/rollback, two target sessions, unaffected administrator and idempotence. Response now matches documented200. |
+| Staff role assignment/removal | Changed roles revoke target sessions and refresh credentials; unchanged role sets preserve them. | `a4cd929`: target invalidation, valid self sign-out, audit attribution, expiry rollback and post-guard authority/credential races pass. The final self-session check accepts only its own transaction revocation timestamp. |
+| Staff disablement | Disable flag, all target sessions, refresh consumption and audit commit together. | `a4cd929`: current authentication/audit and rollback cases pass; reuses `ee5beb2` target credential, administrator isolation and idempotence coverage, rerun in the selected staff suite. |
+| Staff activation resend | Requires current creator authority and step-up through commit; activation replacement, outbox and audit are atomic. | `a4cd929`: audit attribution, expiry/failure rollback and post-guard authority/credential races pass; target sessions are unchanged. |
 | CRM expire sessions / force password change | Account-locked session/refresh invalidation and private user notice. | Both methods unchanged from `337b965`; reuse35 focused checks plus earlier permission races. |
 | Ownership transfer | Successful transfer invalidates both owners' sessions and refresh credentials; unrelated accounts remain untouched. | `ee5beb2`: nine ownership HTTP cases pass; strengthened success/rollback tests include actual refresh rows. |
 | Self-service single/bulk revocation | Locked actor/confirmation and owner-scoped credentials are checked through commit. | `93dfc27`:41 distinct focused cases; browser evidence reused. |

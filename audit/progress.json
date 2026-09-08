@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+  "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
   "active_step": "R01",
-  "next_action": "R01: finish current step-up/audit/deadline acceptance for built staff role changes, disablement and activation resend, reusing requireStaffStepUp and the corrected service-boundary fixtures. Staff creation is repaired at640108c; production verification-provider writes are unavailable and future provider setup has an explicit prerequisite. Then finish other domain callers, CSRF alternatives and task-wide session reconciliation. Lost-contact policy remains pending.",
+  "next_action": "R01: consolidate staff task acceptance for 02-auth-users-admin.md#T-05.03.01, T-05.03.02 and T-10.01.01 using the current staff API and source-bound UI evidence. Record exact unmet criteria before changing more code. Staff creation and role/disable/resend authentication boundaries are repaired. Then finish remaining domain callers, explicit CSRF alternatives and task-wide session reconciliation. Lost-contact policy remains pending; do not ask again.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -104,7 +104,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Staff creation now requires current step-up through commit and records verification/correlation; reviewed API/browser evidence at640108c. Finish role-change/disable/resend session deadlines, audit and task-level acceptance. Deployed administrator-grant inventory remains external."
+        "Staff creation is repaired at640108c and role-change/disable/resend authentication deadlines and audit ata4cd929; focused checks pass. Consolidate whole staff task acceptance using saved evidence. Deployed administrator-grant inventory remains external."
       ]
     },
     {
@@ -533,6 +533,10 @@
     {
       "id": "R01-staff-creation-step-up",
       "review_record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+    },
+    {
+      "id": "R01-staff-sensitive-actions",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
     }
   ],
   "deferred_improvements": [

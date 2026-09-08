@@ -3770,6 +3770,118 @@
           "record": "R01-staff-creation-step-up"
         }
       ]
+    },
+    {
+      "id": "R01-staff-sensitive-actions",
+      "date": "2026-09-08",
+      "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
+      "summary": "Keep staff role changes, disablement and activation resend bound to current authentication through persistence, with verified-session audit metadata.",
+      "review": [
+        "Read canonical T-02.02.04, T-05.03.01, T-05.03.02 and T-10.01.01. The initial 15-case HTTP run reproduced 10 failures: three missing audit verification/correlation records, six accepted session/step-up expirations during writes and one accepted expired self-role change. Three audit rollback cases, valid self-role sign-out and self-disable rejection already passed.",
+        "All three services now receive the acting session. After established account/permission locks, requireStaffStepUp checks the owned locked session, CSRF, revocation, absolute/idle deadlines and verification window using the database clock after waits. Repeat checks after writes and audit, before commit. Failed checks roll back target roles, disable/activation state, sessions, refresh credentials, delivery outbox and audit together.",
+        "Self role changes intentionally revoke the acting session. Only their final check accepts the exact revocation timestamp written by that already-authorized transaction; original expiry, verification and CSRF checks still apply. Initial checks never allow revoked sessions. Self-disable continues to return400. Role-set and already-disabled no-ops retain final authentication checks.",
+        "Each action audit includes stepUpVerified, the persisted step-up timestamp and request correlation. Existing actor/subject, before/after roles and optional reason semantics are preserved. Session credentials are not serialized into audit metadata.",
+        "Fifteen HTTP cases verify effects, audit attribution, write-failure rollback, deadline expiry with an audit sequence witness, self-role sign-out and self-disable rejection. The existing authority suite now runs all four authority-change races against all four staff operations, totaling17 cases. All observe the corrected service boundary. Unchanged staff creation is included in regression coverage.",
+        "Combined six-file run passed230/231. The remaining failure came from a mechanical unit-fixture edit that expected an actor credential object in audit metadata. Restored its original actorUserId expectation; the final39-case unit run passes. No production change was needed for that failure.",
+        "Reviewed the complete product diff, including the unchanged permission helper body, lock ordering and constrained self-revocation exception. No frontend, dependency, schema or public API contract changed. Prior UI evidence remains revision-bound; no browser rerun claimed."
+      ],
+      "checks": [
+        "231 distinct cases pass across the six-file run and corrected unit rerun; overlapping unit passes are counted once. API typecheck, focused ESLint/Prettier, regenerated OpenAPI comparison and git diff review pass.",
+        "Retain prior broad checkpoint and coverage gaps. No full suite, browser, production image or route-budget renewal. Existing pg concurrent-query deprecation warning remains outside this repair."
+      ],
+      "remaining": [
+        "Consolidate whole staff-creation, role-assignment and staff-list requirements using the existing task-specific API/browser evidence. This completed boundary repair alone does not certify those three whole tasks. Then continue remaining profile/manual-verification/domain callers and explicit CSRF alternatives."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "0e7dcb727048ae9fd08bbc321fe0bf1f90cbc9ebbb01a565169553f4a779faf8"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "6f3d9ff331e8c4bfe2aa21d6020584a724d90c470883ee453e2c6ad043e238e9"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "b49ad2ca8ad7896ce411ae6a3e674b467c4afa4c6c3eee2c360f2dff28e318aa"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-http.integration.test.ts",
+          "sha256": "5b1fcc32f73138ea6aa0b267a16e7785aeb91166f4cdca2e9b67c078a71d97cc"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+        },
+        {
+          "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+          "sha256": "32e241eeeebe5f4e44c740c8f498e778bd7f40b9ba4fb73e7c2d4cf9f003dc2b"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-staff-sensitive-after.log",
+        "/tmp/barghsa-staff-sensitive-before.log",
+        "/tmp/barghsa-staff-sensitive-contract.log",
+        "/tmp/barghsa-staff-sensitive-format-final.log",
+        "/tmp/barghsa-staff-sensitive-format-tests.log",
+        "/tmp/barghsa-staff-sensitive-format.log",
+        "/tmp/barghsa-staff-sensitive-lint.log",
+        "/tmp/barghsa-staff-sensitive-openapi.log",
+        "/tmp/barghsa-staff-sensitive-typecheck.log",
+        "/tmp/barghsa-staff-sensitive-unit-final.log"
+      ],
+      "evidence_reconciliation": [
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.01",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-sensitive-actions"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.02",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-sensitive-actions"
+        },
+        {
+          "task_key": "01-platform-infrastructure.md#T-06.02.05",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-sensitive-actions"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.02",
+          "paths": [
+            "apps/api/src/admin/staff-mutation-permission.ts"
+          ],
+          "record": "R01-staff-sensitive-actions"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.03",
+          "paths": [
+            "apps/api/src/admin/staff-mutation-permission.ts"
+          ],
+          "record": "R01-staff-sensitive-actions"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.04",
+          "paths": [
+            "apps/api/src/admin/staff-mutation-permission.ts"
+          ],
+          "record": "R01-staff-sensitive-actions"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.06",
+          "paths": [
+            "apps/api/src/admin/staff-mutation-permission.ts"
+          ],
+          "record": "R01-staff-sensitive-actions"
+        }
+      ]
     }
   ]
 }

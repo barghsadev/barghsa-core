@@ -729,5 +729,22 @@
       "python3 audit/current_skipped_tasks.py: passed; generated dispositions match acceptance.",
       "python3 audit/current_pr_reviews.py: passed; generated PR checklist matches acceptance."
     ]
+  },
+  "latest_plan_refresh": {
+    "date": "2026-09-08",
+    "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
+    "full_directory_read": "Reuse the complete directory reconciliation recorded in refresh at9a114cfc. This follow-up reviews subsequent progress and the current staff repair; it does not claim a second full semantic archive review.",
+    "changes": [
+      "Shortened the existing active plan and handoff, removed superseded next-step instructions and retained all23 original group mappings in progress.json.",
+      "Preserved full301-PR checklist,170 historical deferrals,23 repeated-task groups and58 skipped-task dispositions. No task acceptance status changed.",
+      "Completed and reviewed the pre-existing staff-action repair, linked its10 log invocations, and reconciled7 immediate-predecessor bindings while retaining12 older verified-record drifts.",
+      "New log copies are deduplicated by raw SHA-256 against the existing index; every invocation is retained. Unique historical evidence and original path mappings remain."
+    ],
+    "validation": [
+      "Audit integrity passes for322 tasks,301 PRs,58 skips,23 groups,99 original mappings and873 saved log invocations.",
+      "Current requirements and generated PR/skip checklists validate."
+    ],
+    "plan": "audit/fix-plan.md",
+    "next_action": "audit/progress.json#next_action"
   }
 }

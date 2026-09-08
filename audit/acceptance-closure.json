@@ -1490,7 +1490,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "5a7b389322d0404da89efb17395b5fe4b40f31417034dc70d11e34d4a7d54e02"
+          "sha256": "0e7dcb727048ae9fd08bbc321fe0bf1f90cbc9ebbb01a565169553f4a779faf8"
         }
       ],
       "checks": [
@@ -1500,7 +1500,8 @@
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
         "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
-        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
@@ -1511,13 +1512,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
         "previous_reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
         "paths": [
           "apps/api/src/admin/admin.controller.ts"
         ],
-        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
       },
       "superseded_assessments": [
         {
@@ -1659,7 +1660,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "5a7b389322d0404da89efb17395b5fe4b40f31417034dc70d11e34d4a7d54e02"
+          "sha256": "0e7dcb727048ae9fd08bbc321fe0bf1f90cbc9ebbb01a565169553f4a779faf8"
         }
       ],
       "checks": [
@@ -1669,7 +1670,8 @@
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
         "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
-        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
@@ -1679,13 +1681,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
         "previous_reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
         "paths": [
           "apps/api/src/admin/admin.controller.ts"
         ],
-        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
       },
       "superseded_assessments": [
         {
@@ -1802,7 +1804,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "5a7b389322d0404da89efb17395b5fe4b40f31417034dc70d11e34d4a7d54e02"
+          "sha256": "0e7dcb727048ae9fd08bbc321fe0bf1f90cbc9ebbb01a565169553f4a779faf8"
         },
         {
           "path": "apps/api/src/admin/brand-config.service.ts",
@@ -1884,7 +1886,8 @@
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
         "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
-        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
       ],
       "limitations": [
         "This certifies the implemented numeral-formatting task, not every F20 localization or screen-reader requirement. Identifiers, customer-authored content, canonical input values and business date strings retain their own semantics. Production deployment and failing combined coverage groups remain separate gates."
@@ -1892,13 +1895,13 @@
       "merged_prs": [],
       "historically_skipped": true,
       "evidence_refresh": {
-        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
         "previous_reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
         "paths": [
           "apps/api/src/admin/admin.controller.ts"
         ],
-        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
       },
       "superseded_assessments": [
         {
@@ -4036,7 +4039,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
+          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4104,7 +4107,8 @@
         "20 distinct new production-browser cases pass across final focused runs: all fields, captured confirmation, step-up, failed/mismatched acknowledgement, retained drafts, stale reload, permission/archive gates, fa/en, light/dark and desktop/mobile. Existing detail/address regression has 72 passing cases.",
         "Final layout review corrected the desktop editor width and dark native date icon. Eight final browser scenarios pass with width assertions and axe scans; API/web types, lint/format, production builds, OpenAPI and all 41 route budgets pass.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
       ],
       "limitations": [],
       "merged_prs": [
@@ -4112,13 +4116,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
         "previous_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
         "paths": [
           "apps/api/src/admin/staff-mutation-permission.ts"
         ],
-        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
       }
     },
     {
@@ -4156,7 +4160,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
+          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4176,7 +4180,8 @@
         "Current crm:verify/admin permission is checked inside the transaction after the profile lock. State/audit/owner notice commit together; concurrency, owner change and notice rollback checks are in the reused156 CRM suite at0530080. The later backend diff only added account-action notices.",
         "All three actions pass fa/en desktop/mobile browser checks with required unverify/reverify reasons, confirmation, invalid-response rejection, current status display and retry.",
         "50 dictionary tests, web types/lint/build and41 route budgets pass at this revision.",
-        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
       ],
       "limitations": [
         "Manual staff verification is covered. No automatic identity provider or external notification delivery is claimed.",
@@ -4187,13 +4192,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
         "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "paths": [
           "apps/api/src/admin/staff-mutation-permission.ts"
         ],
-        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
       }
     },
     {
@@ -4231,7 +4236,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
+          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4263,7 +4268,8 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
-        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
       ],
       "limitations": [
         "User notices are durable private in-app notices. Email/SMS delivery is not claimed.",
@@ -4274,13 +4280,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
         "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
         "paths": [
           "apps/api/src/admin/staff-mutation-permission.ts"
         ],
-        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
       }
     },
     {
@@ -4400,7 +4406,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
+          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -4530,7 +4536,8 @@
         "Archive refusals now return specific fa/en messages, localized counts and the existing error/status codes. The shared action dialog forwards the locale and supports response-aware mappings while preserving existing string mappings, CSRF, step-up and captured-action retries.",
         "Real PostgreSQL/HTTP tests verify canonical legal-owner protection even with Manager and Finance agents, no mutation/audit on refusal, exact staff actor/trimmed reason/timestamp, retained paid invoice and sibling profile, and no duplicate archival audit. Two existing concurrency tests now wait for the active-profile CTE introduced in the prior wallet step.",
         "Explicit built-app archive browser recheck passes in R01-crm-profile-page-acceptance; earlier default-server run was development.",
-        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
       ],
       "limitations": [
         "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
@@ -4541,13 +4548,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
         "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "paths": [
           "apps/api/src/admin/staff-mutation-permission.ts"
         ],
-        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
       }
     },
     {
