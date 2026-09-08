@@ -14,11 +14,16 @@ beforeEach(async () => {
       'test-only',
     ]);
     const session = randomUUID(),
-      csrf = randomUUID();
+      csrf = randomUUID(),
+      family = randomUUID();
     await http.pool.query(
       `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
-      [session, user, csrf, randomUUID()]
+      [session, user, csrf, family]
+    );
+    await http.pool.query(
+      'INSERT INTO refresh_tokens(id,family_id,token_hash,user_id,session_id) VALUES ($1,$2,$3,$4,$5)',
+      [randomUUID(), family, randomUUID(), user, session]
     );
     headers[user] = {
       Cookie: `barghsa_session=${session}`,
@@ -98,6 +103,17 @@ it('requires step-up and keeps the old owner until exact-transfer acceptance', a
       )
     ).rows[0].count
   ).toBe(0);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT user_id,consumed_at IS NOT NULL AS consumed FROM refresh_tokens ORDER BY user_id'
+      )
+    ).rows
+  ).toEqual([
+    { user_id: 'owner', consumed: true },
+    { user_id: 'stranger', consumed: false },
+    { user_id: 'target', consumed: true },
+  ]);
   expect((await post('ownership-accept', 'target', { transferId: id })).status).toBe(401);
   expect(
     (
@@ -199,6 +215,11 @@ it('rolls back ownership, sessions and transfer state when audit fails', async (
       )
     ).rows[0].count
   ).toBe(2);
+  expect((await http.pool.query('SELECT consumed_at FROM refresh_tokens')).rows).toEqual([
+    { consumed_at: null },
+    { consumed_at: null },
+    { consumed_at: null },
+  ]);
 });
 it('checks expiry again after waiting for target membership', async () => {
   const id = await initiate(),

@@ -525,6 +525,7 @@ export class AdminController {
    * Permission: `admin:staff:edit`.
    */
   @Post('staff/:userId/disable')
+  @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Disable a staff account (requires step-up)' })

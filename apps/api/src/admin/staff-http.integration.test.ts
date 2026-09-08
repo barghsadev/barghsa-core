@@ -164,6 +164,95 @@ it('replaces roles through HTTP, revokes old sessions, and rejects disabled acco
   expect((await fetch(`${http.base}/api/admin/staff`, { headers: adminHeaders })).status).toBe(200);
 });
 
+it.each(['commit', 'audit-failure'])(
+  'staff disablement keeps account, sessions and refresh credentials atomic on %s',
+  async (mode) => {
+    const userId = randomUUID();
+    await http.pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'test-only',true)",
+      [userId, `${userId}@example.test`]
+    );
+    const credentials = await Promise.all([session(userId), session(userId)]);
+    if (mode === 'audit-failure') {
+      await http.pool
+        .query(`CREATE FUNCTION deny_staff_disable_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+        BEGIN IF NEW.event='staff_user_disabled' THEN RAISE EXCEPTION 'controlled disable audit failure'; END IF; RETURN NEW; END $$;
+        CREATE TRIGGER deny_staff_disable_audit BEFORE INSERT ON audit_log
+        FOR EACH ROW EXECUTE FUNCTION deny_staff_disable_audit()`);
+    }
+    try {
+      const response = await fetch(`${http.base}/api/admin/staff/${userId}/disable`, {
+        method: 'POST',
+        headers: adminHeaders,
+        body: '{}',
+      });
+      const committed = mode === 'commit';
+      expect(response.status, await response.clone().text()).toBe(committed ? 200 : 500);
+      expect(
+        (
+          await http.pool.query(
+            'SELECT disabled_at IS NOT NULL AS disabled FROM users WHERE user_id=$1',
+            [userId]
+          )
+        ).rows[0].disabled
+      ).toBe(committed);
+      expect(
+        (
+          await http.pool.query(
+            'SELECT revoked_at IS NOT NULL AS revoked FROM sessions WHERE user_id=$1',
+            [userId]
+          )
+        ).rows
+      ).toEqual([{ revoked: committed }, { revoked: committed }]);
+      expect(
+        (
+          await http.pool.query(
+            'SELECT consumed_at IS NOT NULL AS consumed FROM refresh_tokens WHERE user_id=$1',
+            [userId]
+          )
+        ).rows
+      ).toEqual([{ consumed: committed }, { consumed: committed }]);
+      for (const headers of credentials)
+        expect((await fetch(`${http.base}/api/auth/sessions`, { headers })).status).toBe(
+          committed ? 401 : 200
+        );
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM audit_log WHERE event='staff_user_disabled' AND user_id=$1",
+            [userId]
+          )
+        ).rows
+      ).toHaveLength(committed ? 1 : 0);
+      expect(
+        (await fetch(`${http.base}/api/auth/sessions`, { headers: adminHeaders })).status
+      ).toBe(200);
+      if (committed) {
+        const repeated = await fetch(`${http.base}/api/admin/staff/${userId}/disable`, {
+          method: 'POST',
+          headers: adminHeaders,
+          body: '{}',
+        });
+        expect(repeated.status).toBe(200);
+        expect(await repeated.json()).toMatchObject({ alreadyDisabled: true });
+        expect(
+          (
+            await http.pool.query(
+              "SELECT id FROM audit_log WHERE event='staff_user_disabled' AND user_id=$1",
+              [userId]
+            )
+          ).rows
+        ).toHaveLength(1);
+      }
+    } finally {
+      if (mode === 'audit-failure')
+        await http.pool.query(
+          'DROP TRIGGER deny_staff_disable_audit ON audit_log; DROP FUNCTION deny_staff_disable_audit()'
+        );
+    }
+  }
+);
+
 it('enforces the role matrix through real staff, finance, CRM, legal and administration routes', async () => {
   const routes = [
     '/api/staff/tickets',
