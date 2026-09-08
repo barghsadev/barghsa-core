@@ -4,6 +4,7 @@ import gzip
 import hashlib
 import json
 import re
+from current_pr_reviews import report as pr_report
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT = ROOT / 'audit'
@@ -51,6 +52,24 @@ def main():
     require(identities(progress['groups'], 'id') == {f'F{i:02}' for i in range(1, 24)},
             'Original repair group missing or duplicated')
     require(progress['active_step'] in identities(progress['steps'], 'id'), 'Unknown active step')
+    expected_counts = {
+        'historical_tasks': len(keys),
+        'acceptance_verified': sum(row['status'] == 'acceptance_verified'
+                                   for row in closure['reviewed_tasks']),
+        'partial': sum(row['status'] == 'partial' for row in closure['reviewed_tasks']),
+        'pending': len(pending),
+        'merged_prs': len(prs),
+        'historical_skips': len(skips),
+        'skips_verified': sum(row['task_key'] in skips and row['status'] == 'acceptance_verified'
+                              for row in closure['reviewed_tasks']),
+        'skips_pending': len(skips.intersection(pending)),
+    }
+    require(progress['counts'] == expected_counts, 'Compact progress counts are stale')
+    detailed = read('evidence/step-reviews.json')['steps']
+    require(identities(progress['completed_steps'], 'id') == identities(detailed, 'id'),
+            'Compact progress lost completed-step evidence')
+    require((AUDIT / 'merged-pr-review.md').read_text() == pr_report(),
+            'Merged-PR review checklist is stale')
 
     manifest = read('cleanup-manifest.json')
     # These paths are read by tests/tools or referenced by immutable migrations.

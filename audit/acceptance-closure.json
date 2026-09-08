@@ -980,7 +980,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1047,
       "requirement": "- **T-06.02.03:** Create timezone-aware date/time display utilities\n  - **Notes:** All timestamps stored as UTC `timestamptz`. When displaying, convert to user's configured timezone (default: `Asia/Tehran`, UTC+3:30). Use `Intl.DateTimeFormat` with `timeZone` option. Functions: `formatInTimezone(utcDate, timezone, locale, format)`, `formatTime(utcDate, timezone)`, `formatDate(utcDate, timezone, locale)`. User can change timezone in profile settings.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M",
@@ -1032,7 +1032,7 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129"
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -1046,7 +1046,8 @@
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
-        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence."
       ],
       "limitations": [
         "Production database deployment is not certified by this local review. Global coverage and broader F20 localization/numeral requirements remain separate open gates."
@@ -1067,7 +1068,101 @@
           "apps/web/e2e/admin-settings-live.spec.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "superseded_assessments": [
+        {
+          "task_key": "01-platform-infrastructure.md#T-06.02.03",
+          "status": "acceptance_verified",
+          "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+          "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+          "requirement_line": 1047,
+          "requirement": "- **T-06.02.03:** Create timezone-aware date/time display utilities\n  - **Notes:** All timestamps stored as UTC `timestamptz`. When displaying, convert to user's configured timezone (default: `Asia/Tehran`, UTC+3:30). Use `Intl.DateTimeFormat` with `timeZone` option. Functions: `formatInTimezone(utcDate, timezone, locale, format)`, `formatTime(utcDate, timezone)`, `formatDate(utcDate, timezone, locale)`. User can change timezone in profile settings.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M",
+          "requirement_sha256": "dd2bfd6ca7b3548d7bee21886f5e583a8e4d591c6911042836e5a0134c326230",
+          "source_evidence": [
+            {
+              "path": "packages/i18n/src/date-time.ts",
+              "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+            },
+            {
+              "path": "packages/i18n/src/date-time.test.ts",
+              "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+              "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
+            },
+            {
+              "path": "apps/web/src/hooks/useTimezone.ts",
+              "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+              "sha256": "3424252822d7c2e305c62edb02a96e37b2a5a964e4b42a3e86bffe5f9f02a78d"
+            },
+            {
+              "path": "apps/api/src/user-settings/user-settings.controller.ts",
+              "sha256": "364dea0197a3bb364c954fe56768624fe12949d39c4b6b53ee6e32b024661cf1"
+            },
+            {
+              "path": "apps/web/e2e/timezone-settings.spec.ts",
+              "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
+            },
+            {
+              "path": "apps/web/e2e/finance-timestamps.spec.ts",
+              "sha256": "6e952f7f358ff5f12b351c41372e810a5ef8288b665c50a66c29935067b265ce"
+            },
+            {
+              "path": "apps/web/e2e/team.spec.ts",
+              "sha256": "17e4a4c7af4ecb6aa28c75a4de60cd638fd6d9aa0d1546bea0dbd28816df7217"
+            },
+            {
+              "path": "apps/web/e2e/tickets.spec.ts",
+              "sha256": "6465d7afb4731a2086cf875a414390776b935fddbb52be56fac4f0efd54ea2ac"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/0119_snapshot.json",
+              "sha256": "8b4cedb0d76788f1b71e6fcca366fe25c46ef1625a59dc420badaf1291b0de9c"
+            }
+          ],
+          "checks": [
+            "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
+            "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
+            "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+          ],
+          "limitations": [
+            "Production database deployment is not certified by this local review. Global coverage and broader F20 localization/numeral requirements remain separate open gates."
+          ],
+          "merged_prs": [],
+          "historically_skipped": true,
+          "evidence_refresh": {
+            "date": "2026-09-08",
+            "prior_reviewed_sha": "656e91f29c0c4c2fbcc667a03b40be8490b075f6",
+            "changed_paths_reviewed": [
+              "apps/web/src/hooks/useAccountTime.tsx",
+              "apps/web/src/routes/_app/settings/timezone.tsx",
+              "apps/web/e2e/timezone-settings.spec.ts",
+              "apps/web/e2e/finance-timestamps.spec.ts",
+              "apps/web/e2e/team.spec.ts",
+              "apps/web/e2e/tickets.spec.ts",
+              "apps/web/e2e/form-accessibility.spec.ts",
+              "apps/web/e2e/admin-settings-live.spec.ts"
+            ],
+            "evidence": "audit/evidence/acceptance-refresh.json"
+          }
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.12.05",
@@ -1357,7 +1452,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-09.03.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 668,
       "requirement": "**T-09.03.01 — TOS editor**\n\n- Description: Admin can edit Terms of Service content. Rich text editor. Versioned with publish date and language (Persian/English). Publishing a materially changed version can trigger re-acceptance flag.\n- Technical notes: Permissions: `admin:tos:edit`. Versioned with `major` (material change → re-acceptance) and `minor` (typo/clarification → no re-acceptance). Preview before publish. Draft → Published. Last editor recorded. Audit: tos_updated.\n- UI/UX: Rich text editor (TipTap or similar). Side-by-side with current active version diff. \"Mark as material change\" checkbox. Publish button. Version history list.\n- Dependencies: T-04.01.01, admin config framework\n- Complexity: M",
@@ -1405,7 +1500,7 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129"
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
@@ -1415,7 +1510,8 @@
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
-        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
@@ -1434,12 +1530,96 @@
           "apps/api/src/admin/admin.controller.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "superseded_assessments": [
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.01",
+          "status": "acceptance_verified",
+          "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+          "requirement_file": "kanban/epics/02-auth-users-admin.md",
+          "requirement_line": 668,
+          "requirement": "**T-09.03.01 — TOS editor**\n\n- Description: Admin can edit Terms of Service content. Rich text editor. Versioned with publish date and language (Persian/English). Publishing a materially changed version can trigger re-acceptance flag.\n- Technical notes: Permissions: `admin:tos:edit`. Versioned with `major` (material change → re-acceptance) and `minor` (typo/clarification → no re-acceptance). Preview before publish. Draft → Published. Last editor recorded. Audit: tos_updated.\n- UI/UX: Rich text editor (TipTap or similar). Side-by-side with current active version diff. \"Mark as material change\" checkbox. Publish button. Version history list.\n- Dependencies: T-04.01.01, admin config framework\n- Complexity: M",
+          "requirement_sha256": "91c804201d84cd144bbb1e327893227cb673704ba1a9a7f355476a2a9f7e5b59",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/tos/tos.service.ts",
+              "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+            },
+            {
+              "path": "apps/api/src/tos/tos.controller.ts",
+              "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+            },
+            {
+              "path": "apps/api/src/admin/tos-http.integration.test.ts",
+              "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+            },
+            {
+              "path": "apps/web/src/pages/AdminTosPage.tsx",
+              "sha256": "c18460a0fef0eed6051674ba830ee804ce1a334604e36ddb88cb7b562b408c35"
+            },
+            {
+              "path": "apps/web/src/pages/TosRichText.tsx",
+              "sha256": "68cc5f3d2dc55a0a440b901e9da5de811fb4a96bc7eef210c80991e25d20acbd"
+            },
+            {
+              "path": "apps/web/src/pages/TosPreview.tsx",
+              "sha256": "546a19686edcd37d14f1df9b66c0c50cfad52ce7c3ed01a537fd954a050fe47d"
+            },
+            {
+              "path": "apps/web/src/pages/admin-tos-text.ts",
+              "sha256": "108dde981ec56b56818b59bc117e1ac2c02468edc443971e3c0d75ff727a257d"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "cd3688d6434338db9aa5e02977c148f1f8f7045c1fb54aa51a12ec877c2e9390"
+            }
+          ],
+          "checks": [
+            "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
+            "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
+            "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+          ],
+          "limitations": [
+            "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
+            "Unsupported imported Markdown constructs retain explicit source editing to avoid silently dropping content."
+          ],
+          "merged_prs": [
+            159
+          ],
+          "historically_skipped": false,
+          "evidence_refresh": {
+            "date": "2026-09-08",
+            "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+            "changed_paths_reviewed": [
+              "apps/web/e2e/admin-settings-live.spec.ts",
+              "apps/web/e2e/form-accessibility.spec.ts",
+              "apps/api/src/admin/admin.controller.ts"
+            ],
+            "evidence": "audit/evidence/acceptance-refresh.json"
+          }
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 676,
       "requirement": "**T-09.03.02 — TOS version history**\n\n- Description: List of all TOS versions with publish date, material change flag, published by. Admin can view any previous version.\n- Technical notes: GET `/api/admin/tos/versions`. Versions are immutable after publish. Display-only.\n- UI/UX: Table: version #, date, material change badge, author. View link opens read-only version.\n- Dependencies: T-09.03.01\n- Complexity: S",
@@ -1487,7 +1667,7 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129"
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
@@ -1497,7 +1677,8 @@
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
-        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
@@ -1515,12 +1696,95 @@
           "apps/api/src/admin/admin.controller.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "superseded_assessments": [
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.02",
+          "status": "acceptance_verified",
+          "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+          "requirement_file": "kanban/epics/02-auth-users-admin.md",
+          "requirement_line": 676,
+          "requirement": "**T-09.03.02 — TOS version history**\n\n- Description: List of all TOS versions with publish date, material change flag, published by. Admin can view any previous version.\n- Technical notes: GET `/api/admin/tos/versions`. Versions are immutable after publish. Display-only.\n- UI/UX: Table: version #, date, material change badge, author. View link opens read-only version.\n- Dependencies: T-09.03.01\n- Complexity: S",
+          "requirement_sha256": "373a0de7e12edc3bd716923a3e1679c2ed0af611034f2ab5e58bbb8cc39cd89b",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/tos/tos.service.ts",
+              "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+            },
+            {
+              "path": "apps/api/src/tos/tos.controller.ts",
+              "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+            },
+            {
+              "path": "apps/api/src/admin/tos-http.integration.test.ts",
+              "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+            },
+            {
+              "path": "apps/web/src/pages/AdminTosPage.tsx",
+              "sha256": "c18460a0fef0eed6051674ba830ee804ce1a334604e36ddb88cb7b562b408c35"
+            },
+            {
+              "path": "apps/web/src/pages/TosRichText.tsx",
+              "sha256": "68cc5f3d2dc55a0a440b901e9da5de811fb4a96bc7eef210c80991e25d20acbd"
+            },
+            {
+              "path": "apps/web/src/pages/TosPreview.tsx",
+              "sha256": "546a19686edcd37d14f1df9b66c0c50cfad52ce7c3ed01a537fd954a050fe47d"
+            },
+            {
+              "path": "apps/web/src/pages/admin-tos-text.ts",
+              "sha256": "108dde981ec56b56818b59bc117e1ac2c02468edc443971e3c0d75ff727a257d"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "cd3688d6434338db9aa5e02977c148f1f8f7045c1fb54aa51a12ec877c2e9390"
+            }
+          ],
+          "checks": [
+            "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
+            "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
+            "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+          ],
+          "limitations": [
+            "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
+          ],
+          "merged_prs": [
+            160
+          ],
+          "historically_skipped": false,
+          "evidence_refresh": {
+            "date": "2026-09-08",
+            "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+            "changed_paths_reviewed": [
+              "apps/web/e2e/admin-settings-live.spec.ts",
+              "apps/web/e2e/form-accessibility.spec.ts",
+              "apps/api/src/admin/admin.controller.ts"
+            ],
+            "evidence": "audit/evidence/acceptance-refresh.json"
+          }
+        }
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1057,
       "requirement": "- **T-06.02.05:** Localize number/currency formatting\n  - **Notes:** IRR amounts displayed as `XX,XXX,XXX,XXX ریال` or `IRR XX,XXX`. Admin-configurable: use Persian numerals (۱۲۳٬۴۵۶٬۷۸۹) or Western digits (123,456,789). Use `Intl.NumberFormat` with `currency: 'IRR'` and locale `fa` or `en`. For Persian: set `useGrouping: true`. Percentages and decimals follow locale conventions.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M\n  - **UI/UX:** All monetary values show the currency symbol/tail (ریال or IRR). Date picker switches between Jalali and Gregorian based on locale. Direction flips seamlessly without visual glitches.",
@@ -1620,13 +1884,14 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129"
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
         }
       ],
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
-        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence."
       ],
       "limitations": [
         "This certifies the implemented numeral-formatting task, not every F20 localization or screen-reader requirement. Identifiers, customer-authored content, canonical input values and business date strings retain their own semantics. Production deployment and failing combined coverage groups remain separate gates."
@@ -1650,7 +1915,144 @@
           "apps/web/e2e/form-accessibility.spec.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "superseded_assessments": [
+        {
+          "task_key": "01-platform-infrastructure.md#T-06.02.05",
+          "status": "acceptance_verified",
+          "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+          "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+          "requirement_line": 1057,
+          "requirement": "- **T-06.02.05:** Localize number/currency formatting\n  - **Notes:** IRR amounts displayed as `XX,XXX,XXX,XXX ریال` or `IRR XX,XXX`. Admin-configurable: use Persian numerals (۱۲۳٬۴۵۶٬۷۸۹) or Western digits (123,456,789). Use `Intl.NumberFormat` with `currency: 'IRR'` and locale `fa` or `en`. For Persian: set `useGrouping: true`. Percentages and decimals follow locale conventions.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M\n  - **UI/UX:** All monetary values show the currency symbol/tail (ریال or IRR). Date picker switches between Jalali and Gregorian based on locale. Direction flips seamlessly without visual glitches.",
+          "requirement_sha256": "b93bda2361fb2d982e32594d37b597965217deac9f4918e762097fd3199f1ca4",
+          "source_evidence": [
+            {
+              "path": "packages/i18n/src/numbers.ts",
+              "sha256": "a504aae6353acb7d4d02352346f005ee0d8708fd07becb5b5a5704ea7090a986"
+            },
+            {
+              "path": "packages/i18n/src/numbers.test.ts",
+              "sha256": "3913ce6487cd7dd7088bd8588589ba26438da9cc73c950da2c2d2a12e6b4a588"
+            },
+            {
+              "path": "apps/web/src/hooks/useNumberFormatting.ts",
+              "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "24ab7aa70df4edd5c7ad94c1bd1f82ad77e9cd19c7c1d5d48aa392b6f96379fe"
+            },
+            {
+              "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+              "sha256": "ac4191e5d8c4f9ac65a4970094e9cf82a6298f081e69a37c61d76e783a9fbffc"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "cd3688d6434338db9aa5e02977c148f1f8f7045c1fb54aa51a12ec877c2e9390"
+            },
+            {
+              "path": "apps/api/src/admin/brand-config.service.ts",
+              "sha256": "38ed5912ba8b306183711181da56cb620e94ebe33c9cc25a873b7fc99778bee4"
+            },
+            {
+              "path": "apps/api/src/public/branding-http.integration.test.ts",
+              "sha256": "a0a8fdc0af4f18d22ec6c438038fa9fb1acfd1b68ba38004549735d044f8825a"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "288a50c62a7cee2b632962c203481ea37a6c6106b7fe82144f5fda30ae52bbae"
+            },
+            {
+              "path": "apps/web/src/pages/InvoicesPage.tsx",
+              "sha256": "f977f538985fc8b2680d673d97e6ddbb717b0898d2c4db321bdc5f5f32d0c2a1"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "6746f1736433005e6a03ef16d39c007cfa79ca2d035e3c4aa72f1fa64c3020d6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "07ee2036238deb8753df59e02160f9b2e876678647a66bb8cd8cc6bbe1b55cc6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "d3d51fb792564b7fa9cb1f966eac48b98a6db400673d92792396e8a4383b2073"
+            },
+            {
+              "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+              "sha256": "fe3c90fb78e0230ae31cb90cdaa9b4103f0ed03a5565c714797497ca16fb493a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminVatPage.tsx",
+              "sha256": "2b563bb934b65ac16fb651288dff661994c6d3c9c5c70d97b5b80345087c99c3"
+            },
+            {
+              "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+              "sha256": "251097cb290b6c9ff9f6b5a508575ff1e8119c680e3fd01acd022805fa0ea536"
+            },
+            {
+              "path": "apps/web/src/components/WalletBalanceCard.tsx",
+              "sha256": "3ed84578f7406c59455c1b7eac5b70c96fa29ef027dc6e4631af7e43b5396b60"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "1c951d2e67bc689e4fdb4f4a669ffb1143952fe330cf3bd402e2c33e59652b5a"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+              "sha256": "e9ac9cbca36c6997ba48741b377a1b52cd02d1f9fecf868d27e3de449c8d5302"
+            },
+            {
+              "path": "apps/web/e2e/number-preferences.spec.ts",
+              "sha256": "ade04d6956cb936875ac982c1a41008c4e86c57e329d0bb3f57752fa5fca9d83"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+            },
+            {
+              "path": "apps/web/e2e/notification-numerals.spec.ts",
+              "sha256": "68bdac4be9c4648a95fbdb3d79bac25f8fe51e36066b6924913939cb1d3da2a6"
+            },
+            {
+              "path": "apps/web/e2e/date-picker-component.spec.ts",
+              "sha256": "b6ce74ba2e1909a9b58e36763461aaac9aa7b5f0d5d1b1a940fa3fac292897ea"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129"
+            }
+          ],
+          "checks": [
+            "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
+            "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
+            "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+          ],
+          "limitations": [
+            "This certifies the implemented numeral-formatting task, not every F20 localization or screen-reader requirement. Identifiers, customer-authored content, canonical input values and business date strings retain their own semantics. Production deployment and failing combined coverage groups remain separate gates."
+          ],
+          "merged_prs": [],
+          "historically_skipped": true,
+          "evidence_refresh": {
+            "date": "2026-09-08",
+            "prior_reviewed_sha": "28a50ef109a6801ae3a6a94b368d1c2a847e184c",
+            "changed_paths_reviewed": [
+              "apps/web/src/hooks/useNumberFormatting.ts",
+              "apps/web/src/pages/WalletPage.tsx",
+              "apps/web/src/pages/InvoicesPage.tsx",
+              "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "apps/web/src/components/WalletBalanceCard.tsx",
+              "apps/web/e2e/number-preferences.spec.ts",
+              "apps/web/e2e/admin-settings-live.spec.ts",
+              "apps/web/e2e/notification-numerals.spec.ts",
+              "apps/web/e2e/date-picker-component.spec.ts",
+              "apps/web/e2e/form-accessibility.spec.ts"
+            ],
+            "evidence": "audit/evidence/acceptance-refresh.json"
+          }
+        }
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-04.01.04",
@@ -1860,7 +2262,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 150,
       "requirement": "- **T-01.03.05:** Configure hashed filenames and CDN-ready public asset output\n  - **Notes:** Vite config sets `build.assetsDir: 'assets'` with content-hash filenames. Set `build.cssCodeSplit: true`. Output manifest for CDN cache invalidation. Ensure public assets set `Cache-Control: public, immutable, max-age=31536000`. Authenticated API responses set `private, no-cache`.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
@@ -1884,17 +2286,18 @@
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "3e95501b47c84daf6da42acd788b75a74c6c52a748e49516e94b04897affca7b"
+          "sha256": "bbdbc65f479e10c1d5ec3c0ee708093557dcce87f13e1edb0a6a7000979927d6"
         },
         {
           "path": "apps/api/src/common/error-http.integration.test.ts",
-          "sha256": "64f4834b1f79f44ace0c45ae0c5915a6faf0a0a723a3322fbb8fbc6a5fd042f1"
+          "sha256": "bc5639e7dae7d863dc3846f0a92961e970b09b68798058aac1b5834ce523112e"
         }
       ],
       "checks": [
         "Reviewed changed workspace/build/test manifests and root configuration against this task; existing Vitest4 projects compatibility limitation remains recorded where applicable.",
         "Runtime/build configuration and lockfile are unchanged since full checkpoint9529872; reuse its frozen production-image builds, workspace typechecks, route budgets and applicable test evidence.",
-        "Fresh package consumer verification passes all18 shared ESM/CJS export tests and all5 UI distribution/strict consumer tests. Every advertised shared/UI/i18n export target exists."
+        "Fresh package consumer verification passes all18 shared ESM/CJS export tests and all5 UI distribution/strict consumer tests. Every advertised shared/UI/i18n export target exists.",
+        "Audit refresh at86bff51: Unmatched-route localization is the only product change. Reviewed the exact diff and reused the passing34 focused/707 HTTP checks from9f00e2c; error envelope and correlation requirements are preserved."
       ],
       "limitations": [
         "CDN-ready output and local server behavior are verified; this is not evidence of deployment to a live CDN."
@@ -1910,7 +2313,64 @@
           "apps/api/src/common/http-exception.filter.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "superseded_assessments": [
+        {
+          "task_key": "01-platform-infrastructure.md#T-01.03.05",
+          "status": "acceptance_verified",
+          "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+          "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+          "requirement_line": 150,
+          "requirement": "- **T-01.03.05:** Configure hashed filenames and CDN-ready public asset output\n  - **Notes:** Vite config sets `build.assetsDir: 'assets'` with content-hash filenames. Set `build.cssCodeSplit: true`. Output manifest for CDN cache invalidation. Ensure public assets set `Cache-Control: public, immutable, max-age=31536000`. Authenticated API responses set `private, no-cache`.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
+          "requirement_sha256": "b562e7ac7743875746f2225a0a2e9a1b099027a6d6a1375128b3c005f607881b",
+          "source_evidence": [
+            {
+              "path": "apps/web/vite.config.ts",
+              "sha256": "2a4a5b13fe68f9b93fb7516dde50931a4e966871792f6015e0ebef3c200fb9dc"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "dcfcda14e2f86914a8863e3bfb5817cdcc94610efbd80e3718db9498f5076c0c"
+            },
+            {
+              "path": "apps/web/test/server.spec.ts",
+              "sha256": "44066f741c773c3426927cfc3d4765f8596d31e12b891709adf6015ddd2fd0c7"
+            },
+            {
+              "path": "apps/api/src/common/cache-control.interceptor.ts",
+              "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "3e95501b47c84daf6da42acd788b75a74c6c52a748e49516e94b04897affca7b"
+            },
+            {
+              "path": "apps/api/src/common/error-http.integration.test.ts",
+              "sha256": "64f4834b1f79f44ace0c45ae0c5915a6faf0a0a723a3322fbb8fbc6a5fd042f1"
+            }
+          ],
+          "checks": [
+            "Reviewed changed workspace/build/test manifests and root configuration against this task; existing Vitest4 projects compatibility limitation remains recorded where applicable.",
+            "Runtime/build configuration and lockfile are unchanged since full checkpoint9529872; reuse its frozen production-image builds, workspace typechecks, route budgets and applicable test evidence.",
+            "Fresh package consumer verification passes all18 shared ESM/CJS export tests and all5 UI distribution/strict consumer tests. Every advertised shared/UI/i18n export target exists."
+          ],
+          "limitations": [
+            "CDN-ready output and local server behavior are verified; this is not evidence of deployment to a live CDN."
+          ],
+          "merged_prs": [
+            14
+          ],
+          "historically_skipped": false,
+          "evidence_refresh": {
+            "date": "2026-09-08",
+            "prior_reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+            "changed_paths_reviewed": [
+              "apps/api/src/common/http-exception.filter.ts"
+            ],
+            "evidence": "audit/evidence/acceptance-refresh.json"
+          }
+        }
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.03",
@@ -2074,14 +2534,60 @@
         "Malformed JSON no longer echoes submitted text, and both JSON parsers return stable localized validation errors in English/Persian. All 52 selected HTTP/filter checks pass."
       ],
       "limitations": [
-        "Built-in Nest labels/default messages are normalized. Application-specific raw messages, route-not-found details and complete downstream outbox/worker correlation remain under review."
+        "Built-in Nest labels/default messages are normalized. Unmatched route details were repaired in9f00e2c. Application-specific raw messages and complete downstream outbox/worker correlation remain under review."
       ],
       "merged_prs": [
         29
       ],
       "historically_skipped": false,
       "remaining_work_reconciled_at": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
-      "remaining_work_evidence": "audit/evidence/acceptance-refresh.json"
+      "remaining_work_evidence": "audit/evidence/acceptance-refresh.json",
+      "superseded_assessments": [
+        {
+          "task_key": "01-platform-infrastructure.md#T-01.05.01",
+          "status": "partial",
+          "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+          "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+          "requirement_line": 217,
+          "requirement": "- **T-01.05.01:** Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware`\n  - **Notes:** Filter catches `HttpException`, `ZodError` (validation), and unhandled `Error`. Maps to codes from `@barghsa/shared/errors`. Resolves localized messages via i18n service. Logs the error with correlation ID and request metadata at appropriate severity (debug for 4xx, error for 5xx). Middleware generates UUIDv7 correlation ID on every request, stores in `cls-rtracer` or `AsyncLocalStorage`, and sets `X-Correlation-ID` response header. Backend services log correlation ID for traceability.\n  - **Dependencies:** T-06.01.04 (error codes), S-06.02 (i18n)\n  - **Complexity:** M",
+          "requirement_sha256": "2b33d7de5e8e1e323a8fb578b17cadefca11629138b2e7a7d609c2b28b9541b5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "4c5e7d19eb5dd56c5494af981d804ee15bd187b27032ac66639e959d5b4674bb"
+            },
+            {
+              "path": "apps/api/src/common/correlation-id.middleware.ts",
+              "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+            },
+            {
+              "path": "apps/api/src/common/body-parser-errors.ts",
+              "sha256": "e8f59c9c9d3aecbe7d28d773d0d4ee92d1b206d4a4687563dce248aa21e9c0ef"
+            },
+            {
+              "path": "apps/api/src/common/error-http.integration.test.ts",
+              "sha256": "64f4834b1f79f44ace0c45ae0c5915a6faf0a0a723a3322fbb8fbc6a5fd042f1"
+            },
+            {
+              "path": "apps/api/test/http-exception-filter.spec.ts",
+              "sha256": "9adbaf8883d43187081809d22700f39fda4b73cf399f34fd173a630abcb0d5f4"
+            }
+          ],
+          "checks": [
+            "Generated UUIDv7 and valid inbound-ID propagation are tested. The filter now generates an ID for parser failures outside AsyncLocalStorage and binds response header/body/log.",
+            "Malformed JSON no longer echoes submitted text, and both JSON parsers return stable localized validation errors in English/Persian. All 52 selected HTTP/filter checks pass."
+          ],
+          "limitations": [
+            "Built-in Nest labels/default messages are normalized. Application-specific raw messages, route-not-found details and complete downstream outbox/worker correlation remain under review."
+          ],
+          "merged_prs": [
+            29
+          ],
+          "historically_skipped": false,
+          "remaining_work_reconciled_at": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+          "remaining_work_evidence": "audit/evidence/acceptance-refresh.json"
+        }
+      ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
@@ -2857,6 +3363,133 @@
         92
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.04.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 185,
+      "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
+      "requirement_sha256": "6ed8e2d214273cba852f52775d287b19be763f5d4b8c4e25de130bf13ecbdf61",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "3208798f2c3c4eabb3b0899a1fef7bf2738d283202a6b09da27ad6799f0ae980"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "64672f9f68261b6d1ea56168b49c6396b75606d32fba8284cc03443ad4ebc55d"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+          "sha256": "4101afdfe4c67dd09616fbbad234fd76d3e64c0a147fa62634ed10e5aa883093"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+          "sha256": "61591ffc483f5632d4676e4ad46194153003aebd430f5785b9fdef97e547cbd6"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "bbdbc65f479e10c1d5ec3c0ee708093557dcce87f13e1edb0a6a7000979927d6"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+          "sha256": "431adbe62ed8ec8b44d4d3150f3a41ed67644c5d2694bd10f28a1e67e0db758a"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+          "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+        },
+        {
+          "path": "packages/db/src/rolling-rate-limits.test.ts",
+          "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "5c30f43b9626cc39a3143e2d5fed1ee22f8bb19e22357d80f516ca47eb431f24"
+        },
+        {
+          "path": "apps/web/src/lib/auth-errors.ts",
+          "sha256": "8c37a2e06fa691c1240496ff791b35fb8bd01de117c3d5582fe1447726582b5d"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "5dca16f6953314afb118b3994ecc4bd0f4ce5bebfc29bad51a8db631ba6f61d1"
+        },
+        {
+          "path": "apps/web/src/routes/support.tsx",
+          "sha256": "872e1b510a4cf1593c42dccf78a36bd1bca27b71b1e39374bb00804e689a25c8"
+        },
+        {
+          "path": "apps/web/e2e/auth-rate-limit.spec.ts",
+          "sha256": "ce6e907d5d21d3803462d11ec08c2f6480f5e8113bc931121b1fac7033f96a04"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "f1e54f077430f488aa83f90ecf6cd1f34e7c58de9dec7ae77680e7f59d64e180"
+        }
+      ],
+      "checks": [
+        "Source review covers OTP destination minute/hour/day admissions, five failed attempts per challenge, normalized account-plus-IP login failure windows, registration IP/destination limits and reset destination limits.",
+        "8 real PostgreSQL rolling-window tests and83 shared rate-limit tests pass, including concurrency, expiry and Redis loss/recovery; saved rate-db/rate-shared logs.",
+        "Committed NGINX pilot configuration passed isolated TLS/proxy and edge rate-limit exercise; rate-edge log. No deployment was performed.",
+        "Reused unchanged API enforcement evidence from234 auth/session checks at e478e08, including real login/proxy/destination HTTP cases. Later23 checks overlap and are not added to that total.",
+        "20 production browser checks on desktop/mobile Chromium pass in fa/en, covering429 input preservation, retry timing, resend cooldowns and keyboard navigation to localized support. Rerun after owner-confirmed contact update at this revision also passes20.",
+        "2 auth-error unit tests pass;50 dictionary tests, web build/types/lint and41 complete-route budgets pass. Logs saved through audit/evidence/index.json."
+      ],
+      "limitations": [
+        "Local application and supplied edge configuration verified. Actual production proxy deployment, trusted forwarding topology and live provider delivery remain operational prerequisites.",
+        "Broader manual support identity-verification procedure belongs to T-02.03.03 and remains partial."
+      ],
+      "merged_prs": [
+        101
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.03.03",
+      "status": "partial",
+      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 175,
+      "requirement": "**T-02.03.03 — Account recovery support path**\n\n- Description: On forgot-password page, include \"Having trouble? Contact support\" link for users who no longer control their registered email/phone. Support recovery requires identity verification, full audit history.\n- Technical notes: Link opens ticket creation or directs to support contact. Support path documented in runbook. Staff have verified identity procedure.\n- UI/UX: Styled as secondary link below the form.\n- Dependencies: T-02.03.01\n- Complexity: S",
+      "requirement_sha256": "a8e5748fc62d699dd5cdaabb835a95bb85aaa36da934e10d60414e712d63977d",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "5dca16f6953314afb118b3994ecc4bd0f4ce5bebfc29bad51a8db631ba6f61d1"
+        },
+        {
+          "path": "apps/web/src/routes/support.tsx",
+          "sha256": "872e1b510a4cf1593c42dccf78a36bd1bca27b71b1e39374bb00804e689a25c8"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "f1e54f077430f488aa83f90ecf6cd1f34e7c58de9dec7ae77680e7f59d64e180"
+        },
+        {
+          "path": "apps/web/e2e/auth-rate-limit.spec.ts",
+          "sha256": "ce6e907d5d21d3803462d11ec08c2f6480f5e8113bc931121b1fac7033f96a04"
+        }
+      ],
+      "checks": [
+        "Shared auth form footer provides the required secondary support link; support page follows fa/en locale and RTL/LTR.",
+        "Owner supplied office021-26658042, mobile09002550292 and info@barghsa.com on2026-09-08. Display values and mailto/tel targets were reviewed against those values; no message or call was sent.",
+        "20 existing production browser recovery/rate-limit checks and50 dictionary tests pass; web build/types/lint and41 budgets pass."
+      ],
+      "limitations": [
+        "No account-recovery runbook or verified manual staff recovery procedure was found in docs. Trace supported staff actions and document required identity evidence, audit history and escalation before closing. No automatic identity provider exists.",
+        "The existing page promises response within24 hours. The owner confirmed contact details only; reconcile this service promise with the actual support process."
+      ],
+      "merged_prs": [
+        100
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -2973,8 +3606,6 @@
     "02-auth-users-admin.md#T-02.01.04",
     "02-auth-users-admin.md#T-02.03.01",
     "02-auth-users-admin.md#T-02.03.02",
-    "02-auth-users-admin.md#T-02.03.03",
-    "02-auth-users-admin.md#T-02.04.01",
     "02-auth-users-admin.md#T-03.01.01",
     "02-auth-users-admin.md#T-03.01.02",
     "02-auth-users-admin.md#T-03.02.01",

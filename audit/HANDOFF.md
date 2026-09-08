@@ -2,6 +2,8 @@
 
 Read [fix-plan.md](fix-plan.md), then [progress.json](progress.json). The latter records the active step, completed steps, remaining work and all F01–F23 groups. Update it after every reviewed step. Do not reload the archive routinely.
 
+The latest reconciliation includes the support contacts supplied by the owner and the previously unrecorded rate-limit review. Follow the next action in progress.json; do not restart that review. Full completed-step detail is in [step evidence](evidence/step-reviews.json). [PR review](merged-pr-review.md) and [historical skips](current-skipped-tasks.md) are generated from current acceptance, not independent status authorities.
+
 Repository `/Users/majid/www/barghsa/barghsa-core`; branch `codex/audit-fixes`. Read Git HEAD and working-tree status before continuing. The user authorized direct Codex implementation and review. Work locally; no push, PR, merge, deployment, remote scheduler/state change or PR #304 action.
 
 Retain Vite SPA under ADR004. No identity-verification provider exists; automatic verification remains unavailable and manual verification stays supported. The dependency license allowlist was waived. Coverage and route budgets were not waived.

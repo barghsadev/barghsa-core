@@ -598,5 +598,119 @@
       "sha256": "cdeae8c1c9a9b764f9a3736f725643936011d07fb8d9997cb94cec71bef682c9",
       "disposition": "archived"
     }
-  ]
+  ],
+  "refresh": {
+    "date": "2026-09-08",
+    "source_revision": "86bff51",
+    "input_files_read": 169,
+    "input_bytes_read": 7830440,
+    "decoded_bytes_read": 9103527,
+    "method": "Read every file, decode gzip logs, parse JSON inventories, compare hashes, reconcile report findings and later recorded evidence. This is audit-content reconciliation, not a new full application or PR code review.",
+    "completed_step_detail": "audit/evidence/step-reviews.json",
+    "duplicate_logs": [
+      {
+        "removed_path": "audit/evidence/612434d/barghsa-notification-types.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-session-web-types.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-support-types.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-support-contacts-types.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-public-auth-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-public-auth-matrix-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-session-alert-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-session-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-step-up-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-support-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-support-contacts-lint.log.gz",
+        "retained_path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-session-alert-types.log.gz",
+        "retained_path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-session-api-types.log.gz",
+        "retained_path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-step-up-types.log.gz",
+        "retained_path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      },
+      {
+        "removed_path": "audit/evidence/r01/barghsa-r01-types.log.gz",
+        "retained_path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70",
+        "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
+      }
+    ],
+    "preservation": "All99 original audit mappings and82 log invocation records retained. Archive bytes and production-referenced input paths remain unchanged."
+  }
 }

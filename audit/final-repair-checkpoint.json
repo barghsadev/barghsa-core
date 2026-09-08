@@ -362,5 +362,6 @@
       "summary": "Notification list/acknowledgement validation and captured password step-up recovery; no external messages sent."
     }
   ],
-  "subsequent_repairs_note": "Full regression, coverage and images above remain bound to 9529872. Subsequent repairs have focused evidence; global coverage refresh is batched."
+  "subsequent_repairs_note": "Full regression, coverage and images above remain bound to9529872. The first two later repairs are listed here; additional A02/R01 focused reviews and corrections are preserved in audit/evidence/step-reviews.json and audit/evidence/index.json. No global coverage or image refresh is claimed for those changes.",
+  "latest_focused_step_evidence": "audit/evidence/step-reviews.json"
 }

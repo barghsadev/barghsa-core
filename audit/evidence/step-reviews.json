@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "scope": "Detailed completed-step evidence. Current execution state lives in audit/progress.json. Historical checks remain bound to their recorded revisions.",
+  "steps": [
+    {
+      "id": "A01",
+      "date": "2026-09-08",
+      "summary": "Archived 68 historical files; removed three byte-identical copies; preserved 29 referenced logs compressed; established current plan/progress and retained reconciliation input paths.",
+      "review": "All99 original paths retained or mapped to identical evidence; no task acceptance changed. Fixed a README archive-name collision found by checksum validation before commit.",
+      "checks": [
+        "audit/check_audit.py: 322tasks/301PRs/58skips/23groups/99mappings/29logs pass",
+        "11 requirement/skip tests pass",
+        "1 loop reconciliation test passes"
+      ],
+      "remaining": "Task evidence remains historical until A02 reconciliation; product repair and acceptance plan remain open."
+    },
+    {
+      "id": "A02",
+      "date": "2026-09-08",
+      "source_revision": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "summary": "Refreshed23 changed verified records, reconciled13 partial records, closed the pool configuration task and corrected stale Redis migration documentation.",
+      "review": "Preserved every superseded assessment; reviewed source differences and reused unaffected9529872 browser/package evidence. Three database records also receive fresh focused validation.",
+      "checks": [
+        "47 database tests pass",
+        "18 shared export tests pass",
+        "5 UI distribution/strict-consumer tests pass"
+      ],
+      "evidence": "audit/evidence/acceptance-refresh.json",
+      "remaining": "36 verified,12 partial,274 pending. This is task acceptance, not an implementation percentage."
+    },
+    {
+      "id": "R01-route-errors",
+      "date": "2026-09-08",
+      "base_revision": "eb13dc4",
+      "summary": "Localized unmatched API routes in Persian/English without echoing request paths or query strings. Preserved explicit domain 404 messages. Restored four audit paths required by tests, tools and immutable migrations.",
+      "review": "Four real HTTP cases reproduced the defect. First route-metadata predicate failed because middleware populates route metadata; exact Nest fallback matching passed, including a regression for that boundary. Broad HTTP validation caught the staff SQL cleanup regression; a reference audit found three further required stable paths and restored all four byte-for-byte.",
+      "checks": [
+        "34 focused error tests pass",
+        "707 HTTP tests in55 files pass",
+        "5 migration domain-constraint tests pass",
+        "API typecheck and focused ESLint pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "bbdbc65f479e10c1d5ec3c0ee708093557dcce87f13e1edb0a6a7000979927d6"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "bc5639e7dae7d863dc3846f0a92961e970b09b68798058aac1b5834ce523112e"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "a528725a8f8e959717d878340585e7aac394a3636e20f2f383707a2fb179b1bd"
+        }
+      ],
+      "remaining": "R01 session/authentication acceptance continues. Application-specific localized errors and downstream correlation remain open in R03."
+    },
+    {
+      "id": "R01-session-revocation",
+      "date": "2026-09-08",
+      "base_revision": "9f00e2c",
+      "summary": "Enforced recent step-up for individual session revocation. Existing confirmation now recovers through password verification, preserves the selected session and clears the submitted password. Corrected nested invalid-password errors for revoke-all.",
+      "review": "A real HTTP regression reproduced a200 response and revocation without step-up. Reviewed guard ordering, CSRF, current/expired verification, wrong password, ownership and refresh invalidation. Browser cases exercise localized prompts, failure/retry, focus containment and cancellation while pending.",
+      "checks": [
+        "94 session tests across9 files pass",
+        "20 production-built browser cases pass across all5 configured profiles, Persian and English",
+        "API/web typechecks and focused ESLint pass",
+        "Production web build passes"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "e414aaee5496aeef7a5b22996d3c509719407aa569e0008cbd9ea74c1fc9e1fe"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+        }
+      ],
+      "remaining": "Session task acceptance is not complete: review refresh-reuse user alerts, all rotation callers, and exact device/step-up requirements."
+    },
+    {
+      "id": "R01-session-reuse-alert",
+      "date": "2026-09-08",
+      "base_revision": "a1132c1",
+      "summary": "Added a Persian/English private account alert when refresh-token reuse revokes a family. Persisted with the revocation and deduplicated by family through the existing unique delivery key. Links to session security settings.",
+      "review": "The new production-migrated test failed before the change because no alert existed. It covers concurrent replay, subsequent reuse of the replacement token, unaffected unrelated sessions, no notice on ordinary refresh, private recipient scope and absence of raw credentials. Reviewed SQL transaction and unique-index bindings.",
+      "checks": [
+        "100 session/inbox tests in10 files pass",
+        "12 shared notification tests pass",
+        "API typecheck and focused ESLint pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "ab6118ece8283459d703de76657d737d807aa3cf9211a047eedc31d985ad68d6"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "9dccf0a6a7b9c7603d9fc270f073a4853fac076c0ff040ebd2173da38fccf0bb"
+        },
+        {
+          "path": "packages/shared/src/notifications/inbox-content.ts",
+          "sha256": "dfb3dd3b507e55bc9118a8bb12f7e018058abba14a7e51982e27699428f83ffa"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-registry.ts",
+          "sha256": "1707d374167dbd56c26b71ea4ad49214c557f41bf97f89e17724236790216e29"
+        }
+      ],
+      "remaining": "This is an immediately visible in-app security notice. No claim of external email/SMS delivery. Full session and step-up acceptance remains open."
+    },
+    {
+      "id": "R01-atomic-step-up",
+      "date": "2026-09-08",
+      "source_revision": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "summary": "Made password verification, current account/session eligibility, step-up timestamp and correlation-bound audit atomic. HTTP returns the actual persisted time. Recorded four session tasks as reviewed partial with explicit unmet criteria.",
+      "review": "Reproduced missing-session success and missing audit. Account-before-session locks protect password/revocation races; expiry is checked again after password verification. Audit metadata uses the existing text schema; corrected the initial test to parse its stored JSON.",
+      "checks": [
+        "141 focused session/auth tests in10 files pass",
+        "API typecheck, focused ESLint and diff review pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "36 verified,16 partial,270 pending. Four reviewed partial tasks retain missing criteria; no whole-group acceptance claim."
+    },
+    {
+      "id": "R01-public-auth-csrf",
+      "date": "2026-09-08",
+      "source_revision": "e478e080315ea6acc7d24cdeb74ef79307325c6c",
+      "summary": "Required JSON for all ten public authentication routes, preventing cross-origin form login. Retained refresh-token CSRF and signed callback guards. Added preflight-policy and all-public-route checks.",
+      "review": "The red HTTP case returned200 and created a session from a form submission. Reviewed every auth skip annotation; only refresh retains the separate guard without JSON. Safe methods remain unchanged. Callback controller cases and the generic independent-auth guard case pass.",
+      "checks": [
+        "234 auth/session checks in18 files pass",
+        "23 later focused checks in3 files pass, including new route/preflight cases; totals overlap",
+        "API typecheck passes after the test-fixture correction (barghsa-r01-public-auth-types-final.log); focused ESLint, formatting and diff review pass."
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Whole CSRF acceptance remains partial pending complete route review and literal requirement reconciliation. No external origin or deployment authorization change.",
+      "review_correction": "The initial typecheck was incorrectly recorded as passing before its exit status was inspected. Its failed log is retained; the runtime checks passed. Do not use the initial type log as passing evidence. Corrected optional fixture types; final typecheck and fixture lint/format all exited0. Product behavior did not change."
+    },
+    {
+      "id": "R01-auth-rate-and-support",
+      "date": "2026-09-08",
+      "source_revision": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "related_revision": "99f30bf",
+      "summary": "Verified auth rate-limit task using source, production PostgreSQL, proxy and browser evidence; connected localized support links and owner-confirmed contact details. Recovery support remains partial for its manual runbook and response-time claim.",
+      "review": "Reviewed exact task criteria, durable quotas and recovery UI. Current API enforcement matches reused e478e08 sources. Inspected passing exits and logs; reviewed support contact targets without contacting anyone.",
+      "checks": [
+        "8 real PostgreSQL rolling-window checks pass",
+        "83 shared rate-limit checks and2 auth-error checks pass",
+        "Isolated committed NGINX pilot TLS/edge checks pass",
+        "20 production browser checks pass before and20 after contact-only update; overlapping cases",
+        "50 dictionary checks, web build/types/lint, formatting and41 budgets pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "37 verified,17 partial,268 pending. Support runbook and24-hour service promise remain unresolved; complete broader session/capability acceptance."
+    },
+    {
+      "id": "A01-plan-refresh",
+      "date": "2026-09-08",
+      "source_revision": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "summary": "Reread169 audit files, reconcile current remaining work and all PR/skip populations, shorten continuation history and consolidate17 byte-identical log files while retaining82 invocation records.",
+      "review": "Reviewed all23 original fix groups, current partial criteria, historical deferrals and later repair evidence. Retained99 original file mappings and production-referenced paths. No new full application or PR code review is claimed.",
+      "refreshed_verified_bindings": [
+        {
+          "task_key": "01-platform-infrastructure.md#T-06.02.03",
+          "changed_files": [
+            "apps/web/e2e/form-accessibility.spec.ts"
+          ],
+          "review": "Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence."
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.01",
+          "changed_files": [
+            "apps/web/e2e/form-accessibility.spec.ts"
+          ],
+          "review": "Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence."
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.02",
+          "changed_files": [
+            "apps/web/e2e/form-accessibility.spec.ts"
+          ],
+          "review": "Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence."
+        },
+        {
+          "task_key": "01-platform-infrastructure.md#T-06.02.05",
+          "changed_files": [
+            "apps/web/e2e/form-accessibility.spec.ts"
+          ],
+          "review": "Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence."
+        },
+        {
+          "task_key": "01-platform-infrastructure.md#T-01.03.05",
+          "changed_files": [
+            "apps/api/src/common/http-exception.filter.ts",
+            "apps/api/src/common/error-http.integration.test.ts"
+          ],
+          "review": "Unmatched-route localization is the only product change. Reviewed the exact diff and reused the passing34 focused/707 HTTP checks from9f00e2c; error envelope and correlation requirements are preserved."
+        }
+      ],
+      "checks": [
+        "Audit provenance, counts, requirement, PR and skip generators pass",
+        "11 existing requirement/skip tests pass",
+        "Diff whitespace and explicit contact-change review pass"
+      ],
+      "remaining": "Continue the fresh R01 next action; no new feature dispatch or remote operation."
+    }
+  ]
+}
