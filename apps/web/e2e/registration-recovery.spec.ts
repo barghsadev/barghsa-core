@@ -31,7 +31,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(digits.first()).toHaveValue('');
     await expect(page.locator('[data-sonner-toast][data-type="success"]')).toHaveCount(0);
     for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(i + 1));
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/app$/);
     expect(attempts).toBe(2);
   });
   test(`registration resend rejects a different challenge (${locale})`, async ({ page }) => {

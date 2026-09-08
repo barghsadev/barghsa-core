@@ -1,3 +1,5 @@
+import { maskDestination } from '../../lib/mask-destination.js';
+import { toast } from 'sonner';
 import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { rateLimitMessage } from '../../lib/auth-errors.js';
@@ -5,7 +7,7 @@ import { lazy, Suspense, useRef, useState, useCallback, useEffect } from 'react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';
-import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import { Button, Checkbox, Input, Label, Alert, AlertDescription } from '@barghsa/ui';
 import { AuthLayout } from '../../components/AuthLayout.js';
 import { PasswordField } from '../../components/PasswordField.js';
 
@@ -240,6 +242,7 @@ function RegisterPage() {
             rateLimitMessage(response, locale, numbers.numberStyle) ??
             resolveErrorMessage(errorCode, locale);
           setFormError(msg);
+          toast.error(msg);
           return;
         }
 
@@ -248,13 +251,12 @@ function RegisterPage() {
         if (typeof challengeId !== 'string' || !challengeId.trim()) {
           const msg = t('auth.register.error.generic', locale);
           setFormError(msg);
+          toast.error(msg);
           return;
         }
 
         // Navigate to OTP verification page with challengeId
-        const destination = normalized.normalized.startsWith('+')
-          ? normalized.formatted || normalized.normalized.replace(/\d(?=\d{4})/g, '*')
-          : normalized.normalized.replace(/(?<=.).{3,}(?=.*@)/g, '***');
+        const destination = maskDestination(normalized.normalized);
 
         router.navigate({
           to: '/register/verify',
@@ -267,11 +269,12 @@ function RegisterPage() {
         // Network error or unexpected failure
         const msg = t('auth.register.error.generic', locale);
         setFormError(msg);
+        toast.error(msg);
       } finally {
         setSubmitting(false);
       }
     },
-    [username, password, tosAccepted, currentTos, locale, router]
+    [username, password, tosAccepted, currentTos, locale, numbers.numberStyle, router]
   );
 
   const handleTosChange = useCallback((checked: boolean | string) => {
@@ -324,7 +327,6 @@ function RegisterPage() {
             {/* Form-level alert for server errors */}
             {formError && (
               <Alert variant="destructive" role="alert">
-                <AlertTitle className="sr-only">Error</AlertTitle>
                 <AlertDescription>{formError}</AlertDescription>
               </Alert>
             )}

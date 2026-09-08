@@ -32,20 +32,38 @@ function OtpVerifyPage() {
   const [otpError, setOtpError] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
   const [resending, setResending] = useState(false);
+  const [resendDeadline, setResendDeadline] = useState(() => Date.now() + RESEND_COOLDOWN * 1000);
   const [resendTimer, setResendTimer] = useState(RESEND_COOLDOWN);
   const canResend = resendTimer === 0;
   const otpRef = useRef<{ reset: () => void } | null>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  const expiryRedirect = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const busy = verifying || resending;
 
   // Countdown timer for resend
   useEffect(() => {
-    if (canResend) return;
-
-    const interval = setInterval(() => {
-      setResendTimer((previous) => Math.max(0, previous - 1));
-    }, 1000);
+    const update = () =>
+      setResendTimer(Math.max(0, Math.ceil((resendDeadline - Date.now()) / 1000)));
+    update();
+    const interval = setInterval(update, 1000);
 
     return () => clearInterval(interval);
-  }, [canResend]);
+  }, [resendDeadline]);
+
+  useEffect(() => {
+    setVerifying(false);
+    setResending(false);
+    setOtp('');
+    setOtpError(null);
+    setResendDeadline(Date.now() + RESEND_COOLDOWN * 1000);
+    otpRef.current?.reset();
+    return () => {
+      requestRef.current?.abort();
+      requestRef.current = null;
+      if (expiryRedirect.current !== null) clearTimeout(expiryRedirect.current);
+      expiryRedirect.current = null;
+    };
+  }, [challengeId]);
 
   // Redirect if no challengeId (user navigated directly)
   useEffect(() => {
@@ -56,18 +74,23 @@ function OtpVerifyPage() {
 
   const handleOtpComplete = useCallback(
     async (code: string) => {
+      if (requestRef.current || expiryRedirect.current !== null) return;
+      const controller = new AbortController();
+      requestRef.current = controller;
       setOtp(code);
       setOtpError(null);
       setVerifying(true);
 
       try {
         const response = await fetch('/api/auth/register/verify', {
+          signal: controller.signal,
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({ challengeId, otp: code }),
         });
 
         const body: Record<string, unknown> = await response.json().catch(() => ({}));
+        if (controller.signal.aborted) return;
 
         if (!response.ok) {
           const errorCode =
@@ -83,7 +106,8 @@ function OtpVerifyPage() {
             case 'AUTH:OTP:EXPIRED':
               msg = t('auth.otp.error.expired', locale);
               // On expiry, redirect back to registration
-              setTimeout(() => {
+              expiryRedirect.current = setTimeout(() => {
+                if (router.state.location.pathname !== '/register/verify') return;
                 toast.error(t('auth.otp.expired', locale));
                 router.navigate({ to: '/register' });
               }, 500);
@@ -109,61 +133,82 @@ function OtpVerifyPage() {
         // ── Success — user created, session set ────────────────────
         toast.success(t('auth.register.success', locale));
         // Redirect to app root (profile check middleware handles redirects)
-        router.navigate({ to: '/' });
+        router.navigate({ to: '/app' });
       } catch {
+        if (controller.signal.aborted) return;
         setOtpError(t('auth.otp.error.generic', locale));
         setOtp('');
         if (otpRef.current?.reset) {
           otpRef.current.reset();
         }
       } finally {
-        setVerifying(false);
+        if (requestRef.current === controller) {
+          requestRef.current = null;
+          setVerifying(false);
+        }
       }
     },
-    [challengeId, locale, router]
+    [challengeId, locale, numbers.numberStyle, router]
   );
 
   const handleResend = useCallback(async () => {
-    if (!canResend || resending) return;
+    if (
+      !canResend ||
+      Date.now() < resendDeadline ||
+      requestRef.current ||
+      expiryRedirect.current !== null
+    )
+      return;
+    const controller = new AbortController();
+    requestRef.current = controller;
 
     setResending(true);
     setOtpError(null);
 
     try {
       const response = await fetch('/api/auth/register/resend', {
+        signal: controller.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({ challengeId }),
       });
+      const body: unknown = await response.json().catch(() => null);
+      if (controller.signal.aborted) return;
 
       if (!response.ok) {
         const retry = rateLimitMessage(response, locale, numbers.numberStyle);
         const message = retry ?? t('auth.otp.error.resend', locale);
         setOtpError(message);
         if (retry) {
-          setResendTimer(retryAfterSeconds(response) ?? 60);
+          setResendDeadline(Date.now() + (retryAfterSeconds(response) ?? RESEND_COOLDOWN) * 1000);
         }
         return;
       }
 
-      if (!hasResendAcknowledgement(await response.json(), challengeId)) {
+      if (!hasResendAcknowledgement(body, challengeId)) {
         setOtpError(t('auth.otp.error.resend', locale));
         return;
       }
 
       // Reset timer
-      setResendTimer(RESEND_COOLDOWN);
+      setResendDeadline(Date.now() + RESEND_COOLDOWN * 1000);
       setOtp('');
       if (otpRef.current?.reset) {
         otpRef.current.reset();
       }
       toast.success(t('auth.otp.sentTo', locale).replace('{destination}', destination));
     } catch {
-      toast.error(t('auth.otp.error.resend', locale));
+      if (controller.signal.aborted) return;
+      const message = t('auth.otp.error.resend', locale);
+      setOtpError(message);
+      toast.error(message);
     } finally {
-      setResending(false);
+      if (requestRef.current === controller) {
+        requestRef.current = null;
+        setResending(false);
+      }
     }
-  }, [challengeId, canResend, resending, locale, destination]);
+  }, [challengeId, canResend, resendDeadline, locale, destination, numbers.numberStyle]);
 
   const handleClearError = useCallback(() => {
     setOtpError(null);
@@ -199,7 +244,7 @@ function OtpVerifyPage() {
           <OtpInput
             ref={otpRef}
             locale={locale}
-            disabled={verifying}
+            disabled={busy}
             error={otpError}
             onComplete={handleOtpComplete}
             onClearError={handleClearError}
@@ -209,7 +254,7 @@ function OtpVerifyPage() {
           <Button
             type="button"
             className="w-full"
-            disabled={!otp || verifying}
+            disabled={!otp || busy}
             onClick={() => otp && handleOtpComplete(otp)}
           >
             {verifying ? (
@@ -229,7 +274,7 @@ function OtpVerifyPage() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                disabled={resending}
+                disabled={busy}
                 onClick={handleResend}
               >
                 {resending ? (

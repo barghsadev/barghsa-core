@@ -34,8 +34,8 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
   const logoUrl = brandConfig.logoUrl;
   return (
     <div className="flex min-h-dvh flex-col md:flex-row" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      {/* Left: Brand column — hidden on mobile, shown as sidebar on md+ */}
-      <aside className="hidden md:flex md:w-1/2 lg:w-3/5 xl:w-1/2 flex-col justify-between bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-8 lg:p-12 xl:p-16">
+      {/* Brand content stacks above the form on mobile. */}
+      <aside className="flex md:w-1/2 lg:w-3/5 xl:w-1/2 flex-col justify-between bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-4 md:p-8 lg:p-12 xl:p-16">
         <div>
           {/* Logo placeholder */}
           <Link
@@ -65,10 +65,10 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
           </Link>
 
           {/* Slogan */}
-          <p className="mt-6 text-lg text-foreground leading-relaxed max-w-md">{slogan}</p>
+          <p className="mt-3 md:mt-6 text-lg text-foreground leading-relaxed max-w-md">{slogan}</p>
 
           {/* Value propositions */}
-          <ul className="mt-8 space-y-4">
+          <ul className="mt-4 space-y-2 md:mt-8 md:space-y-4">
             {(['value1', 'value2', 'value3'] as const).map((key) => (
               <li key={key} className="flex items-start gap-3 text-sm text-foreground">
                 <svg
@@ -92,40 +92,10 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
         </div>
 
         {/* Bottom brand area */}
-        <div className="text-xs text-foreground">
+        <div className="mt-6 text-xs text-foreground">
           &copy; {new Date().getFullYear()} {appTitle}
         </div>
       </aside>
-
-      {/* Mobile brand header — shown only on small screens */}
-      <div className="flex md:hidden flex-col items-center py-8 px-4 border-b border-border bg-gradient-to-b from-primary/5 to-background">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-xl font-bold no-underline"
-          style={{ color: 'var(--brand-primary)' }}
-          aria-label={t('auth.brand.logo.alt', locale)}
-        >
-          {logoUrl ? (
-            <img src={logoUrl} alt={appTitle} className="h-7 w-auto" />
-          ) : (
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 32 32"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              className="shrink-0"
-              style={{ color: 'var(--brand-primary)' }}
-            >
-              <rect width="32" height="32" rx="8" fill="currentColor" />
-              <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--brand-primary-foreground)" />
-            </svg>
-          )}
-          <span>{appTitle}</span>
-        </Link>
-        <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">{slogan}</p>
-      </div>
 
       {/* Right: Form column */}
       <main className="flex flex-1 items-center justify-center p-4 md:p-8 lg:p-12">

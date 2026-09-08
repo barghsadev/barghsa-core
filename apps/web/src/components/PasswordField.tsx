@@ -151,6 +151,7 @@ export function PasswordField({
 }: PasswordFieldProps) {
   const [internalValue, setInternalValue] = useState('');
   const [visible, setVisible] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   // Controlled or uncontrolled
   const isControlled = externalValue !== undefined;
@@ -168,7 +169,7 @@ export function PasswordField({
   );
 
   const strength = evaluateStrength(value);
-  const showStrengthMeter = showStrength && value.length > 0;
+  const showStrengthMeter = showStrength && focused && !disabled;
   const meetsReq = meetsMinimumRequirements(value);
 
   const handleToggle = useCallback(() => {
@@ -191,6 +192,11 @@ export function PasswordField({
           disabled={disabled}
           value={value}
           onChange={handleChange}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') setFocused(false);
+          }}
           aria-invalid={!!error}
           aria-describedby={
             error ? `${id}-error` : showStrengthMeter ? `${id}-strength` : undefined
@@ -201,6 +207,8 @@ export function PasswordField({
           <button
             type="button"
             onClick={handleToggle}
+            disabled={disabled}
+            aria-pressed={visible}
             className="absolute inset-y-0 end-0 flex items-center pe-2.5 text-muted-foreground hover:text-foreground"
             aria-label={t('auth.register.passwordVisibilityLabel', locale)}
           >
@@ -215,8 +223,14 @@ export function PasswordField({
         </p>
       )}
 
-      {showStrengthMeter && (
-        <div id={`${id}-strength`} className="space-y-1" aria-live="polite">
+      {/* Reserve space so blur cannot move the form control being clicked. */}
+      {showStrength && (
+        <div
+          id={`${id}-strength`}
+          className={`space-y-1 ${showStrengthMeter ? '' : 'invisible'}`}
+          aria-hidden={!showStrengthMeter}
+          aria-live="polite"
+        >
           <Progress
             value={strength.score}
             aria-label={t('auth.register.passwordStrengthLabel', locale)}
