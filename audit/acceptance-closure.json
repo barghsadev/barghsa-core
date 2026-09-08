@@ -6491,6 +6491,410 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
       "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.01.01",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 205,
+      "requirement": "**T-03.01.01 — App-level profile check middleware**\n\n- Description: After login, app checks if user has any profiles. If none, redirect to `/onboarding`. If exactly one profile, set it as default and proceed to dashboard. If multiple, show profile selector to choose default, then proceed.\n- Technical notes: Implemented as client route guard/loader in TanStack Router, with independent API authorization. Query GET `/api/profiles` returns `{ profiles: [...], hasDefault: boolean, activeProfileId }`. Profile switch is persistent in DB (not just session). API must never return profiles belonging to another user.\n- UI/UX: Brief loading state while fetching profiles. If no profiles, redirect to `/onboarding`. If multiple profiles, show a selection modal/dropdown briefly.\n- Dependencies: T-01.02.03, T-04.01.01\n- Complexity: M",
+      "requirement_sha256": "67ec2c4f3a1433a9b9817ca7b1b4a7a877b11f96fec0521c0c29357c2a493f5b",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "1b56c47873a641996f8862fa203e37ddad3d28cf1d74c9570815911273377c85"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "29a1a05d9edd3f9a5ad2aee201b78736d7cb72b12d605dbc75764daae32a8bf6"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+          "sha256": "97be465ac525e7131417ad7d28d3593fd80bbae513ccc8586e57e247ef71bf58"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "2de92474f5af7378a03dafdcb84e5af2f402f433adb3cce9345a2d46ebe759bb"
+        }
+      ],
+      "checks": [
+        "Client profile guard handles zero profiles, an established first default and forced selection when multiple accessible profiles have no choice. API lists owned or active Manager/Finance/Legal memberships and never exposes inaccessible profiles. Current account-owned user_profile_contexts persists the choice across sessions; it is the normalized implementation of the user preference, with legacy owned is_default fallback. An unavailable previous choice deliberately requires reselection. First invitation now initializes only a sole accessible profile without any previous choice.",
+        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+      ],
+      "merged_prs": [
+        102
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "limitations": [
+        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.01.02",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 213,
+      "requirement": "**T-03.01.02 — Profile verification check after login**\n\n- Description: If active profile is NOT verified and system settings enforce verification, notify user. Show auto-verify button if verification method is `api`. Allow access to: profile correction/verification, invitations, notifications, tickets/support, security settings, existing records, financial/refund info. Block new commercial orders.\n- Technical notes: Block is on backend: order submission endpoints check `profile.verified || !adminRequiresVerification`. Blocking screen explains reason, required action, status, and support path. Does NOT prevent profile switching or access to non-commercial pages.\n- UI/UX: Banner at top of app: \"Your profile is not yet verified. [Verify now] [Learn more]\" with blocking overlay on commercial order flows. Non-intrusive on allowed pages.\n- Dependencies: T-03.01.01, E-07 (verification settings)\n- Complexity: M",
+      "requirement_sha256": "d633cfaa1677bfcd615a4416aa73658ee495eac35d78622d626ac4866ba81f3d",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.guard.ts",
+          "sha256": "853391a898f19ef6386234216fad187e59d6686cead2fff36320516e14071d3d"
+        },
+        {
+          "path": "apps/api/src/profiles/verification-http.integration.test.ts",
+          "sha256": "32baac0d151eec8df6d6cc5aa2bff6d15d98a636e8115685a92dd780addfa704"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "ee5b6b4bc9d9c7eab8e01ec1cd232dec5a2eef434c708f361ee3ed9c1d1701d4"
+        }
+      ],
+      "checks": [
+        "Verification banner reflects current active profile and system mode, provides localized manual/support guidance, and does not gate switching or allowed non-commercial pages. No identity provider exists, so API verification returns unavailable and never simulates success. Actual commercial-order submission enforcement and blocking UI remain assigned to the order domain; reusable guard existence does not close this task.",
+        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+      ],
+      "merged_prs": [
+        103
+      ],
+      "historically_skipped": false,
+      "status": "partial",
+      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "limitations": [
+        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external.",
+        "Actual new commercial-order submission enforcement and blocking UI require the assigned order-domain acceptance. Future provider integration requires an approved contract and existing authorization/configuration/audit prerequisites; automatic verification remains unavailable."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.01",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 223,
+      "requirement": "**T-03.02.01 — Profile type selection (Individual vs Legal)**\n\n- Description: Page displaying two cards/options: Individual and Legal. User selects one to proceed. Clear explanation of each type.\n- Technical notes: POST `/api/onboarding/start` with `{ profileType: 'INDIVIDUAL' | 'LEGAL' }`. Returns profileId (draft state). Profile starts in DRAFT state.\n- UI/UX: Two large cards with icons, title, short description in Persian/EN. Selected card highlighted.\n- Dependencies: T-03.01.01\n- Complexity: S",
+      "requirement_sha256": "659f7001a6d96cf7637b728014aea801e00b1852b763b16d053b0c42bcbd50f9",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/onboarding.controller.ts",
+          "sha256": "a049d23a5b72ad621c68fcdfb5a87f4debb588e9497a6e5535d504e28fd88039"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/index.tsx",
+          "sha256": "6712c5b245265c4a0fd09d9cc240e146e64a49c3aee585f671d6c972508666e8"
+        }
+      ],
+      "checks": [
+        "Localized individual/legal cards, selected state, pending/error handling and POST onboarding/start create an owner-bound DRAFT of the selected type. Historical redirects/placeholders are replaced by the current forms.",
+        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+      ],
+      "merged_prs": [
+        104
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "limitations": [
+        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.02",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 231,
+      "requirement": "**T-03.02.02 — Individual profile form**\n\n- Description: Multi-field form for individual profile:\n  - Title: free text (Dr., Mr., etc.), optional\n  - First name: required, text, max 100 chars\n  - Last name: required, separate field, text, max 100 chars\n  - Province: required, selectable list of Iranian provinces fetched from API\n  - City: required, selectable list filtered by selected province, fetched from API\n  - Full address: required, textarea, max 500 chars\n  - Postal code: required, Iranian postal code validation (10 digits)\n  - National ID number: required, Iranian national ID validation (10 digits)\n- Technical notes: Province/city data from `GET /api/admin/geography/provinces` and `GET /api/admin/geography/provinces/:id/cities`. Address saved in addresses table, linked to profile. Server-side validation of national ID (checksum algorithm) and postal code. Server-side dedup of national ID among active profiles.\n- UI/UX: Two-column form on desktop, single column on mobile. City dropdown updates when province selected. Validation on blur per field. Step indicator if multi-step (but all on one page initially). \"Back\" goes to type selection.\n- Dependencies: T-03.02.01, T-09.04.01 (province/city management)\n- Complexity: L",
+      "requirement_sha256": "61abffab66dc0c63714d8f32101438c44a31c8af04df55c3b98f7e2aa0428c31",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding.controller.ts",
+          "sha256": "a049d23a5b72ad621c68fcdfb5a87f4debb588e9497a6e5535d504e28fd88039"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.test.ts",
+          "sha256": "3461efef45c18c94a1dc2c50428a50560844324e4d914f90fdb550a530457ea1"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "53c1a0755dfb5dd6d7dce88e56ea611dc4e9886002fc106198f8928fa2da9249"
+        },
+        {
+          "path": "apps/web/src/lib/profile-digits.ts",
+          "sha256": "400784506ea1a48e4ed47d1917d6444bfb7a257cf948fb353695d3f8aa3a53db"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "78a0a128d8359138bd8040f52eea6753e0491a890ce0df2b908882fd2b1e516f"
+        }
+      ],
+      "checks": [
+        "Individual form has optional title, bounded first/last names and address, required active province/city, validated national checksum and ten-digit postal string, per-field blur validation, desktop/mobile layout and back action. Save rechecks owner, DRAFT/type/archive and geography under transaction locks, preserves address history and enforces active identity uniqueness. Persian/Arabic digits now normalize without losing leading zeros; error headings are localized.",
+        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+      ],
+      "merged_prs": [
+        105
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "limitations": [
+        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external.",
+        "Province/city selectors consume admin-managed data. Current seed provides31 provinces; city provisioning must be supplied and verified for deployment. This review does not claim an all-city seed dataset."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.03",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 247,
+      "requirement": "**T-03.02.03 — Legal profile form**\n\n- Description: All individual fields (for authorized representative) PLUS legal entity fields:\n  - Legal name: required\n  - National identifier (شناسه ملی): required, unique among active legal profiles, 11-digit validation\n  - Registration number: required\n  - Company/entity type: required (select from admin-managed types)\n  - Registration date: optional\n  - Economic code: optional initially, required by service when needed for invoicing\n  - Official phone: optional\n  - Official email: optional\n  - Official province, city, full address, postal code: required\n  - Authorized representative's title and relationship: required\n  - Optional document uploads: official gazette or registration docs\n- Technical notes: Same province/city pattern. National identifier uniqueness enforced at DB level (unique index, case-insensitive). Address saved in addresses table. Owner is set to the creating user. Legal profile starts in DRAFT until basic fields complete (verification is separate).\n- UI/UX: Tabbed or sectioned form: \"Individual Representative\" section + \"Legal Entity\" section. Upload area for documents (drag & drop). All form data saved as draft after each section completion (auto-save).\n- Dependencies: T-03.02.01, T-09.04.01, E-07 (verification settings)\n- Complexity: XL",
+      "requirement_sha256": "e1fba24eb3016ee0d0bee2596693ca9816a8fcb5b106858a495b252ebfab1c4a",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/legal-profiles.service.ts",
+          "sha256": "544f494b4855788df9b39477864582a45dd567a630657747ddd5c286937000c6"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding-drafts.service.ts",
+          "sha256": "c4aa41846b847d6f4675873404ba43fa41d3ceef1013c0798f2b60fa4f28d0ed"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
+          "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+          "sha256": "ca212d5cd0337d2df4c54e4cdcfa86de65a0ffde042f8a7fa5a6dac4f60fb5f3"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "9525c97c79c0538054e771de8b50658cf476f0b8cf3189e4181cfa22c6415a97"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+          "sha256": "4904cc36675adfe5158bdf599d776981a839a378a73a9261e92131182c3c4248"
+        },
+        {
+          "path": "apps/web/src/lib/profile-digits.ts",
+          "sha256": "400784506ea1a48e4ed47d1917d6444bfb7a257cf948fb353695d3f8aa3a53db"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "78a0a128d8359138bd8040f52eea6753e0491a890ce0df2b908882fd2b1e516f"
+        }
+      ],
+      "checks": [
+        "Legal form contains all representative and entity fields, required title/relationship, admin-managed company type, validated identifiers and official geography/address. Optional documents use verified profile-bound uploads and immutable sealing. Section blur autosaves a versioned owner-bound DRAFT; restoration, conflicts, failures and retries preserve input. Persian/Arabic identifiers normalize on entry and restoration. Current UI completes the useful PR106 backend and PR108 frontend slices.",
+        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+      ],
+      "merged_prs": [
+        108,
+        106
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "limitations": [
+        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external.",
+        "Province/city selectors consume admin-managed data. Current seed provides31 provinces; city provisioning must be supplied and verified for deployment. This review does not claim an all-city seed dataset."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.04",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 266,
+      "requirement": "**T-03.02.04 — Onboarding completion and redirect**\n\n- Description: After profile creation, redirect to `/app`. If multiple profiles could be added, show option to \"Add another profile\" or \"Continue to app\".\n- Technical notes: Final POST `/api/onboarding/complete/:profileId` finalizes the profile (transitions from DRAFT to PENDING_VERIFICATION or ACTIVE depending on verification settings). Sets profile as default if first profile.\n- UI/UX: Success animation/confetti on completion. Two action buttons: \"Add another profile\" and \"Go to dashboard\".\n- Dependencies: T-03.02.02, T-03.02.03\n- Complexity: M",
+      "requirement_sha256": "84c56a41386642e51a83bd6981030c738101266db099da3577fdf1747ca80c72",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding.controller.ts",
+          "sha256": "a049d23a5b72ad621c68fcdfb5a87f4debb588e9497a6e5535d504e28fd88039"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/complete.tsx",
+          "sha256": "79f126ef943e5ff417c99a94d666d79324a531b8abb017b4fadb5223c58d10b6"
+        }
+      ],
+      "checks": [
+        "Completion checks matching profile ID and a completed status before showing success/confetti. Failure has retry/back controls. API validates complete identity/geography/main address, preserves existing non-DRAFT status, applies ACTIVE or PENDING_VERIFICATION, and establishes only the first default without replacing an existing choice. Add-another and dashboard actions are localized.",
+        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+      ],
+      "merged_prs": [
+        107
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "limitations": [
+        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.01",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 276,
+      "requirement": "**T-03.03.01 — Profile switcher in sidebar**\n\n- Description: Top section of dashboard sidebar displays current profile name, type badge, and a dropdown/selector to switch profiles. Shows all profiles user has access to (as owner or agent).\n- Technical notes: GET `/api/profiles` returns user's profiles with current active flag. Switch: POST `/api/profiles/switch/:profileId`. Backend updates activeProfileId on user record. On switch, client re-fetches all profile-scoped data. API enforces: user must have access to the target profile (as owner or active agent).\n- UI/UX: Compact dropdown showing profile name, type icon (person/building), current badge. Active profile marked. Quick switch without page reload (dashboard data refreshes). On mobile: collapsible accordion.\n- Dependencies: T-03.01.01\n- Complexity: M",
+      "requirement_sha256": "e84adbdc336e95e0e822f3e73d00bf5b30643d4b7f55b07d9ad7fb8376025df5",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "420494f024301632b713c536c6950c38ba93d1a5e6e068ceefae7d98b4e74f7f"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "599432cf0743497b45dd84e24e6e1c9ef472947e1ed60944303684cd605da5ba"
+        },
+        {
+          "path": "apps/web/src/lib/profile-context.ts",
+          "sha256": "49809e9b92f9ff6315353cfd406efca153cd060b4a8b97ac00e093e31e2b8964"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "ffd7cc7fbbf0727e71ce3067d6a261dc77ba431b1e004a552850b1cbe1388853"
+        }
+      ],
+      "checks": [
+        "Sidebar lists accessible owner/agent profiles, current name/type and active choice; mobile control collapses. Authorized switching persists context and refreshes profile-scoped content through a context revision/remount and cross-tab notification without a document reload. Inaccessible/lost-context handling remains fail-closed with explicit reselection.",
+        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+      ],
+      "merged_prs": [
+        109
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "limitations": [
+        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.02",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 284,
+      "requirement": "**T-03.03.02 — Default profile selection**\n\n- Description: On login, if user has multiple profiles but no default set, show profile selection. User can change default from profile settings.\n- Technical notes: `defaultProfileId` on user record. API: POST `/api/profiles/default/:profileId`. If user has exactly one profile, it is automatically the default.\n- UI/UX: Radio list of profiles with \"Set as default\" option. On first login with multiple profiles, modal forces selection before proceeding.\n- Dependencies: T-03.03.01\n- Complexity: M",
+      "requirement_sha256": "2200b5fd0d50bcdb41aa9cc8e6fb3dce0a07026be4aaccbba7d27c81406711fa",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "420494f024301632b713c536c6950c38ba93d1a5e6e068ceefae7d98b4e74f7f"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "1b56c47873a641996f8862fa203e37ddad3d28cf1d74c9570815911273377c85"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "29a1a05d9edd3f9a5ad2aee201b78736d7cb72b12d605dbc75764daae32a8bf6"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "2de92474f5af7378a03dafdcb84e5af2f402f433adb3cce9345a2d46ebe759bb"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "bd25c7be547d63f2542c0e83ce4f56ceec4f0174994232029711e07f646f7c31"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "ffd7cc7fbbf0727e71ce3067d6a261dc77ba431b1e004a552850b1cbe1388853"
+        }
+      ],
+      "checks": [
+        "Forced initial radio selection and the settings default control persist the account choice. Required POST /api/profiles/default/:profileId now delegates to the same locked owner/active-agent authorization, context and audit transaction. Settings requires a matching acknowledgement before refreshing; failed/mismatched responses preserve selection. Single first owned/invited profile selection is automatic; previous choices are retained.",
+        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+      ],
+      "merged_prs": [
+        110
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "limitations": [
+        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -6592,14 +6996,6 @@
     "01-platform-infrastructure.md#T-07.05.02",
     "01-platform-infrastructure.md#T-07.05.03",
     "01-platform-infrastructure.md#T-07.05.04",
-    "02-auth-users-admin.md#T-03.01.01",
-    "02-auth-users-admin.md#T-03.01.02",
-    "02-auth-users-admin.md#T-03.02.01",
-    "02-auth-users-admin.md#T-03.02.02",
-    "02-auth-users-admin.md#T-03.02.03",
-    "02-auth-users-admin.md#T-03.02.04",
-    "02-auth-users-admin.md#T-03.03.01",
-    "02-auth-users-admin.md#T-03.03.02",
     "02-auth-users-admin.md#T-03.03.03",
     "02-auth-users-admin.md#T-03.03.04",
     "02-auth-users-admin.md#T-03.03.05",

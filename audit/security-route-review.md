@@ -1,17 +1,17 @@
 # CSRF and sensitive-action review
 
-Current through product/test `1695680`, 2026-09-09. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
+Current through product/test `ab09a87`, 2026-09-09. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
 
-The inventory reflects compiled Nest module/controller metadata without starting the application. It follows imports and forward references from AppModule, reads global/controller/method guards and route decorators, and expands registered paths. There are 33 modules, 65 controllers and 346 routes. Global guards are RateLimitGuard and CsrfGuard. The September9 OTP settings refresh added the GET/PUT pair. The registration/OTP checkpoint subsequently reviewed and refreshed22 AuthController/TosController source bindings for optional published-version reads and device-cookie propagation; route paths, guards and flags are unchanged. OTP settings permission/session/CSRF/step-up and atomic audit evidence is retained in the consolidated R01-registration-otp step review. At f1b879b, PreauthCsrfController adds GET /api/auth/csrf; eleven AuthController entries now require anonymous or authenticated CSRF instead of skipping. Their reviewed source bindings and the new controller are refreshed; other bindings retain their prior evidence.
+The inventory reflects compiled Nest module/controller metadata without starting the application. It follows imports and forward references from AppModule, reads global/controller/method guards and route decorators, and expands registered paths. There are 33 modules, 65 controllers and 347 routes. Global guards are RateLimitGuard and CsrfGuard. The September9 OTP settings refresh added the GET/PUT pair. The registration/OTP checkpoint subsequently reviewed and refreshed22 AuthController/TosController source bindings for optional published-version reads and device-cookie propagation; route paths, guards and flags are unchanged. OTP settings permission/session/CSRF/step-up and atomic audit evidence is retained in the consolidated R01-registration-otp step review. At f1b879b, PreauthCsrfController adds GET /api/auth/csrf; eleven AuthController entries now require anonymous or authenticated CSRF instead of skipping. Their reviewed source bindings and the new controller are refreshed; other bindings retain their prior evidence. At9cc2c70, POST /api/profiles/default/:profileId adds one authenticated, CSRF-protected route through the existing locked owner/active-agent context transaction. Runtime metadata,11 HTTP cases and matching OpenAPI pass;18 ProfilesController bindings are refreshed. Later ab09a87 changes only invitation service behavior and adds no routes.
 
 | State-changing route classification | Count | Current boundary |
 | --- | ---: | --- |
 | SessionAuthGuard and StepUpGuard | 118 | Global session-bound CSRF plus recent verification |
 | Above plus StorageAdminGuard | 4 | Additional storage permission guard |
-| SessionAuthGuard only | 65 | Global session-bound CSRF; service permissions and confirmation vary |
+| SessionAuthGuard only | 66 | Global session-bound CSRF; service permissions and confirmation vary |
 | RefreshCsrfGuard | 1 | CSRF bound to presented refresh credential |
 | No route guard | 16 | Public or independently authenticated routes below |
-| Total unsafe-method registrations | 204 | All 122 RequiresStepUp routes have StepUpGuard |
+| Total unsafe-method registrations | 205 | All 122 RequiresStepUp routes have StepUpGuard |
 
 ## Public routes and alternatives
 
@@ -23,7 +23,7 @@ The inventory reflects compiled Nest module/controller metadata without starting
 | POST `/api/webhooks/email/resend` | No skip annotation. Service verifies Svix signature and replay window before processing. Normal provider requests have no session cookie. Full delivery and replay acceptance remains in R02. |
 | POST `/api/auth/logout` | No skip annotation. Existing session requires CSRF. No-session logout has no authenticated account to mutate. Final session HTTP suite covers rejection and success. |
 | POST `/api/csp-report` | Unauthenticated telemetry. Global CSRF currently rejects it if session context exists without a token. Check actual browser reporting and payload handling before deciding the required exception; no repair or runtime reproduction claimed here. |
-| GET `/api/wallet/top-ups/callback` | Explicit provider return, outside the204 unsafe-method registrations. It reaches payment processing. Review paid/cancelled/failed transitions and provider verification with finance; GET does not by itself prove this route has no effects. |
+| GET `/api/wallet/top-ups/callback` | Explicit provider return, outside the205 unsafe-method registrations. It reaches payment processing. Review paid/cancelled/failed transitions and provider verification with finance; GET does not by itself prove this route has no effects. |
 
 Three unsafe routes retain SkipCsrf: refresh and two payment callbacks. Public authentication no longer has an exemption. Callback/telemetry and payment-return GET dispositions remain assigned to their owning batches; no external origin approval is inferred. Current local CSRF evidence includes217 distinct API cases and98 distinct Chromium cases at f1b879b, with successful focused reruns replacing intermediate failures. The later shared recovery OTP change at1695680 passes31 affected browser cases and leaves API behavior unchanged. Exact logs and repair reviews are in the consolidated R01-session-recovery step review.
 

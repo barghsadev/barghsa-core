@@ -6146,6 +6146,433 @@
         "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
         "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
       ]
+    },
+    {
+      "id": "R01-profiles-onboarding",
+      "date": "2026-09-09",
+      "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "base_revision": "1695680",
+      "product_commits": [
+        "ffd77e1",
+        "9cc2c70",
+        "ba62f29",
+        "ab09a87771f0257f95d65cc4221add205d21f2bf"
+      ],
+      "summary": "Profile/onboarding batch reviewed and repaired locally:7 task acceptances verified,1 partial;8 saved PR reviews closed,1 open for commercial-order enforcement.",
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-03.01.02",
+        "02-auth-users-admin.md#T-03.02.01",
+        "02-auth-users-admin.md#T-03.02.02",
+        "02-auth-users-admin.md#T-03.02.03",
+        "02-auth-users-admin.md#T-03.02.04",
+        "02-auth-users-admin.md#T-03.03.01",
+        "02-auth-users-admin.md#T-03.03.02"
+      ],
+      "review": [
+        "Client profile guard handles zero profiles, an established first default and forced selection when multiple accessible profiles have no choice. API lists owned or active Manager/Finance/Legal memberships and never exposes inaccessible profiles. Current account-owned user_profile_contexts persists the choice across sessions; it is the normalized implementation of the user preference, with legacy owned is_default fallback. An unavailable previous choice deliberately requires reselection. First invitation now initializes only a sole accessible profile without any previous choice.",
+        "Verification banner reflects current active profile and system mode, provides localized manual/support guidance, and does not gate switching or allowed non-commercial pages. No identity provider exists, so API verification returns unavailable and never simulates success. Actual commercial-order submission enforcement and blocking UI remain assigned to the order domain; reusable guard existence does not close this task.",
+        "Localized individual/legal cards, selected state, pending/error handling and POST onboarding/start create an owner-bound DRAFT of the selected type. Historical redirects/placeholders are replaced by the current forms.",
+        "Individual form has optional title, bounded first/last names and address, required active province/city, validated national checksum and ten-digit postal string, per-field blur validation, desktop/mobile layout and back action. Save rechecks owner, DRAFT/type/archive and geography under transaction locks, preserves address history and enforces active identity uniqueness. Persian/Arabic digits now normalize without losing leading zeros; error headings are localized.",
+        "Legal form contains all representative and entity fields, required title/relationship, admin-managed company type, validated identifiers and official geography/address. Optional documents use verified profile-bound uploads and immutable sealing. Section blur autosaves a versioned owner-bound DRAFT; restoration, conflicts, failures and retries preserve input. Persian/Arabic identifiers normalize on entry and restoration. Current UI completes the useful PR106 backend and PR108 frontend slices.",
+        "Completion checks matching profile ID and a completed status before showing success/confetti. Failure has retry/back controls. API validates complete identity/geography/main address, preserves existing non-DRAFT status, applies ACTIVE or PENDING_VERIFICATION, and establishes only the first default without replacing an existing choice. Add-another and dashboard actions are localized.",
+        "Sidebar lists accessible owner/agent profiles, current name/type and active choice; mobile control collapses. Authorized switching persists context and refreshes profile-scoped content through a context revision/remount and cross-tab notification without a document reload. Inaccessible/lost-context handling remains fail-closed with explicit reselection.",
+        "Forced initial radio selection and the settings default control persist the account choice. Required POST /api/profiles/default/:profileId now delegates to the same locked owner/active-agent authorization, context and audit transaction. Settings requires a matching acknowledgement before refreshing; failed/mismatched responses preserve selection. Single first owned/invited profile selection is automatic; previous choices are retained."
+      ],
+      "checks": [
+        "53 distinct affected API cases pass:34 cases from three unchanged files in r01-first-profile-api.log, plus all19 invitation-acceptance cases in r01-first-profile-api-final.log. The context file includes11 canonical default endpoint cases; its earlier11-case run overlaps. Six intermediate failures were test assertions comparing stored JSON text with an object; the corrected file passes without a product change.",
+        "29 distinct affected production Chromium cases have current/reused evidence:19 onboarding/form cases at ba62f29 and10 profile-switch/settings cases from ffd77e1, with the two changed endpoint fixtures rerun successfully at9cc2c70. Counts overlap across focused reruns; do not sum all logs. Four pre-fix form cases and the initial first-invitation HTTP case reproduced confirmed defects.",
+        "API/web types, focused lint/format, production builds, reviewed OpenAPI contract and all42 unchanged payload budgets pass at the relevant repair revisions. Backend-only ab09a87 leaves ba62f29 frontend evidence valid; it adds no route/schema/dependency change.",
+        "Reuse source-bound profile, legal, guard, geography and draft tests from9529872, with14-file initial comparison and additional test/helper comparison. legal-documents HTTP changes only add the separately verified CRM document case atf74fd83266; its prior owner-document case remains intact. Current controller/agent/form differences are explicitly covered by this batch. No new full-suite, coverage, image or deployed-operation claim."
+      ],
+      "repairs": [
+        {
+          "commit": "ffd77e1a63f5235b9d771a47351627db095ffa87",
+          "summary": "Profile settings now changes the persisted default/active profile through the existing authorized switch endpoint. Uses the already-fetched list; matching acknowledgement required before context refresh. Invalid/failed replies preserve selection. Existing sidebar code and backend are unchanged.",
+          "checks": "10 distinct Chromium cases pass, including2 new fa/en mobile settings cases for HTTP failure, mismatched acknowledgement, CSRF, same-document/sidebar refresh and persistence after reload. Web types/lint/format/build and all42 unchanged budgets pass. Electricity249.87KB/250KB. Initial2 tests reproduced absence; intermediate shared-import budget failures are retained and superseded by final passing checks.",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/routes/_app/settings/profile.tsx",
+              "sha256": "dbb88eaf78e1d1db180aaa856a6820089a51a8f3da342471eb8dd47a3846b72f"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "ea4ca15d31819b05504d6eb71e62c40b89858694d3d249ed84aa22f5295b070c"
+            }
+          ],
+          "logs": [
+            "audit/evidence/ffd77e1/r01-profiles-default-before.log.gz",
+            "audit/evidence/ffd77e1/r01-profiles-default-browser-final.log.gz",
+            "audit/evidence/ffd77e1/r01-profiles-default-budgets-final.log.gz",
+            "audit/evidence/ffd77e1/r01-profiles-default-build-final.log.gz",
+            "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+            "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+            "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+          ]
+        },
+        {
+          "commit": "9cc2c707bc88912f64532f5de3bf769e56d4aa56",
+          "summary": "Add required POST /api/profiles/default/:profileId and use it from settings; preserve existing actor-owned context transaction and legacy endpoints.",
+          "checks": "11 API HTTP cases,2 affected fa/en browser cases,API/web types,lint/format,OpenAPI and42 unchanged budgets pass. New tests verify cross-session persistence, current owner/agent access, CSRF, unavailable profiles and audit rollback. Route metadata verified;347 routes/205 unsafe/122 step-up.",
+          "logs": [
+            "audit/evidence/ab09a87/r01-profiles-default-api-http.log.gz",
+            "audit/evidence/ab09a87/r01-profiles-default-api-browser.log.gz",
+            "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+            "audit/evidence/ab09a87/r01-profiles-default-route-metadata-v2.log.gz"
+          ]
+        },
+        {
+          "commit": "ba62f29",
+          "summary": "Normalize Persian/Arabic profile identifiers on entry/restoration; retain leading zeros and localize form error headings.",
+          "checks": "19 affected Chromium cases, web types/lint/build/format and42 budgets pass. Four baseline form cases failed before repair.",
+          "logs": [
+            "audit/evidence/ab09a87/r01-onboarding-digits-before.log.gz",
+            "audit/evidence/ab09a87/r01-onboarding-digits-browser.log.gz",
+            "audit/evidence/ab09a87/r01-onboarding-digits-budgets.log.gz"
+          ]
+        },
+        {
+          "commit": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "summary": "Initialize only the first accepted profile as account default within membership, credential rotation and audit transaction. Preserve saved/unavailable/legacy default choices and require selection for multiple profiles.",
+          "checks": "53 distinct API cases pass including19 acceptance cases, failure rollback and five preservation scenarios. API types/lint/format/OpenAPI pass. Reviewed profile→account→session lock order; existing deadline checks still bracket writes and commit.",
+          "logs": [
+            "audit/evidence/ab09a87/r01-first-profile-before.log.gz",
+            "audit/evidence/ab09a87/r01-first-profile-api.log.gz",
+            "audit/evidence/ab09a87/r01-first-profile-api-final.log.gz",
+            "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz"
+          ]
+        }
+      ],
+      "historical_dispositions": [
+        "PR102/104 temporary selectors/redirect placeholders are superseded by current verified onboarding/selection flows.",
+        "PR105 city-data seeding follow-up is explicit deployment provisioning, not a claim that the31-province seed supplies cities.",
+        "PR106 legal UI deferral is satisfied by PR108 and current repaired legal form. PR108 upload placeholders are superseded by verified uploads, durable autosave and sealed documents. These are contributing slices, not duplicate features to delete.",
+        "PR103 historical simulated API verification is superseded by fail-closed no-provider policy. Actual commercial-order acceptance keeps this PR open.",
+        "PR110 missing settings control and required endpoint are now repaired. Legacy switch/default endpoints retain their compatible behavior."
+      ],
+      "remaining": [
+        "Verification banner reflects current active profile and system mode, provides localized manual/support guidance, and does not gate switching or allowed non-commercial pages. No identity provider exists, so API verification returns unavailable and never simulates success. Actual commercial-order submission enforcement and blocking UI remain assigned to the order domain; reusable guard existence does not close this task.",
+        "Deployment city provisioning and future provider setup require external evidence. Broad V02/coverage and the12 older evidence refreshes retain their scope."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 102,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.01.01"
+          ],
+          "reason": "Client profile guard handles zero profiles, an established first default and forced selection when multiple accessible profiles have no choice. API lists owned or active Manager/Finance/Legal memberships and never exposes inaccessible profiles. Current account-owned user_profile_contexts persists the choice across sessions; it is the normalized implementation of the user preference, with legacy owned is_default fallback. An unavailable previous choice deliberately requires reselection. First invitation now initializes only a sole accessible profile without any previous choice.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        },
+        {
+          "pr": 103,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.01.02"
+          ],
+          "reason": "Verification banner reflects current active profile and system mode, provides localized manual/support guidance, and does not gate switching or allowed non-commercial pages. No identity provider exists, so API verification returns unavailable and never simulates success. Actual commercial-order submission enforcement and blocking UI remain assigned to the order domain; reusable guard existence does not close this task.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        },
+        {
+          "pr": 104,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.02.01"
+          ],
+          "reason": "Localized individual/legal cards, selected state, pending/error handling and POST onboarding/start create an owner-bound DRAFT of the selected type. Historical redirects/placeholders are replaced by the current forms.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        },
+        {
+          "pr": 105,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.02.02"
+          ],
+          "reason": "Individual form has optional title, bounded first/last names and address, required active province/city, validated national checksum and ten-digit postal string, per-field blur validation, desktop/mobile layout and back action. Save rechecks owner, DRAFT/type/archive and geography under transaction locks, preserves address history and enforces active identity uniqueness. Persian/Arabic digits now normalize without losing leading zeros; error headings are localized. Historical city-seed follow-up is external deployment data provisioning; API selectors and management exist. No literal requirement for a complete static city seed is certified.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        },
+        {
+          "pr": 106,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.02.03"
+          ],
+          "reason": "Legal form contains all representative and entity fields, required title/relationship, admin-managed company type, validated identifiers and official geography/address. Optional documents use verified profile-bound uploads and immutable sealing. Section blur autosaves a versioned owner-bound DRAFT; restoration, conflicts, failures and retries preserve input. Persian/Arabic identifiers normalize on entry and restoration. Current UI completes the useful PR106 backend and PR108 frontend slices.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        },
+        {
+          "pr": 107,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.02.04"
+          ],
+          "reason": "Completion checks matching profile ID and a completed status before showing success/confetti. Failure has retry/back controls. API validates complete identity/geography/main address, preserves existing non-DRAFT status, applies ACTIVE or PENDING_VERIFICATION, and establishes only the first default without replacing an existing choice. Add-another and dashboard actions are localized.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        },
+        {
+          "pr": 108,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.02.03"
+          ],
+          "reason": "Legal form contains all representative and entity fields, required title/relationship, admin-managed company type, validated identifiers and official geography/address. Optional documents use verified profile-bound uploads and immutable sealing. Section blur autosaves a versioned owner-bound DRAFT; restoration, conflicts, failures and retries preserve input. Persian/Arabic identifiers normalize on entry and restoration. Current UI completes the useful PR106 backend and PR108 frontend slices.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        },
+        {
+          "pr": 109,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.03.01"
+          ],
+          "reason": "Sidebar lists accessible owner/agent profiles, current name/type and active choice; mobile control collapses. Authorized switching persists context and refreshes profile-scoped content through a context revision/remount and cross-tab notification without a document reload. Inaccessible/lost-context handling remains fail-closed with explicit reselection.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        },
+        {
+          "pr": 110,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.03.02"
+          ],
+          "reason": "Forced initial radio selection and the settings default control persist the account choice. Required POST /api/profiles/default/:profileId now delegates to the same locked owner/active-agent authorization, context and audit transaction. Settings requires a matching acknowledgement before refreshing; failed/mismatched responses preserve selection. Single first owned/invited profile selection is automatic; previous choices are retained.",
+          "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+          "evidence": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+        }
+      ],
+      "pr_counts": {
+        "closed": 8,
+        "open": 1,
+        "blocked": 0
+      },
+      "evidence_reuse": "Reuse source-bound profile, legal, guard, geography and draft tests from9529872, with14-file initial comparison and additional test/helper comparison. legal-documents HTTP changes only add the separately verified CRM document case atf74fd83266; its prior owner-document case remains intact. Current controller/agent/form differences are explicitly covered by this batch. No new full-suite, coverage, image or deployed-operation claim.",
+      "reused_review_records": [
+        "R01-agents-invitations-ownership",
+        "R01-crm-legal-documents",
+        "R01-session-recovery"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "37ab46cfcd94f631e24c35154e11cbdb461ba536b5c34f1adfed3a44ee632c41"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.test.ts",
+          "sha256": "c702e726ce6606e2e9c399eb2eb684347decbdb409199d4c6254ed375fcb6b15"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "1b56c47873a641996f8862fa203e37ddad3d28cf1d74c9570815911273377c85"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "29a1a05d9edd3f9a5ad2aee201b78736d7cb72b12d605dbc75764daae32a8bf6"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+          "sha256": "97be465ac525e7131417ad7d28d3593fd80bbae513ccc8586e57e247ef71bf58"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-http.integration.test.ts",
+          "sha256": "aebf81137cf231a61c70689e3d93563c6c45e528d94ca1eafe6e79a683ea3dbd"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+          "sha256": "ca212d5cd0337d2df4c54e4cdcfa86de65a0ffde042f8a7fa5a6dac4f60fb5f3"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
+          "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-profiles.service.ts",
+          "sha256": "544f494b4855788df9b39477864582a45dd567a630657747ddd5c286937000c6"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding-drafts.service.ts",
+          "sha256": "c4aa41846b847d6f4675873404ba43fa41d3ceef1013c0798f2b60fa4f28d0ed"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding.controller.ts",
+          "sha256": "a049d23a5b72ad621c68fcdfb5a87f4debb588e9497a6e5535d504e28fd88039"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "420494f024301632b713c536c6950c38ba93d1a5e6e068ceefae7d98b4e74f7f"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.guard.test.ts",
+          "sha256": "83f77df548a27103bec6ce6b2960d8a317f65746ec699af30873b6cf946ca31a"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.guard.ts",
+          "sha256": "853391a898f19ef6386234216fad187e59d6686cead2fff36320516e14071d3d"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.test.ts",
+          "sha256": "3461efef45c18c94a1dc2c50428a50560844324e4d914f90fdb550a530457ea1"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+        },
+        {
+          "path": "apps/api/src/profiles/verification-http.integration.test.ts",
+          "sha256": "32baac0d151eec8df6d6cc5aa2bff6d15d98a636e8115685a92dd780addfa704"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "78a0a128d8359138bd8040f52eea6753e0491a890ce0df2b908882fd2b1e516f"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "ffd7cc7fbbf0727e71ce3067d6a261dc77ba431b1e004a552850b1cbe1388853"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "2de92474f5af7378a03dafdcb84e5af2f402f433adb3cce9345a2d46ebe759bb"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "599432cf0743497b45dd84e24e6e1c9ef472947e1ed60944303684cd605da5ba"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "ee5b6b4bc9d9c7eab8e01ec1cd232dec5a2eef434c708f361ee3ed9c1d1701d4"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyOptions.ts",
+          "sha256": "01a9795059439957b0317412424e7dca3fbbad3479748b310fa361e3a0ff66e6"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+          "sha256": "4904cc36675adfe5158bdf599d776981a839a378a73a9261e92131182c3c4248"
+        },
+        {
+          "path": "apps/web/src/lib/profile-context.ts",
+          "sha256": "49809e9b92f9ff6315353cfd406efca153cd060b4a8b97ac00e093e31e2b8964"
+        },
+        {
+          "path": "apps/web/src/lib/profile-digits.ts",
+          "sha256": "400784506ea1a48e4ed47d1917d6444bfb7a257cf948fb353695d3f8aa3a53db"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "bd25c7be547d63f2542c0e83ce4f56ceec4f0174994232029711e07f646f7c31"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/complete.tsx",
+          "sha256": "79f126ef943e5ff417c99a94d666d79324a531b8abb017b4fadb5223c58d10b6"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/index.tsx",
+          "sha256": "6712c5b245265c4a0fd09d9cc240e146e64a49c3aee585f671d6c972508666e8"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "53c1a0755dfb5dd6d7dce88e56ea611dc4e9886002fc106198f8928fa2da9249"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "9525c97c79c0538054e771de8b50658cf476f0b8cf3189e4181cfa22c6415a97"
+        }
+      ],
+      "evidence": [
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-api-final.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-api.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-before.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-format.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-test-format.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-before.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-browser.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-budgets.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-build.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-format.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-test-format.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-additional-reuse.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-browser.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-budgets.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-format.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-http.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-openapi.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-web-build.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-route-metadata-v2.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-before.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-browser-final.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-browser.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets-final.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets-v2.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets-v3.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets-v4.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build-final.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build-v2.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build-v3.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build-v4.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-format-v2.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-format-v3.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-format.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-source-reuse.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+      ],
+      "logs": [
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-api-final.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-api.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-before.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-format.log.gz",
+        "audit/evidence/ab09a87/r01-first-profile-test-format.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-before.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-browser.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-budgets.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-build.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-format.log.gz",
+        "audit/evidence/ab09a87/r01-onboarding-digits-test-format.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-additional-reuse.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-browser.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-budgets.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-format.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-http.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-openapi.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-api-web-build.log.gz",
+        "audit/evidence/ab09a87/r01-profiles-default-route-metadata-v2.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-before.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-browser-final.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-browser.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets-final.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets-v2.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets-v3.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets-v4.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-budgets.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build-final.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build-v2.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build-v3.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build-v4.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-build.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-format-v2.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-format-v3.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-default-format.log.gz",
+        "audit/evidence/ffd77e1/r01-profiles-source-reuse.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+      ]
     }
   ]
 }

@@ -1026,7 +1026,16 @@
     "historical_deferrals": [
       "- [ ] Frontend legal profile form UI (slice 2)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Legal frontend deferral satisfied by later implementation and current review.",
+    "reviewed_source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+    "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "PR108 contributes the legal UI. Current field validation, localized input, durable drafts, real documents and completion are reviewed with source-bound API/browser evidence. audit/evidence/step-reviews.json#R01-profiles-onboarding"
+      }
+    ]
   },
   {
     "pr": 92,
