@@ -813,6 +813,26 @@ it('trusts only the opaque browser cookie after OTP and rejects public fingerpri
   expect(verified.status, await verified.clone().text()).toBe(200);
   expect(await verified.text()).not.toContain(token);
   const trustedHash = createHash('sha256').update(token).digest('hex');
+  const grants = (
+    await fixture.pool.query(
+      "SELECT user_id,metadata::jsonb AS metadata,correlation_id,ip FROM audit_log WHERE event='device_trust_granted'"
+    )
+  ).rows;
+  const trustedId = (
+    await fixture.pool.query('SELECT id FROM device_trusts WHERE device_fingerprint=$1', [
+      trustedHash,
+    ])
+  ).rows[0].id;
+  expect(grants).toEqual([
+    {
+      user_id: 'provider-admin',
+      metadata: { deviceId: trustedId },
+      correlation_id: expect.any(String),
+      ip: expect.any(String),
+    },
+  ]);
+  expect(JSON.stringify(grants)).not.toContain(token);
+  expect(JSON.stringify(grants)).not.toContain(trustedHash);
   expect(
     (
       await fixture.pool.query(
@@ -915,6 +935,12 @@ it.each([true, false])(
       'SELECT id,ip_address,user_agent_hint,EXTRACT(EPOCH FROM expires_at-trusted_at)::int AS seconds FROM device_trusts WHERE device_fingerprint=$1',
       [hash]
     );
+    const grants = (
+      await fixture.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='device_trust_granted'"
+      )
+    ).rows;
+    expect(grants).toEqual(trustDevice ? [{ metadata: { deviceId: id } }] : []);
     if (trustDevice) {
       expect(trust.rows).toEqual([
         { id, ip_address: '127.0.0.1', user_agent_hint: 'Updated browser', seconds: 30 * 86400 },
@@ -932,4 +958,170 @@ it.each([true, false])(
     expect(await returning.json()).toMatchObject({ requiresOtp: !trustDevice });
   },
   20000
+);
+
+async function deliveredLoginCode() {
+  await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [
+    await argon2.hash(password),
+  ]);
+  const login = await post('auth/login', { username: 'provider@example.test', password });
+  expect(login.status).toBe(200);
+  const { challengeId } = (await login.json()) as { challengeId: string };
+  const cookie = login.headers.get('set-cookie')!.split(';')[0]!;
+  const fingerprint = createHash('sha256').update(cookie.split('=')[1]!).digest('hex');
+  expect(await deliver()).toBe('sent');
+  const otp = received.at(-1)!.text.match(/\d{6}/)![0];
+  return { challengeId, otp, cookie, fingerprint };
+}
+
+it.each([false, true])(
+  'rolls back OTP/session/trust on grant-audit failure and audits one successful retry (existing trust %s)',
+  async (existing) => {
+    const code = await deliveredLoginCode();
+    const id = randomUUID();
+    if (existing)
+      await fixture.pool.query(
+        `INSERT INTO device_trusts(id,user_id,device_fingerprint,ip_address,expires_at)
+         VALUES ($1,'provider-admin',$2,'192.0.2.1',NOW()+INTERVAL '1 day')`,
+        [id, code.fingerprint]
+      );
+    const before = (await fixture.pool.query('SELECT * FROM device_trusts')).rows;
+    await fixture.pool.query(`CREATE FUNCTION reject_trust_audit() RETURNS trigger AS $$
+      BEGIN IF NEW.event='device_trust_granted' THEN RAISE EXCEPTION 'controlled trust audit failure'; END IF;
+      RETURN NEW; END; $$ LANGUAGE plpgsql;
+      CREATE TRIGGER reject_trust_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_trust_audit();`);
+    const body = { challengeId: code.challengeId, otp: code.otp, trustDevice: true };
+    const headers = { Cookie: code.cookie };
+    const failed = await post('auth/login/verify', body, headers);
+    expect(failed.status).toBe(500);
+    expect(await failed.text()).not.toContain('controlled trust audit failure');
+    expect(failed.headers.getSetCookie()).toEqual([]);
+    expect((await fixture.pool.query('SELECT * FROM device_trusts')).rows).toEqual(before);
+    for (const table of ['sessions', 'refresh_tokens'])
+      expect(
+        (await fixture.pool.query(`SELECT count(*)::int AS count FROM ${table}`)).rows[0].count
+      ).toBe(0);
+    expect(
+      (
+        await fixture.pool.query(
+          'SELECT consumed_at,attempts_remaining FROM otp_challenges WHERE challenge_id=$1',
+          [code.challengeId]
+        )
+      ).rows
+    ).toEqual([{ consumed_at: null, attempts_remaining: 5 }]);
+    await fixture.pool.query('DROP TRIGGER reject_trust_audit ON audit_log');
+    const retries = await Promise.all([
+      post('auth/login/verify', body, headers),
+      post('auth/login/verify', body, headers),
+    ]);
+    expect(retries.map((r) => r.status).sort()).toEqual([200, 409]);
+    const trust = (await fixture.pool.query('SELECT id FROM device_trusts')).rows;
+    expect(trust).toHaveLength(1);
+    if (existing) expect(trust[0].id).toBe(id);
+    expect(
+      (
+        await fixture.pool.query(
+          "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='device_trust_granted'"
+        )
+      ).rows
+    ).toEqual([{ metadata: { deviceId: trust[0].id } }]);
+    expect(
+      (await fixture.pool.query('SELECT count(*)::int AS count FROM sessions')).rows[0].count
+    ).toBe(1);
+  }
+);
+
+it.each(['account', 'session', 'trust'] as const)(
+  'rejects an OTP that expires while waiting for the %s lock and rolls back all effects',
+  async (resource) => {
+    const code = await deliveredLoginCode();
+    const trustId = randomUUID(),
+      sessionId = randomUUID();
+    await fixture.pool.query(
+      `INSERT INTO device_trusts(id,user_id,device_fingerprint,ip_address,expires_at)
+       VALUES ($1,'provider-admin',$2,'192.0.2.1',NOW()+INTERVAL '1 day')`,
+      [trustId, code.fingerprint]
+    );
+    await fixture.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,expires_at,idle_deadline)
+       VALUES ($1,'provider-admin','existing-session-csrf',NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      [sessionId]
+    );
+    const trustBefore = (await fixture.pool.query('SELECT * FROM device_trusts')).rows;
+    const lock = await fixture.pool.connect();
+    let verifying: Promise<Response> | undefined;
+    try {
+      await fixture.pool.query(
+        "UPDATE otp_challenges SET expires_at=clock_timestamp()+INTERVAL '3 seconds' WHERE challenge_id=$1",
+        [code.challengeId]
+      );
+      await lock.query('BEGIN');
+      const pid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      if (resource === 'account')
+        await lock.query("SELECT user_id FROM users WHERE user_id='provider-admin' FOR UPDATE");
+      else if (resource === 'session')
+        await lock.query('SELECT session_id FROM sessions WHERE session_id=$1 FOR UPDATE', [
+          sessionId,
+        ]);
+      else await lock.query('SELECT id FROM device_trusts WHERE id=$1 FOR UPDATE', [trustId]);
+      verifying = post(
+        'auth/login/verify',
+        { challengeId: code.challengeId, otp: code.otp, trustDevice: true },
+        { Cookie: code.cookie }
+      );
+      await expect
+        .poll(
+          async () =>
+            (
+              await fixture.pool.query(
+                'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+                [pid]
+              )
+            ).rows[0].count
+        )
+        .toBe(1);
+      await expect
+        .poll(
+          async () =>
+            (
+              await fixture.pool.query(
+                'SELECT expires_at<=clock_timestamp() AS expired FROM otp_challenges WHERE challenge_id=$1',
+                [code.challengeId]
+              )
+            ).rows[0].expired,
+          { timeout: 6000 }
+        )
+        .toBe(true);
+      await lock.query('COMMIT');
+      const response = await verifying;
+      expect(response.status, await response.clone().text()).toBe(401);
+      expect(await response.json()).toMatchObject({ error: { code: 'AUTH:OTP:EXPIRED' } });
+      expect(response.headers.getSetCookie()).toEqual([]);
+      expect((await fixture.pool.query('SELECT * FROM device_trusts')).rows).toEqual(trustBefore);
+      expect((await fixture.pool.query('SELECT session_id,revoked_at FROM sessions')).rows).toEqual(
+        [{ session_id: sessionId, revoked_at: null }]
+      );
+      expect(
+        (await fixture.pool.query('SELECT count(*)::int AS count FROM refresh_tokens')).rows[0]
+          .count
+      ).toBe(0);
+      expect(
+        (await fixture.pool.query("SELECT id FROM audit_log WHERE event='device_trust_granted'"))
+          .rows
+      ).toEqual([]);
+      expect(
+        (
+          await fixture.pool.query(
+            'SELECT consumed_at,attempts_remaining FROM otp_challenges WHERE challenge_id=$1',
+            [code.challengeId]
+          )
+        ).rows
+      ).toEqual([{ consumed_at: null, attempts_remaining: 5 }]);
+    } finally {
+      await lock.query('ROLLBACK');
+      lock.release();
+      await verifying;
+    }
+  },
+  15000
 );

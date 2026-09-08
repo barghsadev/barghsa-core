@@ -24,6 +24,7 @@ import {
 import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 import { TosService } from '../tos/tos.service.js';
 import { deviceTrustIp } from './device-trust-ip.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 /**
  * Service handling registration and login business logic.
@@ -685,6 +686,11 @@ export class AuthService {
       );
       authVersion = challengeRow.auth_version;
 
+      // The account lock may have waited beyond the challenge deadline.
+      if (new Date(challengeRow.expires_at).getTime() <= Date.now()) {
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
+      }
+
       // 2. Verify OTP inside the transaction
       const submittedHash = this.otpService.hashOtp(otp);
       if (!this.otpService.compareOtpHashes(submittedHash, challengeRow.otp_hash)) {
@@ -737,12 +743,13 @@ export class AuthService {
         const trustExpiresAt = new Date(trustNow.getTime() + 30 * 24 * 60 * 60 * 1000);
         const trustId = uuidv7();
 
-        await client.query(
+        const granted = await client.query(
           `INSERT INTO device_trusts (id, user_id, device_fingerprint, user_agent_hint, trusted_at, expires_at, ip_address)
            VALUES ($1, $2, $3, $4, $5, $6, $7::inet)
            ON CONFLICT (user_id, device_fingerprint) DO UPDATE
              SET user_agent_hint = $4, trusted_at = $5, expires_at = $6,
-                 ip_address = $7::inet, updated_at = NOW()`,
+                 ip_address = $7::inet, updated_at = NOW()
+           RETURNING id`,
           [
             trustId,
             userId,
@@ -753,6 +760,27 @@ export class AuthService {
             trustedIp,
           ]
         );
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+           VALUES ($1,$2,'device_trust_granted',$3,$4,$5,clock_timestamp())`,
+          [
+            uuidv7(),
+            userId,
+            JSON.stringify({ deviceId: granted.rows[0].id }),
+            correlationIdStorage.getStore() ?? uuidv7(),
+            ip,
+          ]
+        );
+      }
+
+      // Session/trust writes can also wait. Roll back every effect if the
+      // challenge expired before all authorization writes completed.
+      const currentChallenge = await client.query(
+        'SELECT expires_at>clock_timestamp() AS valid FROM otp_challenges WHERE challenge_id=$1',
+        [challengeId]
+      );
+      if (!currentChallenge.rows[0]?.valid) {
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
       }
 
       await client.query('COMMIT');

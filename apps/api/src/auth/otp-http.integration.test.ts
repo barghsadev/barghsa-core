@@ -233,7 +233,9 @@ it('issues account-bound contact and password-reset challenges through their act
       .status
   ).toBe(200);
   // These are independent issuance routes; clear only the test send quotas.
-  await http.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
+  await http.pool.query(
+    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+  );
   expect((await post('forgot-password', { username: 'otp-old@example.test' })).status).toBe(200);
   expect(
     (
@@ -248,6 +250,36 @@ it('issues account-bound contact and password-reset challenges through their act
     { purpose: 'password_reset', user_id: 'otp-user', destination: 'otp-old@example.test' },
   ]);
 }, 10000);
+
+it('exhausts login after five concurrent wrong codes and refuses the correct code afterward', async () => {
+  const id = await challenge('otp-old@example.test', 'login');
+  const attempts = await Promise.all(
+    Array.from({ length: 5 }, () => post('login/verify', { challengeId: id, otp: '654321' }))
+  );
+  expect(attempts.map((r) => r.status)).toEqual(Array(5).fill(401));
+  expect(
+    (
+      await http.pool.query('SELECT attempts_remaining FROM otp_challenges WHERE challenge_id=$1', [
+        id,
+      ])
+    ).rows[0].attempts_remaining
+  ).toBe(0);
+  expect((await post('login/verify', { challengeId: id, otp: '123456' })).status).toBe(429);
+  // Clear only this isolated fixture's transport counters, preserving the
+  // exhausted challenge, to prove expiry of the IP window cannot revive it.
+  await http.pool.query(
+    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+  );
+  const correct = await post('login/verify', { challengeId: id, otp: '123456', trustDevice: true });
+  expect(correct.status).toBe(401);
+  expect(await correct.json()).toMatchObject({ error: { code: 'AUTH:OTP:MAX_ATTEMPTS' } });
+  expect((await http.pool.query('SELECT count(*)::int AS count FROM sessions')).rows[0].count).toBe(
+    1
+  );
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM device_trusts')).rows[0].count
+  ).toBe(0);
+});
 
 it('rolls back OTP consumption and partial session writes when refresh-token insertion fails', async () => {
   const id = await challenge('otp-old@example.test', 'login');
