@@ -1037,6 +1037,22 @@ export class AuthService {
    */
   async resetPassword(input: ResetPasswordInput, ip: string): Promise<ResetPasswordResponse> {
     const pool = getDbPool();
+    // Increment outside the credential transaction: failed resets still count,
+    // and the limiter must not need a second connection while holding one.
+    const destination = await pool.query(
+      "SELECT destination FROM otp_challenges WHERE challenge_id=$1 AND purpose='password_reset'",
+      [input.challengeId]
+    );
+    if (destination.rows[0]) {
+      await this.rateLimitService.enforceSecurityRateLimit(
+        rateLimitKey(
+          'password-reset:verify:destination',
+          createHash('sha256').update(destination.rows[0].destination.toLowerCase()).digest('hex')
+        ),
+        5,
+        3_600_000
+      );
+    }
     const client = await pool.connect();
 
     try {
@@ -1067,7 +1083,7 @@ export class AuthService {
       }
 
       // Check expiry
-      if (new Date(row.expires_at) < new Date()) {
+      if (new Date(row.expires_at).getTime() <= Date.now()) {
         throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
       }
 
@@ -1103,6 +1119,12 @@ export class AuthService {
         );
       }
 
+      await this.otpService.assertCurrentAccount(row.user_id, row.auth_version, client);
+      // Account locking can wait beyond the original OTP deadline.
+      if (new Date(row.expires_at).getTime() <= Date.now()) {
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
+      }
+
       // 2. Verify OTP inside the transaction
       const submittedHash = this.otpService.hashOtp(input.otp);
       if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
@@ -1133,8 +1155,6 @@ export class AuthService {
 
       const userId = row.user_id;
 
-      await this.otpService.assertCurrentAccount(userId, row.auth_version, client);
-
       // 4. Check password history (last 5 passwords)
       const historyResult = await client.query(
         `SELECT password_hash, version FROM password_history
@@ -1161,9 +1181,7 @@ export class AuthService {
       const newHash = await argon2.hash(input.newPassword, PASSWORD_HASH_OPTIONS);
 
       // 4a. Check against current password
-      const isSameAsCurrent = await argon2
-        .verify(currentHash, input.newPassword)
-        .catch(() => false);
+      const isSameAsCurrent = await argon2.verify(currentHash, input.newPassword);
       if (isSameAsCurrent) {
         await client.query('ROLLBACK');
         this.logger.warn(`Password reuse (same as current) detected for user ${userId} from ${ip}`);
@@ -1175,9 +1193,7 @@ export class AuthService {
 
       // 4b. Check password history
       for (const entry of historyResult.rows) {
-        const isReused = await argon2
-          .verify(entry.password_hash, input.newPassword)
-          .catch(() => false);
+        const isReused = await argon2.verify(entry.password_hash, input.newPassword);
         if (isReused) {
           await client.query('ROLLBACK');
           this.logger.warn(`Password reuse detected for user ${userId} from ${ip}`);
@@ -1224,7 +1240,7 @@ export class AuthService {
 
       // 8. Record audit event
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
 
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
@@ -1232,6 +1248,15 @@ export class AuthService {
         [auditId, userId, 'password_reset', null, correlationId, ip, now]
       );
 
+      // Credential revocation and audit writes can wait too. Expiry here
+      // must roll back the OTP, password/history, sessions and audit together.
+      const currentChallenge = await client.query(
+        'SELECT expires_at>clock_timestamp() AS valid FROM otp_challenges WHERE challenge_id=$1',
+        [input.challengeId]
+      );
+      if (!currentChallenge.rows[0]?.valid) {
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
+      }
       await client.query('COMMIT');
 
       this.logger.log(`Password reset for user ${userId} from ${ip}`);

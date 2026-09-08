@@ -2,8 +2,9 @@ import { authResponseRecord, hasPasswordChangeAcknowledgement } from '../lib/aut
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js';
 import { useEffect, useState, type FormEvent } from 'react';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';
+import { toast } from 'sonner';
 import { Button, Input, Label, Alert, AlertDescription } from '@barghsa/ui';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField } from '../components/PasswordField.js';
@@ -83,6 +84,7 @@ function maskDestination(destination: string): string {
 }
 
 function ForgotPasswordPage() {
+  const router = useRouter();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const [username, setUsername] = useState('');
@@ -93,7 +95,6 @@ function ForgotPasswordPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(0);
-  const [complete, setComplete] = useState(false);
   const normalized = normalizeUsername(username);
 
   useEffect(() => {
@@ -170,7 +171,10 @@ function ForgotPasswordPage() {
       setPassword('');
       setConfirmation('');
       setChallengeId('');
-      setComplete(true);
+      toast.success(t('auth.resetPassword.success', locale), {
+        description: t('auth.resetPassword.signIn', locale),
+      });
+      await router.navigate({ to: '/login', replace: true });
     } catch {
       setError(t('auth.forgotPassword.error.generic', locale));
     } finally {
@@ -195,23 +199,14 @@ function ForgotPasswordPage() {
     >
       <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
         <h1 className="text-xl font-semibold">
-          {t(
-            complete
-              ? 'auth.resetPassword.success'
-              : challengeId
-                ? 'auth.resetPassword.title'
-                : 'auth.forgotPassword.title',
-            locale
-          )}
+          {t(challengeId ? 'auth.resetPassword.title' : 'auth.forgotPassword.title', locale)}
         </h1>
         {error && (
           <Alert variant="destructive" role="alert">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        {complete ? (
-          <p role="status">{t('auth.resetPassword.signIn', locale)}</p>
-        ) : challengeId ? (
+        {challengeId ? (
           <form onSubmit={reset} className="space-y-4">
             <p className="text-sm text-muted-foreground">{t('auth.forgotPassword.sent', locale)}</p>
             <p className="text-sm" dir="ltr">

@@ -34,10 +34,16 @@ for (const locale of ['fa', 'en'] as const) {
       otp: '123456',
       newPassword: 'New-browser-password-123!',
     });
-    await expect(page.getByRole('status')).toContainText(locale === 'fa' ? 'وارد شوید' : 'Sign in');
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.locator('[data-sonner-toast]')).toContainText(
+      locale === 'fa' ? 'وارد شوید' : 'Sign in'
+    );
     await expect(page.locator('#reset-otp')).toHaveCount(0);
     expect(page.url()).not.toContain('123456');
     expect(await page.evaluate(() => JSON.stringify(sessionStorage))).not.toContain('123456');
+    await page.goto('/forgot-password');
+    await expect(page.locator('#username')).toHaveValue('');
+    await expect(page.locator('#reset-otp')).toHaveCount(0);
   });
 }
 
@@ -84,7 +90,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#new-password')).toHaveValue('New-browser-password-123!');
     await expect(page.locator('#reset-otp')).toHaveValue('123456');
     await page.locator('button[type="submit"]').click();
-    await expect(page.getByRole('status')).toContainText(locale === 'fa' ? 'وارد شوید' : 'Sign in');
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.locator('[data-sonner-toast]')).toContainText(
+      locale === 'fa' ? 'وارد شوید' : 'Sign in'
+    );
     await expect(page.locator('#new-password')).toHaveCount(0);
     expect(attempts).toBe(2);
   });
