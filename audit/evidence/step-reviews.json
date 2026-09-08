@@ -2369,6 +2369,91 @@
         "audit/evidence/r01/barghsa-login-destination-preview.log.gz",
         "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
       ]
+    },
+    {
+      "id": "R01-otp-trust-atomic",
+      "date": "2026-09-08",
+      "source_revision": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
+      "summary": "Audit device-trust grants atomically, reject OTP expiry across lock waits, and verify T-02.01.03 locally.",
+      "review": [
+        "Compared T-02.01.03 with the controller, OTP/account locking, session creation, optional trust, resend limits and the shared inline OTP UI. Challenges are purpose/account/version-bound; wrong guesses durably decrement the locked challenge. A consumed or exhausted code cannot authorize a new session. Staff always require OTP; customer trust remains risk-based under the locally verified T-02.01.02 policy.",
+        "Device opt-in now writes device_trust_granted in the same transaction as OTP consumption, session/refresh insertion and the trust upsert. RETURNING id identifies the actual persisted row when an existing device is renewed. Audit metadata contains only its record ID, with actor, correlation and observed IP; no raw browser proof or fingerprint hash. Opt-out does not alter or audit trust.",
+        "Challenge validity is checked again after waiting for the account lock. A final database wall-clock check after session/trust/audit writes rejects expiry during later waits and rolls back every effect. User, session and trust locks retain their existing order; the challenge lock prevents concurrent replay throughout the transaction.",
+        "Real PostgreSQL tests cover audit failure for both new and existing trust, preserved challenge attempts, no partial sessions/refreshes/cookies, unchanged prior trust and successful concurrent retry with exactly one grant audit. Separate account/session/trust waits cross the challenge deadline and leave the old session/trust unchanged with no grant audit.",
+        "A new HTTP test sends five concurrent incorrect codes, confirms zero attempts, observes the independent IP transport limit, then clears only the isolated transport counters and proves the exhausted challenge still rejects the correct OTP. This fixture action does not change application limits or reset challenge attempts.",
+        "Existing delivered-code, credential-change, trusted-device, staff-MFA, cross-purpose, resend and partial-session-failure cases pass. The shared OTP input, resend acknowledgement, trust checkbox and retry-to-dashboard behavior reuse the 36 production-browser checks at 53a8bec; frontend sources are unchanged."
+      ],
+      "checks": [
+        "93 distinct API/unit cases pass across five files and focused invocations. Initial combined run passed 64/67; its three expiry tests expected the wrong error-code separator. Corrected race-only run passes 3/3. Other two-file run passed 25/26; the new exhausted-code test first encountered the independent IP 429. After explicitly checking that limit and isolating the exhausted challenge, its focused rerun passes 1/1. Overlapping reruns are not extra cases; selected-out tests are not task skips.",
+        "API typecheck, focused ESLint, formatting and git diff checks pass. Compiled HTTP fixtures use real PostgreSQL; API typecheck ran only after all fixture builds finished. All failing logs are retained.",
+        "No schema, dependency, frontend or cookie-policy change. Earlier migration, browser and bundle evidence is reused where sources are unchanged. No global checkpoint or production delivery claim is renewed."
+      ],
+      "remaining": [
+        "Next review 02-auth-users-admin.md#T-02.01.04 forced password change: requirement flag, password-history/strength, token replay/expiry and credential/session invalidation, using existing tests before adding missing behavior checks.",
+        "Lost-contact policy question remains pending. Live provider delivery and production operation remain external prerequisites."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "193ac82b444e60c982a2e2d64e4355789e2a6bb9338e101e84409412f489cde1"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "b4e190151f5ff48b3f5de445a1181b213428c147d84480e5cf67112cc8cfa214"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "ed342dd8c1aa3b42b5df5e7b3413dd631380e5f3b7ae752ea01e16b696eacba3"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        },
+        {
+          "path": "apps/api/src/auth/dto/login.dto.ts",
+          "sha256": "e55ee47070d30d4ea5db0f17939501119379b66a7f44481710d19c849ba4ce88"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "64672f9f68261b6d1ea56168b49c6396b75606d32fba8284cc03443ad4ebc55d"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.spec.ts",
+          "sha256": "e60f3d278748d491e730eac7d3b22bfb8d2e3d88a959e74a8a0459c3c302a6e3"
+        },
+        {
+          "path": "apps/api/src/auth/device-trust-ip.ts",
+          "sha256": "17f24d8563a3b1ed5a7a0f167bfb3ac46a9f12d820d0100e22a2b7200c58f4e9"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "e8d924df792921baa59203b3791e2f10547398f15a156c7748d996cc21c46497"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "707fc71492eba3d6f51e2b06f52dd569011671419f626e03ed25d5ee44f3e1e2"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-otp-trust-atomic-api.log.gz",
+        "audit/evidence/r01/barghsa-otp-trust-atomic-attempts-final.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-otp-trust-atomic-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-otp-trust-atomic-races-final.log.gz",
+        "audit/evidence/r01/barghsa-otp-trust-atomic-tests-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-otp-trust-atomic-verification.log.gz"
+      ]
     }
   ]
 }

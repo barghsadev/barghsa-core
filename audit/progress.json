@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+  "source_revision": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
   "active_step": "R01",
-  "next_action": "R01: review 02-auth-users-admin.md#T-02.01.03 OTP, including durable trust-creation audit and challenge validity after lock waits, then .04 forced password change. Login flow .02 is locally verified through 53a8bec using reviewed backend evidence and 36 production-browser cases. Reuse valid evidence; lost-contact policy question remains pending.",
+  "next_action": "R01: review 02-auth-users-admin.md#T-02.01.04 forced password change. Check flag enforcement, password-history/strength, token replay/expiry and credential/session invalidation, reusing existing evidence before adding missing behavior checks. Login .02 and OTP .03 are verified locally through bbb5c66. Latest OTP step passes 93 distinct API/unit cases across focused runs; browser sources remain covered by the 36 cases at 53a8bec. Lost-contact policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Login UI .01 and login flow .02 are verified locally. Review .03 OTP / .04 forced password change, remaining rotation/revocation callers, CSRF alternatives and approximate session location."
+        "Login UI .01, login flow .02 and OTP .03 are verified locally. Review .04 forced password change, remaining rotation/revocation callers, CSRF alternatives and approximate session location."
       ]
     },
     {
@@ -460,6 +460,10 @@
     {
       "id": "R01-login-destination",
       "review_record": "audit/evidence/step-reviews.json#R01-login-destination"
+    },
+    {
+      "id": "R01-otp-trust-atomic",
+      "review_record": "audit/evidence/step-reviews.json#R01-otp-trust-atomic"
     }
   ],
   "deferred_improvements": [
@@ -478,9 +482,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 47,
+    "acceptance_verified": 48,
     "partial": 18,
-    "pending": 257,
+    "pending": 256,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
