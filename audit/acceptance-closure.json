@@ -1779,7 +1779,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1057,
       "requirement": "- **T-06.02.05:** Localize number/currency formatting\n  - **Notes:** IRR amounts displayed as `XX,XXX,XXX,XXX ریال` or `IRR XX,XXX`. Admin-configurable: use Persian numerals (۱۲۳٬۴۵۶٬۷۸۹) or Western digits (123,456,789). Use `Intl.NumberFormat` with `currency: 'IRR'` and locale `fa` or `en`. For Persian: set `useGrouping: true`. Percentages and decimals follow locale conventions.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M\n  - **UI/UX:** All monetary values show the currency symbol/tail (ریال or IRR). Date picker switches between Jalali and Gregorian based on locale. Direction flips seamlessly without visual glitches.",
@@ -1863,7 +1863,7 @@
         },
         {
           "path": "apps/web/e2e/number-preferences.spec.ts",
-          "sha256": "ade04d6956cb936875ac982c1a41008c4e86c57e329d0bb3f57752fa5fca9d83"
+          "sha256": "9fff0d2e4b3d89a1066f29692b8ca0952840439fa6c5ee19b802f3e977163f63"
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -1894,22 +1894,13 @@
       "merged_prs": [],
       "historically_skipped": true,
       "evidence_refresh": {
-        "date": "2026-09-08",
-        "prior_reviewed_sha": "28a50ef109a6801ae3a6a94b368d1c2a847e184c",
-        "changed_paths_reviewed": [
-          "apps/web/src/hooks/useNumberFormatting.ts",
-          "apps/web/src/pages/WalletPage.tsx",
-          "apps/web/src/pages/InvoicesPage.tsx",
-          "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-          "apps/web/src/components/WalletBalanceCard.tsx",
-          "apps/web/e2e/number-preferences.spec.ts",
-          "apps/web/e2e/admin-settings-live.spec.ts",
-          "apps/web/e2e/notification-numerals.spec.ts",
-          "apps/web/e2e/date-picker-component.spec.ts",
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ],
-        "evidence": "audit/evidence/acceptance-refresh.json"
+        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "previous_reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "paths": [
+          "apps/web/e2e/number-preferences.spec.ts"
+        ]
       },
       "superseded_assessments": [
         {
@@ -3714,7 +3705,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -3730,11 +3721,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
+          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
+          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.test.ts",
@@ -3742,7 +3733,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "d20d95d44d3eb13440e4fcffc1133ccd1727acc2533c5e45910e40b93292417d"
+          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3820,21 +3811,21 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
         "paths": [
-          "apps/api/openapi.json",
-          "packages/i18n/src/crm.ts",
-          "apps/web/src/routeTree.gen.ts"
+          "apps/api/src/crm/crm-v2.service.ts",
+          "apps/api/src/crm/crm-v2.controller.ts",
+          "apps/api/openapi.json"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3858,11 +3849,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
+          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
+          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -3890,7 +3881,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "d20d95d44d3eb13440e4fcffc1133ccd1727acc2533c5e45910e40b93292417d"
+          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3940,12 +3931,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
         "paths": [
-          "packages/i18n/src/crm.ts",
+          "apps/api/src/crm/crm-v2.controller.ts",
+          "apps/api/src/crm/crm-v2.service.ts",
           "apps/api/openapi.json"
         ]
       }
@@ -3953,7 +3945,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 412,
       "requirement": "**T-05.02.03 — Verification state management**\n\n- Description: Staff can change verification state of a profile. Options: Verify, Unverify, Mark for re-verification.\n- Technical notes: POST `/api/crm/profiles/:profileId/verify` with `{ action: 'verify' | 'unverify' | 'reverify', reason? }`. Permissions: `crm:verify` or admin. Audit: verification_change with before/after state, actor, reason. Notifications sent to profile owner.\n- UI/UX: Current status badge (Verified/Unverified/Pending). Dropdown with actions. Reason required for unverify/reverify. Confirmation dialog.\n- Dependencies: T-05.02.01, E-07 (admin verification settings)\n- Complexity: M",
@@ -3977,11 +3969,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
+          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
+          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -4015,19 +4007,20 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
         "paths": [
-          "packages/i18n/src/crm.ts"
+          "apps/api/src/crm/crm-v2.controller.ts",
+          "apps/api/src/crm/crm-v2.service.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 420,
       "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
@@ -4051,11 +4044,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
+          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
+          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -4098,12 +4091,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
         "paths": [
-          "packages/i18n/src/crm.ts"
+          "apps/api/src/crm/crm-v2.controller.ts",
+          "apps/api/src/crm/crm-v2.service.ts"
         ]
       }
     },
@@ -4200,7 +4194,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -4208,11 +4202,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
+          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
+          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
         },
         {
           "path": "apps/api/src/crm/profile-archive-finance.integration.test.ts",
@@ -4364,19 +4358,20 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
         "paths": [
-          "packages/i18n/src/crm.ts"
+          "apps/api/src/crm/crm-v2.service.ts",
+          "apps/api/src/crm/crm-v2.controller.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "4b8ccf8621fc1bf99ba0fef915d274a1b92bbd5d",
+      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 378,
       "requirement": "**T-05.01.01 — CRM users list page**\n\n- Description: `/app/crm` — list of all registered users. Columns: Username, profiles (legal/individual indicators), registration date, last login, verification status, profile count. Staff and admin only.\n- Technical notes: Backend: GET `/api/crm/users` with pagination, search, sort, filter. Server-side filtering/sorting. Cursor pagination recommended for large datasets. Permission: staff roles `crm:read` or `admin`. Profile type columns: \"Legal\" icon and \"Individual\" icon shown per user if they have that profile type. Search by username (email/mobile).\n- UI/UX: Table with sortable columns. Filter bar: profile type (all/individual/legal), verification status (verified/unverified/pending), registration date range. Search input. Pagination controls. \"Collapse all\" on row expansion.\n- Dependencies: T-03.01.01, authorization framework\n- Complexity: L",
@@ -4404,7 +4399,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "d20d95d44d3eb13440e4fcffc1133ccd1727acc2533c5e45910e40b93292417d"
+          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4447,14 +4442,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "4b8ccf8621fc1bf99ba0fef915d274a1b92bbd5d",
-        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "review": "CRM list search/filter changes only. All 47 API and 20 built-app list cases pass. DatePicker/calendar bindings and other task behavior are unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-search-filters",
+        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "previous_reviewed_sha": "4b8ccf8621fc1bf99ba0fef915d274a1b92bbd5d",
+        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
         "paths": [
-          "apps/api/src/crm/crm.service.ts",
-          "apps/web/src/pages/CrmProfileList.tsx",
-          "apps/web/e2e/crm-list.spec.ts"
+          "apps/api/openapi.json"
         ]
       }
     },
@@ -4516,6 +4509,65 @@
       ],
       "merged_prs": [
         122
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.05.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 513,
+      "requirement": "**T-05.05.01 — Profiles awaiting verification widget**\n\n- Description: On staff dashboard, widget showing profiles pending verification (if verification is not disabled). Shows count and \"Show all\" link to CRM with verification filter.\n- Technical notes: GET `/api/crm/dashboard/pending-verification` returns count and last 5 entries. Permission: staff with `crm:verify`.\n- UI/UX: Card: icon + count + \"Profiles awaiting verification\" + \"Show all\" link. Click opens CRM with `?verification=PENDING` filter.\n- Dependencies: T-05.01.02, E-07 (verification settings)\n- Complexity: S",
+      "requirement_sha256": "084bdf1a89485083f6aa1c86fe170c0300f939dbd1aed2d2f29f25dfe5ad6f4e",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
+        },
+        {
+          "path": "apps/api/src/crm/crm-dashboard.integration.test.ts",
+          "sha256": "b59decb2ffa2b08e46ac26348f66ead6a6b3f791fd854e215b525c910af656c6"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "44dee1d738e5393fb8d57fbc35a8268dbe39fcaf3a557b6daae71b71349db826"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "edd7b92bda435d826540c6c11b0967ace180033908bd4971b12bbe1f8264a927"
+        },
+        {
+          "path": "apps/web/e2e/number-preferences.spec.ts",
+          "sha256": "9fff0d2e4b3d89a1066f29692b8ca0952840439fa6c5ee19b802f3e977163f63"
+        }
+      ],
+      "checks": [
+        "Compared every T-05.05.01 criterion: authenticated crm:verify permission, disabled verification setting, count/latest five and localized icon/count/Show all card. The Show all link preserves verification=PENDING; the destination retains its independent crm:read requirement.",
+        "Removed the unresolved settings TODO. The widget follows canonical profile_verification_mode and legacy verification.required fallback. Explicit DISABLED returns enabled=false/count=0/no identities; invalid explicit modes cannot disable enforcement. API mode visibility does not enable a provider or simulate approval.",
+        "One window-count query now returns count and latest-five rows from the same snapshot, excluding archived and nonpending profiles. Descending profile IDs break timestamp ties. Created dates are explicit UTC strings retaining microseconds.",
+        "Permission checks remain on the HTTP endpoint. Real PostgreSQL cases cover no session, customer/read-only refusal, crm:verify grant/revocation, explicit disabled override, manual/API modes, legacy fallback, invalid-mode fallback, legal names, deterministic five-row limit and enabled-empty results.",
+        "Browser hides the widget and discards data on 401/403 or disabled responses. Malformed counts/envelopes show localized errors without a stale count or Show all link. Existing 30-second polling recovers; overlapping pending-widget requests are suppressed.",
+        "The card and page description use theme colors. Persian/English light/dark desktop/mobile scans and inspected Persian dark mobile/English light desktop screenshots pass. Number-style preferences remain intact. The backend returns latest-five entries; the specified card UI requires count and navigation, not a new entries table.",
+        "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods.",
+        "pnpm --filter @barghsa/api exec vitest run src/crm/crm-dashboard.integration.test.ts src/crm/crm-v2.service.test.ts src/crm/crm-v2.service.spec.ts --reporter=dot: 31/31 pass across three files, exit 0.",
+        "Explicit production preview: final e2e/crm-dashboard.spec.ts run passes 8/8 fa/en light/dark desktop/mobile cases. Four e2e/number-preferences.spec.ts cases passed in the earlier combined run. 12 distinct passing browser cases across focused runs; not one final 12-case invocation.",
+        "Initial combined browser run had four passes/eight failures because the test clock was installed after the polling interval. Installing it before navigation corrected the fixture. Product code stayed unchanged; the final eight cases pass permission/settings changes, malformed-response recovery, held-request polling and keyboard Show all.",
+        "API/web typechecks, focused lint, final formatting, production web build, all 41 complete-route budgets and OpenAPI generation/drift pass. Served-index equality and manifest hashes bind browser evidence to the build. No global coverage or production image checkpoint is renewed."
+      ],
+      "limitations": [
+        "Visibility and local reads are verified. Provider approval, deployed settings and final global regression remain separate evidence."
+      ],
+      "merged_prs": [
+        136
       ],
       "historically_skipped": false
     }
@@ -4655,7 +4707,6 @@
     "02-auth-users-admin.md#T-05.04.03",
     "02-auth-users-admin.md#T-05.04.04",
     "02-auth-users-admin.md#T-05.04.05",
-    "02-auth-users-admin.md#T-05.05.01",
     "02-auth-users-admin.md#T-05.05.02",
     "02-auth-users-admin.md#T-06.01.01",
     "02-auth-users-admin.md#T-06.01.02",

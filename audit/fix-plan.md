@@ -1,24 +1,24 @@
 # Remaining repairs, reviews and skipped work
 
-Refreshed 2026-09-08 through product commit `4b8ccf8`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
+Refreshed 2026-09-08 through product commit `d87042c`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
 
 ## Current numbers
 
 | Population | Verified | Partial | Pending review | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 41 | 18 | 204 | 263 |
+| Tasks with merged PR evidence | 42 | 18 | 203 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| Combined | 44 | 18 | 260 | 322 |
+| Combined | 45 | 18 | 259 | 322 |
 
-There are **278 unresolved task reviews**, including the 18 partial reviews. Unresolved review does not establish that a task is unbuilt. The records do not support a reliable percentage of implementation effort remaining.
+There are **277 unresolved task reviews**, including the 18 partial reviews. Unresolved review does not establish that a task is unbuilt. The records do not support a reliable percentage of implementation effort remaining.
 
 The saved inventory contains **301 merged PRs**, last recorded as checked against GitHub on September 8. A new query during this refresh failed because `gh` is unavailable; no newer inventory is claimed. The **58 historical skips** overlap the task population: 3 verified and 55 pending review. Another **1,033 queue gaps** are separate historical backlog evidence: 737 earlier gaps and 296 later tasks. None is automatically a missing implementation.
 
 ## Next bounded step
 
-CRM list T-05.01.01 and filters/search T-05.01.02 are verified at 4b8ccf8. Full names, legal full-text search, staff filtering and removable search tags are checked with 47 passing API cases and 20 passing built-app browser cases. Profile detail/edit/actions T-05.02.01/.02/.03/.04/.05 remain verified. See [step evidence](evidence/step-reviews.json).
+Next review `02-auth-users-admin.md#T-02.01.01` login page UI, then login authentication, OTP and forced password change. Reuse prior auth/session evidence and inspect exact remaining criteria. Lost-contact approver/evidence policy remains pending.
 
-Next review `02-auth-users-admin.md#T-05.05.01` pending-verification widget: current permissions, disabled setting, count/latest five and Show all link. T-05.02.06 local archival passes; future contracts and approved retention policy remain prerequisites. Reuse existing evidence. No global checkpoint is renewed.
+All nine F15 CRM records are reviewed: eight verified locally; T-05.02.06 remains partial for future contracts and approved retention policy. Latest widget step d87042c passed 31 API cases and 12 distinct built-app browser cases across focused runs. Earlier list/search step passed 47 API and 20 built-app browser cases. See [step evidence](evidence/step-reviews.json). No global checkpoint is renewed.
 
 ## Ordered work
 
@@ -41,7 +41,7 @@ A01 cleanup and A02 reconciliation are complete. R01 is active; eight later phas
 ## R01 checklist
 
 - Sessions/access: required approximate session location is missing. Complete rotation/revocation, trusted-device, CSRF alternatives and sensitive-action caller matrices. Review staff roles, activation, OTP/reset/contact changes, manual verification, profile selection, membership, ownership and address boundaries.
-- CRM: T-05.01.01 list is verified; T-05.01.02 filters/search is verified; finish T-05.05.01 pending widget; T-05.02.01 full profile view is verified. T-05.02.06 local archive guards, checklist, acknowledgements, blocker details, ownership and retained records pass. Contract integration and approved retention policy remain explicit prerequisites. T-05.02.02/.03/.04/.05 are verified locally.
+- CRM: eight of nine F15 task records are verified locally, including list, search/filter and pending widget. T-05.02.06 local archival passes; future contract integration and approved retention policy remain explicit prerequisites.
 - Tickets/finance: customer/staff privacy, attachments, assignment and transitions; receipt thresholds/independent approval, callbacks/replays, invoice arithmetic/snapshots and ledger integrity. Preserve useful corrective PRs. Future refund, ordering and contract consumers remain separate where the original task requires them separately.
 - Recovery: confirmed contacts and intake/escalation runbook are implemented. Owner policy for lost-contact approvers/identity checks remains pending. A reviewed credential-change method and full case audit remain needed. Continue independent work while awaiting that answer.
 
@@ -53,12 +53,12 @@ The last full checkpoint at `9529872` recorded API-critical coverage 92.34% line
 
 | Disposition | Count |
 | --- | ---: |
-| PRs with unresolved mapped tasks | 255 |
-| PRs mapping only to verified tasks | 42 |
+| PRs with unresolved mapped tasks | 254 |
+| PRs mapping only to verified tasks | 43 |
 | PRs with no current task mapping | 4 |
 | Historical deferral statements | 170 across 101 PRs |
 
-Review current combined implementation once per qualified task and associate all contributing PRs. Verified mappings do not automatically resolve separate PR deferrals. The 222 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 84, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review current combined implementation once per qualified task and associate all contributing PRs. Verified mappings do not automatically resolve separate PR deferrals. The 221 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 83, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
 Handle #47 in R05 and #234/#235/#242 in V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before calling that queue gap unbuilt. Repeated PRs alone do not justify code deletion. Preserve obsolete `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users-admin.md#T-05.06.01` as provenance outside the 322 current claims.
 
@@ -74,7 +74,7 @@ Each deferral needs a disposition: satisfied by later implementation, confirmed 
 | Development, configuration and documentation | 21 | T-07.* |
 | Deployment, operations and CI | 20 | T-05.* |
 
-These are review batches. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 278 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
+These are review batches. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 277 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
 
 ## External prerequisites and decisions
 

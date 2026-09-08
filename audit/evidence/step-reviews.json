@@ -1702,6 +1702,89 @@
         "audit/evidence/r01/barghsa-crm-search-target.log.gz",
         "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
       ]
+    },
+    {
+      "id": "R01-crm-pending-widget",
+      "date": "2026-09-08",
+      "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "summary": "Verified the pending-verification widget; settings and permissions now control visibility and count/latest-five data stays consistent.",
+      "review": [
+        "Compared every T-05.05.01 criterion: authenticated crm:verify permission, disabled verification setting, count/latest five and localized icon/count/Show all card. The Show all link preserves verification=PENDING; the destination retains its independent crm:read requirement.",
+        "Removed the unresolved settings TODO. The widget follows canonical profile_verification_mode and legacy verification.required fallback. Explicit DISABLED returns enabled=false/count=0/no identities; invalid explicit modes cannot disable enforcement. API mode visibility does not enable a provider or simulate approval.",
+        "One window-count query now returns count and latest-five rows from the same snapshot, excluding archived and nonpending profiles. Descending profile IDs break timestamp ties. Created dates are explicit UTC strings retaining microseconds.",
+        "Permission checks remain on the HTTP endpoint. Real PostgreSQL cases cover no session, customer/read-only refusal, crm:verify grant/revocation, explicit disabled override, manual/API modes, legacy fallback, invalid-mode fallback, legal names, deterministic five-row limit and enabled-empty results.",
+        "Browser hides the widget and discards data on 401/403 or disabled responses. Malformed counts/envelopes show localized errors without a stale count or Show all link. Existing 30-second polling recovers; overlapping pending-widget requests are suppressed.",
+        "The card and page description use theme colors. Persian/English light/dark desktop/mobile scans and inspected Persian dark mobile/English light desktop screenshots pass. Number-style preferences remain intact. The backend returns latest-five entries; the specified card UI requires count and navigation, not a new entries table.",
+        "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods."
+      ],
+      "checks": [
+        "pnpm --filter @barghsa/api exec vitest run src/crm/crm-dashboard.integration.test.ts src/crm/crm-v2.service.test.ts src/crm/crm-v2.service.spec.ts --reporter=dot: 31/31 pass across three files, exit 0.",
+        "Explicit production preview: final e2e/crm-dashboard.spec.ts run passes 8/8 fa/en light/dark desktop/mobile cases. Four e2e/number-preferences.spec.ts cases passed in the earlier combined run. 12 distinct passing browser cases across focused runs; not one final 12-case invocation.",
+        "Initial combined browser run had four passes/eight failures because the test clock was installed after the polling interval. Installing it before navigation corrected the fixture. Product code stayed unchanged; the final eight cases pass permission/settings changes, malformed-response recovery, held-request polling and keyboard Show all.",
+        "API/web typechecks, focused lint, final formatting, production web build, all 41 complete-route budgets and OpenAPI generation/drift pass. Served-index equality and manifest hashes bind browser evidence to the build. No global coverage or production image checkpoint is renewed."
+      ],
+      "remaining": [
+        "F15 has eight locally verified task records and one partial archival record. Production contract integration and approved retention policy remain; no provider-backed verification is claimed.",
+        "Next R01 task: 02-auth-users-admin.md#T-02.01.01 login page UI, followed by login/OTP/password-enforcement flows and remaining session caller criteria. Reuse prior auth/session evidence."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
+        },
+        {
+          "path": "apps/api/src/crm/crm-dashboard.integration.test.ts",
+          "sha256": "b59decb2ffa2b08e46ac26348f66ead6a6b3f791fd854e215b525c910af656c6"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "44dee1d738e5393fb8d57fbc35a8268dbe39fcaf3a557b6daae71b71349db826"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "edd7b92bda435d826540c6c11b0967ace180033908bd4971b12bbe1f8264a927"
+        },
+        {
+          "path": "apps/web/e2e/number-preferences.spec.ts",
+          "sha256": "9fff0d2e4b3d89a1066f29692b8ca0952840439fa6c5ee19b802f3e977163f63"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-api.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-browser-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-browser-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-browser.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-budgets.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-build.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-openapi-generate.log.gz",
+        "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-widget-target.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ],
+      "visual_evidence": [
+        {
+          "path": "audit/evidence/r01/barghsa-crm-widget-fa-true-mobile-chrome.png",
+          "sha256": "bf2ca84f7af07884d6e9de8525e182e0de237f07c02ec26fdd10bcd68f448e4d"
+        },
+        {
+          "path": "audit/evidence/r01/barghsa-crm-widget-en-false-chromium.png",
+          "sha256": "4ed19e6ce816927fc2ee454282b1342e5989e3befb674f4d08d4aeeb5de05f5c"
+        }
+      ]
     }
   ]
 }
