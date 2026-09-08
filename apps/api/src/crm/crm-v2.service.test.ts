@@ -98,19 +98,19 @@ function fakeSiblingRow(overrides: Record<string, unknown> = {}) {
 
 function fakeLegalRow(overrides: Record<string, unknown> = {}) {
   return {
-    legal_name: 'Acme Corp',
-    national_identifier: '12345678901',
-    registration_number: 'REG-001',
-    company_type_id: 'limited-liability',
-    economic_code: null,
-    official_phone: null,
-    official_email: 'legal@acme.com',
-    official_province_id: 'tehran',
-    official_city_id: 'tehran-1',
-    official_full_address: '456 Corp St',
-    official_postal_code: '9876543210',
-    representative_title: 'CEO',
-    representative_relationship: 'Director',
+    legalName: 'Acme Corp',
+    nationalIdentifier: '12345678901',
+    registrationNumber: 'REG-001',
+    companyTypeId: 'limited-liability',
+    economicCode: null,
+    officialPhone: null,
+    officialEmail: 'legal@acme.com',
+    officialProvinceId: 'tehran',
+    officialCityId: 'tehran-1',
+    officialFullAddress: '456 Corp St',
+    officialPostalCode: '9876543210',
+    representativeTitle: 'CEO',
+    representativeRelationship: 'Director',
     ...overrides,
   };
 }

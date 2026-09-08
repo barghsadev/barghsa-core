@@ -1,3 +1,4 @@
+import { editCrmLegalInfo, readCrmLegalInfo } from './crm-profile-legal.js';
 import { editCrmAddress } from './crm-profile-address.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { createHash } from 'node:crypto';
@@ -52,6 +53,7 @@ export type CrmUpdateProfileResult =
       };
       user: { username: string; email: string | null; mobile: string | null };
       address?: CrmProfileAddress;
+      legalInfo?: CrmLegalInfo;
     }
   | { error: string }
   | null;
@@ -359,67 +361,8 @@ export class CrmV2Service {
     );
 
     // 6. Fetch legal info if this is a LEGAL profile
-    let legalInfo: CrmLegalInfo | null = null;
-    if (profileRow.profile_type === 'LEGAL') {
-      const legalResult = await pool.query(
-        `SELECT l.legal_name, l.national_identifier, l.registration_number, l.company_type_id,
-                l.registration_date, l.economic_code, l.official_phone, l.official_email,
-                l.official_province_id, l.official_city_id,
-                l.official_full_address, l.official_postal_code,
-                l.representative_title, l.representative_relationship,
-                l.representative_honorific, l.representative_first_name, l.representative_last_name,
-                l.representative_national_id, l.representative_province_id, l.representative_city_id,
-                l.representative_full_address, l.representative_postal_code, l.created_at, l.updated_at,
-                json_build_object('nameFa', ct.name_fa, 'nameEn', ct.name_en) AS company_type_name,
-                json_build_object('nameFa', op.name_fa, 'nameEn', op.name_en) AS official_province_name,
-                json_build_object('nameFa', oc.name_fa, 'nameEn', oc.name_en) AS official_city_name,
-                json_build_object('nameFa', rp.name_fa, 'nameEn', rp.name_en) AS representative_province_name,
-                json_build_object('nameFa', rc.name_fa, 'nameEn', rc.name_en) AS representative_city_name
-         FROM legal_profiles l
-         LEFT JOIN company_types ct ON ct.id=l.company_type_id
-         LEFT JOIN provinces op ON op.id::text=LOWER(l.official_province_id)
-         LEFT JOIN cities oc ON oc.id::text=LOWER(l.official_city_id) AND oc.province_id=op.id
-         LEFT JOIN provinces rp ON rp.id=l.representative_province_id
-         LEFT JOIN cities rc ON rc.id=l.representative_city_id AND rc.province_id=rp.id
-         WHERE l.id = $1`,
-        [profileId]
-      );
-
-      if (legalResult.rows.length > 0) {
-        const lr = legalResult.rows[0] as Record<string, unknown>;
-        legalInfo = {
-          legalName: lr.legal_name as string,
-          nationalIdentifier: lr.national_identifier as string,
-          registrationNumber: lr.registration_number as string,
-          companyTypeId: (lr.company_type_id as string) ?? null,
-          companyTypeName: localizedName(lr.company_type_name),
-          registrationDate: (lr.registration_date as string) ?? null,
-          economicCode: (lr.economic_code as string) ?? null,
-          officialPhone: (lr.official_phone as string) ?? null,
-          officialEmail: (lr.official_email as string) ?? null,
-          officialProvinceId: (lr.official_province_id as string) ?? null,
-          officialCityId: (lr.official_city_id as string) ?? null,
-          officialFullAddress: (lr.official_full_address as string) ?? null,
-          officialPostalCode: (lr.official_postal_code as string) ?? null,
-          officialProvinceName: localizedName(lr.official_province_name),
-          officialCityName: localizedName(lr.official_city_name),
-          representativeHonorific: (lr.representative_honorific as string) ?? null,
-          representativeFirstName: (lr.representative_first_name as string) ?? null,
-          representativeLastName: (lr.representative_last_name as string) ?? null,
-          representativeNationalId: (lr.representative_national_id as string) ?? null,
-          representativeProvinceId: (lr.representative_province_id as string) ?? null,
-          representativeCityId: (lr.representative_city_id as string) ?? null,
-          representativeProvinceName: localizedName(lr.representative_province_name),
-          representativeCityName: localizedName(lr.representative_city_name),
-          representativeFullAddress: (lr.representative_full_address as string) ?? null,
-          representativePostalCode: (lr.representative_postal_code as string) ?? null,
-          createdAt: (lr.created_at as string) ?? '',
-          updatedAt: (lr.updated_at as string) ?? '',
-          representativeTitle: lr.representative_title as string,
-          representativeRelationship: lr.representative_relationship as string,
-        };
-      }
-    }
+    const legalInfo =
+      profileRow.profile_type === 'LEGAL' ? await readCrmLegalInfo(pool, profileId) : null;
 
     // Determine last active session
     const lastActive = sessionsList.length > 0 ? sessionsList[0]!.lastActive : null;
@@ -524,7 +467,7 @@ export class CrmV2Service {
     try {
       await client.query('BEGIN');
       const found = await client.query(
-        `SELECT id,user_id,title,contact_email,contact_mobile,archived,updated_at
+        `SELECT id,user_id,profile_type,title,contact_email,contact_mobile,archived,updated_at
         FROM profiles WHERE id=$1 FOR UPDATE`,
         [profileId]
       );
@@ -566,6 +509,13 @@ export class CrmV2Service {
           after[field] = value;
         }
       }
+      if (dto.legal && profile.profile_type !== 'LEGAL')
+        throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+      const legalChange = dto.legal ? await editCrmLegalInfo(client, profileId, dto.legal) : null;
+      if (legalChange?.changed) {
+        before.legal = legalChange.before;
+        after.legal = legalChange.after;
+      }
       const addressChange = dto.address
         ? await editCrmAddress(client, profileId, dto.address)
         : null;
@@ -573,7 +523,7 @@ export class CrmV2Service {
         before.address = addressChange.before;
         after.address = addressChange.after;
       }
-      if (Object.keys(changes).length || addressChange?.changed) {
+      if (Object.keys(changes).length || addressChange?.changed || legalChange?.changed) {
         const entries = Object.entries(changes);
         const updated = await client.query(
           `UPDATE profiles SET ${[...entries.map(([key], index) => `${key}=$${index + 1}`), 'updated_at=NOW()'].join(',')}
@@ -588,7 +538,7 @@ export class CrmV2Service {
             actorUserId,
             JSON.stringify({
               profileId,
-              scope: dto.address ? 'profile_details' : 'profile_contact',
+              scope: dto.address || dto.legal ? 'profile_details' : 'profile_contact',
               before,
               after,
             }),
@@ -602,6 +552,7 @@ export class CrmV2Service {
       return {
         updated: true,
         ...(addressChange ? { address: addressChange.address } : {}),
+        ...(legalChange ? { legalInfo: legalChange.legalInfo } : {}),
         profile: {
           id: profileId,
           title: profile.title ?? null,

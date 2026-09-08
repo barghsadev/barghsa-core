@@ -1,3 +1,5 @@
+import { crmLegalEditSchema, type CrmLegalEdit } from './crm-profile-legal.js';
+import type { SchemaObject } from '@nestjs/swagger';
 import { crmAddressEditSchema, type CrmAddressEdit } from './crm-profile-address.js';
 import { z } from 'zod';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
@@ -27,10 +29,11 @@ import { ErrorCodes } from '@barghsa/shared/errors';
  * DTO for updating a CRM profile's editable fields.
  * Identity fields (firstName, lastName, nationalId) are blocked for
  * direct editing — they require a verification case (T-05.02.05).
- * For LEGAL profiles, legal-entity fields are also blocked for direct edit.
+ * Legal name and national identifier also require a verification case.
  */
 export interface UpdateProfileDto {
   address?: CrmAddressEdit;
+  legal?: CrmLegalEdit;
   title?: string | null;
   /** Profile contact details; never verified account sign-in destinations. */
   email?: string | null;
@@ -233,7 +236,7 @@ export class CrmV2Controller {
    * PUT /api/crm/profiles/:profileId
    *
    * Updates editable fields on a CRM profile. Identity fields (firstName,
-   * lastName, nationalId) and legal-entity fields are blocked for direct
+   * lastName, nationalId), legal name and national identifier are blocked for direct
    * editing — they require a verification case (T-05.02.05).
    *
    * The crm:edit capability is resolved from current database roles.
@@ -255,6 +258,10 @@ export class CrmV2Controller {
     schema: {
       type: 'object',
       properties: {
+        legal: z.toJSONSchema(crmLegalEditSchema, {
+          target: 'openapi-3.0',
+          io: 'input',
+        }) as SchemaObject,
         address: {
           type: 'object',
           required: [
@@ -329,6 +336,7 @@ export class CrmV2Controller {
     const parsed = z
       .object({
         address: crmAddressEditSchema.optional(),
+        legal: crmLegalEditSchema.optional(),
         title: z.string().max(256).nullable().optional(),
         email: z.string().max(254).nullable().optional(),
         mobile: z.string().max(32).nullable().optional(),
@@ -340,8 +348,7 @@ export class CrmV2Controller {
         {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message:
-            'Only profile contacts, title and a valid existing address can be edited directly',
+          message: 'Only validated nonidentity profile and legal fields can be edited directly',
         },
         400
       );
@@ -351,6 +358,7 @@ export class CrmV2Controller {
       profileId,
       {
         ...(parsed.data.address ? { address: parsed.data.address } : {}),
+        ...(parsed.data.legal ? { legal: parsed.data.legal } : {}),
         ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
         ...(parsed.data.email !== undefined ? { email: parsed.data.email } : {}),
         ...(parsed.data.mobile !== undefined ? { mobile: parsed.data.mobile } : {}),

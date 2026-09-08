@@ -2,6 +2,14 @@ import { lookup } from './lookup.js';
 import { t as sharedText, type I18nDictionary, type Locale } from './index.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'crm.legal.edit': 'ویرایش اطلاعات حقوقی',
+  'crm.legal.description':
+    'فقط اطلاعات غیرهویتی تغییر می‌کند. نام و شناسه ملی شخص حقوقی نیاز به درخواست اصلاح دارد.',
+  'crm.legal.confirm': 'تأیید تغییرات اطلاعات حقوقی',
+  'crm.legal.invalid': 'مقدار معتبر برای «{field}» وارد کنید.',
+  'crm.legal.optionsError': 'گزینه‌ها بارگذاری نشد. برای تغییر این فیلد دوباره تلاش کنید.',
+  'crm.legal.conflict':
+    'اطلاعات حقوقی تغییر کرده است. لغو کنید و پروفایل را دوباره بارگذاری کنید؛ سپس تغییرات خود را بررسی کنید.',
   'crm.address.edit': 'ویرایش آدرس',
   'crm.address.saved': 'آدرس ذخیره شد.',
   'crm.address.confirm': 'تأیید تغییر آدرس',
@@ -283,6 +291,14 @@ export const fa: I18nDictionary = {
   'crm.list.PENDING_VERIFICATION': 'در انتظار تأیید',
 };
 export const en: I18nDictionary = {
+  'crm.legal.edit': 'Edit legal details',
+  'crm.legal.description':
+    'Only nonidentity information changes here. Legal name and national identifier require a correction case.',
+  'crm.legal.confirm': 'Confirm legal details',
+  'crm.legal.invalid': 'Enter a valid value for {field}.',
+  'crm.legal.optionsError': 'Options could not be loaded. Retry to change this field.',
+  'crm.legal.conflict':
+    'Legal details have changed. Cancel and reload the profile, then review your edits.',
   'crm.address.edit': 'Edit address',
   'crm.address.saved': 'Address saved.',
   'crm.address.confirm': 'Confirm address changes',

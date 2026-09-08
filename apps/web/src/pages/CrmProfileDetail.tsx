@@ -1,3 +1,4 @@
+import { CrmLegalEditor } from '../components/CrmLegalEditor.js';
 import { CrmAddressEditor } from '../components/CrmAddressEditor.js';
 import { CrmLegalDocuments } from '../components/CrmLegalDocuments.js';
 import { formatDate } from '@barghsa/i18n/date-time';
@@ -15,7 +16,7 @@ import {
   Button,
   Label,
 } from '@barghsa/ui';
-import { useState, useEffect, useId } from 'react';
+import { useState, useEffect, useId, useRef } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/crm';
 import { useLocale } from '../hooks/useLocale.js';
@@ -83,7 +84,7 @@ interface SessionsInfo {
   entries: SessionEntry[];
 }
 
-interface LegalInfo {
+export interface LegalInfo {
   legalName: string;
   nationalIdentifier: string;
   registrationNumber: string;
@@ -210,6 +211,14 @@ function CrmProfileDetailContent() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [editingAddress, setEditingAddress] = useState<string | null>(null);
+  const [editingLegal, setEditingLegal] = useState(false);
+  const [legalSaved, setLegalSaved] = useState(false);
+  const legalEditButton = useRef<HTMLButtonElement>(null);
+  const wasEditingLegal = useRef(false);
+  useEffect(() => {
+    if (wasEditingLegal.current && !editingLegal) legalEditButton.current?.focus();
+    wasEditingLegal.current = editingLegal;
+  }, [editingLegal]);
   const [addressSaved, setAddressSaved] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editFields, setEditFields] = useState<EditableFields>({
@@ -459,7 +468,7 @@ function CrmProfileDetailContent() {
                 {data.viewerPermissions?.canEdit && !profile.archived && (
                   <button
                     onClick={handleStartEdit}
-                    disabled={editingAddress !== null}
+                    disabled={editingAddress !== null || editingLegal}
                     className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                   >
                     {t('crm.profile.edit', locale)}
@@ -759,8 +768,14 @@ function CrmProfileDetailContent() {
       )}
 
       {/* Tab: Profile Details */}
-      {activeTab === 'details' && (
-        <div id="panel-details" role="tabpanel" aria-labelledby="tab-details" className="space-y-6">
+      {(activeTab === 'details' || editingLegal) && (
+        <div
+          id="panel-details"
+          role="tabpanel"
+          aria-labelledby="tab-details"
+          className="space-y-6"
+          hidden={activeTab !== 'details'}
+        >
           <Section title={t('crm.profile.section.userInfo', locale)}>
             <DetailRow label={t('crm.profile.field.userId', locale)} value={user.userId} />
             <DetailRow label={t('crm.profile.field.username', locale)} value={user.username} />
@@ -923,6 +938,43 @@ function CrmProfileDetailContent() {
 
           {legalInfo && (
             <Section title={t('crm.profile.section.legalEntity', locale)}>
+              {legalSaved && <p role="status">{t('crm.profile.edit.saved', locale)}</p>}
+              {data.viewerPermissions?.canEdit &&
+                !profile.archived &&
+                !isEditing &&
+                !editingLegal && (
+                  <Button
+                    ref={legalEditButton}
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingLegal(true);
+                      setLegalSaved(false);
+                    }}
+                    disabled={editingAddress !== null}
+                  >
+                    {t('crm.legal.edit', locale)}
+                  </Button>
+                )}
+              {editingLegal && data.viewerPermissions?.canEdit && !profile.archived && (
+                <CrmLegalEditor
+                  key={profile.id}
+                  profileId={profile.id}
+                  legalInfo={legalInfo}
+                  returnFocus={legalEditButton}
+                  onCancel={() => setEditingLegal(false)}
+                  onSaved={(legalInfo, updatedAt) => {
+                    setData((current) =>
+                      current
+                        ? { ...current, legalInfo, profile: { ...current.profile, updatedAt } }
+                        : current
+                    );
+                    setEditingLegal(false);
+                    setLegalSaved(true);
+                  }}
+                />
+              )}
+
               {[
                 ['legalName', legalInfo.legalName],
                 ['nationalIdentifier', legalInfo.nationalIdentifier],
@@ -951,25 +1003,33 @@ function CrmProfileDetailContent() {
                 ['representativePostalCode', legalInfo.representativePostalCode],
                 ['createdAt', time.format(legalInfo.createdAt)],
                 ['updatedAt', time.format(legalInfo.updatedAt)],
-              ].map(([field, value]) => (
-                <DetailRow
-                  key={field}
-                  label={t('crm.profile.field.' + field, locale)}
-                  value={value ?? '—'}
-                  icon={
-                    ['legalName', 'nationalIdentifier'].includes(field ?? '') ? '🔒' : undefined
-                  }
-                  iconTooltip={t('crm.profile.edit.identityLocked', locale)}
-                  correctionHref={
-                    data.viewerPermissions?.canEditIdentity &&
-                    !profile.archived &&
-                    ['legalName', 'nationalIdentifier'].includes(field ?? '')
-                      ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=${field === 'legalName' ? 'legal_name' : 'national_identifier'}`
-                      : undefined
-                  }
-                  correctionLabel={t('crm.corrections.request', locale)}
-                />
-              ))}
+              ]
+                .filter(
+                  ([field]) =>
+                    !editingLegal ||
+                    ['legalName', 'nationalIdentifier', 'createdAt', 'updatedAt'].includes(
+                      field ?? ''
+                    )
+                )
+                .map(([field, value]) => (
+                  <DetailRow
+                    key={field}
+                    label={t('crm.profile.field.' + field, locale)}
+                    value={value ?? '—'}
+                    icon={
+                      ['legalName', 'nationalIdentifier'].includes(field ?? '') ? '🔒' : undefined
+                    }
+                    iconTooltip={t('crm.profile.edit.identityLocked', locale)}
+                    correctionHref={
+                      data.viewerPermissions?.canEditIdentity &&
+                      !profile.archived &&
+                      ['legalName', 'nationalIdentifier'].includes(field ?? '')
+                        ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=${field === 'legalName' ? 'legal_name' : 'national_identifier'}`
+                        : undefined
+                    }
+                    correctionLabel={t('crm.corrections.request', locale)}
+                  />
+                ))}
             </Section>
           )}
           {legalInfo && (
@@ -1059,7 +1119,7 @@ function CrmProfileDetailContent() {
                         type="button"
                         variant="outline"
                         className="mt-3"
-                        disabled={editingAddress !== null}
+                        disabled={editingAddress !== null || editingLegal}
                         onClick={() => {
                           setEditingAddress(addr.id);
                           setAddressSaved(false);
