@@ -3540,7 +3540,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "724bef3c3df59466d702d2b10073ddd623d35a777218009378069fb3c84df757"
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
@@ -3602,7 +3602,8 @@
         "Reused unchanged API enforcement evidence from234 auth/session checks at e478e08, including real login/proxy/destination HTTP cases. Later23 checks overlap and are not added to that total.",
         "20 production browser checks on desktop/mobile Chromium pass in fa/en, covering429 input preservation, retry timing, resend cooldowns and keyboard navigation to localized support. Rerun after owner-confirmed contact update at this revision also passes20.",
         "2 auth-error unit tests pass;50 dictionary tests, web build/types/lint and41 complete-route budgets pass. Logs saved through audit/evidence/index.json.",
-        "At6640012 only unsupported support response-time copy changed; rate-limit behavior and prior browser evidence unchanged. Dictionary checks/build and41 route budgets pass."
+        "At6640012 only unsupported support response-time copy changed; rate-limit behavior and prior browser evidence unchanged. Dictionary checks/build and41 route budgets pass.",
+        "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain."
       ],
       "limitations": [
         "Local application and supplied edge configuration verified. Actual production proxy deployment, trusted forwarding topology and live provider delivery remain operational prerequisites.",
@@ -4790,7 +4791,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "724bef3c3df59466d702d2b10073ddd623d35a777218009378069fb3c84df757"
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
         },
         {
           "path": "apps/api/src/auth/dto/login.dto.ts",
@@ -4850,7 +4851,8 @@
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
-        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
+        "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain."
       ],
       "limitations": [
         "Local risk policy requires OTP on unknown/changed/expired trust or staff login. It does not claim an external IP reputation service or separately configurable numerical score.",
@@ -4882,7 +4884,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "724bef3c3df59466d702d2b10073ddd623d35a777218009378069fb3c84df757"
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
         },
         {
           "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -4942,7 +4944,8 @@
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
-        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
+        "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain."
       ],
       "limitations": [
         "Local app and mock-provider delivery are verified. Live provider delivery and deployment remain operational prerequisites.",
@@ -4975,7 +4978,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "724bef3c3df59466d702d2b10073ddd623d35a777218009378069fb3c84df757"
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
         },
         {
           "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -5043,7 +5046,8 @@
         "No dependency version, schema, API shape or cookie policy changed. Earlier migration, OpenAPI and unrelated login/OTP evidence is reused. Failed browser logs are retained; no failures remain in this step.",
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain."
       ],
       "limitations": [
         "Local application acceptance uses the implemented five-entry previous-password window. Existing malformed credential/history records require authorized remediation; this step does not rewrite production data.",
@@ -5084,7 +5088,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "724bef3c3df59466d702d2b10073ddd623d35a777218009378069fb3c84df757"
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
         },
         {
           "path": "apps/api/src/auth/dto/reset-password.dto.ts",
@@ -5147,7 +5151,8 @@
         "OTP-first API/database/browser requirements and 151 distinct focused API, 38 browser and three migration cases are detailed in audit/evidence/step-reviews.json#R01-reset-otp-first. Types, lint/format, OpenAPI, snapshot and 41 route budgets passed. Results combine explicit focused runs; no global checkpoint renewed.",
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain."
       ],
       "limitations": [
         "Local acceptance uses controlled HTTP/provider fixtures and migrated PostgreSQL. Real provider delivery and production rollout remain external."

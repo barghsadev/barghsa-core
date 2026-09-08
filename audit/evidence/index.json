@@ -5552,6 +5552,55 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-activation-deadline-after.log",
+      "path": "audit/evidence/r01/barghsa-activation-deadline-after.log.gz",
+      "sha256": "6018195858d28033e93a03d22c49019f662f13f371fcf6c2510fedd30d0c2061",
+      "encoding": "gzip",
+      "stored_sha256": "be18cdcbbeb024d29d9d9fddacd461124704f64004123ba05b522790e7260295"
+    },
+    {
+      "original_path": "/tmp/barghsa-activation-deadline-before.log",
+      "path": "audit/evidence/r01/barghsa-activation-deadline-before.log.gz",
+      "sha256": "24858cfa28733b9f1a1b579464608ab46f1533927a514272e4095f9ee1858850",
+      "encoding": "gzip",
+      "stored_sha256": "e6370efb19ea67310a9c9ba72be2d9990d7f0eb91c964320a3ce0dcec2ba1cf2"
+    },
+    {
+      "original_path": "/tmp/barghsa-activation-deadline-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/barghsa-activation-deadline-format-final.log",
+      "path": "audit/evidence/r01/barghsa-activation-deadline-format-final.log.gz",
+      "sha256": "3046892ce02a82222b2f27474c275b2c6fd2c05dfc76f2a47bbaf4a84096abed",
+      "encoding": "gzip",
+      "stored_sha256": "358f005ba7436b8bfd851260ecfc20453774f7f59f4cf67a39582c8cdf438ee3"
+    },
+    {
+      "original_path": "/tmp/barghsa-activation-deadline-format.log",
+      "path": "audit/evidence/r01/barghsa-activation-deadline-format.log.gz",
+      "sha256": "7c7e4baae1178ba37240107b5d007339c45369b2b4f4b046a8d76824bfc0abc4",
+      "encoding": "gzip",
+      "stored_sha256": "0381a28cc32b6177cee87c4be9b7e22174e26b14df38cfc501f1d734ac6b239d"
+    },
+    {
+      "original_path": "/tmp/barghsa-activation-deadline-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-activation-deadline-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
     }
   ]
 }

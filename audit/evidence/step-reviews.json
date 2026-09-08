@@ -3322,6 +3322,44 @@
         "/tmp/barghsa-trust-deadline-lint.log",
         "/tmp/barghsa-trust-deadline-types.log"
       ]
+    },
+    {
+      "id": "R01-staff-activation-deadlines",
+      "date": "2026-09-08",
+      "source_revision": "a60cce67adebfebe85b9d6a8cbf771c68ec55e76",
+      "summary": "Staff activation checks its original token deadline after account locking and after all credential/audit writes.",
+      "review": [
+        "Two HTTP regressions reproduced activation success after token expiry during an account-row lock wait and during audit insertion. Real PostgreSQL blocking and a rollback-surviving sequence prove both waits occurred.",
+        "The locked token row supplies the immutable original deadline. Database-clock checks reject expiry both before mutation and immediately before commit; password update, activation-token consumption, session/refresh revocation and audit remain one transaction. No replacement session is issued; activation returns to login.",
+        "The seven-case focused suite covers both regressions, concurrent one-time use, only-target credential invalidation, initially expired/disabled/nonstaff targets, and audit-failure rollback. Four existing delivery/staff activation cases also pass. The disabled-account assertion was corrected because the existing auth-version trigger intentionally clears its link before the request.",
+        "Diff review confirms only activateStaff and its new HTTP tests changed. Other auth methods, migrations, dependencies and response shapes are unchanged; earlier relevant evidence remains reusable."
+      ],
+      "checks": [
+        "11/11 selected HTTP cases passed across two files;25 unrelated cases intentionally unselected. API typecheck, focused ESLint, final Prettier and git diff checks passed. Initial failing run is retained."
+      ],
+      "remaining": [
+        "Finish remaining session caller matrix, then CSRF and sensitive-action review. Staff creation task acceptance and lost-contact policy remain separate; no broad checkpoint, coverage or deployment evidence renewed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
+        },
+        {
+          "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
+          "sha256": "cded34e5f70aeebe22a1c4d636abf42d8b09b9f235ef5b011e0a697f29fe52b7"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-activation-deadline-after.log",
+        "/tmp/barghsa-activation-deadline-before.log",
+        "/tmp/barghsa-activation-deadline-format-check.log",
+        "/tmp/barghsa-activation-deadline-format-final.log",
+        "/tmp/barghsa-activation-deadline-format.log",
+        "/tmp/barghsa-activation-deadline-lint.log",
+        "/tmp/barghsa-activation-deadline-types.log"
+      ]
     }
   ]
 }
