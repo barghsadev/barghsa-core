@@ -6,6 +6,12 @@ export interface InboxText {
 }
 export type InboxContent = Record<'fa' | 'en', InboxText>;
 const labels: Record<string, [string, string, string, string]> = {
+  'auth.refresh_token_reused': [
+    'قطع نشست برای حفظ امنیت حساب',
+    'Session ended for account security',
+    'درخواست ورود غیرعادی شناسایی شد و نشست مربوط به آن را بستیم. نشست‌های دیگر خود را بررسی کنید و اگر این فعالیت را نمی‌شناسید، رمز عبور خود را تغییر دهید.',
+    'We detected an unusual sign-in request and ended the affected session. Review your other sessions and change your password if this activity was unexpected.',
+  ],
   'payment.wallet_topup_completed': [
     'شارژ کیف پول انجام شد',
     'Wallet top-up completed',
@@ -89,6 +95,7 @@ export function defaultInboxLink(event: string, data: Record<string, unknown> = 
   if (Object.hasOwn(data, 'link_route'))
     return notificationLink(typeof data.link_route === 'string' ? data.link_route : null);
   if (event.startsWith('payment.wallet_')) return '/wallet';
+  if (event === 'auth.refresh_token_reused') return '/settings/security';
   if (event === 'payment.invoice_reminder') {
     const id = scalar(data.invoiceId);
     return id && /^[a-f0-9-]{36}$/i.test(id) ? `/invoices/${id}` : '/invoices';

@@ -4,6 +4,7 @@ import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { defaultInboxContent, defaultInboxLink } from '@barghsa/shared/notifications';
 import { resolveStaffPermissions } from './staff-permissions.js';
 
 /** Session idle timeout: 30 minutes */
@@ -516,6 +517,24 @@ export class SessionService {
            SET revoked_at = $1, updated_at = $1
            WHERE family_id = $2 AND revoked_at IS NULL`,
           [now, tokenRow.family_id]
+        );
+
+        // Commit a private account notice with the revocation. A family can be
+        // replayed through several consumed tokens; it must produce one alert.
+        const event = 'auth.refresh_token_reused';
+        await client.query(
+          `INSERT INTO in_app_notifications
+           (id,recipient_user_id,type,title_i18n_key,body_i18n_key,localized_content,link_route,delivery_key)
+           VALUES ($1,$2,$3,'notifications.legacy.title','notifications.legacy.body',$4::jsonb,$5,$6)
+           ON CONFLICT (delivery_key) DO NOTHING`,
+          [
+            uuidv7(),
+            tokenRow.user_id,
+            event,
+            JSON.stringify(defaultInboxContent(event)),
+            defaultInboxLink(event),
+            `session-reuse:${tokenRow.family_id}`,
+          ]
         );
 
         await client.query('COMMIT');

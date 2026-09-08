@@ -67,6 +67,11 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
     securityPinned: true,
     category: 'mandatory',
   },
+  'auth.refresh_token_reused': {
+    classification: 'immediate',
+    securityPinned: true,
+    category: 'mandatory',
+  },
   'auth.new_device_login': {
     classification: 'immediate',
     securityPinned: true,

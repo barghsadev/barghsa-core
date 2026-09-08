@@ -5,7 +5,7 @@
   "plan": "audit/fix-plan.md",
   "source_revision": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
   "active_step": "R01",
-  "next_action": "Continue R01 session acceptance: refresh-token reuse currently logs only a server warning; implement the required private user alert, then review rotation callers and remaining session/step-up criteria.",
+  "next_action": "Continue R01 session/step-up acceptance: setStepUpVerifiedTimestamp currently updates even expired/revoked/missing sessions and returns no persisted timestamp or audit event. Fix truthful step-up acknowledgement and audit, then disposition the four session tasks against rotation callers and remaining device/CSRF criteria.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -386,6 +386,38 @@
         }
       ],
       "remaining": "Session task acceptance is not complete: review refresh-reuse user alerts, all rotation callers, and exact device/step-up requirements."
+    },
+    {
+      "id": "R01-session-reuse-alert",
+      "date": "2026-09-08",
+      "base_revision": "a1132c1",
+      "summary": "Added a Persian/English private account alert when refresh-token reuse revokes a family. Persisted with the revocation and deduplicated by family through the existing unique delivery key. Links to session security settings.",
+      "review": "The new production-migrated test failed before the change because no alert existed. It covers concurrent replay, subsequent reuse of the replacement token, unaffected unrelated sessions, no notice on ordinary refresh, private recipient scope and absence of raw credentials. Reviewed SQL transaction and unique-index bindings.",
+      "checks": [
+        "100 session/inbox tests in10 files pass",
+        "12 shared notification tests pass",
+        "API typecheck and focused ESLint pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "ab6118ece8283459d703de76657d737d807aa3cf9211a047eedc31d985ad68d6"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "9dccf0a6a7b9c7603d9fc270f073a4853fac076c0ff040ebd2173da38fccf0bb"
+        },
+        {
+          "path": "packages/shared/src/notifications/inbox-content.ts",
+          "sha256": "dfb3dd3b507e55bc9118a8bb12f7e018058abba14a7e51982e27699428f83ffa"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-registry.ts",
+          "sha256": "1707d374167dbd56c26b71ea4ad49214c557f41bf97f89e17724236790216e29"
+        }
+      ],
+      "remaining": "This is an immediately visible in-app security notice. No claim of external email/SMS delivery. Full session and step-up acceptance remains open."
     }
   ],
   "deferred_improvements": [],

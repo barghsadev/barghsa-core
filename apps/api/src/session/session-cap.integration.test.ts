@@ -27,6 +27,47 @@ async function usable() {
     AND expires_at>NOW() AND idle_deadline>NOW()`)
   ).rows;
 }
+it('records one private security alert when concurrent refresh reuse revokes a token family', async () => {
+  const original = await service.createSession('cap-user', false);
+  const other = await service.createSession('cap-user', false);
+  const next = await service.redeemRefreshToken(original.refreshToken);
+  expect((await db.pool.query('SELECT id FROM in_app_notifications')).rows).toHaveLength(0);
+  const attempts = await Promise.allSettled([
+    service.redeemRefreshToken(original.refreshToken),
+    service.redeemRefreshToken(original.refreshToken),
+  ]);
+  expect(attempts).toEqual([
+    expect.objectContaining({
+      status: 'rejected',
+      reason: expect.objectContaining({ status: 401 }),
+    }),
+    expect.objectContaining({
+      status: 'rejected',
+      reason: expect.objectContaining({ status: 401 }),
+    }),
+  ]);
+  expect(await service.validateSession(original.sessionId)).toBeNull();
+  expect(await service.validateSession(other.sessionId)).not.toBeNull();
+  const notices = (await db.pool.query('SELECT * FROM in_app_notifications')).rows;
+  expect(notices).toHaveLength(1);
+  expect(notices[0]).toMatchObject({
+    recipient_user_id: 'cap-user',
+    profile_id: null,
+    type: 'auth.refresh_token_reused',
+    link_route: '/settings/security',
+    is_read: false,
+  });
+  expect(notices[0].localized_content.en.body).toContain('Review your other sessions');
+  expect(notices[0].localized_content.fa.body).toContain('نشست');
+  const serialized = JSON.stringify(notices[0]);
+  for (const credential of [original.refreshToken, next.refreshToken, original.csrfToken])
+    expect(serialized).not.toContain(credential);
+  await expect(service.redeemRefreshToken(next.refreshToken)).rejects.toMatchObject({
+    status: 401,
+  });
+  expect((await db.pool.query('SELECT id FROM in_app_notifications')).rows).toHaveLength(1);
+});
+
 it('caps concurrent standalone creation from an empty account at fifty usable sessions', async () => {
   const created = await Promise.all(
     Array.from({ length: 65 }, () => service.createSession('cap-user', false))
