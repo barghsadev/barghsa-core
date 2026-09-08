@@ -3475,7 +3475,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+      "reviewed_sha": "e86936264cd1bd699658b5118a148cef9a5d9b16",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 185,
       "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
@@ -3487,7 +3487,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
+          "sha256": "86ce4aa9c7fb8850e7e2b35c36bbc40041788ec0394767f5615d55fc26a4baa9"
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
@@ -3649,12 +3649,12 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "e86936264cd1bd699658b5118a148cef9a5d9b16",
+        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+        "review": "Reviewed reset-password transaction and acknowledged recovery navigation. Other auth methods are unchanged; only immediate-predecessor matching source hashes were refreshed. Reset tests, delivery/OTP tests and focused browser checks pass. Earlier drift and task limitations remain.",
+        "record": "audit/evidence/step-reviews.json#R01-reset-transaction",
         "paths": [
-          "apps/api/src/auth/auth.controller.ts"
+          "apps/api/src/auth/auth.service.ts"
         ]
       }
     },
@@ -4700,7 +4700,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+      "reviewed_sha": "e86936264cd1bd699658b5118a148cef9a5d9b16",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 99,
       "requirement": "**T-02.01.02 — Login authentication flow**\n\n- Description: POST `/api/auth/login` with `{ username, password, deviceInfo }`. Server validates credentials using Argon2id. On success: server checks if OTP enforcement is needed (new device, suspicious IP, risk score). If OTP not needed → set session, redirect to `/app`. If OTP needed → return `{ requiresOtp: true, challengeId }`, show OTP UI.\n- Technical notes: Password hashing with Argon2id (mem=37MiB, t=3, p=1 or benchmarked equivalent). Progressive delay after 5 failed attempts per account-and-IP in 15 min. Broad IP/device limits detect password spraying. No permanent lockout. Device trust: store device fingerprint (user agent, public IP hint, etc.) on successful login from trusted device. Trust is revocable, time-limited (default 30 days), and visible in device management.\n- UI/UX: If OTP required, transition to OTP input inline (same page, no redirect). \"Trust this device\" checkbox shown on OTP step.\n- Dependencies: T-01.01.02, T-01.01.03\n- Complexity: L",
@@ -4728,7 +4728,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
+          "sha256": "86ce4aa9c7fb8850e7e2b35c36bbc40041788ec0394767f5615d55fc26a4baa9"
         },
         {
           "path": "apps/api/src/auth/dto/login.dto.ts",
@@ -4794,20 +4794,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "e86936264cd1bd699658b5118a148cef9a5d9b16",
+        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+        "review": "Reviewed reset-password transaction and acknowledged recovery navigation. Other auth methods are unchanged; only immediate-predecessor matching source hashes were refreshed. Reset tests, delivery/OTP tests and focused browser checks pass. Earlier drift and task limitations remain.",
+        "record": "audit/evidence/step-reviews.json#R01-reset-transaction",
         "paths": [
-          "apps/api/src/auth/auth.controller.ts",
-          "apps/api/src/session/session.service.ts"
+          "apps/api/src/auth/auth.service.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.01.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+      "reviewed_sha": "e86936264cd1bd699658b5118a148cef9a5d9b16",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 107,
       "requirement": "**T-02.01.03 — Login OTP verification**\n\n- Description: Same OTP input pattern as registration. POST `/api/auth/login/verify` with `{ challengeId, otp, trustDevice }`. On success: set session, optionally mark device as trusted. On failure: increment attempts, invalidate challenge after 5 failed attempts.\n- Technical notes: Same OTP rate limits as registration. Device trust stored with expiry. Customer MFA is risk-based (triggered on new/suspicious device). Staff/admin MFA is mandatory on every new device. Sensitive actions later require step-up auth.\n- UI/UX: OTP input with resend. \"Trust this device\" checkbox visible.\n- Dependencies: T-02.01.02, T-01.02.02\n- Complexity: M",
@@ -4815,7 +4814,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
+          "sha256": "86ce4aa9c7fb8850e7e2b35c36bbc40041788ec0394767f5615d55fc26a4baa9"
         },
         {
           "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -4882,20 +4881,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "e86936264cd1bd699658b5118a148cef9a5d9b16",
+        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+        "review": "Reviewed reset-password transaction and acknowledged recovery navigation. Other auth methods are unchanged; only immediate-predecessor matching source hashes were refreshed. Reset tests, delivery/OTP tests and focused browser checks pass. Earlier drift and task limitations remain.",
+        "record": "audit/evidence/step-reviews.json#R01-reset-transaction",
         "paths": [
-          "apps/api/src/auth/auth.controller.ts",
-          "apps/api/src/session/session.service.ts"
+          "apps/api/src/auth/auth.service.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.01.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+      "reviewed_sha": "e86936264cd1bd699658b5118a148cef9a5d9b16",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 115,
       "requirement": "**T-02.01.04 — Password change enforcement on login**\n\n- Description: If server flags user as `mustChangePassword`, after credential verification but before setting session, redirect to password change form. User cannot proceed to `/app` without changing password. After successful change, display login page again.\n- Technical notes: Flag `mustChangePasswordAtNextLogin` on user record. Staff or system sets this flag. Password history (last N passwords, default 5) prevents reuse. New password must satisfy same strength policy. Session is NOT established until password is changed.\n- UI/UX: Inline form within auth layout. \"Your password must be changed before continuing\" explanation. Success message: \"Password changed. Please log in.\" Redirect to login page. API: `/api/auth/force-change-password` with old password verification (already verified in login step, just need new password).\n- Dependencies: T-02.01.02\n- Complexity: M",
@@ -4903,7 +4901,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
+          "sha256": "86ce4aa9c7fb8850e7e2b35c36bbc40041788ec0394767f5615d55fc26a4baa9"
         },
         {
           "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -4979,16 +4977,99 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "e86936264cd1bd699658b5118a148cef9a5d9b16",
+        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+        "review": "Reviewed reset-password transaction and acknowledged recovery navigation. Other auth methods are unchanged; only immediate-predecessor matching source hashes were refreshed. Reset tests, delivery/OTP tests and focused browser checks pass. Earlier drift and task limitations remain.",
+        "record": "audit/evidence/step-reviews.json#R01-reset-transaction",
         "paths": [
-          "apps/api/src/auth/auth.controller.ts",
-          "apps/api/src/session/session-http.integration.test.ts",
-          "apps/api/src/session/session-cap.integration.test.ts"
+          "apps/api/src/auth/auth.service.ts"
         ]
       }
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.03.02",
+      "status": "partial",
+      "reviewed_sha": "e86936264cd1bd699658b5118a148cef9a5d9b16",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 167,
+      "requirement": "**T-02.03.02 — OTP verification and password reset**\n\n- Description: POST `/api/auth/reset-password` with `{ challengeId, otp, newPassword }`. Backend verifies OTP, validates new password strength (same policy), hashes new password, updates user record.\n- Technical notes: On success: invalidate ALL existing sessions and refresh tokens for that user. Audit: password_reset event with user ID, timestamp, correlation ID. OTP consumed. Password history check enforced. Rate limit: 5 reset attempts per hour per destination.\n- UI/UX: After OTP verified, show new password form with strength meter and confirm password field. Success: redirect to login page with success toast. \"Your password has been reset. Please log in with your new password.\"\n- Dependencies: T-02.03.01, T-01.02.03\n- Complexity: M",
+      "requirement_sha256": "d2541b14502937943b2e84f0100bb041fec9d5ac9190386f0303449a4c71adc4",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "86ce4aa9c7fb8850e7e2b35c36bbc40041788ec0394767f5615d55fc26a4baa9"
+        },
+        {
+          "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
+          "sha256": "b2cada52840a14dc668abd897f9dd23dee9b0ee44fddfbb6dba52ccd8e50dc4f"
+        },
+        {
+          "path": "apps/web/e2e/password-reset.spec.ts",
+          "sha256": "30addb3ae03b3bfacb3ae9c1d15b430f2fd5b97056f66a135fea4d52631e12ed"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "0152c6a90fba92204d9143788aa1a02de99650f559b8892374304c5aba8ac96a"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "9ab812c1aaeff6e3014ae336e8149e4746947eb276ba06dfd78288a4dc6bd231"
+        },
+        {
+          "path": "apps/api/src/auth/dto/reset-password.dto.ts",
+          "sha256": "31087687a8debdae1413623f29fc3e0f2f508e916660d73c56ace508e0f44b18"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "64672f9f68261b6d1ea56168b49c6396b75606d32fba8284cc03443ad4ebc55d"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "ed342dd8c1aa3b42b5df5e7b3413dd631380e5f3b7ae752ea01e16b696eacba3"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "b4e190151f5ff48b3f5de445a1181b213428c147d84480e5cf67112cc8cfa214"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+          "sha256": "4101afdfe4c67dd09616fbbad234fd76d3e64c0a147fa62634ed10e5aa883093"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "f5b0c5f5508145a2a068752b696e856c6d36b11a5af08d9f3027d98bd5316e13"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "89abab0ef8ba9a30aa5b6d904dacba9c2776987c51d663cc984f172a0cbbd9a6"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "08099d90db7f5e61142947ba8c1059aea10bd3ed66391cd7f3b1bb352ca2972d"
+        },
+        {
+          "path": "apps/web/src/lib/auth-responses.ts",
+          "sha256": "67a6f449bd32a510b6a7317aaa090faa04f6651d323b69d2ec77b49d22345a6f"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "b3c45d8c48d19ba44c95aebdfcdd1dc3e1313e3ef0080dbe40efde01a7cc98c4"
+        }
+      ],
+      "checks": [
+        "Backend reset now rejects expiry after account/credential/audit waits, fails on unreadable current/history hashes, enforces the five-attempt destination quota outside the credential transaction, preserves history and revokes all account sessions/refreshes atomically with request-correlated audit. Unrelated credentials remain unchanged.",
+        "Only acknowledged success clears recovery secrets, replaces the URL with /login and shows the Persian/English success toast. Failed or malformed acknowledgements preserve input. OTP-first staging remains unimplemented.",
+        "54 distinct API cases and 10 production-browser cases pass across focused runs; API/web types, focused lint/format and all 41 route budgets pass. The two quota/concurrency cases also pass with a one-connection application pool. Exact revisions, limited scopes, intermediate failures and logs: audit/evidence/step-reviews.json#R01-reset-transaction."
+      ],
+      "limitations": [
+        "The full task remains partial: its UI requirement says OTP verification precedes password entry. The current form still collects OTP and the new password together for the existing single reset request. This remaining sequence must be implemented and reviewed; it is not counted as verified.",
+        "Complete OTP-first reset verification and then the password-entry step without weakening single-use authorization, expiry, five-attempt limits, audit or session revocation. Also reconcile reset cooldown/pending behavior against its required callers.",
+        "Live provider delivery/deployment remains external. Local destination-limit tests use the compiled application and trusted local test proxy; the production proxy allowlist is unchanged."
+      ],
+      "merged_prs": [
+        99
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -5100,7 +5181,6 @@
     "02-auth-users-admin.md#T-01.02.02",
     "02-auth-users-admin.md#T-01.02.03",
     "02-auth-users-admin.md#T-02.03.01",
-    "02-auth-users-admin.md#T-02.03.02",
     "02-auth-users-admin.md#T-03.01.01",
     "02-auth-users-admin.md#T-03.01.02",
     "02-auth-users-admin.md#T-03.02.01",

@@ -2729,6 +2729,116 @@
         "audit/evidence/r01/barghsa-step-up-rotation-preview.log.gz",
         "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
       ]
+    },
+    {
+      "id": "R01-reset-transaction",
+      "date": "2026-09-08",
+      "source_revision": "e86936264cd1bd699658b5118a148cef9a5d9b16",
+      "summary": "Repair password-reset expiry, history verification, durable destination limits, audit correlation and success navigation; retain OTP-first UI as an explicit remaining criterion.",
+      "review": [
+        "Reviewed T-02.03.02 while tracing the password-reset session boundary for T-02.02.01. Successful reset already revokes every session and refresh token for the account and requires a new login. No replacement session is issued during reset; unrelated accounts remain unchanged.",
+        "Reset now locks/checks current account authorization before OTP verification, rechecks the original OTP deadline after account waiting, and checks database wall-clock expiry after password/history, revocation and audit writes. Expiry at the account, session, refresh or audit lock restores all credential state, challenge attempts and audit state.",
+        "Unreadable current/history password hashes now abort verification instead of becoming a non-match. Current and five latest history entries remain enforced, with monotonically increasing history versions and the required Argon2id creation policy. The password_reset audit uses the request correlation ID and contains no OTP, password, encoded hash or reset credential.",
+        "Added the required five reset attempts per destination per hour through the existing durable PostgreSQL limiter. Its key hashes the normalized stored challenge destination, so different challenges and IPs share the same quota while other destinations remain independent. The quota increments before checking out a credential-transaction client, survives rollback, and avoids needing a second connection while holding the transaction connection.",
+        "The recovery page now clears password, confirmation, OTP and challenge state only after a valid reset acknowledgement, shows existing Persian/English success text, and replaces the recovery URL with /login. Failed or malformed acknowledgements preserve input. Returning to recovery starts an empty form.",
+        "The full task remains partial: its UI requirement says OTP verification precedes password entry. The current form still collects OTP and the new password together for the existing single reset request. This remaining sequence must be implemented and reviewed; it is not counted as verified."
+      ],
+      "checks": [
+        "54 distinct API cases pass across the new 14-case reset transaction suite and existing OTP/delivery HTTP suites. Coverage includes password policy/history, failed-audit rollback, concurrent single-use reset, both account sessions revoked, unrelated credentials preserved, stale login OTP rejected and destination quota across six real forwarded IPs. Redis is disabled in the HTTP fixture.",
+        "After moving quota enforcement before transaction checkout, the 14 reset cases pass again. A further two targeted cases pass with DB_POOL_MIN/MAX=1 for the compiled application: audit rollback/concurrent reset and cross-IP destination quota. Source confirms StorageModule creates the database instance with default pool configuration, so those env limits apply. An intermediate observer-pool experiment was interrupted before completion and is not passing evidence; it incorrectly constrained the test observer pool, not the app. Its log is retained. Final fixture keeps an independent observer pool and restores env variables.",
+        "10/10 production-browser checks pass on Chromium/mobile Chrome. They cover Persian/English destination normalization, exact challenge/OTP payload, confirmation mismatch, acknowledged redirect with localized toast, cleared secrets on revisit, rejected resets and malformed-success retry. No broader form accessibility or OTP-first sequence execution is claimed.",
+        "API/web typechecks, focused ESLint, final formatting, production web build, all 41 unchanged complete-route budgets and git diff check pass. API type checks first caught snapshot row typing/possibly missing fixture-user assertions; final types pass. Typechecks ran outside compiled-fixture builds. Served index and manifest hashes bind the browser build; preview stopped and no owned HTTP test servers remain.",
+        "No schema, dependency, API response shape or cookie-policy change. Other auth methods remain unchanged, so their source-bound evidence is reused. No new global checkpoint or production provider delivery is claimed."
+      ],
+      "remaining": [
+        "Complete OTP-first reset verification and then the password-entry step without weakening single-use authorization, expiry, five-attempt limits, audit or session revocation. Also reconcile reset cooldown/pending behavior against its required callers.",
+        "Return to remaining login/privilege/recovery rotation and centralized cookie policy/path. Current-session refresh after rotation, approximate location and remaining CSRF/revocation/sensitive-action matrices remain R01 work. Lost-contact approver/evidence policy remains pending."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "86ce4aa9c7fb8850e7e2b35c36bbc40041788ec0394767f5615d55fc26a4baa9"
+        },
+        {
+          "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
+          "sha256": "b2cada52840a14dc668abd897f9dd23dee9b0ee44fddfbb6dba52ccd8e50dc4f"
+        },
+        {
+          "path": "apps/web/e2e/password-reset.spec.ts",
+          "sha256": "30addb3ae03b3bfacb3ae9c1d15b430f2fd5b97056f66a135fea4d52631e12ed"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "0152c6a90fba92204d9143788aa1a02de99650f559b8892374304c5aba8ac96a"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "9ab812c1aaeff6e3014ae336e8149e4746947eb276ba06dfd78288a4dc6bd231"
+        },
+        {
+          "path": "apps/api/src/auth/dto/reset-password.dto.ts",
+          "sha256": "31087687a8debdae1413623f29fc3e0f2f508e916660d73c56ace508e0f44b18"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "64672f9f68261b6d1ea56168b49c6396b75606d32fba8284cc03443ad4ebc55d"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "ed342dd8c1aa3b42b5df5e7b3413dd631380e5f3b7ae752ea01e16b696eacba3"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "b4e190151f5ff48b3f5de445a1181b213428c147d84480e5cf67112cc8cfa214"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+          "sha256": "4101afdfe4c67dd09616fbbad234fd76d3e64c0a147fa62634ed10e5aa883093"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "f5b0c5f5508145a2a068752b696e856c6d36b11a5af08d9f3027d98bd5316e13"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "89abab0ef8ba9a30aa5b6d904dacba9c2776987c51d663cc984f172a0cbbd9a6"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "08099d90db7f5e61142947ba8c1059aea10bd3ed66391cd7f3b1bb352ca2972d"
+        },
+        {
+          "path": "apps/web/src/lib/auth-responses.ts",
+          "sha256": "67a6f449bd32a510b6a7317aaa090faa04f6651d323b69d2ec77b49d22345a6f"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "b3c45d8c48d19ba44c95aebdfcdd1dc3e1313e3ef0080dbe40efde01a7cc98c4"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-reset-transaction-api.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-app-pool-api.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-app-pool-format.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-browser.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-budgets.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-final-api.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-final-format.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-pool-final-api.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-pool-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-preview-binding.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-preview.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-types-final.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-types.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-ui-format.log.gz",
+        "audit/evidence/r01/barghsa-reset-transaction-web-build.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ]
     }
   ]
 }

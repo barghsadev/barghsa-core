@@ -126,7 +126,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#96](https://github.com/barghsadev/barghsa-core/pull/96) | 01-platform-infrastructure.md#T-03.01.03 (pending) | Task review remains | 0 |
 | [#97](https://github.com/barghsadev/barghsa-core/pull/97) | 01-platform-infrastructure.md#T-03.01.04 (pending) | Task review remains | 0 |
 | [#98](https://github.com/barghsadev/barghsa-core/pull/98) | 01-platform-infrastructure.md#T-03.01.05 (pending) | Task review remains | 0 |
-| [#99](https://github.com/barghsadev/barghsa-core/pull/99) | 02-auth-users-admin.md#T-02.03.02 (pending) | Task review remains | 0 |
+| [#99](https://github.com/barghsadev/barghsa-core/pull/99) | 02-auth-users-admin.md#T-02.03.02 (partial) | Task review remains | 0 |
 | [#100](https://github.com/barghsadev/barghsa-core/pull/100) | 02-auth-users-admin.md#T-02.03.03 (partial) | Task review remains | 0 |
 | [#101](https://github.com/barghsadev/barghsa-core/pull/101) | 02-auth-users-admin.md#T-02.04.01 (acceptance_verified) | Mapped tasks verified | 0 |
 | [#102](https://github.com/barghsadev/barghsa-core/pull/102) | 02-auth-users-admin.md#T-03.01.01 (pending) | Task review remains | 0 |
@@ -366,5 +366,5 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `4cec3c0bd0d29a6709f112e5abf887e50614ea5005de10603fa7b1c2082b58b9`
+- `acceptance-closure.json`: `d6162b04144bbaad2349777ef4ffff531d81d2516c0468eef6ece238923b39f3`
 - `pr-deferrals.json`: `7eeb18cad788f86b8967258624d04c1535d0927dbcf93b8912e10fb04df2a5c4`

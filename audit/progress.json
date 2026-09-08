@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+  "source_revision": "e86936264cd1bd699658b5118a148cef9a5d9b16",
   "active_step": "R01",
-  "next_action": "R01: finish 02-auth-users-admin.md#T-02.02.01 rotation/cookie review. Reconcile login/password/privilege/recovery boundaries with existing source-bound evidence, then finalize centralized SameSite/path policy against E06 and retained Vite SPA. MFA step-up 9469d35 is atomic and passes 131 focused API and 16 production-browser cases plus types/lint/format. Current-session list refresh after rotation is a known follow-up; approximate location and remaining revocation/CSRF/caller matrices remain. Lost-contact policy question is still pending.",
+  "next_action": "R01: finish OTP-first password reset for 02-auth-users-admin.md#T-02.03.02. Verify OTP before showing password entry while preserving short-lived single-use authorization, five-attempt destination limits, history, atomic audit and all-session revocation. Backend reset repairs and acknowledged login redirect e869362 pass 54 distinct API and 10 browser cases, types/lint/format and 41 route budgets. Task is partial because current UI still submits OTP and password together. Then resume remaining rotation/cookie review; current-session refresh, location and caller matrices remain. Lost-contact policy question is pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Login .01-.04 are verified locally. Deadline safety and atomic step-up rotation pass. Finish other required rotation/cookie boundaries, refresh current-session display after rotation, then remaining revocation/CSRF/caller and approximate-location requirements."
+        "Finish OTP-first reset sequence; reset transaction and success navigation now pass. Retain remaining rotation/cookie review, current-session refresh, approximate location and revocation/CSRF/sensitive-action caller requirements."
       ]
     },
     {
@@ -476,6 +476,10 @@
     {
       "id": "R01-step-up-rotation",
       "review_record": "audit/evidence/step-reviews.json#R01-step-up-rotation"
+    },
+    {
+      "id": "R01-reset-transaction",
+      "review_record": "audit/evidence/step-reviews.json#R01-reset-transaction"
     }
   ],
   "deferred_improvements": [
@@ -495,8 +499,8 @@
   "counts": {
     "historical_tasks": 322,
     "acceptance_verified": 49,
-    "partial": 18,
-    "pending": 255,
+    "partial": 19,
+    "pending": 254,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,

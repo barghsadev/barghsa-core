@@ -1,22 +1,22 @@
 # Remaining repairs, reviews and skipped work
 
-Refreshed 2026-09-08 through product commit `9469d35`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
+Refreshed 2026-09-08 through product commit `e869362`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
 
 ## Current numbers
 
 | Population | Verified | Partial | Pending review | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 46 | 18 | 199 | 263 |
+| Tasks with merged PR evidence | 46 | 19 | 198 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| Combined | 49 | 18 | 255 | 322 |
+| Combined | 49 | 19 | 254 | 322 |
 
-There are **273 unresolved task reviews**, including the 18 partial reviews. Unresolved review does not establish that a task is unbuilt. The records do not support a reliable percentage of implementation effort remaining.
+There are **273 unresolved task reviews**, including the 19 partial reviews. Unresolved review does not establish that a task is unbuilt. The records do not support a reliable percentage of implementation effort remaining.
 
 The saved inventory contains **301 merged PRs**, last recorded as checked against GitHub on September 8. A new query during this refresh failed because `gh` is unavailable; no newer inventory is claimed. The **58 historical skips** overlap the task population: 3 verified and 55 pending review. Another **1,033 queue gaps** are separate historical backlog evidence: 737 earlier gaps and 296 later tasks. None is automatically a missing implementation.
 
 ## Next bounded step
 
-Login T-02.01.01–.04 are verified locally. Deadline safety `f39132f` and atomic MFA step-up rotation `9469d35` pass focused review. The latter passes 131 API cases, 16 production-browser cases and types/lint/format. Next reconcile login/password/privilege/recovery boundaries, then finalize centralized SameSite/path policy against E06 and retained Vite SPA. Refreshing the visible current-session list after rotation remains a session-list follow-up. T-02.02.01 stays partial; lost-contact approver/evidence policy remains pending.
+Reset repair `e869362` fixes expiry during lock/write waits, unverifiable history, destination attempt limits, audit correlation and acknowledged return to login. It passes 54 distinct API cases, 10 browser cases, types/lint/format and all 41 route budgets. T-02.03.02 is now reviewed as partial: OTP must be verified before password entry, while the current UI submits both together. Finish that sequence with short-lived single-use authorization and preserved limits, then return to remaining rotation/cookie policy review. Lost-contact approver/evidence policy remains pending.
 
 All nine F15 CRM records are reviewed: eight verified locally; T-05.02.06 remains partial for future contracts and approved retention policy. Latest widget step d87042c passed 31 API cases and 12 distinct built-app browser cases across focused runs. Earlier list/search step passed 47 API and 20 built-app browser cases. See [step evidence](evidence/step-reviews.json). No global checkpoint is renewed.
 
