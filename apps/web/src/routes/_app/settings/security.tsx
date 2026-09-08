@@ -25,6 +25,7 @@ import {
   DialogTitle,
 } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
+import { TrustedDevices } from '../../../components/TrustedDevices.js';
 
 export const Route = createFileRoute('/_app/settings/security')({
   component: SettingsSecurityPage,
@@ -321,7 +322,10 @@ function SettingsSecurityPage() {
   // ── Render ──────────────────────────────────────────────────────────
 
   return (
-    <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div
+      className="container mx-auto max-w-2xl py-8 px-4 bg-background text-foreground"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       {time.notice}
       <h1 className="text-2xl font-bold mb-6">{t('settings.security.title', locale)}</h1>
 
@@ -450,6 +454,8 @@ function SettingsSecurityPage() {
           </div>
         )}
       </div>
+
+      <TrustedDevices locale={locale} formatTimestamp={time.format} deviceName={getDeviceName} />
 
       {/* ── Revoke Single Session Confirmation Dialog ──────────────── */}
       {revokeConfirmId && revokeConfirmSession && (

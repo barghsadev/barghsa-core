@@ -13704,6 +13704,117 @@
           "Metrics"
         ]
       }
+    },
+    "/api/auth/trusted-devices": {
+      "get": {
+        "operationId": "TrustedDevicesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "userAgent",
+                      "ip",
+                      "trustedAt",
+                      "expiresAt",
+                      "isCurrentDevice"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "userAgent": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "ip": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "trustedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "expiresAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "isCurrentDevice": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        },
+        "summary": "List unexpired device trust for current user",
+        "tags": [
+          "Sessions"
+        ]
+      }
+    },
+    "/api/auth/trusted-devices/{id}": {
+      "delete": {
+        "operationId": "TrustedDevicesController_revoke",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "revoked"
+                  ],
+                  "properties": {
+                    "revoked": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Session is no longer active"
+          },
+          "403": {
+            "description": "CSRF or recent step-up required"
+          },
+          "404": {
+            "description": "Device trust not found for this user"
+          }
+        },
+        "summary": "Remove own device trust after step-up; existing sessions remain active",
+        "tags": [
+          "Sessions"
+        ]
+      }
     }
   },
   "servers": [],

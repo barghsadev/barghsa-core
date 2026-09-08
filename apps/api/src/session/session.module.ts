@@ -2,6 +2,7 @@ import { Module, RequestMethod, type MiddlewareConsumer, type NestModule } from 
 import { APP_GUARD } from '@nestjs/core';
 import { SessionService } from './session.service.js';
 import { SessionController } from './session.controller.js';
+import { TrustedDevicesController } from './trusted-devices.controller.js';
 import { CsrfGuard } from './csrf.guard.js';
 import { SessionContextMiddleware } from './session-context.middleware.js';
 
@@ -18,7 +19,7 @@ import { SessionContextMiddleware } from './session-context.middleware.js';
  * when an authenticated session is present.
  */
 @Module({
-  controllers: [SessionController],
+  controllers: [SessionController, TrustedDevicesController],
   providers: [
     SessionService,
     SessionContextMiddleware,

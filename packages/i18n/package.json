@@ -116,6 +116,11 @@
       "types": "./dist/geography.d.ts",
       "import": "./dist/geography.js",
       "default": "./dist/geography.js"
+    },
+    "./trusted-devices": {
+      "types": "./dist/trusted-devices.d.ts",
+      "import": "./dist/trusted-devices.js",
+      "default": "./dist/trusted-devices.js"
     }
   },
   "scripts": {

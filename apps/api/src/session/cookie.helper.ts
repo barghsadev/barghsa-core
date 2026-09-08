@@ -147,13 +147,20 @@ export function clearRefreshCookie(res: Response): void {
   });
 }
 
+/** Read existing device proof without creating cookies on authenticated GET requests. */
+export function readDeviceCookie(req: Request): string | null {
+  const name = process.env.NODE_ENV === 'production' ? '__Host-barghsa_device' : 'barghsa_device';
+  const token = req.cookies?.[name];
+  return typeof token === 'string' && /^[a-f0-9]{64}$/.test(token) ? token : null;
+}
+
 /** Random device possession proof. Public user-agent strings cannot confer trust. */
 export function getOrCreateDeviceCookie(req: Request, res: Response): string {
   const secure = process.env.NODE_ENV === 'production';
   // __Host- prevents a sibling subdomain from planting a known trust cookie.
   const name = secure ? '__Host-barghsa_device' : 'barghsa_device';
-  const existing = req.cookies?.[name];
-  if (typeof existing === 'string' && /^[a-f0-9]{64}$/.test(existing)) return existing;
+  const existing = readDeviceCookie(req);
+  if (existing) return existing;
   const token = randomBytes(32).toString('hex');
   res.cookie(name, token, {
     httpOnly: true,

@@ -1015,12 +1015,85 @@ export class SessionService {
     }
   }
 
-  /**
-   * Get all active sessions for a user.
-   *
-   * Returns non-revoked, non-expired sessions for display in
-   * settings/security pages.
-   */
+  /** Return unexpired trust metadata without disclosing device possession proofs. */
+  async getTrustedDevices(userId: string, currentFingerprint: string | null) {
+    const result = await getDbPool().query(
+      `SELECT id, user_agent_hint AS "userAgent", host(ip_address) AS ip,
+              trusted_at AS "trustedAt", expires_at AS "expiresAt",
+              COALESCE(device_fingerprint=$2,false) AS "isCurrentDevice"
+       FROM device_trusts WHERE user_id=$1 AND expires_at>clock_timestamp()
+       ORDER BY trusted_at DESC,id DESC`,
+      [userId, currentFingerprint]
+    );
+    return result.rows;
+  }
+
+  async revokeTrustedDevice(
+    userId: string,
+    sessionId: string,
+    deviceId: string,
+    ip: string | null
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const account = await client.query(
+        'SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+        [userId]
+      );
+      if (!account.rows[0] || account.rows[0].disabled_at) {
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      }
+      await client.query(
+        'SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2 FOR UPDATE',
+        [sessionId, userId]
+      );
+      const target = await client.query(
+        'SELECT id FROM device_trusts WHERE id=$1 AND user_id=$2 FOR UPDATE',
+        [deviceId, userId]
+      );
+      // Revalidate after every possible lock wait, including the trust row.
+      const actor = await client.query(
+        `SELECT revoked_at IS NULL AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp() AS active,
+                step_up_verified_at>clock_timestamp()-($3::double precision * INTERVAL '1 millisecond')
+                AND step_up_verified_at<=clock_timestamp() AS fresh
+         FROM sessions WHERE session_id=$1 AND user_id=$2`,
+        [sessionId, userId, SessionService.STEP_UP_WINDOW_MS]
+      );
+      if (!actor.rows[0]?.active)
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      if (!actor.rows[0].fresh)
+        throw new HttpException({ error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code }, 403);
+      if (!target.rows.length)
+        throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      await client.query('DELETE FROM device_trusts WHERE id=$1 AND user_id=$2', [
+        deviceId,
+        userId,
+      ]);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'device_trust_revoked',$3,$4,$5,clock_timestamp())`,
+        [
+          uuidv7(),
+          userId,
+          JSON.stringify({ deviceId }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          ip,
+        ]
+      );
+      await client.query('COMMIT');
+      return { revoked: true as const };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
+      this.logger.error(`Device trust revocation failed: ${String(error)}`);
+      throw new HttpException({ error: ErrorCodes.INTERNAL_SERVER.code }, 500);
+    } finally {
+      client.release();
+    }
+  }
+
+  /** Return non-revoked, unexpired sessions with display-only device metadata. */
   async getUserSessions(userId: string) {
     const pool = getDbPool();
 
