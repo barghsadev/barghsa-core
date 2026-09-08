@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "66400126602cf78938a133b2a528f8410ee15fa9",
+  "source_revision": "c29d16c97de7de8bd203fc962f47346a8759f152",
   "active_step": "R01",
-  "next_action": "Continue R01 session rotation/revocation and current-capability caller review. Recovery intake runbook and truthful response-time copy are committed; lost-contact approver/evidence policy is awaiting owner input, and credential-recovery execution remains unmet. Continue independent work without redoing completed auth/rate tests.",
+  "next_action": "Continue R01 session/CSRF/current-capability caller matrix. CRM force-password-change and expire-sessions now recheck permission and target under transaction locks (30 checks pass). Review remaining sensitive CRM/profile/identity mutations for the same boundary, then complete rotation/revocation and device criteria. Lost-contact recovery policy remains awaiting owner input.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Four session tasks reviewed partial. Errors, single-session step-up, refresh-reuse notices and atomic audited step-up repaired. Finish rotation/revocation caller coverage, CSRF alternatives and exact device/session criteria."
+        "Reviewed session repairs and both CRM session-action permission races. Finish remaining rotation/revocation callers, CSRF alternatives, approximate IP location and trusted-device criteria."
       ]
     },
     {
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Finish required CRM list/detail/correction/archive acceptance through current capabilities and real API."
+        "Both CRM account actions now recheck current permissions under locks. Finish remaining CRM list/detail/correction/archive acceptance and mutation permission boundaries through the real API."
       ]
     },
     {
@@ -338,6 +338,10 @@
     {
       "id": "R01-recovery-runbook",
       "review_record": "audit/evidence/step-reviews.json#R01-recovery-runbook"
+    },
+    {
+      "id": "R01-crm-session-permission",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-session-permission"
     }
   ],
   "deferred_improvements": [],

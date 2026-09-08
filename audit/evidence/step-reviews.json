@@ -232,6 +232,38 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "Support task remains partial for policy, restricted evidence handling and a reviewed credential-recovery method. Session/capability review proceeds independently."
+    },
+    {
+      "id": "R01-crm-session-permission",
+      "date": "2026-09-08",
+      "source_revision": "c29d16c97de7de8bd203fc962f47346a8759f152",
+      "summary": "Rechecked current staff permission and target existence inside both CRM forced-password-change and expire-sessions transactions. Reused shared deterministic account locks.",
+      "review": "Two real HTTP lock-wait cases reproduced200 after actor permission loss. Six final concurrent HTTP cases cover revoked/retained permission and deleted targets across both actions. Rejected mutations preserve password flags, sessions and refresh tokens without successful audit entries; authorized actions remain functional.",
+      "checks": [
+        "30 CRM tests in3 files pass, including6 new real PostgreSQL HTTP cases",
+        "API typecheck and focused ESLint pass after test setup completed",
+        "Formatting and diff review pass"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "ed68f9b44432d428b86455c35982050993efaa5284d61279b367f4684f994ad5"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.test.ts",
+          "sha256": "a5fa4f0241eed99e4c11bbc2ec5ec5d3078ef866c2ed8c08dd7eb4065f0d8eb9"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "43dc59dcb9d14eff1ea32dd7d4d059b304ad61dd9b9ee6f8029346d339869b70"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Continue session caller/current-permission review for remaining mutations. No full CRM/session group closure or global regression/coverage claim."
     }
   ]
 }

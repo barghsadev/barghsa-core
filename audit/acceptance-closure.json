@@ -3200,7 +3200,8 @@
       "checks": [
         "Reviewed customer list/revoke/revoke-all ownership, current-session exclusion, database invalidation and localized confirmation behavior.",
         "Individual revocation now enforces step-up; wrong password, expiry, foreign owner, failed request/retry, refresh invalidation and five-profile focus checks pass.",
-        "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json."
+        "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json.",
+        "Atc29d16c, both staff CRM account actions reject permission revoked during a real target-row lock wait and targets deleted during that wait.30 focused CRM checks pass, including six HTTP races; API types/lint pass. Source/revision-bound detail is in audit/evidence/step-reviews.json#R01-crm-session-permission."
       ],
       "limitations": [
         "The session list displays raw IP addresses, not the required approximate location. No location resolution exists in the inspected device model/UI.",
@@ -3209,7 +3210,85 @@
       "merged_prs": [
         90
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "superseded_assessments": [
+        {
+          "task_key": "02-auth-users-admin.md#T-02.02.02",
+          "status": "partial",
+          "reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+          "requirement_file": "kanban/epics/02-auth-users-admin.md",
+          "requirement_line": 133,
+          "requirement": "**T-02.02.02 — Session revocation**\n\n- Description: Users can view and revoke their own active sessions/devices from Settings → Security. Staff can revoke any user's sessions. Password reset, staff disablement, ownership transfer, and suspected compromise revoke applicable sessions immediately.\n- Technical notes: Session list shows device name, IP location (approximate), last active time, created time. Revoke is immediate (server removes session from active store). API: GET `/api/auth/sessions`, DELETE `/api/auth/sessions/:id`. Revoke all by POST `/api/auth/sessions/revoke-all` (requires password confirmation or OTP).\n- UI/UX: Card/list view of active sessions with Revoke button per session and \"Revoke all other sessions\" action. Confirm dialog before revoke.\n- Dependencies: T-02.02.01\n- Complexity: M",
+          "requirement_sha256": "68e38f31d3aa97f19dae579d7452fe1baba5c6f35978898212580e503862445a",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+            },
+            {
+              "path": "apps/api/src/session/session.controller.ts",
+              "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+            },
+            {
+              "path": "apps/api/src/session/session.module.ts",
+              "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+            },
+            {
+              "path": "apps/api/src/session/session-context.middleware.ts",
+              "sha256": "cb64a4f0cd8bcd1e7fd83b62563d6c3a734e3ca93d0d994c67d412e8695f90d7"
+            },
+            {
+              "path": "apps/api/src/session/csrf.guard.ts",
+              "sha256": "2a60792f376464c8459c72499cf267857cd5f1804438c5df8338f1ee4ed6bd58"
+            },
+            {
+              "path": "apps/api/src/session/refresh-csrf.guard.ts",
+              "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+            },
+            {
+              "path": "apps/api/src/session/cookie.helper.ts",
+              "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+            },
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "25a72ee6d57b1532ccf92726d7dd00331a581e9fc0a559997b6a0dc051baf837"
+            },
+            {
+              "path": "apps/api/src/session/session-cap.integration.test.ts",
+              "sha256": "d0dcb189d7bf03c1fec16081ca2189bfdb368cf16c4dc97f0dc186b4f8f9ec83"
+            },
+            {
+              "path": "apps/api/src/session/session-http.integration.test.ts",
+              "sha256": "4b052258c2817e6b63ba02e2ae1b3ab6e144346e25af8ade5af4758c90461ec5"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security.tsx",
+              "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+            }
+          ],
+          "checks": [
+            "Reviewed customer list/revoke/revoke-all ownership, current-session exclusion, database invalidation and localized confirmation behavior.",
+            "Individual revocation now enforces step-up; wrong password, expiry, foreign owner, failed request/retry, refresh invalidation and five-profile focus checks pass.",
+            "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json."
+          ],
+          "limitations": [
+            "The session list displays raw IP addresses, not the required approximate location. No location resolution exists in the inspected device model/UI.",
+            "Remaining staff/ownership/compromise revocation callers and trusted-device-management acceptance must be reconciled during their domain reviews."
+          ],
+          "merged_prs": [
+            90
+          ],
+          "historically_skipped": false
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.03",
