@@ -227,6 +227,9 @@ for (const locale of ['fa', 'en'] as const) {
               ? 'در انتظار تأیید'
               : 'Pending verification';
       await expect(page.getByRole('heading', { level: 1 })).toContainText(statusText);
+      await expect(page.getByRole('tabpanel')).toContainText(
+        newStatus === 'ACTIVE' ? (locale === 'fa' ? 'تأیید نشده' : 'Unverified') : statusText
+      );
       expect(bodies).toEqual(Array(2).fill({ action, ...(reason ? { reason } : {}) }));
       if (action === 'reverify') {
         const archive = locale === 'fa' ? 'بایگانی پروفایل' : 'Archive profile';

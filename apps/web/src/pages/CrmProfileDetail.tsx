@@ -630,7 +630,11 @@ function CrmProfileDetailContent() {
             <SummaryCard
               title={t('crm.profile.summary.verification', locale)}
               value={
-                profile.status === 'VERIFIED' ? t('crm.profile.verified', locale) : profile.status
+                profile.status === 'VERIFIED'
+                  ? t('crm.profile.verified', locale)
+                  : ['ACTIVE', 'DRAFT'].includes(profile.status)
+                    ? t('crm.profile.unverified', locale)
+                    : t(`crm.list.${profile.status}`, locale)
               }
               icon="✓"
               colorClass={profile.status === 'VERIFIED' ? 'text-green-600' : 'text-yellow-600'}
