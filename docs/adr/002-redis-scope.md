@@ -15,7 +15,7 @@ The application uses Redis for three operational purposes:
 
 1. **Read-heavy config caching** — Admin settings (VAT rates, product prices, thresholds) are immutable and change infrequently. `ConfigCache` in `packages/shared/src/config-cache/` stores entries under `config:entry:*` with a 5-minute TTL and version-gated staleness detection (`config:global:version`). See `01-platform-infrastructure.md#T-04.02.03`.
 
-2. **Distributed rate-limit acceleration** — The `CompositeRateLimiterStore` in `packages/shared/src/rate-limit/` records every general request in PostgreSQL before checking the additional Redis counter. Either store may deny a request; Redis failure returns the already-persisted PostgreSQL result. See `01-platform-infrastructure.md#T-04.02.02`.
+2. **Additional distributed rate counters** — The `CompositeRateLimiterStore` in `packages/shared/src/rate-limit/` records every general request in PostgreSQL before checking the additional Redis counter. Either store may deny a request; Redis failure returns the already-persisted PostgreSQL result. Security failure-history reads use PostgreSQL directly. See `01-platform-infrastructure.md#T-04.02.02`.
 
 3. **Short-lived coordination locks** — Planned for future use (mutex-style locks for distributed job scheduling, cache stampede prevention, etc.) with sub-second to 30-second TTLs.
 
@@ -31,11 +31,11 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 
 ### Concrete guarantees
 
-| Area               | Redis Role                                        | Fallback                                                                      | TTL                                          | Invalidation                                                      |
-| ------------------ | ------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------- |
-| Config caching     | Cache values; verify freshness against PostgreSQL | Direct PostgreSQL read                                                        | 300 s (5 min)                                | Transactional PostgreSQL version bump; best-effort Redis eviction |
-| Rate limiting      | Low-latency atomic counters                       | PostgreSQL upsert (`INSERT ... ON CONFLICT DO UPDATE`) + periodic row cleanup | Window duration (configurable per namespace) | Redis keys auto-expire after the window; PG cleanup is periodic   |
-| Coordination locks | Distributed mutual exclusion                      | PG advisory locks or skip-operation                                           | 1–30 s (depending on use case)               | Automatic expiry (NX + PEXPIRE); never block on a stale lock      |
+| Area               | Redis Role                                        | Fallback                                                                                     | TTL                                          | Invalidation                                                      |
+| ------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------- |
+| Config caching     | Cache values; verify freshness against PostgreSQL | Direct PostgreSQL read                                                                       | 300 s (5 min)                                | Transactional PostgreSQL version bump; best-effort Redis eviction |
+| Rate limiting      | Additional atomic counters                        | Authoritative PostgreSQL rolling history with per-key transaction locks and periodic cleanup | Window duration (configurable per namespace) | Redis keys auto-expire after the window; PG cleanup is periodic   |
+| Coordination locks | Distributed mutual exclusion                      | PG advisory locks or skip-operation                                                          | 1–30 s (depending on use case)               | Automatic expiry (NX + PEXPIRE); never block on a stale lock      |
 
 ### What Redis is NOT used for
 
@@ -52,7 +52,7 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 
 - **Operational simplicity:** Redis can be reconfigured, migrated, or replaced without application downtime or data loss.
 - **Fail-safe by default:** All Redis clients are created with `lazyConnect: true`, offline queuing disabled, one reconnect attempt per command and a one-second command deadline by default. Initial connection timeout defaults to ten seconds. Construction and connection failures log a warning and return `null`.
-- **Horizontal scalability:** Rate-limit counters can share a single Redis instance across N API replicas, with PostgreSQL atomic upserts preserving the shared quota across connected and degraded replicas.
+- **Horizontal scalability:** API replicas share PostgreSQL rolling histories serialized by a transaction advisory lock for each qualified key. Redis can further restrict general admissions; flushing it cannot restore PostgreSQL quota.
 
 ### Negative
 
@@ -63,9 +63,11 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 
 Configuration entries now use `config:entry:v2:`. Old entries expire under their existing TTL and are never read by the repaired cache. A cache hit requires an equal, positive PostgreSQL version; population checks that version before and after reading the value. Missing version metadata forces a database value read without caching. Each hit adds a PostgreSQL metadata read.
 
-General rate counters now persist during healthy Redis operation as well as outages. PostgreSQL failure refuses admission even when Redis is healthy. Redis increments retain their original expiry and can further restrict requests. Counters still use fixed windows; the required sliding-window or token-bucket behavior remains open. Traffic recorded only in Redis before this repair cannot be reconstructed after data loss, so rollout must account for that existing window.
+General and security counters use migration `0120_rolling_rate_limits.sql`, which adds bounded rolling histories and their admission/reset functions. Database time controls expiry. All windows of a qualified key share the reset lock; window lengths retain independent histories. PostgreSQL failure refuses admission even when Redis is healthy. Redis increments retain their original expiry and can further restrict general requests.
 
-No database migration is required. Future introductions of Redis-based storage must be reviewed against the guarantees above and approved through the ADR process.
+Drain old API and worker counter writers before applying 0120 and switching consumers. Legacy PostgreSQL buckets have no individual attempt timestamps. Their first rolling read imports them at the latest possible timestamp, including recorded clock skew, instead of resetting protection. Truncated history is retained conservatively when a quota increases. Traffic recorded only in Redis before durable enforcement cannot be reconstructed after its loss. Local migration/concurrency tests do not establish that deployed writers were drained or historical traffic reconciled.
+
+The configuration-cache namespace change itself requires no database migration. Future introductions of Redis-based storage must be reviewed against these guarantees and approved through the ADR process.
 
 ---
 
@@ -83,7 +85,7 @@ No database migration is required. Future introductions of Redis-based storage m
 
 ## Related
 
-- **ADR-001:** (planned) Database conventions & migration strategy.
+- **ADR-001:** [Database conventions and migration strategy](001-data-types-and-conventions.md).
 - **T-04.02.01:** Redis connection factory with graceful fallback — `packages/shared/src/redis/`.
 - **T-04.02.02:** Distributed rate-limiting with Redis + PostgreSQL fallback — `packages/shared/src/rate-limit/`.
 - **T-04.02.03:** Configuration caching with version-gated invalidation — `packages/shared/src/config-cache/`.
