@@ -3,6 +3,7 @@ import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { withCsrf } from '../../../lib/csrf.js';
+import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
 import { useState, useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
@@ -280,7 +281,9 @@ function IndividualProfileFormPage() {
         {/* Submit error alert */}
         {submitError && (
           <Alert variant="destructive" className="mb-6" role="alert">
-            <AlertTitle className="sr-only">Error</AlertTitle>
+            <AlertTitle className="sr-only">
+              {t('settings.security.error.title', locale)}
+            </AlertTitle>
             <AlertDescription>{submitError}</AlertDescription>
           </Alert>
         )}
@@ -381,7 +384,7 @@ function IndividualProfileFormPage() {
               maxLength={10}
               value={nationalId}
               onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                const val = normalizeProfileDigits(e.target.value).replace(/\D/g, '').slice(0, 10);
                 setNationalId(val);
               }}
               onBlur={() => handleBlur('nationalId')}
@@ -529,7 +532,7 @@ function IndividualProfileFormPage() {
               maxLength={10}
               value={postalCode}
               onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                const val = normalizeProfileDigits(e.target.value).replace(/\D/g, '').slice(0, 10);
                 setPostalCode(val);
               }}
               onBlur={() => handleBlur('postalCode')}

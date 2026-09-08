@@ -5,6 +5,7 @@ import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-up
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n/app';
 import { withCsrf } from '../../../lib/csrf.js';
+import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
@@ -153,7 +154,7 @@ function LegalProfileFormPage() {
     }
 
     setLegalName(data.legalName ?? '');
-    setNationalIdentifier(data.nationalIdentifier ?? '');
+    setNationalIdentifier(normalizeProfileDigits(data.nationalIdentifier ?? ''));
     setRegistrationNumber(data.registrationNumber ?? '');
     setCompanyTypeId(data.companyTypeId ?? '');
     setRegistrationDate(data.registrationDate ?? '');
@@ -163,18 +164,18 @@ function LegalProfileFormPage() {
     setOfficialProvinceId(data.officialProvinceId ?? '');
     setOfficialCityId(data.officialCityId ?? '');
     setOfficialFullAddress(data.officialFullAddress ?? '');
-    setOfficialPostalCode(data.officialPostalCode ?? '');
+    setOfficialPostalCode(normalizeProfileDigits(data.officialPostalCode ?? ''));
     setRepresentativeTitle(data.representativeTitle ?? '');
     setRepresentativeRelationship(data.representativeRelationship ?? '');
     setRepresentative({
       representativeHonorific: data.representativeHonorific ?? '',
       representativeFirstName: data.representativeFirstName ?? '',
       representativeLastName: data.representativeLastName ?? '',
-      representativeNationalId: data.representativeNationalId ?? '',
+      representativeNationalId: normalizeProfileDigits(data.representativeNationalId ?? ''),
       representativeProvinceId: data.representativeProvinceId ?? '',
       representativeCityId: data.representativeCityId ?? '',
       representativeFullAddress: data.representativeFullAddress ?? '',
-      representativePostalCode: data.representativePostalCode ?? '',
+      representativePostalCode: normalizeProfileDigits(data.representativePostalCode ?? ''),
     });
   }, []);
   const draft = useOnboardingDraft(
@@ -687,7 +688,9 @@ function LegalProfileFormPage() {
         {/* Submit error alert */}
         {submitError && (
           <Alert variant="destructive" className="mb-6" role="alert">
-            <AlertTitle className="sr-only">Error</AlertTitle>
+            <AlertTitle className="sr-only">
+              {t('settings.security.error.title', locale)}
+            </AlertTitle>
             <AlertDescription>{submitError}</AlertDescription>
           </Alert>
         )}
@@ -734,7 +737,15 @@ function LegalProfileFormPage() {
                     field,
                     t(`onboarding.legal.${field}`, locale),
                     representative[field],
-                    (value) => setRepresentative((prev) => ({ ...prev, [field]: value })),
+                    (value) =>
+                      setRepresentative((prev) => ({
+                        ...prev,
+                        [field]:
+                          field === 'representativeNationalId' ||
+                          field === 'representativePostalCode'
+                            ? normalizeProfileDigits(value)
+                            : value,
+                      })),
                     {
                       required: field !== 'representativeHonorific',
                       maxLength:
@@ -855,7 +866,10 @@ function LegalProfileFormPage() {
                   'nationalIdentifier',
                   isRtl ? 'شناسه ملی' : 'National Identifier',
                   nationalIdentifier,
-                  (v) => setNationalIdentifier(v.replace(/\D/g, '').slice(0, 11)),
+                  (v) =>
+                    setNationalIdentifier(
+                      normalizeProfileDigits(v).replace(/\D/g, '').slice(0, 11)
+                    ),
                   {
                     required: true,
                     inputMode: 'numeric',
@@ -1106,7 +1120,9 @@ function LegalProfileFormPage() {
                 maxLength={10}
                 value={officialPostalCode}
                 onChange={(e) => {
-                  const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  const val = normalizeProfileDigits(e.target.value)
+                    .replace(/\D/g, '')
+                    .slice(0, 10);
                   setOfficialPostalCode(val);
                 }}
                 onBlur={() => handleBlur('officialPostalCode')}

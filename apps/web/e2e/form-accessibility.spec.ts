@@ -426,20 +426,32 @@ for (const locale of ['en', 'fa']) {
       submissions++;
       expect(route.request().postDataJSON().draftVersion).toBeGreaterThan(0);
       expect(route.request().postDataJSON().documents).toEqual([documentKey]);
+      expect(route.request().postDataJSON()).toMatchObject({
+        nationalIdentifier: '12345678901',
+        representativeNationalId: '1234567891',
+        representativePostalCode: '1234567890',
+        officialPostalCode: '1234567890',
+      });
       return route.fulfill({ status: 400, json: { message: 'Test response' } });
     });
     await page.goto('/onboarding/legal/profile-one');
     await page.locator('#legalName').fill('Company');
-    await page.locator('#nationalIdentifier').fill('12345678901');
+    await page.locator('#nationalIdentifier').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰۱' : '١٢٣٤٥٦٧٨٩٠١');
     await page.locator('#registrationNumber').fill('123');
     await page.locator('#companyTypeId').selectOption('limited-liability');
     await page.locator('#representativeFirstName').fill('Person');
     await page.locator('#representativeLastName').fill('Owner');
-    await page.locator('#representativeNationalId').fill('1234567891');
+    await page.locator('#representativeNationalId').fill('۰۰۱۲');
+    await expect(page.locator('#representativeNationalId')).toHaveValue('0012');
+    await page
+      .locator('#representativeNationalId')
+      .fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۱' : '١٢٣٤٥٦٧٨٩١');
     await page.locator('#representativeProvinceId').selectOption('province-a');
     await page.locator('#representativeCityId').selectOption('city-a');
     await page.locator('#representativeFullAddress').fill('Representative Street');
-    await page.locator('#representativePostalCode').fill('1234567890');
+    await page
+      .locator('#representativePostalCode')
+      .fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '١٢٣٤٥٦٧٨٩٠');
     await page.locator('#representativeTitle').fill('CEO');
     await page.locator('#representativeRelationship').fill('director');
     await page.locator('button[type="submit"]').click();
@@ -456,7 +468,7 @@ for (const locale of ['en', 'fa']) {
     await expect(page.locator('#officialCityId option[value="city-a"]')).toHaveCount(0);
     await page.locator('#officialCityId').selectOption('city-b');
     await page.locator('#officialFullAddress').fill('Street');
-    await page.locator('#officialPostalCode').fill('1234567890');
+    await page.locator('#officialPostalCode').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '١٢٣٤٥٦٧٨٩٠');
     await page.locator('#document-upload').setInputFiles({
       name: 'registration.pdf',
       mimeType: 'application/pdf',
@@ -465,6 +477,9 @@ for (const locale of ['en', 'fa']) {
     await expect(page.getByText('registration.pdf', { exact: true })).toBeVisible();
     await page.locator('button[type="submit"]').click();
     await expect.poll(() => submissions).toBe(1);
+    await expect(page.locator('[data-slot="alert-title"]')).toHaveText(
+      locale === 'fa' ? 'خطا' : 'Error'
+    );
   });
 }
 
@@ -508,11 +523,13 @@ for (const locale of ['en', 'fa']) {
     );
     await page.locator('#firstName').fill('Person');
     await page.locator('#lastName').fill('Owner');
-    await page.locator('#nationalId').fill('1234567891');
+    await page.locator('#nationalId').fill('۰۰۱۲');
+    await expect(page.locator('#nationalId')).toHaveValue('0012');
+    await page.locator('#nationalId').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۱' : '١٢٣٤٥٦٧٨٩١');
     await page.locator('#provinceId').selectOption('province-one');
     await page.locator('#cityId').selectOption('city-one');
     await page.locator('#fullAddress').fill('Street');
-    await page.locator('#postalCode').fill('1234567890');
+    await page.locator('#postalCode').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '١٢٣٤٥٦٧٨٩٠');
     await page.locator('button[type="submit"]').click();
     await expect
       .poll(() => sent)
@@ -525,8 +542,53 @@ for (const locale of ['en', 'fa']) {
         fullAddress: 'Street',
         postalCode: '1234567890',
       });
+    await expect(page.locator('[data-slot="alert-title"]')).toHaveText(
+      locale === 'fa' ? 'خطا' : 'Error'
+    );
   });
 }
+
+test('legal onboarding restores localized draft identifiers without dropping leading zeros', async ({
+  page,
+}) => {
+  await shell(page, 'fa');
+  let stored = {
+    version: 4,
+    data: {
+      legalName: 'شرکت آزمایشی',
+      nationalIdentifier: '۰۰۱۲۳۴۵۶۷۸۹',
+      representativeNationalId: '٠٠١٢٣٤٥٦٧٨',
+      representativePostalCode: '۱۲۳۴۵۶۷۸۹۰',
+      officialPostalCode: '١٢٣٤٥٦٧٨٩٠',
+    } as Record<string, string>,
+  };
+  await page.route('**/api/onboarding/draft/*', (route) => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: stored });
+    const input = route.request().postDataJSON() as {
+      expectedVersion: number;
+      data: Record<string, string>;
+    };
+    expect(input.expectedVersion).toBe(stored.version);
+    stored = { version: stored.version + 1, data: input.data };
+    return route.fulfill({ json: stored });
+  });
+  await page.goto('/onboarding/legal/profile-one');
+  await expect(page.locator('#nationalIdentifier')).toHaveValue('00123456789');
+  await expect(page.locator('#representativeNationalId')).toHaveValue('0012345678');
+  await expect(page.locator('#representativePostalCode')).toHaveValue('1234567890');
+  await expect(page.locator('#officialPostalCode')).toHaveValue('1234567890');
+  await expect.poll(() => stored.version).toBe(5);
+  expect(stored.data).toMatchObject({
+    legalName: 'شرکت آزمایشی',
+    nationalIdentifier: '00123456789',
+    representativeNationalId: '0012345678',
+    representativePostalCode: '1234567890',
+    officialPostalCode: '1234567890',
+  });
+  await page.reload();
+  await expect(page.locator('#nationalIdentifier')).toHaveValue('00123456789');
+  await expect(page.locator('#legalName')).toHaveValue('شرکت آزمایشی');
+});
 
 for (const locale of ['en', 'fa']) {
   test(`legal autosave preserves later edits, retries failures and restores saved geography (${locale})`, async ({
