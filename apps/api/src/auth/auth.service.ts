@@ -96,47 +96,83 @@ export class AuthService {
       10,
       3_600_000
     );
-    const pool = getDbPool();
-    const existing = await pool.query(
-      'SELECT 1 FROM account_login_identifiers WHERE destination=$1',
-      [input.username]
-    );
-    if (existing.rows.length) {
-      throw new HttpException(
-        {
-          statusCode: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus,
-          error: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.code,
-        },
-        ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      // Serialize starts by canonical destination across every API process.
+      await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
+        `registration:${input.username}`,
+      ]);
+      const pending = await client.query<{
+        challenge_id: string;
+        password_hash: string;
+      }>(
+        `SELECT challenge_id,password_hash FROM otp_challenges
+         WHERE destination=$1 AND purpose='registration' AND tos_version_id=$2
+           AND password_hash IS NOT NULL AND consumed_at IS NULL AND attempts_remaining>0
+           AND expires_at>clock_timestamp()
+         ORDER BY created_at DESC,challenge_id FOR UPDATE`,
+        [input.username, input.tosVersionId]
       );
-    }
+      const existing = await client.query(
+        'SELECT 1 FROM account_login_identifiers WHERE destination=$1',
+        [input.username]
+      );
+      if (existing.rows.length) {
+        throw new HttpException(
+          {
+            statusCode: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus,
+            error: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.code,
+          },
+          ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus
+        );
+      }
 
-    // Bind consent to the published version actually shown by the client.
-    const terms = await pool.query(
-      `SELECT id FROM tos_versions WHERE id::text=$1 AND is_active=true
+      // Verify the salted password hash to compare complete requests without
+      // persisting a fast password fingerprint or a second copy of the secret.
+      for (const candidate of pending.rows) {
+        if (!(await argon2.verify(candidate.password_hash, input.password))) continue;
+        const current = await client.query(
+          'SELECT expires_at>clock_timestamp() AS valid FROM otp_challenges WHERE challenge_id=$1',
+          [candidate.challenge_id]
+        );
+        if (!current.rows[0]?.valid) continue;
+        await client.query('COMMIT');
+        return { challengeId: candidate.challenge_id };
+      }
+
+      // Bind consent to the published version actually shown by the client.
+      const terms = await client.query(
+        `SELECT id FROM tos_versions WHERE id::text=$1 AND is_active=true
        AND status='published' AND published_at IS NOT NULL`,
-      [input.tosVersionId]
-    );
-    if (!terms.rows.length) {
-      throw new HttpException(
-        {
-          statusCode: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
-          error: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.code,
-        },
-        ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus
+        [input.tosVersionId]
       );
+      if (!terms.rows.length) {
+        throw new HttpException(
+          {
+            statusCode: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
+            error: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.code,
+          },
+          ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus
+        );
+      }
+
+      const passwordHash = await argon2.hash(input.password, PASSWORD_HASH_OPTIONS);
+      const { challengeId } = await this.otpService.createRegistrationChallenge(
+        input.username,
+        ip,
+        passwordHash,
+        input.tosVersionId,
+        client
+      );
+      await client.query('COMMIT');
+      return { challengeId };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
     }
-
-    // ── Create OTP challenge (storing password hash and TOS version) ──
-    const passwordHash = await argon2.hash(input.password, PASSWORD_HASH_OPTIONS);
-    const { challengeId } = await this.otpService.createChallenge(
-      input.username,
-      ip,
-      passwordHash,
-      input.tosVersionId
-    );
-
-    return { challengeId };
   }
 
   /**

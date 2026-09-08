@@ -2,6 +2,7 @@ import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { randomInt, randomUUID, createHash, timingSafeEqual } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import type { PoolClient } from 'pg';
 import { RateLimitService } from '../rate-limit/rate-limit.service.js';
@@ -72,6 +73,38 @@ export class OtpService {
   ): Promise<OtpChallengeResult> {
     await this.enforceSendRateLimits(destination, ip);
 
+    return this.queueChallenge(destination, passwordHash, tosVersionId, binding, transactionClient);
+  }
+
+  /** Caller owns the registration transaction, including quotas and delivery. */
+  async createRegistrationChallenge(
+    destination: string,
+    ip: string,
+    passwordHash: string,
+    tosVersionId: string,
+    client: Pick<PoolClient, 'query'>
+  ): Promise<OtpChallengeResult> {
+    const store = new PostgresRateLimiterStore((text, params) => client.query(text, params));
+    await this.enforceSendRateLimits(destination, ip, (key, limit, windowMs) =>
+      store.incrementSecurity(key, limit, windowMs)
+    );
+    return this.queueChallenge(destination, passwordHash, tosVersionId, undefined, client);
+  }
+
+  private async queueChallenge(
+    destination: string,
+    passwordHash?: string,
+    tosVersionId?: string,
+    binding:
+      | {
+          purpose: 'change_username' | 'add_email' | 'add_mobile';
+          userId: string;
+          authVersion?: number;
+          previousChallengeId?: string;
+        }
+      | undefined = undefined,
+    transactionClient?: Pick<PoolClient, 'query'>
+  ): Promise<OtpChallengeResult> {
     const otp = this.generateOtp();
     const otpHash = this.hashOtp(otp);
     const challengeId = randomUUID();
@@ -387,39 +420,27 @@ export class OtpService {
     }
   }
 
-  private async enforceSendRateLimits(destination: string, ip: string): Promise<void> {
-    const perMinute = await this.rateLimitService.checkSecurityRateLimit(
-      `otp:dest:${destination}:60s`,
-      1,
-      60_000
-    );
+  private async enforceSendRateLimits(
+    destination: string,
+    ip: string,
+    check = this.rateLimitService.checkSecurityRateLimit.bind(this.rateLimitService)
+  ): Promise<void> {
+    const perMinute = await check(`otp:dest:${destination}:60s`, 1, 60_000);
     if (!perMinute.allowed) {
       OtpService.throwRateLimited(perMinute.resetMs);
     }
 
-    const perHour = await this.rateLimitService.checkSecurityRateLimit(
-      `otp:dest:${destination}:3600s`,
-      5,
-      3_600_000
-    );
+    const perHour = await check(`otp:dest:${destination}:3600s`, 5, 3_600_000);
     if (!perHour.allowed) {
       OtpService.throwRateLimited(perHour.resetMs);
     }
 
-    const perDay = await this.rateLimitService.checkSecurityRateLimit(
-      `otp:dest:${destination}:86400s`,
-      10,
-      86_400_000
-    );
+    const perDay = await check(`otp:dest:${destination}:86400s`, 10, 86_400_000);
     if (!perDay.allowed) {
       OtpService.throwRateLimited(perDay.resetMs);
     }
 
-    const ipLimit = await this.rateLimitService.checkSecurityRateLimit(
-      `otp:ip:${ip}:3600s`,
-      20,
-      3_600_000
-    );
+    const ipLimit = await check(`otp:ip:${ip}:3600s`, 20, 3_600_000);
     if (!ipLimit.allowed) {
       OtpService.throwRateLimited(ipLimit.resetMs);
     }

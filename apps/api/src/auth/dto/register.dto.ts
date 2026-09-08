@@ -22,9 +22,10 @@ function toE164(value: string): string {
 export const RegisterSchema = z.object({
   username: z
     .string()
+    .trim()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(255)
-    .transform(toE164)
+    .transform((value) => toE164(value).toLowerCase())
     .refine(
       (val) => {
         // Must be a valid email or E.164 phone number
