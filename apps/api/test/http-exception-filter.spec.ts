@@ -128,6 +128,23 @@ describe('HttpExceptionFilter', () => {
     return { json, status, response, request, host };
   }
 
+  it('retains an explicit domain not-found message after a controller route matched', () => {
+    const { json, request, host } = createMockHost(404, {});
+    request.route = { path: '/profiles/:id' };
+    filter.catch(new NotFoundException('This profile is no longer available'), host);
+    expect(json.mock.calls[0][0].error.message).toBe('This profile is no longer available');
+    expect(json.mock.calls[0][0].error.code).toBe('NOT_FOUND:RESOURCE');
+  });
+
+  it('localizes the Nest fallback when middleware has populated route metadata', () => {
+    const { json, request, host } = createMockHost(404, {});
+    request.route = { path: '/{*path}' };
+    request.originalUrl = '/api/unknown?private=route-marker';
+    filter.catch(new NotFoundException(`Cannot GET ${request.originalUrl}`), host);
+    expect(json.mock.calls[0][0].error.message).toBe('منبع درخواستی یافت نشد');
+    expect(JSON.stringify(json.mock.calls[0][0])).not.toContain('route-marker');
+  });
+
   it.each([
     {
       exception: new BadRequestException(),

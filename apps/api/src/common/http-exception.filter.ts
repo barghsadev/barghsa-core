@@ -54,10 +54,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // Resolve localized message
     const locale = this.resolveLocale(request);
     const errorCodeDef = resolveErrorCodeDef(errorCode, httpStatus);
-    // For 5xx errors, always use the localized error-code message (never leak internals)
-    // For 4xx errors, use rawMessage if available, otherwise localized message
+    // Match Nest's fallback message, including Express's original URL. Middleware
+    // can populate request.route even when no controller matched. Other explicit
+    // business explanations for missing resources retain their existing behavior.
+    const unmatchedRoute =
+      httpStatus === HttpStatus.NOT_FOUND &&
+      rawMessage === `Cannot ${request.method} ${request.originalUrl ?? request.url}`;
     const message =
-      httpStatus < 500
+      httpStatus < 500 && !unmatchedRoute
         ? (rawMessage ?? t(errorCodeDef.messageKey, locale))
         : t(errorCodeDef.messageKey, locale);
 

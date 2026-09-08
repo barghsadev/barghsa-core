@@ -324,6 +324,35 @@
       ],
       "evidence": "audit/evidence/acceptance-refresh.json",
       "remaining": "36 verified,12 partial,274 pending. This is task acceptance, not an implementation percentage."
+    },
+    {
+      "id": "R01-route-errors",
+      "date": "2026-09-08",
+      "base_revision": "eb13dc4",
+      "summary": "Localized unmatched API routes in Persian/English without echoing request paths or query strings. Preserved explicit domain 404 messages. Restored four audit paths required by tests, tools and immutable migrations.",
+      "review": "Four real HTTP cases reproduced the defect. First route-metadata predicate failed because middleware populates route metadata; exact Nest fallback matching passed, including a regression for that boundary. Broad HTTP validation caught the staff SQL cleanup regression; a reference audit found three further required stable paths and restored all four byte-for-byte.",
+      "checks": [
+        "34 focused error tests pass",
+        "707 HTTP tests in55 files pass",
+        "5 migration domain-constraint tests pass",
+        "API typecheck and focused ESLint pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "bbdbc65f479e10c1d5ec3c0ee708093557dcce87f13e1edb0a6a7000979927d6"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "bc5639e7dae7d863dc3846f0a92961e970b09b68798058aac1b5834ce523112e"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "a528725a8f8e959717d878340585e7aac394a3636e20f2f383707a2fb179b1bd"
+        }
+      ],
+      "remaining": "R01 session/authentication acceptance continues. Application-specific localized errors and downstream correlation remain open in R03."
     }
   ],
   "deferred_improvements": [],

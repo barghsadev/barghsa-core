@@ -56,3 +56,27 @@ it.each(
   expect(body.error.code).toBe('VALIDATION:INPUT:INVALID');
   expect(body.error.message).toBe(message);
 });
+
+it.each(
+  ['GET', 'POST'].flatMap((method) => [
+    { method, locale: 'en', message: 'Requested resource was not found' },
+    { method, locale: 'fa', message: 'منبع درخواستی یافت نشد' },
+  ])
+)(
+  'localizes unmatched $method routes without echoing the URL ($locale)',
+  async ({ method, locale, message }) => {
+    const response = await fetch(fixture.base + '/api/missing-private-path?private=route-marker', {
+      method,
+      headers: { 'Accept-Language': locale },
+    });
+    expect(response.status).toBe(404);
+    const text = await response.text();
+    expect(text).not.toContain('missing-private-path');
+    expect(text).not.toContain('route-marker');
+    const body = JSON.parse(text);
+    expect(body.error.code).toBe('NOT_FOUND:RESOURCE');
+    expect(body.error.message).toBe(message);
+    expect(response.headers.get('x-correlation-id')).toBe(body.error.correlationId);
+    expect(response.headers.get('cache-control')).toContain('no-store');
+  }
+);

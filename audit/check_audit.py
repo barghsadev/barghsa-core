@@ -53,6 +53,10 @@ def main():
     require(progress['active_step'] in identities(progress['steps'], 'id'), 'Unknown active step')
 
     manifest = read('cleanup-manifest.json')
+    # These paths are read by tests/tools or referenced by immutable migrations.
+    for name in ('legacy-inline-constraints.json', 'staff-administrator-review.sql',
+                 'notification-template-history-review.sql', 'schema-snapshot-review.md'):
+        require((AUDIT / name).is_file(), f'Missing stable audit input: {name}')
     require(len(identities(manifest['files'], 'original_path')) == 99,
             'Cleanup manifest lost an original file')
     for row in manifest['files']:

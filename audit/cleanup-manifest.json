@@ -294,9 +294,9 @@
     },
     {
       "original_path": "audit/legacy-inline-constraints.json",
-      "current_path": "audit/archive/legacy-inline-constraints.json",
+      "current_path": "audit/legacy-inline-constraints.json",
       "sha256": "a903d06d7f795341a8f9eda12b698b050917c697340de99319b81a582c077f0b",
-      "disposition": "archived"
+      "disposition": "retained"
     },
     {
       "original_path": "audit/license-inventory.json",
@@ -348,9 +348,9 @@
     },
     {
       "original_path": "audit/notification-template-history-review.sql",
-      "current_path": "audit/preflight/notification-template-history-review.sql",
+      "current_path": "audit/notification-template-history-review.sql",
       "sha256": "245b0eeac8384f8072f0faf8bbc0f2b042a95cfa2c9ff03cf9fd6225e4b90b26",
-      "disposition": "preflight"
+      "disposition": "retained"
     },
     {
       "original_path": "audit/optional-foreign-key-defaults-before.json",
@@ -492,9 +492,9 @@
     },
     {
       "original_path": "audit/schema-snapshot-review.md",
-      "current_path": "audit/archive/schema-snapshot-review.md",
+      "current_path": "audit/schema-snapshot-review.md",
       "sha256": "ebc8397b172d5869c8b31d35131da09bcde60e3289b4c861d499ac7bb8483718",
-      "disposition": "archived"
+      "disposition": "retained"
     },
     {
       "original_path": "audit/secret-scan-review.md",
@@ -528,9 +528,9 @@
     },
     {
       "original_path": "audit/staff-administrator-review.sql",
-      "current_path": "audit/preflight/staff-administrator-review.sql",
+      "current_path": "audit/staff-administrator-review.sql",
       "sha256": "330b00d6314924b8a496a353b1e9b3fd2dd9274d0130e6585e61b0337bd71782",
-      "disposition": "preflight"
+      "disposition": "retained"
     },
     {
       "original_path": "audit/staff-permission-enforcement.json",

@@ -14,4 +14,6 @@ The plan covers remaining repairs, acceptance review of merged work, and histori
 
 The root task-review, skipped-task and merged-task JSON files remain as historical inputs to existing validators and reconciliation tools. Their historical assessments are superseded by the current acceptance ledger and requirement overlay. They do not authorize dispatch.
 
+The root constraint inventory, staff-administrator SQL, notification-template-history SQL and schema-snapshot review also retain their original paths: tests, maintenance tools and immutable migrations reference them. The cleanup validator checks these paths.
+
 Checks: `python3 audit/check_audit.py`, `python3 audit/current_requirements.py`, and `python3 audit/current_skipped_tasks.py`. Use `--write` on a generator only after its inputs were deliberately reviewed.
