@@ -496,3 +496,70 @@ it('allows a correction-only staff member to create without granting queue, deta
     await http.pool.query("DELETE FROM staff_roles WHERE role_id='correction-only'");
   }
 });
+
+for (const [fieldName, requestedValue, legal, original] of [
+  ['last_name', 'Corrected family', false, null],
+  ['national_id', '0010350829', false, null],
+  ['legal_name', 'Corrected company', true, 'Original company'],
+  ['national_identifier', '45678901234', true, '34567890123'],
+] as const) {
+  it(`applies ${fieldName} only after independent approval with its real before/after audit`, async () => {
+    const target = await profile();
+    if (legal) {
+      await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [target]);
+      await http.pool.query(
+        `INSERT INTO legal_profiles(id,legal_name,national_identifier,registration_number,representative_title,representative_relationship)
+         VALUES ($1,'Original company',$2,'registration-fixture','Director','Board member')`,
+        [target, fieldName === 'legal_name' ? '23456789012' : original]
+      );
+    }
+    const table = legal ? 'legal_profiles' : 'profiles';
+    const storedValue = async () =>
+      (await http.pool.query(`SELECT ${fieldName} AS value FROM ${table} WHERE id=$1`, [target]))
+        .rows[0].value;
+    const response = await create(target, { fieldName, requestedValue });
+    expect(response.status, http.logs()).toBe(201);
+    const created = (await response.json()) as { id: string };
+    expect(created).toMatchObject({ success: true, profileId: target, status: 'Open' });
+    expect(await storedValue()).toBe(original);
+    expect((await review(created.id, 'Under Review')).status).toBe(200);
+    expect(await storedValue()).toBe(original);
+    const approved = await review(created.id, 'Approved');
+    expect(approved.status, http.logs()).toBe(200);
+    expect(await approved.json()).toMatchObject({
+      success: true,
+      profileId: target,
+      id: created.id,
+      status: 'Approved',
+    });
+    expect(await storedValue()).toBe(requestedValue);
+    expect(
+      (
+        await http.pool.query('SELECT first_name,status,profile_type FROM profiles WHERE id=$1', [
+          target,
+        ])
+      ).rows[0]
+    ).toEqual({
+      first_name: 'Original',
+      status: 'VERIFIED',
+      profile_type: legal ? 'LEGAL' : 'INDIVIDUAL',
+    });
+    const audits = (
+      await http.pool.query(
+        "SELECT user_id,metadata::jsonb AS metadata FROM audit_log WHERE event='verification_case_reviewed' AND metadata::jsonb->>'caseId'=$1 AND metadata::jsonb->>'decision'='Approved'",
+        [created.id]
+      )
+    ).rows;
+    expect(audits).toHaveLength(1);
+    expect(audits[0]).toMatchObject({
+      user_id: 'reviewer',
+      metadata: {
+        profileId: target,
+        fieldName,
+        oldValue: original,
+        newValue: requestedValue,
+        reviewerNotes: 'Evidence checked',
+      },
+    });
+  });
+}

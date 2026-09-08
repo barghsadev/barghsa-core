@@ -232,6 +232,7 @@ for (const [locale, darkMode] of [
     await expect(dialog).toHaveCount(0);
     expect(uploads).toBe(1);
     await expect(page.locator('#correction-value')).toHaveValue('');
+    await expect(page.locator('#correction-field')).toBeFocused();
     await expect(
       page.getByText(
         locale === 'fa'
@@ -255,52 +256,159 @@ for (const [locale, darkMode] of [
       }))
     );
   });
-test('correction reviewer sees fixed evidence and legacy cases stay blocked', async ({ page }) => {
-  await shell(page);
-  let legacy = false;
-  await page.route('**/api/crm/verification-cases?*', (route) =>
-    route.fulfill({
-      json: {
-        cases: [item],
-        total: 1,
-        viewer: { userId: 'reviewer', canCreate: false, canReview: true },
-      },
-    })
-  );
-  await page.route(`**/api/crm/verification-cases/${caseId}`, (route) =>
-    route.fulfill({
-      json: {
-        ...item,
-        currentValue: 'Original',
-        evidenceUrls: ['verification-evidence/fixed'],
-        evidenceDownloadUrls: legacy ? [] : ['https://storage.example.test/fixed?signature=test'],
-        reviewerNotes: null,
-      },
-    })
-  );
-  await page.route(`**/api/crm/verification-cases/${caseId}/status`, (route) => {
-    expect(route.request().postDataJSON()).toEqual({ decision: 'Approved' });
-    return route.fulfill({ json: { success: true, id: caseId, profileId, status: 'Approved' } });
+for (const [locale, darkMode] of [
+  ['en', false],
+  ['fa', false],
+  ['en', true],
+  ['fa', true],
+] as const)
+  test(`correction reviewer uses fixed evidence, keyboard and legacy rejection (${locale}, dark=${darkMode})`, async ({
+    page,
+  }, testInfo) => {
+    await shell(page, locale);
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({
+        json: {
+          appTitle: 'Correction review',
+          slogan: '',
+          primaryColor: '#2563eb',
+          secondaryColor: '#64748b',
+          accentColor: '#f59e0b',
+          logoUrl: null,
+          faviconUrl: null,
+          darkMode,
+        },
+      })
+    );
+    let legacy = false;
+    await page.route('**/api/crm/verification-cases?*', (route) =>
+      route.fulfill({
+        json: {
+          cases:
+            new URL(route.request().url()).searchParams.get('status') === 'Under Review'
+              ? [item]
+              : [],
+          total: 1,
+          viewer: { userId: 'reviewer', canCreate: false, canReview: true },
+        },
+      })
+    );
+    await page.route(`**/api/crm/verification-cases/${caseId}`, (route) =>
+      route.fulfill({
+        json: {
+          ...item,
+          currentValue: 'Original',
+          evidenceUrls: ['verification-evidence/fixed'],
+          evidenceDownloadUrls: legacy ? [] : ['https://storage.example.test/fixed?signature=test'],
+          reviewerNotes: null,
+        },
+      })
+    );
+    const decisions: unknown[] = [];
+    await page.route(`**/api/crm/verification-cases/${caseId}/status`, (route) => {
+      const body = route.request().postDataJSON();
+      decisions.push(body);
+      expect(body).toEqual(
+        legacy
+          ? { decision: 'Rejected', reviewerNotes: 'Resubmit evidence' }
+          : { decision: 'Approved', reviewerNotes: 'Evidence checked' }
+      );
+      return route.fulfill({
+        json: { success: true, id: caseId, profileId, status: body.decision },
+      });
+    });
+    await page.goto('/admin/crm/corrections');
+    const open = page.getByRole('button', {
+      name: locale === 'fa' ? 'بررسی درخواست' : 'Review case',
+      exact: true,
+    });
+    const review = page.getByRole('button', {
+      name: locale === 'fa' ? 'بررسی تصمیم' : 'Review decision',
+      exact: true,
+    });
+    const evidence = page.getByRole('link', {
+      name: locale === 'fa' ? 'نمایش مدرک 1' : 'Open evidence 1',
+      exact: true,
+    });
+    await expect(page.locator('#case-status')).toBeVisible();
+    await page.locator('#case-status').focus();
+    await expect(page.locator('#case-status')).toBeFocused();
+    await page.locator('#case-status').selectOption('Under Review');
+    await expect(page.locator('#case-status')).toHaveValue('Under Review');
+    await expect(open).toBeVisible();
+    await expect
+      .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
+      .toBe(darkMode);
+    const checkPage = async () => {
+      const result = await new AxeBuilder({ page })
+        .include('section:has(#case-status)')
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+        .analyze();
+      expect(result.violations).toEqual([]);
+      expect(result.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+        page.viewportSize()!.width + 1
+      );
+    };
+    await checkPage();
+    await open.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByText('Original', { exact: true })).toBeVisible();
+    await expect(evidence).toHaveAttribute(
+      'href',
+      'https://storage.example.test/fixed?signature=test'
+    );
+    await expect(evidence).toHaveAttribute('target', '_blank');
+    await expect(evidence).toHaveAttribute('rel', 'noopener noreferrer');
+    await checkPage();
+    await evidence.focus();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#case-decision')).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#case-notes')).toBeFocused();
+    await page.keyboard.type('Evidence checked');
+    await page.screenshot({
+      path: `/tmp/barghsa-crm-correction-review-${locale}-${darkMode ? 'dark' : 'light'}-${testInfo.project.name}.png`,
+    });
+    await page.keyboard.press('Tab');
+    await expect(review).toBeFocused();
+    await page.keyboard.press('Enter');
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(caseId);
+    await expect(dialog).toContainText('Evidence checked');
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(review).toBeFocused();
+    expect(decisions).toEqual([]);
+    await page.keyboard.press('Enter');
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .press('Enter');
+    await expect(dialog).toHaveCount(0);
+    expect(decisions).toHaveLength(1);
+    await expect(page.locator('#case-status')).toBeFocused();
+    legacy = true;
+    await open.click();
+    await expect(review).toBeDisabled();
+    await expect(
+      page.getByText(
+        locale === 'fa' ? 'نسخه ثابت مدارک در دسترس نیست.' : 'Fixed evidence is unavailable.',
+        { exact: false }
+      )
+    ).toBeVisible();
+    await expect(evidence).toHaveCount(0);
+    await page.locator('#case-decision').selectOption('Rejected');
+    await expect(review).toBeDisabled();
+    await page.locator('#case-notes').fill('Resubmit evidence');
+    await expect(review).toBeEnabled();
+    await review.click();
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .press('Enter');
+    await expect(dialog).toHaveCount(0);
+    expect(decisions).toHaveLength(2);
+    await expect(page.locator('#case-status')).toBeFocused();
   });
-  await page.goto('/admin/crm/corrections');
-  await page.getByRole('button', { name: 'Review case', exact: true }).click();
-  await expect(page.getByText('Original', { exact: true })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Open evidence 1' })).toHaveAttribute(
-    'href',
-    'https://storage.example.test/fixed?signature=test'
-  );
-  await page.getByRole('button', { name: 'Review decision', exact: true }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
-  await expect(page.getByRole('dialog')).toHaveCount(0);
-  legacy = true;
-  await page.getByRole('button', { name: 'Review case', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Review decision', exact: true })).toBeDisabled();
-  await expect(page.getByText('Fixed evidence is unavailable.', { exact: false })).toBeVisible();
-  await page.locator('#case-decision').selectOption('Rejected');
-  await expect(page.getByRole('button', { name: 'Review decision', exact: true })).toBeDisabled();
-  await page.locator('#case-notes').fill('Resubmit evidence');
-  await expect(page.getByRole('button', { name: 'Review decision', exact: true })).toBeEnabled();
-});
 
 for (const locale of ['en', 'fa'])
   test(`correction decisions require the selected case and matching acknowledgement (${locale})`, async ({

@@ -76,6 +76,10 @@ function Corrections({
     [notes, setNotes] = useState(''),
     [decision, setDecision] = useState<Status>('Under Review');
   const [action, setAction] = useState<CorrectionAction | null>(null);
+  const reviewButton = useRef<HTMLButtonElement>(null);
+  const createButton = useRef<HTMLButtonElement>(null);
+  const fieldSelect = useRef<HTMLSelectElement>(null);
+  const statusSelect = useRef<HTMLSelectElement>(null);
   const load = useCallback(async () => {
     const current = ++generation.current;
     ++detailGeneration.current;
@@ -274,6 +278,7 @@ function Corrections({
             <div>
               <Label htmlFor="correction-field">{t('crm.corrections.field', locale)}</Label>
               <select
+                ref={fieldSelect}
                 id="correction-field"
                 value={field}
                 onChange={(event) => setField(event.target.value)}
@@ -328,6 +333,7 @@ function Corrections({
               />
             </div>
             <Button
+              ref={createButton}
               type="submit"
               disabled={
                 !value.trim() ||
@@ -347,6 +353,7 @@ function Corrections({
           <>
             <Label htmlFor="case-status">{t('crm.corrections.status', locale)}</Label>
             <select
+              ref={statusSelect}
               id="case-status"
               disabled={busy || !!action}
               value={status}
@@ -490,6 +497,7 @@ function Corrections({
                   className="block rounded border bg-background text-foreground p-2 w-full"
                 />
                 <Button
+                  ref={reviewButton}
                   disabled={
                     busy ||
                     !!action ||
@@ -517,6 +525,13 @@ function Corrections({
       {action && (
         <TeamActionDialog
           action={action}
+          finalFocus={() =>
+            action.expected.id
+              ? (reviewButton.current ?? statusSelect.current)
+              : createButton.current?.disabled
+                ? fieldSelect.current
+                : createButton.current
+          }
           onClose={() => setAction(null)}
           onSuccess={async (value) => {
             const result = value as {

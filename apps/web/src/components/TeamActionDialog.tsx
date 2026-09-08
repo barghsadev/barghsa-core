@@ -1,5 +1,5 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type ComponentProps, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -34,10 +34,12 @@ export function TeamActionDialog({
   action,
   onClose,
   onSuccess,
+  finalFocus,
 }: {
   action: TeamAction;
   onClose: () => void;
   onSuccess: (result: unknown) => Promise<void>;
+  finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -139,7 +141,11 @@ export function TeamActionDialog({
         if (!open && !inFlight.current) onClose();
       }}
     >
-      <DialogContent showCloseButton={!busy} dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <DialogContent
+        showCloseButton={!busy}
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        finalFocus={finalFocus}
+      >
         <form onSubmit={submit} className="space-y-4">
           <DialogHeader>
             <DialogTitle>{action.title}</DialogTitle>
