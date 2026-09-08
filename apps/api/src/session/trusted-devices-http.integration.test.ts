@@ -118,11 +118,15 @@ it('requires authentication, CSRF and fresh step-up, with no cross-user or nonex
 });
 
 it('revokes durably, audits once without secrets and requires OTP on the next login while retaining sessions', async () => {
+  const verifiedAt = (
+    await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [session])
+  ).rows[0].step_up_verified_at as Date;
+  const correlationId = randomUUID();
   const results = await Promise.all(
     [0, 1].map(() =>
       fetch(endpoint(), {
         method: 'DELETE',
-        headers: { ...headers(), 'X-Correlation-Id': 'trust-revoke-http' },
+        headers: { ...headers(), 'X-Correlation-Id': correlationId },
       })
     )
   );
@@ -142,8 +146,11 @@ it('revokes durably, audits once without secrets and requires OTP on the next lo
     )
   ).rows;
   expect(audit).toHaveLength(1);
-  expect(audit[0]).toMatchObject({ user_id: 'trust-owner', metadata: { deviceId: own } });
-  expect(audit[0].correlation_id).toBeTruthy();
+  expect(audit[0]).toMatchObject({
+    user_id: 'trust-owner',
+    metadata: { deviceId: own, stepUpVerified: true, stepUpVerifiedAt: verifiedAt.toISOString() },
+    correlation_id: correlationId,
+  });
   expect(JSON.stringify(audit)).not.toContain(fingerprint);
   expect(JSON.stringify(audit)).not.toContain(token);
   await http.pool.query(
@@ -273,3 +280,36 @@ it('reports database list failures instead of an empty trusted-device list', asy
   expect(response.status).toBe(500);
   expect(await response.text()).not.toContain('hidden_trust_fixture');
 });
+
+it.each(['session', 'step-up'])(
+  'rolls back removal when %s authorization expires during audit persistence',
+  async (deadline) => {
+    await http.pool.query(
+      `UPDATE sessions SET ${
+        deadline === 'session'
+          ? "expires_at=clock_timestamp()+INTERVAL '2 seconds'"
+          : "step_up_verified_at=clock_timestamp()-INTERVAL '14 minutes 58 seconds'"
+      } WHERE session_id=$1`,
+      [session]
+    );
+    await http.pool.query(`CREATE SEQUENCE trust_audit_calls;
+      CREATE FUNCTION delay_trust_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.event='device_trust_revoked' THEN
+        PERFORM nextval('trust_audit_calls'); PERFORM pg_sleep(2.2);
+      END IF; RETURN NEW; END $$;
+      CREATE TRIGGER delay_trust_audit BEFORE INSERT ON audit_log
+      FOR EACH ROW EXECUTE FUNCTION delay_trust_audit()`);
+    const response = await fetch(endpoint(), { method: 'DELETE', headers: headers() });
+    // A sequence survives rollback and proves the request reached the delayed write.
+    expect(
+      (await http.pool.query('SELECT is_called FROM trust_audit_calls')).rows[0].is_called
+    ).toBe(true);
+    expect(response.status, await response.clone().text()).toBe(deadline === 'session' ? 401 : 403);
+    expect(
+      (await http.pool.query('SELECT id FROM device_trusts WHERE id=$1', [own])).rows
+    ).toHaveLength(1);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='device_trust_revoked'")).rows
+    ).toHaveLength(0);
+  }
+);

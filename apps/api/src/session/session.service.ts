@@ -1219,18 +1219,23 @@ export class SessionService {
         'SELECT id FROM device_trusts WHERE id=$1 AND user_id=$2 FOR UPDATE',
         [deviceId, userId]
       );
-      // Revalidate after every possible lock wait, including the trust row.
-      const actor = await client.query(
-        `SELECT revoked_at IS NULL AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp() AS active,
+      const checkAuthorization = async () => {
+        const actor = await client.query(
+          `SELECT revoked_at IS NULL AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp() AS active,
                 step_up_verified_at>clock_timestamp()-($3::double precision * INTERVAL '1 millisecond')
-                AND step_up_verified_at<=clock_timestamp() AS fresh
+                AND step_up_verified_at<=clock_timestamp() AS fresh,
+                step_up_verified_at AS "verifiedAt"
          FROM sessions WHERE session_id=$1 AND user_id=$2`,
-        [sessionId, userId, SessionService.STEP_UP_WINDOW_MS]
-      );
-      if (!actor.rows[0]?.active)
-        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
-      if (!actor.rows[0].fresh)
-        throw new HttpException({ error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code }, 403);
+          [sessionId, userId, SessionService.STEP_UP_WINDOW_MS]
+        );
+        if (!actor.rows[0]?.active)
+          throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+        if (!actor.rows[0].fresh)
+          throw new HttpException({ error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code }, 403);
+        return actor.rows[0];
+      };
+      // Row locks protect authority changes; the database clock also covers time spent waiting.
+      const actor = await checkAuthorization();
       if (!target.rows.length)
         throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
       await client.query('DELETE FROM device_trusts WHERE id=$1 AND user_id=$2', [
@@ -1243,11 +1248,12 @@ export class SessionService {
         [
           uuidv7(),
           userId,
-          JSON.stringify({ deviceId }),
+          JSON.stringify({ deviceId, stepUpVerified: true, stepUpVerifiedAt: actor.verifiedAt }),
           correlationIdStorage.getStore() ?? uuidv7(),
           ip,
         ]
       );
+      await checkAuthorization();
       await client.query('COMMIT');
       return { revoked: true as const };
     } catch (error) {
