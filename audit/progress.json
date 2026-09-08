@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
+  "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
   "active_step": "R01",
-  "next_action": "R01: review 02-auth-users-admin.md#T-05.02.01 full profile/list requirements against current implementation and existing evidence. Archive local criteria are checked at 1da0e6a: checklist, safe acknowledgement, detailed fa/en blockers, ownership and soft retention. T-05.02.06 stays partial for unimplemented contract integration and approved retention policy. Reuse invoice/wallet checks. Lost-contact policy question remains pending.",
+  "next_action": "R01: review 02-auth-users-admin.md#T-05.01.01 CRM users list against canonical requirements and current evidence. T-05.02.01/.02/.03/.04/.05 are verified locally. T-05.02.06 remains partial for contract integration and approved retention policy. Reuse the 80 passing built-app CRM cases and final eight hover/tab cases; retain all earlier backend evidence. Lost-contact approver/evidence policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "T-05.02.02/.03/.04/.05 remain verified. Finish T-05.02.01 whole-profile/list acceptance. T-05.02.06 local archive criteria pass; production contract integration and approved retention policy remain. Preserve existing address, identity correction and permission evidence."
+        "T-05.02.01/.02/.03/.04/.05 are verified locally. Next complete CRM list T-05.01.01 and other remaining list criteria. T-05.02.06 local archive criteria pass; production contract integration and approved retention policy remain."
       ]
     },
     {
@@ -419,6 +419,10 @@
     {
       "id": "R01-archive-confirmation-and-retention",
       "review_record": "audit/evidence/step-reviews.json#R01-archive-confirmation-and-retention"
+    },
+    {
+      "id": "R01-crm-profile-page-acceptance",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
     }
   ],
   "deferred_improvements": [
@@ -432,8 +436,8 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 41,
-    "partial": 19,
+    "acceptance_verified": 42,
+    "partial": 18,
     "pending": 262,
     "merged_prs": 301,
     "historical_skips": 58,

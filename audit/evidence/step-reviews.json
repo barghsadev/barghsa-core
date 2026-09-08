@@ -1341,11 +1341,12 @@
         "Real PostgreSQL/HTTP tests verify canonical legal-owner protection even with Manager and Finance agents, no mutation/audit on refusal, exact staff actor/trimmed reason/timestamp, retained paid invoice and sibling profile, and no duplicate archival audit. Two existing concurrency tests now wait for the active-profile CTE introduced in the prior wallet step.",
         "Visual review found the close button overlapping the Persian title. Both affected dialog headers now reserve physical-right spacing. Desktop/mobile fa/en light/dark checks pass with keyboard, focus, geometry and accessibility assertions. Axe can leave one wrapped transparent description unresolved on mobile; the test permits only that exact node and proves opaque rendered colors, unobscured text and contrast >=4.5. No rule or color threshold was disabled.",
         "Preserve verified CRM tasks T-05.02.02/.03/.04/.05: every other recorded source hash still matches. API diff is confined to archive blocker metadata/localization; other handlers remain unchanged. Existing 28 CRM browser cases passed before the final header-only spacing change, which the final eight archive cases cover. New translations only add archive keys.",
-        "The archival runbook records current behavior and the remaining contract/retention prerequisites without claiming an approved policy or production exercise."
+        "The archival runbook records current behavior and the remaining contract/retention prerequisites without claiming an approved policy or production exercise.",
+        "Evidence correction: the default browser server was development, not the built frontend. The subsequent R01-crm-profile-page-acceptance explicitly checks the production preview and includes every archive browser case. API/build results and the earlier source bindings remain valid."
       ],
       "checks": [
         "API archive acceptance, invoice, wallet and verification-case HTTP batch: 94/94 pass. The unchanged finance race file passed 10/10 in the earlier batch. Combined 104 distinct API cases pass across focused runs, not one 104-case invocation.",
-        "Production browser: existing 28 CRM cases passed in the initial Chromium run; final focused fa/en x light/dark x desktop/mobile archive run passes 8/8. Browser fixture includes current production API/package builds. The previously failed scanner readings and test-fixture logs are retained.",
+        "Development browser: existing 28 CRM cases passed in the initial Chromium run; final focused fa/en x light/dark x desktop/mobile archive run passes 8/8. Browser fixture includes current production API/package builds. The previously failed scanner readings and test-fixture logs are retained.",
         "pnpm --filter @barghsa/i18n test: 50/50 pass, exit 0.",
         "API/web typechecks, changed-file lint and final formatting, production web build, all 41 route budgets, OpenAPI generation/drift and diff checks pass, exit 0.",
         "No full regression, coverage or image checkpoint is renewed. No dependency, schema, remote state or threshold change."
@@ -1426,6 +1427,93 @@
         {
           "path": "audit/evidence/r01/barghsa-archive-dialog-en-light-mobile-chrome.png",
           "sha256": "98e33f05cbfb61411f6039a9387c31a82a66004a545f9dc38731eb78107a18ee"
+        }
+      ]
+    },
+    {
+      "id": "R01-crm-profile-page-acceptance",
+      "date": "2026-09-08",
+      "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+      "summary": "Closed local profile-detail acceptance with readable themes, contained tabs, keyboard scrolling and localized load retries.",
+      "review": [
+        "Compared T-05.02.01 with the current GET controller/service and all seven UI tabs. Profile/account contacts, verification, dates, safe session references/count/activity, addresses/main marker, sibling profiles, scoped agents/history and authorized legal documents are present. The required /app/crm/profiles/:profileId alias reaches the staff detail page.",
+        "The legal read moved to readCrmLegalInfo in the already-reviewed legal-edit step. Its SQL column whitelist, references and module/test hashes remain unchanged. Other changed API lines concern edit/archive mutations, not the detail permission boundary. Reuse earlier backend evidence instead of repeating the CRM suite.",
+        "Initial page-wide tests reproduced dark verification labels/inputs at 1.04:1 contrast, low-contrast links/text, an orange action at 3.59:1 and mobile overflow of 107/171 pixels. The page now uses theme-aware cards/fields/text, accessible colored links and wrapping tabs. Main-address cards and hovered session/sibling rows preserve readable backgrounds.",
+        "The session table is a named, focusable scroll region so keyboard users can reach offscreen columns. One documented attribute-level lint exception permits that intentional focus stop; global rules are unchanged. Axe scans, tab/panel relationships, Home/End focus and page-width checks pass on all seven tabs.",
+        "Loading is announced. Failed loads preserve localized 403/404 messages, replace network/parser details with the generic locale message and offer keyboard-accessible retry. Eight built-app cases cover a held load, 503, 403, 404, network failure, malformed JSON and successful recovery. The initial fixture assumed only one startup read; it now permits the real locale-triggered aborted/refetched read while preserving each intended response phase.",
+        "Corrected evidence labeling: earlier browser commands in this continuation used the default development server. Development screenshots exposed the guarded router devtools. The root already excludes them from production. The final explicit preview runs passed without them. No product devtools defect or change is claimed.",
+        "Visual inspection of final built-app Persian dark mobile and English dark desktop screenshots confirms readable controls and wrapped navigation. Existing profile action/document/record tests are included in the 80-case production run. Larger live history volume and legacy document recovery remain operational evidence, not local UI acceptance claims."
+      ],
+      "checks": [
+        "Built-app browser run: PLAYWRIGHT_BASE_URL=http://127.0.0.1:4179 pnpm --filter @barghsa/web exec playwright test e2e/crm-detail-permissions.spec.ts --project=chromium --project=mobile-chrome --workers=2 --reporter=list. 80/80 pass, exit 0. Saved HTTP index equality and manifest hashes prove the target was the local production build.",
+        "After the final two hover-background refinements, the same production target passes all eight full-tab desktop/mobile fa/en light/dark cases, including hover scans. Other 72 cases are reused because only these two backgrounds and their test assertions changed. The earlier 80-case invocation passed before that refinement.",
+        "Web typecheck, focused lint, formatting, production build and all 41 complete-route budgets pass. The final source change after typecheck was CSS and a narrow lint comment for a keyboard-accessible scroll region.",
+        "API data and permission checks reuse the source-bound CRM/records/legal-document evidence and the unchanged legal-read module tested in R01-crm-legal-edit. No new API, dependency, migration, global coverage or image checkpoint is claimed."
+      ],
+      "remaining": [
+        "T-05.01.01 CRM list requirements are next; this closes the profile-detail task only.",
+        "T-05.02.06 remains partial for unimplemented production contract integration and approved retention policy.",
+        "Large production history-volume performance and legacy immutable-document recovery remain operational prerequisites. The detail session list contains the latest 20 records; active count is computed separately. The written task does not specify session pagination.",
+        "Global admin/terms-banner and other screen acceptance remains in R03."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "512d12cf2d77852a695daa8a61930d8395fc0fefc38bf99fef05b974a620b588"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "5df75267ac00027960c6622dfad6d039d5966a413bbb5f503eb87fb427d318da"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "1d52198a6384a38484c6d8180ad6afa1c31fdc1f0343f1a97ec4c25d76d3e0ad"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-legal.ts",
+          "sha256": "3b64d91021c7aa8d4115bd710f9da2fd5b89a6aa523fd063b7463933a8827db0"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-crm-page-axe-red.json.gz",
+        "audit/evidence/r01/barghsa-crm-page-browser-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-budgets.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-build-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-build.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-fixed.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-format-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-format-fixed.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-format-verified.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-hover-budgets.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-hover-build.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-hover-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-hover-production-target.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-hover-production.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-lint.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-production-target.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-production.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-red.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-regression.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-retry-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-page-retry-format.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ],
+      "visual_evidence": [
+        {
+          "path": "audit/evidence/r01/barghsa-crm-page-fa-true-0-mobile-chrome.png",
+          "sha256": "cb8b41d2aa8c4420709822319745597a995fd1110d2f0c7fc616d8675e777817"
+        },
+        {
+          "path": "audit/evidence/r01/barghsa-crm-page-en-true-3-chromium.png",
+          "sha256": "f4491025da9c65dfa168646ef6a128fb36bdaa93a093c9aae3a9197f45d44887"
         }
       ]
     }
