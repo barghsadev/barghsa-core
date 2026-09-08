@@ -1,6 +1,6 @@
 # Remaining repairs, reviews and skipped work
 
-Current through product `5543cc2` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
+Current through product `455ed61` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
 
 ## Current numbers
 
@@ -16,11 +16,9 @@ The saved inventory contains **301 merged PRs**, last recorded as checked agains
 
 ## Next bounded step
 
-Continue R01 with the CSRF route/alternative and sensitive-action caller matrices for `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Then reconcile task-wide session acceptance. The [session caller matrix](session-caller-review.md) records covered triggers and reusable evidence for ten unchanged methods.
+Continue R01 from the [security route review](security-route-review.md). The complete registration matrix contains 342 routes, 203 unsafe-method routes and 120 guarded step-up routes. Next verify staff creation that grants roles and verification-provider configuration, then finish required domain audit/UI recovery and explicit public-auth/callback/telemetry dispositions. Metadata alone is not task acceptance.
 
-Latest repair `5543cc2` makes invitation membership, current-session rotation, other-session revocation and audit atomic. Original actor/invitation deadlines remain binding after lock/write waits.64 distinct API cases and4 focused desktop/mobile browser cases pass across recorded runs; types/lint/format and unchanged OpenAPI pass. Browser API fixtures exercise retries, refreshed profiles and the new CSRF cookie on the next action. The HTTP suite verifies real credential delivery and authorization. Full invitation/decline/details and agent/ownership acceptance remains in F07.
-
-Use [step evidence](evidence/step-reviews.json) for earlier cookie, location, self-service, staff, ownership and reset checks. Do not rerun valid evidence or infer whole-task closure from one repaired boundary. Lost-contact policy remains pending. No later focused step renews the broad checkpoint.
+Latest repair `455ed61` rejects invalid/future step-up times, removes session credentials from guard logs, logs all CSRF rejection paths and returns the required `requiresStepUp` error flag. The final combined run passes 83 distinct API cases plus types/lint/format. The [session caller matrix](session-caller-review.md) retains earlier credential effects and reusable evidence. No broad checkpoint is renewed; lost-contact policy remains pending.
 
 ## Ordered work
 
@@ -65,7 +63,7 @@ All 18 partial records are routed below. Read exact requirements and limitations
 | 01-platform-infrastructure.md#T-04.01.04 | Production sizing, load, replica visibility and actual alerts, V01/external. |
 | 02-auth-users-admin.md#T-02.02.01 | Remaining rotation callers; local cookie topology verified, R01. |
 | 02-auth-users-admin.md#T-02.02.02 | Remaining revocation callers; approximate country location verified, R01. |
-| 02-auth-users-admin.md#T-02.02.03 | Complete route/caller matrix and explicit CSRF alternatives, R01. |
+| 02-auth-users-admin.md#T-02.02.03 | Registration matrix saved; explicit CSRF alternatives and handler dispositions remain, R01. |
 | 02-auth-users-admin.md#T-02.02.04 | Built sensitive-action recovery matrix; future refund/contract consumers separate, R01. |
 | 02-auth-users-admin.md#T-02.03.03 | Approved recovery policy, credential-change method and complete case audit, R01/external. |
 | 02-auth-users-admin.md#T-05.02.06 | Future contract writer and approved retention policy, V01/B01/external. |

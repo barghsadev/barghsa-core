@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "5543cc267fd27b1cf445e2b0bb62c32b9f2a8105",
+  "source_revision": "455ed6193831daaa1e8836880de3004be4dd4c18",
   "active_step": "R01",
-  "next_action": "R01: complete CSRF route/alternative and sensitive-action caller matrices for T-02.02.03/T-02.02.04, then reconcile task-wide session acceptance. Reuse audit/session-caller-review.md and source-bound checks; invitation acceptance is verified at 5543cc2. F07 retains full invitation/decline/details and agent/ownership acceptance. Lost-contact policy remains pending; no broad checkpoint renewed.",
+  "next_action": "R01: continue sensitive-action caller/audit/UI review from audit/security-route-review.md. First verify staff creation with role grants and verification-provider configuration, which lack route step-up metadata. Guard boundary repair455ed61 passes83 focused API cases. Public-auth/callback/telemetry CSRF dispositions and task-wide session reconciliation remain. Lost-contact policy remains pending; reuse valid prior evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Reviewed session triggers include login/MFA/reset, staff/ownership/self-service revocation, profile role changes and invitation acceptance. Finish CSRF/sensitive-action matrices and task-wide session evidence reconciliation."
+        "Route registration matrix saved at455ed61; CSRF/step-up guard boundaries repaired and83 focused API cases pass. Finish public-auth/callback/telemetry dispositions, required sensitive-action/audit/UI callers and task-wide session reconciliation."
       ]
     },
     {
@@ -525,6 +525,10 @@
     {
       "id": "R01-invitation-credentials",
       "review_record": "audit/evidence/step-reviews.json#R01-invitation-credentials"
+    },
+    {
+      "id": "R01-guard-boundaries",
+      "review_record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
     }
   ],
   "deferred_improvements": [

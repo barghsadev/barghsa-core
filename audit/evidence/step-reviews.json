@@ -3517,6 +3517,85 @@
         "/tmp/barghsa-invitation-atomic-unit.log",
         "/tmp/barghsa-invitation-atomic-web-types.log"
       ]
+    },
+    {
+      "id": "R01-guard-boundaries",
+      "date": "2026-09-08",
+      "source_revision": "455ed6193831daaa1e8836880de3004be4dd4c18",
+      "summary": "Reject invalid/future step-up times, keep credentials out of guard logs, log every CSRF rejection and return the required step-up response flag.",
+      "review": [
+        "Eleven new unit cases failed before repair: invalid/future dates were accepted, CSRF/step-up logs exposed session identifiers, and public-JSON/refresh CSRF failures lacked security logs. The repaired guards reject non-finite, future and expired verification timestamps; reasons/method/correlation remain available without session, refresh or CSRF credentials.",
+        "Two real HTTP assertions then reproduced the missing requiresStepUp response flag on staff-role and storage mutations. The common error filter now emits true only for403 AUTHZ:STEP_UP_REQUIRED. It does not pass arbitrary exception fields through. CSRF, authentication, malformed-body and not-found errors retain their envelopes without the flag.",
+        "The real staff-role case proves a future timestamp cannot grant roles or revoke the target session, then restores current verification and proves the valid role-change flow still works. Storage probes/mutations distinguish CSRF from step-up failures.",
+        "Read compiled Nest registration metadata without creating an application or running handlers:33 modules,63 controllers,342 routes,203 unsafe-method routes,120 RequiresStepUp routes and14 unsafe SkipCsrf routes. All120 have StepUpGuard. The CSV binds each controller source hash; route registration is not domain authorization, transaction or UI acceptance.",
+        "Public auth has11 JSON-constrained routes; refresh has its own token-bound guard; payment/chargeback and Resend entry methods verify signed raw payloads before processing. The GET payment return enters a provider-processing path and needs the existing finance review, despite being GET. Public-auth alternatives, CSP telemetry behavior and the literal CSRF requirement remain explicit dispositions in security-route-review.md."
+      ],
+      "checks": [
+        "83 distinct API cases in7 files pass in the final combined run. Earlier61 and8 case runs overlap and are not added. The initial typecheck found an exact-optional-property mismatch in the new fixture; corrected fixture and final API typecheck pass. Focused ESLint, Prettier and diff review pass.",
+        "The existing generated OpenAPI comparison passes. This does not document the new optional error flag by itself. No frontend, schema or dependency change; no browser, broad coverage, route-budget or production-image renewal."
+      ],
+      "remaining": [
+        "Continue the sensitive-action caller/audit/UI matrix, starting with staff creation that grants roles and verification-provider configuration without route step-up metadata. Complete the public-auth/callback/telemetry CSRF dispositions before whole-task acceptance. Other legacy session-service logging is not certified by this guard-only repair."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "5626cb476fa0a9f2671c22b802331b9a0a8842a5b597bb7184cfb7c929d3e613"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "294eedd94a379655b8b63081cea1f9b1227b9a586b642fb804263be033de76cf"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.test.ts",
+          "sha256": "fbe7e969203b173c1554b1d61dfdbcd49eaae911f6293c59fece7f63dcebd623"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "8d3fa7393599ec5a12d6260a6d3a5a5afbcfaf2fb7ccde57fa8bee4c995bf66f"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+          "sha256": "f330c388c4e5ed471a736e96426091bf8f73933d221a43da31f81a5764807248"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.ts",
+          "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.test.ts",
+          "sha256": "959323fbb2ad7263b587ea2b6332186623372d98c15d1b45f965b7406b2870f0"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+        },
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "route_inventory": "audit/evidence/r01/route-security.csv",
+      "logs": [
+        "/tmp/barghsa-guard-review-after.log",
+        "/tmp/barghsa-guard-review-before.log",
+        "/tmp/barghsa-guard-review-final.log",
+        "/tmp/barghsa-guard-review-flag-before.log",
+        "/tmp/barghsa-guard-review-format-check.log",
+        "/tmp/barghsa-guard-review-format-final.log",
+        "/tmp/barghsa-guard-review-format.log",
+        "/tmp/barghsa-guard-review-lint-final.log",
+        "/tmp/barghsa-guard-review-lint.log",
+        "/tmp/barghsa-guard-review-openapi.log",
+        "/tmp/barghsa-guard-review-staff.log",
+        "/tmp/barghsa-guard-review-types-final.log",
+        "/tmp/barghsa-guard-review-types.log"
+      ]
     }
   ]
 }

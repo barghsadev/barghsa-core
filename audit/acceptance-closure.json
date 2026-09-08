@@ -3372,11 +3372,11 @@
         },
         {
           "path": "apps/api/src/session/csrf.guard.ts",
-          "sha256": "021a231753cdf7779dd49ea7d98c9f4ac828b95e940a8876ff6a7e9928ceebcb"
+          "sha256": "8d3fa7393599ec5a12d6260a6d3a5a5afbcfaf2fb7ccde57fa8bee4c995bf66f"
         },
         {
           "path": "apps/api/src/session/refresh-csrf.guard.ts",
-          "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+          "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
@@ -3384,7 +3384,7 @@
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
-          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -3405,6 +3405,34 @@
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
           "sha256": "ecdbe31b9ba3079242f510d6af12a2905d7a320692956b5df9250fa763e0ea1b"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "5626cb476fa0a9f2671c22b802331b9a0a8842a5b597bb7184cfb7c929d3e613"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "294eedd94a379655b8b63081cea1f9b1227b9a586b642fb804263be033de76cf"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.test.ts",
+          "sha256": "fbe7e969203b173c1554b1d61dfdbcd49eaae911f6293c59fece7f63dcebd623"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+          "sha256": "f330c388c4e5ed471a736e96426091bf8f73933d221a43da31f81a5764807248"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.test.ts",
+          "sha256": "959323fbb2ad7263b587ea2b6332186623372d98c15d1b45f965b7406b2870f0"
+        },
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
         }
       ],
       "checks": [
@@ -3416,10 +3444,11 @@
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
-        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
+        "At455ed61, reviewed guard validation/security logs and exact step-up error flag;83 API cases and final types/lint/format pass. Complete metadata inventory is in security-route-review.md. Other criteria and older source drift remain. See evidence/step-reviews.json#R01-guard-boundaries."
       ],
       "limitations": [
-        "Complete the state-changing-route/caller matrix. Public auth now uses JSON plus the current same-origin CORS policy; signed callbacks use independent request authentication. Reconcile these alternatives with the literal no-exemption wording before whole-task closure.",
+        "Registered-route matrix complete at455ed61. Finish explicit public-auth, signed-callback, GET-return and telemetry dispositions against the literal requirement. Metadata alone does not certify every handler; see security-route-review.md.",
         "The JSON defense depends on retaining same-origin CORS authorization. A future cross-origin frontend requires an explicitly reviewed origin policy; no production topology change is claimed."
       ],
       "merged_prs": [
@@ -3427,13 +3456,15 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9827e96c6e439e07c85daead4655a03fff84becd",
+        "source_revision": "455ed6193831daaa1e8836880de3004be4dd4c18",
         "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
         "paths": [
-          "apps/api/src/auth/auth.controller.ts"
+          "apps/api/src/session/csrf.guard.ts",
+          "apps/api/src/session/refresh-csrf.guard.ts",
+          "apps/api/src/session/step-up.guard.ts"
         ],
-        "review": "Reviewed selected reset/issuance/schema/contract changes and their shared callers. Unchanged behavior reuses valid evidence. Earlier unrelated source drift is not silently refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-reset-otp-first"
+        "review": "Current guard files and bounded filter change reviewed; relevant final HTTP/unit checks pass. Other source evidence is not silently refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
       }
     },
     {
@@ -3463,11 +3494,11 @@
         },
         {
           "path": "apps/api/src/session/csrf.guard.ts",
-          "sha256": "2a60792f376464c8459c72499cf267857cd5f1804438c5df8338f1ee4ed6bd58"
+          "sha256": "8d3fa7393599ec5a12d6260a6d3a5a5afbcfaf2fb7ccde57fa8bee4c995bf66f"
         },
         {
           "path": "apps/api/src/session/refresh-csrf.guard.ts",
-          "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+          "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
@@ -3475,7 +3506,7 @@
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
-          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -3500,6 +3531,34 @@
         {
           "path": "apps/api/src/session/self-revocation.integration.test.ts",
           "sha256": "0f55543660dc5dbb16bcb0c21efc930f4ed0be170b192b48030b2e94c2ed1f3d"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "5626cb476fa0a9f2671c22b802331b9a0a8842a5b597bb7184cfb7c929d3e613"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "294eedd94a379655b8b63081cea1f9b1227b9a586b642fb804263be033de76cf"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.test.ts",
+          "sha256": "fbe7e969203b173c1554b1d61dfdbcd49eaae911f6293c59fece7f63dcebd623"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+          "sha256": "f330c388c4e5ed471a736e96426091bf8f73933d221a43da31f81a5764807248"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.test.ts",
+          "sha256": "959323fbb2ad7263b587ea2b6332186623372d98c15d1b45f965b7406b2870f0"
+        },
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
         }
       ],
       "checks": [
@@ -3510,7 +3569,8 @@
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
-        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
+        "At455ed61, reviewed guard validation/security logs and exact step-up error flag;83 API cases and final types/lint/format pass. Complete metadata inventory is in security-route-review.md. Other criteria and older source drift remain. See evidence/step-reviews.json#R01-guard-boundaries."
       ],
       "limitations": [
         "The complete matrix of built sensitive actions and their UI recovery remains to be reviewed with each domain.",
@@ -3521,15 +3581,15 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "455ed6193831daaa1e8836880de3004be4dd4c18",
+        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
         "paths": [
-          "apps/api/src/session/session.service.ts",
-          "apps/api/src/session/session-cap.integration.test.ts",
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ]
+          "apps/api/src/session/csrf.guard.ts",
+          "apps/api/src/session/refresh-csrf.guard.ts",
+          "apps/api/src/session/step-up.guard.ts"
+        ],
+        "review": "Current guard files and bounded filter change reviewed; relevant final HTTP/unit checks pass. Other source evidence is not silently refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
       }
     },
     {
