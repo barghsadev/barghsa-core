@@ -12,7 +12,10 @@ export default function AdminLayout() {
   const locale = useLocale();
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <div className="flex flex-col h-dvh bg-gray-50" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div
+      className="flex flex-col h-dvh bg-background text-foreground"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       <a href="#admin-content" className="sr-only focus:not-sr-only focus:p-3">
         {t('shell.skipContent', locale)}
       </a>

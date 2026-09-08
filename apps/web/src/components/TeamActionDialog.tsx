@@ -166,7 +166,7 @@ export function TeamActionDialog({
             </p>
           )}
           {error && (
-            <p role="alert" className="text-sm text-red-700">
+            <p role="alert" className="text-sm text-red-700 dark:text-red-300">
               {error}
             </p>
           )}

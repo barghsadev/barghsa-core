@@ -252,11 +252,13 @@ function Corrections({
     <section className="space-y-5 max-w-5xl mx-auto" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header>
         <h1 className="text-2xl font-semibold">{t('crm.corrections.title', locale)}</h1>
-        <p className="mt-2 text-sm text-gray-600">{t('crm.corrections.description', locale)}</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t('crm.corrections.description', locale)}
+        </p>
       </header>
       {!profileId && (
         <p>
-          <a className="text-blue-700 underline" href="/admin/crm">
+          <a className="text-foreground underline" href="/admin/crm">
             {t('crm.corrections.chooseProfile', locale)}
           </a>
         </p>
@@ -265,7 +267,7 @@ function Corrections({
       {profileId && profileType && canCreate && (
         <form
           onSubmit={(event) => void create(event)}
-          className="space-y-3 rounded border bg-white p-4"
+          className="space-y-3 rounded border bg-card text-card-foreground p-4"
         >
           <h2 className="font-semibold">{t('crm.corrections.request', locale)}</h2>
           <fieldset disabled={busy || !!action} className="space-y-3">
@@ -275,7 +277,7 @@ function Corrections({
                 id="correction-field"
                 value={field}
                 onChange={(event) => setField(event.target.value)}
-                className="block rounded border p-2"
+                className="block rounded border bg-background text-foreground p-2"
               >
                 {(profileType === 'LEGAL'
                   ? ['legal_name', 'national_identifier']
@@ -305,7 +307,7 @@ function Corrections({
                 maxLength={1000}
                 value={reason}
                 onChange={(event) => setReason(event.target.value)}
-                className="block w-full rounded border p-2"
+                className="block w-full rounded border bg-background text-foreground p-2"
               />
             </div>
             <div>
@@ -352,7 +354,7 @@ function Corrections({
                 setStatus(event.target.value as Status);
                 setOffset(0);
               }}
-              className="rounded border p-2"
+              className="rounded border bg-background text-foreground p-2"
             >
               {(['Open', 'Under Review', 'Approved', 'Rejected'] as const).map((value) => (
                 <option key={value} value={value}>
@@ -384,7 +386,7 @@ function Corrections({
           {queue.cases.map((item) => (
             <li
               key={item.id}
-              className="rounded border bg-white p-3 flex flex-wrap items-center justify-between gap-3"
+              className="rounded border bg-card text-card-foreground p-3 flex flex-wrap items-center justify-between gap-3"
             >
               <span>
                 {t(`crm.corrections.${item.fieldName}`, locale)} · {item.requestedValue}
@@ -422,7 +424,7 @@ function Corrections({
       )}
       {detailLoading && <p role="status">{t('crm.list.loading', locale)}</p>}
       {detail && (
-        <article className="space-y-3 rounded border bg-white p-4 break-words">
+        <article className="space-y-3 rounded border bg-card text-card-foreground p-4 break-words">
           <h2 className="font-semibold">{t(`crm.corrections.${detail.fieldName}`, locale)}</h2>
           <dl className="grid gap-3 sm:grid-cols-2">
             {[
@@ -435,7 +437,9 @@ function Corrections({
               ['status', t(`crm.corrections.${detail.status}`, locale)],
             ].map(([key, value]) => (
               <div key={key}>
-                <dt className="text-sm text-gray-500">{t(`crm.corrections.${key}`, locale)}</dt>
+                <dt className="text-sm text-muted-foreground">
+                  {t(`crm.corrections.${key}`, locale)}
+                </dt>
                 <dd className="whitespace-pre-wrap">{value}</dd>
               </div>
             ))}
@@ -446,7 +450,7 @@ function Corrections({
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="block text-blue-700 underline"
+              className="block text-foreground underline"
             >
               {t('crm.corrections.evidence', locale)} {index + 1}
             </a>
@@ -465,7 +469,7 @@ function Corrections({
                   id="case-decision"
                   value={decision}
                   onChange={(event) => setDecision(event.target.value as Status)}
-                  className="block rounded border p-2"
+                  className="block rounded border bg-background text-foreground p-2"
                 >
                   {(detail.status === 'Open'
                     ? ['Under Review', 'Rejected']
@@ -483,7 +487,7 @@ function Corrections({
                   maxLength={1000}
                   value={notes}
                   onChange={(event) => setNotes(event.target.value)}
-                  className="block rounded border p-2 w-full"
+                  className="block rounded border bg-background text-foreground p-2 w-full"
                 />
                 <Button
                   disabled={
