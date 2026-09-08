@@ -6350,6 +6350,125 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-api-final.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-api-final.log.gz",
+      "sha256": "ea940e7df55567e1f4687895e24281db4a81fc607291bef7ded8d4479193cc96",
+      "encoding": "gzip",
+      "stored_sha256": "2fb9aed036bb9d37833d7a261ff090ddb9d5d9b17e050edfd183cba32cda6898"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-api-recheck.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-api-recheck.log.gz",
+      "sha256": "e6b45f7f96a3540846a6f078d26eb64c2ac5c86c72402a111e07d67b966603c7",
+      "encoding": "gzip",
+      "stored_sha256": "62c3e5f55984cbe29f3b7df8301c4fb7e693496d19f60636d53e559ff063452d"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-api-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-api-types.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-api-types.log.gz",
+      "sha256": "dbb58a6846e0ab3897389d549058d1bba94f808a7ac5bbf1337c29debf3478e4",
+      "encoding": "gzip",
+      "stored_sha256": "729fd92b518a9c82a6723fde96814e9883118a2bc5c3f9d5afe101dbae41a9ba"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-api.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-api.log.gz",
+      "sha256": "df585214ff9e00c0644309d99c53930d3f29cae3b4208eb5f534a3c8e397fb58",
+      "encoding": "gzip",
+      "stored_sha256": "f2f4724e000d61a8666d6924037cfc9a99c9ba3d961f91859bc4e0f10a6c347f"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-artifacts.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-artifacts.log.gz",
+      "sha256": "9ccd1eb708d8e7b4f8d431aea6283031b78a201836555751d2196beccd7209e0",
+      "encoding": "gzip",
+      "stored_sha256": "f44f4a471017929f6e957de4735608a875b5697fe3b6dd6e4af92dd27bd8f51f"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-browser.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-browser.log.gz",
+      "sha256": "f3d91fad90e1c5f1276bc045d121ff3285cfe09fdf1024d8981a512081e16172",
+      "encoding": "gzip",
+      "stored_sha256": "01ebc22c9a72d8dee534a7fb5ca36d0ed612cc00f28ba6ecc27ede7e56dfe179"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-budgets.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-budgets.log.gz",
+      "sha256": "f70f12bf916814410b8a8849f42bcd12a18605844d2079b4f9e2de88cb50a097",
+      "encoding": "gzip",
+      "stored_sha256": "13a408106b1ead2ca7bbd376e6edb8eda9a7b4943945e72581c853b8648736c0"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-commit.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-commit.log.gz",
+      "sha256": "4f36f8d6aec661eee6584575a5f0c7c7f04f0a3abe23fe84241d103e53da85bd",
+      "encoding": "gzip",
+      "stored_sha256": "d21219c7c082324e649f74f98792a75c18f19a6f981c8dc9ac0566601983f4f7"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-format-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-format-fix.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-format-fix.log.gz",
+      "sha256": "78c7565d0a9f2988d0615bf84f8d4599671cb0692d842825caac3f5dde72792c",
+      "encoding": "gzip",
+      "stored_sha256": "cf4dfd0183782f03b2f72875c3e037ef9983494c136737fc51ecee5de79ed4fd"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-format.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-format.log.gz",
+      "sha256": "26c1b8b864c7beded3159dca67f0cdb36146ab4478e0c83ff0db76baeacd1b40",
+      "encoding": "gzip",
+      "stored_sha256": "d0bc1857409b1ed4726f22088ffdab4b8b980cc0aa2e9d55fb5a544c202ec6cb"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-openapi.log",
+      "path": "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+      "sha256": "135329686d2878faa2e19fe4a091501fbc48ad6c6463fb6530841b5e33657567",
+      "encoding": "gzip",
+      "stored_sha256": "c694a0d88e6bea88c484ed9dba8a4c032dfac224c3193ce3a97d61879e8b9b7a"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-source-review.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-source-review.log.gz",
+      "sha256": "c23c086d19fdaa8cea4bfe78f8843ea0de5da297b2e32e48e27dbe80166f6f1e",
+      "encoding": "gzip",
+      "stored_sha256": "265e74bb227c58c3928f9ed13bc840e8c249fef986ebc775a025051db1a5ea0b"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-web-build.log",
+      "path": "audit/evidence/417ab33/r01-agent-mutation-web-build.log.gz",
+      "sha256": "5716b65995f2c044ef10df873e6247185e6eb75f15649b9f5ee62f7796ba5025",
+      "encoding": "gzip",
+      "stored_sha256": "1225f3e3ab629b7a82d3f45d13faf1bcc8ea98077e287e00017ebfcdd3e3f8dd"
+    },
+    {
+      "original_path": "/tmp/r01-agent-mutation-web-types.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
     }
   ]
 }

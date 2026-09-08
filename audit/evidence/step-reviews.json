@@ -4091,6 +4091,85 @@
         130,
         218
       ]
+    },
+    {
+      "id": "R01-agent-sensitive-actions",
+      "date": "2026-09-08",
+      "source_revision": "417ab336b32740bf1e8ddd9a2c6fe526a5e71f8f",
+      "summary": "Keep agent role changes/removal bound to current authorization through commit and return self-session revocation to the UI.",
+      "review": [
+        "Read canonical T-05.04.04 and related agent/ownership requirements. Confirmed that setAgentRoles trusted the request-time actor identity, omitted current session/CSRF/deadline validation after waits and omitted verified step-up time/request correlation from its audit.",
+        "Extracted the existing staff session check into session/session-step-up.ts. Exact comparison proves the function is unchanged apart from generic name and logger text; staff mutation permission code is byte-identical and keeps its re-export. Agent changes retain profile-first locking, then sorted actor/target accounts, actor session and memberships. Current actor disablement/activation and owner/Manager grants are checked under locks.",
+        "Initial and final session checks enforce exact ownership, current CSRF, revocation, absolute/idle expiry and recent nonfuture step-up. Valid self-demotion/removal passes the final check only for its exact intentional revocation timestamp. No-op preserves membership IDs and credentials. Membership, target session/refresh invalidation and correlated verified-session audit are atomic.",
+        "Success returns sessionRevoked only when this transaction revoked the actor session. TeamActionDialog redirects to login after a successful explicit true result; other operations retain normal refresh. Existing fixed ownership sign-out and error/step-up/retry branches are unchanged.",
+        "21 new HTTP cases cover post-guard role removal, disablement, revocation and CSRF rotation; audit attribution; self/other mutations; expiry during audit with rollback-surviving delay witness; unchanged self roles. Reused and reran13 ownership/agent credential cases and17 staff post-guard authority cases. Historical authorship/user rows remain.",
+        "Initial new-test failures were fixture errors: audit metadata requires a jsonb cast, and the configured default step-up window is15 minutes, not5. Corrected fixtures and retained all failed logs. Existing30 cases passed in the initial combined run and production code did not change afterward.",
+        "32 production-built browser cases pass in fa/en desktop/mobile, including8 self-sign-out cases plus existing role, invitation, ownership and failure flows. Build asset hashes are retained. This does not renew whole-page theme/accessibility acceptance.",
+        "Initial API typecheck overlapped Playwright globalSetup rebuilding API/shared packages and reported missing shared declarations. Sequential rerun passes. Browser setup must finish before consumer typechecks. Format failure corrected; no functional change or broad checkpoint renewal.",
+        "Corrected five profile AgentsController route source bindings that pointed to the separate same-named AI AgentsController. Verified canonical profile controller routes; registration counts and guards are unchanged. Refreshed only eight task records whose helper/dialog source binding exactly matched the immediate product parent; older evidence drifts remain."
+      ],
+      "checks": [
+        "51 distinct API cases pass across the final selected runs:21 new agent mutation,13 ownership/agent and17 staff mutation cases.32 production-browser cases pass.",
+        "API/web types, focused ESLint/Prettier, OpenAPI comparison, production web build, all41 unchanged route budgets and diff review pass."
+      ],
+      "remaining": [
+        "R01: repair confirmed invitation authority gaps in AgentsService.createInvitation/withdrawInvitation. Creation checks owner/Manager before its transaction; withdrawal also accepts the original inviter after their role is removed. Bind both writes to current profile/account/session/grants and audit correlation, preserving non-step-up invitation policy. Then finish current domain-role/conditional-UI and invitation/ownership acceptance. Lost-contact policy remains pending; do not ask again.",
+        "Role-matrix discovery: actual consumers include activeProfileSql, explicit service queries and Owner/Manager checks; AgentRoleGuard has no registered decorator consumers, so its unit tests alone do not prove endpoint enforcement. Existing context/order/address/profile-write HTTP suites cover additive/current membership, stale Owner roles and protected-field denial. Reuse their reviewed code/checks before adding tests. Saved PR134 explicitly implemented only the permission-framework slice."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/staff-mutation-http.integration.test.ts",
+          "sha256": "8356ecd6749f2a7d3637d52648788247086991050dc0100a389fc884132d2449"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
+          "sha256": "ff49d39b0f8700263da604060db2eb32d4ccc746e94ed4e8d7fed67d259f8630"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.controller.ts",
+          "sha256": "11f3967e091303af9d074a71307f877d09fc62fb4e27ecfad3fc54eaa93cf1f5"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "abf868a1138554c428c077b2406c99e28903387016cfc0f1772e6494106d1264"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "28e6838ed0dbd65946bab391a836eb2c1853f22537f8e99cd23916f26ec4e6be"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/r01-agent-mutation-api-final.log",
+        "/tmp/r01-agent-mutation-api-recheck.log",
+        "/tmp/r01-agent-mutation-api-types-final.log",
+        "/tmp/r01-agent-mutation-api-types.log",
+        "/tmp/r01-agent-mutation-api.log",
+        "/tmp/r01-agent-mutation-artifacts.log",
+        "/tmp/r01-agent-mutation-browser.log",
+        "/tmp/r01-agent-mutation-budgets.log",
+        "/tmp/r01-agent-mutation-commit.log",
+        "/tmp/r01-agent-mutation-format-final.log",
+        "/tmp/r01-agent-mutation-format-fix.log",
+        "/tmp/r01-agent-mutation-format.log",
+        "/tmp/r01-agent-mutation-lint.log",
+        "/tmp/r01-agent-mutation-openapi.log",
+        "/tmp/r01-agent-mutation-source-review.log",
+        "/tmp/r01-agent-mutation-web-build.log",
+        "/tmp/r01-agent-mutation-web-types.log"
+      ]
     }
   ]
 }

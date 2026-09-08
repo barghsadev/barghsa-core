@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product `ab10771`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product `417ab33`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,9 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Review `02-auth-users-admin.md#T-05.04.04`, agent-role permission enforcement, including current step-up audit/deadlines and UI recovery. Reuse the credential-invalidation evidence at `8904b03`; record exact unmet criteria before editing. Then continue remaining agent/invitation/ownership and domain/CSRF dispositions.
+Next confirmed defect: invitation creation checks authority before its transaction, and withdrawal still permits the original inviter after loss of their agent role. Repair current authorization at the write boundary, preserving the existing invitation confirmation policy. Then finish `02-auth-users-admin.md#T-05.04.04` current domain-role consumers/conditional UI and full invitation/ownership acceptance. Keep future order/contract/refund integrations explicit.
+
+Agent role changes/removal now recheck current authorization through commit and record verified step-up time/correlation. Self-mutations return to login; no-op preserves credentials. Product `417ab33` passes51 selected API cases and32 production-browser cases, plus types/lint/format/OpenAPI/build and41 unchanged budgets. [Scoped review](evidence/step-reviews.json#R01-agent-sensitive-actions). Whole role-matrix acceptance remains open.
 
 Staff creation T-05.03.01, role assignment T-05.03.02 and staff list T-10.01.01 are now verified locally at `ab10771`. Repairs fixed creator-only initial-role selection, a temporary-password character-class failure and dark-theme staff content. The role picker is expandable and supports multiple selections. Current checks pass: 220 distinct API/unit cases, 12 distinct production-browser cases across the final runs, light/dark staff-content scans in fa/en on desktop/mobile, types/lint/format, OpenAPI and all41 route budgets. [Exact review and scope](evidence/step-reviews.json#R01-staff-task-acceptance). No broad checkpoint is renewed.
 
@@ -93,6 +95,6 @@ Production delivery, sizing/load, TLS/DNS/proxies, monitoring/alerts, backups/re
 
 The last broad checkpoint at `9529872` remains revision-bound. Its coverage gaps were API-critical 92.34% lines / 81.07% branches, web-critical 73.07% / 70.42%, and web-general 66.38% / 62.02%. Later focused tests do not renew broad, coverage or image evidence. [Checkpoint](final-repair-checkpoint.json).
 
-Read this plan and progress.json, then only the selected requirements and relevant evidence. Do not routinely reread the archive or repeat valid checks. Save full logs; inspect failures and compact summaries. Use lower effort for straightforward edits, higher effort for critical review. Do not overlap consumer typechecks with shared/API builds, or builds with browser fixtures.
+Read this plan and progress.json, then only the selected requirements and relevant evidence. Do not routinely reread the archive or repeat valid checks. Save full logs; inspect failures and compact summaries. Use lower effort for straightforward edits, higher effort for critical review. Do not overlap consumer typechecks with shared/API builds or browser runs: Playwright global setup rebuilds API/shared. Build the frontend before browser fixtures.
 
 Keep scope within original defects and exact claimed-task requirements. Record new noncritical improvements separately. Keep exhaustive historical dispositions in V01, after confirmed critical repairs. Finish local repairs with one final regression run and a concise handoff of remaining external, future and skipped work. Partial/deferred requirements never count as acceptance passes.

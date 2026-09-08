@@ -4021,7 +4021,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -4041,7 +4041,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4098,6 +4098,10 @@
         {
           "path": "kanban/epics/02-auth-users-admin.md",
           "sha256": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
         }
       ],
       "checks": [
@@ -4111,7 +4115,8 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
-        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed."
+        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
       ],
       "limitations": [],
       "merged_prs": [
@@ -4119,13 +4124,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
-        "previous_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
-        "paths": [
-          "apps/api/openapi.json"
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/TeamActionDialog.tsx",
+          "apps/api/src/admin/staff-mutation-permission.ts"
         ],
-        "review": "Reviewed the additive controller/contract change and new staff HTTP case. Existing contract values are JSON-equal; existing controller methods and test bodies are unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
       }
     },
     {
@@ -4143,7 +4148,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -4163,7 +4168,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4176,6 +4181,10 @@
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
           "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
         }
       ],
       "checks": [
@@ -4184,7 +4193,8 @@
         "All three actions pass fa/en desktop/mobile browser checks with required unverify/reverify reasons, confirmation, invalid-response rejection, current status display and retry.",
         "50 dictionary tests, web types/lint/build and41 route budgets pass at this revision.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
-        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
       ],
       "limitations": [
         "Manual staff verification is covered. No automatic identity provider or external notification delivery is claimed.",
@@ -4195,13 +4205,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
-        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "paths": [
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/TeamActionDialog.tsx",
           "apps/api/src/admin/staff-mutation-permission.ts"
         ],
-        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
       }
     },
     {
@@ -4219,7 +4229,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -4239,7 +4249,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4260,6 +4270,10 @@
         {
           "path": "apps/api/src/session/session.service.ts",
           "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
         }
       ],
       "checks": [
@@ -4272,7 +4286,8 @@
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
-        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
       ],
       "limitations": [
         "User notices are durable private in-app notices. Email/SMS delivery is not claimed.",
@@ -4283,13 +4298,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
-        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "paths": [
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/TeamActionDialog.tsx",
           "apps/api/src/admin/staff-mutation-permission.ts"
         ],
-        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
       }
     },
     {
@@ -4327,7 +4342,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -4362,7 +4377,8 @@
         "Protected-field scope matches the five fields named in T-03.03.03. Creation and confirmation errors have fa/en light/dark keyboard and contrast evidence; see R01-crm-correction-theme-and-scope.",
         "All18 real PostgreSQL/HTTP correction cases pass with exit0, including independent approval, correct identity table updates and actual before/after audits for the four additional protected fields.",
         "All24 distinct correction production-browser cases pass across the final focused runs. Eight reviewer cases cover fa/en, light/dark, desktop/mobile, status filtering, immutable evidence links, keyboard navigation, Escape cancellation, focus restoration, approval and legacy rejection. Queue/detail axe checks report no violations or incomplete contrast results.",
-        "API/web typechecks, explicit changed-file lint, formatting, production build and all41 complete-route budgets pass. Backend product sources remain unchanged; prior transaction/evidence/permission regressions remain applicable."
+        "API/web typechecks, explicit changed-file lint, formatting, production build and all41 complete-route budgets pass. Backend product sources remain unchanged; prior transaction/evidence/permission regressions remain applicable.",
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
       ],
       "limitations": [
         "This verifies the local correction workflow and its five canonical protected identity fields. Legacy unsealed evidence requires resubmission; no live storage-provider recovery or production reconciliation is certified.",
@@ -4373,13 +4389,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
-        "paths": [
-          "packages/i18n/src/crm.ts"
-        ]
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/TeamActionDialog.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
       }
     },
     {
@@ -4409,7 +4424,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -4513,7 +4528,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
         },
         {
           "path": "packages/i18n/src/crm.ts",
@@ -4522,6 +4537,10 @@
         {
           "path": "docs/runbooks/profile-archival.md",
           "sha256": "87a6a9bbf0124affbe476aca4eef95713a222be96594e5ca5b6a5cd35cd24798"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
         }
       ],
       "checks": [
@@ -4540,7 +4559,8 @@
         "Real PostgreSQL/HTTP tests verify canonical legal-owner protection even with Manager and Finance agents, no mutation/audit on refusal, exact staff actor/trimmed reason/timestamp, retained paid invoice and sibling profile, and no duplicate archival audit. Two existing concurrency tests now wait for the active-profile CTE introduced in the prior wallet step.",
         "Explicit built-app archive browser recheck passes in R01-crm-profile-page-acceptance; earlier default-server run was development.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
-        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed."
+        "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
       ],
       "limitations": [
         "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
@@ -4551,13 +4571,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
-        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "paths": [
-          "apps/api/src/admin/staff-mutation-permission.ts"
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "changed_paths_reviewed": [
+          "apps/api/src/admin/staff-mutation-permission.ts",
+          "apps/web/src/components/TeamActionDialog.tsx"
         ],
-        "review": "Only staff-action service arguments changed in AdminController. The permission helper function used by CRM is byte-identical; its neighboring session helper changed and has focused staff HTTP coverage. Older drift is retained.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
       }
     },
     {
@@ -5279,7 +5299,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -5311,7 +5331,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
         },
         {
           "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -5344,6 +5364,10 @@
         {
           "path": "apps/api/src/auth/dto/reset-password.dto.ts",
           "sha256": "49bdc9d40ad0378ab428e9c352d1b577c8182d47332ccda637f3f6ea549f93a6"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
         }
       ],
       "checks": [
@@ -5352,7 +5376,8 @@
         "Both activation methods are implemented. Temporary passwords meet the same upper/lower/digit policy, are Argon2id-hashed, returned once and require first-login change. Deterministic repeated bytes reproduced a lost character class; distinct reserved characters plus shuffle now pass. Unchanged login/forced-password methods match reviewed8f857aa evidence.",
         "Link creation stores a hash and24-hour expiry with encrypted delivery payload. Five current staff/activation delivery HTTP cases exercise the email adapter with a local receiver, expired-message cancellation, queue-failure rollback, replacement and one-time activation. activateStaff exactly matches the reviewed a60cce6 method.",
         "A creator without view/edit-role/disable grants can now select initial roles through the restricted role-options response. Existing role-management and later role edits still return403. The fa/en form provides normalized name/username fields, a keyboard-operated multi-select with descriptions and activation radios. Two selected roles survive step-up; fresh CSRF is used on retry; temporary password clears on dismissal/reload. Light/dark axe checks pass on desktop/mobile.",
-        "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+        "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5361,7 +5386,16 @@
       "merged_prs": [
         129
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+        "changed_paths_reviewed": [
+          "apps/api/src/admin/staff-mutation-permission.ts",
+          "apps/web/src/components/TeamActionDialog.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.03.02",
@@ -5382,7 +5416,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -5414,7 +5448,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
         },
         {
           "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -5423,6 +5457,10 @@
         {
           "path": "apps/web/e2e/staff-users.spec.ts",
           "sha256": "991ad5193e175e7a98ee1e35c4fd0f4154878d351e50c0eb94f14b920f77890d"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
         }
       ],
       "checks": [
@@ -5430,7 +5468,8 @@
         "PUT replaces the role set, deduplicates input and removes all roles for an empty set. Current tests prove idempotent no-op preserves credentials, real changes revoke target sessions/refresh tokens, removed permissions apply immediately, and valid self-role changes sign out the actor.",
         "The role_change audit contains target, before/after sets, actor, optional reason, verified step-up time and request correlation. Current authentication/permission checks survive waits; expiry or audit failure rolls back roles and credentials. R01-staff-sensitive-actions retains the17 authority races and constrained self-revocation review.",
         "The UI shows current role badges and an expandable checkbox multi-select with translated names/descriptions. It preserves the selected target, roles and reason through confirmation, failed password, failed save and retry. Staff creation/role editor light/dark axe scans and fa/en desktop/mobile cases pass.",
-        "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+        "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5439,7 +5478,16 @@
       "merged_prs": [
         130
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+        "changed_paths_reviewed": [
+          "apps/api/src/admin/staff-mutation-permission.ts",
+          "apps/web/src/components/TeamActionDialog.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-10.01.01",
@@ -5460,7 +5508,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -5492,7 +5540,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
         },
         {
           "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -5513,6 +5561,10 @@
         {
           "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
           "sha256": "cded34e5f70aeebe22a1c4d636abf42d8b09b9f235ef5b011e0a697f29fe52b7"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
         }
       ],
       "checks": [
@@ -5520,7 +5572,8 @@
         "Create/edit controls follow current independent capabilities. Canonical creation and role-assignment requirements are verified in the two related task records. A creator-only account can use its form without an unrelated blanket denial message.",
         "Disable uses a target-specific TeamActionDialog confirmation and admin:staff:edit plus step-up. Self-disable is prohibited. HTTP commit/rollback cases prove the disable flag, all target sessions, refresh credentials and audit are atomic; the administrator remains active and repeated disable is idempotent. Current login and session authorization reject disabled accounts.",
         "Reviewed the localized table, name fallback, role/status/last-login cells, pagination, retry and permission-loss behavior. Staff list and role editor axe scans pass in light/dark for fa/en on desktop/mobile. Replaced fixed white/gray page colors after reproducing dark text contrast failures.",
-        "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+        "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5529,7 +5582,16 @@
       "merged_prs": [
         218
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+        "changed_paths_reviewed": [
+          "apps/api/src/admin/staff-mutation-permission.ts",
+          "apps/web/src/components/TeamActionDialog.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+      }
     }
   ],
   "pending_task_keys": [

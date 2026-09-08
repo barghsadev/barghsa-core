@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+  "source_revision": "417ab336b32740bf1e8ddd9a2c6fe526a5e71f8f",
   "active_step": "R01",
-  "next_action": "R01: review 02-auth-users-admin.md#T-05.04.04 agent-role permission enforcement, current step-up audit/deadlines and UI recovery. Reuse8904b03 credential-invalidation evidence; repair only confirmed remaining criteria. Staff creation, role assignment and staff listing are verified locally atab10771. Then finish remaining agent/invitation/ownership and domain/CSRF dispositions. Lost-contact policy remains pending; do not ask again.",
+  "next_action": "R01: repair confirmed invitation authority gaps in AgentsService.createInvitation/withdrawInvitation. Creation checks owner/Manager before its transaction; withdrawal also accepts the original inviter after their role is removed. Bind both writes to current profile/account/session/grants and audit correlation, preserving non-step-up invitation policy. Then finish current domain-role/conditional-UI and invitation/ownership acceptance. Lost-contact policy remains pending; do not ask again.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -134,7 +134,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Invitation acceptance credential/transaction boundary is verified at 5543cc2. Finish full invitation/decline/details, agent/ownership, profile-selection and onboarding acceptance; future contract/order/document consumers remain separate."
+        "Agent role/removal sensitive-action boundary verified at417ab33 with51 API and32 browser cases. Invitation acceptance credential boundary retains5543cc2 evidence. Finish current role matrix, full invitation/list/withdrawal and ownership, profile-selection and onboarding acceptance; future contract/order/document consumers remain separate."
       ]
     },
     {
@@ -541,6 +541,10 @@
     {
       "id": "R01-staff-task-acceptance",
       "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+    },
+    {
+      "id": "R01-agent-sensitive-actions",
+      "review_record": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
     }
   ],
   "deferred_improvements": [
