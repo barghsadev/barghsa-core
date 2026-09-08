@@ -3286,6 +3286,42 @@
         "/tmp/barghsa-self-revocation-types-final.log",
         "/tmp/barghsa-self-revocation-types.log"
       ]
+    },
+    {
+      "id": "R01-trusted-device-deadlines",
+      "date": "2026-09-08",
+      "source_revision": "89e7c5399e1e47b415aab3331e08b90a6f1beeea",
+      "summary": "Trusted-device removal rolls back if authorization expires during its writes; audit records the verified step-up timestamp.",
+      "review": [
+        "Two real-PostgreSQL HTTP regressions first returned200 and removed trust after absolute session or step-up expiry during a delayed audit insert. A nontransactional sequence proves each request reached that write.",
+        "The existing account/session/trust lock order is unchanged. One local authorization check runs after row locks and again after audit insertion, using the database clock for absolute, idle and step-up deadlines. Any failure rolls back deletion and audit together.",
+        "The successful audit now includes stepUpVerified and the exact stored stepUpVerifiedAt. The existing concurrent-removal test also verifies exact UUID correlation, one successful removal, session retention and OTP on subsequent login.",
+        "Diff review confirms only the trusted-device method and its HTTP tests changed. Reuse other session and browser evidence; no schema, dependency, cookie or response-format change."
+      ],
+      "checks": [
+        "12/12 trusted-device HTTP cases passed, including both reproduced failures, account/target lock races, ownership, CSRF, step-up and audit failure. API typecheck, focused ESLint, Prettier and git diff checks passed."
+      ],
+      "remaining": [
+        "Reconcile remaining login/password/privilege/recovery and staff/ownership/compromise callers, then CSRF and sensitive-action matrices. No broad checkpoint or production evidence renewed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+          "sha256": "f6c3860a14bb68e854b26417b3ad3156e16aaa2dba26ed8c47189beef6a1b959"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-trust-deadline-after.log",
+        "/tmp/barghsa-trust-deadline-before.log",
+        "/tmp/barghsa-trust-deadline-format.log",
+        "/tmp/barghsa-trust-deadline-lint.log",
+        "/tmp/barghsa-trust-deadline-types.log"
+      ]
     }
   ]
 }

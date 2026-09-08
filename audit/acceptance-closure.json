@@ -3056,7 +3056,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "c0edf569f566e11867c2af4c0170e0bf73da526650b7c91a55fdda53487c8e8c"
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3124,7 +3124,8 @@
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
         "MFA step-up rotation is now wired and tested. Login/password/privilege/recovery boundary reconciliation remains; prior isolated rotation tests alone did not establish these caller requirements.",
@@ -3157,7 +3158,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "c0edf569f566e11867c2af4c0170e0bf73da526650b7c91a55fdda53487c8e8c"
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3237,7 +3238,8 @@
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "Approximate country location and active-list semantics are locally verified at c26aad7. No city-level accuracy or production proxy evidence claimed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
         "Remaining staff/ownership/compromise revocation callers and trusted-device-management acceptance must be reconciled during their domain reviews."
@@ -3347,7 +3349,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "c0edf569f566e11867c2af4c0170e0bf73da526650b7c91a55fdda53487c8e8c"
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3406,7 +3408,8 @@
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
         "Complete the state-changing-route/caller matrix. Public auth now uses JSON plus the current same-origin CORS policy; signed callbacks use independent request authentication. Reconcile these alternatives with the literal no-exemption wording before whole-task closure.",
@@ -3437,7 +3440,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "c0edf569f566e11867c2af4c0170e0bf73da526650b7c91a55fdda53487c8e8c"
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3499,7 +3502,8 @@
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
         "The complete matrix of built sensitive actions and their UI recovery remains to be reviewed with each domain.",
@@ -4172,7 +4176,7 @@
         },
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "c0edf569f566e11867c2af4c0170e0bf73da526650b7c91a55fdda53487c8e8c"
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
         }
       ],
       "checks": [
@@ -4182,7 +4186,8 @@
         "Both separate action buttons pass fa/en desktop/mobile confirmation/reason/step-up/error/retry checks. Successful acknowledgement must identify the selected customer.",
         "API/web types, focused lint, production build and41 route budgets pass.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
         "User notices are durable private in-app notices. Email/SMS delivery is not claimed.",
@@ -4805,7 +4810,7 @@
         },
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "c0edf569f566e11867c2af4c0170e0bf73da526650b7c91a55fdda53487c8e8c"
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
@@ -4844,7 +4849,8 @@
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
         "Local risk policy requires OTP on unknown/changed/expired trust or staff login. It does not claim an external IP reputation service or separately configurable numerical score.",
@@ -4908,7 +4914,7 @@
         },
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "c0edf569f566e11867c2af4c0170e0bf73da526650b7c91a55fdda53487c8e8c"
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
@@ -4935,7 +4941,8 @@
         "No schema, dependency, frontend or cookie-policy change. Earlier migration, browser and bundle evidence is reused where sources are unchanged. No global checkpoint or production delivery claim is renewed.",
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain."
+        "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
         "Local app and mock-provider delivery are verified. Live provider delivery and deployment remain operational prerequisites.",

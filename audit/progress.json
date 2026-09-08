@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "93dfc2760fb62b10b407238d317db09af241f190",
+  "source_revision": "89e7c5399e1e47b415aab3331e08b90a6f1beeea",
   "active_step": "R01",
-  "next_action": "R01: assess the same final deadline/authorization invariants in trusted-device revocation, then reconcile login/password/privilege/recovery and staff/ownership/compromise callers for T-02.02.01/T-02.02.02. Complete CSRF and sensitive-action matrices afterward. Self-service single/bulk revocation is verified at 93dfc27. Reuse focused evidence; no broad checkpoint renewed. Lost-contact policy remains pending.",
+  "next_action": "R01: reconcile login/password/privilege/recovery and staff/ownership/compromise session callers for T-02.02.01/T-02.02.02, using existing tests and source-bound evidence. Trusted-device final authorization and audit checks are verified at 89e7c53. Complete CSRF and sensitive-action matrices afterward. Lost-contact policy remains pending; no broad checkpoint renewed.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "OTP-first reset, current-session display, cookie topology, country location and actor-bound self-service revocation are locally verified. Finish trusted-device final boundary and remaining rotation/revocation/CSRF/sensitive-action callers."
+        "OTP-first reset, session display, cookies, location, self-service revocation and trusted-device final checks are locally verified. Finish remaining rotation/revocation/CSRF/sensitive-action callers."
       ]
     },
     {
@@ -505,6 +505,10 @@
     {
       "id": "R01-self-revocation",
       "review_record": "audit/evidence/step-reviews.json#R01-self-revocation"
+    },
+    {
+      "id": "R01-trusted-device-deadlines",
+      "review_record": "audit/evidence/step-reviews.json#R01-trusted-device-deadlines"
     }
   ],
   "deferred_improvements": [

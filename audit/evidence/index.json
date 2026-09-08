@@ -5517,6 +5517,41 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-trust-deadline-after.log",
+      "path": "audit/evidence/r01/barghsa-trust-deadline-after.log.gz",
+      "sha256": "96078f6b746af50af0e5d51bc3bf1fe2b8dc1a0c941341556374bb34cb33e7e0",
+      "encoding": "gzip",
+      "stored_sha256": "6ac0f73062f36fb4099470c83ebe25306d1763a52c38ba1d17e55aff4f656b07"
+    },
+    {
+      "original_path": "/tmp/barghsa-trust-deadline-before.log",
+      "path": "audit/evidence/r01/barghsa-trust-deadline-before.log.gz",
+      "sha256": "d9a136c1df36de91a31a8e4a90726a04def747213acb8c8cdffe12ec1b7c598c",
+      "encoding": "gzip",
+      "stored_sha256": "354c61964a507d48115f709c8a6359670f0cff61a96a2eaa6248a2d051ce93b9"
+    },
+    {
+      "original_path": "/tmp/barghsa-trust-deadline-format.log",
+      "path": "audit/evidence/r01/barghsa-trust-deadline-format.log.gz",
+      "sha256": "acc7baa4127035d5d4564cc9da69ff4b178a5d9d91a08473a0101e267de3deb5",
+      "encoding": "gzip",
+      "stored_sha256": "fb7cb742d40dc10a34cbfbaf2ee086591588fdf53017e37cbf72cc0607a8d398"
+    },
+    {
+      "original_path": "/tmp/barghsa-trust-deadline-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-trust-deadline-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
     }
   ]
 }
