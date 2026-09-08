@@ -209,6 +209,7 @@ function CrmProfileDetailContent() {
   const [data, setData] = useState<ProfileDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
   const [activeTab, setActiveTab] = useState('overview');
   const [editingAddress, setEditingAddress] = useState<string | null>(null);
   const [editingLegal, setEditingLegal] = useState(false);
@@ -267,11 +268,17 @@ function CrmProfileDetailContent() {
       })
       .catch((err: Error) => {
         if (abort.signal.aborted) return;
-        setError(err.message);
+        const expected = [
+          t('crm.profile.error.notFound', locale),
+          t('crm.profile.error.accessDenied', locale),
+        ];
+        setError(
+          expected.includes(err.message) ? err.message : t('crm.profile.error.generic', locale)
+        );
         setLoading(false);
       });
     return () => abort.abort();
-  }, [profileId, locale]);
+  }, [profileId, locale, reloadKey]);
 
   /** Enter edit mode, pre-filling form fields from current data */
   function handleStartEdit() {
@@ -424,7 +431,9 @@ function CrmProfileDetailContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
-        <div className="animate-pulse text-gray-400">{t('crm.profile.loading', locale)}</div>
+        <div role="status" className="text-muted-foreground">
+          {t('crm.profile.loading', locale)}
+        </div>
       </div>
     );
   }
@@ -433,11 +442,24 @@ function CrmProfileDetailContent() {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-red-700 mb-2">
-            {t('crm.profile.error.title', locale)}
-          </h2>
-          <p className="text-gray-600">{error}</p>
-          <Link to="/admin/crm/" className="text-blue-600 hover:underline mt-4 inline-block">
+          <div role="alert">
+            <h1 className="text-xl font-semibold text-red-700 dark:text-red-300 mb-2">
+              {t('crm.profile.error.title', locale)}
+            </h1>
+            <p className="text-muted-foreground">{error}</p>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4 mx-2"
+            onClick={() => setReloadKey((key) => key + 1)}
+          >
+            {t('crm.records.retry', locale)}
+          </Button>
+          <Link
+            to="/admin/crm/"
+            className="text-blue-700 dark:text-blue-300 hover:underline mt-4 inline-block"
+          >
             {t('crm.profile.backToUsers', locale)}
           </Link>
         </div>
@@ -456,7 +478,7 @@ function CrmProfileDetailContent() {
       {time.notice}
       {/* Breadcrumb / Header */}
       <div className="mb-6">
-        <Link to="/admin/crm/" className="text-blue-600 hover:underline text-sm">
+        <Link to="/admin/crm/" className="text-blue-700 dark:text-blue-300 hover:underline text-sm">
           {t('crm.profile.backToUsers', locale)}
         </Link>
         <h1 className="text-2xl font-bold mt-1 flex flex-wrap items-center gap-3">
@@ -487,7 +509,7 @@ function CrmProfileDetailContent() {
                   <>
                     <button
                       onClick={() => setShowForcePwChange(true)}
-                      className="text-sm px-3 py-1 rounded bg-orange-600 text-white hover:bg-orange-700 transition-colors"
+                      className="text-sm px-3 py-1 rounded bg-orange-700 text-white hover:bg-orange-800 transition-colors"
                     >
                       {t('crm.profile.admin.forcePasswordChange', locale)}
                     </button>
@@ -520,7 +542,7 @@ function CrmProfileDetailContent() {
             )}
           </span>
         </h1>
-        <p className="text-gray-500 text-sm mt-1 break-words">
+        <p className="text-muted-foreground text-sm mt-1 break-words">
           {profile.firstName && profile.lastName
             ? `${profile.firstName} ${profile.lastName}`
             : (legalInfo?.legalName ?? profileId)}
@@ -532,13 +554,13 @@ function CrmProfileDetailContent() {
       {data.viewerPermissions?.canVerify &&
         !profile.archived &&
         ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(profile.status) && (
-          <div className="mb-4 space-y-3 rounded border bg-white p-4">
+          <div className="mb-4 space-y-3 rounded border bg-card text-card-foreground p-4">
             <Label htmlFor="crm-verify-action">
               {t('crm.profile.verification.action', locale)}
             </Label>
             <select
               id="crm-verify-action"
-              className="block rounded border p-2"
+              className="block rounded border border-input bg-background text-foreground p-2"
               value={
                 profile.status === 'VERIFIED'
                   ? verificationAction === 'verify'
@@ -561,7 +583,7 @@ function CrmProfileDetailContent() {
             </Label>
             <textarea
               id="crm-verify-reason"
-              className="block w-full rounded border p-2"
+              className="block w-full rounded border border-input bg-background text-foreground p-2"
               maxLength={1000}
               value={verificationReason}
               onChange={(event) => setVerificationReason(event.target.value)}
@@ -701,8 +723,12 @@ function CrmProfileDetailContent() {
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
-        <div className="flex gap-6" role="tablist" aria-label={t('crm.profile.title', locale)}>
+      <div className="border-b border-border mb-6">
+        <div
+          className="flex flex-wrap gap-x-6 gap-y-2"
+          role="tablist"
+          aria-label={t('crm.profile.title', locale)}
+        >
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -730,8 +756,8 @@ function CrmProfileDetailContent() {
               }}
               className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-blue-600 text-blue-700 dark:text-blue-300'
+                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
               }`}
             >
               {tab.label}
@@ -754,19 +780,23 @@ function CrmProfileDetailContent() {
                     : t(`crm.list.${profile.status}`, locale)
               }
               icon="✓"
-              colorClass={profile.status === 'VERIFIED' ? 'text-green-600' : 'text-yellow-600'}
+              colorClass={
+                profile.status === 'VERIFIED'
+                  ? 'text-green-700 dark:text-green-300'
+                  : 'text-yellow-700 dark:text-yellow-300'
+              }
             />
             <SummaryCard
               title={t('crm.profile.summary.activeSessions', locale)}
               value={numbers.number(sessions.count)}
               icon="⚡"
-              colorClass="text-blue-600"
+              colorClass="text-blue-700 dark:text-blue-300"
             />
             <SummaryCard
               title={t('crm.profile.summary.lastLogin', locale)}
               value={user.lastLogin ? time.format(user.lastLogin) : '—'}
               icon="🔑"
-              colorClass="text-gray-600"
+              colorClass="text-muted-foreground"
             />
             <SummaryCard
               title={t('crm.profile.summary.lastPasswordChange', locale)}
@@ -776,25 +806,25 @@ function CrmProfileDetailContent() {
                   : t('crm.profile.passwordChangeUnknown', locale)
               }
               icon="🔒"
-              colorClass="text-gray-600"
+              colorClass="text-muted-foreground"
             />
             <SummaryCard
               title={t('crm.profile.summary.addresses', locale)}
               value={numbers.number(addresses.length)}
               icon="📍"
-              colorClass="text-purple-600"
+              colorClass="text-purple-700 dark:text-purple-300"
             />
             <SummaryCard
               title={t('crm.profile.summary.otherProfiles', locale)}
               value={numbers.number(siblingProfiles.length)}
               icon="👤"
-              colorClass="text-teal-600"
+              colorClass="text-teal-700 dark:text-teal-300"
             />
             <SummaryCard
               title={t('crm.profile.summary.lastActivity', locale)}
               value={sessions.lastActive ? time.format(sessions.lastActive) : '—'}
               icon="⏱"
-              colorClass="text-gray-600"
+              colorClass="text-muted-foreground"
             />
           </div>
         </div>
@@ -955,7 +985,7 @@ function CrmProfileDetailContent() {
               correctionLabel={t('crm.corrections.request', locale)}
             />
             {isEditing && (
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {t('crm.profile.edit.identityLocked', locale)}
               </p>
             )}
@@ -1090,16 +1120,18 @@ function CrmProfileDetailContent() {
           </p>
         )}
         {addresses.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">{t('crm.profile.noAddresses', locale)}</p>
+          <p className="text-muted-foreground text-center py-8">
+            {t('crm.profile.noAddresses', locale)}
+          </p>
         ) : (
           <div className="space-y-4">
             {addresses.map((addr) => (
               <div
                 key={addr.id}
-                className={`border rounded-lg p-4 ${addr.mainAddress ? 'border-blue-300 bg-blue-50' : 'border-gray-200'}`}
+                className={`border rounded-lg p-4 bg-card text-card-foreground ${addr.mainAddress ? 'border-blue-300' : 'border-border'}`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-500">
+                  <span className="text-sm font-medium text-muted-foreground">
                     {t('crm.profile.tab.addresses', locale)}
                   </span>
                   {addr.mainAddress && (
@@ -1131,7 +1163,7 @@ function CrmProfileDetailContent() {
                   />
                 ) : (
                   <>
-                    <p className="text-gray-900">{addr.fullAddress}</p>
+                    <p className="text-foreground">{addr.fullAddress}</p>
                     <DetailRow
                       label={t('crm.profile.field.postalCode', locale)}
                       value={addr.postalCode}
@@ -1144,7 +1176,7 @@ function CrmProfileDetailContent() {
                       label={t('crm.profile.field.city', locale)}
                       value={referenceName(addr.cityName, locale)}
                     />
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {t('crm.profile.label.created', locale)}: {time.format(addr.createdAt)}
                     </p>
                     {data.viewerPermissions?.canEdit && !profile.archived && !isEditing && (
@@ -1172,18 +1204,26 @@ function CrmProfileDetailContent() {
       {/* Tab: Sessions */}
       {activeTab === 'sessions' && (
         <div id="panel-sessions" role="tabpanel" aria-labelledby="tab-sessions">
-          <div className="mb-4 text-sm text-gray-500">
+          <div className="mb-4 text-sm text-muted-foreground">
             {numbers.number(sessions.count)} {t('crm.profile.tab.sessions', locale)} |{' '}
             {t('crm.profile.summary.lastActivity', locale)}:{' '}
             {sessions.lastActive ? time.format(sessions.lastActive) : '—'}
           </div>
           {sessions.entries.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">{t('crm.profile.noSessions', locale)}</p>
+            <p className="text-muted-foreground text-center py-8">
+              {t('crm.profile.noSessions', locale)}
+            </p>
           ) : (
-            <div className="overflow-x-auto">
+            <div
+              className="overflow-x-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- The named scroll region needs keyboard access to offscreen session columns.
+              tabIndex={0}
+              role="region"
+              aria-label={t('crm.profile.tab.sessions', locale)}
+            >
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 text-start text-gray-500">
+                  <tr className="border-b border-border text-start text-muted-foreground">
                     <th className="pb-2 font-medium">{t('crm.profile.label.sessionId', locale)}</th>
                     <th className="pb-2 font-medium">{t('crm.profile.label.created', locale)}</th>
                     <th className="pb-2 font-medium">
@@ -1196,7 +1236,7 @@ function CrmProfileDetailContent() {
                 </thead>
                 <tbody>
                   {sessions.entries.map((s) => (
-                    <tr key={s.sessionId} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={s.sessionId} className="border-b border-border hover:bg-muted/50">
                       <td className="py-2 font-mono text-xs">
                         {s.sessionId.replace(/^session-ref:/, '').substring(0, 12)}...
                       </td>
@@ -1219,7 +1259,7 @@ function CrmProfileDetailContent() {
                           )}
                         </span>
                       </td>
-                      <td className="py-2 text-xs text-gray-500 max-w-[150px] truncate">
+                      <td className="py-2 text-xs text-muted-foreground max-w-[150px] truncate">
                         {s.deviceInfo ? JSON.stringify(s.deviceInfo) : '—'}
                       </td>
                     </tr>
@@ -1261,7 +1301,7 @@ function CrmProfileDetailContent() {
       {activeTab === 'profiles' && (
         <div id="panel-profiles" role="tabpanel" aria-labelledby="tab-profiles">
           {siblingProfiles.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">
+            <p className="text-muted-foreground text-center py-8">
               {t('crm.profile.noOtherProfiles', locale)}
             </p>
           ) : (
@@ -1269,7 +1309,7 @@ function CrmProfileDetailContent() {
               {siblingProfiles.map((sp) => (
                 <div
                   key={sp.id}
-                  className="border border-gray-200 rounded-lg p-4 flex items-center justify-between hover:bg-gray-50"
+                  className="border border-border rounded-lg p-4 flex items-center justify-between hover:bg-muted/50"
                 >
                   <div>
                     <div className="flex items-center gap-2">
@@ -1287,14 +1327,14 @@ function CrmProfileDetailContent() {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm mt-1 text-gray-600">
+                    <p className="text-sm mt-1 text-muted-foreground">
                       {sp.title ?? sp.id.substring(0, 8)}
                     </p>
                   </div>
                   <Link
                     to="/admin/crm/profiles/$profileId"
                     params={{ profileId: sp.id }}
-                    className="text-blue-600 hover:underline text-sm"
+                    className="text-blue-700 dark:text-blue-300 hover:underline text-sm"
                   >
                     {t('crm.profile.label.view', locale)}
                   </Link>
@@ -1362,8 +1402,8 @@ function SummaryCard({
   colorClass: string;
 }) {
   return (
-    <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
-      <p className="text-sm text-gray-500 mb-1">{title}</p>
+    <div className="border border-border rounded-lg p-4 bg-card text-card-foreground shadow-sm">
+      <p className="text-sm text-muted-foreground mb-1">{title}</p>
       <p className={`text-2xl font-bold ${colorClass}`}>
         {icon} {value}
       </p>
@@ -1373,8 +1413,8 @@ function SummaryCard({
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border border-gray-200 rounded-lg p-4 bg-white">
-      <h3 className="text-lg font-semibold mb-3 text-gray-800">{title}</h3>
+    <div className="border border-border rounded-lg p-4 bg-card text-card-foreground">
+      <h3 className="text-lg font-semibold mb-3 text-foreground">{title}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
         {children}
       </div>
@@ -1401,8 +1441,8 @@ function DetailRow({
 }) {
   return (
     <div className="flex flex-col">
-      <span className="text-xs text-gray-500 font-medium">{label}</span>
-      <span className={`text-sm text-gray-900 break-words ${valueClass ?? ''}`}>
+      <span className="text-xs text-muted-foreground font-medium">{label}</span>
+      <span className={`text-sm text-foreground break-words ${valueClass ?? ''}`}>
         {value}
         {icon && (
           <span
@@ -1443,7 +1483,7 @@ function EditRow({
   const inputId = useId();
   return (
     <div className="flex flex-col">
-      <label htmlFor={inputId} className="text-xs text-gray-500 font-medium">
+      <label htmlFor={inputId} className="text-xs text-muted-foreground font-medium">
         {label}
       </label>
       <input
@@ -1453,7 +1493,7 @@ function EditRow({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder ?? ''}
         dir="auto"
-        className="mt-1 w-full border border-gray-300 rounded px-2 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+        className="mt-1 w-full border border-gray-300 rounded px-2 py-1 text-sm text-foreground focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
       />
     </div>
   );

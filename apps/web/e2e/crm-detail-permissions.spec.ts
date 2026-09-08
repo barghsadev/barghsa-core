@@ -1133,3 +1133,230 @@ for (const locale of ['fa', 'en'] as const)
       expect(bodies).toEqual(Array(8).fill({ reason: 'Closure requested' }));
     });
   }
+
+for (const locale of ['fa', 'en'] as const)
+  for (const darkMode of [false, true])
+    test(`CRM full profile tabs remain readable and contained (${locale}, dark=${darkMode})`, async ({
+      page,
+    }, testInfo) => {
+      await page.addInitScript((locale) => {
+        const apply = () => {
+          document.documentElement.lang = locale;
+          document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
+        };
+        if (document.documentElement) apply();
+        new MutationObserver(apply).observe(document, { childList: true });
+      }, locale);
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Archive review',
+            slogan: '',
+            primaryColor: '#2563eb',
+            secondaryColor: '#64748b',
+            accentColor: '#f59e0b',
+            logoUrl: null,
+            faviconUrl: null,
+            darkMode,
+          },
+        })
+      );
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'UTC' } })
+      );
+
+      const current = {
+        ...detail(false, true),
+        addresses: [
+          {
+            id: 'address-one',
+            provinceId: 'province',
+            cityId: 'city',
+            provinceName: { nameFa: 'تهران', nameEn: 'Tehran' },
+            cityName: { nameFa: 'تهران', nameEn: 'Tehran' },
+            fullAddress: 'Example retained address',
+            postalCode: '1234567890',
+            mainAddress: true,
+            createdAt: '2026-08-01T00:00:00.000Z',
+            updatedAt: '2026-08-01T00:00:00.000Z',
+          },
+        ],
+        sessions: {
+          count: 1,
+          lastActive: '2026-08-02T00:00:00.000Z',
+          entries: [
+            {
+              sessionId: 'session-ref:abcdef1234567890',
+              createdAt: '2026-08-01T00:00:00.000Z',
+              lastActive: '2026-08-02T00:00:00.000Z',
+              expiresAt: '2026-08-03T00:00:00.000Z',
+              isRevoked: false,
+              isActive: true,
+              deviceInfo: { browser: 'Chrome' },
+            },
+          ],
+        },
+        siblingProfiles: [
+          {
+            id: '22222222-2222-4222-8222-222222222222',
+            profileType: 'LEGAL',
+            status: 'VERIFIED',
+            isDefault: false,
+            title: 'Another company',
+          },
+        ],
+        agentRelationships: { items: [], nextCursor: null },
+        verificationHistory: { items: [], nextCursor: null },
+      };
+      await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
+      await page.goto(`/app/crm/profiles/${id}`);
+      const main = page.getByRole('main');
+      const tabs = main.getByRole('tab');
+      await expect(tabs).toHaveCount(7);
+      await expect
+        .poll(() => page.locator('html').evaluate((n) => n.classList.contains('dark')))
+        .toBe(darkMode);
+      const findings = [];
+      for (let n = 0; n < 7; n++) {
+        await tabs.nth(n).click();
+        const panel = main.getByRole('tabpanel');
+        await expect(panel).toBeVisible();
+        const selected = tabs.nth(n);
+        await expect(selected).toHaveAttribute('aria-selected', 'true');
+        expect(await selected.getAttribute('aria-controls')).toBe(await panel.getAttribute('id'));
+        const overflow = await main.evaluate((n) => n.scrollWidth - n.clientWidth);
+        expect.soft(overflow, `tab ${n} page overflow`).toBeLessThanOrEqual(1);
+        const result = await new AxeBuilder({ page })
+          .include('#admin-content')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze();
+        const relevant = {
+          tab: n,
+          violations: result.violations,
+          incomplete: result.incomplete.filter((i) => i.id === 'color-contrast'),
+        };
+        findings.push(relevant);
+        expect
+          .soft(
+            result.violations.map((i) => ({ id: i.id, nodes: i.nodes.map((n) => n.target) })),
+            `tab ${n}`
+          )
+          .toEqual([]);
+        expect.soft(relevant.incomplete, `tab ${n} unresolved contrast`).toEqual([]);
+        if (n === 3 || n === 6) {
+          const row = n === 3 ? panel.getByRole('row').last() : panel.locator('.rounded-lg');
+          await row.hover();
+          const hoverScan = await new AxeBuilder({ page })
+            .include('#admin-content')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze();
+          expect(hoverScan.violations).toEqual([]);
+          expect(hoverScan.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
+        }
+        if (n === 0 || n === 3)
+          await main.screenshot({
+            path: `/tmp/barghsa-crm-page-${locale}-${darkMode}-${n}-${testInfo.project.name}.png`,
+          });
+      }
+      await testInfo.attach('profile-accessibility', {
+        contentType: 'application/json',
+        body: JSON.stringify(findings),
+      });
+      await tabs.first().focus();
+      await tabs.first().press('End');
+      await expect(tabs.last()).toBeFocused();
+      await tabs.last().press('Home');
+      await expect(tabs.first()).toBeFocused();
+    });
+
+for (const locale of ['fa', 'en'] as const)
+  for (const darkMode of [false, true])
+    test(`CRM profile loading and errors allow localized retry (${locale}, dark=${darkMode})`, async ({
+      page,
+    }) => {
+      await page.addInitScript((locale) => {
+        const apply = () => {
+          document.documentElement.lang = locale;
+          document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
+        };
+        if (document.documentElement) apply();
+        new MutationObserver(apply).observe(document, { childList: true });
+      }, locale);
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Archive review',
+            slogan: '',
+            primaryColor: '#2563eb',
+            secondaryColor: '#64748b',
+            accentColor: '#f59e0b',
+            logoUrl: null,
+            faviconUrl: null,
+            darkMode,
+          },
+        })
+      );
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'UTC' } })
+      );
+
+      let release!: () => void;
+      const held = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      let phase = 0;
+      const requestedPhases: number[] = [];
+      const replies = [503, 403, 404, 0, 200, 201];
+      await page.route(`**/api/crm/profiles/${id}`, async (route) => {
+        const status = replies[phase];
+        requestedPhases.push(phase);
+        expect(route.request().method()).toBe('GET');
+        // Locale initialization can abort and repeat the initial read. Hold both.
+        await held;
+        if (status === 0) return route.abort('failed');
+        if (status === 200)
+          return route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: 'invalid json',
+          });
+        if (status === 201) return route.fulfill({ json: detail(false, false) });
+        return route.fulfill({ status, json: { message: 'Internal upstream detail' } });
+      });
+      await page.goto(`/admin/crm/profiles/${id}`);
+      const main = page.getByRole('main');
+      await expect(main.getByRole('status')).toHaveText(
+        locale === 'fa' ? 'در حال بارگذاری پروفایل…' : 'Loading profile...'
+      );
+      release();
+      const generic =
+        locale === 'fa' ? 'بارگذاری پروفایل با خطا مواجه شد' : 'Failed to load profile';
+      const messages = [
+        generic,
+        locale === 'fa' ? 'دسترسی غیرمجاز' : 'Access denied',
+        locale === 'fa' ? 'پروفایل یافت نشد' : 'Profile not found',
+        generic,
+        generic,
+      ];
+      for (const message of messages) {
+        await expect(main.getByRole('alert')).toContainText(message);
+        await expect(main).not.toContainText('Internal upstream detail');
+        const scan = await new AxeBuilder({ page })
+          .include('#admin-content')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze();
+        expect(scan.violations).toEqual([]);
+        expect(scan.incomplete.filter((i) => i.id === 'color-contrast')).toEqual([]);
+        const retry = main.getByRole('button', {
+          name: locale === 'fa' ? 'تلاش دوباره' : 'Retry',
+          exact: true,
+        });
+        await retry.focus();
+        phase++;
+        await retry.press('Enter');
+      }
+      await expect(main.getByRole('tablist')).toBeVisible();
+      expect([...new Set(requestedPhases)]).toEqual([0, 1, 2, 3, 4, 5]);
+    });
