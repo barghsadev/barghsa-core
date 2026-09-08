@@ -5,7 +5,7 @@
   "plan": "audit/fix-plan.md",
   "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
   "active_step": "R01",
-  "next_action": "Consolidate session/recovery acceptance per task and saved PR using the current repaired workflow and preserved caller evidence. Reconcile session lifecycle/revocation, refresh CSRF, sensitive-domain assignments and forgot-password intake. Keep lost-contact owner policy and finance/telemetry/future dependencies explicit. Do not rebuild the three completed repairs or repeat unchanged checks.",
+  "next_action": "Read selected requirements and existing profile/onboarding evidence, inspect current implementation once, then repair confirmed gaps with focused checks.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Route registration matrix saved at455ed61; CSRF/step-up guard boundaries repaired and83 focused API cases pass. Finish public-auth/callback/telemetry dispositions, required sensitive-action/audit/UI callers and task-wide session reconciliation."
+        "Session creation/revocation locally verified at1695680. Public-auth pre-login CSRF and refresh binding are verified. Finish assigned callback/telemetry CSRF and sensitive-domain audit/UI dispositions; do not rebuild completed session work."
       ]
     },
     {
@@ -114,7 +114,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Registration/OTP nine-task batch verified locally atc706820. Finish remaining reset/contact/staff acceptance and explicit PR dispositions using retained evidence. Support contacts and runbook are implemented; lost-contact owner policy/execution remain. Live delivery remains operational work."
+        "Registration/OTP and forgot/reset locally verified. Finish remaining contact/profile acceptance and saved login/staff PR dispositions using retained evidence. Lost-contact owner policy, execution and complete case audit remain; live provider delivery remains external."
       ]
     },
     {
@@ -566,6 +566,10 @@
     {
       "id": "R01-registration-otp",
       "review_record": "audit/evidence/step-reviews.json#R01-registration-otp"
+    },
+    {
+      "id": "R01-session-recovery",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-recovery"
     }
   ],
   "deferred_improvements": [
@@ -584,9 +588,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 66,
-    "partial": 19,
-    "pending": 237,
+    "acceptance_verified": 69,
+    "partial": 17,
+    "pending": 236,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -700,127 +704,104 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-session-recovery",
-    "name": "Session lifecycle and account recovery",
+    "id": "R01-profiles-onboarding",
+    "name": "Profile selection, onboarding and switching",
     "status": "in_progress",
     "prs": [
-      89,
-      90,
-      91,
-      92,
-      93,
-      99,
-      100
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-02.02.01",
-      "02-auth-users-admin.md#T-02.02.02",
-      "02-auth-users-admin.md#T-02.02.03",
-      "02-auth-users-admin.md#T-02.02.04",
-      "02-auth-users-admin.md#T-02.03.01",
-      "02-auth-users-admin.md#T-02.03.02",
-      "02-auth-users-admin.md#T-02.03.03"
+      "02-auth-users-admin.md#T-03.01.01",
+      "02-auth-users-admin.md#T-03.01.02",
+      "02-auth-users-admin.md#T-03.02.01",
+      "02-auth-users-admin.md#T-03.02.02",
+      "02-auth-users-admin.md#T-03.02.03",
+      "02-auth-users-admin.md#T-03.02.04",
+      "02-auth-users-admin.md#T-03.03.01",
+      "02-auth-users-admin.md#T-03.03.02"
     ],
     "remaining_checklist": [
-      "Reconcile session creation/revocation criteria using unchanged caller evidence and completed agent/invitation/ownership batches.",
-      "Disposition JSON-auth, refresh, callbacks/GET-return and telemetry CSRF boundaries; assign finance/telemetry consumers to their owning batches without marking them passed.",
-      "Link built sensitive actions and UI recovery to owning domain reviews; preserve unbuilt refund/contract prerequisites.",
-      "Review forgot-password intake and support/recovery requirements; reuse verified OTP-first reset, estimator and delivery evidence.",
-      "Keep lost-contact execution blocked on the existing unanswered owner policy; do not ask again or infer a provider."
+      "Review zero/one/multiple profile selection, persisted active/default profile and account isolation.",
+      "Review verification restrictions against the no-provider decision; keep non-commercial access and new-order server enforcement explicit.",
+      "Review individual/legal draft creation, all literal fields, geography/national-ID uniqueness, address ownership and optional documents/autosave.",
+      "Review completion transitions, first default, add-another/dashboard actions and switch invalidation using existing transaction evidence.",
+      "Disposition PR106 legal UI deferral and compare contributing PR108 without rebuilding duplicate slices."
     ],
     "historical_deferrals": [
       {
-        "pr": 92,
-        "statements": [
-          "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) \u2014 Slice 2 (separate PR)",
-          "- [ ] Frontend step-up modal dialog \u2014 Slice 2"
+        "pr": 106,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/106",
+        "task_keys": [
+          "02-auth-users-admin.md#T-03.02.03"
         ],
-        "disposition": "Review current linked implementations before closing."
+        "historical_deferrals": [
+          "- [ ] Frontend legal profile form UI (slice 2)"
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "R01-registration-otp",
       "R01-agents-invitations-ownership",
-      "audit/session-caller-review.md",
-      "audit/security-route-review.md",
-      "R01-reset-otp-first"
+      "audit/evidence/step-reviews.json#R01-session-recovery",
+      "Existing profile/onboarding/verification/identity and address step reviews; inspect relevant source bindings before reuse."
     ],
     "pr_dispositions": [
       {
-        "pr": 89,
+        "pr": 102,
         "status": "open",
-        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
+        "reason": "Current requirement and historical review pending."
       },
       {
-        "pr": 90,
+        "pr": 103,
         "status": "open",
-        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
+        "reason": "Current requirement and historical review pending."
       },
       {
-        "pr": 91,
+        "pr": 104,
         "status": "open",
-        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
+        "reason": "Current requirement and historical review pending."
       },
       {
-        "pr": 92,
+        "pr": 105,
         "status": "open",
-        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
+        "reason": "Current requirement and historical review pending."
       },
       {
-        "pr": 93,
+        "pr": 106,
         "status": "open",
-        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
+        "reason": "Current requirement and historical review pending."
       },
       {
-        "pr": 99,
+        "pr": 107,
         "status": "open",
-        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
+        "reason": "Current requirement and historical review pending."
       },
       {
-        "pr": 100,
+        "pr": 108,
         "status": "open",
-        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
+        "reason": "Current requirement and historical review pending."
+      },
+      {
+        "pr": 109,
+        "status": "open",
+        "reason": "Current requirement and historical review pending."
+      },
+      {
+        "pr": 110,
+        "status": "open",
+        "reason": "Current requirement and historical review pending."
       }
     ],
-    "next_action": "Consolidate session/recovery acceptance per task and saved PR using the current repaired workflow and preserved caller evidence. Reconcile session lifecycle/revocation, refresh CSRF, sensitive-domain assignments and forgot-password intake. Keep lost-contact owner policy and finance/telemetry/future dependencies explicit. Do not rebuild the three completed repairs or repeat unchanged checks.",
-    "local_repairs": [
-      {
-        "commit": "b68f408",
-        "summary": "Remove session bearer IDs and raw exception text/URLs from auth/session and HTTP error logs. Keep operation and correlation IDs.",
-        "checks": "53 API cases; types/lint/format pass. AST comparison confirms all35 auth/session method bodies unchanged except logging and now-unused catch bindings."
-      },
-      {
-        "commit": "f1b879b8e0ef27a264eae021469cbbf5d639c5d7",
-        "summary": "Browser-bound PostgreSQL pre-login CSRF challenges replace11 public-auth exemptions. Anonymous challenges expire after30min, consume atomically before auth, and never become user sessions. All browser callers bootstrap; retry once only on CSRF-guard rejection.",
-        "checks": "217 distinct API cases across17 files,98 distinct Chromium cases across10 files,11 helper units,40 migration checks across4 files,API/web/DB types,lint/format,OpenAPI,snapshot and42 payload gates pass. Focused reruns excluded from counts.",
-        "migration": "0123_preauth_sessions must precede API rollout. Generated snapshot adds only preauth_sessions;94 existing tables unchanged. No external rollout performed."
-      },
-      {
-        "commit": "169568059f71e16b9f00cd3522a412fdb6b3f375",
-        "summary": "Recovery now uses the shared six-digit OTP input with Persian/Arabic normalization, keyboard/paste/autosubmit, pending serialization, clear-on-error and existing grant/cooldown behavior.",
-        "checks": "31 distinct affected Chromium cases:29 recovery/rate-limit +2 new mobile fa/en cases. Web types/lint/production build and42 unchanged payload gates pass. No API changes; reuse217 current API cases and earlier transaction evidence."
-      }
-    ],
-    "checkpoint": {
-      "revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
-      "scope": "Three local repairs verified: credential-safe logging, pre-login CSRF, shared recovery OTP. Combined feature acceptance/PR closure remains pending.",
-      "evidence_prefix": "/tmp/r01-session-recovery-",
-      "method_reuse_log": "/tmp/r01-session-recovery-log-method-review.log",
-      "latest_api_logs": [
-        "/tmp/r01-session-recovery-preauth-api-checkpoint.log",
-        "/tmp/r01-session-recovery-preauth-api-followup.log"
-      ],
-      "latest_browser_logs": [
-        "/tmp/r01-session-recovery-preauth-browser.log",
-        "/tmp/r01-session-recovery-preauth-browser-followup.log"
-      ],
-      "note": "Failed intermediate logs retained. Final passing follow-ups replace failures only in their affected files.",
-      "recovery_browser_logs": [
-        "/tmp/r01-recovery-otp-browser.log",
-        "/tmp/r01-recovery-otp-mobile-browser.log"
-      ]
-    }
+    "next_action": "Read selected requirements and existing profile/onboarding evidence, inspect current implementation once, then repair confirmed gaps with focused checks."
   },
   "open_domain_reviews": [
     {
@@ -845,6 +826,30 @@
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "owner_batch": "orders and addresses",
       "criteria": "Manager operations, documents/comments/consultation and protected identity denial",
+      "status": "pending linked acceptance"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "owner_batch": "R01 payments/callbacks",
+      "criteria": "Signed callback/chargeback authentication, replay/ledger effects and state-changing payment return GET against literal CSRF requirement",
+      "status": "pending linked acceptance"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "owner_batch": "R02 email delivery",
+      "criteria": "Signed email webhook/replay and CSRF disposition",
+      "status": "pending linked acceptance"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "owner_batch": "R03 telemetry",
+      "criteria": "Actual browser CSP report transport, cookie context, payload safety and CSRF disposition",
+      "status": "pending linked acceptance"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.04",
+      "owner_batch": "R01 finance and R02 provider/storage administration",
+      "criteria": "Required sensitive caller authorization through writes, verification audit and UI re-prompt; retain separate refund/contract/no-provider prerequisites",
       "status": "pending linked acceptance"
     }
   ]

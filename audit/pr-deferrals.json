@@ -1038,7 +1038,21 @@
       "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) — Slice 2 (separate PR)",
       "- [ ] Frontend step-up modal dialog — Slice 2"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Frontend modal satisfied locally; sensitive-domain wiring acceptance remains open.",
+    "reviewed_source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+    "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "pending_domain_review",
+        "evidence": "Staff/profile roles, ownership and session/trust callers are verified. Remaining storage/provider/finance/price consumers require linked domain acceptance; refund/contract and real-provider callers remain future prerequisites. audit/evidence/step-reviews.json#R01-session-recovery"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Action-specific password dialogs, wrong-password handling, pending protection and rotated-CSRF retry verified in session display and later staff/agents/ownership browser batches. audit/evidence/step-reviews.json#R01-session-recovery"
+      }
+    ]
   },
   {
     "pr": 87,

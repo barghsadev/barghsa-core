@@ -5591,6 +5591,561 @@
         "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
         "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz"
       ]
+    },
+    {
+      "id": "R01-session-recovery",
+      "date": "2026-09-09",
+      "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+      "base_revision": "00b4ed2",
+      "product_commits": [
+        "b68f408",
+        "f1b879b8e0ef27a264eae021469cbbf5d639c5d7",
+        "169568059f71e16b9f00cd3522a412fdb6b3f375"
+      ],
+      "summary": "Session/recovery local feature work complete. Four task acceptances verified, including preserved reset; three remain partial. Four saved PR reviews close and three stay open with assigned remaining criteria.",
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.01",
+        "02-auth-users-admin.md#T-02.02.02",
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-02.03.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-02.03.03"
+      ],
+      "review": [
+        "Fresh opaque session/CSRF and rotating refresh credentials, centralized production Secure/HttpOnly/narrow cookie paths, idle30min/absolute24h, locked refresh-family reuse revocation and private deduplicated notice are verified. Login, OTP, step-up, password/reset/activation, staff/profile-role changes and ownership credential effects have source-bound caller evidence. Agent/invitation/ownership batch now closes the previously pending caller review. Logging-only edits and anonymous CSRF do not change authenticated rotation semantics.",
+        "Owner-scoped session list, approximate IP country, device name, created/last-active timestamps, single confirmation and password-confirmed all-other revocation are verified with current actor checks through commit. Staff/CRM revocation, disablement, reset, ownership and refresh-reuse compromise invalidate applicable credentials atomically. Trusted-device removal revokes future trust and is distinguished from active-session revocation. Existing fa/en desktop/mobile dialog, retry, failure and self-sign-out evidence remains valid.",
+        "Owner-requested anonymous/current-session pre-login CSRF now protects all11 public-auth POST routes. RefreshCsrfGuard validates X-CSRF-Token against the session linked to the hashed refresh credential; expired/revoked sessions fail and redemption rechecks token consumption/deadlines. Authenticated mutations use the global guard, rotate tokens with sessions and return safe403 plus correlation/security log. Signed payment/email callbacks, payment return GET and actual CSP reporting retain their assigned domain review; the no-exemption task is not closed.",
+        "Shared step-up rotates session/CSRF, preserves absolute deadline, rejects invalid/future/expired verification and emits requiresStepUp only for the intended403. Current staff, role, ownership, session and trust callers check authority through writes and audit verified timestamp. Password modal/action wording, wrong-password retry and fresh-CSRF retry are already tested. Remaining storage/provider/finance/price/domain consumer criteria are assigned; refunds and contract cancellation remain separate future tasks.",
+        "Auth-layout email/mobile intake, back-to-login, masked destination and identical generic known/unknown responses are implemented. Normalized destination starts are capped5/hour, alongside shared IP/device/send limits before account lookup. Unknown identifiers receive an opaque synthetic challenge; encrypted delivery configuration failure does not reveal existence. Recovery now uses the same six-digit OtpInput as login/register, including normalized paste, keyboard control, autosubmit, error clear and resend/pending serialization. Current HTTP/rate-limit/delivery and31 affected browser cases supply acceptance.",
+        "Preserve verified OTP-first reset: limited one-use verification grant, server password strength/history, atomic password/OTP/audit/session/refresh invalidation and return-to-login acknowledgement. New preauth transport and shared recovery OTP are verified by current217 API and31 recovery/rate-limit browser cases. Existing reset transaction/migration evidence remains valid; no reset service logic changed beyond safe logging.",
+        "Shared secondary support path and confirmed info@barghsa.com,021-26658042,09002550292 plus intake/escalation runbook are implemented. No invented24-hour promise or identity provider. Lost-contact approval/evidence/retention policy remains unanswered; safe credential-change execution and complete case audit remain unimplemented. Do not certify full recovery or ask the same policy question again."
+      ],
+      "checks": [
+        "53 API cases; types/lint/format pass. AST comparison confirms all35 auth/session method bodies unchanged except logging and now-unused catch bindings.",
+        "217 distinct API cases across17 files,98 distinct Chromium cases across10 files,11 helper units,40 migration checks across4 files,API/web/DB types,lint/format,OpenAPI,snapshot and42 payload gates pass. Focused reruns excluded from counts.",
+        "31 distinct affected Chromium cases:29 recovery/rate-limit +2 new mobile fa/en cases. Web types/lint/production build and42 unchanged payload gates pass. No API changes; reuse217 current API cases and earlier transaction evidence.",
+        "Focused API/browser/migration and quality checks were completed before this consolidation. Reused unchanged caller, refresh, cookie, transaction and dialog evidence; no new product changes or repeated test runs."
+      ],
+      "repairs": [
+        {
+          "commit": "b68f408",
+          "summary": "Remove session bearer IDs and raw exception text/URLs from auth/session and HTTP error logs. Keep operation and correlation IDs.",
+          "checks": "53 API cases; types/lint/format pass. AST comparison confirms all35 auth/session method bodies unchanged except logging and now-unused catch bindings."
+        },
+        {
+          "commit": "f1b879b8e0ef27a264eae021469cbbf5d639c5d7",
+          "summary": "Browser-bound PostgreSQL pre-login CSRF challenges replace11 public-auth exemptions. Anonymous challenges expire after30min, consume atomically before auth, and never become user sessions. All browser callers bootstrap; retry once only on CSRF-guard rejection.",
+          "checks": "217 distinct API cases across17 files,98 distinct Chromium cases across10 files,11 helper units,40 migration checks across4 files,API/web/DB types,lint/format,OpenAPI,snapshot and42 payload gates pass. Focused reruns excluded from counts.",
+          "migration": "0123_preauth_sessions must precede API rollout. Generated snapshot adds only preauth_sessions;94 existing tables unchanged. No external rollout performed."
+        },
+        {
+          "commit": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+          "summary": "Recovery now uses the shared six-digit OTP input with Persian/Arabic normalization, keyboard/paste/autosubmit, pending serialization, clear-on-error and existing grant/cooldown behavior.",
+          "checks": "31 distinct affected Chromium cases:29 recovery/rate-limit +2 new mobile fa/en cases. Web types/lint/production build and42 unchanged payload gates pass. No API changes; reuse217 current API cases and earlier transaction evidence."
+        }
+      ],
+      "historical_dispositions": [
+        "PR89 infrastructure-only rotation claims are superseded by implemented caller effects and current source-bound evidence;50-session cap evidence retained. PR90 self/bulk/staff credential and UI claims are verified.",
+        "PR91 former anonymous-auth exemption is superseded by f1b879b; callbacks/telemetry keep whole task open. PR92 statements are dispositioned individually in pr-deferrals.json.",
+        "PR93 former shared OTP claim is now fulfilled by1695680. PR99 legacy direct-reset implementation is superseded by verified OTP-first reset and migration0122, preserving its useful history.",
+        "PR100 contacts/runbook are repaired; lost-contact policy/execution remains open. Historical product loop-state edits remain provenance, with protocol review in V01."
+      ],
+      "remaining": [
+        "Payment signed callbacks and state-changing return GET remain R01 finance review; email callback remains R02 and CSP reporting remains R03. Their policy/handler dispositions are not acceptance passes.",
+        "Same-origin browser topology is retained. Any future cross-origin deployment requires its own reviewed origin policy.",
+        "Remaining built storage/provider/payment/price and other required domain actions need linked authorization/audit/UI evidence from their owning batches.",
+        "Refund and contract-cancellation callers remain future dependencies. No identity adapter may be enabled without the recorded authorization/step-up/configuration/audit prerequisites.",
+        "Owner policy for lost-contact approvers, identity evidence and restricted collection/retention remains unanswered. Do not ask again.",
+        "A reviewed credential-change execution method and full case audit remain required; current contact changes require old and new OTPs. No automatic identity provider exists."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 89,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.02.01"
+          ],
+          "reason": "Fresh opaque session/CSRF and rotating refresh credentials, centralized production Secure/HttpOnly/narrow cookie paths, idle30min/absolute24h, locked refresh-family reuse revocation and private deduplicated notice are verified. Login, OTP, step-up, password/reset/activation, staff/profile-role changes and ownership credential effects have source-bound caller evidence. Agent/invitation/ownership batch now closes the previously pending caller review. Logging-only edits and anonymous CSRF do not change authenticated rotation semantics.",
+          "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+          "evidence": "audit/evidence/step-reviews.json#R01-session-recovery"
+        },
+        {
+          "pr": 90,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.02.02"
+          ],
+          "reason": "Owner-scoped session list, approximate IP country, device name, created/last-active timestamps, single confirmation and password-confirmed all-other revocation are verified with current actor checks through commit. Staff/CRM revocation, disablement, reset, ownership and refresh-reuse compromise invalidate applicable credentials atomically. Trusted-device removal revokes future trust and is distinguished from active-session revocation. Existing fa/en desktop/mobile dialog, retry, failure and self-sign-out evidence remains valid.",
+          "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+          "evidence": "audit/evidence/step-reviews.json#R01-session-recovery"
+        },
+        {
+          "pr": 91,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.02.03"
+          ],
+          "reason": "Owner-requested anonymous/current-session pre-login CSRF now protects all11 public-auth POST routes. RefreshCsrfGuard validates X-CSRF-Token against the session linked to the hashed refresh credential; expired/revoked sessions fail and redemption rechecks token consumption/deadlines. Authenticated mutations use the global guard, rotate tokens with sessions and return safe403 plus correlation/security log. Signed payment/email callbacks, payment return GET and actual CSP reporting retain their assigned domain review; the no-exemption task is not closed.",
+          "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+          "evidence": "audit/evidence/step-reviews.json#R01-session-recovery"
+        },
+        {
+          "pr": 92,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.02.04"
+          ],
+          "reason": "Shared step-up rotates session/CSRF, preserves absolute deadline, rejects invalid/future/expired verification and emits requiresStepUp only for the intended403. Current staff, role, ownership, session and trust callers check authority through writes and audit verified timestamp. Password modal/action wording, wrong-password retry and fresh-CSRF retry are already tested. Remaining storage/provider/finance/price/domain consumer criteria are assigned; refunds and contract cancellation remain separate future tasks.",
+          "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+          "evidence": "audit/evidence/step-reviews.json#R01-session-recovery"
+        },
+        {
+          "pr": 93,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.03.01"
+          ],
+          "reason": "Auth-layout email/mobile intake, back-to-login, masked destination and identical generic known/unknown responses are implemented. Normalized destination starts are capped5/hour, alongside shared IP/device/send limits before account lookup. Unknown identifiers receive an opaque synthetic challenge; encrypted delivery configuration failure does not reveal existence. Recovery now uses the same six-digit OtpInput as login/register, including normalized paste, keyboard control, autosubmit, error clear and resend/pending serialization. Current HTTP/rate-limit/delivery and31 affected browser cases supply acceptance.",
+          "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+          "evidence": "audit/evidence/step-reviews.json#R01-session-recovery"
+        },
+        {
+          "pr": 99,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.03.02"
+          ],
+          "reason": "Preserve verified OTP-first reset: limited one-use verification grant, server password strength/history, atomic password/OTP/audit/session/refresh invalidation and return-to-login acknowledgement. New preauth transport and shared recovery OTP are verified by current217 API and31 recovery/rate-limit browser cases. Existing reset transaction/migration evidence remains valid; no reset service logic changed beyond safe logging.",
+          "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+          "evidence": "audit/evidence/step-reviews.json#R01-session-recovery"
+        },
+        {
+          "pr": 100,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.03.03"
+          ],
+          "reason": "Shared secondary support path and confirmed info@barghsa.com,021-26658042,09002550292 plus intake/escalation runbook are implemented. No invented24-hour promise or identity provider. Lost-contact approval/evidence/retention policy remains unanswered; safe credential-change execution and complete case audit remain unimplemented. Do not certify full recovery or ask the same policy question again.",
+          "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+          "evidence": "audit/evidence/step-reviews.json#R01-session-recovery"
+        }
+      ],
+      "pr_counts": {
+        "closed": 4,
+        "open": 3,
+        "blocked": 0
+      },
+      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
+      "reused_review_records": [
+        "R01-registration-otp",
+        "R01-agents-invitations-ownership",
+        "audit/session-caller-review.md",
+        "audit/security-route-review.md",
+        "R01-reset-otp-first"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "f337395c8b01a912d5a0cb922ad67de3c157e378a1b90e4422450218886c06c2"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "3a4418e02e52b6058b50b4cd0b610e78e3f9f05e14083e5b113d835326be4433"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "d208d74a660e1983e7828674a3b9dfa057d3971d0107752b0a5d6dc5690842b6"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "06c9645b97a15b9a0a646b0d61f3022eb45e8e5532578a34214338d930e6d5a8"
+        },
+        {
+          "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
+          "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "4f221eaf98605b836d615ad0e98ff1a9c4f59c7e3ec33bc416fe4971a1400293"
+        },
+        {
+          "path": "apps/api/src/auth/dto/reset-password.dto.ts",
+          "sha256": "49bdc9d40ad0378ab428e9c352d1b577c8182d47332ccda637f3f6ea549f93a6"
+        },
+        {
+          "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+          "sha256": "4c2a11811f174a66be642f8e5c92e49ce4ad7d38a04494835a52041cf7e1faa6"
+        },
+        {
+          "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+          "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+        },
+        {
+          "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+          "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+        },
+        {
+          "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+          "sha256": "5d13bd853ccb666821867bbf41a2c5873c8a0a97ab8776d8d00c2f5d706bb0cd"
+        },
+        {
+          "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+          "sha256": "87490ee4f7615f13d236eeb43a2c083c461dfee38ae60b03d1e28c1685dfa6c6"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "cc13848cf36ac7c9ffc963cec1eac851a2e285f6aa469e0af7ed8e14522450e1"
+        },
+        {
+          "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
+          "sha256": "18dc44dda897bd74a71de7be6c5dbe4d1974b5b17d3f47658ad57337b78c95b0"
+        },
+        {
+          "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
+          "sha256": "ff26770e6ccdb918ede163a3edb3f039d434779dc55982a6180ff724c3e73138"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "a9fe448454c0aa23d0ef34a9f87a6fb696cb6435edfcd4789df5c60a9dded070"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
+          "sha256": "36a0c6e435e07405e4bb23c3b3f991388e487ecb08aa8a397b43dec87e7549f7"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.test.ts",
+          "sha256": "ede917f1d3dbd762cfd44c012889630b82a38592f1f14d6e8e83339abeee2b01"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "ecc71ca24491c7db4575b8331415ff0ebe9c3cf8a11ea5efba6a442f3505af71"
+        },
+        {
+          "path": "apps/api/src/session/geoip-country.d.ts",
+          "sha256": "e999f9875b732e53ffd964e668bada52be77881ccaf6495a68c4d91e430001c7"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+          "sha256": "e596516adfde0884eb620dd38cadcdd71a42d2e061d92e7327e51e5b6b3f9eba"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf.controller.ts",
+          "sha256": "db2be409a2a15af3a5655503b0730a6dedf2e5235bce07e6ae8d061c7b72fdc1"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf.service.test.ts",
+          "sha256": "16501df36e009094eaf2804dc171db5d92220e7c94bdce97171c1df18617b779"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf.service.ts",
+          "sha256": "1dc595906412d0f67cc576bce7560e9b463fb615a402f87c3eea9a01bc0c7db9"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.test.ts",
+          "sha256": "f330c388c4e5ed471a736e96426091bf8f73933d221a43da31f81a5764807248"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.ts",
+          "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
+        },
+        {
+          "path": "apps/api/src/session/self-revocation.integration.test.ts",
+          "sha256": "0f55543660dc5dbb16bcb0c21efc930f4ed0be170b192b48030b2e94c2ed1f3d"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "01947f280709fa9db8925c67a5f36cd71dbf2946a6fb9af460c31ec17dc72f26"
+        },
+        {
+          "path": "apps/api/src/session/session-context.middleware.ts",
+          "sha256": "cb64a4f0cd8bcd1e7fd83b62563d6c3a734e3ca93d0d994c67d412e8695f90d7"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+        },
+        {
+          "path": "apps/api/src/session/session-location.test.ts",
+          "sha256": "05ef44e31f4c06ee1f79da3c40f23298ca4cb7b171da405383326a57a598a455"
+        },
+        {
+          "path": "apps/api/src/session/session-location.ts",
+          "sha256": "c1b59ac80a2e02433281852c09dcb934b184a981973e1e647bd935a3f3a5c371"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "45f3f76a488b79388956dcb80324ac26db567f1c3611ba44199f136739781f3c"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "903927be2f91c6dcda04d16589cb57194f0ede2535c24280be7898d0fe9fbf12"
+        },
+        {
+          "path": "apps/api/src/session/session.module.ts",
+          "sha256": "577f7e25773db4d74d667fc486ebdac0b9ffd9329e792c5460279241bb77c017"
+        },
+        {
+          "path": "apps/api/src/session/session.service.test.ts",
+          "sha256": "04869c27729bb1eae9268e80d5080dc59c209fc9e875f0ef64e557b3af8fac0e"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "6857c3122dd03ba01804a78218102486c28499cf22f97a941d9231e003e6724e"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.test.ts",
+          "sha256": "959323fbb2ad7263b587ea2b6332186623372d98c15d1b45f965b7406b2870f0"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+          "sha256": "b81e5af7aa3e5e283e8efe56af345b5915283c5b2b0271a6ed92cc5bee47aa76"
+        },
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+        },
+        {
+          "path": "apps/api/src/test/public-auth.ts",
+          "sha256": "01ca6b8e34472e5185a526fd19ceef48d5f6ddc6c594c56a31c5f203355d5159"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "54fd94845c4ed025b414ec555dfc36ac66e17bacb31ca23d08e4a71ec235aaa1"
+        },
+        {
+          "path": "apps/web/e2e/auth-rate-limit.spec.ts",
+          "sha256": "1d5b91044e6cf9755a051b44c5e9c991b5c1dcbcbb676e569dadb060e7a0cda4"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "c95e7219735bfbde1c7f524c29468dcf7df4cf6952c6db29f9ad055ea87b8551"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "0636c0abc18de018c5a42bad288311fe094e00ee118c794cc24e13201f647c96"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "d089bcc26ce0d1192e9620bebefd4eeceb1ba64989de9f069d05463203247e9b"
+        },
+        {
+          "path": "apps/web/e2e/password-reset.spec.ts",
+          "sha256": "2a92f595e18fbfb0050a9ef2a50f862600152f9a3d790fbf46702921f4e75ce1"
+        },
+        {
+          "path": "apps/web/e2e/preauth-csrf.spec.ts",
+          "sha256": "db8e4154848d8299dca34391ed69f9db1ba87396d6dfdbff386f2a250cef3609"
+        },
+        {
+          "path": "apps/web/e2e/public-auth-fixture.ts",
+          "sha256": "4a4798c6dfab9e9072225b038a2b4b6a10139cf18bd0b4c8c3d44a274c4b85df"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+        },
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "accf61409400eeb3b797f3d9a18012110d60052e4b2fc7f968473e5b7c7c258f"
+        },
+        {
+          "path": "apps/web/e2e/registration-recovery.spec.ts",
+          "sha256": "f740511215e80dff9eff50194d2765c773926f78d78b6496b6aa09d844235120"
+        },
+        {
+          "path": "apps/web/e2e/registration-strength.spec.ts",
+          "sha256": "7f8a6c2017d0286a35c3180fd61bb265bd8d05faa5e287512b6919e290f5dc18"
+        },
+        {
+          "path": "apps/web/e2e/session-cookies.spec.ts",
+          "sha256": "769ed2748457ac0ee3867955f803824e9f9d810c1d8727fa978a0bcadb181087"
+        },
+        {
+          "path": "apps/web/e2e/staff-activation.spec.ts",
+          "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+        },
+        {
+          "path": "apps/web/src/components/OtpInput.tsx",
+          "sha256": "1f305065082c3085b1f3d6ea5b67709d0eef2e04e08d1482641d3a68834ca154"
+        },
+        {
+          "path": "apps/web/src/lib/public-auth-fetch.test.ts",
+          "sha256": "48cb7ce3867e25d66d062191ed1d95dc3015c88f2e2a2674ae9ab1b178cfeab7"
+        },
+        {
+          "path": "apps/web/src/lib/public-auth-fetch.ts",
+          "sha256": "9315e8d564d27af391cb6821967252f38af2d89c6d80d71a846533023a77762c"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "b2127003434ef04f0f1161cf7211bdb2407c01cf515607494989ef58379a2a9a"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "2b7a4c213a2139dd84d9a3c2e1e2ef587e7e7146f7e1290259ad50f71f40b79b"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "c604329fd4b683f0683ede7ccd8ba991dcb34cb4f642d399987fdd4b116cc22f"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "6ec0f3f66a30b54f84b4c00489b5a9dd34ee6c91164ebdce8e38104981525b78"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "530ce0d201d8916178f62122e5cc9ee826194c594641fa23822bc6feee792d31"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "c9b92996fd090ee860c8cb11b6472893be241e2c5c6e0bf6b207fbb4589b532c"
+        },
+        {
+          "path": "apps/web/src/routes/support.tsx",
+          "sha256": "872e1b510a4cf1593c42dccf78a36bd1bca27b71b1e39374bb00804e689a25c8"
+        },
+        {
+          "path": "docs/runbooks/account-recovery.md",
+          "sha256": "a870d377282fe75761985a61a986a17db75c193d00516664b3fbb7c6b17d10ff"
+        },
+        {
+          "path": "docs/security/cookies.md",
+          "sha256": "522019da24e475020d1ea87b0af09a9aad50d2ee5a7306906eb2562150c0d446"
+        },
+        {
+          "path": "docs/security/session-location.md",
+          "sha256": "7fb228d81f807bdb35fc0aa7db8dba67fe916bf91ac11619e22a62d6254abcf6"
+        },
+        {
+          "path": "packages/db/drizzle/production/0122_password_reset_authorization.sql",
+          "sha256": "bda131ec6b6b75080c7dc19f305eb5a6a192d3aadfe95a1217d2aa26d47e24e9"
+        },
+        {
+          "path": "packages/db/drizzle/production/0123_preauth_sessions.sql",
+          "sha256": "f1381edb86151c1e4ac85f5e5c17824219d1238578d230ac5cfe84098b86772d"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0122_snapshot.json",
+          "sha256": "96eabf757d937734937d854804beeaa9ec63127a0272e1ddbca849772c02d708"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0123_snapshot.json",
+          "sha256": "89324daac4f0c19fb86b3a7303b850749822945f43e823701d1b3a5933d3f3e7"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "621058753fcf09ff3d6757278165f45791b582bf3564e28ecae56bb5c9544e46"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "8eac72e718f61aebad57e039bc0dbd7588c2ab82880282885c0497d0bfc2942d"
+        },
+        {
+          "path": "packages/db/src/migrate.device-trust-ip.test.ts",
+          "sha256": "c78a3bb1a430db90294aec2f8cf1080a2f67340a2598923f0757fc8bfbddc1a5"
+        },
+        {
+          "path": "packages/db/src/migrate.password-reset-authorization.test.ts",
+          "sha256": "1e930fb4fae822e352921a1a98ad0f2dc15f44f15c3c8d3ffa051fd9cc728f10"
+        },
+        {
+          "path": "packages/db/src/migrate.preauth-sessions.test.ts",
+          "sha256": "45e1f27fa90c1d19f148b9e7c95f96abf713e31c468efbc8fb6346a35b027e03"
+        },
+        {
+          "path": "packages/db/src/schema/otp-challenge.ts",
+          "sha256": "060dff1853f976a07d106d10d2b4843738dce505fe83b1f0722a6fa9bb49a15e"
+        },
+        {
+          "path": "packages/db/src/schema/preauth-sessions.ts",
+          "sha256": "fe9b47e98aa2d70314290cabd1e70f6beb16111f9f692d58a656eb400eff5a7c"
+        },
+        {
+          "path": "packages/db/src/schema/users.ts",
+          "sha256": "7d42977fbbd37cae00542a20607d595694365c72d71ac1a2f6cb8df05b2e3261"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "23cacd41e4d3712dcf60d5d6e3e34e0396cf591e2ef93ce32131e7ac5703a51a"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/1695680/r01-recovery-otp-browser.log.gz",
+        "audit/evidence/1695680/r01-recovery-otp-budgets.log.gz",
+        "audit/evidence/1695680/r01-recovery-otp-build.log.gz",
+        "audit/evidence/1695680/r01-recovery-otp-format.log.gz",
+        "audit/evidence/1695680/r01-recovery-otp-mobile-browser.log.gz",
+        "audit/evidence/1695680/r01-recovery-otp-mobile-format.log.gz",
+        "audit/evidence/1695680/r01-session-recovery-audit-check.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/612434d/barghsa-repair-final-backlog.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-auth-diff.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-log-format.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-log-lint.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-log-method-review.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-log-tests-v2.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-log-tests.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-login-comparison.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-methods.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-api-checkpoint.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-api-followup.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-api-types.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-browser-followup.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-browser.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-budgets-v2.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-budgets.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-contract-check.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-contract-pass.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-final-format.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-fixture-format.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-format.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-generate.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-migrations.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-openapi.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-snapshot-pass.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-tests-v2.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-tests.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-web-build-v2.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-web-build.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-web-types-v2.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-web-types.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-web-unit-v2.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-web-unit.log.gz",
+        "audit/evidence/f1b879b/r01-session-recovery-preauth-workflows.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-requirements.log.gz",
+        "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-db-types.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+      ]
     }
   ]
 }

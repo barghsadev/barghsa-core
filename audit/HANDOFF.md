@@ -1,33 +1,29 @@
 # Continue here
 
-Read [fix-plan.md](fix-plan.md) and [progress.json](progress.json), then only the selected requirements/evidence. Keep feature batches and completed work. Do not routinely reread the archive.
+Read [fix-plan.md](fix-plan.md) and [progress.json](progress.json), then only selected requirements/evidence. Preserve feature batches and valid completed work.
 
 ## Current checkpoint
 
-Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **1695680**. Three local repairs are complete and reviewed:
+Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **1695680**. Session/recovery is consolidated in `evidence/step-reviews.json#R01-session-recovery`: **4 verified task acceptances including preserved reset /3 partial;4 PR reviews closed /3 open**. Session creation/revocation and forgot/reset are locally verified. Open items have domain or policy assignments.
 
-- `b68f408`: session bearer IDs and raw exception/URL data removed from auth/session and HTTP error logs.53 API cases pass.35 auth/session method bodies compare unchanged outside logging and unused catch bindings.
-- `f1b879b`: owner-requested pre-login CSRF.11 public-auth exemptions replaced with browser-bound anonymous/current-session tokens. PostgreSQL challenges expire after30min, consume before auth and never become user sessions. All browser callers bootstrap.217 distinct API cases across17 files,98 distinct Chromium cases across10 files,11 helper units and40 migration checks pass. Failed intermediate checks remain archived; passing follow-ups replace only their affected files.
-- `1695680`: password recovery uses the shared six-digit OTP input, with normalized paste, keyboard controls, automatic submission, pending serialization and clear-on-error.31 affected browser cases pass, including2 new mobile fa/en cases. API code is unchanged; reuse f1b879b and prior reset transaction evidence.
+Completed repairs: b68f408 removes credential/exception/URL secrets from logs;f1b879b implements owner-requested pre-login CSRF on11 public-auth routes;1695680 gives recovery the shared six-digit OTP input.53 logging cases,217 distinct preauth API cases,98 preauth browser cases,11 helper units,40 migration checks and31 later affected recovery browser cases pass. These groups overlap; do not sum them. Applicable types/lint/build/OpenAPI/snapshot and42 payload gates pass.1218 logs remain indexed.35-method AST evidence preserves nonlogging behavior.
 
-Applicable types/lint/format, production build, OpenAPI, snapshot and42 payload gates pass. Migration0123 must precede API rollout. Its generated snapshot adds one table;94 existing tables are unchanged. No rollout occurred.1218 logs are indexed. This does not renew broad V02, coverage, images or deployed-operation evidence.
+Migration0123 must precede API rollout. Its snapshot adds one table;94 existing tables remain unchanged. No rollout occurred. No broad V02, coverage, images or deployed-operation evidence is renewed.
 
-## Next feature batch work
+## Next feature batch
 
-Active **R01-session-recovery**, saved PRs #89–#93, #99 and #100. Exact membership, repairs and evidence are in progress.json.active_batch. No confirmed local defect remains in that checklist. **Next consolidate acceptance per task and PR**, reconciling session callers/revocation, forgot-password intake, refresh CSRF and assigned domain-sensitive actions. Preserve verified T-02.03.02. Read original criteria and remaining partial limitations; do not rebuild completed repairs or repeat unchanged checks.
+Active **R01-profiles-onboarding**, saved PRs **#102–#110**, eight tasks. Exact membership, criteria, frozen PR106 deferral and reuse sources are in progress.json.active_batch. Review profile selection/default/switching, verification restrictions, individual/legal drafts, geography/identity/address boundaries, optional documents/autosave and completion. Compare PR108's later legal slice with PR106's UI deferral. Review once; repair only confirmed gaps and check each meaningful change.
 
-Keep finance/callback/payment-return and telemetry checks with their owning batches. Sensitive-domain matrices remain open. Lost-contact owner policy is unanswered; do not ask again or invent approvers/evidence/retention/provider rules. Partial dependencies do not prevent other items closing. Record one consolidated batch review before updating acceptance/PR counts.
+Session CSRF remains partial for payments/callbacks in R01, email delivery in R02 and actual CSP reporting in R03. Step-up retains required domain authorization/audit/UI checks; refund/contract/no-provider callers remain separate prerequisites. Lost-contact policy remains unanswered; do not ask again or invent approvers/evidence/retention. Credential-change execution and complete case audit remain required. Open records do not prevent independent batches continuing.
 
-## Preserved work and counts
+## Counts and preserved work
 
-Registration/OTP batch is complete at c706820:9 tasks verified and9 saved PR reviews closed, #68–#76. Agents/invitations/ownership:4 reviews closed; PR134 and T-05.04.04 remain open for linked domain-role evidence. Their detailed checks remain in step-reviews.json. Preserve staff/CRM and all other completed repairs.
+**69 verified /17 partial /236 pending =322 claims.253 unresolved reviews are not coding effort.** Explicit saved PR reviews: **17 closed /4 open /280 not reviewed** of301. Mapping counts230 unresolved/67 verified-only/4 unmapped.58 historical skips:3 verified/55 pending. Saved GitHub inventory stops September3; no fresh query is claimed. Keep the12 older evidence-refresh entries and original source bindings.
 
-**66 verified /19 partial /237 pending =322 claims.**256 unresolved task reviews are not coding effort. **13 explicit PR reviews closed /1 open /287 not reviewed** from301 saved merged PRs. Mapping counts233 unresolved/64 verified-only/4 unmapped.58 historical skips:3 verified/55 pending. Latest saved GitHub merge September3; no current GitHub coverage is claimed. Preserve older source bindings and the12 recorded evidence-refresh items for V01.
+Registration/OTP closes9 tasks/9 PRs atc706820. Agents/invitations/ownership closes4 PRs at1bf4680;PR134 and T-05.04.04 retain linked domain-role checks. Preserve completed staff/CRM and all other repairs. Keep R01–B01 order; new skipped builds follow repair closure.
 
 ## Decisions and execution
 
-Retain Vite SPA/ADR004; dependency license allowlist is waived. No identity provider exists. Support: info@barghsa.com,021-26658042,09002550292. Owner-approved auth budget covers initial load, estimator measured separately;150KB auth and900KB estimator limits remain. Owner explicitly requested pre-login CSRF; it is implemented. Do not ask these questions again.
+Retain Vite SPA/ADR004. Dependency license allowlist waived. No identity provider exists; automatic verification unavailable, manual supported. Contacts:info@barghsa.com,021-26658042,09002550292. Auth150KB budget covers initial load; estimator900KB measured separately. Pre-login CSRF explicitly requested and implemented. Do not ask these questions again.
 
-Keep R01–B01 order and skipped-build scope. Use rtk and codebase-memory; small output, targeted checks, valid evidence reuse. Build dependencies before web; browser runner serves existing web dist and rebuilds API/shared in setup. Never overlap builds/setup with consumer typechecks.
-
-Local edits and explicit commits only. No push, PR publication/merge, scheduler/state changes, deployment or PR304 action. Keep the goal active while meaningful work remains.
+Use rtk and codebase-memory; small output, targeted checks, valid evidence reuse. Build dependencies before web; browser fixtures serve existing web dist and rebuild API/shared in setup. Never overlap builds/setup with consumer typechecks. Local edits and explicit commits only. No push, PR publication/merge, scheduler/state change, deployment or PR304 action. Keep work active while meaningful tasks remain.
