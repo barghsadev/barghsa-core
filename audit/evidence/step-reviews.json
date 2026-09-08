@@ -808,6 +808,43 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "T-05.02.05 still needs supported identity-field coverage and remaining page acceptance review. Review the additional locked legal/representative fields before closing the task. Legal nonidentity editing and archive review remain separate requirements."
+    },
+    {
+      "id": "R01-crm-correction-theme-and-scope",
+      "date": "2026-09-08",
+      "source_revision": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+      "summary": "Repaired correction form/card/control colors, the shared admin background and confirmation error contrast in light/dark themes. Resolved the protected-field scope from canonical requirements.",
+      "review": "Two initial dark-theme tests reproduced near-white text on white forms. Further checks reproduced an unthemed admin background and insufficient dark error contrast. Page/background colors now follow the theme; confirmation errors use readable colors in both themes. Reviewed Persian mobile dark and English desktop light screenshots. T-03.03.03 explicitly defines protected fields as first_name, last_name, national_id for individuals and legal_name/national_identifier for legal profiles. The current case API supports all five; other legal/representative fields belong in the direct-edit requirement review.",
+      "checks": [
+        "74 distinct production Chromium desktop/mobile CRM cases have passing evidence. The broader run passed70 and had4 desktop description-color checks awaiting resolution. The final8 fa/en light/dark creation/error cases pass, overlapping4 earlier passes. Other paths are unchanged by the final removal of an unnecessary description background style; their70-case evidence is reused.",
+        "Creation form and confirmation errors pass WCAG-tagged axe violation checks. One transparent wrapped description was inconclusive on desktop. Screenshots and hit-testing showed it was unobscured. The test resolves only that reported node using rendered sRGB colors, opaque ancestors, text-line hit tests and the unchanged4.5:1 threshold. Measured contrast4.827:1 light and7.585:1 dark. Measurement and diagnostic logs are saved. Other inconclusive contrast nodes still fail.",
+        "Keyboard focus moves through field/value/reason/evidence controls. Retained cases cover targets, uploads, step-up retries, malformed acknowledgements, permissions, archived profiles and field links.",
+        "Web types, focused lint/format, production build and41 route budgets pass. Failed theme checks and diagnostics remain saved. API source is unchanged."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "bba8ad5a71af2b4e7648599cbd0d5443659ea057f20c6d44d985686cc78e12bd"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "9a1bb68f39382d672686d2e5dda59d45e664e87abd5a83c505af1a2c56cc41c7"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "b25415575cdcd24755b909edce9817eb4c90f5e8845bd17cb853866096e915d1"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "7fdf91d82b1135135ec0e21f7e2a01935ed3cebed9c12af4b135b7c44c462ca8"
+        },
+        {
+          "path": "kanban/epics/02-auth-users-admin.md",
+          "sha256": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Finish T-05.02.05 with focused approval evidence for the four remaining protected fields and review-queue/detail keyboard/theme checks. Then complete legal nonidentity direct editing under T-05.02.02. Other admin screens still need their own review."
     }
   ]
 }

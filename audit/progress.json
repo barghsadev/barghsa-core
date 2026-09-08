@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
+  "source_revision": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
   "active_step": "R01",
-  "next_action": "R01: review legal and representative identity-field coverage for T-05.02.05 against canonical profile requirements; the case API currently supports only five fields while other legal fields are blocked from direct editing. Implement confirmed missing corrections, then finish legal nonidentity contact/address editing and archive writer/retention/checklist acceptance. Correction-only UI access is reviewed. Preserve the unanswered lost-contact recovery policy question.",
+  "next_action": "R01: finish T-05.02.05 acceptance with focused HTTP approval checks for last_name, national_id, legal_name and national_identifier using the existing verification-case fixture; current HTTP cases exercise first_name. Check review-queue/detail keyboard and themes. T-03.03.03 defines only these five protected identity fields; no expansion to other legal/representative fields is required. Then implement legal nonidentity direct editing under T-05.02.02 and continue archive writer/retention/checklist review. Preserve the pending lost-contact policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Staff address editing, correction acknowledgements, field links and correction-only access are reviewed. Finish legal/representative identity-field coverage, legal nonidentity contact/address editing, whole-page acceptance and archive/list review."
+        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Staff address editing, correction acknowledgements, field links, correction-only access and form/confirmation themes are reviewed. Protected-field scope is the five fields in T-03.03.03. Finish case approval-field/reviewer-page acceptance, legal nonidentity editing, full-profile/list and archive review."
       ]
     },
     {
@@ -390,6 +390,10 @@
     {
       "id": "R01-crm-correction-only-access",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-only-access"
+    },
+    {
+      "id": "R01-crm-correction-theme-and-scope",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-theme-and-scope"
     }
   ],
   "deferred_improvements": [
