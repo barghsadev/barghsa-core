@@ -3360,6 +3360,62 @@
         "/tmp/barghsa-activation-deadline-lint.log",
         "/tmp/barghsa-activation-deadline-types.log"
       ]
+    },
+    {
+      "id": "R01-session-caller-review",
+      "date": "2026-09-08",
+      "source_revision": "ee5beb2e55300297953108ea1ce4c50edaaaefc2",
+      "summary": "Reconcile session caller evidence, verify staff/ownership credential revocation and align staff-disablement success with its documented200 response.",
+      "review": [
+        "Ten relevant method bodies match the revisions of earlier focused checks exactly; comparisons and hashes are in audit/evidence/r01/session-method-reuse.json. The matrix in audit/session-caller-review.md identifies covered paths and remaining boundaries.",
+        "New staff-disablement HTTP cases prove both target sessions and refresh credentials are revoked together, audit failure preserves all changes, other accounts remain usable, and repeat disablement does not duplicate audit. Existing ownership tests now seed refresh credentials for both parties and an unrelated account, verifying committed invalidation and rollback.",
+        "The first success assertion exposed201 despite the controller OpenAPI declaration promising200. An intermediate check confirmed credential behavior using the actual201; the final repair adds HttpCode(200), restores200 assertions and passes. No response-body or generated-contract change.",
+        "setAgentRoles changes/removes profile privileges without rotating or revoking target session/refresh credentials. This is a remaining T-02.02.01 boundary, not a claim that revoked profile permissions remain effective. Review invitation acceptance and other profile privilege writers in the same next step."
+      ],
+      "checks": [
+        "17 distinct cases pass across nine ownership and eight staff HTTP cases. Initial run16/17; two staff-disablement cases pass at final response behavior. Overlapping runs are not additive. API types, focused lint/format, generated OpenAPI comparison and diff check pass."
+      ],
+      "remaining": [
+        "Profile privilege-change credential invalidation; remaining CSRF/sensitive-action authorization matrices. T-02.02.01 through04 remain partial. No broad checkpoint, coverage or production evidence renewed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "106658bf096ce68543fe5073ba293b628a29f585ad0b7faa55c555297327ae5b"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "d47ad86bb7c6bd9296b92785bb811957b95ddfaa9e411e870e6e1bf5106d5add"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "6d55b87d1aaaebf017c7427f5a3396f4159d060671e2a8846abbb576b35cef5d"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "079e120498b1a927d2b8141ddbe9da4720dfc397cd6b62a440470393971c2cc6"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "sha256": "3577b6dae3ef7f82b8dc0f9b6eb31cbf1fd2c22f593e91f2ba9c6cdb5ca49113"
+        },
+        {
+          "path": "audit/evidence/r01/session-method-reuse.json",
+          "sha256": "0fd9267ea1c5cbe685b434016eab2d14c301ba5e5ac77b32d7789bee04ca8201"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-caller-revocation-checks.log",
+        "/tmp/barghsa-caller-revocation-contract-status.log",
+        "/tmp/barghsa-caller-revocation-contract.log",
+        "/tmp/barghsa-caller-revocation-format-check.log",
+        "/tmp/barghsa-caller-revocation-format.log",
+        "/tmp/barghsa-caller-revocation-lint.log",
+        "/tmp/barghsa-caller-revocation-openapi.log",
+        "/tmp/barghsa-caller-revocation-staff-final.log",
+        "/tmp/barghsa-caller-revocation-types.log"
+      ]
     }
   ]
 }

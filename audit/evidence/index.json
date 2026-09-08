@@ -5601,6 +5601,69 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-checks.log",
+      "path": "audit/evidence/r01/barghsa-caller-revocation-checks.log.gz",
+      "sha256": "78ecb224efad8fae427d4f56495e532a7cfe079c29da17903d3ae339dfe3e3af",
+      "encoding": "gzip",
+      "stored_sha256": "e236611a6d8ee940ce3e51f1a06cdcab10c6398c534ab64dea7d7ce0ed659db2"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-contract-status.log",
+      "path": "audit/evidence/r01/barghsa-caller-revocation-contract-status.log.gz",
+      "sha256": "be15e7abdb1f8189ce71b444ab39877b3663dae788fa0b30e15ca2e914a9a787",
+      "encoding": "gzip",
+      "stored_sha256": "4d6318849bc456a3c0013b842435613280082188e91b3fa0c8c537ab3cfe2596"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-contract.log",
+      "path": "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+      "sha256": "135329686d2878faa2e19fe4a091501fbc48ad6c6463fb6530841b5e33657567",
+      "encoding": "gzip",
+      "stored_sha256": "c694a0d88e6bea88c484ed9dba8a4c032dfac224c3193ce3a97d61879e8b9b7a"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-format.log",
+      "path": "audit/evidence/r01/barghsa-caller-revocation-format.log.gz",
+      "sha256": "ac5223f4653b72db1601a6237a80f39d1a9f9d0d2a73de2802535801f0cc1420",
+      "encoding": "gzip",
+      "stored_sha256": "e99d33183e4143ce321deb5813df4ce6bb9bc87c8ffa9c88cba0f673e07a1a09"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-openapi.log",
+      "path": "audit/evidence/r01/barghsa-caller-revocation-openapi.log.gz",
+      "sha256": "71b607575af91b77b73bed5a28c352757a0190efd25977d8871950374ed0b5df",
+      "encoding": "gzip",
+      "stored_sha256": "1d9bc927c0d98761fead9e8821e13a095fcf260347a390f34280718d14f8321d"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-staff-final.log",
+      "path": "audit/evidence/r01/barghsa-caller-revocation-staff-final.log.gz",
+      "sha256": "0945a245b1c313459ae1137086a42dbbcced0bb796dc8b606785e8e3c58a4342",
+      "encoding": "gzip",
+      "stored_sha256": "fefe769f78fc22928d112e8de217197ab0f1389d98481a8805fa5d8d0373e015"
+    },
+    {
+      "original_path": "/tmp/barghsa-caller-revocation-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
     }
   ]
 }

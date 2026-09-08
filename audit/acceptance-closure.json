@@ -1489,7 +1489,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "cd3688d6434338db9aa5e02977c148f1f8f7045c1fb54aa51a12ec877c2e9390"
+          "sha256": "106658bf096ce68543fe5073ba293b628a29f585ad0b7faa55c555297327ae5b"
         }
       ],
       "checks": [
@@ -1497,7 +1497,8 @@
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
@@ -1656,7 +1657,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "cd3688d6434338db9aa5e02977c148f1f8f7045c1fb54aa51a12ec877c2e9390"
+          "sha256": "106658bf096ce68543fe5073ba293b628a29f585ad0b7faa55c555297327ae5b"
         }
       ],
       "checks": [
@@ -1664,7 +1665,8 @@
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
@@ -1797,7 +1799,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "cd3688d6434338db9aa5e02977c148f1f8f7045c1fb54aa51a12ec877c2e9390"
+          "sha256": "106658bf096ce68543fe5073ba293b628a29f585ad0b7faa55c555297327ae5b"
         },
         {
           "path": "apps/api/src/admin/brand-config.service.ts",
@@ -1877,7 +1879,8 @@
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged."
       ],
       "limitations": [
         "This certifies the implemented numeral-formatting task, not every F20 localization or screen-reader requirement. Identifiers, customer-authored content, canonical input values and business date strings retain their own semantics. Production deployment and failing combined coverage groups remain separate gates."
@@ -3128,7 +3131,7 @@
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
-        "MFA step-up rotation is now wired and tested. Login/password/privilege/recovery boundary reconciliation remains; prior isolated rotation tests alone did not establish these caller requirements.",
+        "Session caller matrix is in audit/session-caller-review.md. Existing login/MFA/password-reset/forced-change/staff-role paths create fresh credentials or invalidate them before reauthentication. Profile privilege changes still require credential invalidation/rotation; review remaining privilege writers.",
         "Local cookie topology is documented and verified at 3ff2920. Production TLS/proxy execution remains external evidence; no cross-origin topology is claimed."
       ],
       "merged_prs": [
@@ -3239,10 +3242,11 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "Approximate country location and active-list semantics are locally verified at c26aad7. No city-level accuracy or production proxy evidence claimed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
-        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
+        "At ee5beb2, reviewed staff disablement, both ownership-transfer parties and unchanged CRM revocation primitives; see audit/session-caller-review.md. Other authorization criteria remain separate."
       ],
       "limitations": [
-        "Remaining staff/ownership/compromise revocation callers and trusted-device-management acceptance must be reconciled during their domain reviews."
+        "Profile privilege-change caller coverage and final task-wide evidence reconciliation remain; built staff-disable/ownership/self-service/trusted-device/refresh-reuse revocation effects are checked."
       ],
       "merged_prs": [
         90
