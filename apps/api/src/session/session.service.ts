@@ -868,6 +868,111 @@ export class SessionService {
     }
   }
 
+  /** Self-service revocation keeps the acting session and confirmation locked through commit. */
+  async revokeOwnSessions(
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    operation: { targetSessionId: string } | { password: string },
+    ip: string | null = null
+  ): Promise<number> {
+    const client = await getDbPool().connect();
+    const requiresStepUp = 'targetSessionId' in operation;
+    const targetId = requiresStepUp ? operation.targetSessionId : null;
+    try {
+      await client.query('BEGIN');
+      const account = await client.query(
+        'SELECT password_hash,disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+        [actor.userId]
+      );
+      if (!account.rows[0] || account.rows[0].disabled_at)
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      const current = await client.query(
+        `SELECT csrf_token,revoked_at,expires_at,idle_deadline,step_up_verified_at
+         FROM sessions WHERE session_id=$1 AND user_id=$2 FOR UPDATE`,
+        [actor.sessionId, actor.userId]
+      );
+      const session = current.rows[0];
+      if (!session || session.revoked_at)
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      if (session.csrf_token !== actor.csrfToken)
+        throw new HttpException({ error: ErrorCodes.AUTHZ_CSRF_INVALID.code }, 403);
+      const checkDeadlines = async () => {
+        const result = await client.query(
+          `SELECT $1::timestamptz>clock_timestamp() AND $2::timestamptz>clock_timestamp() AS active,
+                  $3::timestamptz>clock_timestamp()-($4::double precision*INTERVAL '1 millisecond')
+                  AND $3::timestamptz<=clock_timestamp() AS fresh`,
+          [
+            session.expires_at,
+            session.idle_deadline,
+            session.step_up_verified_at,
+            SessionService.STEP_UP_WINDOW_MS,
+          ]
+        );
+        if (!result.rows[0]?.active)
+          throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+        if (requiresStepUp && !result.rows[0].fresh)
+          throw new HttpException({ error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code }, 403);
+      };
+      await checkDeadlines();
+      if ('password' in operation) {
+        const { verify } = await import('argon2');
+        if (!(await verify(account.rows[0].password_hash, operation.password).catch(() => false)))
+          throw new HttpException({ error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code }, 422);
+      } else {
+        const target = await client.query(
+          'SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2 FOR UPDATE',
+          [targetId, actor.userId]
+        );
+        if (!target.rows.length)
+          throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      }
+      const revoked = await client.query<{ active: boolean }>(
+        `UPDATE sessions SET revoked_at=clock_timestamp(),updated_at=clock_timestamp()
+         WHERE user_id=$1 AND revoked_at IS NULL
+           AND (($3::text IS NULL AND session_id<>$2) OR session_id=$3)
+         RETURNING expires_at>clock_timestamp() AND idle_deadline>clock_timestamp() AS active`,
+        [actor.userId, actor.sessionId, targetId]
+      );
+      await client.query(
+        `UPDATE refresh_tokens SET consumed_at=clock_timestamp()
+         WHERE user_id=$1 AND consumed_at IS NULL
+           AND (($3::text IS NULL AND session_id<>$2) OR session_id=$3)`,
+        [actor.userId, actor.sessionId, targetId]
+      );
+      const revokedCount = revoked.rows.filter((row) => row.active).length;
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'sessions_revoked',$3,$4,$5,clock_timestamp())`,
+        [
+          uuidv7(),
+          actor.userId,
+          JSON.stringify({
+            scope: requiresStepUp ? 'one' : 'others',
+            revokedCount,
+            changedSessionCount: revoked.rows.length,
+            stepUpVerified: true,
+            ...(targetId
+              ? { targetSessionHash: createHash('sha256').update(targetId).digest('hex') }
+              : {}),
+          }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          ip,
+        ]
+      );
+      // The account/session rows stay locked. Only their original deadlines can change authority now.
+      // Use the snapshot so deliberately revoking this very session remains supported.
+      await checkDeadlines();
+      await client.query('COMMIT');
+      return revokedCount;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
+      this.logger.error(`Self-service session revocation failed: ${String(error)}`);
+      throw new HttpException({ error: ErrorCodes.INTERNAL_SERVER.code }, 500);
+    } finally {
+      client.release();
+    }
+  }
+
   /**
    * Revoke all active sessions for a user.
    *

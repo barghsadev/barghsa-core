@@ -124,18 +124,11 @@ export class SessionController {
     @Param('id') sessionId: string,
     @Req() req: AuthenticatedRequest
   ): Promise<{ message: string }> {
-    const userId = req.session.userId;
-
-    // Verify the session belongs to this user before revoking
-    const session = await this.sessionService.getSessionById(sessionId);
-
-    if (!session || session.user_id !== userId) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    await this.sessionService.revokeSession(sessionId);
-
-    this.logger.log(`Session ${sessionId} revoked by user ${userId} (session owner)`);
+    await this.sessionService.revokeOwnSessions(
+      req.session,
+      { targetSessionId: sessionId },
+      req.ip ?? null
+    );
 
     return { message: 'Session revoked.' };
   }
@@ -167,34 +160,15 @@ export class SessionController {
     }
 
     const userId = req.session.userId;
-    const currentSessionId = req.session.sessionId;
-
-    // ── Verify password via SessionService ─────────────────
-    const passwordValid = await this.sessionService.verifyUserPassword(
-      userId,
-      parsed.data.password
+    const revokedCount = await this.sessionService.revokeOwnSessions(
+      req.session,
+      { password: parsed.data.password },
+      req.ip ?? null
     );
-
-    if (!passwordValid) {
-      throw new HttpException(
-        { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
-        422
-      );
-    }
-
-    // ── Count sessions before revoking ───────────────────────
-    const activeSessions = await this.sessionService.getUserSessions(userId);
-    const otherSessions = activeSessions.filter(
-      (s: Record<string, unknown>) => s.session_id !== currentSessionId
-    );
-    const revokedCount = otherSessions.length;
 
     if (revokedCount === 0) {
       return { message: 'No other sessions to revoke.', revokedCount: 0 };
     }
-
-    // ── Revoke all other sessions ────────────────────────────
-    await this.sessionService.revokeAllUserSessions(userId, currentSessionId);
 
     this.logger.log(`All other sessions (${revokedCount}) revoked for user ${userId}`);
 

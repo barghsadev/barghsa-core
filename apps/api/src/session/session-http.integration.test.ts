@@ -29,11 +29,11 @@ afterAll(async () => {
   await fixture?.close();
 }, 15000);
 
-async function login() {
+async function login(username = 'http@example.test') {
   const response = await fetch(`${base}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Cookie: `barghsa_device=${fingerprint}` },
-    body: JSON.stringify({ username: 'http@example.test', password, deviceInfo: { fingerprint } }),
+    body: JSON.stringify({ username, password, deviceInfo: { fingerprint } }),
   });
   const data = (await response.json()) as {
     requiresOtp: boolean;
@@ -392,6 +392,65 @@ it('does not authorize cross-origin browser JSON authentication requests', async
   });
   expect(response.headers.get('access-control-allow-origin')).toBeNull();
   expect(response.headers.get('access-control-allow-credentials')).toBeNull();
+});
+
+it('revoke-all requires CSRF and password, preserves its caller and invalidates the other session over HTTP', async () => {
+  await pool.query('INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,$3)', [
+    'http-bulk-user',
+    'http-bulk@example.test',
+    await argon2.hash(password),
+  ]);
+  await pool.query(
+    "INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at,ip_address) VALUES ($1,'http-bulk-user',$2,NOW()+INTERVAL '1 day','127.0.0.1')",
+    [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')]
+  );
+  const auth = await login('http-bulk@example.test');
+  const other = await login('http-bulk@example.test');
+  const correlationId = randomUUID();
+  const revoke = (value: string, csrf = true) =>
+    fetch(`${base}/api/auth/sessions/revoke-all`, {
+      method: 'POST',
+      headers: {
+        Cookie: auth.cookie,
+        'Content-Type': 'application/json',
+        'X-Correlation-Id': correlationId,
+        ...(csrf ? { 'X-CSRF-Token': auth.token } : {}),
+      },
+      body: JSON.stringify({ password: value }),
+    });
+  expect((await revoke(password, false)).status).toBe(403);
+  expect((await revoke('wrong-password')).status).toBe(422);
+  expect(
+    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: other.cookie } })).status
+  ).toBe(200);
+  const response = await revoke(password);
+  expect(response.status).toBe(200);
+  expect(response.headers.get('x-correlation-id')).toBe(correlationId);
+  expect(await response.json()).toEqual({
+    message: 'All 1 other session(s) revoked.',
+    revokedCount: 1,
+  });
+  expect(response.headers.getSetCookie()).toEqual([]);
+  expect(
+    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } })).status
+  ).toBe(200);
+  expect(
+    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: other.cookie } })).status
+  ).toBe(401);
+  expect(
+    (
+      await pool.query('SELECT consumed_at FROM refresh_tokens WHERE session_id=$1', [
+        other.sessionId,
+      ])
+    ).rows[0].consumed_at
+  ).not.toBeNull();
+  expect(
+    (
+      await pool.query(
+        "SELECT correlation_id FROM audit_log WHERE user_id='http-bulk-user' AND event='sessions_revoked'"
+      )
+    ).rows
+  ).toEqual([{ correlation_id: correlationId }]);
 });
 
 it('invalidates old sessions and refresh tokens atomically on a forced password change', async () => {
