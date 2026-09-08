@@ -3001,6 +3001,51 @@
         "/tmp/barghsa-reset-stages-web-types.log",
         "/tmp/barghsa-reset-stages-worker-types.log"
       ]
+    },
+    {
+      "id": "R01-session-display",
+      "date": "2026-09-08",
+      "source_revision": "218a3a381f20b0a722d101ac2be5f79b3b527632",
+      "summary": "Security sessions refresh after step-up in single-session revocation and trusted-device removal, including failed removal. Failed refresh hides obsolete session cards.",
+      "review": [
+        "Both flows record successful step-up separately from removal success and refresh in finally. The single-session target remains fixed and retries retain fresh CSRF headers. Incorrect passwords do not refresh or send the removal request.",
+        "TrustedDevices receives the existing parent refresh callback. It catches load failures itself, so either dialog releases its pending guard after refresh. Revoke-all retains its existing refresh. No API or cookie changes.",
+        "Session errors now hide current/other session cards rather than presenting obsolete rows as current. Existing removal dialogs retain their target during loading.",
+        "Reused selected production-browser cases, extending them to assert replacement-session timestamps, failure refresh and subsequent recovery. No unrelated test cases or global checkpoints renewed."
+      ],
+      "checks": [
+        "24 production browser cases passed, desktop Chromium/mobile Chrome: session dialogs and step-up in fa/en plus trusted-device flows/load failures in fa/en and both themes. Includes correct-password/removal failure, incorrect password, latest CSRF, pending duplicate protection, failed session refresh and later restoration.",
+        "Web typecheck, focused ESLint, Prettier and production build passed. Diff check passed."
+      ],
+      "remaining": [
+        "Complete cookie topology, approximate location and remaining rotation/revocation/CSRF/sensitive-action caller matrices. These four task records remain partial."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "ecdbe31b9ba3079242f510d6af12a2905d7a320692956b5df9250fa763e0ea1b"
+        },
+        {
+          "path": "apps/web/e2e/trusted-devices.spec.ts",
+          "sha256": "51bed2051f3af5b296211dc0207c38e60f2d04542e48af8d551e72e3cf337b22"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "9443dc25b2492d1eddf8c2e7729848a21c59be80555781b5119a777e4f145a51"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "ab26779759fae9e32c1a7f852f7a2b1ca254cd43e6f2fa31bed9ed83b31d0f3a"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-session-display-browser.log",
+        "/tmp/barghsa-session-display-build.log",
+        "/tmp/barghsa-session-display-format.log",
+        "/tmp/barghsa-session-display-lint.log",
+        "/tmp/barghsa-session-display-types.log"
+      ]
     }
   ]
 }

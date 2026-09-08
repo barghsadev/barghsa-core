@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "9827e96c6e439e07c85daead4655a03fff84becd",
+  "source_revision": "218a3a381f20b0a722d101ac2be5f79b3b527632",
   "active_step": "R01",
-  "next_action": "R01: reconcile remaining session rotation/cookie requirements for 02-auth-users-admin.md#T-02.02.01 through T-02.02.04. Start with current-session display refresh after password step-up, then final cookie topology, approximate session location and sensitive-action/revocation/CSRF caller matrices. OTP-first reset T-02.03.02 is verified at 9827e96. Reuse its focused evidence; no global checkpoint renewed. Lost-contact approver/evidence policy remains pending.",
+  "next_action": "R01: finish final cookie topology for 02-auth-users-admin.md#T-02.02.01 and its E06 dependency, then approximate session location and required rotation/revocation/CSRF/sensitive-action caller matrices. Current-session refresh is verified at 218a3a3. Reuse focused evidence; no broad checkpoint renewed. Lost-contact policy remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "OTP-first reset is now locally verified. Finish rotation/cookie review, current-session refresh after step-up, approximate location and revocation/CSRF/sensitive-action caller requirements."
+        "OTP-first reset and current-session refresh after step-up are locally verified. Finish cookie topology, approximate location and remaining rotation/revocation/CSRF/sensitive-action caller requirements."
       ]
     },
     {
@@ -488,6 +488,10 @@
     {
       "id": "R01-reset-otp-first",
       "review_record": "audit/evidence/step-reviews.json#R01-reset-otp-first"
+    },
+    {
+      "id": "R01-session-display",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-display"
     }
   ],
   "deferred_improvements": [

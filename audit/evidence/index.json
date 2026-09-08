@@ -5118,6 +5118,41 @@
       "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
       "encoding": "gzip",
       "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/barghsa-session-display-browser.log",
+      "path": "audit/evidence/r01/barghsa-session-display-browser.log.gz",
+      "sha256": "52918e7eeccb4f662a8b3e93997360694c21117a0188ec910444bcdd4be8a54c",
+      "encoding": "gzip",
+      "stored_sha256": "621d25be92e702974e91dc964ac2cdd3a38bce13c4d788464608f50a287422dc"
+    },
+    {
+      "original_path": "/tmp/barghsa-session-display-build.log",
+      "path": "audit/evidence/r01/barghsa-session-display-build.log.gz",
+      "sha256": "7740fc332940c92e1264510fa3b3de8c6afe478b3007a7388dda7b402e79514b",
+      "encoding": "gzip",
+      "stored_sha256": "fc1d3a9893b34f261b6984ca9229818c6d8727211f917763219f3e59814cdbb2"
+    },
+    {
+      "original_path": "/tmp/barghsa-session-display-format.log",
+      "path": "audit/evidence/r01/barghsa-session-display-format.log.gz",
+      "sha256": "336134d4f8349e55bc77d85a196f0f4eb100f1fb41548bef4e98ba7044cb5b93",
+      "encoding": "gzip",
+      "stored_sha256": "208048a64dda75bf0df3eec38f1ea0a8b381b4824ab1df5070bea63fbe9391ac"
+    },
+    {
+      "original_path": "/tmp/barghsa-session-display-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-session-display-types.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
     }
   ]
 }

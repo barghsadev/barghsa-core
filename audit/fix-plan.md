@@ -1,6 +1,6 @@
 # Remaining repairs, reviews and skipped work
 
-Current through product `9827e96` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
+Current through product `218a3a3` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
 
 ## Current numbers
 
@@ -16,7 +16,7 @@ The saved inventory contains **301 merged PRs**, last recorded as checked agains
 
 ## Next bounded step
 
-Continue R01 session rotation and cookie review for `02-auth-users-admin.md#T-02.02.01` through `T-02.02.04`. Start with the current-session display after password step-up; then complete cookie policy, approximate location and required revocation/CSRF/sensitive-action callers. Review one bounded change and focused evidence before proceeding.
+Continue R01 session rotation and cookie review for `02-auth-users-admin.md#T-02.02.01` through `T-02.02.04`. Current-session refresh is verified at `218a3a3` with 24 focused desktop/mobile browser cases, types, lint and build. Complete cookie policy, approximate location and required rotation/revocation/CSRF/sensitive-action callers. Review one bounded change and focused evidence before proceeding.
 
 OTP-first reset `02-auth-users-admin.md#T-02.03.02` is locally verified at `9827e96`. Successful OTP verification consumes the code and issues a hashed, single-use authorization with the original deadline. Final reset retains strength/history, quotas, atomic audit and all-session revocation. The browser verifies before password entry and handles expiry, retries and login navigation. Recorded checks cover 151 distinct API cases across focused runs, 38 desktop/mobile browser cases, three migration cases, types/lint/format, OpenAPI, snapshot and all 41 route budgets. See [step evidence](evidence/step-reviews.json). No global checkpoint is renewed. Lost-contact policy remains pending.
 
@@ -40,7 +40,7 @@ A01 cleanup and A02 reconciliation are complete. Nine phases remain: R01 active 
 
 ## R01 checklist
 
-- Sessions/access: required approximate session location is missing, and the current-session display needs refresh after step-up rotation. Complete rotation/revocation, trusted-device, CSRF alternatives and sensitive-action caller matrices. Review staff roles, activation, OTP/reset/contact changes, manual verification, profile selection, membership, ownership and address boundaries.
+- Sessions/access: required approximate session location is missing; current-session refresh after step-up is verified. Complete rotation/revocation, trusted-device, CSRF alternatives and sensitive-action caller matrices. Review staff roles, activation, OTP/reset/contact changes, manual verification, profile selection, membership, ownership and address boundaries.
 - CRM: eight of nine F15 task records are verified locally, including list, search/filter and pending widget. T-05.02.06 local archival passes; future contract integration and approved retention policy remain explicit prerequisites.
 - Tickets/finance: customer/staff privacy, attachments, assignment and transitions; receipt thresholds/independent approval, callbacks/replays, invoice arithmetic/snapshots and ledger integrity. Preserve useful corrective PRs. Future refund, ordering and contract consumers remain separate where the original task requires them separately.
 - Recovery: confirmed contacts and intake/escalation runbook are implemented. Owner policy for lost-contact approvers/identity checks remains pending. A reviewed credential-change method and full case audit remain needed. Continue independent work while awaiting that answer.
