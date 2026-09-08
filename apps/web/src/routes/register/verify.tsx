@@ -1,3 +1,4 @@
+import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
 import { hasSessionAcknowledgement, hasResendAcknowledgement } from '../../lib/auth-responses.js';
 import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../hooks/useLocale.js';
@@ -82,7 +83,7 @@ function OtpVerifyPage() {
       setVerifying(true);
 
       try {
-        const response = await fetch('/api/auth/register/verify', {
+        const response = await publicAuthFetch('/api/auth/register/verify', {
           signal: controller.signal,
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
@@ -166,7 +167,7 @@ function OtpVerifyPage() {
     setOtpError(null);
 
     try {
-      const response = await fetch('/api/auth/register/resend', {
+      const response = await publicAuthFetch('/api/auth/register/resend', {
         signal: controller.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },

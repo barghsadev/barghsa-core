@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, expect, it } from 'vitest';
 import { createHash } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -7,7 +8,7 @@ afterEach(async () => {
   await http?.close();
 }, 15000);
 async function post(username: string, ip: string) {
-  return fetch(`${http!.base}/api/auth/forgot-password`, {
+  return fetchWithPreauth(`${http!.base}/api/auth/forgot-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': ip },
     body: JSON.stringify({ username }),

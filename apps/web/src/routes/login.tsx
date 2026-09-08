@@ -1,3 +1,4 @@
+import { publicAuthFetch } from '../lib/public-auth-fetch.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { rateLimitMessage, retryAfterSeconds, authErrorCode } from '../lib/auth-errors.js';
@@ -206,7 +207,7 @@ function LoginPage() {
       setSubmitting(true);
 
       try {
-        const response = await fetch('/api/auth/login', {
+        const response = await publicAuthFetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({
@@ -299,7 +300,7 @@ function LoginPage() {
       setChangingPassword(true);
 
       try {
-        const response = await fetch('/api/auth/force-change-password', {
+        const response = await publicAuthFetch('/api/auth/force-change-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({
@@ -353,7 +354,7 @@ function LoginPage() {
       setVerifying(true);
 
       try {
-        const response = await fetch('/api/auth/login/verify', {
+        const response = await publicAuthFetch('/api/auth/login/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({ challengeId, otp: code, trustDevice }),
@@ -425,7 +426,7 @@ function LoginPage() {
     setOtpError(null);
 
     try {
-      const response = await fetch('/api/auth/login/resend', {
+      const response = await publicAuthFetch('/api/auth/login/resend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({ challengeId }),

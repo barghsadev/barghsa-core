@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
@@ -17,6 +18,7 @@ const generic = {
 };
 async function mockApp(page: Page, hasProfile = true) {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await mockPublicAuthCsrf(page);
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
@@ -301,3 +303,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(attempts).toEqual(Array(2).fill({ challengeId, otp: '123456', trustDevice: true }));
   });
 }
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
+});

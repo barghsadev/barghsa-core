@@ -302,6 +302,13 @@
       "when": 1791331200025,
       "tag": "0122_password_reset_authorization",
       "breakpoints": true
+    },
+    {
+      "idx": 123,
+      "version": "7",
+      "when": 1791331200026,
+      "tag": "0123_preauth_sessions",
+      "breakpoints": true
     }
   ]
 }

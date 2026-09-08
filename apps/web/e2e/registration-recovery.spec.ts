@@ -1,9 +1,11 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect } from './coverage-fixture';
 
 const challengeId = '00000000-0000-4000-8000-000000000001';
 for (const locale of ['en', 'fa'] as const) {
   test(`registration rejects incomplete session and allows retry (${locale})`, async ({ page }) => {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
     let attempts = 0;
     await page.route('**/api/auth/register/verify', (route) => {
       expect(route.request().postDataJSON()).toEqual({ challengeId, otp: '123456' });
@@ -37,6 +39,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`registration resend rejects a different challenge (${locale})`, async ({ page }) => {
     await page.clock.install();
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
     let attempts = 0;
     await page.route('**/api/auth/register/resend', (route) => {
       expect(route.request().postDataJSON()).toEqual({ challengeId });
@@ -57,14 +60,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(resend).toBeEnabled();
     await expect(page.locator('[data-sonner-toast][data-type="success"]')).toHaveCount(0);
     await resend.click();
+    await expect.poll(() => attempts).toBe(2);
     await expect(resend).toHaveCount(0);
-    expect(attempts).toBe(2);
   });
 }
 
 for (const challenge of [42, { invalid: true }, '   ']) {
   test(`registration rejects invalid challenge ${JSON.stringify(challenge)}`, async ({ page }) => {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
     await page.route('**/api/tos/current?*', (route) =>
       route.fulfill({ json: { id: challengeId, versionId: 'v1', content: 'Terms' } })
     );
@@ -87,3 +91,7 @@ for (const challenge of [42, { invalid: true }, '   ']) {
     expect(attempts).toBe(2);
   });
 }
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
+});

@@ -1,3 +1,4 @@
+import { publicAuthFetch } from '../lib/public-auth-fetch.js';
 import '../lib/auth-errors.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
@@ -53,7 +54,7 @@ function ActivatePage() {
     setBusy(true);
     setError(null);
     try {
-      const response = await fetch('/api/auth/activate-staff', {
+      const response = await publicAuthFetch('/api/auth/activate-staff', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({ token, newPassword: password }),

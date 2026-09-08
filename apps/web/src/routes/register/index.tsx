@@ -1,3 +1,4 @@
+import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
 import { maskDestination } from '../../lib/mask-destination.js';
 import { toast } from 'sonner';
 import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
@@ -220,7 +221,7 @@ function RegisterPage() {
       try {
         const tosVersionId = currentTos.id;
 
-        const response = await fetch('/api/auth/register', {
+        const response = await publicAuthFetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({

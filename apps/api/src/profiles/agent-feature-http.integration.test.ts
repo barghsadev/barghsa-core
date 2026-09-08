@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { createHash, randomUUID, randomInt } from 'node:crypto';
 import type { AgentListResponseDto } from './agents.service.js';
@@ -196,7 +197,7 @@ it('an unregistered username discovers the same pending invite after account cre
     "INSERT INTO tos_versions(id,version_id,content_fa,content_en,status,is_active,published_at,change_type) VALUES ($1,$2,'قوانین','Terms','published',true,NOW(),'major')",
     [terms, terms]
   );
-  const registration = await fetch(`${http.base}/api/auth/register`, {
+  const registration = await fetchWithPreauth(`${http.base}/api/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -212,7 +213,7 @@ it('an unregistered username discovers the same pending invite after account cre
     createHash('sha256').update('123456').digest('hex'),
     challengeId,
   ]);
-  const verification = await fetch(`${http.base}/api/auth/register/verify`, {
+  const verification = await fetchWithPreauth(`${http.base}/api/auth/register/verify`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ challengeId, otp: '123456' }),

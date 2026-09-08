@@ -1,4 +1,6 @@
+import { PreauthCsrfService } from './preauth-csrf.service.js';
 import {
+  Inject,
   Injectable,
   CanActivate,
   ExecutionContext,
@@ -26,7 +28,7 @@ import { SESSION_COOKIE_NAME } from './cookie.helper.js';
  *
  * Design notes:
  * - GET, HEAD, OPTIONS are exempt (safe methods per HTTP spec).
- * - Public auth requires JSON and the API's same-origin CORS policy.
+ * - Public auth requires JSON and a browser-bound anonymous or authenticated token.
  *   Signed provider callbacks and refresh use independent validation.
  *   Session-free requests must still satisfy their route's authentication.
  * - SessionContextMiddleware loads the session before this global guard runs.
@@ -38,9 +40,9 @@ import { SESSION_COOKIE_NAME } from './cookie.helper.js';
  * async updateProfile(@Req() req: AuthenticatedRequest) { ... }
  * ```
  *
- * Public auth without a session token must require JSON:
+ * Public auth requires a token even before a user session exists:
  * ```ts
- * @SkipCsrf({ requireJson: true })
+ * @RequirePreauthCsrf()
  * @Post('login')
  * ```
  */
@@ -54,7 +56,9 @@ export class CsrfGuard implements CanActivate {
   /** Name of the custom header carrying the CSRF token. */
   private readonly CSRF_HEADER = 'x-csrf-token';
 
-  canActivate(context: ExecutionContext): boolean {
+  constructor(@Inject(PreauthCsrfService) private readonly preauth: PreauthCsrfService) {}
+
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
     const method = request.method.toUpperCase();
 
@@ -63,19 +67,24 @@ export class CsrfGuard implements CanActivate {
       return true;
     }
 
-    // ── Check if a skip decorator is present ────────────────────
     const handler = context.getHandler();
-    const skipCsrf = Reflect.getMetadata('skipCsrf', handler);
-    if (skipCsrf) {
-      // Public auth has no session token yet. JSON is not a CORS-safelisted
-      // content type, so cross-origin browsers need a preflight that this
-      // same-origin API does not authorize. Reject form/text submissions.
-      if (
-        Reflect.getMetadata('csrfRequireJson', handler) &&
-        !/^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? '')
-      ) {
+    const publicAuth = Reflect.getMetadata('preauthCsrf', handler);
+    if (publicAuth) {
+      if (!/^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? '')) {
         this.reject(method, 'public auth requires JSON');
       }
+      if (!(request as AuthenticatedRequest).session) {
+        const token = request.headers[this.CSRF_HEADER];
+        if (typeof token !== 'string' || !token) this.reject(method, 'missing X-CSRF-Token header');
+        return this.preauth
+          .consume(request, context.switchToHttp().getResponse(), token)
+          .then((valid) => {
+            if (!valid) this.reject(method, 'anonymous token invalid or expired');
+            return true;
+          });
+      }
+    } else if (Reflect.getMetadata('skipCsrf', handler)) {
+      // Refresh and signed callbacks enforce their independent request proofs.
       return true;
     }
 
@@ -115,24 +124,16 @@ export class CsrfGuard implements CanActivate {
   }
 }
 
-/**
- * Decorator to skip CSRF validation on a specific route handler.
- *
- * Public auth must require JSON and retain the API's same-origin CORS policy.
- * Other callers must have independent request authentication (signed provider
- * callbacks or the refresh-token-bound CSRF guard).
- *
- * ```ts
- * @SkipCsrf({ requireJson: true })
- * @Post('login')
- * async login(@Body() body: LoginDto) { ... }
- * ```
- */
-
-export function SkipCsrf(options: { requireJson?: boolean } = {}): MethodDecorator {
+/** Only independently authenticated refresh and signed provider callbacks may skip this guard. */
+export function SkipCsrf(): MethodDecorator {
   return (_target, _propertyKey, descriptor) => {
-    Reflect.defineMetadata('skipCsrf', true, descriptor.value!);
-    Reflect.defineMetadata('csrfRequireJson', options.requireJson === true, descriptor.value!);
-    return descriptor;
+    Reflect.defineMetadata('skipCsrf', true, descriptor!.value!);
+  };
+}
+
+/** Public JSON authentication still requires a browser-bound token. */
+export function RequirePreauthCsrf(): MethodDecorator {
+  return (_target, _propertyKey, descriptor) => {
+    Reflect.defineMetadata('preauthCsrf', true, descriptor!.value!);
   };
 }

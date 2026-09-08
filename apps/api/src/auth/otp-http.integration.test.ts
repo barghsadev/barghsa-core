@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -57,7 +58,7 @@ async function challenge(
 }
 
 async function post(path: string, body: unknown) {
-  return fetch(`${http.base}/api/auth/${path}`, {
+  return fetchWithPreauth(`${http.base}/api/auth/${path}`, {
     method: 'POST',
     headers,
     body: JSON.stringify(body),

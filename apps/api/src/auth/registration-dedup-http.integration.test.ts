@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -27,7 +28,7 @@ afterEach(async () => {
 }, 15000);
 
 async function register(username: string, overrides: Record<string, string> = {}) {
-  const response = await fetch(`${http.base}/api/auth/register`, {
+  const response = await fetchWithPreauth(`${http.base}/api/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password, tosVersionId: terms, ...overrides }),

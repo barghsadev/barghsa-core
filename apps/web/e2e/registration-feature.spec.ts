@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 
@@ -6,6 +7,7 @@ const password = 'Registration-browser-password-123!';
 
 async function openRegistration(page: Page, locale: string, verify = false) {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await mockPublicAuthCsrf(page);
   await page.route('**/api/tos/current?*', (route) =>
     route.fulfill({ json: { id: challengeId, versionId: 'v1', content: 'Published terms' } })
   );
@@ -228,3 +230,7 @@ for (const locale of ['fa', 'en']) {
     await expect(page.locator('[data-sonner-toast][data-type="error"]')).toBeVisible();
   });
 }
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
+});

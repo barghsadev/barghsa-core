@@ -1,7 +1,9 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect, type Page } from './coverage-fixture';
 
 async function openPassword(page: Page, locale: string) {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await mockPublicAuthCsrf(page);
   await page.route('**/api/tos/current?*', (route) =>
     route.fulfill({
       json: { id: '00000000-0000-4000-8000-000000000001', versionId: 'v1', content: 'Terms' },
@@ -103,3 +105,7 @@ for (const locale of ['en', 'fa']) {
     await expect(meter).toHaveAttribute('aria-valuenow', '100');
   });
 }
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
+});

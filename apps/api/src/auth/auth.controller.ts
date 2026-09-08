@@ -60,7 +60,7 @@ import {
   setCsrfCookie,
   clearCsrfCookie,
 } from '../session/cookie.helper.js';
-import { SkipCsrf } from '../session/csrf.guard.js';
+import { SkipCsrf, RequirePreauthCsrf } from '../session/csrf.guard.js';
 import { RefreshCsrfGuard } from '../session/refresh-csrf.guard.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -85,7 +85,7 @@ export class AuthController {
    * - 3 attempts per IP per 60s
    * - 10 starts per normalized destination per hour in the service
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(RegisterSchema)
   @Post('register')
   @HttpCode(200)
@@ -154,7 +154,7 @@ export class AuthController {
    * Error response is always generic ("Invalid username or password")
    * to avoid revealing whether the username exists.
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(LoginSchema)
   @Post('login')
   @HttpCode(200)
@@ -249,7 +249,7 @@ export class AuthController {
    * Rate limits:
    * - 5 verification attempts per IP per 60s
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(LoginVerifySchema)
   @Post('login/verify')
   @HttpCode(200)
@@ -312,7 +312,7 @@ export class AuthController {
    * Rate limits:
    * - 3 resend attempts per IP per 120s
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(LoginResendSchema)
   @Post('login/resend')
   @HttpCode(200)
@@ -358,7 +358,7 @@ export class AuthController {
    * Rate limits:
    * - 5 attempts per IP per 300s
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(ForceChangePasswordSchema)
   @Post('force-change-password')
   @HttpCode(200)
@@ -406,7 +406,7 @@ export class AuthController {
    * - 5 attempts per destination per hour
    * - 5 attempts per IP per hour
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @Post('activate-staff')
   @HttpCode(200)
   @RateLimit({ namespace: 'activate-staff:ip', limit: 10, windowMs: 900_000, security: true })
@@ -428,7 +428,7 @@ export class AuthController {
     );
   }
 
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(ForgotPasswordSchema)
   @Post('forgot-password')
   @HttpCode(200)
@@ -467,7 +467,7 @@ export class AuthController {
     return this.authService.forgotPassword(parsed.data, ip, getOrCreateDeviceCookie(req, res));
   }
 
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(VerifyResetOtpSchema)
   @Post('reset-password/verify')
   @HttpCode(200)
@@ -524,7 +524,7 @@ export class AuthController {
    * - 5 reset attempts per destination per hour
    * - 5 reset attempts per IP per hour
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(ResetPasswordSchema)
   @Post('reset-password')
   @HttpCode(200)
@@ -584,7 +584,7 @@ export class AuthController {
    * Rate limits:
    * - 5 verification attempts per IP per 60s
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(VerifyOtpSchema)
   @Post('register/verify')
   @HttpCode(200)
@@ -756,7 +756,7 @@ export class AuthController {
    * Rate limits:
    * - 3 resend attempts per IP per 120s
    */
-  @SkipCsrf({ requireJson: true })
+  @RequirePreauthCsrf()
   @ApiZodBody(ResendOtpSchema)
   @Post('register/resend')
   @HttpCode(200)

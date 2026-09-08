@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
 
@@ -218,4 +219,8 @@ test('public terms language changes discard stale content after a failed read', 
   await expect(page.getByText('شرایط فارسی قبلی')).toHaveCount(0);
   await page.getByRole('link', { name: 'فارسی', exact: true }).click();
   await expect(page.getByRole('article')).toContainText('شرایط فارسی قبلی');
+});
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
 });

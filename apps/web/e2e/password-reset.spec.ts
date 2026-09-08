@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect } from './coverage-fixture';
 import type { Page } from '@playwright/test';
 
@@ -94,6 +95,7 @@ test('rejected OTP leaves verification usable without showing password fields', 
 for (const locale of ['en', 'fa'] as const) {
   test(`reset needs acknowledgement before clearing input (${locale})`, async ({ page }) => {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
     await page.route('**/api/auth/forgot-password', (route) =>
       route.fulfill({ json: { sent: true, challengeId: 'reset-challenge' } })
     );
@@ -129,6 +131,7 @@ for (const locale of ['en', 'fa'] as const) {
       page,
     }) => {
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await mockPublicAuthCsrf(page);
       await page.route('**/api/auth/forgot-password', (route) => route.fulfill({ json: result }));
       await page.goto('/forgot-password');
       await page.evaluate((lang) => {
@@ -144,6 +147,7 @@ for (const locale of ['en', 'fa'] as const) {
   }
   test(`recovery honors rate limiting with an empty response (${locale})`, async ({ page }) => {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
     await page.route('**/api/auth/forgot-password', (route) =>
       route.fulfill({ status: 429, headers: { 'Retry-After': '30' }, json: null })
     );
@@ -280,4 +284,8 @@ test('duplicate pending verification submits once and reveals password fields on
   } finally {
     release();
   }
+});
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
 });

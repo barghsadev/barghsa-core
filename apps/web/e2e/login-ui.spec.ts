@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 
@@ -15,6 +16,7 @@ for (const locale of ['fa', 'en'])
           new MutationObserver(apply).observe(document, { childList: true });
         }, locale);
         await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+        await mockPublicAuthCsrf(page);
         await page.route('**/api/public/branding/config', (route) =>
           route.fulfill({
             json: {
@@ -170,3 +172,7 @@ for (const locale of ['fa', 'en'])
         });
       }
     );
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
+});

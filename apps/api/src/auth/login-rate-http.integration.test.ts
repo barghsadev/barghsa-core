@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import * as argon2 from 'argon2';
@@ -32,7 +33,7 @@ afterEach(async () => {
 }, 15000);
 
 async function login(name = username, secret = 'wrong-password') {
-  return fetch(`${http.base}/api/auth/login`, {
+  return fetchWithPreauth(`${http.base}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Cookie: `barghsa_device=${deviceToken}` },
     body: JSON.stringify({
@@ -116,7 +117,7 @@ it('preserves service-level OTP retry timing and localizes it for Persian client
     VALUES ($1,$2,60000,1)`,
     [`otp:dest:${username}:60s`, Math.floor(Date.now() / 60000) * 60000]
   );
-  const response = await fetch(`${http.base}/api/auth/forgot-password`, {
+  const response = await fetchWithPreauth(`${http.base}/api/auth/forgot-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept-Language': 'fa' },
     body: JSON.stringify({ username }),
@@ -141,7 +142,7 @@ it('enforces destination starts and device spraying independently of the IP coun
     ['forgot-password', { username }],
     ['register', { username, password, tosVersionId: 'unpublished-test-terms' }],
   ] as const) {
-    const response = await fetch(`${http.base}/api/auth/${route}`, {
+    const response = await fetchWithPreauth(`${http.base}/api/auth/${route}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),

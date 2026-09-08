@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import * as argon2 from 'argon2';
@@ -45,7 +46,7 @@ afterEach(async () => {
 }, 15000);
 
 async function post(path: string, body: unknown, token: string | null = device) {
-  const response = await fetch(`${http.base}/api/auth/${path}`, {
+  const response = await fetchWithPreauth(`${http.base}/api/auth/${path}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

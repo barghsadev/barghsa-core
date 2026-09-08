@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['fa', 'en'] as const) {
@@ -39,4 +40,8 @@ test('missing or rejected activation links never show successful activation', as
   await page.locator('#activation-confirmation').fill('Activated-browser-password-123!');
   await page.locator('button[type="submit"]').click();
   await expect(page.getByRole('alert')).toContainText('منقضی');
+});
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
 });

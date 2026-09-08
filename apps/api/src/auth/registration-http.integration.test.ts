@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -30,7 +31,7 @@ async function post(path: string, body: unknown, headers: Record<string, string>
     const version = (await current.json()) as { revision: string };
     body = { ...(body as Record<string, unknown>), expectedRevision: version.revision };
   }
-  return fetch(`${fixture.base}/api/${path}`, {
+  return fetchWithPreauth(`${fixture.base}/api/${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...headers },
     body: JSON.stringify(body),
@@ -80,7 +81,7 @@ it('rolls registration back when its creation audit fails, then permits exactly 
     CREATE TRIGGER reject_registration_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_registration_audit();`);
   const failed = await post('auth/register/verify', body);
   expect(failed.status).toBe(500);
-  expect(failed.headers.getSetCookie()).toEqual([]);
+  expect(failed.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
   await expectRegistrationRolledBack(body.challengeId, username);
   await fixture.pool.query('DROP TRIGGER reject_registration_audit ON audit_log');
   const responses = await Promise.all([
@@ -137,7 +138,9 @@ for (const table of ['tos_versions', 'sessions', 'refresh_tokens', 'audit_log'])
       const rejected = await response;
       expect(rejected.status, fixture.logs()).toBe(401);
       expect(await rejected.json()).toMatchObject({ error: { code: 'AUTH:OTP:EXPIRED' } });
-      expect(rejected.headers.getSetCookie()).toEqual([]);
+      expect(rejected.headers.getSetCookie()).toEqual([
+        expect.stringMatching(/^barghsa_preauth=;/),
+      ]);
       await expectRegistrationRolledBack(body.challengeId, username);
     } finally {
       await blocker.query('ROLLBACK');

@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
@@ -30,7 +31,7 @@ afterAll(async () => {
 }, 15000);
 
 async function login(username = 'http@example.test') {
-  const response = await fetch(`${base}/api/auth/login`, {
+  const response = await fetchWithPreauth(`${base}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Cookie: `barghsa_device=${fingerprint}` },
     body: JSON.stringify({ username, password, deviceInfo: { fingerprint } }),
@@ -464,7 +465,7 @@ it('invalidates old sessions and refresh tokens atomically on a forced password 
     'INSERT INTO password_history(id,user_id,password_hash,version) VALUES ($1,$2,$3,1)',
     [randomUUID(), 'http-user', await argon2.hash('Older-test-password-123!')]
   );
-  const response = await fetch(`${base}/api/auth/force-change-password`, {
+  const response = await fetchWithPreauth(`${base}/api/auth/force-change-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ passwordChangeToken, newPassword: 'Changed-test-password-456!' }),

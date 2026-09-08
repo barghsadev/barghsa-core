@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import * as argon2 from 'argon2';
@@ -8,7 +9,7 @@ const token = 'b'.repeat(64);
 const tokenHash = createHash('sha256').update(token).digest('hex');
 const newPassword = 'Activated-staff-password-123!';
 const activate = () =>
-  fetch(`${http.base}/api/auth/activate-staff`, {
+  fetchWithPreauth(`${http.base}/api/auth/activate-staff`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token, newPassword }),
@@ -134,7 +135,7 @@ it('activates once and invalidates only that account credentials in the same aud
   expect(responses.map((r) => r.status).sort()).toEqual([200, 401]);
   const success = responses.find((r) => r.status === 200)!;
   expect(await success.json()).toEqual({ activated: true });
-  expect(success.headers.getSetCookie()).toEqual([]);
+  expect(success.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
   const user = (
     await http.pool.query(
       "SELECT password_hash,must_change_password,activation_token,activation_token_expires_at FROM users WHERE user_id='activating'"

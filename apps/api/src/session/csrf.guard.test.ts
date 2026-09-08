@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { ForbiddenException, Logger } from '@nestjs/common';
-import { CsrfGuard, SkipCsrf } from './csrf.guard.js';
+import { CsrfGuard, SkipCsrf, RequirePreauthCsrf } from './csrf.guard.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 /**
@@ -24,11 +24,12 @@ function createMockContext(options: {
   const handler = () => {};
   if (skipCsrf) {
     const descriptor = { value: handler, configurable: true };
-    SkipCsrf({ requireJson: options.requireJson === true })({}, 'handler', descriptor);
+    (options.requireJson ? RequirePreauthCsrf() : SkipCsrf())({}, 'handler', descriptor);
   }
 
   return {
     switchToHttp: () => ({
+      getResponse: () => ({ clearCookie: vi.fn() }),
       getRequest: () => ({
         method,
         headers: {
@@ -47,7 +48,7 @@ describe('CsrfGuard', () => {
   let guard: CsrfGuard;
 
   beforeEach(() => {
-    guard = new CsrfGuard();
+    guard = new CsrfGuard({ consume: vi.fn().mockResolvedValue(true) } as any);
   });
 
   afterEach(() => vi.restoreAllMocks());
@@ -262,11 +263,18 @@ describe('CsrfGuard', () => {
       ).toThrow(ForbiddenException);
     });
     it.each(['application/json', 'application/json; charset=UTF-8'])(
-      'allows public auth JSON requests (%s)',
-      (contentType) => {
-        expect(
-          guard.canActivate(createMockContext({ skipCsrf: true, requireJson: true, contentType }))
-        ).toBe(true);
+      'allows public auth JSON only after anonymous token validation (%s)',
+      async (contentType) => {
+        await expect(
+          guard.canActivate(
+            createMockContext({
+              skipCsrf: true,
+              requireJson: true,
+              contentType,
+              csrfHeader: 'token',
+            })
+          )
+        ).resolves.toBe(true);
       }
     );
     it('bypasses CSRF check when @SkipCsrf() is present', () => {

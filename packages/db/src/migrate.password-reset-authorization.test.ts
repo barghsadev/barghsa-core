@@ -43,7 +43,9 @@ it('upgrades existing OTPs without consuming them, enforces grant state and repe
     const account = (await pool.query('SELECT * FROM users')).rows[0];
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0122_password_reset_authorization'],
+      applied: journal.entries
+        .filter((entry: { idx: number }) => entry.idx >= 122)
+        .map((entry: { tag: string }) => entry.tag),
     });
     expect((await pool.query('SELECT * FROM otp_challenges')).rows).toEqual([
       { ...before, reset_token_hash: null, reset_consumed_at: null },

@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import * as argon2 from 'argon2';
@@ -68,7 +69,7 @@ async function challenge(user = 'reset-user') {
   return id;
 }
 function reset(newPassword = replacement, otp = '123456', id = challengeId, ip = '192.0.2.1') {
-  return fetch(`${http.base}/api/auth/reset-password`, {
+  return fetchWithPreauth(`${http.base}/api/auth/reset-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': ip },
     body: JSON.stringify({ challengeId: id, otp, newPassword }),
@@ -144,7 +145,7 @@ it.each(['current', 'history'])(
     const response = await reset();
     expect(response.status).toBe(500);
     expect(await response.text()).not.toContain('unreadable-');
-    expect(response.headers.getSetCookie()).toEqual([]);
+    expect(response.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
     expect(await state()).toEqual(before);
   }
 );
@@ -163,12 +164,13 @@ it('rolls back audit failure, then commits one concurrent reset and revokes only
   const failed = await reset();
   expect(failed.status).toBe(500);
   expect(await failed.text()).not.toContain('controlled reset audit failure');
-  expect(failed.headers.getSetCookie()).toEqual([]);
+  expect(failed.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
   expect(await state()).toEqual(before);
   await http.pool.query('DROP TRIGGER reject_reset_audit ON audit_log');
   const responses = await Promise.all([reset(), reset()]);
   expect(responses.map((r) => r.status).sort()).toEqual([200, 409]);
-  for (const response of responses) expect(response.headers.getSetCookie()).toEqual([]);
+  for (const response of responses)
+    expect(response.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
   const success = responses.find((r) => r.status === 200)!;
   const after = await state();
   expect(
@@ -206,7 +208,7 @@ it('rolls back audit failure, then commits one concurrent reset and revokes only
       })
     ).status
   ).toBe(401);
-  const stale = await fetch(`${http.base}/api/auth/login/verify`, {
+  const stale = await fetchWithPreauth(`${http.base}/api/auth/login/verify`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ challengeId: staleLogin, otp: '123456' }),
@@ -265,7 +267,9 @@ it.each(['account', 'session', 'refresh', 'audit'] as const)(
       const response = await changing;
       expect(response.status, await response.clone().text()).toBe(401);
       expect(await response.text()).toContain('AUTH:OTP:EXPIRED');
-      expect(response.headers.getSetCookie()).toEqual([]);
+      expect(response.headers.getSetCookie()).toEqual([
+        expect.stringMatching(/^barghsa_preauth=;/),
+      ]);
       expect(await state()).toEqual(before);
     } finally {
       await lock.query('ROLLBACK');
@@ -302,7 +306,7 @@ it('shares five reset attempts across challenges and source IPs while keeping de
 });
 
 function verifyReset(otp = '123456', id = challengeId, ip = '192.0.2.1') {
-  return fetch(`${http.base}/api/auth/reset-password/verify`, {
+  return fetchWithPreauth(`${http.base}/api/auth/reset-password/verify`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': ip },
     body: JSON.stringify({ challengeId: id, otp }),
@@ -315,7 +319,7 @@ function completeReset(
   id = challengeId,
   ip = '192.0.2.1'
 ) {
-  return fetch(`${http.base}/api/auth/reset-password`, {
+  return fetchWithPreauth(`${http.base}/api/auth/reset-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': ip },
     body: JSON.stringify({ challengeId: id, resetToken, newPassword }),
@@ -332,7 +336,7 @@ async function authorization() {
   };
   expect(response.status, JSON.stringify(body)).toBe(200);
   expect(response.headers.get('cache-control')?.split(/,\s*/)).toContain('no-store');
-  expect(response.headers.getSetCookie()).toEqual([]);
+  expect(response.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
   expect(body).toMatchObject({
     verified: true,
     challengeId,
@@ -468,7 +472,7 @@ it.each(['password', 'disabled'] as const)(
 it('new reset issuance atomically replaces old grants without revoking sessions or changing auth version', async () => {
   const grant = await authorization();
   const before = await state();
-  const response = await fetch(`${http.base}/api/auth/forgot-password`, {
+  const response = await fetchWithPreauth(`${http.base}/api/auth/forgot-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: 'reset@example.test' }),
@@ -565,7 +569,7 @@ it('keeps disabled and unknown reset destinations indistinguishable without queu
   await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='reset-user'");
   const before = await state();
   for (const username of ['reset@example.test', 'unknown@example.test']) {
-    const response = await fetch(`${http.base}/api/auth/forgot-password`, {
+    const response = await fetchWithPreauth(`${http.base}/api/auth/forgot-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username }),
@@ -589,7 +593,7 @@ it('keeps the old grant valid if replacement delivery cannot be queued atomicall
   await http.pool.query(`CREATE FUNCTION reject_reset_delivery() RETURNS trigger AS $$
     BEGIN RAISE EXCEPTION 'controlled outbox failure'; END; $$ LANGUAGE plpgsql;
     CREATE TRIGGER reject_reset_delivery BEFORE INSERT ON auth_delivery_outbox FOR EACH ROW EXECUTE FUNCTION reject_reset_delivery();`);
-  const response = await fetch(`${http.base}/api/auth/forgot-password`, {
+  const response = await fetchWithPreauth(`${http.base}/api/auth/forgot-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: 'reset@example.test' }),

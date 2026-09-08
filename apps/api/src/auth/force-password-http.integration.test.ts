@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeAll, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import * as argon2 from 'argon2';
@@ -43,7 +44,7 @@ afterEach(async () => {
 }, 15000);
 
 async function post(path: string, body: unknown) {
-  return fetch(`${http.base}/api/auth/${path}`, {
+  return fetchWithPreauth(`${http.base}/api/auth/${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -179,7 +180,8 @@ it('rolls back audit failure, then commits only one concurrent change and invali
   await http.pool.query('DROP TRIGGER reject_password_audit ON audit_log');
   const responses = await Promise.all([change(), change()]);
   expect(responses.map((r) => r.status).sort()).toEqual([200, 400]);
-  for (const response of responses) expect(response.headers.getSetCookie()).toEqual([]);
+  for (const response of responses)
+    expect(response.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
   const after = await state();
   expect(after.users[0]).toMatchObject({
     must_change_password: false,

@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import * as argon2 from 'argon2';
@@ -158,7 +159,7 @@ it('revokes durably, audits once without secrets and requires OTP on the next lo
     VALUES ('resend','Fixture mailbox','active',$1,'trust-owner','passed')`,
     [JSON.stringify({ api_key: 'fixture-only-key', from_email: 'auth@example.test' })]
   );
-  const login = await fetch(`${http.base}/api/auth/login`, {
+  const login = await fetchWithPreauth(`${http.base}/api/auth/login`, {
     method: 'POST',
     headers: { Cookie: `barghsa_device=${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: 'trust@example.test', password }),

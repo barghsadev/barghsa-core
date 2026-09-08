@@ -14109,6 +14109,37 @@
           "Admin · Authentication"
         ]
       }
+    },
+    "/api/auth/csrf": {
+      "get": {
+        "operationId": "PreauthCsrfController_token",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "csrfToken": {
+                      "pattern": "^[a-f0-9]{64}$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "csrfToken"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Current session token, or a short-lived anonymous token for one auth request."
+          }
+        },
+        "summary": "Get a browser-bound CSRF token before an authentication request",
+        "tags": [
+          "Auth"
+        ]
+      }
     }
   },
   "servers": [],

@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 
@@ -116,3 +117,7 @@ for (const locale of ['fa', 'en'] as const) {
     });
   }
 }
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
+});

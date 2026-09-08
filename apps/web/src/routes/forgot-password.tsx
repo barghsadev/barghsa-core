@@ -1,3 +1,4 @@
+import { publicAuthFetch } from '../lib/public-auth-fetch.js';
 import { maskDestination } from '../lib/mask-destination.js';
 import { authResponseRecord, hasPasswordChangeAcknowledgement } from '../lib/auth-responses.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -129,7 +130,7 @@ function ForgotPasswordPage() {
 
   async function request(path: string, payload: unknown): Promise<Record<string, unknown> | null> {
     abort.current = new AbortController();
-    const response = await fetch(`/api/auth/${path}`, {
+    const response = await publicAuthFetch(`/api/auth/${path}`, {
       signal: abort.current.signal,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },

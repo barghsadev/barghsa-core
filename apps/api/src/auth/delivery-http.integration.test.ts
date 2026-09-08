@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
@@ -72,7 +73,7 @@ afterEach(async () => {
 }, 15000);
 
 async function post(path: string, body: unknown, headers: Record<string, string> = {}) {
-  return fetch(`${fixture.base}/api/${path}`, {
+  return fetchWithPreauth(`${fixture.base}/api/${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...headers },
     body: JSON.stringify(body),
@@ -459,7 +460,9 @@ it.each(['password', 'revoke', 'expire', 'address', 'staff'])(
         change === 'password' ? 401 : 200
       );
       if (change !== 'password') expect(await response.json()).toMatchObject({ requiresOtp: true });
-      expect(response.headers.getSetCookie()).toEqual([]);
+      expect(response.headers.getSetCookie()).toEqual([
+        expect.stringMatching(/^barghsa_preauth=;/),
+      ]);
       expect(
         (
           await fixture.pool.query(
@@ -799,7 +802,10 @@ it('trusts only the opaque browser cookie after OTP and rejects public fingerpri
   const challenge = (await first.json()) as { requiresOtp: boolean; challengeId: string };
   expect(first.status).toBe(200);
   expect(challenge.requiresOtp).toBe(true);
-  const cookie = first.headers.get('set-cookie')!.split(';')[0]!;
+  const cookie = first.headers
+    .getSetCookie()
+    .find((cookie) => cookie.startsWith('barghsa_device='))!
+    .split(';')[0]!;
   expect(cookie).toMatch(/^barghsa_device=[a-f0-9]{64}$/);
   expect(first.headers.get('set-cookie')).toContain('HttpOnly');
   const token = cookie.split('=')[1]!;
@@ -865,7 +871,9 @@ it('trusts only the opaque browser cookie after OTP and rejects public fingerpri
     });
     expect(changedNetwork.status, await changedNetwork.clone().text()).toBe(200);
     expect(await changedNetwork.json()).toMatchObject({ requiresOtp: true });
-    expect(changedNetwork.headers.getSetCookie()).toEqual([]);
+    expect(changedNetwork.headers.getSetCookie()).toEqual([
+      expect.stringMatching(/^barghsa_preauth=;/),
+    ]);
     expect(await sessionCount()).toBe(beforeRiskChecks);
   }
   await fixture.pool.query(
@@ -967,7 +975,10 @@ async function deliveredLoginCode() {
   const login = await post('auth/login', { username: 'provider@example.test', password });
   expect(login.status).toBe(200);
   const { challengeId } = (await login.json()) as { challengeId: string };
-  const cookie = login.headers.get('set-cookie')!.split(';')[0]!;
+  const cookie = login.headers
+    .getSetCookie()
+    .find((cookie) => cookie.startsWith('barghsa_device='))!
+    .split(';')[0]!;
   const fingerprint = createHash('sha256').update(cookie.split('=')[1]!).digest('hex');
   expect(await deliver()).toBe('sent');
   const otp = received.at(-1)!.text.match(/\d{6}/)![0];
@@ -995,7 +1006,7 @@ it.each([false, true])(
     const failed = await post('auth/login/verify', body, headers);
     expect(failed.status).toBe(500);
     expect(await failed.text()).not.toContain('controlled trust audit failure');
-    expect(failed.headers.getSetCookie()).toEqual([]);
+    expect(failed.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
     expect((await fixture.pool.query('SELECT * FROM device_trusts')).rows).toEqual(before);
     for (const table of ['sessions', 'refresh_tokens'])
       expect(
@@ -1096,7 +1107,9 @@ it.each(['account', 'session', 'trust'] as const)(
       const response = await verifying;
       expect(response.status, await response.clone().text()).toBe(401);
       expect(await response.json()).toMatchObject({ error: { code: 'AUTH:OTP:EXPIRED' } });
-      expect(response.headers.getSetCookie()).toEqual([]);
+      expect(response.headers.getSetCookie()).toEqual([
+        expect.stringMatching(/^barghsa_preauth=;/),
+      ]);
       expect((await fixture.pool.query('SELECT * FROM device_trusts')).rows).toEqual(trustBefore);
       expect((await fixture.pool.query('SELECT session_id,revoked_at FROM sessions')).rows).toEqual(
         [{ session_id: sessionId, revoked_at: null }]

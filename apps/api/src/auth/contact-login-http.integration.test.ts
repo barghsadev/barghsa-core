@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { beforeEach, afterEach, expect, it } from 'vitest';
 import { randomUUID, createHash } from 'node:crypto';
 import * as argon2 from 'argon2';
@@ -29,7 +30,11 @@ afterEach(async () => {
   await http?.close();
 }, 15000);
 const post = (path: string, body: unknown) =>
-  fetch(`${http.base}/api/auth/${path}`, { method: 'POST', headers, body: JSON.stringify(body) });
+  fetchWithPreauth(`${http.base}/api/auth/${path}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
 const login = (username: string, secret = password) =>
   post('login', { username, password: secret });
 const user = async () => (await fetch(`${http.base}/api/auth/user`, { headers })).json();
