@@ -37,6 +37,116 @@ async function post(path: string, body: unknown, headers: Record<string, string>
   });
 }
 
+async function pendingRegistration() {
+  const username = `atomic-${randomUUID()}@example.test`;
+  const started = await post('auth/register', { username, password, tosVersionId: oldTerms });
+  const body = (await started.json()) as { challengeId: string };
+  expect(started.status, JSON.stringify(body) + fixture.logs()).toBe(200);
+  // Transaction tests control the stored code; real delivery has separate HTTP/worker evidence.
+  await fixture.pool.query('UPDATE otp_challenges SET otp_hash=$1 WHERE challenge_id=$2', [
+    createHash('sha256').update('123456').digest('hex'),
+    body.challengeId,
+  ]);
+  return { username, body: { challengeId: body.challengeId, otp: '123456' } };
+}
+
+async function expectRegistrationRolledBack(challengeId: string, username: string) {
+  expect(
+    (
+      await fixture.pool.query(
+        'SELECT consumed_at,attempts_remaining FROM otp_challenges WHERE challenge_id=$1',
+        [challengeId]
+      )
+    ).rows[0]
+  ).toEqual({ consumed_at: null, attempts_remaining: 5 });
+  const counts = (
+    await fixture.pool.query(
+      `SELECT (SELECT count(*)::int FROM users WHERE username=$1) AS users,
+      (SELECT count(*)::int FROM tos_acceptances) AS consent,
+      (SELECT count(*)::int FROM sessions) AS sessions,
+      (SELECT count(*)::int FROM refresh_tokens) AS refresh,
+      (SELECT count(*)::int FROM audit_log WHERE event='user_created') AS audits`,
+      [username]
+    )
+  ).rows[0];
+  expect(counts).toEqual({ users: 0, consent: 0, sessions: 0, refresh: 0, audits: 0 });
+}
+
+it('rolls registration back when its creation audit fails, then permits exactly one concurrent retry', async () => {
+  const { username, body } = await pendingRegistration();
+  await fixture.pool
+    .query(`CREATE FUNCTION reject_registration_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN IF NEW.event='user_created' THEN RAISE EXCEPTION 'Injected audit failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER reject_registration_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_registration_audit();`);
+  const failed = await post('auth/register/verify', body);
+  expect(failed.status).toBe(500);
+  expect(failed.headers.getSetCookie()).toEqual([]);
+  await expectRegistrationRolledBack(body.challengeId, username);
+  await fixture.pool.query('DROP TRIGGER reject_registration_audit ON audit_log');
+  const responses = await Promise.all([
+    post('auth/register/verify', body),
+    post('auth/register/verify', body),
+  ]);
+  expect(responses.map((response) => response.status).sort()).toEqual([200, 409]);
+  const created = (await responses.find((response) => response.ok)!.json()) as { userId: string };
+  expect(
+    (await fixture.pool.query("SELECT user_id FROM audit_log WHERE event='user_created'")).rows
+  ).toEqual([{ user_id: created.userId }]);
+}, 15000);
+
+for (const table of ['tos_versions', 'sessions', 'refresh_tokens', 'audit_log']) {
+  it(`rolls registration back if OTP expires while ${table} writes wait`, async () => {
+    const { username, body } = await pendingRegistration();
+    const deadline = (
+      await fixture.pool.query(
+        "UPDATE otp_challenges SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE challenge_id=$1 RETURNING expires_at",
+        [body.challengeId]
+      )
+    ).rows[0].expires_at as Date;
+    const blocker = await fixture.pool.connect();
+    let response: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      // Table identifiers come only from this fixed test list.
+      await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      response = post('auth/register/verify', body);
+      await expect
+        .poll(
+          async () =>
+            (
+              await fixture.pool.query(
+                'SELECT count(*)::int AS count FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))',
+                [pid]
+              )
+            ).rows[0].count
+        )
+        .toBe(1);
+      await expect
+        .poll(
+          async () =>
+            (
+              await fixture.pool.query('SELECT clock_timestamp()>$1::timestamptz AS expired', [
+                deadline,
+              ])
+            ).rows[0].expired,
+          { timeout: 5000 }
+        )
+        .toBe(true);
+      await blocker.query('COMMIT');
+      const rejected = await response;
+      expect(rejected.status, fixture.logs()).toBe(401);
+      expect(await rejected.json()).toMatchObject({ error: { code: 'AUTH:OTP:EXPIRED' } });
+      expect(rejected.headers.getSetCookie()).toEqual([]);
+      await expectRegistrationRolledBack(body.challengeId, username);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await response;
+    }
+  }, 15000);
+}
+
 it('rejects placeholder, unknown and draft terms before creating a challenge', async () => {
   for (const tosVersionId of ['current', randomUUID(), draftTerms]) {
     const response = await post('auth/register', {
@@ -120,6 +230,31 @@ it('keeps consent bound to the displayed publication and supports later re-accep
     version_id: oldTerms,
     user_agent: 'Registration-consent-test/1.0',
   });
+  const creationAudit = (
+    await fixture.pool.query(
+      "SELECT user_id,metadata::jsonb AS metadata,correlation_id,ip,created_at FROM audit_log WHERE event='user_created' AND user_id=$1",
+      [user.userId]
+    )
+  ).rows;
+  expect(creationAudit).toHaveLength(1);
+  expect(creationAudit[0]).toMatchObject({
+    user_id: user.userId,
+    correlation_id: verified.headers.get('x-correlation-id'),
+    metadata: {
+      terms: {
+        versionId: oldTerms,
+        acceptedAt: registrationEvidence.accepted_at.toISOString(),
+        hashAlgorithm: 'sha256',
+        contentHashes: {
+          fa: createHash('sha256').update('قوانین اول').digest('hex'),
+          en: createHash('sha256').update('First terms').digest('hex'),
+        },
+      },
+    },
+  });
+  expect(creationAudit[0].ip).toMatch(/127\.0\.0\.1/);
+  expect(creationAudit[0].created_at).toBeInstanceOf(Date);
+  expect(JSON.stringify(creationAudit)).not.toContain('123456');
   expect(registrationEvidence.accepted_at).toBeInstanceOf(Date);
   expect(registrationEvidence.ip_address).toMatch(/127\.0\.0\.1/);
   const headers = {

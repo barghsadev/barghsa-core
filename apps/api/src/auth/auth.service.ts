@@ -907,7 +907,7 @@ export class AuthService {
       }
 
       // Check expiry
-      if (new Date(row.expires_at) < new Date()) {
+      if (new Date(row.expires_at) <= new Date()) {
         throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
       }
 
@@ -975,14 +975,14 @@ export class AuthService {
 
       // 5. Record TOS acceptance immutably in tos_acceptances (T-04.01.02)
       // A newer publication must not change the terms this challenge accepted.
-      const tosResult = await client.query(
-        `SELECT id FROM tos_versions
+      const tosResult = await client.query<{ id: string; content_fa: string; content_en: string }>(
+        `SELECT id,content_fa,content_en FROM tos_versions
          WHERE id::text=$1 AND status='published' AND published_at IS NOT NULL
          FOR SHARE`,
         [row.tos_version_id]
       );
 
-      const tosVersionId = tosResult.rows.length > 0 ? tosResult.rows[0].id : null;
+      const tosVersionId = tosResult.rows[0]?.id ?? null;
 
       if (tosVersionId) {
         const acceptanceId = uuidv7();
@@ -1008,6 +1008,41 @@ export class AuthService {
         undefined,
         client
       );
+
+      // Keep the creation audit and the exact accepted publication hashes in
+      // the same transaction as consent, OTP consumption and session creation.
+      const acceptedTerms = tosResult.rows[0]!;
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'user_created',$3,$4,$5,clock_timestamp())`,
+        [
+          uuidv7(),
+          userId,
+          JSON.stringify({
+            terms: {
+              versionId: acceptedTerms.id,
+              acceptedAt: now.toISOString(),
+              hashAlgorithm: 'sha256',
+              contentHashes: {
+                fa: createHash('sha256').update(acceptedTerms.content_fa).digest('hex'),
+                en: createHash('sha256').update(acceptedTerms.content_en).digest('hex'),
+              },
+            },
+          }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          ip,
+        ]
+      );
+
+      // Consent, session and audit writes can wait beyond the OTP deadline.
+      // Check database wall time after all writes so expiry rolls everything back.
+      const currentChallenge = await client.query(
+        'SELECT expires_at>clock_timestamp() AS valid FROM otp_challenges WHERE challenge_id=$1',
+        [challengeId]
+      );
+      if (!currentChallenge.rows[0]?.valid) {
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
+      }
 
       await client.query('COMMIT');
 
