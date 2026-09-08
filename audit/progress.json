@@ -5,7 +5,7 @@
   "plan": "audit/fix-plan.md",
   "source_revision": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
   "active_step": "R01",
-  "next_action": "Review remaining critical task requirements by domain. Start session/authentication acceptance using current requirements and existing migrated HTTP evidence; fix demonstrated remaining defects before R02 consumers.",
+  "next_action": "Continue R01 session acceptance: refresh-token reuse currently logs only a server warning; implement the required private user alert, then review rotation callers and remaining session/step-up criteria.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -353,6 +353,39 @@
         }
       ],
       "remaining": "R01 session/authentication acceptance continues. Application-specific localized errors and downstream correlation remain open in R03."
+    },
+    {
+      "id": "R01-session-revocation",
+      "date": "2026-09-08",
+      "base_revision": "9f00e2c",
+      "summary": "Enforced recent step-up for individual session revocation. Existing confirmation now recovers through password verification, preserves the selected session and clears the submitted password. Corrected nested invalid-password errors for revoke-all.",
+      "review": "A real HTTP regression reproduced a200 response and revocation without step-up. Reviewed guard ordering, CSRF, current/expired verification, wrong password, ownership and refresh invalidation. Browser cases exercise localized prompts, failure/retry, focus containment and cancellation while pending.",
+      "checks": [
+        "94 session tests across9 files pass",
+        "20 production-built browser cases pass across all5 configured profiles, Persian and English",
+        "API/web typechecks and focused ESLint pass",
+        "Production web build passes"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "e414aaee5496aeef7a5b22996d3c509719407aa569e0008cbd9ea74c1fc9e1fe"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+        }
+      ],
+      "remaining": "Session task acceptance is not complete: review refresh-reuse user alerts, all rotation callers, and exact device/step-up requirements."
     }
   ],
   "deferred_improvements": [],

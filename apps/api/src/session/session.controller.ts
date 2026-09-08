@@ -18,6 +18,7 @@ import { SessionService } from './session.service.js';
 import { SessionAuthGuard } from './session.guard.js';
 import type { AuthenticatedRequest } from './session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { RequiresStepUp, StepUpGuard } from './step-up.guard.js';
 
 // ─── Zod schemas ──────────────────────────────────────────────────────
 
@@ -100,6 +101,8 @@ export class SessionController {
    * Users can only revoke their own sessions (unless admin — future).
    */
   @Delete(':id')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @RateLimit({ namespace: 'sessions:revoke:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Revoke a specific session' })

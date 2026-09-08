@@ -183,6 +183,77 @@ it('requires CSRF for refresh, rejects idle expiry, and retains refresh reuse re
   ).not.toBeNull();
 }, 15000);
 
+it('requires recent step-up to revoke a session and retains the ownership boundary', async () => {
+  const auth = await login();
+  const target = await login();
+  const headers = {
+    Cookie: auth.cookie,
+    'Content-Type': 'application/json',
+    'X-CSRF-Token': auth.token,
+  };
+  const revoke = () =>
+    fetch(`${base}/api/auth/sessions/${target.sessionId}`, { method: 'DELETE', headers });
+  for (const verifiedAt of [null, new Date(Date.now() - 16 * 60_000)]) {
+    await pool.query('UPDATE sessions SET step_up_verified_at=$1 WHERE session_id=$2', [
+      verifiedAt,
+      auth.sessionId,
+    ]);
+    const response = await revoke();
+    expect(response.status).toBe(403);
+    expect(await response.json()).toMatchObject({ error: { code: 'AUTHZ:STEP_UP_REQUIRED' } });
+    expect(
+      (await pool.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [target.sessionId]))
+        .rows[0].revoked_at
+    ).toBeNull();
+  }
+  const wrong = await fetch(`${base}/api/auth/step-up`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ password: 'wrong-password' }),
+  });
+  expect(wrong.ok).toBe(false);
+  expect((await revoke()).status).toBe(403);
+  const verified = await fetch(`${base}/api/auth/step-up`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ password }),
+  });
+  expect(verified.status).toBe(200);
+  const outsider = randomUUID();
+  await pool.query('INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,$3)', [
+    outsider,
+    `${outsider}@example.test`,
+    'not-used',
+  ]);
+  await pool.query('UPDATE sessions SET user_id=$1 WHERE session_id=$2', [
+    outsider,
+    target.sessionId,
+  ]);
+  expect((await revoke()).status).toBe(404);
+  expect(
+    (await pool.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [target.sessionId]))
+      .rows[0].revoked_at
+  ).toBeNull();
+  await pool.query('UPDATE sessions SET user_id=$1 WHERE session_id=$2', [
+    'http-user',
+    target.sessionId,
+  ]);
+  expect((await revoke()).status).toBe(200);
+  expect(
+    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: target.cookie } })).status
+  ).toBe(401);
+  expect(
+    (
+      await pool.query('SELECT consumed_at FROM refresh_tokens WHERE session_id=$1', [
+        target.sessionId,
+      ])
+    ).rows.every((row) => row.consumed_at !== null)
+  ).toBe(true);
+  expect(
+    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } })).status
+  ).toBe(200);
+}, 15000);
+
 it('invalidates old sessions and refresh tokens atomically on a forced password change', async () => {
   const auth = await login();
   const passwordChangeToken = randomUUID();

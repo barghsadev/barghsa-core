@@ -1174,6 +1174,86 @@ for (const locale of ['en', 'fa']) {
 }
 
 for (const locale of ['en', 'fa']) {
+  test(`session revocation recovers through password step-up and keeps its target (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const sessions = [true, false].map((isCurrentSession, index) => ({
+      sessionId: `session-${index}`,
+      deviceInfo: { userAgent: 'Windows', ip: '192.0.2.1' },
+      createdAt: '2026-09-01T12:00:00.000Z',
+      updatedAt: '2026-09-01T12:00:00.000Z',
+      expiresAt: '2030-01-01T00:00:00Z',
+      idleDeadline: '2030-01-01T00:00:00Z',
+      isCurrentSession,
+    }));
+    await page.route('**/api/auth/sessions', (route) => route.fulfill({ json: sessions }));
+    await page.route('**/api/auth/sessions/revoke-all', (route) =>
+      route.fulfill({
+        status: 422,
+        json: { error: { code: 'AUTH:LOGIN:INVALID_CREDENTIALS' } },
+      })
+    );
+    const verifications: string[] = [];
+    await page.route('**/api/auth/step-up', (route) => {
+      const password = route.request().postDataJSON().password;
+      verifications.push(password);
+      return route.fulfill({ status: password === 'right-password' ? 200 : 422, json: {} });
+    });
+    let attempts = 0;
+    await page.route('**/api/auth/sessions/session-1', (route) => {
+      expect(route.request().method()).toBe('DELETE');
+      attempts++;
+      return route.fulfill(
+        attempts === 1
+          ? { status: 403, json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } } }
+          : attempts === 2
+            ? { status: 503, json: {} }
+            : { status: 200, json: { message: 'Session revoked.' } }
+      );
+    });
+    await page.goto('/settings/security');
+    const allName = locale === 'fa' ? 'قطع دسترسی همه نشست‌های دیگر' : 'Revoke all other sessions';
+    await page.getByRole('button', { name: allName, exact: true }).click();
+    const allDialog = page.getByRole('dialog', { name: allName, exact: true });
+    await allDialog
+      .getByLabel(locale === 'fa' ? 'رمز عبور' : 'Password', { exact: true })
+      .fill('wrong-password');
+    await allDialog.getByRole('button', { name: allName, exact: true }).click();
+    await expect(allDialog.getByRole('alert')).toContainText(
+      locale === 'fa' ? 'رمز عبور' : 'password'
+    );
+    await page.keyboard.press('Escape');
+    const name = locale === 'fa' ? 'قطع دسترسی' : 'Revoke';
+    await page.getByRole('button', { name, exact: true }).click();
+    const dialog = page.getByRole('dialog', { name, exact: true });
+    const submit = dialog.getByRole('button', { name, exact: true });
+    await submit.click();
+    const password = dialog.getByLabel(locale === 'fa' ? 'رمز عبور' : 'Password', { exact: true });
+    await expect(password).toBeFocused();
+    await expect(submit).toBeDisabled();
+    await password.fill('wrong-password');
+    await submit.click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(password).toHaveValue('');
+    expect(attempts).toBe(1);
+    await password.fill('right-password');
+    await submit.click();
+    await expect(dialog.getByRole('alert')).toContainText(
+      locale === 'fa' ? 'خطا در قطع دسترسی' : 'Failed to revoke'
+    );
+    await expect(password).toHaveValue('');
+    expect(attempts).toBe(2);
+    await password.fill('right-password');
+    await submit.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByRole('button', { name, exact: true })).toHaveCount(0);
+    expect(attempts).toBe(3);
+    expect(verifications).toEqual(['wrong-password', 'right-password', 'right-password']);
+  });
+}
+
+for (const locale of ['en', 'fa']) {
   for (const kind of ['notifications', 'marketing-consent']) {
     test(`preferences require a valid read and preserve choices through save failures (${kind}, ${locale})`, async ({
       page,

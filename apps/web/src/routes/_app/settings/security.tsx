@@ -158,6 +158,8 @@ function SettingsSecurityPage() {
   const [revokeConfirmId, setRevokeConfirmId] = useState<string | null>(null);
   const [revokingId, setRevokingId] = useState<string | null>(null);
   const [revokeError, setRevokeError] = useState<string | null>(null);
+  const [revokeNeedsPassword, setRevokeNeedsPassword] = useState(false);
+  const [revokePassword, setRevokePassword] = useState('');
 
   // Revoke-all dialog
   const [showRevokeAll, setShowRevokeAll] = useState(false);
@@ -199,19 +201,37 @@ function SettingsSecurityPage() {
   // ── Revoke a single session (with confirmation) ────────────────────
 
   const handleConfirmRevoke = useCallback(async () => {
-    if (!revokeConfirmId || revokingRef.current) return;
+    if (!revokeConfirmId || revokingRef.current || (revokeNeedsPassword && !revokePassword)) return;
     revokingRef.current = true;
 
     setRevokingId(revokeConfirmId);
     setRevokeError(null);
 
     try {
+      if (revokeNeedsPassword) {
+        const verified = await fetch('/api/auth/step-up', {
+          method: 'POST',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ password: revokePassword }),
+        });
+        setRevokePassword('');
+        if (!verified.ok) {
+          setRevokeError(t('team.passwordError', locale));
+          return;
+        }
+      }
       const response = await fetch(`/api/auth/sessions/${revokeConfirmId}`, {
         method: 'DELETE',
         headers: withCsrf(),
       });
 
       if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        const code = typeof body?.error === 'string' ? body.error : body?.error?.code;
+        if (response.status === 403 && code === 'AUTHZ:STEP_UP_REQUIRED') {
+          setRevokeNeedsPassword(true);
+          return;
+        }
         setRevokeError(t('settings.security.error.revoke', locale));
         return;
       }
@@ -225,11 +245,13 @@ function SettingsSecurityPage() {
       revokingRef.current = false;
       setRevokingId(null);
     }
-  }, [revokeConfirmId, locale]);
+  }, [revokeConfirmId, revokeNeedsPassword, revokePassword, locale]);
 
   const handleCancelRevokeConfirm = useCallback(() => {
     if (revokingRef.current) return;
     setRevokeError(null);
+    setRevokePassword('');
+    setRevokeNeedsPassword(false);
     setRevokeConfirmId(null);
   }, []);
 
@@ -252,7 +274,12 @@ function SettingsSecurityPage() {
       const body: Record<string, unknown> = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        const errorCode = typeof body?.error === 'string' ? body.error : '';
+        const errorCode =
+          typeof body?.error === 'string'
+            ? body.error
+            : body.error && typeof body.error === 'object' && 'code' in body.error
+              ? body.error.code
+              : '';
         if (errorCode === 'AUTH:LOGIN:INVALID_CREDENTIALS') {
           setRevokeAllError(t('settings.security.error.invalidPassword', locale));
         } else {
@@ -377,6 +404,8 @@ function SettingsSecurityPage() {
                     onClick={(event) => {
                       revokeTriggerRef.current = event.currentTarget;
                       setRevokeError(null);
+                      setRevokeNeedsPassword(false);
+                      setRevokePassword('');
                       setRevokeConfirmId(session.sessionId);
                     }}
                     className="gap-1"
@@ -461,6 +490,25 @@ function SettingsSecurityPage() {
               </p>
             </div>
 
+            {revokeNeedsPassword && (
+              <div className="space-y-2">
+                <Label htmlFor="revoke-single-password">
+                  {t('settings.security.passwordLabel', locale)}
+                </Label>
+                <Input
+                  id="revoke-single-password"
+                  type="password"
+                  autoComplete="current-password"
+                  autoFocus
+                  value={revokePassword}
+                  disabled={revokingId !== null}
+                  onChange={(event) => {
+                    setRevokePassword(event.target.value);
+                    setRevokeError(null);
+                  }}
+                />
+              </div>
+            )}
             {revokeError && (
               <p role="alert" className="text-sm text-destructive">
                 {revokeError}
@@ -477,7 +525,9 @@ function SettingsSecurityPage() {
               </Button>
               <Button
                 variant="destructive"
-                disabled={revokingId === revokeConfirmId}
+                disabled={
+                  revokingId === revokeConfirmId || (revokeNeedsPassword && !revokePassword)
+                }
                 onClick={handleConfirmRevoke}
               >
                 {revokingId === revokeConfirmId
