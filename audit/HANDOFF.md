@@ -24,13 +24,17 @@ Updated 2026-09-08. Read this file first. The original 23-group fix plan remains
 
 Exact revision bindings, image IDs and logs: `audit/final-repair-checkpoint.json`. Image test procedure/limits: `audit/production-image-review.md`.
 
-## Latest verified step after the full checkpoint
+## Latest verified steps after the full checkpoint
 
 F14 callback recovery: require persisted release/failure/reopen/final statuses; reject event IDs bound to another order or terminal credit claims without ledger credit. Hold the advisory lock until duplicate ledger lookup settles. Historical credited events with Pending/Failed/Rejected intents now release the original intent on replay without another credit.
 
 Ten PostgreSQL regressions reproduced false success before repair. Final wallet suite passes **559 tests in 28 files**, including 15 new database recovery cases and a delayed-read lock case. API types, focused lint and diff checks pass. Existing replay tests now require rejection instead of accepting another order's transaction ID. Logs `/tmp/barghsa-callback-recovery-red.log`, `/tmp/barghsa-wallet-callback-regression.log`, `/tmp/barghsa-callback-types.log`, `/tmp/barghsa-callback-lint.log`.
 
-Source changed after 9529872. Its full coverage/image results remain historical; current callback repair has focused evidence only. No external payment service was called and no remote action occurred.
+F09/F17 notification administration: validate list/save/publication results, retain localized retry, bind returned template identity/content, freeze saving fields, and handle password step-up for create/edit/publish/unpublish/delete/test-send through the existing shared dialog. Capture the original action and ignore late challenges after an editor closes. Unpublishing validates the server's archived state; test-send still requires actual channel/delivery acknowledgement.
+
+Four browser regressions reproduced failures before repair. **55 checks across five browser profiles** pass, plus **17 focused Chromium notification checks** covering existing history/read-only/template behavior. Web types, focused lint, 50 dictionary tests, production build and all 41 route budgets pass. Logs `/tmp/barghsa-notification-recovery-red.log`, `/tmp/barghsa-notification-recovery-final.log`, `/tmp/barghsa-notification-all-profiles.log`, `/tmp/barghsa-notification-types.log`, `/tmp/barghsa-notification-lint.log`, `/tmp/barghsa-notification-budgets.log`. Existing error-message assertions were changed to the localized error instead of raw server text. No real notifications sent.
+
+Source changed after 9529872. Its full coverage/image results remain historical; these repairs have focused evidence only. Coverage refresh is batched; do not cite the prior percentages as measurement of these new sources. No external payment service was called and no remote action occurred.
 
 ## Latest completed repairs
 

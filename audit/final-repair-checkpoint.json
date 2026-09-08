@@ -329,5 +329,38 @@
     ],
     "test_invocation": "Executed scripts/test-production-images.py with image tag strings :f18 replaced by :9529872 in memory. No production or existing database accessed.",
     "reuse_limit": "Local image behavior only. Real provider/proxy/TLS/restore and production rollout remain unverified."
-  }
+  },
+  "subsequent_repairs": [
+    {
+      "group": "F14",
+      "commit": "0fcf576",
+      "status": "implemented_and_reviewed",
+      "tests": 559,
+      "files": 28,
+      "log": "/tmp/barghsa-wallet-callback-regression.log",
+      "summary": "Durable callback outcomes, bound event replays, held duplicate-read lock, and recovery of credited intents without second credit."
+    },
+    {
+      "group": "F09/F17",
+      "status": "implemented_and_reviewed",
+      "browser_checks": 55,
+      "browser_profiles": 5,
+      "existing_notification_check_run": 17,
+      "logs": [
+        "/tmp/barghsa-notification-all-profiles.log",
+        "/tmp/barghsa-notification-recovery-final.log",
+        "/tmp/barghsa-notification-types.log",
+        "/tmp/barghsa-notification-lint.log",
+        "/tmp/barghsa-notification-budgets.log"
+      ],
+      "source_sha256": {
+        "apps/web/src/pages/AdminNotificationsPage.tsx": "4c61e1fce436e41b52268256078a1178ed406852859f7bea148fe38aa4a588bf",
+        "apps/web/e2e/notification-template-recovery.spec.ts": "793193f2518815f1c1f03dfd14b251e731d07659dbf4aeff64bb8a9e83aec9e8",
+        "apps/web/e2e/form-accessibility.spec.ts": "88afc9d9e35826b310e73a17c1e0e07d53b151f6cca8d5c6f04c61b34baf7129",
+        "packages/i18n/src/admin-ui.ts": "7eade1846a2099547349339ad84253d52bd88f100a54e4d9158edd416a098ce5"
+      },
+      "summary": "Notification list/acknowledgement validation and captured password step-up recovery; no external messages sent."
+    }
+  ],
+  "subsequent_repairs_note": "Full regression, coverage and images above remain bound to 9529872. Subsequent repairs have focused evidence; global coverage refresh is batched."
 }

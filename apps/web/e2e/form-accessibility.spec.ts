@@ -2085,7 +2085,11 @@ for (const locale of ['en', 'fa']) {
           .locator('#notification-template-bodyTemplate')
           .fill('Replacement {{userName}}');
         await editor.locator('button[type="submit"]').click();
-        await expect(page.getByRole('alert').filter({ hasText: 'Unavailable' })).toBeVisible();
+        await expect(
+          page
+            .getByRole('alert')
+            .filter({ hasText: locale === 'fa' ? 'خطا در ذخیره قالب' : 'Failed to save template' })
+        ).toBeVisible();
         expect(writes).toEqual([
           {
             eventKey: version.eventKey,

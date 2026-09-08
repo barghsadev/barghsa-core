@@ -656,6 +656,8 @@ export const fa: I18nDictionary = {
   'admin.notifications.testDestinationHint':
     'باید متعلق به خودتان یا در فهرست مجاز توسعه باشد. در غیر این صورت ارسال با خطای ۴۰۳ رد می‌شود.',
   'admin.notifications.error.load': 'خطا در بارگذاری قالب‌های اعلان',
+  'admin.notifications.retry': 'تلاش مجدد',
+  'admin.notifications.confirmAction': 'برای ادامه این عملیات، گذرواژه خود را تأیید کنید.',
   'admin.notifications.error.save': 'خطا در ذخیره قالب',
   'admin.notifications.error.publish': 'خطا در انتشار قالب',
   'admin.notifications.error.unpublish': 'خطا در غیرفعال‌سازی قالب',
@@ -1507,6 +1509,8 @@ export const en: I18nDictionary = {
   'admin.notifications.testDestinationHint':
     'Must be your own contact or an allow-listed test address; otherwise the send is rejected with 403.',
   'admin.notifications.error.load': 'Failed to load notification templates',
+  'admin.notifications.retry': 'Retry',
+  'admin.notifications.confirmAction': 'Verify your password to continue this action.',
   'admin.notifications.error.save': 'Failed to save template',
   'admin.notifications.error.publish': 'Failed to publish template',
   'admin.notifications.error.unpublish': 'Failed to unpublish template',
