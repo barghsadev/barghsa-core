@@ -3057,7 +3057,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.02.01",
       "status": "partial",
-      "reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 125,
       "requirement": "**T-02.02.01 — Session creation and cookie management**\n\n- Description: On successful authentication, create server-side session. Store session data in PostgreSQL (or encrypted cookie with server-side revocation). Set HttpOnly and production-Secure cookies using the centralized SameSite policy owned by E-06. Rotate session identifier on login, MFA, password change, privilege change, and account recovery.\n- Technical notes: Opaque or signed session identifiers. Production cookies: Secure, narrow Path, and the centralized SameSite policy from E-06. Non-TLS dev may disable Secure through explicit dev setting. Refresh tokens rotate on use; reuse revokes token family and alerts user. Absolute session timeout (24h default), idle timeout (30 min default).\n- UI/UX: N/A (backend)\n- Dependencies: T-02.01.02\n- Complexity: L",
@@ -3065,7 +3065,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3128,12 +3128,21 @@
       "merged_prs": [
         89
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "paths": [
+          "apps/api/src/session/session.service.ts"
+        ]
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.02",
       "status": "partial",
-      "reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 133,
       "requirement": "**T-02.02.02 — Session revocation**\n\n- Description: Users can view and revoke their own active sessions/devices from Settings → Security. Staff can revoke any user's sessions. Password reset, staff disablement, ownership transfer, and suspected compromise revoke applicable sessions immediately.\n- Technical notes: Session list shows device name, IP location (approximate), last active time, created time. Revoke is immediate (server removes session from active store). API: GET `/api/auth/sessions`, DELETE `/api/auth/sessions/:id`. Revoke all by POST `/api/auth/sessions/revoke-all` (requires password confirmation or OTP).\n- UI/UX: Card/list view of active sessions with Revoke button per session and \"Revoke all other sessions\" action. Confirm dialog before revoke.\n- Dependencies: T-02.02.01\n- Complexity: M",
@@ -3141,7 +3150,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3283,12 +3292,21 @@
           ],
           "historically_skipped": false
         }
-      ]
+      ],
+      "evidence_refresh": {
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "paths": [
+          "apps/api/src/session/session.service.ts"
+        ]
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.03",
       "status": "partial",
-      "reviewed_sha": "e478e080315ea6acc7d24cdeb74ef79307325c6c",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 141,
       "requirement": "**T-02.02.03 — CSRF protection**\n\n- Description: Every state-changing POST/PUT/PATCH/DELETE requires a server-generated CSRF token bound to the authenticated session, sent in a custom header (e.g. `X-CSRF-Token`). Validate server-side. Rotate token after auth/session rotation.\n- Technical notes: Double-submit cookie pattern or signed token. Frontend reads CSRF token from meta tag or cookie and sends in header. CSRF failures return 403 with safe error + correlation ID, logged as security event. No exception for API endpoints — every state change requires this.\n- UI/UX: N/A (transparent to user; errors caught by frontend interceptor → redirect to login or show error).\n- Dependencies: T-02.02.01\n- Complexity: M",
@@ -3296,7 +3314,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3360,12 +3378,21 @@
       "merged_prs": [
         91
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "e478e080315ea6acc7d24cdeb74ef79307325c6c",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "paths": [
+          "apps/api/src/session/session.service.ts"
+        ]
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.04",
       "status": "partial",
-      "reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 149,
       "requirement": "**T-02.02.04 — Step-up authentication for sensitive actions**\n\n- Description: Sensitive actions require recent step-up authentication (re-enter password or OTP). Actions include: role changes, storage/payment credentials change, payment confirmation, refunds, contract cancellation, price changes, session revocation, profile deletion, ownership transfer.\n- Technical notes: Step-up requirement lasts for a short configured period (default 15 min) after verification. Audit flag: `stepUpVerified: true` with timestamp. If session idle exceeds the step-up window, re-prompt. API returns `requiresStepUp` flag; frontend shows step-up dialog.\n- UI/UX: Modal dialog asking for password or OTP before proceeding. Shows which action requires it.\n- Dependencies: T-02.02.01, T-02.01.02\n- Complexity: L",
@@ -3373,7 +3400,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3436,12 +3463,21 @@
       "merged_prs": [
         92
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "paths": [
+          "apps/api/src/session/session.service.ts"
+        ]
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "a22de92046b68f548417dbfae8e0c1b934097299",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 185,
       "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
@@ -3453,7 +3489,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "7973ec017d40c4fdec081b5639687345d164bfbd15e8e12aebfcce9fb49d9b42"
+          "sha256": "7c5724c925dc97c2d6952f8365150bc3f60602234c2a4e11d410f7c3e3b9813c"
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
@@ -3615,10 +3651,10 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "a22de92046b68f548417dbfae8e0c1b934097299",
-        "previous_reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
-        "review": "Network trust lookup/upsert changed; account/IP delay, broad device limits and OTP admissions remain unchanged. Focused login-rate HTTP and auth-delivery checks pass; unchanged shared/edge/browser evidence is reused.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-network",
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "a22de92046b68f548417dbfae8e0c1b934097299",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
         "paths": [
           "apps/api/src/auth/auth.service.ts"
         ]
@@ -3723,7 +3759,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -3739,7 +3775,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -3829,21 +3865,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
         "paths": [
-          "apps/api/src/crm/crm-v2.service.ts",
-          "apps/api/src/crm/crm-v2.controller.ts",
-          "apps/api/openapi.json"
+          "apps/api/src/crm/crm-v2.service.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3871,7 +3905,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -3949,21 +3983,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
         "paths": [
-          "apps/api/src/crm/crm-v2.controller.ts",
-          "apps/api/src/crm/crm-v2.service.ts",
-          "apps/api/openapi.json"
+          "apps/api/src/crm/crm-v2.service.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 412,
       "requirement": "**T-05.02.03 — Verification state management**\n\n- Description: Staff can change verification state of a profile. Options: Verify, Unverify, Mark for re-verification.\n- Technical notes: POST `/api/crm/profiles/:profileId/verify` with `{ action: 'verify' | 'unverify' | 'reverify', reason? }`. Permissions: `crm:verify` or admin. Audit: verification_change with before/after state, actor, reason. Notifications sent to profile owner.\n- UI/UX: Current status badge (Verified/Unverified/Pending). Dropdown with actions. Reason required for unverify/reverify. Confirmation dialog.\n- Dependencies: T-05.02.01, E-07 (admin verification settings)\n- Complexity: M",
@@ -3991,7 +4023,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -4025,12 +4057,11 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
         "paths": [
-          "apps/api/src/crm/crm-v2.controller.ts",
           "apps/api/src/crm/crm-v2.service.ts"
         ]
       }
@@ -4038,7 +4069,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 420,
       "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
@@ -4066,7 +4097,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -4090,7 +4121,7 @@
         },
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
         }
       ],
       "checks": [
@@ -4109,13 +4140,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
         "paths": [
-          "apps/api/src/crm/crm-v2.controller.ts",
-          "apps/api/src/crm/crm-v2.service.ts"
+          "apps/api/src/crm/crm-v2.service.ts",
+          "apps/api/src/session/session.service.ts"
         ]
       }
     },
@@ -4212,7 +4243,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -4220,7 +4251,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -4376,13 +4407,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "previous_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
-        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
         "paths": [
-          "apps/api/src/crm/crm-v2.service.ts",
-          "apps/api/src/crm/crm-v2.controller.ts"
+          "apps/api/src/crm/crm-v2.service.ts"
         ]
       }
     },
@@ -4533,7 +4563,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.05.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 513,
       "requirement": "**T-05.05.01 — Profiles awaiting verification widget**\n\n- Description: On staff dashboard, widget showing profiles pending verification (if verification is not disabled). Shows count and \"Show all\" link to CRM with verification filter.\n- Technical notes: GET `/api/crm/dashboard/pending-verification` returns count and last 5 entries. Permission: staff with `crm:verify`.\n- UI/UX: Card: icon + count + \"Profiles awaiting verification\" + \"Show all\" link. Click opens CRM with `?verification=PENDING` filter.\n- Dependencies: T-05.01.02, E-07 (verification settings)\n- Complexity: S",
@@ -4541,7 +4571,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "1d13bf98457e69460996afb92c9424229d5bdd727335d207353d05c6f689f7ab"
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -4587,7 +4617,16 @@
       "merged_prs": [
         136
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "paths": [
+          "apps/api/src/crm/crm-v2.service.ts"
+        ]
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.01.01",

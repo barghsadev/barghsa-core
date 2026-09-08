@@ -1986,6 +1986,83 @@
         "audit/evidence/r01/barghsa-device-trust-ip-snapshot.log.gz",
         "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
       ]
+    },
+    {
+      "id": "R01-device-trust-atomic",
+      "date": "2026-09-08",
+      "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "summary": "Serialize trusted-login authorization with session creation and hide browser tokens from customer and CRM session listings.",
+      "review": [
+        "Password-only login no longer reads trust outside session creation. SessionService checks the current account and staff flags under the user lock, locks usable sessions, then holds the selected trust row with FOR SHARE through commit. Missing, revoked, changed-address or expired trust rolls back and continues through OTP; changed credentials still reject the stale login.",
+        "Trust expiry uses clock_timestamp() in a fresh statement after lock acquisition, not transaction-start NOW(). Lock order is user, sessions, trust, matching successful OTP completion. Trust failure precedes session-cap eviction and inserts, so rejected trust cannot revoke an old session or create a new one.",
+        "Real PostgreSQL concurrency tests hold the account while password, revocation, expiry, address or staff status changes. A separate test holds session insertion after authorization: a direct trust deletion waits for commit, then subsequent password login requires OTP. Trust revocation governs later login authorization; revoking already-issued sessions remains the separate session action.",
+        "Review found trusted password login saved the raw opaque browser cookie in session device_info, and both customer and CRM session lists returned that field. New trusted sessions now save its hash, matching OTP-created session metadata. Both list queries allow only IP, user agent, browser and OS display fields, protecting legacy raw-token records without discarding valid display hints.",
+        "CRM continues returning non-bearer session references and excluding expired sessions from active counts. Privacy checks cover active and expired legacy records and additional unknown secret fields. Frontend uses display details and does not read fingerprint values. No UI, dependency, migration or requirement change in this step."
+      ],
+      "checks": [
+        "Initial auth/session invocation passes 63/63 across delivery HTTP, login-rate HTTP, session HTTP and session-service tests. It includes the first four account-lock race cases.",
+        "Focused privacy invocation passes 24/24 across session HTTP and controller tests. It verifies hashing for new trusted sessions and no raw token or extra secret in the authenticated session response.",
+        "Final race invocation passes 6/6 selected delivery tests; 17 other tests are intentionally unselected, not acceptance skips. Added staff-promotion and inverse revocation/commit order cases pass. Earlier delivery cases remain covered by the initial invocation on unchanged relevant behavior.",
+        "Final customer/CRM privacy invocation passes 26/26 across session HTTP and CRM-list HTTP tests, including preserved IP/user-agent/browser/OS display fields and protected legacy records. These runs overlap and their totals are not added together.",
+        "Final API typecheck, six-file ESLint, formatting and git diff checks pass. Each HTTP invocation compiled the application first. No browser rerun or global checkpoint renewal; network migration evidence at a22de92 and unchanged browser UI evidence are reused."
+      ],
+      "remaining": [
+        "Next implement authenticated own-device listing/revocation and its Settings > Security UI for T-02.01.02. Apply user-before-trust lock order, ownership, CSRF and appropriate confirmation/step-up checks; review before closing acceptance.",
+        "Confirm or align Argon2id parameters with the original requirement, then complete T-02.01.03 OTP and T-02.01.04 forced-password-change reviews. Login task counts remain unchanged until remaining criteria are checked.",
+        "Historical session rows can retain raw device data internally until normal session expiry/retention cleanup, but neither customer nor CRM list exposes it. This local change does not claim a deployment or production data cleanup."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "7c5724c925dc97c2d6952f8365150bc3f60602234c2a4e11d410f7c3e3b9813c"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "62f058317ddb3063bfb2b74371acca6705b6bef97888661db9518b8a141c059b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+          "sha256": "978837f326b63f908105408f46c3f100fdfa0f9d9bd2e0d64820d2984933d4b9"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "ff5008f407d6d1303b3b670348544dfc2c984c23cfb38c7d93c4dacd8c862601"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
+        },
+        {
+          "path": "apps/api/src/auth/device-trust-ip.ts",
+          "sha256": "17f24d8563a3b1ed5a7a0f167bfb3ac46a9f12d820d0100e22a2b7200c58f4e9"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-device-trust-atomic-api.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-atomic-crm-api.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-atomic-crm-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-format-final.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-atomic-format.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-atomic-privacy-api.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-atomic-privacy-format.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-atomic-races.log.gz"
+      ]
     }
   ]
 }
