@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+  "source_revision": "a22de92046b68f548417dbfae8e0c1b934097299",
   "active_step": "R01",
-  "next_action": "R01: review 02-auth-users-admin.md#T-02.01.02 login authentication flow, then .03 login OTP and .04 forced password change. Reuse prior auth/session API evidence and 40 distinct passing built-app login UI/recovery cases; inspect exact remaining criteria before editing. Login page .01 is verified. F15 has eight verified tasks and one archival partial for contracts/retention. Lost-contact approver/evidence question remains pending.",
+  "next_action": "R01: finish trusted-device management for 02-auth-users-admin.md#T-02.01.02. Add own-device list/revoke UI and API, serialize trust authorization with session creation/revocation, and review focused ownership/CSRF/step-up/concurrency cases. Network trust fix a22de92 passes 46 API and 6 migration cases across focused runs. Then align or benchmark Argon2id settings and review .03 OTP / .04 forced password change. Reuse unchanged prior evidence; lost-contact policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Login UI T-02.01.01 is verified. Next review login/OTP/forced-password-change criteria and reuse session repairs/CRM permission-race evidence. Finish remaining rotation/revocation callers, CSRF alternatives, approximate IP location and trusted-device criteria."
+        "Login UI .01 is verified; login .02 network trust is repaired but full acceptance is pending device management, atomic trust authorization and Argon2 parameter evidence. Continue .03 OTP / .04 forced password change, rotation/revocation callers, CSRF alternatives and approximate session location."
       ]
     },
     {
@@ -440,6 +440,10 @@
     {
       "id": "R01-login-ui",
       "review_record": "audit/evidence/step-reviews.json#R01-login-ui"
+    },
+    {
+      "id": "R01-device-trust-network",
+      "review_record": "audit/evidence/step-reviews.json#R01-device-trust-network"
     }
   ],
   "deferred_improvements": [

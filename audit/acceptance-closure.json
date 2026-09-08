@@ -3441,7 +3441,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+      "reviewed_sha": "a22de92046b68f548417dbfae8e0c1b934097299",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 185,
       "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
@@ -3453,7 +3453,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "3208798f2c3c4eabb3b0899a1fef7bf2738d283202a6b09da27ad6799f0ae980"
+          "sha256": "7973ec017d40c4fdec081b5639687345d164bfbd15e8e12aebfcce9fb49d9b42"
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
@@ -3615,12 +3615,12 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
-        "previous_reviewed_sha": "66400126602cf78938a133b2a528f8410ee15fa9",
-        "review": "Authentication, OTP, resend and forced-password-change request/acknowledgement logic is unchanged. Existing 32 production-browser recovery cases pass. The shared layout changes only text colors; no API, permission, dependency, migration or requirements change. Login request payloads and error/rate-limit handlers remain unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-login-ui",
+        "source_revision": "a22de92046b68f548417dbfae8e0c1b934097299",
+        "previous_reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+        "review": "Network trust lookup/upsert changed; account/IP delay, broad device limits and OTP admissions remain unchanged. Focused login-rate HTTP and auth-delivery checks pass; unchanged shared/edge/browser evidence is reused.",
+        "record": "audit/evidence/step-reviews.json#R01-device-trust-network",
         "paths": [
-          "apps/web/src/components/AuthLayout.tsx"
+          "apps/api/src/auth/auth.service.ts"
         ]
       }
     },

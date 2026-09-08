@@ -1882,6 +1882,110 @@
           "sha256": "6f0339ade3ea069defe50fed7977fbe15d31dd803389fdb5f60ca6c724cdca52"
         }
       ]
+    },
+    {
+      "id": "R01-device-trust-network",
+      "date": "2026-09-08",
+      "source_revision": "a22de92046b68f548417dbfae8e0c1b934097299",
+      "summary": "Require OTP when a trusted browser changes its server-observed IP address; preserve opt-in and existing trust during migration.",
+      "review": [
+        "T-02.01.02 requires new/suspicious-device checks and revocable 30-day trust. Login previously accepted the opaque browser cookie at any address. It now requires an unexpired cookie hash and matching inet address; changed, unknown and null legacy addresses require OTP. Staff still require OTP on trusted devices.",
+        "Address comes from the HTTP server, overriding client fingerprint input. The helper validates IP addresses, normalizes common IPv4-mapped peers and rejects CIDR, forwarded lists and scoped interface identifiers. PostgreSQL normalizes IPv6 comparison. Browser-version changes do not invalidate identity.",
+        "Only successful login OTP with trustDevice=true records or refreshes address, browser hint and 30-day expiry. Opt-out leaves the existing trust record unchanged. Password-only attempts cannot change the trusted address; changed-address attempts create no session or session cookies.",
+        "Generated migration 0121 adds one nullable inet column. Snapshot comparison changed only device_trusts and snapshot identity. Existing rows and expiry survive upgrade with null address; no address is invented. Journal time was advanced beyond the existing future-dated predecessor to preserve migration order. Apply migration before the new API; network enforcement is complete only after older API instances are drained.",
+        "Reviewed diff and reused unchanged edge/OTP/rate-limiter/UI evidence. Focused login rate and session HTTP checks pass with fixtures explicitly seeding the OTP-verified local address. This step adds conservative same-address enforcement, not an external IP reputation or geographical risk service."
+      ],
+      "checks": [
+        "46 distinct API/unit cases pass across four focused files. Initial invocation: 44/45, with a test-only null-cookie-header assertion failure. Final delivery invocation: 18/18, including added opt-out coverage; other 28 passing cases are unchanged and reused.",
+        "6 distinct PostgreSQL migration cases pass across three files and focused runs. New upgrade/repeat test and four notification-lineage cases passed initially. Baseline simulation initially retained the newly added column while deleting migration history; the fixture now removes it to model the old schema. Corrected baseline passes fresh install, populated legacy upgrade and repeat migration.",
+        "API and DB typechecks, focused ESLint and formatting pass. Snapshot check passes both guard tests and generation without schema drift. git diff --check passes. No web change, browser rerun or renewed global checkpoint."
+      ],
+      "remaining": [
+        "T-02.01.02 remains pending full acceptance. Add user-facing trusted-device listing/revocation and serialize trust checks with session issuance so revocation/expiry cannot race a trusted login. Review ownership, CSRF, step-up and concurrency before acceptance.",
+        "Hashing currently uses library defaults; canonical requirement specifies Argon2id 37 MiB/t3/p1 or a benchmarked equivalent. Confirm or align password creation paths before closing login requirements. Incorrect old parameter/stub comments were corrected, not treated as proof.",
+        "Continue T-02.01.03 OTP and T-02.01.04 forced-password-change acceptance. Reuse existing UI/recovery evidence; no task is marked verified by this bounded network fix."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "7973ec017d40c4fdec081b5639687345d164bfbd15e8e12aebfcce9fb49d9b42"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "009c6f7486e8988819bfc7ae772e74231bd9164d5b4d5413624d6e3297f260ee"
+        },
+        {
+          "path": "apps/api/src/auth/device-trust-ip.test.ts",
+          "sha256": "2c68134950f6d35acb349651ae8a164cc3ccda01913cee352180186fa21a5af7"
+        },
+        {
+          "path": "apps/api/src/auth/device-trust-ip.ts",
+          "sha256": "17f24d8563a3b1ed5a7a0f167bfb3ac46a9f12d820d0100e22a2b7200c58f4e9"
+        },
+        {
+          "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+          "sha256": "84505dc936ea2475f70255b0d7985fc30d03ec96b26d7dc53e0ab8eebb55002f"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "4cc7bdd78fa894db5023c70436f7952cd579e47eb411c38cc644036640571864"
+        },
+        {
+          "path": "packages/db/drizzle/production/0121_device_trust_ip.sql",
+          "sha256": "fdbd70b55665f2e7215f5b791543eb1414e3d01b4141f73e232a08b9be56018d"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0121_snapshot.json",
+          "sha256": "069de3ef96f4a3f25916767ad91ba9ea4f3626bac2e5084ac3af93760a062ce6"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "52b0defe37448932516c2e63cc718bb991f88c334afce702d46642a0b549d122"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "d85bb65d0f66d3a70d158ffe2a9988d68ac9a028ae686c3156e282e19f6f6b37"
+        },
+        {
+          "path": "packages/db/src/migrate.device-trust-ip.test.ts",
+          "sha256": "5176048b69f1e204f6e5dfd89745b321313e5ea25844f6a36542041aedee214d"
+        },
+        {
+          "path": "packages/db/src/migrate.notification-template-lineage.test.ts",
+          "sha256": "82ddb480e5128a70d6620edc9dc9d5e390e1c367282bb81e733bdbf11ceb4dba"
+        },
+        {
+          "path": "packages/db/src/schema/device-trust.ts",
+          "sha256": "c96fc16b26dc20076f48050894ce9d95a796c361f97beadf01010818b4e42351"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-device-trust-ip-api-final.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-api.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-db-types.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-format-final.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-format.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-generate.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-migrations-final.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-migrations.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-snapshot.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+      ]
     }
   ]
 }
