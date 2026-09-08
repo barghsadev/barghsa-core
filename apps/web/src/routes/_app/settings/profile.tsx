@@ -18,6 +18,7 @@ import {
 import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
+import { refreshProfileContext } from '../../../lib/profile-context.js';
 
 export const Route = createFileRoute('/_app/settings/profile')({
   component: SettingsProfilePage,
@@ -127,6 +128,9 @@ function SettingsProfilePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [defaultProfileId, setDefaultProfileId] = useState<string | null>(null);
+  const [availableProfiles, setAvailableProfiles] = useState<ProfileSummary[]>([]);
+  const [settingDefault, setSettingDefault] = useState(false);
+  const [defaultError, setDefaultError] = useState<string | null>(null);
 
   // Editable form fields
   const [title, setTitle] = useState('');
@@ -218,6 +222,7 @@ function SettingsProfilePage() {
         activeProfileId: string | null;
       } = await listResponse.json();
 
+      setAvailableProfiles(listData.profiles);
       if (!listData.activeProfileId) {
         setError(t('settings.profile.error.notFound', locale));
         return;
@@ -270,6 +275,27 @@ function SettingsProfilePage() {
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
+
+  async function changeDefault(profileId: string) {
+    if (!profileId || settingDefault || saving || profileId === defaultProfileId) return;
+    setSettingDefault(true);
+    setDefaultError(null);
+    try {
+      const response = await fetch(`/api/profiles/switch/${encodeURIComponent(profileId)}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+      });
+      if (!response.ok) throw new Error('Profile switch failed');
+      const result: { activeProfileId?: string } = await response.json();
+      if (result.activeProfileId !== profileId) throw new Error('Unexpected profile');
+      refreshProfileContext();
+    } catch {
+      setDefaultError(t('dashboard.profile.switchError', locale));
+    } finally {
+      setSettingDefault(false);
+    }
+  }
 
   // ── Save handler ─────────────────────────────────────────────────────
 
@@ -375,6 +401,36 @@ function SettingsProfilePage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">{t('settings.profile.title', locale)}</h1>
       </div>
+
+      {availableProfiles.length > 0 && (
+        <section aria-labelledby="default-profile-title" className="mb-6 rounded-lg border p-4">
+          <h2 id="default-profile-title" className="mb-3 text-base font-semibold">
+            <label htmlFor="settings-profile-switcher">
+              {t('dashboard.profile.default.title', locale)}
+            </label>
+          </h2>
+          <select
+            id="settings-profile-switcher"
+            value={defaultProfileId ?? ''}
+            onChange={(event) => void changeDefault(event.target.value)}
+            disabled={loading || saving || settingDefault}
+            className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+          >
+            {!defaultProfileId && (
+              <option value="" disabled>
+                {t('dashboard.profile.choose', locale)}
+              </option>
+            )}
+            {availableProfiles.map((item) => (
+              <option key={item.id} value={item.id}>
+                {[item.title, item.firstName, item.lastName].filter(Boolean).join(' ') ||
+                  t('dashboard.profile.unnamed', locale)}
+              </option>
+            ))}
+          </select>
+          {defaultError && <p role="alert">{defaultError}</p>}
+        </section>
+      )}
 
       {/* Loading */}
       {loading && (

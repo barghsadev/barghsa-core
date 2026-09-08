@@ -26,6 +26,84 @@ async function openProfileMenu(page: Page) {
     await menu.click();
   }
 }
+
+for (const locale of ['fa', 'en'] as const) {
+  test(`profile settings changes the saved default and recovers failed switches (${locale})`, async ({
+    page,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shell(page);
+    await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page
+      .context()
+      .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'settings-token' }]);
+    let active = 'first';
+    let attempts = 0;
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          profiles: [profile('first'), profile('second')],
+          activeProfileId: active,
+          hasDefault: true,
+        },
+      })
+    );
+    await page.route(/\/api\/profiles\/(first|second)$/, (route) => {
+      const id = route.request().url().split('/').at(-1)!;
+      return route.fulfill({ json: { ...profile(id), addresses: [], legalInfo: null } });
+    });
+    await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/profiles/switch/second', (route) => {
+      expect(route.request().method()).toBe('POST');
+      expect(route.request().headers()['x-csrf-token']).toBe('settings-token');
+      attempts++;
+      if (attempts === 1) return route.fulfill({ status: 503, json: {} });
+      if (attempts === 2) return route.fulfill({ json: { activeProfileId: 'wrong-profile' } });
+      active = 'second';
+      return route.fulfill({ json: { activeProfileId: active } });
+    });
+    await page.goto('/settings/profile');
+    const preferences = page.getByRole('region', {
+      name: locale === 'fa' ? 'انتخاب پروفایل پیش‌فرض' : 'Select Default Profile',
+    });
+    const selector = preferences.getByRole('combobox');
+    await expect(selector).toHaveValue('first');
+    await page.evaluate(() => {
+      document.documentElement.dataset.profileSettingsSentinel = 'retained';
+    });
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      await selector.selectOption('second');
+      await expect.poll(() => attempts).toBe(attempt);
+      await expect(preferences.getByRole('alert')).toHaveText(
+        locale === 'fa' ? 'تغییر پروفایل با خطا مواجه شد' : 'Failed to switch profile'
+      );
+      await expect(selector).toBeEnabled();
+      await expect(selector).toHaveValue('first');
+    }
+    await selector.selectOption('second');
+    await expect(selector).toHaveValue('second');
+    await expect(preferences.getByRole('alert')).toHaveCount(0);
+    expect(attempts).toBe(3);
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-profile-settings-sentinel',
+      'retained'
+    );
+    await expect(page).toHaveURL(/\/settings\/profile$/);
+    await openProfileMenu(page);
+    const sidebarSelector = page.locator('#profile-switcher');
+    await expect(sidebarSelector).toHaveValue('second');
+    expect(await selector.getAttribute('id')).not.toBe(await sidebarSelector.getAttribute('id'));
+    await page.reload();
+    await expect(selector).toHaveValue('second');
+  });
+}
+
 for (const locale of ['fa', 'en'] as const) {
   test(`accepting an invitation refreshes profiles and uses rotated CSRF (${locale})`, async ({
     page,
