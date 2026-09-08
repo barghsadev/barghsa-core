@@ -2620,6 +2620,115 @@
         "audit/evidence/612434d/barghsa-notification-lint.log.gz",
         "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
       ]
+    },
+    {
+      "id": "R01-step-up-rotation",
+      "date": "2026-09-08",
+      "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+      "summary": "Rotate session, refresh and CSRF credentials atomically after password step-up and verify browser retries use the replacement cookie.",
+      "review": [
+        "T-02.02.01 and T-06.01.04.03 require identifier rotation at step-up. AuthController now delivers replacement session, refresh and readable CSRF cookies only after verification commits. The response retains its message/timestamp shape and contains no new credential fields.",
+        "verifyStepUp retains account-before-session locks, checks the current password and uses rotateSession inside its own transaction. The old session is revoked, old family credentials consumed, replacement credentials inserted, and only the replacement receives the persisted step-up timestamp. Audit insertion and a final original-deadline check precede commit. Caller-owned rotation neither commits nor releases the client and propagates database failures. Its success log is suppressed before an outer transaction commits.",
+        "PostgreSQL cases prove one success under concurrent submission, one active replacement, original absolute expiry and device metadata preserved, a matching private audit, old identifier rejection and family revocation/alert on old refresh reuse. Audit failure and idle/absolute expiry while audit insertion waits restore all original sessions and refresh rows, with no step-up audit.",
+        "Compiled HTTP cases adopt actual Set-Cookie responses, reject the old identifier and old CSRF token, then exercise session and trusted-device ownership checks with new credentials. The trusted-device account-race fixture now observes its actual blocker because authenticated validation waits before entering the domain method.",
+        "Reviewed all five direct browser step-up callers: session security, trusted devices, TeamActionDialog, wallet receipt decisions and reminder toggles. Each constructs CSRF headers at the actual retry through withCsrf; email-provider captured requests also rebuild headers. Browser cases now return changing Set-Cookie values and verify retries retain the intended target/configuration with the current token. Current-session display refresh after rotation remains a separate session-list follow-up."
+      ],
+      "checks": [
+        "91/91 session unit/PostgreSQL/compiled-HTTP cases pass, plus 40/40 controller cases. Existing invalid account/session/password and refresh-family cases remain covered. No failures remain in selected tests.",
+        "16/16 production-browser cases pass on desktop Chromium/mobile Chrome: four session-revocation, four provider-save and eight trusted-device cases across Persian/English, with light/dark trusted-device coverage. Wrong password, repeated verification, failure/retry and pending controls remain exercised. Other unchanged direct callers were reviewed in source; no new browser execution for receipt/reminder flows is claimed.",
+        "API/web typechecks, focused ESLint, final formatting and git diff checks pass. Initial API typecheck found the old controller test calling the previous two-argument method; its mock/signature were updated and explicit production/test cookie plus failed-commit cases added. Final typecheck passes after fixture builds end.",
+        "Existing web production index/manifest hashes match the saved 8f857aa build, and the served index matches that build. No frontend product source changed, so prior route-budget evidence is reused. Browser preview stopped after completion. No schema, dependency or response-body shape changed; no global checkpoint or deployed cookie claim is renewed."
+      ],
+      "remaining": [
+        "T-02.02.01 remains partial. Review required login/password/privilege/recovery boundaries and finalize centralized cookie policy/path against E06 and retained Vite SPA.",
+        "Refresh the visible current-session list after rotation, then finish the existing approximate-location, revocation, CSRF alternative and sensitive-action caller requirements. Lost-contact policy remains pending."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.test.ts",
+          "sha256": "5988fe4a86fa61023db019538ac50370a4748b8e9756af12b1f5f719d182fb49"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "9ab812c1aaeff6e3014ae336e8149e4746947eb276ba06dfd78288a4dc6bd231"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "01947f280709fa9db8925c67a5f36cd71dbf2946a6fb9af460c31ec17dc72f26"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "a82b6792d0fc97530909f290d283a4d8c94b7a0a3948befddd1e9834532bcfe1"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "8dfb458ce08062e9528f678428de13e33aa8abd1a9802330346219612bf19f00"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+          "sha256": "5eb9b8b523173df265769f265bf62c3c6e97569b8b775d4a60086a0291425439"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-recovery.spec.ts",
+          "sha256": "0b763be35c6a5ad5072974f639181d079e088e78d9d48794172216f19245097e"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "702b3579da90f71b06786e142fdb86c59c401ed04fbbe70b9f2b467c6a316efa"
+        },
+        {
+          "path": "apps/web/e2e/trusted-devices.spec.ts",
+          "sha256": "3ac26c73de92b748369786841b95ede957cd951f504d8086898c5ab8595a991d"
+        },
+        {
+          "path": "apps/web/src/lib/csrf.ts",
+          "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "84db9bc90bc87098959424038ed26c2b19235ca5adeecb7a41a89bf8308fb3e9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9db713709ad9ed2da7f51ebf0396440275ecb67f03627c684d8c003357f6b794"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "d3d51fb792564b7fa9cb1f966eac48b98a6db400673d92792396e8a4383b2073"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "d060ae82b73825095a228b670218e5c7773008fb383a49415eb9e9952e23d5aa"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "3d92c53fed4fdf5f6e596686a268fc1f837c940328e196ef3b83c552adcff35f"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-api-types.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-api.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-browser-format.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-browser.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-controller-format.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-controller-tests.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-preview-binding.log.gz",
+        "audit/evidence/r01/barghsa-step-up-rotation-preview.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ]
     }
   ]
 }

@@ -3,7 +3,7 @@
   "scope": "Historical skips reconciled with recorded acceptance; not a dispatch queue",
   "source_sha256": {
     "audit/skipped-tasks.json": "e4394d905111e9f5d319185eb47aeb26bd75927b6fc2ac99c449b10cd42e4947",
-    "audit/acceptance-closure.json": "f57d9bae876d17fcafddb704e8411067291225e997ae6b5adda3f835a253b2c2"
+    "audit/acceptance-closure.json": "4cec3c0bd0d29a6709f112e5abf887e50614ea5005de10603fa7b1c2082b58b9"
   },
   "historically_skipped": 58,
   "acceptance_verified": 3,
@@ -314,7 +314,7 @@
       "historical_assessment": "partial",
       "direct_merged_prs": [],
       "acceptance_status": "acceptance_verified",
-      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+      "reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
       "limitations": [
         "Production database deployment is not certified by this local review. Global coverage and broader F20 localization/numeral requirements remain separate open gates."
       ],
@@ -338,7 +338,7 @@
       "historical_assessment": "partial",
       "direct_merged_prs": [],
       "acceptance_status": "acceptance_verified",
-      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+      "reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
       "limitations": [
         "This certifies the implemented numeral-formatting task, not every F20 localization or screen-reader requirement. Identifiers, customer-authored content, canonical input values and business date strings retain their own semantics. Production deployment and failing combined coverage groups remain separate gates."
       ],
