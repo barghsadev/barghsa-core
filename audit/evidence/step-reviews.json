@@ -384,6 +384,47 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "Full CRM detail lacks agent relationships, verification history and last-password-change display; address editing remains unimplemented. Review remaining correction/archive requirements and role/session matrices."
+    },
+    {
+      "id": "R01-crm-password-change-date",
+      "date": "2026-09-08",
+      "source_revision": "a7a423b172aea26c7f0b8025fdec51127f46688a",
+      "summary": "CRM overview shows the last recorded password change in the viewer account timezone, or a localized Not recorded label.",
+      "review": "Uses only MAX(password_history.created_at) scoped to the profile account. Reviewed forced-change and reset writers: old-password history is saved in the credential transaction. Does not infer a password change from user.updated_at or expose hashes. Real HTTP test excludes another account and unrelated user updates. Verified fa/en display at a UTC date crossing the configured America/Los_Angeles calendar boundary.",
+      "checks": [
+        "Red:1 new HTTP case failed because lastPasswordChange was absent.",
+        "30 CRM API tests pass in3 files. A later typecheck found an untyped test response; corrected only its type annotation. API/web typechecks then pass.",
+        "4 production desktop/mobile Chromium cases pass in fa/en, including password date display and unchanged profile contact edit/retry.",
+        "50 dictionary tests, i18n/web builds, focused ESLint/format and41 complete-route budgets pass."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "3ca7155f7298ea66172def837f241f29ad6a20dc54c0d6d46dbe2b81745f0efd"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+          "sha256": "3dda64db129991ef16ef9b8e23e722698c1ca65b4c207c5df4e77270704b4aa0"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "3208798f2c3c4eabb3b0899a1fef7bf2738d283202a6b09da27ad6799f0ae980"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "c2ffc67ea8e76fa45be333faa30a779063206c9bcb765a67648c8152f6fab99e"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "40eafc8601e18a4d43ea96305e5e6b757a72e7c61ac091edca25f2318aba541a"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "0927edafc88ef29a1980a8f468b326f935db04b2f5a1f8fa894e450417dd5393"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "The profile detail task stays partial: agent relationships and verification history tabs remain placeholders; required route and accessibility review remain. Historical/imported accounts without trustworthy password-history records remain Not recorded."
     }
   ]
 }
