@@ -2,6 +2,18 @@ import { lookup } from './lookup.js';
 import { t as sharedText, type I18nDictionary, type Locale } from './index.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'crm.address.edit': 'ویرایش آدرس',
+  'crm.address.saved': 'آدرس ذخیره شد.',
+  'crm.address.confirm': 'تأیید تغییر آدرس',
+  'crm.address.chooseProvince': 'استان را انتخاب کنید',
+  'crm.address.chooseCity': 'شهر را انتخاب کنید',
+  'crm.address.provinceError': 'استان‌ها بارگذاری نشد. برای تغییر محل، دوباره تلاش کنید.',
+  'crm.address.cityError': 'شهرها بارگذاری نشد. برای تغییر محل، دوباره تلاش کنید.',
+  'crm.address.locationInvalid': 'یک شهر فعال از استان انتخاب‌شده را انتخاب کنید.',
+  'crm.address.fullAddress': 'آدرس کامل',
+  'crm.address.fullInvalid': 'آدرسی بین ۱ تا ۵۰۰ نویسه وارد کنید.',
+  'crm.address.postalInvalid': 'کد پستی ۱۰ رقمی وارد کنید که با ۱ تا ۹ شروع شود.',
+  'crm.address.reload': 'بارگذاری دوباره پروفایل و کنار گذاشتن ویرایش‌ها',
   'crm.documents.title': 'مدارک شخص حقوقی',
   'crm.documents.restricted': 'برای مشاهده این مدارک به دسترسی بررسی هویت نیاز دارید.',
   'crm.documents.expiry':
@@ -270,6 +282,18 @@ export const fa: I18nDictionary = {
   'crm.list.PENDING_VERIFICATION': 'در انتظار تأیید',
 };
 export const en: I18nDictionary = {
+  'crm.address.edit': 'Edit address',
+  'crm.address.saved': 'Address saved.',
+  'crm.address.confirm': 'Confirm address changes',
+  'crm.address.chooseProvince': 'Select province',
+  'crm.address.chooseCity': 'Select city',
+  'crm.address.provinceError': 'Provinces could not be loaded. Retry to change the location.',
+  'crm.address.cityError': 'Cities could not be loaded. Retry to change the location.',
+  'crm.address.locationInvalid': 'Select an active city in the selected province.',
+  'crm.address.fullAddress': 'Full address',
+  'crm.address.fullInvalid': 'Enter an address of 1–500 characters.',
+  'crm.address.postalInvalid': 'Enter a 10-digit postal code starting with 1–9.',
+  'crm.address.reload': 'Reload profile and discard edits',
   'crm.documents.title': 'Legal documents',
   'crm.documents.restricted': 'Verification access is required to view these documents.',
   'crm.documents.expiry': 'Download links expire after five minutes. Refresh to obtain new links.',

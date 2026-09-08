@@ -1,3 +1,4 @@
+import { CrmAddressEditor } from '../components/CrmAddressEditor.js';
 import { CrmLegalDocuments } from '../components/CrmLegalDocuments.js';
 import { formatDate } from '@barghsa/i18n/date-time';
 import { CrmProfileRecords } from '../components/CrmProfileRecords.js';
@@ -63,6 +64,7 @@ interface Address {
   postalCode: string;
   mainAddress: boolean;
   createdAt: string;
+  updatedAt: string;
 }
 
 interface SessionEntry {
@@ -207,6 +209,8 @@ function CrmProfileDetailContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [editingAddress, setEditingAddress] = useState<string | null>(null);
+  const [addressSaved, setAddressSaved] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editFields, setEditFields] = useState<EditableFields>({
     title: '',
@@ -455,6 +459,7 @@ function CrmProfileDetailContent() {
                 {data.viewerPermissions?.canEdit && !profile.archived && (
                   <button
                     onClick={handleStartEdit}
+                    disabled={editingAddress !== null}
                     className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                   >
                     {t('crm.profile.edit', locale)}
@@ -944,49 +949,96 @@ function CrmProfileDetailContent() {
       )}
 
       {/* Tab: Addresses */}
-      {activeTab === 'addresses' && (
-        <div id="panel-addresses" role="tabpanel" aria-labelledby="tab-addresses">
-          {addresses.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">{t('crm.profile.noAddresses', locale)}</p>
-          ) : (
-            <div className="space-y-4">
-              {addresses.map((addr) => (
-                <div
-                  key={addr.id}
-                  className={`border rounded-lg p-4 ${addr.mainAddress ? 'border-blue-300 bg-blue-50' : 'border-gray-200'}`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-500">
-                      {t('crm.profile.tab.addresses', locale)}
+      <div
+        id="panel-addresses"
+        role="tabpanel"
+        aria-labelledby="tab-addresses"
+        hidden={activeTab !== 'addresses'}
+      >
+        {addressSaved && (
+          <p role="status" className="mb-3 text-sm">
+            {t('crm.address.saved', locale)}
+          </p>
+        )}
+        {addresses.length === 0 ? (
+          <p className="text-gray-500 text-center py-8">{t('crm.profile.noAddresses', locale)}</p>
+        ) : (
+          <div className="space-y-4">
+            {addresses.map((addr) => (
+              <div
+                key={addr.id}
+                className={`border rounded-lg p-4 ${addr.mainAddress ? 'border-blue-300 bg-blue-50' : 'border-gray-200'}`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-500">
+                    {t('crm.profile.tab.addresses', locale)}
+                  </span>
+                  {addr.mainAddress && (
+                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+                      {t('crm.profile.label.main', locale)}
                     </span>
-                    {addr.mainAddress && (
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-                        {t('crm.profile.label.main', locale)}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-gray-900">{addr.fullAddress}</p>
-                  <DetailRow
-                    label={t('crm.profile.field.postalCode', locale)}
-                    value={addr.postalCode}
-                  />
-                  <DetailRow
-                    label={t('crm.profile.field.province', locale)}
-                    value={referenceName(addr.provinceName, locale)}
-                  />
-                  <DetailRow
-                    label={t('crm.profile.field.city', locale)}
-                    value={referenceName(addr.cityName, locale)}
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    {t('crm.profile.label.created', locale)}: {time.format(addr.createdAt)}
-                  </p>
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+                {editingAddress === addr.id ? (
+                  <CrmAddressEditor
+                    profileId={profile.id}
+                    address={addr}
+                    onCancel={() => setEditingAddress(null)}
+                    onSaved={(saved, updatedAt) => {
+                      setData((current) =>
+                        current
+                          ? {
+                              ...current,
+                              profile: { ...current.profile, updatedAt },
+                              addresses: current.addresses.map((item) =>
+                                item.id === saved.id ? saved : item
+                              ),
+                            }
+                          : current
+                      );
+                      setEditingAddress(null);
+                      setAddressSaved(true);
+                    }}
+                  />
+                ) : (
+                  <>
+                    <p className="text-gray-900">{addr.fullAddress}</p>
+                    <DetailRow
+                      label={t('crm.profile.field.postalCode', locale)}
+                      value={addr.postalCode}
+                    />
+                    <DetailRow
+                      label={t('crm.profile.field.province', locale)}
+                      value={referenceName(addr.provinceName, locale)}
+                    />
+                    <DetailRow
+                      label={t('crm.profile.field.city', locale)}
+                      value={referenceName(addr.cityName, locale)}
+                    />
+                    <p className="text-xs text-gray-400 mt-1">
+                      {t('crm.profile.label.created', locale)}: {time.format(addr.createdAt)}
+                    </p>
+                    {data.viewerPermissions?.canEdit && !profile.archived && !isEditing && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="mt-3"
+                        disabled={editingAddress !== null}
+                        onClick={() => {
+                          setEditingAddress(addr.id);
+                          setAddressSaved(false);
+                        }}
+                      >
+                        {t('crm.address.edit', locale)}
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Tab: Sessions */}
       {activeTab === 'sessions' && (

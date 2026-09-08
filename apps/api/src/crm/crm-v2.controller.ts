@@ -1,3 +1,4 @@
+import { crmAddressEditSchema, type CrmAddressEdit } from './crm-profile-address.js';
 import { z } from 'zod';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
@@ -29,6 +30,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
  * For LEGAL profiles, legal-entity fields are also blocked for direct edit.
  */
 export interface UpdateProfileDto {
+  address?: CrmAddressEdit;
   title?: string | null;
   /** Profile contact details; never verified account sign-in destinations. */
   email?: string | null;
@@ -253,16 +255,41 @@ export class CrmV2Controller {
     schema: {
       type: 'object',
       properties: {
+        address: {
+          type: 'object',
+          required: [
+            'id',
+            'expectedUpdatedAt',
+            'provinceId',
+            'cityId',
+            'fullAddress',
+            'postalCode',
+          ],
+          additionalProperties: false,
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            expectedUpdatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description:
+                'Exact six-digit fractional timestamp from the CRM address row; stale edits return 409',
+            },
+            provinceId: { type: 'string', format: 'uuid' },
+            cityId: { type: 'string', format: 'uuid' },
+            fullAddress: { type: 'string', minLength: 1, maxLength: 500 },
+            postalCode: { type: 'string', pattern: '^[1-9][0-9]{9}$' },
+          },
+        },
         title: { type: 'string', nullable: true, description: 'Profile title' },
         email: {
           type: 'string',
           nullable: true,
-          description: 'User email (stored on users table)',
+          description: 'Profile contact email; does not change account sign-in',
         },
         mobile: {
           type: 'string',
           nullable: true,
-          description: 'User mobile (stored on users table)',
+          description: 'Profile contact mobile; does not change account sign-in',
         },
       },
     },
@@ -301,6 +328,7 @@ export class CrmV2Controller {
     }
     const parsed = z
       .object({
+        address: crmAddressEditSchema.optional(),
         title: z.string().max(256).nullable().optional(),
         email: z.string().max(254).nullable().optional(),
         mobile: z.string().max(32).nullable().optional(),
@@ -312,7 +340,8 @@ export class CrmV2Controller {
         {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Only title, email and mobile can be edited directly with valid text values',
+          message:
+            'Only profile contacts, title and a valid existing address can be edited directly',
         },
         400
       );
@@ -321,6 +350,7 @@ export class CrmV2Controller {
     const result = await this.crmV2Service.updateProfile(
       profileId,
       {
+        ...(parsed.data.address ? { address: parsed.data.address } : {}),
         ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
         ...(parsed.data.email !== undefined ? { email: parsed.data.email } : {}),
         ...(parsed.data.mobile !== undefined ? { mobile: parsed.data.mobile } : {}),

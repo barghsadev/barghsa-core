@@ -9360,13 +9360,53 @@
             "application/json": {
               "schema": {
                 "properties": {
+                  "address": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cityId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "expectedUpdatedAt": {
+                        "description": "Exact six-digit fractional timestamp from the CRM address row; stale edits return 409",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "fullAddress": {
+                        "maxLength": 500,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "postalCode": {
+                        "pattern": "^[1-9][0-9]{9}$",
+                        "type": "string"
+                      },
+                      "provinceId": {
+                        "format": "uuid",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "expectedUpdatedAt",
+                      "provinceId",
+                      "cityId",
+                      "fullAddress",
+                      "postalCode"
+                    ],
+                    "type": "object"
+                  },
                   "email": {
-                    "description": "User email (stored on users table)",
+                    "description": "Profile contact email; does not change account sign-in",
                     "nullable": true,
                     "type": "string"
                   },
                   "mobile": {
-                    "description": "User mobile (stored on users table)",
+                    "description": "Profile contact mobile; does not change account sign-in",
                     "nullable": true,
                     "type": "string"
                   },

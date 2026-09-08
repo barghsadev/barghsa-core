@@ -1,3 +1,4 @@
+import { editCrmAddress } from './crm-profile-address.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { createHash } from 'node:crypto';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
@@ -50,6 +51,7 @@ export type CrmUpdateProfileResult =
         updatedAt: string;
       };
       user: { username: string; email: string | null; mobile: string | null };
+      address?: CrmProfileAddress;
     }
   | { error: string }
   | null;
@@ -102,6 +104,7 @@ export interface CrmProfileAddress {
   postalCode: string;
   mainAddress: boolean;
   createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -275,6 +278,7 @@ export class CrmV2Service {
     const addressResult = await pool.query(
       `SELECT a.id, a.province_id, a.city_id, a.full_address, a.postal_code, a.main_address,
               a.created_at,
+              to_char(a.updated_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS updated_at,
               json_build_object('nameFa', p.name_fa, 'nameEn', p.name_en) AS province_name,
               json_build_object('nameFa', c.name_fa, 'nameEn', c.name_en) AS city_name
        FROM addresses a
@@ -296,6 +300,7 @@ export class CrmV2Service {
         postalCode: row.postal_code as string,
         mainAddress: row.main_address as boolean,
         createdAt: (row.created_at as string) ?? '',
+        updatedAt: (row.updated_at as string) ?? '',
       })
     );
 
@@ -561,10 +566,17 @@ export class CrmV2Service {
           after[field] = value;
         }
       }
-      if (Object.keys(changes).length) {
+      const addressChange = dto.address
+        ? await editCrmAddress(client, profileId, dto.address)
+        : null;
+      if (addressChange?.changed) {
+        before.address = addressChange.before;
+        after.address = addressChange.after;
+      }
+      if (Object.keys(changes).length || addressChange?.changed) {
         const entries = Object.entries(changes);
         const updated = await client.query(
-          `UPDATE profiles SET ${entries.map(([key], index) => `${key}=$${index + 1}`).join(',')},updated_at=NOW()
+          `UPDATE profiles SET ${[...entries.map(([key], index) => `${key}=$${index + 1}`), 'updated_at=NOW()'].join(',')}
           WHERE id=$${entries.length + 1} RETURNING updated_at`,
           [...entries.map(([, value]) => value), profileId]
         );
@@ -574,7 +586,12 @@ export class CrmV2Service {
           [
             uuidv7(),
             actorUserId,
-            JSON.stringify({ profileId, scope: 'profile_contact', before, after }),
+            JSON.stringify({
+              profileId,
+              scope: dto.address ? 'profile_details' : 'profile_contact',
+              before,
+              after,
+            }),
             uuidv7(),
             ip,
           ]
@@ -584,6 +601,7 @@ export class CrmV2Service {
       await client.query('COMMIT');
       return {
         updated: true,
+        ...(addressChange ? { address: addressChange.address } : {}),
         profile: {
           id: profileId,
           title: profile.title ?? null,
