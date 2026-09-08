@@ -852,3 +852,84 @@ for (const locale of ['fa', 'en'] as const)
       );
       expect(attempts).toBe(6);
     });
+
+for (const locale of ['en', 'fa'] as const)
+  for (const profileType of ['INDIVIDUAL', 'LEGAL'] as const)
+    test(`CRM locked fields open the matching correction form (${locale}, ${profileType})`, async ({
+      page,
+    }) => {
+      await page.addInitScript((lang) => {
+        if (document.documentElement) document.documentElement.lang = lang;
+        new MutationObserver(() => {
+          document.documentElement.lang = lang;
+        }).observe(document, { childList: true });
+      }, locale);
+      const current = detail(false, true);
+      current.profile.profileType = profileType;
+      Object.assign(current.viewerPermissions, { canEditIdentity: true });
+      if (profileType === 'LEGAL')
+        Object.assign(current, {
+          legalInfo: {
+            legalName: 'Example Company',
+            nationalIdentifier: '12345678901',
+            registrationDate: null,
+            createdAt: current.profile.createdAt,
+            updatedAt: current.profile.updatedAt,
+          },
+        });
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
+      await page.route('**/api/crm/verification-cases?*', (route) =>
+        route.fulfill({
+          json: {
+            cases: [],
+            total: 0,
+            viewer: { userId: 'creator', canCreate: true, canReview: false },
+          },
+        })
+      );
+      const fields =
+        profileType === 'LEGAL'
+          ? ['legal_name', 'national_identifier']
+          : ['first_name', 'last_name', 'national_id'];
+      const selected = fields[fields.length - 1]!;
+      await page.goto(`/admin/crm/profiles/${id}`);
+      const details = page.getByRole('tab', {
+        name: locale === 'fa' ? 'جزئیات پروفایل' : 'Profile Details',
+        exact: true,
+      });
+      await details.click();
+      const panel = page.getByRole('tabpanel');
+      const links = panel.getByRole('link', {
+        name: /^Request identity correction:|^درخواست اصلاح هویت:/,
+      });
+      await expect(links).toHaveCount(fields.length);
+      for (const field of fields)
+        await expect(panel.locator(`a[href$="fieldName=${field}"]`)).toBeVisible();
+      const link = panel.locator(`a[href$="fieldName=${selected}"]`);
+      await link.focus();
+      await expect(link).toBeFocused();
+      await link.press('Enter');
+      await expect(page).toHaveURL(new RegExp(`profileId=${id}&fieldName=${selected}$`));
+      await expect(page.locator('#correction-field')).toHaveValue(selected);
+      await page.locator('#correction-value').fill('Review required');
+      // A field from the other profile type cannot preselect an unsupported correction.
+      const unsupported = profileType === 'LEGAL' ? 'national_id' : 'legal_name';
+      await page.goto(`/admin/crm/corrections?profileId=${id}&fieldName=${unsupported}`);
+      await expect(page.locator('#correction-field')).toHaveValue(fields[0]!);
+      await expect(
+        page.locator('#correction-field').locator(`option[value="${unsupported}"]`)
+      ).toHaveCount(0);
+      for (const archived of [false, true]) {
+        Object.assign(current.viewerPermissions, { canEditIdentity: archived });
+        current.profile.archived = archived;
+        if (archived)
+          Object.assign(current.profile, {
+            archivedAt: '2026-09-01T00:00:00Z',
+            archivedReason: 'Closed',
+          });
+        await page.goto(`/admin/crm/profiles/${id}`);
+        await details.click();
+        await expect(links).toHaveCount(0);
+      }
+    });

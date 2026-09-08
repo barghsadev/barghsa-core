@@ -34,10 +34,22 @@ interface Queue {
   viewer: { userId: string; canCreate: boolean; canReview: boolean };
 }
 export default function CrmCorrectionsPage() {
-  const { profileId } = useSearch({ from: '/admin/crm/corrections' });
-  return <Corrections key={profileId ?? 'queue'} profileId={profileId} />;
+  const { profileId, fieldName } = useSearch({ from: '/admin/crm/corrections' });
+  return (
+    <Corrections
+      key={(profileId ?? 'queue') + ':' + (fieldName ?? '')}
+      profileId={profileId}
+      initialField={fieldName}
+    />
+  );
 }
-function Corrections({ profileId }: { profileId: string | undefined }) {
+function Corrections({
+  profileId,
+  initialField,
+}: {
+  profileId: string | undefined;
+  initialField: string | undefined;
+}) {
   const locale = useLocale(),
     generation = useRef(0),
     detailGeneration = useRef(0),
@@ -107,12 +119,21 @@ function Corrections({ profileId }: { profileId: string | undefined }) {
         if (!response.ok) return;
         const data = await response.json();
         if (controller.signal.aborted) return;
+        if (
+          data?.profile?.id !== profileId ||
+          !['LEGAL', 'INDIVIDUAL'].includes(data.profile.profileType)
+        )
+          return;
         setProfileType(data.profile.profileType);
-        setField(data.profile.profileType === 'LEGAL' ? 'legal_name' : 'first_name');
+        const fields =
+          data.profile.profileType === 'LEGAL'
+            ? ['legal_name', 'national_identifier']
+            : ['first_name', 'last_name', 'national_id'];
+        setField(initialField && fields.includes(initialField) ? initialField : fields[0]!);
       })
       .catch(() => {});
     return () => controller.abort();
-  }, [profileId, refreshVersion]);
+  }, [profileId, initialField, refreshVersion]);
   async function select(item: Case) {
     const current = ++detailGeneration.current;
     setDetail(null);

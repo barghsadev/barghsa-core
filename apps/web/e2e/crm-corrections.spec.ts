@@ -20,7 +20,7 @@ async function shell(page: Page, locale = 'en') {
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route(`**/api/crm/profiles/${profileId}`, (route) =>
-    route.fulfill({ json: { profile: { profileType: 'INDIVIDUAL' } } })
+    route.fulfill({ json: { profile: { id: profileId, profileType: 'INDIVIDUAL' } } })
   );
 }
 for (const locale of ['en', 'fa'])

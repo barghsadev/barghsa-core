@@ -867,20 +867,44 @@ function CrmProfileDetailContent() {
             <DetailRow
               label={t('crm.profile.field.firstName', locale)}
               value={profile.firstName ?? '—'}
-              icon={isEditing ? '🔒' : undefined}
-              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
+              icon={profile.profileType === 'INDIVIDUAL' ? '🔒' : undefined}
+              iconTooltip={t('crm.profile.edit.identityLocked', locale)}
+              correctionHref={
+                profile.profileType === 'INDIVIDUAL' &&
+                data.viewerPermissions?.canEditIdentity &&
+                !profile.archived
+                  ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=first_name`
+                  : undefined
+              }
+              correctionLabel={t('crm.corrections.request', locale)}
             />
             <DetailRow
               label={t('crm.profile.field.lastName', locale)}
               value={profile.lastName ?? '—'}
-              icon={isEditing ? '🔒' : undefined}
-              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
+              icon={profile.profileType === 'INDIVIDUAL' ? '🔒' : undefined}
+              iconTooltip={t('crm.profile.edit.identityLocked', locale)}
+              correctionHref={
+                profile.profileType === 'INDIVIDUAL' &&
+                data.viewerPermissions?.canEditIdentity &&
+                !profile.archived
+                  ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=last_name`
+                  : undefined
+              }
+              correctionLabel={t('crm.corrections.request', locale)}
             />
             <DetailRow
               label={t('crm.profile.field.nationalId', locale)}
               value={profile.nationalId ?? '—'}
-              icon={isEditing ? '🔒' : undefined}
-              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
+              icon={profile.profileType === 'INDIVIDUAL' ? '🔒' : undefined}
+              iconTooltip={t('crm.profile.edit.identityLocked', locale)}
+              correctionHref={
+                profile.profileType === 'INDIVIDUAL' &&
+                data.viewerPermissions?.canEditIdentity &&
+                !profile.archived
+                  ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=national_id`
+                  : undefined
+              }
+              correctionLabel={t('crm.corrections.request', locale)}
             />
             {isEditing && (
               <p className="text-xs text-gray-400 mt-1">
@@ -932,6 +956,18 @@ function CrmProfileDetailContent() {
                   key={field}
                   label={t('crm.profile.field.' + field, locale)}
                   value={value ?? '—'}
+                  icon={
+                    ['legalName', 'nationalIdentifier'].includes(field ?? '') ? '🔒' : undefined
+                  }
+                  iconTooltip={t('crm.profile.edit.identityLocked', locale)}
+                  correctionHref={
+                    data.viewerPermissions?.canEditIdentity &&
+                    !profile.archived &&
+                    ['legalName', 'nationalIdentifier'].includes(field ?? '')
+                      ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=${field === 'legalName' ? 'legal_name' : 'national_identifier'}`
+                      : undefined
+                  }
+                  correctionLabel={t('crm.corrections.request', locale)}
                 />
               ))}
             </Section>
@@ -1258,12 +1294,16 @@ function DetailRow({
   valueClass,
   icon,
   iconTooltip,
+  correctionHref,
+  correctionLabel,
 }: {
   label: string;
   value: string;
   valueClass?: string | undefined;
   icon?: string | undefined;
   iconTooltip?: string | undefined;
+  correctionHref?: string | undefined;
+  correctionLabel?: string | undefined;
 }) {
   return (
     <div className="flex flex-col">
@@ -1281,6 +1321,15 @@ function DetailRow({
           </span>
         )}
       </span>
+      {correctionHref && correctionLabel && (
+        <a
+          href={correctionHref}
+          aria-label={correctionLabel + ': ' + label}
+          className="mt-1 text-sm text-primary underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          {correctionLabel}
+        </a>
+      )}
     </div>
   );
 }
