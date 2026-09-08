@@ -26,9 +26,9 @@ import { SESSION_COOKIE_NAME } from './cookie.helper.js';
  *
  * Design notes:
  * - GET, HEAD, OPTIONS are exempt (safe methods per HTTP spec).
- * - Unauthenticated requests (no session) are exempt — CSRF requires a
- *   session to be meaningful. Auth endpoints that create sessions (login,
- *   register) are naturally exempt because they run before a session exists.
+ * - Public auth requires JSON and the API's same-origin CORS policy.
+ *   Signed provider callbacks and refresh use independent validation.
+ *   Session-free requests must still satisfy their route's authentication.
  * - SessionContextMiddleware loads the session before this global guard runs.
  * - Failures return 403 with correlation ID and are logged as security events.
  *
@@ -38,9 +38,9 @@ import { SESSION_COOKIE_NAME } from './cookie.helper.js';
  * async updateProfile(@Req() req: AuthenticatedRequest) { ... }
  * ```
  *
- * To skip CSRF on a specific controller method (rare — auth endpoints only):
+ * Public auth without a session token must require JSON:
  * ```ts
- * @SkipCsrf()
+ * @SkipCsrf({ requireJson: true })
  * @Post('login')
  * ```
  */
@@ -74,7 +74,7 @@ export class CsrfGuard implements CanActivate {
         Reflect.getMetadata('csrfRequireJson', handler) &&
         !/^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? '')
       ) {
-        throw new ForbiddenException({ error: ErrorCodes.AUTHZ_CSRF_INVALID.code });
+        this.reject(method, 'public auth requires JSON');
       }
       return true;
     }
@@ -96,32 +96,22 @@ export class CsrfGuard implements CanActivate {
     const sessionToken = authRequest.session.csrfToken;
 
     if (!headerToken || typeof headerToken !== 'string') {
-      const correlationId = correlationIdStorage.getStore();
-      this.logger.warn(
-        `CSRF check failed: missing X-CSRF-Token header | ` +
-          `session=${authRequest.session.sessionId} | ` +
-          `method=${method} | correlationId=${correlationId ?? 'none'}`
-      );
-      throw new ForbiddenException({
-        statusCode: 403,
-        error: ErrorCodes.AUTHZ_CSRF_INVALID.code,
-      });
+      this.reject(method, 'missing X-CSRF-Token header');
     }
 
     if (headerToken !== sessionToken) {
-      const correlationId = correlationIdStorage.getStore();
-      this.logger.warn(
-        `CSRF check failed: token mismatch | ` +
-          `session=${authRequest.session.sessionId} | ` +
-          `method=${method} | correlationId=${correlationId ?? 'none'}`
-      );
-      throw new ForbiddenException({
-        statusCode: 403,
-        error: ErrorCodes.AUTHZ_CSRF_INVALID.code,
-      });
+      this.reject(method, 'token mismatch');
     }
 
     return true;
+  }
+
+  private reject(method: string, reason: string): never {
+    this.logger.warn(
+      `CSRF check failed: ${reason} | method=${method} | ` +
+        `correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+    );
+    throw new ForbiddenException({ statusCode: 403, error: ErrorCodes.AUTHZ_CSRF_INVALID.code });
   }
 }
 

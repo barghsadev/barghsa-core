@@ -87,6 +87,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
       },
     };
 
+    if (
+      httpStatus === HttpStatus.FORBIDDEN &&
+      errorCode === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code
+    ) {
+      body.requiresStepUp = true;
+    }
+
     if (exception instanceof HttpException) {
       const snapshot = readOnlineTopUpLimitFromErrorBody(exception.getResponse());
       if (snapshot) {

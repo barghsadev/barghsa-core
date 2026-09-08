@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { ForbiddenException } from '@nestjs/common';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { ForbiddenException, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { StepUpGuard, RequiresStepUp } from './step-up.guard.js';
 
@@ -32,6 +32,34 @@ describe('StepUpGuard', () => {
   beforeEach(() => {
     guard = new StepUpGuard(new Reflector());
   });
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it.each([
+    ['invalid', new Date(NaN)],
+    ['future', new Date('2099-01-01T00:00:00Z')],
+  ])('rejects a %s verification timestamp', (_name, stepUpVerifiedAt) => {
+    expect(() =>
+      guard.canActivate(createMockContext({ requiresStepUp: true, session: { stepUpVerifiedAt } }))
+    ).toThrow(ForbiddenException);
+  });
+
+  it.each([null, new Date('2000-01-01T00:00:00Z')])(
+    'does not log session credentials when step-up is required (%s)',
+    (stepUpVerifiedAt) => {
+      const debug = vi.spyOn(Logger.prototype, 'debug').mockImplementation(() => {});
+      expect(() =>
+        guard.canActivate(
+          createMockContext({
+            requiresStepUp: true,
+            session: { sessionId: 'private-session-credential', stepUpVerifiedAt },
+          })
+        )
+      ).toThrow(ForbiddenException);
+      expect(debug).toHaveBeenCalledTimes(1);
+      expect(String(debug.mock.calls[0]![0])).not.toContain('private-session-credential');
+    }
+  );
 
   describe('no step-up required (no decorator)', () => {
     it('allows request without @RequiresStepUp() decorator', () => {

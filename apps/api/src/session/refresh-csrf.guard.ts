@@ -2,17 +2,21 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   type CanActivate,
   type ExecutionContext,
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { REFRESH_COOKIE_NAME } from './cookie.helper.js';
 import { SessionService } from './session.service.js';
 
-/** Refresh can recover an idle-expired session, but still requires its CSRF token. */
+/** Require the CSRF token bound to the presented refresh credential. */
 @Injectable()
 export class RefreshCsrfGuard implements CanActivate {
+  private readonly logger = new Logger(RefreshCsrfGuard.name);
+
   constructor(@Inject(SessionService) private readonly sessions: SessionService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,6 +29,10 @@ export class RefreshCsrfGuard implements CanActivate {
       !csrfToken ||
       !(await this.sessions.validateRefreshCsrf(refreshToken, csrfToken))
     ) {
+      this.logger.warn(
+        `CSRF check failed: refresh token binding invalid | method=${request.method} | ` +
+          `correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new ForbiddenException({ statusCode: 403, error: ErrorCodes.AUTHZ_CSRF_INVALID.code });
     }
     return true;

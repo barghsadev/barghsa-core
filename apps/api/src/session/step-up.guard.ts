@@ -81,24 +81,17 @@ export class StepUpGuard implements CanActivate {
 
     if (!stepUpVerifiedAt) {
       // Never performed step-up
-      this.logger.debug(
-        `Step-up required for session ${authRequest.session.sessionId}: never verified`
-      );
+      this.logger.debug('Step-up required: never verified');
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code,
       });
     }
 
-    const now = new Date();
-    const elapsed = now.getTime() - stepUpVerifiedAt.getTime();
+    const elapsed = Date.now() - stepUpVerifiedAt.getTime();
 
-    if (elapsed >= STEP_UP_WINDOW_MS) {
-      // Step-up window has expired
-      this.logger.debug(
-        `Step-up required for session ${authRequest.session.sessionId}: ` +
-          `last verified ${elapsed}ms ago (window: ${STEP_UP_WINDOW_MS}ms)`
-      );
+    if (!Number.isFinite(elapsed) || elapsed < 0 || elapsed >= STEP_UP_WINDOW_MS) {
+      this.logger.debug('Step-up required: verification outside the permitted window');
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code,

@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { ForbiddenException } from '@nestjs/common';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { ForbiddenException, Logger } from '@nestjs/common';
 import { CsrfGuard, SkipCsrf } from './csrf.guard.js';
-import '../common/correlation-id.middleware.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 /**
  * Create a mock ExecutionContext for testing CSRF validation.
@@ -14,7 +14,7 @@ import '../common/correlation-id.middleware.js';
 function createMockContext(options: {
   method?: string;
   session?: { sessionId: string; csrfToken: string; userId: string; isAdmin: boolean };
-  csrfHeader?: string;
+  csrfHeader?: string | undefined;
   skipCsrf?: boolean;
   requireJson?: boolean;
   contentType?: string | undefined;
@@ -49,6 +49,40 @@ describe('CsrfGuard', () => {
   beforeEach(() => {
     guard = new CsrfGuard();
   });
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it.each(['missing', 'mismatch', 'public form'])(
+    'logs %s rejection with correlation and no credentials',
+    (reason) => {
+      const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
+      const correlationId = '01990d22-6699-7000-8000-000000000001';
+      const session = {
+        sessionId: 'private-session-credential',
+        csrfToken: 'private-csrf-credential',
+        userId: 'user-1',
+        isAdmin: false,
+      };
+      const context = createMockContext({
+        session,
+        csrfHeader: reason === 'missing' ? undefined : 'private-submitted-token',
+        skipCsrf: reason === 'public form',
+        requireJson: true,
+        contentType: 'text/plain',
+      });
+      correlationIdStorage.run(correlationId, () => {
+        expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+      });
+      expect(warn).toHaveBeenCalledTimes(1);
+      const log = String(warn.mock.calls[0]![0]);
+      expect(log).toContain('CSRF check failed');
+      expect(log).toContain(`correlationId=${correlationId}`);
+      expect(log).toContain('method=POST');
+      for (const secret of [session.sessionId, session.csrfToken, 'private-submitted-token']) {
+        expect(log).not.toContain(secret);
+      }
+    }
+  );
 
   describe('safe methods (GET, HEAD, OPTIONS)', () => {
     it('allows GET requests without CSRF header', () => {

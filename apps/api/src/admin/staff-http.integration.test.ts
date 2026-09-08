@@ -124,6 +124,31 @@ it('replaces roles through HTTP, revokes old sessions, and rejects disabled acco
     [userId, 'role-change@example.test', 'test-only']
   );
   const oldSession = await session(userId);
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW()+INTERVAL '1 hour' WHERE user_id='bootstrap'"
+  );
+  try {
+    const denied = await fetch(`${http.base}/api/admin/users/${userId}/roles`, {
+      method: 'PUT',
+      headers: adminHeaders,
+      body: JSON.stringify({ roleIds: ['role-finance'] }),
+    });
+    expect(denied.status, await denied.clone().text()).toBe(403);
+    expect(await denied.json()).toMatchObject({
+      error: { code: 'AUTHZ:STEP_UP_REQUIRED' },
+      requiresStepUp: true,
+    });
+    expect(
+      (await http.pool.query('SELECT role_id FROM user_roles WHERE user_id=$1', [userId])).rows
+    ).toEqual([]);
+    expect((await fetch(`${http.base}/api/auth/sessions`, { headers: oldSession })).status).toBe(
+      200
+    );
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='bootstrap'"
+    );
+  }
   const response = await fetch(`${http.base}/api/admin/users/${userId}/roles`, {
     method: 'PUT',
     headers: adminHeaders,

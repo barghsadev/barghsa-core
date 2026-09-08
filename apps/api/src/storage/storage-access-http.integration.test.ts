@@ -67,6 +67,7 @@ it('requires CSRF and recent step-up before any storage mutation or connection p
       body: '{}',
     });
     expect(withoutCsrf.status).toBe(403);
+    expect(await withoutCsrf.json()).not.toHaveProperty('requiresStepUp');
     const response = await fetch(`${http.base}/api/admin/storage/${path}`, {
       method,
       headers: adminHeaders,
@@ -76,6 +77,7 @@ it('requires CSRF and recent step-up before any storage mutation or connection p
     const body = (await response.json()) as { requiresStepUp?: boolean; error?: unknown };
     expect(body, `${method} ${path}`).toMatchObject({
       error: { code: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code },
+      requiresStepUp: true,
     });
   }
 });

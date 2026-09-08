@@ -28,6 +28,7 @@ it.each([
   expect(response.headers.get('cache-control')).toContain('private');
   expect(response.headers.get('cache-control')).toContain('no-store');
   const body = (await response.json()) as { error: { code: string; correlationId: string } };
+  expect(body).not.toHaveProperty('requiresStepUp');
   expect(body.error.code).toEqual(expect.any(String));
   expect(body.error.correlationId).toMatch(
     /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
