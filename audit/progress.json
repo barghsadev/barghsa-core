@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+  "source_revision": "e478e080315ea6acc7d24cdeb74ef79307325c6c",
   "active_step": "R01",
-  "next_action": "Continue R01 from four reviewed partial session tasks in acceptance-closure.json: trace required rotation/revocation callers and reconcile public-auth CSRF alternatives, then review auth rate limiting. Do not repeat the completed error/revocation/reuse-alert/atomic-step-up repairs or their unchanged checks.",
+  "next_action": "Continue R01: review auth rate-limit task02#T-02.04.01 against canonical rolling account/IP/destination limits and existing real-PostgreSQL evidence. Four session tasks have explicit partial dispositions; remaining rotation/revocation caller coverage and device-location requirements are recorded there. Completed local auth repairs must not be replayed.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -431,6 +431,20 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "36 verified,16 partial,270 pending. Four reviewed partial tasks retain missing criteria; no whole-group acceptance claim."
+    },
+    {
+      "id": "R01-public-auth-csrf",
+      "date": "2026-09-08",
+      "source_revision": "e478e080315ea6acc7d24cdeb74ef79307325c6c",
+      "summary": "Required JSON for all ten public authentication routes, preventing cross-origin form login. Retained refresh-token CSRF and signed callback guards. Added preflight-policy and all-public-route checks.",
+      "review": "The red HTTP case returned200 and created a session from a form submission. Reviewed every auth skip annotation; only refresh retains the separate guard without JSON. Safe methods remain unchanged. Callback controller cases and the generic independent-auth guard case pass.",
+      "checks": [
+        "234 auth/session checks in18 files pass",
+        "23 later focused checks in3 files pass, including new route/preflight cases; totals overlap",
+        "API typecheck, focused ESLint and diff review pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Whole CSRF acceptance remains partial pending complete route review and literal requirement reconciliation. No external origin or deployment authorization change."
     }
   ],
   "deferred_improvements": [],

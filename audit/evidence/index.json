@@ -386,6 +386,48 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "encoding": "gzip",
       "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-r01-public-auth-red.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-red.log.gz",
+      "sha256": "45451890902a8f7a24cdbdfff17b37af318c4de1a0f1305aa75a1f03f0431f6e",
+      "encoding": "gzip",
+      "stored_sha256": "2f588bae1c1fbbf087f73792374448d1b3981208c1a37d0cc5abc6f1cbbf5dde"
+    },
+    {
+      "original_path": "/tmp/barghsa-r01-public-auth.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth.log.gz",
+      "sha256": "6683e1ec04453ee445724b81ddded0057254e9f80256285b2a901c1938b3f5bd",
+      "encoding": "gzip",
+      "stored_sha256": "c20b78a1018f6feb176cd729f0fc1ffb91ad23bceff094563b45026bb3abca1a"
+    },
+    {
+      "original_path": "/tmp/barghsa-r01-public-auth-matrix.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-matrix.log.gz",
+      "sha256": "cf0bf9e880f1f7b4d6ee3876b6315042a490398892fc633e23709ac4ec306832",
+      "encoding": "gzip",
+      "stored_sha256": "9b8dfe77cf83d23465bb04ea8035fe9eeb90e061e4c15ef9e8e89a07c884f732"
+    },
+    {
+      "original_path": "/tmp/barghsa-r01-public-auth-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types.log.gz",
+      "sha256": "89fd67191bdf7e1d7bb5e05c105ca5c69a3a34627be5efd642aa77df80a199d9",
+      "encoding": "gzip",
+      "stored_sha256": "c3f35d7c7f16d4fccc3ade2e9e9da92d314eda1e7021564e2a0a8b8f277b2ac2"
+    },
+    {
+      "original_path": "/tmp/barghsa-r01-public-auth-lint.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-r01-public-auth-matrix-lint.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-matrix-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
     }
   ]
 }
