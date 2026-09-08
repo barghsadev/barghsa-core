@@ -5,7 +5,7 @@
   "plan": "audit/fix-plan.md",
   "source_revision": "e478e080315ea6acc7d24cdeb74ef79307325c6c",
   "active_step": "R01",
-  "next_action": "Continue R01: review auth rate-limit task02#T-02.04.01 against canonical rolling account/IP/destination limits and existing real-PostgreSQL evidence. Four session tasks have explicit partial dispositions; remaining rotation/revocation caller coverage and device-location requirements are recorded there. Completed local auth repairs must not be replayed.",
+  "next_action": "Continue R01 auth rate-limit task02#T-02.04.01 against canonical edge/application, account/IP/destination rules and existing PostgreSQL evidence. Four session tasks retain explicit partial criteria. Do not repeat completed local auth repairs or unchanged checks.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -441,10 +441,11 @@
       "checks": [
         "234 auth/session checks in18 files pass",
         "23 later focused checks in3 files pass, including new route/preflight cases; totals overlap",
-        "API typecheck, focused ESLint and diff review pass"
+        "API typecheck passes after the test-fixture correction (barghsa-r01-public-auth-types-final.log); focused ESLint, formatting and diff review pass."
       ],
       "evidence": "audit/evidence/index.json",
-      "remaining": "Whole CSRF acceptance remains partial pending complete route review and literal requirement reconciliation. No external origin or deployment authorization change."
+      "remaining": "Whole CSRF acceptance remains partial pending complete route review and literal requirement reconciliation. No external origin or deployment authorization change.",
+      "review_correction": "The initial typecheck was incorrectly recorded as passing before its exit status was inspected. Its failed log is retained; the runtime checks passed. Do not use the initial type log as passing evidence. Corrected optional fixture types; final typecheck and fixture lint/format all exited0. Product behavior did not change."
     }
   ],
   "deferred_improvements": [],

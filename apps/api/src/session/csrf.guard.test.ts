@@ -17,14 +17,14 @@ function createMockContext(options: {
   csrfHeader?: string;
   skipCsrf?: boolean;
   requireJson?: boolean;
-  contentType?: string;
+  contentType?: string | undefined;
 }) {
   const { method = 'POST', session, csrfHeader, skipCsrf = false } = options;
 
   const handler = () => {};
   if (skipCsrf) {
     const descriptor = { value: handler, configurable: true };
-    SkipCsrf({ requireJson: options.requireJson })({}, 'handler', descriptor);
+    SkipCsrf({ requireJson: options.requireJson === true })({}, 'handler', descriptor);
   }
 
   return {
