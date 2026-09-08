@@ -1,4 +1,15 @@
 const en = {
+  otpTitle: 'One-time code expiry',
+  otpDescription:
+    'Applies to newly sent registration, login and recovery codes. Codes already sent keep their existing expiry.',
+  otpLoading: 'Loading code settings...',
+  otpLoadFailed: 'Could not load code settings. Reload before making changes.',
+  otpLabel: 'Code lifetime in seconds',
+  otpRange: 'Enter a whole number from {min} to {max}.',
+  otpSave: 'Save code expiry',
+  otpSaved: 'Code expiry updated.',
+  otpReload: 'Reload code settings',
+  otpConflict: 'Settings changed. Close this dialog and reload before saving.',
   title: 'Profile Verification',
   description: 'Choose how profile verification requests are handled.',
   loading: 'Loading verification configuration…',
@@ -17,6 +28,17 @@ const en = {
 } as const;
 
 const fa: Record<keyof typeof en, string> = {
+  otpTitle: 'زمان اعتبار کد یک‌بارمصرف',
+  otpDescription:
+    'برای کدهای جدید ثبت‌نام، ورود و بازیابی اعمال می‌شود. زمان اعتبار کدهای ارسال‌شده تغییر نمی‌کند.',
+  otpLoading: 'در حال بارگذاری تنظیمات کد...',
+  otpLoadFailed: 'تنظیمات کد بارگذاری نشد. پیش از تغییر، دوباره بارگذاری کنید.',
+  otpLabel: 'مدت اعتبار کد به ثانیه',
+  otpRange: 'یک عدد صحیح از {min} تا {max} وارد کنید.',
+  otpSave: 'ذخیره زمان اعتبار کد',
+  otpSaved: 'زمان اعتبار کد به‌روزرسانی شد.',
+  otpReload: 'بارگذاری دوباره تنظیمات کد',
+  otpConflict: 'تنظیمات تغییر کرده است. این پنجره را ببندید و پیش از ذخیره، دوباره بارگذاری کنید.',
   title: 'احراز هویت پروفایل',
   description: 'روش رسیدگی به درخواست‌های احراز هویت پروفایل را انتخاب کنید.',
   loading: 'در حال بارگذاری تنظیمات احراز هویت…',

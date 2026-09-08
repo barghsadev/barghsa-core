@@ -6,6 +6,7 @@ import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import type { PoolClient } from 'pg';
 import { RateLimitService } from '../rate-limit/rate-limit.service.js';
+import { readOtpConfig, type OtpConfig } from './otp-config.js';
 
 export type OtpPurpose =
   'registration' | 'login' | 'password_reset' | 'change_username' | 'add_email' | 'add_mobile';
@@ -26,7 +27,6 @@ export class OtpAttemptRejected extends HttpException {
 export class OtpService {
   private readonly logger = new Logger(OtpService.name);
 
-  static readonly OTP_TTL_MS = 5 * 60 * 1000;
   static readonly MAX_ATTEMPTS = 5;
 
   constructor(private readonly rateLimitService: RateLimitService) {}
@@ -108,7 +108,8 @@ export class OtpService {
     const otp = this.generateOtp();
     const otpHash = this.hashOtp(otp);
     const challengeId = randomUUID();
-    const expiresAt = new Date(Date.now() + OtpService.OTP_TTL_MS);
+    const config = await readOtpConfig(transactionClient);
+    const expiresAt = new Date(Date.now() + config.ttlSeconds * 1000);
 
     const deliveryId = randomUUID();
     const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination });
@@ -172,6 +173,7 @@ export class OtpService {
     await this.enforceSendRateLimits(destination, ip);
     // Configuration failure must not reveal whether this destination has an account.
     this.deliveryPayload(randomUUID(), { code: '000000', destination });
+    const config = await readOtpConfig();
     const found = await getDbPool().query<{ user_id: string; auth_version: number }>(
       'SELECT u.user_id,u.auth_version FROM users u JOIN account_login_identifiers i ON i.user_id=u.user_id WHERE i.destination=$1',
       [destination]
@@ -182,7 +184,8 @@ export class OtpService {
       user.user_id,
       destination,
       'password_reset',
-      user.auth_version
+      user.auth_version,
+      config
     );
   }
 
@@ -190,12 +193,14 @@ export class OtpService {
     userId: string,
     destination: string,
     purpose: 'login' | 'password_reset',
-    authVersion?: number
+    authVersion?: number,
+    config?: OtpConfig
   ): Promise<OtpChallengeResult> {
     const otp = this.generateOtp();
     const otpHash = this.hashOtp(otp);
     const challengeId = randomUUID();
-    const expiresAt = new Date(Date.now() + OtpService.OTP_TTL_MS);
+    const lifetime = config ?? (await readOtpConfig());
+    const expiresAt = new Date(Date.now() + lifetime.ttlSeconds * 1000);
 
     const deliveryId = randomUUID();
     const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination });
@@ -293,7 +298,8 @@ export class OtpService {
 
     const otp = this.generateOtp();
     const otpHash = this.hashOtp(otp);
-    const newExpiresAt = new Date(Date.now() + OtpService.OTP_TTL_MS);
+    const config = await readOtpConfig();
+    const newExpiresAt = new Date(Date.now() + config.ttlSeconds * 1000);
 
     // NOTE: Intentionally do NOT reset attempts_remaining on resend —
     // prevents brute-force bypass via resend cycling (new OTP, same attempts budget)

@@ -3,6 +3,11 @@ import { HttpException } from '@nestjs/common';
 import { OtpService } from './otp.service.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
+// Configuration persistence and issuance are covered together by OTP-config HTTP tests.
+vi.mock('./otp-config.js', () => ({
+  readOtpConfig: async () => ({ ttlSeconds: 300, version: 0 }),
+}));
+
 const mockRateLimitService = {
   checkSecurityRateLimit: vi.fn(),
 };

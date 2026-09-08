@@ -116,6 +116,9 @@ async function shell(page: Page, locale = 'en') {
     }).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/admin/config/otp', (route) =>
+    route.fulfill({ json: { ttlSeconds: 300, version: 0 } })
+  );
   await page.route('**/api/auth/trusted-devices', (route) => route.fulfill({ json: [] }));
   let draft = { version: 0, data: {} as Record<string, string> };
   await page.route('**/api/onboarding/draft/*', (route) => {

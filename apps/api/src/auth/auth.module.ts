@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { OtpService } from './otp.service.js';
+import { OtpConfigController } from './otp-config.controller.js';
 import { SessionModule } from '../session/session.module.js';
 import { TosModule } from '../tos/tos.module.js';
 
 @Module({
   imports: [SessionModule, TosModule],
-  controllers: [AuthController],
+  controllers: [AuthController, OtpConfigController],
   providers: [AuthService, OtpService],
   exports: [AuthService, OtpService],
 })

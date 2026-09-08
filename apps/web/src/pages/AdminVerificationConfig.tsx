@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import { OtpConfigPanel } from '../components/OtpConfigPanel.js';
 
 const MODES = ['DISABLED', 'MANUAL', 'API'] as const;
 type VerificationMode = (typeof MODES)[number];
@@ -164,6 +165,7 @@ export default function AdminVerificationConfig() {
           {saving ? text('saving') : text('save')}
         </button>
       </fieldset>
+      <OtpConfigPanel />
     </div>
   );
 }

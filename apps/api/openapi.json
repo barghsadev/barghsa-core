@@ -13997,6 +13997,105 @@
           "Admin"
         ]
       }
+    },
+    "/api/admin/config/otp": {
+      "get": {
+        "operationId": "OtpConfigController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "ttlSeconds",
+                    "version"
+                  ],
+                  "properties": {
+                    "ttlSeconds": {
+                      "type": "integer",
+                      "minimum": 60,
+                      "maximum": 900
+                    },
+                    "version": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Read the OTP lifetime and settings version",
+        "tags": [
+          "Admin · Authentication"
+        ]
+      },
+      "put": {
+        "operationId": "OtpConfigController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ttlSeconds": {
+                    "type": "integer",
+                    "minimum": 60,
+                    "maximum": 900
+                  },
+                  "expectedVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483646
+                  }
+                },
+                "required": [
+                  "ttlSeconds",
+                  "expectedVersion"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "ttlSeconds",
+                    "version"
+                  ],
+                  "properties": {
+                    "ttlSeconds": {
+                      "type": "integer",
+                      "minimum": 60,
+                      "maximum": 900
+                    },
+                    "version": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Set the lifetime for newly sent OTP codes",
+        "tags": [
+          "Admin · Authentication"
+        ]
+      }
     }
   },
   "servers": [],
