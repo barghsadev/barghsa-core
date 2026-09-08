@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "054d28c15589c3485ccc16e88eec2b1d0d042518",
+  "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
   "active_step": "R01",
-  "next_action": "R01: complete field-specific identity correction entry for T-05.02.05 and review supported identity fields; then finish legal nonidentity contact/address editing for T-05.02.02. Preserve the separate archive writer/retention/checklist review in T-05.02.06 and whole-page CRM acceptance. Current correction target/acknowledgement repair is reviewed. Continue critical role/session/finance review; preserve pending lost-contact policy question.",
+  "next_action": "R01: fix T-05.02.05 correction-only staff access: the creation form depends on queue.viewer.canCreate from a verification:read endpoint, despite the create API allowing crm:edit-identity. Use authorized profile capability independently of queue access; verify creation succeeds without granting queue/review reads. Then review remaining identity fields, finish legal nonidentity contact/address editing and archive writer/retention/checklist acceptance. Preserve the unanswered lost-contact recovery policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. General staff address editing and correction target/acknowledgement repairs are reviewed. Finish field-specific correction entry, legal nonidentity contact/address editing, remaining page acceptance and archive/list review."
+        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Staff address editing, correction target/acknowledgement checks and field-specific correction links are reviewed. Fix correction-only UI access; finish legal nonidentity contact/address editing, identity-field coverage, whole-page acceptance and archive/list review."
       ]
     },
     {
@@ -382,6 +382,10 @@
     {
       "id": "R01-crm-correction-acknowledgements",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-acknowledgements"
+    },
+    {
+      "id": "R01-crm-correction-field-entry",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-field-entry"
     }
   ],
   "deferred_improvements": [

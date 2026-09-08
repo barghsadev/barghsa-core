@@ -741,6 +741,41 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "Correction task T-05.02.05 remains partial for the required field-specific request entry and remaining identity-field/page acceptance. Archive task T-05.02.06 remains partial for the remaining business-writer/retention/checklist review. General legal nonidentity editing remains in T-05.02.02."
+    },
+    {
+      "id": "R01-crm-correction-field-entry",
+      "date": "2026-09-08",
+      "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
+      "summary": "Added accessible field-specific correction links for the five identity fields supported by the current case API. The form carries the selected profile/field through route search and checks profile type before preselection.",
+      "review": "Links require current viewer correction capability and a nonarchived profile; individual and legal fields cannot preselect each other. Profile detail responses must match the requested profile before exposing the form. No API permissions or identity mutation logic changed. Existing generic navigation remains available.",
+      "checks": [
+        "66 production Chromium desktop/mobile browser cases pass in fa/en. Includes8 new individual/legal field-link cases covering hrefs, keyboard activation, form preselection, unsupported other-type fields, permission denial and archived profiles; all58 existing profile/correction cases also pass.",
+        "Web typecheck, focused lint, production build,41 route budgets and final targeted format/whitespace checks pass. A translation-selector edit required final test formatting; formatting-only changes did not require repeating browser tests. API evidence from054d28c is reused because API code did not change."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/routes/admin/crm/corrections.tsx",
+          "sha256": "a2e12cbaa6432662902d82e16cd7812c06e2323c34311db2d078abb27c075cf3"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "d95f9cb56f150db52b543c0a8c69ee0de08291790c04681a9ec0656dccba260a"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "e2bf8aa04f40971527077f178867f8d37421b014317d70275fa7b4accf53c2fb"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "dff5327a342ba3d28baa713dea80d74dee42436a6cd5552b0420948d674ecc15"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "The creation form still depends on queue.viewer.canCreate from a verification:read endpoint, so staff with crm:read and crm:edit-identity but without verification:read cannot use their authorized creation path. Separate creation capability from queue access next. Review remaining identity-field coverage and page acceptance before closing T-05.02.05."
     }
   ]
 }
