@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product `417ab33`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product `e48bf58`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,9 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Next confirmed defect: invitation creation checks authority before its transaction, and withdrawal still permits the original inviter after loss of their agent role. Repair current authorization at the write boundary, preserving the existing invitation confirmation policy. Then finish `02-auth-users-admin.md#T-05.04.04` current domain-role consumers/conditional UI and full invitation/ownership acceptance. Keep future order/contract/refund integrations explicit.
+Next: ownership initiation/acceptance/decline/cancel still accept only actor userId and do not recheck the acting session after guards. Their audit lacks verified step-up time/correlation, and resolution checks transfer expiry only before writes. Repair these boundaries while preserving the durable Expired transition and existing credential effects. Then finish agent/invitation presentation and current domain-role acceptance.
+
+Invitation creation/withdrawal/decline repaired at `e48bf58`: current profile/account/session/grants hold through commit; former inviters cannot withdraw; current username controls decline; state/audit roll back on expiry/failure. Acceptance/decline lock-order deadlock is fixed.120 selected API/unit cases and API quality/contract checks pass. [Scoped evidence](evidence/step-reviews.json#R01-invitation-authority). Existing frontend evidence is reused.
 
 Agent role changes/removal now recheck current authorization through commit and record verified step-up time/correlation. Self-mutations return to login; no-op preserves credentials. Product `417ab33` passes51 selected API cases and32 production-browser cases, plus types/lint/format/OpenAPI/build and41 unchanged budgets. [Scoped review](evidence/step-reviews.json#R01-agent-sensitive-actions). Whole role-matrix acceptance remains open.
 

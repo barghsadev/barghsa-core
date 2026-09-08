@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "417ab336b32740bf1e8ddd9a2c6fe526a5e71f8f",
+  "source_revision": "e48bf58d729c692b9f844e5bd1de97b5049baa59",
   "active_step": "R01",
-  "next_action": "R01: repair confirmed invitation authority gaps in AgentsService.createInvitation/withdrawInvitation. Creation checks owner/Manager before its transaction; withdrawal also accepts the original inviter after their role is removed. Bind both writes to current profile/account/session/grants and audit correlation, preserving non-step-up invitation policy. Then finish current domain-role/conditional-UI and invitation/ownership acceptance. Lost-contact policy remains pending; do not ask again.",
+  "next_action": "R01: repair ownership initiation/acceptance/decline/cancel current-session and step-up boundaries, verified-time/correlated audit and expiry during writes. Methods were read: they still accept actor userId only, never revalidate the acting session after guards, and resolve checks transfer expiry only before writes. Reuse417ab33 ownership credential evidence and preserve the durable Expired transition. Then finish agent/invitation presentation and current domain-role acceptance. Lost-contact policy remains pending; do not ask again.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -134,7 +134,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Agent role/removal sensitive-action boundary verified at417ab33 with51 API and32 browser cases. Invitation acceptance credential boundary retains5543cc2 evidence. Finish current role matrix, full invitation/list/withdrawal and ownership, profile-selection and onboarding acceptance; future contract/order/document consumers remain separate."
+        "Invitation creation/withdrawal/decline current authorization, expiry/audit rollback and decision races verified ate48bf58 with120 selected API/unit cases. Agent role/removal boundary retains417ab33. Next repair ownership current-session/step-up/audit/final expiry. Then full invitation/list/details/confirmation, role/domain, profile-selection and onboarding acceptance; future contract/order/document consumers remain separate."
       ]
     },
     {
@@ -545,6 +545,10 @@
     {
       "id": "R01-agent-sensitive-actions",
       "review_record": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+    },
+    {
+      "id": "R01-invitation-authority",
+      "review_record": "audit/evidence/step-reviews.json#R01-invitation-authority"
     }
   ],
   "deferred_improvements": [

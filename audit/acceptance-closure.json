@@ -3917,7 +3917,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "b0700e1e9e870025a49a48e99a7703ca868b4031ebeb678d077e4fdcdb364c0a"
+          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3997,13 +3997,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
-        "previous_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
-        "paths": [
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+        "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "review": "Reviewed the additive controller/contract change and new staff HTTP case. Existing contract values are JSON-equal; existing controller methods and test bodies are unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -4065,7 +4064,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "b0700e1e9e870025a49a48e99a7703ca868b4031ebeb678d077e4fdcdb364c0a"
+          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -4101,7 +4100,7 @@
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
-          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
         }
       ],
       "checks": [
@@ -4127,10 +4126,10 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx",
-          "apps/api/src/admin/staff-mutation-permission.ts"
+          "apps/api/openapi.json",
+          "apps/api/src/session/session-step-up.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -4184,7 +4183,7 @@
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
-          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
         }
       ],
       "checks": [
@@ -4208,10 +4207,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx",
-          "apps/api/src/admin/staff-mutation-permission.ts"
+          "apps/api/src/session/session-step-up.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -4273,7 +4271,7 @@
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
-          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
         }
       ],
       "checks": [
@@ -4301,10 +4299,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx",
-          "apps/api/src/admin/staff-mutation-permission.ts"
+          "apps/api/src/session/session-step-up.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -4540,7 +4537,7 @@
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
-          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
         }
       ],
       "checks": [
@@ -4574,10 +4571,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "changed_paths_reviewed": [
-          "apps/api/src/admin/staff-mutation-permission.ts",
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/session/session-step-up.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -4611,7 +4607,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "b0700e1e9e870025a49a48e99a7703ca868b4031ebeb678d077e4fdcdb364c0a"
+          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4656,13 +4652,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
-        "previous_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
-        "paths": [
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+        "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "review": "Reviewed the additive controller/contract change and new staff HTTP case. Existing contract values are JSON-equal; existing controller methods and test bodies are unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -4749,7 +4744,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "b0700e1e9e870025a49a48e99a7703ca868b4031ebeb678d077e4fdcdb364c0a"
+          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4787,13 +4782,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
-        "previous_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
-        "paths": [
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
+        "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "review": "Reviewed the additive controller/contract change and new staff HTTP case. Existing contract values are JSON-equal; existing controller methods and test bodies are unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -5188,7 +5182,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "b0700e1e9e870025a49a48e99a7703ca868b4031ebeb678d077e4fdcdb364c0a"
+          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5271,13 +5265,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
-        "previous_reviewed_sha": "93dfc2760fb62b10b407238d317db09af241f190",
-        "paths": [
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "93dfc2760fb62b10b407238d317db09af241f190",
+        "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "review": "Reviewed the additive controller/contract change and new staff HTTP case. Existing contract values are JSON-equal; existing controller methods and test bodies are unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -5367,7 +5360,7 @@
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
-          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
         }
       ],
       "checks": [
@@ -5391,10 +5384,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/api/src/admin/staff-mutation-permission.ts",
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/session/session-step-up.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -5460,7 +5452,7 @@
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
-          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
         }
       ],
       "checks": [
@@ -5483,10 +5475,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/api/src/admin/staff-mutation-permission.ts",
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/session/session-step-up.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     },
     {
@@ -5564,7 +5555,7 @@
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
-          "sha256": "66ae6c4b4fbe5b932881740e201edb99ce914ae0c2b1372b371a30417b1e62a0"
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
         }
       ],
       "checks": [
@@ -5587,10 +5578,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/api/src/admin/staff-mutation-permission.ts",
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/session/session-step-up.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
       }
     }
   ],

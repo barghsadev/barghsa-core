@@ -1,6 +1,6 @@
 # Session caller review
 
-Reviewed through product `417ab33`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
+Reviewed through product `e48bf58`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
 
 | Caller / event | Current credential behavior | Evidence / disposition |
 | --- | --- | --- |
@@ -20,6 +20,7 @@ Reviewed through product `417ab33`. Scope: session creation/rotation/revocation 
 | Trusted-device removal | Removes the future-login trust record, retains sessions and checks actor/step-up deadlines through writes. | `89e7c53`:12 HTTP cases; next login requires OTP. |
 | Suspected compromise via refresh reuse | Revokes the affected family and persists a private, deduplicated security notice. | `redeemRefreshToken` unchanged from `f39132f`; reuse deadline and refresh-reuse alert checks. |
 | Profile agent role change/removal | `setAgentRoles` invalidates target credentials with changed membership; no-op preserves credentials. | `417ab33`:21 new HTTP cases plus13 existing ownership/agent and17 staff cases pass;32 browser cases include self sign-out. Current actor authentication/step-up, exact intended self-revocation and verified-time/correlated audit hold through commit. No-op preserves credentials. |
+| Invitation creation / withdrawal / decline | Current actor session, CSRF, account and authority are rechecked under profile/account/session/invitation locks through commit. No credential rotation or step-up is added. | `e48bf58`:120 selected API/unit cases include current-identity/authority races, decision/session expiry rollback and audit attribution. Former-inviter withdrawal and acceptance/decline deadlock repaired. |
 | Invitation acceptance | Adds membership with current-session rotation and other-session invalidation; original deadlines remain binding through commit. | `5543cc2`:14 HTTP cases,4 registration cases and4 focused browser cases; retries, profile refresh and fresh-CSRF profile switching pass. |
 
 Exact method comparisons and hashes: [session-method-reuse.json](evidence/r01/session-method-reuse.json). All ten selected methods match their cited evidence revisions. This comparison does not renew dependency, whole-file, browser, coverage or production evidence.

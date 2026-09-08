@@ -4170,6 +4170,92 @@
         "/tmp/r01-agent-mutation-web-build.log",
         "/tmp/r01-agent-mutation-web-types.log"
       ]
+    },
+    {
+      "id": "R01-invitation-authority",
+      "date": "2026-09-08",
+      "source_revision": "e48bf58d729c692b9f844e5bd1de97b5049baa59",
+      "summary": "Bind invitation creation, withdrawal and decline to current authorization and consistent transaction locks.",
+      "review": [
+        "Read canonical T-05.04.01/.02/.03/.04. Removed the original-inviter withdrawal bypass, which let a former agent act after losing Owner/Manager authority. Creation and withdrawal now lock the legal profile, current actor account/session and current grants before writing. Duplicate/member checks share the creation transaction and profile lock.",
+        "Extracted requireCurrentSession from the existing step-up function, preserving its locked-session SQL, CSRF/expiry checks and exact intentional revocation handling byte-for-byte. The step-up wrapper still requires a fresh verified timestamp. Invitation creation/withdrawal/decline retain their existing non-step-up policy.",
+        "Each writer rechecks current session/CSRF/absolute/idle deadlines before commit and records request correlation. Withdrawal/decline also recheck invitation expiry after writes. State and audit roll back together on expired authorization, expired invitation or audit failure. Controller validation rejects malformed IDs/bodies without raw database errors.",
+        "Acceptance racing decline reproduced a real PostgreSQL deadlock and HTTP500: acceptance held the account before the invitation; decline held the invitation before its audit acquired an account lock. Decline now uses the same profile/account/session/invitation order. Current username is checked under account and invitation locks, before exposing private invitation state. Unowned active or archived invitations return404.",
+        "Existing invitation race tests still waited at a pre-repair UPDATE; updated them to actual locked queries. Multi-waiter tests follow the recursive pg_blocking_pids chain because queued waiters can block on each other. An earlier duplicate-creation fixture held its lock too long while counting only direct blockers and produced artificial lock timeouts; those logs are retained. Final races require exactly one successful decision/audit and correct membership, with only the documented losing state/session outcomes.",
+        "Replaced obsolete SQL-response mocks for creation/withdrawal/decline with real HTTP/PostgreSQL behavior checks. Retained focused input/rate-limit unit checks, including the ten-per-hour profile quota. The shared test fixture clears only its own per-IP decline quota between independent cases after a combined run exhausted it; production limits and intra-case quotas remain active.",
+        "41 invitation mutation cases verify Owner/Manager success without step-up; former/Finance/Legal denial; post-guard role/account/session/CSRF/archive races; duplicate serialization; current invitee identity; scope/privacy; malformed input; audit attribution/failure and session/invitation expiry rollback. Five existing invitation decision/rollback cases and22 controller/service cases pass. The unchanged acceptance/agent/staff paths retain52 passing cases from the first selected run after the common helper extraction.",
+        "OpenAPI changes are limited to400 validation descriptions and409 changed/expired decision responses for withdrawal and decline. Other contract values and formatting are preserved. No frontend source, frontend dependency, migration or route registration changed; retain417ab33 browser/build/type/budget evidence without claiming a new broad checkpoint."
+      ],
+      "checks": [
+        "120 distinct API/unit cases pass across the final/reused runs:41 invitation mutations,5 invitation decision/rollback,22 controller/service and52 unchanged acceptance/agent/staff cases. Overlapping runs are counted once.",
+        "Final API types, focused ESLint/Prettier, generated OpenAPI comparison and diff review pass. Existing frontend evidence is reused; no new browser, coverage, migration or image run is claimed."
+      ],
+      "remaining": [
+        "R01: repair ownership initiation/acceptance/decline/cancel current-session and step-up boundaries, verified-time/correlated audit and expiry during writes. Methods were read: they still accept actor userId only, never revalidate the acting session after guards, and resolve checks transfer expiry only before writes. Reuse417ab33 ownership credential evidence and preserve the durable Expired transition. Then finish agent/invitation presentation and current domain-role acceptance. Lost-contact policy remains pending; do not ask again.",
+        "Whole T-05.04.01/.02/.03/.04 acceptance remains open for list/details/preview/confirmation/notification and current domain-role consumers. Recorded task counts remain53 verified,18 partial,251 pending; a repaired boundary is not a whole-task pass."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.controller.test.ts",
+          "sha256": "afd891fa8e35b64d82c238e6ab1dc1c00d017c92724f129cc5e318212ee9c470"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.controller.ts",
+          "sha256": "7142644b09cbcce73d89b7d2336832b9bc4943c7648cbcabfb123436692d6195"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.test.ts",
+          "sha256": "690dd50bf60d907e6cdb34a7edfcc4e5e6d4ac32a1012c50c40aa38312628518"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "0a858995a1b287b1b7cc9614f4b74f377c71086aeb02b0dd553fbc3f272c6b86"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-http.integration.test.ts",
+          "sha256": "aebf81137cf231a61c70689e3d93563c6c45e528d94ca1eafe6e79a683ea3dbd"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+          "sha256": "b8790d08233727c5d75be5a6f8b93385022961da936a4e387569435a7f1041cd"
+        },
+        {
+          "path": "apps/api/src/profiles/invitations.controller.ts",
+          "sha256": "d7d65ecdaa1bf47938ce28b72bd05704890a66cce80d15a858057079bb09c142"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/r01-invitation-authority-api-final.log",
+        "/tmp/r01-invitation-authority-api-recheck.log",
+        "/tmp/r01-invitation-authority-api.log",
+        "/tmp/r01-invitation-authority-commit.log",
+        "/tmp/r01-invitation-authority-contract-diff.log",
+        "/tmp/r01-invitation-authority-contract-final.log",
+        "/tmp/r01-invitation-authority-decline-final.log",
+        "/tmp/r01-invitation-authority-format-final.log",
+        "/tmp/r01-invitation-authority-isolation-format.log",
+        "/tmp/r01-invitation-authority-lint-final.log",
+        "/tmp/r01-invitation-authority-lint.log",
+        "/tmp/r01-invitation-authority-mutations-final.log",
+        "/tmp/r01-invitation-authority-openapi-generate.log",
+        "/tmp/r01-invitation-authority-privacy-final.log",
+        "/tmp/r01-invitation-authority-privacy-format.log",
+        "/tmp/r01-invitation-authority-quality-format.log",
+        "/tmp/r01-invitation-authority-quality-lint.log",
+        "/tmp/r01-invitation-authority-races.log",
+        "/tmp/r01-invitation-authority-source-review.log",
+        "/tmp/r01-invitation-authority-types-final.log",
+        "/tmp/r01-invitation-authority-types.log"
+      ]
     }
   ]
 }

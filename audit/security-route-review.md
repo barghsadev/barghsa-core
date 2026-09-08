@@ -1,6 +1,6 @@
 # CSRF and sensitive-action review
 
-Current through product `417ab33`, 2026-09-08. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
+Current through product `e48bf58`, 2026-09-08. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
 
 The inventory reflects compiled Nest module/controller metadata without starting the application. It follows imports and forward references from AppModule, reads global/controller/method guards and route decorators, and expands registered paths. There are 33 modules, 63 controllers and 343 routes. Global guards are RateLimitGuard and CsrfGuard.
 
@@ -36,9 +36,11 @@ Fourteen unsafe routes have SkipCsrf:11 public-auth, refresh and two payment cal
 | Storage and provider credentials | All four storage mutations/probes and email/SMS/AI-model mutations have step-up metadata. Verification-provider config has no step-up decorator but no production adapter is registered, so the controller cannot reach its writer. Five registration checks confirm production refuses the stub. Before a real provider is enabled, require current authorization/step-up, encrypted config, audit and atomic version persistence. This is a future integration prerequisite, consistent with the no-provider decision. |
 | Payment confirmation, prices and finance configuration | Invoice/wallet receipt decisions, catalogue prices, VAT and configured finance limits have step-up metadata. Domain authorization, audit, expiry during waits and UI retry remain in finance review. |
 | Session and trusted-device revocation | Individual routes have guards. Bulk self-revocation uses explicit in-service confirmation and final checks. Reuse source-bound session/trust/CRM repairs; do not infer missing protection from the bulk route's absent decorator. |
-| Profile archival and ownership | CRM DELETE profile and ownership transfer/accept/cancel/decline have step-up metadata. Reuse atomic ownership/session checks; reconcile complete domain audit and UI criteria. |
+| Profile archival and ownership | CRM DELETE profile and ownership transfer/accept/cancel/decline have step-up metadata. Ownership credential effects retain prior evidence. Initiation/resolution still accept only actor userId and need current session/step-up through commit, verified-time/correlated audit and final expiry checks. |
 | Refunds and contract cancellation | Separate future consumers remain explicit dependencies. Order cancellation is not automatically a contract-cancellation implementation. |
 | Other registered step-up actions | The CSV retains every route. Review required caller/audit/UI behavior with its domain once; avoid repeating shared guard tests per endpoint. |
+
+Invitation creation/withdrawal/decline are repaired at `e48bf58`: current account/session/CSRF and profile/role or invited-username checks hold through writes. They retain their non-step-up policy. Decision expiry and audit failures roll back atomically; acceptance/decline use consistent lock order. Registration counts remain unchanged.
 
 ## Completed guard repair
 
