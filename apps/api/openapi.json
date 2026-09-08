@@ -13028,10 +13028,10 @@
         "operationId": "TosController_getCurrent",
         "parameters": [
           {
-            "description": "Content locale (default: fa)",
-            "in": "query",
             "name": "locale",
             "required": false,
+            "in": "query",
+            "description": "Content locale (default: fa)",
             "schema": {
               "enum": [
                 "fa",
@@ -13039,46 +13039,59 @@
               ],
               "type": "string"
             }
+          },
+          {
+            "name": "versionId",
+            "required": false,
+            "in": "query",
+            "description": "Immutable published version UUID. Omit to read current terms. Drafts are never public.",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
+            "description": "Current TOS version",
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
                   "properties": {
-                    "content": {
-                      "description": "TOS content in the requested locale",
-                      "type": "string"
-                    },
                     "id": {
-                      "description": "Immutable UUID used to record acceptance",
-                      "type": "string"
+                      "type": "string",
+                      "description": "Immutable UUID used to record acceptance"
                     },
-                    "publishedAt": {
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "updatedAt": {
-                      "format": "date-time",
-                      "type": "string"
+                    "content": {
+                      "type": "string",
+                      "description": "TOS content in the requested locale"
                     },
                     "versionId": {
-                      "description": "Version identifier, e.g. \"v1\"",
-                      "type": "string"
+                      "type": "string",
+                      "description": "Version identifier, e.g. \"v1\""
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "publishedAt": {
+                      "type": "string",
+                      "format": "date-time"
                     }
-                  },
-                  "type": "object"
+                  }
                 }
               }
-            },
-            "description": "Current TOS version"
+            }
+          },
+          "400": {
+            "description": "Invalid version UUID"
           },
           "404": {
-            "description": "No active TOS version found"
+            "description": "No matching published TOS version found"
           }
         },
-        "summary": "Get current active TOS version",
+        "summary": "Read current terms or a specific published version",
         "tags": [
           "Terms of Service"
         ]

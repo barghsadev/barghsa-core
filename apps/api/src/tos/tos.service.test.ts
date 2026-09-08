@@ -100,7 +100,8 @@ describe('TosService', () => {
       await service.getCurrent();
 
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringContaining('ORDER BY published_at DESC')
+        expect.stringContaining('ORDER BY published_at DESC'),
+        []
       );
     });
 
@@ -110,7 +111,8 @@ describe('TosService', () => {
       await service.getCurrent();
 
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringContaining('WHERE is_active = true')
+        expect.stringContaining('WHERE is_active = true'),
+        []
       );
     });
 

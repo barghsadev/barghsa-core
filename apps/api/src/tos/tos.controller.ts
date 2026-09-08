@@ -39,7 +39,15 @@ export class TosController {
    * Supports Persian and English content via the `locale` query parameter.
    */
   @Get('current')
-  @ApiOperation({ summary: 'Get current active TOS version' })
+  @ApiOperation({ summary: 'Read current terms or a specific published version' })
+  @ApiQuery({
+    name: 'versionId',
+    required: false,
+    type: String,
+    format: 'uuid',
+    description:
+      'Immutable published version UUID. Omit to read current terms. Drafts are never public.',
+  })
   @ApiQuery({
     name: 'locale',
     required: false,
@@ -60,10 +68,20 @@ export class TosController {
       },
     },
   })
-  @ApiResponse({ status: 404, description: 'No active TOS version found' })
-  async getCurrent(@Query('locale') locale?: string): Promise<CurrentTosResponse> {
+  @ApiResponse({ status: 400, description: 'Invalid version UUID' })
+  @ApiResponse({ status: 404, description: 'No matching published TOS version found' })
+  async getCurrent(
+    @Query('locale') locale?: string,
+    @Query('versionId') versionId?: string
+  ): Promise<CurrentTosResponse> {
+    if (versionId !== undefined && !z.uuid().safeParse(versionId).success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    }
     const normalizedLocale = locale === 'en' ? 'en' : 'fa';
-    return this.tosService.getCurrent(normalizedLocale);
+    return this.tosService.getCurrent(normalizedLocale, versionId);
   }
 
   @UseGuards(SessionAuthGuard)

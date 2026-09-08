@@ -74,6 +74,48 @@ async function create() {
   return (await response.json()) as { id: string };
 }
 
+it('serves the exact published terms after replacement without requiring authentication', async () => {
+  const first = await create();
+  expect((await request(`/${first.id}/publish`, 'POST', { changeType: 'major' })).status).toBe(200);
+  const second = await request('', 'POST', {
+    ...draft,
+    versionId: 'review-v2',
+    contentEn: 'New terms',
+  });
+  const next = (await second.json()) as { id: string };
+  expect((await request(`/${next.id}/publish`, 'POST', { changeType: 'major' })).status).toBe(200);
+  const current = await fetch(`${http.base}/api/tos/current?locale=en`);
+  expect(await current.json()).toMatchObject({ id: next.id, content: 'New terms' });
+  for (const locale of ['en', 'fa']) {
+    const saved = await fetch(
+      `${http.base}/api/tos/current?locale=${locale}&versionId=${first.id.toUpperCase()}`
+    );
+    expect(saved.status).toBe(200);
+    expect(await saved.json()).toMatchObject({
+      id: first.id,
+      versionId: draft.versionId,
+      content: locale === 'en' ? draft.contentEn : draft.contentFa,
+    });
+  }
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM tos_acceptances')).rows[0].count
+  ).toBe(0);
+});
+
+it('never serves draft or missing terms and rejects malformed version selectors', async () => {
+  const { id } = await create();
+  for (const versionId of [id, randomUUID()]) {
+    expect((await fetch(`${http.base}/api/tos/current?versionId=${versionId}`)).status).toBe(404);
+  }
+  for (const query of [
+    'versionId=',
+    'versionId=invalid',
+    `versionId=${id}&versionId=${randomUUID()}`,
+  ]) {
+    expect((await fetch(`${http.base}/api/tos/current?${query}`)).status).toBe(400);
+  }
+});
+
 it('audits draft create, edit, publication and discard with current actor context', async () => {
   expect((await request('', 'POST', draft, 'other')).status).toBe(403);
   const { id } = await create();
@@ -147,13 +189,15 @@ it('rejects editor authority revoked while a draft mutation waits for the actor 
   try {
     await client.query('BEGIN');
     await client.query("SELECT user_id FROM users WHERE user_id='editor' FOR UPDATE");
+    const blocker = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
     pending = request(`/${id}`, 'PUT', { contentEn: 'Must not save' });
     await expect
       .poll(async () =>
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+              'SELECT count(*) FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))',
+              [blocker]
             )
           ).rows[0].count
         )

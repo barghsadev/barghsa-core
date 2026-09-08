@@ -96,7 +96,7 @@ function resolveErrorMessage(errorCode: string | undefined, locale: Locale): str
 
 function RegisterPage() {
   const [termsOpen, setTermsOpen] = useState(false);
-  const termsTrigger = useRef<HTMLButtonElement>(null);
+  const termsTrigger = useRef<HTMLAnchorElement>(null);
   const router = useRouter();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -392,16 +392,37 @@ function RegisterPage() {
                 />
                 <div id="tos-label" className="text-sm font-normal leading-relaxed">
                   {t('auth.register.tosPrefix', locale)}{' '}
-                  <button
-                    type="button"
+                  <a
                     ref={termsTrigger}
-                    onClick={() => setTermsOpen(true)}
-                    disabled={!currentTos}
+                    href={
+                      currentTos
+                        ? `/terms?lang=${locale}&version=${encodeURIComponent(currentTos.id)}`
+                        : undefined
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(event) => {
+                      if (!currentTos) {
+                        event.preventDefault();
+                        return;
+                      }
+                      if (
+                        window.matchMedia('(max-width: 767px)').matches &&
+                        !event.ctrlKey &&
+                        !event.metaKey &&
+                        !event.shiftKey &&
+                        !event.altKey
+                      ) {
+                        event.preventDefault();
+                        setTermsOpen(true);
+                      }
+                    }}
+                    aria-disabled={!currentTos}
                     className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
                     aria-label={t('auth.register.tosLinkText', locale)}
                   >
                     {t('auth.register.tosLinkText', locale)}
-                  </button>{' '}
+                  </a>{' '}
                   {t('auth.register.tosSuffix', locale)}
                 </div>
               </div>

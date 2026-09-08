@@ -13,7 +13,7 @@ export default function RegistrationTermsDialog({
   locale: Locale;
   versionId: string;
   content: string;
-  finalFocus: RefObject<HTMLButtonElement | null>;
+  finalFocus: RefObject<HTMLAnchorElement | null>;
   onClose: () => void;
 }) {
   return (

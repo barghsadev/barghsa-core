@@ -8,6 +8,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 const TosContent = lazy(() => import('../components/TosContent.js'));
 
 interface CurrentTosResponse {
+  id?: string;
   content: string;
   versionId: string;
   updatedAt: string;
@@ -20,6 +21,7 @@ function isCurrentTos(value: unknown): value is CurrentTosResponse {
   const validDate = (value: unknown) =>
     typeof value === 'string' && Number.isFinite(Date.parse(value));
   return (
+    (terms.id === undefined || typeof terms.id === 'string') &&
     typeof terms.content === 'string' &&
     !!terms.content.trim() &&
     typeof terms.versionId === 'string' &&
@@ -31,13 +33,16 @@ function isCurrentTos(value: unknown): value is CurrentTosResponse {
 
 export const Route = createFileRoute('/terms')({
   component: TermsPage,
-  validateSearch: (search: Record<string, unknown>): { lang?: 'fa' | 'en' } => ({
+  validateSearch: (search: Record<string, unknown>): { lang?: 'fa' | 'en'; version?: string } => ({
     ...(search.lang === 'en' ? { lang: 'en' as const } : {}),
+    ...(search.version === undefined
+      ? {}
+      : { version: typeof search.version === 'string' ? search.version : '' }),
   }),
 });
 
 function TermsPage() {
-  const { lang } = useSearch({ from: '/terms' });
+  const { lang, version } = useSearch({ from: '/terms' });
   const locale: Locale = lang ?? 'fa';
   const isRtl = locale === 'fa';
   const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon;
@@ -56,7 +61,9 @@ function TermsPage() {
         setLoading(true);
         setTos(null);
         setError(false);
-        const res = await fetch(`/api/tos/current?locale=${locale}`, {
+        const query = new URLSearchParams({ locale });
+        if (version !== undefined) query.set('versionId', version);
+        const res = await fetch(`/api/tos/current?${query}`, {
           signal: controller.signal,
           credentials: 'omit',
         });
@@ -66,6 +73,8 @@ function TermsPage() {
         }
         const data: unknown = await res.json();
         if (!isCurrentTos(data)) throw new Error('Invalid terms response');
+        if (version !== undefined && data.id?.toLowerCase() !== version.toLowerCase())
+          throw new Error('Mismatched terms version');
         if (!cancelled) setTos(data);
       } catch {
         if (!cancelled) setError(true);
@@ -80,7 +89,7 @@ function TermsPage() {
       cancelled = true;
       controller.abort();
     };
-  }, [locale, attempt]);
+  }, [locale, version, attempt]);
 
   let formattedDate: string | null = null;
   if (tos?.updatedAt) {
@@ -146,7 +155,7 @@ function TermsPage() {
           <nav aria-label={t('tos.page.language', locale)} className="mb-6 flex flex-wrap gap-4">
             <Link
               to="/terms"
-              search={{ lang: 'fa' }}
+              search={{ lang: 'fa', version }}
               lang="fa"
               aria-current={locale === 'fa' ? 'page' : undefined}
               className="underline underline-offset-4"
@@ -155,7 +164,7 @@ function TermsPage() {
             </Link>
             <Link
               to="/terms"
-              search={{ lang: 'en' }}
+              search={{ lang: 'en', version }}
               lang="en"
               aria-current={locale === 'en' ? 'page' : undefined}
               className="underline underline-offset-4"
@@ -199,6 +208,7 @@ function TermsPage() {
             <article className="prose prose-sm dark:prose-invert max-w-none">
               <header className="mb-8 not-prose">
                 <h1 className="text-2xl font-bold tracking-tight">{t('tos.page.title', locale)}</h1>
+                <p className="mt-2 text-sm text-muted-foreground">{tos.versionId}</p>
                 {formattedDate && (
                   <p className="mt-2 text-sm text-muted-foreground">
                     {t('tos.page.lastUpdated', locale).replace('{date}', formattedDate)}

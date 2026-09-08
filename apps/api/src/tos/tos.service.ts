@@ -83,7 +83,7 @@ export class TosService {
    * Supports locale-based content selection via the `locale` parameter.
    * Falls back to Persian content when the requested locale is not available.
    */
-  async getCurrent(locale: 'fa' | 'en' = 'fa'): Promise<CurrentTosResponse> {
+  async getCurrent(locale: 'fa' | 'en' = 'fa', versionId?: string): Promise<CurrentTosResponse> {
     const pool = getDbPool();
 
     const result = await pool.query<{
@@ -98,9 +98,11 @@ export class TosService {
     }>(
       `SELECT id, version_id, content_fa, content_en, is_active, published_at, created_at, updated_at
        FROM tos_versions
-       WHERE is_active = true AND status = 'published' AND published_at IS NOT NULL
+       WHERE ${versionId === undefined ? 'is_active = true' : 'id = $1::uuid'}
+         AND status = 'published' AND published_at IS NOT NULL
        ORDER BY published_at DESC
-       LIMIT 1`
+       LIMIT 1`,
+      versionId === undefined ? [] : [versionId]
     );
 
     if (result.rows.length === 0) {
