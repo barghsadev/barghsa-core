@@ -20,27 +20,25 @@ async function shell(page: Page, locale = 'en') {
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route(`**/api/crm/profiles/${profileId}`, (route) =>
-    route.fulfill({ json: { profile: { id: profileId, profileType: 'INDIVIDUAL' } } })
+    route.fulfill({
+      json: {
+        profile: { id: profileId, profileType: 'INDIVIDUAL', archived: false },
+        viewerPermissions: { canEditIdentity: true },
+      },
+    })
   );
 }
 for (const locale of ['en', 'fa'])
-  test(`correction evidence and target survive password confirmation (${locale})`, async ({
+  test(`correction-only staff retain evidence and target through password confirmation (${locale})`, async ({
     page,
   }) => {
     await shell(page, locale);
     let verified = false,
-      created = false,
       uploads = 0,
       acknowledgements = 0;
     const bodies: unknown[] = [];
     await page.route('**/api/crm/verification-cases?*', (route) =>
-      route.fulfill({
-        json: {
-          cases: created ? [{ ...item, status: 'Open' }] : [],
-          total: created ? 1 : 0,
-          viewer: { userId: 'creator', canCreate: true, canReview: true },
-        },
-      })
+      route.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } })
     );
     await page.route('**/api/upload/presigned-url', (route) =>
       route.fulfill({ json: { key, presignedUrl: '/test-evidence-upload' } })
@@ -67,7 +65,6 @@ for (const locale of ['en', 'fa'])
           status: 201,
           json: { success: true, id: caseId, status: 'Open', profileId: caseId },
         });
-      created = true;
       return route.fulfill({
         status: 201,
         json: { success: true, id: caseId, status: 'Open', profileId },
@@ -114,6 +111,21 @@ for (const locale of ['en', 'fa'])
       .click();
     await expect(dialog).toHaveCount(0);
     expect(uploads).toBe(1);
+    await expect(page.locator('#correction-value')).toHaveValue('');
+    await expect(
+      page.getByText(
+        locale === 'fa'
+          ? 'اجازه مشاهده صف اصلاح هویت را ندارید.'
+          : 'You do not have permission to view the correction queue.',
+        { exact: true }
+      )
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', {
+        name: locale === 'fa' ? 'بررسی درخواست' : 'Review case',
+        exact: true,
+      })
+    ).toHaveCount(0);
     expect(bodies).toEqual(
       Array.from({ length: 3 }, () => ({
         fieldName: 'first_name',
@@ -257,4 +269,57 @@ for (const locale of ['en', 'fa'])
         reviewerNotes: 'Evidence checked',
       }))
     );
+  });
+
+for (const locale of ['en', 'fa'])
+  test(`correction creation follows profile permission and recovers from profile errors (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let allowed = false;
+    let archived = false;
+    let profileStatus = 200;
+    await page.route(`**/api/crm/profiles/${profileId}`, (route) =>
+      route.fulfill({
+        status: profileStatus,
+        json: {
+          profile: { id: profileId, profileType: 'INDIVIDUAL', archived },
+          viewerPermissions: { canEditIdentity: allowed },
+        },
+      })
+    );
+    await page.route('**/api/crm/verification-cases?*', (route) =>
+      route.fulfill({
+        json: {
+          cases: [],
+          total: 0,
+          viewer: { userId: 'viewer', canCreate: true, canReview: false },
+        },
+      })
+    );
+    await page.goto(`/admin/crm/corrections?profileId=${profileId}`);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    const refresh = page.getByRole('button', {
+      name: locale === 'fa' ? 'تازه‌سازی' : 'Refresh',
+      exact: true,
+    });
+    await expect(page.locator('#case-status')).toBeVisible();
+    await expect(page.locator('#correction-value')).toHaveCount(0);
+    allowed = true;
+    await refresh.click();
+    await expect(page.locator('#correction-value')).toBeVisible();
+    profileStatus = 503;
+    await refresh.click();
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.locator('#correction-value')).toHaveCount(0);
+    profileStatus = 200;
+    await refresh.click();
+    await expect(page.locator('#correction-value')).toBeVisible();
+    archived = true;
+    await refresh.click();
+    await expect(page.locator('#correction-value')).toHaveCount(0);
+    archived = false;
+    allowed = false;
+    await refresh.click();
+    await expect(page.locator('#correction-value')).toHaveCount(0);
   });

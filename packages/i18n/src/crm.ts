@@ -138,6 +138,7 @@ export const fa: I18nDictionary = {
   'crm.corrections.uploading': 'در حال بارگذاری مدارک…',
   'crm.corrections.error':
     'عملیات انجام نشد. دسترسی، مدارک و اطلاعات ورودی را بررسی و دوباره تلاش کنید.',
+  'crm.corrections.queueForbidden': 'اجازه مشاهده صف اصلاح هویت را ندارید.',
   'crm.corrections.empty': 'درخواست اصلاحی پیدا نشد.',
   'crm.corrections.details': 'بررسی درخواست',
   'crm.corrections.creator': 'درخواست‌کننده',
@@ -430,6 +431,7 @@ export const en: I18nDictionary = {
   'crm.corrections.uploading': 'Uploading evidence…',
   'crm.corrections.error':
     'Could not complete this operation. Check your access, evidence and input, then retry.',
+  'crm.corrections.queueForbidden': 'You do not have permission to view the correction queue.',
   'crm.corrections.empty': 'No matching correction cases.',
   'crm.corrections.details': 'Review case',
   'crm.corrections.creator': 'Requested by',

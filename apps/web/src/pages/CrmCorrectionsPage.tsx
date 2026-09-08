@@ -65,6 +65,9 @@ function Corrections({
   const [error, setError] = useState(false),
     [saved, setSaved] = useState(false);
   const [profileType, setProfileType] = useState<string | null>(null);
+  const [canCreate, setCanCreate] = useState(false);
+  const [profileError, setProfileError] = useState(false);
+  const [queueForbidden, setQueueForbidden] = useState(false);
   const [field, setField] = useState('first_name'),
     [value, setValue] = useState(''),
     [reason, setReason] = useState('');
@@ -79,6 +82,7 @@ function Corrections({
     setLoading(true);
     setError(false);
     setQueue(null);
+    setQueueForbidden(false);
     setDetail(null);
     setDetailLoading(false);
     const params = new URLSearchParams({
@@ -91,6 +95,10 @@ function Corrections({
       const response = await fetch(`/api/crm/verification-cases?${params}`, {
         credentials: 'include',
       });
+      if (response.status === 403) {
+        if (current === generation.current) setQueueForbidden(true);
+        return;
+      }
       if (!response.ok) throw new Error();
       const data = await response.json();
       if (!Array.isArray(data.cases)) throw new Error();
@@ -110,20 +118,24 @@ function Corrections({
   }, [load]);
   useEffect(() => {
     if (!profileId) return;
+    setProfileError(false);
     const controller = new AbortController();
     void fetch(`/api/crm/profiles/${encodeURIComponent(profileId)}`, {
       credentials: 'include',
       signal: controller.signal,
     })
       .then(async (response) => {
-        if (!response.ok) return;
+        if (!response.ok) throw new Error();
         const data = await response.json();
         if (controller.signal.aborted) return;
         if (
           data?.profile?.id !== profileId ||
           !['LEGAL', 'INDIVIDUAL'].includes(data.profile.profileType)
         )
-          return;
+          throw new Error('Invalid correction profile');
+        setCanCreate(
+          data.viewerPermissions?.canEditIdentity === true && data.profile.archived === false
+        );
         setProfileType(data.profile.profileType);
         const fields =
           data.profile.profileType === 'LEGAL'
@@ -131,7 +143,12 @@ function Corrections({
             : ['first_name', 'last_name', 'national_id'];
         setField(initialField && fields.includes(initialField) ? initialField : fields[0]!);
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setCanCreate(false);
+          setProfileError(true);
+        }
+      });
     return () => controller.abort();
   }, [profileId, initialField, refreshVersion]);
   async function select(item: Case) {
@@ -185,6 +202,7 @@ function Corrections({
     event.preventDefault();
     if (
       !profileId ||
+      !canCreate ||
       !files.length ||
       files.length > 5 ||
       files.some((file) => !isAllowedInvoiceReceiptFile(file)) ||
@@ -243,7 +261,8 @@ function Corrections({
           </a>
         </p>
       )}
-      {profileId && profileType && queue?.viewer.canCreate && (
+      {profileError && <p role="alert">{t('crm.profile.error.generic', locale)}</p>}
+      {profileId && profileType && canCreate && (
         <form
           onSubmit={(event) => void create(event)}
           className="space-y-3 rounded border bg-white p-4"
@@ -322,23 +341,27 @@ function Corrections({
         </form>
       )}
       <div className="flex flex-wrap items-center gap-3">
-        <Label htmlFor="case-status">{t('crm.corrections.status', locale)}</Label>
-        <select
-          id="case-status"
-          disabled={busy || !!action}
-          value={status}
-          onChange={(event) => {
-            setStatus(event.target.value as Status);
-            setOffset(0);
-          }}
-          className="rounded border p-2"
-        >
-          {(['Open', 'Under Review', 'Approved', 'Rejected'] as const).map((value) => (
-            <option key={value} value={value}>
-              {t(`crm.corrections.${value}`, locale)}
-            </option>
-          ))}
-        </select>
+        {!queueForbidden && (
+          <>
+            <Label htmlFor="case-status">{t('crm.corrections.status', locale)}</Label>
+            <select
+              id="case-status"
+              disabled={busy || !!action}
+              value={status}
+              onChange={(event) => {
+                setStatus(event.target.value as Status);
+                setOffset(0);
+              }}
+              className="rounded border p-2"
+            >
+              {(['Open', 'Under Review', 'Approved', 'Rejected'] as const).map((value) => (
+                <option key={value} value={value}>
+                  {t(`crm.corrections.${value}`, locale)}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
         <Button
           variant="outline"
           disabled={loading || busy || !!action}
@@ -354,6 +377,8 @@ function Corrections({
       {error && <p role="alert">{t('crm.corrections.error', locale)}</p>}
       {loading ? (
         <p role="status">{t('crm.list.loading', locale)}</p>
+      ) : queueForbidden ? (
+        <p>{t('crm.corrections.queueForbidden', locale)}</p>
       ) : queue?.cases.length ? (
         <ul className="space-y-2">
           {queue.cases.map((item) => (
@@ -377,22 +402,24 @@ function Corrections({
       ) : (
         !error && <p>{t('crm.corrections.empty', locale)}</p>
       )}
-      <nav className="flex gap-2" aria-label={t('crm.corrections.title', locale)}>
-        <Button
-          variant="outline"
-          disabled={loading || busy || !!action || offset === 0}
-          onClick={() => setOffset((previous) => Math.max(0, previous - 20))}
-        >
-          {t('crm.list.previous', locale)}
-        </Button>
-        <Button
-          variant="outline"
-          disabled={loading || busy || !!action || !queue || offset + 20 >= queue.total}
-          onClick={() => setOffset((previous) => previous + 20)}
-        >
-          {t('crm.list.next', locale)}
-        </Button>
-      </nav>
+      {queue && (
+        <nav className="flex gap-2" aria-label={t('crm.corrections.title', locale)}>
+          <Button
+            variant="outline"
+            disabled={loading || busy || !!action || offset === 0}
+            onClick={() => setOffset((previous) => Math.max(0, previous - 20))}
+          >
+            {t('crm.list.previous', locale)}
+          </Button>
+          <Button
+            variant="outline"
+            disabled={loading || busy || !!action || !queue || offset + 20 >= queue.total}
+            onClick={() => setOffset((previous) => previous + 20)}
+          >
+            {t('crm.list.next', locale)}
+          </Button>
+        </nav>
+      )}
       {detailLoading && <p role="status">{t('crm.list.loading', locale)}</p>}
       {detail && (
         <article className="space-y-3 rounded border bg-white p-4 break-words">

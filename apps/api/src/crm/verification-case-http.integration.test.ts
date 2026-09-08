@@ -454,3 +454,45 @@ for (const correctionFirst of [false, true])
       await operation;
     }
   });
+
+it('allows a correction-only staff member to create without granting queue, detail or review access', async () => {
+  const target = await profile();
+  await http.pool.query(
+    "INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('correction-only','Correction only','Fixture','[\"crm:read\",\"crm:edit-identity\"]')"
+  );
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES ('creator','correction-only')"
+  );
+  await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='creator'");
+  try {
+    const details = await fetch(http.base + '/api/crm/profiles/' + target, {
+      headers: headers.creator!,
+    });
+    expect(details.status).toBe(200);
+    expect(await details.json()).toMatchObject({
+      profile: { id: target },
+      viewerPermissions: { canEditIdentity: true, canVerify: false },
+    });
+    const created = await create(target);
+    expect(created.status).toBe(201);
+    const result = (await created.json()) as { id: string };
+    expect(result).toMatchObject({ success: true, status: 'Open', profileId: target });
+    for (const path of [
+      '/api/crm/verification-cases',
+      '/api/crm/profiles/' + target + '/verification-cases',
+      '/api/crm/verification-cases/' + result.id,
+    ])
+      expect((await fetch(http.base + path, { headers: headers.creator! })).status).toBe(403);
+    expect((await review(result.id, 'Under Review', 'creator')).status).toBe(403);
+    await http.pool.query(
+      "DELETE FROM user_roles WHERE user_id='creator' AND role_id='correction-only'"
+    );
+    expect((await create(await profile())).status).toBe(403);
+  } finally {
+    await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='creator'");
+    await http.pool.query(
+      "DELETE FROM user_roles WHERE user_id='creator' AND role_id='correction-only'"
+    );
+    await http.pool.query("DELETE FROM staff_roles WHERE role_id='correction-only'");
+  }
+});
