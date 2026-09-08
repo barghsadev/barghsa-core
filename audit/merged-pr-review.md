@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `7915c70b080d5a05ba57a22a357e8cbb233160c7c3e7d68bd858d9715f67c157`
+- `acceptance-closure.json`: `696e1ee782257bde2c3049bf997e38b6cf26cec856834ab515a33c4ec1357957`
 - `pr-deferrals.json`: `e3867cf66c80c265784dbfa26a0947149c04c8a7f6020d6e0709a20b69df18fd`
 - `evidence/step-reviews.json`: `b227b6a6fb8cfbe3a90a585dfaf0bcba0f2d6f25a081f86c6b7e62d09987b9e0`

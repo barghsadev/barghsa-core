@@ -5875,7 +5875,7 @@
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
-        "Required cross-domain role matrix remains unresolved. See progress.json.active_batch.cross_domain_evidence; no future requirement is counted as passed."
+        "Required cross-domain role matrix remains unresolved. See progress.json.open_domain_reviews; no future requirement is counted as passed."
       ],
       "merged_prs": [
         134

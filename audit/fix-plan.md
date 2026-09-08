@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product `1bf4680`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product `adf9020`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -20,7 +20,7 @@ First feature batch completed locally at `1bf4680`: agents, invitations and owne
 
 Current evidence:92 API cases,13 worker cases,80 distinct production-browser cases,50 i18n cases, applicable types/lint/format/OpenAPI and all41 unchanged route budgets. Focused reruns overlap these counts. Previous ownership API evidence is reused because its method bodies are unchanged. Deployed operations and the broad V02/coverage checkpoint are separate.
 
-Continue R01 by selecting a bounded account/session recovery batch from saved task requirements and PR inventory. Reuse completed staff, CRM, invitation and ownership work. Keep lost-contact policy pending without asking again. Preserve R01–B01 order; link cross-domain agent checks when their owning batches run. Apply the feature-batch rules below.
+Active R01 batch: registration and OTP, saved PRs #68–#76. UI repair029905c and atomic registration audit/deadline repairadf9020 are reviewed;76 distinct browser and21 API checks pass across focused runs. Remaining confirmed repairs are duplicate submission handling and admin-configurable OTP expiry. Literal strength/terms-link/device-quota and session acceptance still need disposition. Exact checklist and reusable evidence are in progress.json.active_batch. Finish this batch and save one consolidated closure; no registration task/PR has been closed at this interruption checkpoint. Reuse completed staff, CRM, invitation and ownership work. Keep lost-contact policy pending without asking again. Preserve R01–B01 order; link cross-domain agent checks when their owning batches run. Apply the feature-batch rules below.
 
 ## Execution order
 

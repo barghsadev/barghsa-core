@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+  "source_revision": "adf9020f93d387a1baacfdd18f281ad9e7d26272",
   "active_step": "R01",
-  "next_action": "First feature batch is complete locally: PR131/132/133/135 closed; PR134 remains open for its assigned wallet/invoice/contract/order role evidence. Select the next bounded R01 account/session recovery batch from saved requirements and PR evidence, reusing completed work. Keep lost-contact policy pending without another question; preserve R01–B01 order and skipped builds in B01.",
+  "next_action": "Continue the same registration/OTP batch with duplicate submission handling and configurable OTP expiry. Preserve 029905c/adf9020 fixes and76 browser/21 API checks. Complete remaining acceptance review and consolidate once; do not restart completed UI or atomic-audit work.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -694,207 +694,229 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-agents-invitations-ownership",
-    "name": "Agents, invitations and ownership",
-    "status": "local_batch_complete_domain_review_open",
+    "id": "R01-registration-otp",
+    "name": "Registration and OTP",
+    "status": "in_progress",
     "prs": [
-      131,
-      132,
-      133,
-      134,
-      135
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-05.04.01",
-      "02-auth-users-admin.md#T-05.04.02",
-      "02-auth-users-admin.md#T-05.04.03",
-      "02-auth-users-admin.md#T-05.04.04",
-      "02-auth-users-admin.md#T-05.04.05"
+      "02-auth-users-admin.md#T-01.01.01",
+      "02-auth-users-admin.md#T-01.01.02",
+      "02-auth-users-admin.md#T-01.01.03",
+      "02-auth-users-admin.md#T-01.01.04",
+      "02-auth-users-admin.md#T-01.01.05",
+      "02-auth-users-admin.md#T-01.01.06",
+      "02-auth-users-admin.md#T-01.02.01",
+      "02-auth-users-admin.md#T-01.02.02",
+      "02-auth-users-admin.md#T-01.02.03"
     ],
     "remaining_checklist": [
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.01",
-        "criteria": [
-          "Current owner/Manager-only list; invited registration status remains private.",
-          "Required name/role/status/joined/actions table and empty state; withdrawal and removal."
-        ],
-        "evidence": [
-          "e48bf58 invitation authority/withdrawal",
-          "417ab33 agent mutations",
-          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-        ],
-        "review_status": "acceptance_verified"
-      },
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.02",
-        "criteria": [
-          "Email/mobile invitation modal, role choice, named entity preview, confirmation and truthful success.",
-          "Registered-user notification and registration-time invitation linking.",
-          "10/hour/profile, one owner, seven-day expiry and complete invitation states/audit."
-        ],
-        "evidence": [
-          "e48bf58 invitation current authorization and duplicate/audit/expiry tests",
-          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-        ],
-        "review_status": "acceptance_verified"
-      },
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.03",
-        "criteria": [
-          "Current-user private pending banner and view-details with entity/inviter/role description/date.",
-          "Accept/decline exact invitation, current credentials, scoped audit and refreshed membership; no extra confirmation required by canonical text."
-        ],
-        "evidence": [
-          "5543cc2 invitation acceptance/rotation",
-          "e48bf58 private decline, current authorization and deadlock repair",
-          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-        ],
-        "review_status": "acceptance_verified"
-      },
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.04",
-        "criteria": [
-          "Additive current agent roles; owner protection; immediate access revocation and preserved history.",
-          "Conditional agent/ownership controls; link wallet/invoice/payment/receipt/refund, contract/document and order/address domain checks."
-        ],
-        "evidence": [
-          "417ab33 agent mutation authority/step-up/revocation",
-          "b4a0c83 ownership authority and expiry",
-          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-        ],
-        "review_status": "partial: linked domain review pending"
-      },
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.05",
-        "criteria": [
-          "Verify password, select eligible agent, confirm exact target, show named success and incoming banner.",
-          "Current owner retains control until acceptance; decline/expiry cancel; audit, one owner, both owners credential invalidation.",
-          "Cancellation, expiry/retry, refreshed CSRF, fa/en, RTL, theme, keyboard/focus and relevant error states."
-        ],
-        "evidence": [
-          "b4a0c83:70 API/unit cases",
-          "a80c807:36 team browser cases",
-          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-        ],
-        "review_status": "acceptance_verified"
-      }
+      "Shared auth layout, username normalization/blur hints and staged password visibility.",
+      "Local password meter/toggle/policy; exact terms version/hash/timestamp consent.",
+      "Registration submit idempotency, limits, safe localized errors/correlation, input preservation.",
+      "Secure OTP generation/configurable expiry/delivery/aggregate limits and same-challenge resend.",
+      "Masked OTP input, navigation/paste/autosubmit, cooldown, retries/expiry and redirects.",
+      "Atomic OTP consumption, user/session/CSRF creation and audit; onboarding handoff."
     ],
-    "confirmed_defects": [],
     "historical_deferrals": [
       {
-        "pr": 132,
-        "statement": "Withdraw/withdraw fix already exists (T-05.04.01)",
-        "disposition": "Withdrawal remains current owner/Manager-only and is verified by e48bf58 plus the current API/browser batch. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "pr": 71,
+        "statement": "Hardcoded TOS version until future E-04 implementation.",
+        "disposition": "Compare current published-version/hash consent path."
       },
       {
-        "pr": 132,
-        "statement": "Accept/decline UI (T-05.04.03 — separate task)",
-        "disposition": "Accept/decline and private details/banner are verified together with current credentials, retry and profile-refresh behavior. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "pr": 73,
+        "statement": "Destination-level registration limit tracked for T-02.04.01.",
+        "disposition": "Reuse verified rate-limit implementation and current source."
       },
       {
-        "pr": 132,
-        "statement": "Invitation expiry worker (follow-up)",
-        "disposition": "Invitation expiry worker is implemented and verified with real migrated PostgreSQL and compiled worker scheduling/failure recovery/shutdown. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-      }
-    ],
-    "cross_domain_evidence": [
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.04",
-        "owner_batch": "wallet/ledger and receipts/approvals/payments",
-        "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
-        "status": "pending linked acceptance"
-      },
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.04",
-        "owner_batch": "invoices",
-        "criteria": "Finance invoice visibility and additive scope",
-        "status": "pending linked acceptance"
-      },
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.04",
-        "owner_batch": "contracts/documents",
-        "criteria": "Legal accept/sign/reject/change rights; Finance signing denial",
-        "status": "pending linked acceptance"
-      },
-      {
-        "task_key": "02-auth-users-admin.md#T-05.04.04",
-        "owner_batch": "orders and addresses",
-        "criteria": "Manager operations, documents/comments/consultation and protected identity denial",
-        "status": "pending linked acceptance"
-      }
-    ],
-    "pr_dispositions": [
-      {
-        "pr": 131,
-        "status": "closed",
-        "task_keys": [
-          "02-auth-users-admin.md#T-05.04.01"
-        ],
-        "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
-        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-      },
-      {
-        "pr": 132,
-        "status": "closed",
-        "task_keys": [
-          "02-auth-users-admin.md#T-05.04.02"
-        ],
-        "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
-        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-      },
-      {
-        "pr": 133,
-        "status": "closed",
-        "task_keys": [
-          "02-auth-users-admin.md#T-05.04.03"
-        ],
-        "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
-        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-      },
-      {
-        "pr": 134,
-        "status": "open",
-        "task_keys": [
-          "02-auth-users-admin.md#T-05.04.04"
-        ],
-        "reason": "Cross-domain role criteria await linked wallet/invoice/contract/order batch evidence.",
-        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-      },
-      {
-        "pr": 135,
-        "status": "closed",
-        "task_keys": [
-          "02-auth-users-admin.md#T-05.04.05"
-        ],
-        "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
-        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "pr": 74,
+        "statement": "Original OTP validation run had a 429 exception-filter mismatch.",
+        "disposition": "Check current error filter and retained validation evidence."
       }
     ],
     "reused_evidence": [
-      "R01-agent-sensitive-actions",
-      "R01-invitation-authority",
-      "R01-invitation-credentials",
-      "R01-ownership-authority",
-      "R01-ownership-recipient-notice"
+      "R01-otp-trust-atomic",
+      "R01-reset-otp-first",
+      "R01-agents-invitations-ownership: real registration-time invitation discovery; cookie and delivery prior evidence by exact source binding"
     ],
-    "new_evidence": [
-      "92 API cases across six selected files pass, including registration-time invitation discovery and quota. 13 real-PostgreSQL/compiled-worker cases pass.",
-      "80 distinct production-browser cases pass across final/reused runs:64 team/profile-switch cases,16 staff cases. Final ownership/shared-focus correction additionally passes16 overlapping focused cases; do not add them to the distinct count.",
-      "50 i18n tests, API/web/worker/shared/i18n types, focused ESLint/Prettier, generated OpenAPI semantic match and all41 unchanged complete-route/Size Limit budgets pass.",
-      "Ownership method bodies match batch-base source exactly; prior b4a0c83 authority evidence remains valid. No schema, dependency installation, loop-state, remote publication or production operation changed."
+    "confirmed_defects": [
+      "Registration does not deduplicate identical submissions.",
+      "OTP expiry is a fixed five-minute constant, with no admin setting."
     ],
-    "next_action": "First feature batch is complete locally: PR131/132/133/135 closed; PR134 remains open for its assigned wallet/invoice/contract/order role evidence. Select the next bounded R01 account/session recovery batch from saved requirements and PR evidence, reusing completed work. Keep lost-contact policy pending without another question; preserve R01–B01 order and skipped builds in B01.",
-    "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
-    "pr_counts": {
-      "closed": 4,
-      "open": 1,
-      "blocked": 0
+    "pr_dispositions": [
+      {
+        "pr": 68,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      },
+      {
+        "pr": 69,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      },
+      {
+        "pr": 70,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      },
+      {
+        "pr": 71,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      },
+      {
+        "pr": 72,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      },
+      {
+        "pr": 73,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      },
+      {
+        "pr": 74,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      },
+      {
+        "pr": 75,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      },
+      {
+        "pr": 76,
+        "status": "open",
+        "reason": "Current requirement and historical claim review in progress."
+      }
+    ],
+    "next_action": "Continue the same registration/OTP batch with duplicate submission handling and configurable OTP expiry. Preserve 029905c/adf9020 fixes and76 browser/21 API checks. Complete remaining acceptance review and consolidate once; do not restart completed UI or atomic-audit work.",
+    "completed_work": [
+      {
+        "revision": "029905c",
+        "summary": "Registration/OTP UI repair reviewed. Masked destination helper reused unchanged from reset; meter respects focus/blur/submit while reserving layout space; localized error toast and alert; mobile branding stacks; OTP verify/resend serialize and use elapsed cooldown; stale expiry redirect checks current route; registration uses existing /app and onboarding.",
+        "checks": "76 distinct Chromium/mobile Chrome cases pass across focused runs. Final app handoff rechecks overlap eight registration cases and supply four login cases. Web types, focused lint/format and 41 unchanged budgets pass.",
+        "logs": [
+          "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-app-browser.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-browser-final.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-browser.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-budgets-final.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-budgets.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-build-final.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-build.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-existing-app-build.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-expiry-browser-final.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-expiry-browser.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-expiry-build.log.gz",
+          "audit/evidence/adf9020/r01-registration-ui-shared-browser.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz"
+        ],
+        "review_notes": "Browser checks caught collapsing-meter click loss, delayed-route unmount and an unnecessary alias. All corrected before commit. The existing /_app/app route is preserved; no new route or generated tree change.",
+        "source_evidence": [
+          {
+            "path": "apps/web/src/components/AuthLayout.tsx",
+            "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+          },
+          {
+            "path": "apps/web/src/components/PasswordField.tsx",
+            "sha256": "a7b3b6100b2230c8c73f15738212b353904e92b764af76f998c517ecb8cf1f8a"
+          },
+          {
+            "path": "apps/web/src/lib/mask-destination.ts",
+            "sha256": "2ae10fd5ac80c861d3c0122cfc5e9a416709785688a309e88c179586a191603f"
+          },
+          {
+            "path": "apps/web/src/routes/forgot-password.tsx",
+            "sha256": "0a0fd571374f7b706d8b37488bafb79c86d4ea194b40d9bdca16cda79694f289"
+          },
+          {
+            "path": "apps/web/src/routes/register/index.tsx",
+            "sha256": "5411a592452c8112e5b6d6bd138ce43b9d4e644ce57b95dbadd32cde76fa402d"
+          },
+          {
+            "path": "apps/web/src/routes/register/verify.tsx",
+            "sha256": "afe416d6a1d337f451e690609032ec97265008075a0bbaf6537aef7bc087fd1b"
+          },
+          {
+            "path": "apps/web/e2e/registration-feature.spec.ts",
+            "sha256": "97a833687cfd3d5e8f46e6396d50c172a9d0347f23e2f21c126f6716ba8fcd56"
+          },
+          {
+            "path": "apps/web/e2e/registration-recovery.spec.ts",
+            "sha256": "e48b30a09b7002749770cf44b1b95c71ff6db2e65307ebb5d9ea96730e4d8e77"
+          }
+        ]
+      },
+      {
+        "revision": "adf9020f93d387a1baacfdd18f281ad9e7d26272",
+        "summary": "Atomic user_created audit stores accepted publication ID, acceptance time and SHA-256 hashes of both published language contents. The same transaction owns user, consent, OTP consumption, session/refresh and audit. A final database wall-clock deadline check rolls every effect back after consent/session/refresh/audit lock waits.",
+        "checks": "21 distinct real-PostgreSQL/API cases pass:15 first-run cases,5 corrected fixture checks and1 delivered-provider-code case. Audit failure permits exactly one concurrent retry. API types, focused lint/format and diff checks pass.",
+        "review_notes": "Initial fixture polls used a one-second default against a two-second deadline; set five-second timeout. Audit metadata is stored text, so the read assertion now casts JSON. Strict types caught array indexing; optional row access preserves missing-publication rejection. No schema, API response, cookie policy, dependency or OTP rate-limit change. Other auth method bodies are unchanged.",
+        "source_evidence": [
+          {
+            "path": "apps/api/src/auth/auth.service.ts",
+            "sha256": "ec783b4b07b7fad641232756497d14e8a3d0ebf740b4e78e7abe9fcd38973fd8"
+          },
+          {
+            "path": "apps/api/src/auth/registration-http.integration.test.ts",
+            "sha256": "f527954aad512f8389e9f0918c53a016737df3a379a3378b302794e39f27cf67"
+          }
+        ],
+        "logs": [
+          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "audit/evidence/adf9020/r01-registration-atomic-api-final.log.gz",
+          "audit/evidence/adf9020/r01-registration-atomic-api.log.gz",
+          "audit/evidence/adf9020/r01-registration-atomic-delivery.log.gz",
+          "audit/evidence/adf9020/r01-registration-atomic-types.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+        ]
+      }
+    ],
+    "remaining_acceptance_review": [
+      "Finish server username normalization and exact registration deduplication semantics without single-connection pool deadlocks.",
+      "Disposition admin-configurable OTP expiry and aggregate device quota literally against the requirement.",
+      "Review strength-estimator equivalence and terms-link desktop/mobile requirements; current local heuristic and exact-version dialog must not be silently treated as an approved requirements change.",
+      "Verify complete task-specific cookie/session/CSRF/OTP-consumption criteria, reuse unchanged delivery and session evidence, and resolve the three historical PR-body claims.",
+      "Run one remaining affected-workflow checkpoint, then individually close supported tasks and PRs in a consolidated batch report."
+    ]
+  },
+  "open_domain_reviews": [
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "wallet/ledger and receipts/approvals/payments",
+      "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
+      "status": "pending linked acceptance"
     },
-    "review_record": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
-  }
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "invoices",
+      "criteria": "Finance invoice visibility and additive scope",
+      "status": "pending linked acceptance"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "contracts/documents",
+      "criteria": "Legal accept/sign/reject/change rights; Finance signing denial",
+      "status": "pending linked acceptance"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "orders and addresses",
+      "criteria": "Manager operations, documents/comments/consultation and protected identity denial",
+      "status": "pending linked acceptance"
+    }
+  ]
 }
