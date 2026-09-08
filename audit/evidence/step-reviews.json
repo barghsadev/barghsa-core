@@ -1148,6 +1148,93 @@
         "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
       ],
       "remaining": "41 verified, 19 partial, 262 pending. Next: T-05.02.06 archive writer/constraint/checklist acceptance, then T-05.02.01 profile/list review."
+    },
+    {
+      "id": "R01-archive-invoice-writers",
+      "date": "2026-09-08",
+      "source_revision": "8f86af00b02185cf0e4173681d167e8de4a421b6",
+      "summary": "Coordinated all implemented invoice creation paths with archival and stopped counting issued credit notes as unpaid bills.",
+      "review": [
+        "Manual invoices previously checked profile existence without a lock or archived-state check. Auto, replacement and adjustment writers also lacked the profile lock. The new fixed-selector query locks the active target profile before staff, order or invoice rows and holds it through commit.",
+        "Profile-first ordering also prevents the archive/profile versus invoice/staff deadlock. Tests hold the actor row or order row, start invoice creation, then verify that real HTTP archival waits. Tests also queue real archival first and verify that later manual/charge/credit creation returns 409 without side effects.",
+        "Child-target profile IDs are compared again after locking the order/original invoice. Caller-owned auto-invoice transactions retain their ownership; callers must acquire profile locks before order/invoice/wallet locks. No production caller of the automatic service was identified by graph tracing; this step does not certify its full order-flow integration task.",
+        "Credit notes use Unpaid storage state but are not customer payables. The archival query now excludes adjustment_kind=credit while preserving Draft, Unpaid, PaymentUnderReview, PartiallyFunded and Overdue blockers. Paid, Cancelled, PartiallyRefunded and Refunded histories remain retained after archival. A separate unpaid bill still blocks when a credit note exists.",
+        "Initial tests had three incorrect result-property assertions. The next run exposed the real credit-note blocker. A later run caught an accidentally removed NotFoundException import and five assertions using the wrong error-envelope shape. The import and assertions are restored/corrected; all failed logs are retained.",
+        "WalletService credit/debit/reserve/release/reverseTransaction and applyPostedBalanceDelta still need review with their transaction-owning callers. Inspect invoice-bank-receipt-confirmation.service.ts, wallet/bank-receipt-confirmation.service.ts, online-topup-callback.service.ts and pay-invoice-with-wallet.service.ts. Adding a profile lock only after a caller already holds a wallet lock can deadlock with archival; establish order at the transaction boundary."
+      ],
+      "checks": [
+        "Final archive/invoice PostgreSQL + real HTTP suite: 28/28 pass, exit 0.",
+        "Unchanged relevant evidence: 38 invoice unit cases pass; 44 existing manual/replacement/adjustment/order/top-up integration cases pass; 27 auto-invoice/CRM cases pass. Combined 137 distinct passes across runs, not one green 137-case invocation.",
+        "API typecheck, explicit lint, formatting, production build and OpenAPI drift pass, exit 0.",
+        "Reviewed staged diff; no migration, dependency, frontend, quality-floor or remote-state change. No global regression/coverage/image renewal."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "8cefc743b466b4e20222a4f58629a984e5de97dfcf7b498a99bdec82d097f05e"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
+          "sha256": "2b4ad70cadf700fdf78f8bbe4a10264b24a1efe8ce1bb17279926dc3b97f7baf"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+          "sha256": "f64ec1fe691203830f20a64b9cb936ae0acca1a07aeac01da7d06eed1055bd39"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "3b3a4a7fd0dd39c6dcd0a041e838da486497c49dee9862a16d278d8befc73b5c"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+          "sha256": "25afdb9f7e5b6f8146e50c99d653810a04a744e511218b52bab19b909cfb8937"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "a70e282c5249a9e66753c8e2d2f729d138995c2065250675400f6b9a66acf226"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-profile-lock.ts",
+          "sha256": "663e71f7595cf8d9ae8428e89c36d3e2299a872a5e34f0b2127bdea561dd8615"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "7696d6cde549af4b895cea03e86ad7dd78bec62cfac46cd84f03463e03901184"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-archive-invoice-build.log.gz",
+        "audit/evidence/r01/barghsa-archive-invoice-constraints-final.log.gz",
+        "audit/evidence/r01/barghsa-archive-invoice-final-integration.log.gz",
+        "audit/evidence/r01/barghsa-archive-invoice-format-2.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-archive-invoice-format-final.log.gz",
+        "audit/evidence/r01/barghsa-archive-invoice-format.log.gz",
+        "audit/evidence/r01/barghsa-archive-invoice-integration.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-archive-invoice-tests.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+      ],
+      "remaining": [
+        "Wallet credit/debit/reserve/release/reversal and their callers still need profile-first lock ordering. Existing top-up initiation and order races remain passing; those checks do not certify every balance writer.",
+        "No production contracts table or creation writer was found in repository discovery. Reconcile the future contract dependency and optional archival guard before claiming contract acceptance.",
+        "Review canonical legal-owner refusal, the required archive confirmation checklist, success acknowledgement validation and explicit blocker messages. The current UI redirects after any successful response without checking its target or archived timestamp.",
+        "Retention currently preserves data and an audit note. Required local handling and the operational retention procedure still need disposition; no production retention exercise is certified."
+      ]
     }
   ]
 }

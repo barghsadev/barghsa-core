@@ -1,6 +1,6 @@
 # Remaining repairs, reviews and skipped work
 
-Refreshed 2026-09-08 through product commit `0023f20`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
+Refreshed 2026-09-08 through product commit `8f86af0`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
 
 ## Current numbers
 
@@ -18,7 +18,7 @@ The saved inventory contains **301 merged PRs**, last recorded as checked agains
 
 Staff profile editing task `02-auth-users-admin.md#T-05.02.02` is verified locally at `0023f20`. Legal nonidentity fields now support validated, confirmed edits with current permissions, exact-version conflicts and atomic audits. T-05.02.03/.04/.05 remain verified. See [step evidence](evidence/step-reviews.json).
 
-Continue `02-auth-users-admin.md#T-05.02.06`: archive writer lock ordering, unpaid invoices and posted/reserved wallet constraints, legal-owner protection, confirmation checklist and retention disposition. Then complete the remaining profile/list requirements. Reuse passing CRM evidence.
+Invoice creation and all nine invoice-state constraints for `02-auth-users-admin.md#T-05.02.06` are checked at `8f86af0`. Continue with wallet balance writers and transaction-owning callers, then posted/reserved balances, legal-owner protection, confirmation checklist, target-bound success acknowledgement and retention disposition. Establish profile locks before staff/ledger/wallet locks. No implemented production contract writer/table was identified; preserve the future dependency. Profile/list requirements follow. Reuse passing evidence.
 
 ## Ordered work
 
@@ -41,7 +41,7 @@ A01 cleanup and A02 reconciliation are complete. R01 is active; eight later phas
 ## R01 checklist
 
 - Sessions/access: required approximate session location is missing. Complete rotation/revocation, trusted-device, CSRF alternatives and sensitive-action caller matrices. Review staff roles, activation, OTP/reset/contact changes, manual verification, profile selection, membership, ownership and address boundaries.
-- CRM: full profile/list requirements. Review archive writer lock ordering for invoice/contract/wallet paths, unpaid invoices, nonzero posted/reserved balances, canonical owner protection, confirmation checklist and retention. T-05.02.02/.03/.04/.05 are already verified locally.
+- CRM: full profile/list requirements. Invoice writers and unpaid-state archival checks pass. Finish wallet writer lock ordering, nonzero posted/reserved balances, canonical owner protection, confirmation checklist, success validation and retention; reconcile the unimplemented contract dependency. T-05.02.02/.03/.04/.05 are already verified locally.
 - Tickets/finance: customer/staff privacy, attachments, assignment and transitions; receipt thresholds/independent approval, callbacks/replays, invoice arithmetic/snapshots and ledger integrity. Preserve useful corrective PRs. Future refund, ordering and contract consumers remain separate where the original task requires them separately.
 - Recovery: confirmed contacts and intake/escalation runbook are implemented. Owner policy for lost-contact approvers/identity checks remains pending. A reviewed credential-change method and full case audit remain needed. Continue independent work while awaiting that answer.
 

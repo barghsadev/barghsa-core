@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "0023f20a373e0305f6c2ed8babaa3f6ae18940b2",
+  "source_revision": "8f86af00b02185cf0e4173681d167e8de4a421b6",
   "active_step": "R01",
-  "next_action": "R01: finish 02-auth-users-admin.md#T-05.02.06 archive acceptance. Reuse the passing CRM regressions. Check invoice/contract/wallet writers against profile-lock ordering, unpaid invoices, nonzero posted/reserved balances, canonical legal-owner protection, required confirmation checklist and retention disposition. Then complete T-05.02.01 profile/list review. T-05.02.02/.03/.04/.05 are verified locally. Lost-contact policy question stays pending.",
+  "next_action": "R01: continue 02-auth-users-admin.md#T-05.02.06 with wallet balance writers and callers. Invoice creation and all nine invoice-state archival constraints are now checked at 8f86af0. Establish profile-before-staff/ledger/wallet order at transaction boundaries; do not add a late profile lock only inside WalletService. Then verify posted/reserved balances, canonical legal owner protection, archive checklist, target-bound success acknowledgement and blocker details, plus retention disposition. Contracts have no implemented production writer/table identified; preserve that dependency gap. T-05.02.01 profile/list review follows. Lost-contact policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -407,6 +407,10 @@
     {
       "id": "R01-crm-legal-edit",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-legal-edit"
+    },
+    {
+      "id": "R01-archive-invoice-writers",
+      "review_record": "audit/evidence/step-reviews.json#R01-archive-invoice-writers"
     }
   ],
   "deferred_improvements": [

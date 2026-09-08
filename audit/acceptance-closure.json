@@ -4164,7 +4164,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+      "reviewed_sha": "8f86af00b02185cf0e4173681d167e8de4a421b6",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -4172,7 +4172,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "28fd8365550635f2890218f2f21b122b79757c17c163a30912d438fd4af2b717"
+          "sha256": "8cefc743b466b4e20222a4f58629a984e5de97dfcf7b498a99bdec82d097f05e"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -4197,24 +4197,70 @@
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
           "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
+          "sha256": "2b4ad70cadf700fdf78f8bbe4a10264b24a1efe8ce1bb17279926dc3b97f7baf"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+          "sha256": "f64ec1fe691203830f20a64b9cb936ae0acca1a07aeac01da7d06eed1055bd39"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "3b3a4a7fd0dd39c6dcd0a041e838da486497c49dee9862a16d278d8befc73b5c"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+          "sha256": "25afdb9f7e5b6f8146e50c99d653810a04a744e511218b52bab19b909cfb8937"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "a70e282c5249a9e66753c8e2d2f729d138995c2065250675400f6b9a66acf226"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-profile-lock.ts",
+          "sha256": "663e71f7595cf8d9ae8428e89c36d3e2299a872a5e34f0b2127bdea561dd8615"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "7696d6cde549af4b895cea03e86ad7dd78bec62cfac46cd84f03463e03901184"
         }
       ],
       "checks": [
         "Soft archival requires current admin:users:edit, recent step-up and a reason, preserves the profile and records actor/reason in profile_deleted. Read guards for unresolved corrections, orders, contracts, unpaid invoices, posted/reserved wallet balances, pending top-ups and canonical legal ownership.",
-        "Current79-case API batch covers order/top-up and correction-versus-archive races and rejection of outstanding archived corrections. Existing profile-action browser and permission evidence is reused where source remains unchanged."
+        "Current79-case API batch covers order/top-up and correction-versus-archive races and rejection of outstanding archived corrections. Existing profile-action browser and permission evidence is reused where source remains unchanged.",
+        "Manual, automatic, replacement and adjustment invoice creation now acquire a shared active-profile lock before staff/order/invoice locks. The locked source profile must still match. Archived targets fail without invoice, line or invoice-audit writes.",
+        "28 PostgreSQL/HTTP cases pass: archived targets and both lock-race directions for all invoice creation paths, real queued archival, every invoice state, issued credit notes and credit notes alongside separate unpaid debt. Credit notes are no longer misclassified as unpaid bills.",
+        "Reused passing 38 invoice unit cases, 44 existing invoice/order/top-up integration cases and 27 auto-invoice/CRM cases, totaling 137 distinct passing cases across focused runs. Types, lint/format, production API build and OpenAPI drift pass. See R01-archive-invoice-writers."
       ],
       "limitations": [
-        "Finish the invoice/contract/wallet writer matrix against profile-lock ordering and focused unpaid-invoice/nonzero posted/reserved balance acceptance. The current batch proves order/top-up races, not every business writer.",
-        "Review canonical legal-owner refusal and the required confirmation checklist/retention behavior against exact requirements. Retention is currently an audit note and preserved data; no production retention procedure or operator exercise is certified."
+        "Wallet credit/debit/reserve/release/reversal and their callers still need profile-first lock ordering. Existing top-up initiation and order races remain passing; those checks do not certify every balance writer.",
+        "No production contracts table or creation writer was found in repository discovery. Reconcile the future contract dependency and optional archival guard before claiming contract acceptance.",
+        "Review canonical legal-owner refusal, the required archive confirmation checklist, success acknowledgement validation and explicit blocker messages. The current UI redirects after any successful response without checking its target or archived timestamp.",
+        "Retention currently preserves data and an audit note. Required local handling and the operational retention procedure still need disposition; no production retention exercise is certified."
       ],
       "merged_prs": [
         128
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
-        "previous_reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
-        "review": "Corrected admin/correction themes and shared confirmation errors.74 distinct CRM browser cases have passing evidence across focused runs; API source unchanged. See R01-crm-correction-theme-and-scope."
+        "source_revision": "8f86af00b02185cf0e4173681d167e8de4a421b6",
+        "previous_reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+        "review": "Invoice writer and unpaid-state acceptance advanced; task stays partial for wallet, ownership, confirmation and retention work.",
+        "record": "audit/evidence/step-reviews.json#R01-archive-invoice-writers"
       }
     }
   ],
