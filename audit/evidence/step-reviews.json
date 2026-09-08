@@ -3416,6 +3416,44 @@
         "/tmp/barghsa-caller-revocation-staff-final.log",
         "/tmp/barghsa-caller-revocation-types.log"
       ]
+    },
+    {
+      "id": "R01-agent-role-credentials",
+      "date": "2026-09-08",
+      "source_revision": "8904b03606351e1f5907dfa2c139de180f6dd34f",
+      "summary": "Profile agent role changes/removal invalidate affected session and refresh credentials atomically; unchanged roles preserve credentials.",
+      "review": [
+        "Before repair, a role-change HTTP regression proved the old session still returned200 after privileges changed. The initial removal case used an invalid empty PUT payload; corrected it to the actual DELETE endpoint. Both final change/removal cases pass.",
+        "setAgentRoles locks the target account before membership/credential writes, serializing with session creation. It preserves the existing profile/manager authorization and account-before-session ordering. Actual changes revoke all target sessions and consume refresh credentials in the same membership/audit transaction; identical role sets return without revocation or audit churn.",
+        "The revised additive-role test first proves old credentials fail, then creates a fresh authenticated fixture session to verify Finance/Legal access under the new roles. Separate tests cover unchanged roles, audit-failure rollback, unrelated credentials and removal. All existing ownership races still pass.",
+        "Invitation acceptance is a separate privilege grant and still needs credential rotation/revocation plus transaction-bound profile/account/expiry review. Its current method was read but not changed in this step. No claim that all privilege writers or sensitive-action caller authorization is complete."
+      ],
+      "checks": [
+        "13/13 real-PostgreSQL ownership/agent HTTP cases pass, including four new credential cases. API types, focused ESLint, final Prettier and diff checks pass. No frontend/dependency/schema/response-shape change or broad regression renewal."
+      ],
+      "remaining": [
+        "Next review and fix invitation acceptance under T-02.02.01 and T-05.04.03, then remaining CSRF/sensitive-action matrices. Reuse the ten unchanged session/auth method comparisons. Lost-contact policy remains pending."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "7adfb9caaf799c4c896ba0f89ce50fe33341cf033f53a4133d143cecef827301"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "sha256": "82ab573a72e03b6b7d52a0f8fe2fb6dc77b7fcf181838ba8c042e703f47502aa"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-agent-credentials-after.log",
+        "/tmp/barghsa-agent-credentials-before.log",
+        "/tmp/barghsa-agent-credentials-format-check.log",
+        "/tmp/barghsa-agent-credentials-format-final.log",
+        "/tmp/barghsa-agent-credentials-format.log",
+        "/tmp/barghsa-agent-credentials-lint.log",
+        "/tmp/barghsa-agent-credentials-types.log"
+      ]
     }
   ]
 }

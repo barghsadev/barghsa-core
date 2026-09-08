@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "ee5beb2e55300297953108ea1ce4c50edaaaefc2",
+  "source_revision": "8904b03606351e1f5907dfa2c139de180f6dd34f",
   "active_step": "R01",
-  "next_action": "R01: repair T-02.02.01 profile privilege-change credential invalidation, starting with AgentsService.setAgentRoles and related invitation acceptance. Reuse the ten method comparisons and revocation checks in audit/session-caller-review.md; then complete CSRF and sensitive-action matrices. Lost-contact policy remains pending; no broad checkpoint renewed.",
+  "next_action": "R01: review/fix AgentsService.acceptInvitation under T-02.02.01 and T-05.04.03. It grants a role without rotating/revoking credentials and needs transaction-bound profile/account/expiry checks. Agent role change/removal is verified at 8904b03. Then finish CSRF/sensitive-action matrices. Reuse audit/session-caller-review.md; lost-contact policy pending, no broad checkpoint renewed.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -517,6 +517,10 @@
     {
       "id": "R01-session-caller-review",
       "review_record": "audit/evidence/step-reviews.json#R01-session-caller-review"
+    },
+    {
+      "id": "R01-agent-role-credentials",
+      "review_record": "audit/evidence/step-reviews.json#R01-agent-role-credentials"
     }
   ],
   "deferred_improvements": [

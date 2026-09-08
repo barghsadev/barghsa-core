@@ -1,6 +1,6 @@
 # Session caller review
 
-Reviewed through product `ee5beb2`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
+Reviewed through product `8904b03`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
 
 | Caller / event | Current credential behavior | Evidence / disposition |
 | --- | --- | --- |
@@ -17,7 +17,8 @@ Reviewed through product `ee5beb2`. Scope: session creation/rotation/revocation 
 | Self-service single/bulk revocation | Locked actor/confirmation and owner-scoped credentials are checked through commit. | `93dfc27`:41 distinct focused cases; browser evidence reused. |
 | Trusted-device removal | Removes the future-login trust record, retains sessions and checks actor/step-up deadlines through writes. | `89e7c53`:12 HTTP cases; next login requires OTP. |
 | Suspected compromise via refresh reuse | Revokes the affected family and persists a private, deduplicated security notice. | `redeemRefreshToken` unchanged from `f39132f`; reuse deadline and refresh-reuse alert checks. |
-| Profile agent role change/removal | `setAgentRoles` changes membership but leaves session/refresh credentials active. | Remaining privilege-change requirement. Fix target credential invalidation and review invitation acceptance/other privilege writers. Dynamic permission checks are separate from credential rotation. |
+| Profile agent role change/removal | `setAgentRoles` invalidates target credentials with changed membership; no-op preserves credentials. | `8904b03`:13 HTTP cases include change/removal, new-session permission behavior, no-op and audit rollback. |
+| Invitation acceptance | Adds profile privileges without rotating or revoking credentials. | Next remaining grant boundary; review account/profile locks, original expiry, credential handling and the acceptance UI together. |
 
 Exact method comparisons and hashes: [session-method-reuse.json](evidence/r01/session-method-reuse.json). All ten selected methods match their cited evidence revisions. This comparison does not renew dependency, whole-file, browser, coverage or production evidence.
 

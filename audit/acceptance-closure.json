@@ -3131,7 +3131,7 @@
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
       ],
       "limitations": [
-        "Session caller matrix is in audit/session-caller-review.md. Existing login/MFA/password-reset/forced-change/staff-role paths create fresh credentials or invalidate them before reauthentication. Profile privilege changes still require credential invalidation/rotation; review remaining privilege writers.",
+        "Caller matrix is in audit/session-caller-review.md. Profile role changes/removal now invalidate credentials. Invitation acceptance and any remaining privilege-grant writers need reconciliation; other reviewed callers retain cited evidence.",
         "Local cookie topology is documented and verified at 3ff2920. Production TLS/proxy execution remains external evidence; no cross-origin topology is claimed."
       ],
       "merged_prs": [
@@ -3246,7 +3246,7 @@
         "At ee5beb2, reviewed staff disablement, both ownership-transfer parties and unchanged CRM revocation primitives; see audit/session-caller-review.md. Other authorization criteria remain separate."
       ],
       "limitations": [
-        "Profile privilege-change caller coverage and final task-wide evidence reconciliation remain; built staff-disable/ownership/self-service/trusted-device/refresh-reuse revocation effects are checked."
+        "Invitation acceptance and final task-wide caller/evidence reconciliation remain. Built staff-disable/ownership/self-service/trusted-device/role-change/refresh-reuse revocation effects are checked; sensitive-action authorization stays in its own matrix."
       ],
       "merged_prs": [
         90
