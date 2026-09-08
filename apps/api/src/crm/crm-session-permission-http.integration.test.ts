@@ -93,9 +93,10 @@ for (const action of ['edit', 'verify', 'archive'] as const) {
 }
 
 for (const action of ['force-password-change', 'expire-sessions'] as const) {
-  for (const scenario of ['revoked', 'retained', 'deleted-target'] as const) {
+  for (const scenario of ['revoked', 'retained', 'deleted-target', 'notice-failure'] as const) {
     it(`${action} checks current permission and target after a lock wait (${scenario})`, async () => {
       const revokePermission = scenario === 'revoked';
+      const committed = scenario === 'retained';
       const suffix = randomUUID();
       // Target sorts first in the shared account-lock order. The actor can
       // lose permission while the pending request waits for the target.
@@ -133,6 +134,13 @@ for (const action of ['force-password-change', 'expire-sessions'] as const) {
       const blocker = await http.pool.connect();
       let request: Promise<Response> | undefined;
       try {
+        if (scenario === 'notice-failure') {
+          await http.pool
+            .query(`CREATE OR REPLACE FUNCTION reject_crm_notice() RETURNS trigger LANGUAGE plpgsql AS $$
+            BEGIN RAISE EXCEPTION 'controlled account notice failure'; END $$;
+            CREATE TRIGGER reject_crm_notice BEFORE INSERT ON in_app_notifications
+            FOR EACH ROW EXECUTE FUNCTION reject_crm_notice()`);
+        }
         await blocker.query('BEGIN');
         await blocker.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [target]);
         const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
@@ -180,10 +188,10 @@ for (const action of ['force-password-change', 'expire-sessions'] as const) {
           ).toHaveLength(0);
           return;
         }
-        expect(response.status).toBe(revokePermission ? 403 : 200);
+        expect(response.status).toBe(revokePermission ? 403 : committed ? 200 : 500);
         if (revokePermission) {
           expect(await response.json()).toMatchObject({ error: { code: 'AUTHZ:FORBIDDEN' } });
-        } else {
+        } else if (committed) {
           expect(await response.json()).toMatchObject({ success: true, userId: target });
         }
         const state = (
@@ -195,27 +203,44 @@ for (const action of ['force-password-change', 'expire-sessions'] as const) {
             [target, targetSession, refreshId]
           )
         ).rows[0];
-        expect(state.must_change_password).toBe(
-          !revokePermission && action === 'force-password-change'
-        );
-        expect(state.revoked_at !== null).toBe(!revokePermission);
-        expect(state.consumed_at !== null).toBe(!revokePermission);
+        expect(state.must_change_password).toBe(committed && action === 'force-password-change');
+        expect(state.revoked_at !== null).toBe(committed);
+        expect(state.consumed_at !== null).toBe(committed);
         const audit = await http.pool.query(
           `SELECT event,metadata FROM audit_log WHERE user_id=$1
            AND event IN ('force_password_change','expire_sessions')`,
           [actor]
         );
-        expect(audit.rows).toHaveLength(revokePermission ? 0 : 1);
-        if (!revokePermission) {
+        expect(audit.rows).toHaveLength(committed ? 1 : 0);
+        if (committed) {
           expect(JSON.parse(audit.rows[0].metadata)).toMatchObject({
             targetUserId: target,
             reason: `Reviewed case ${suffix}`,
           });
         }
+        const notices = await http.pool.query(
+          `SELECT recipient_user_id,profile_id,localized_content,link_route FROM in_app_notifications
+           WHERE recipient_user_id=ANY($1::text[])`,
+          [[target, actor]]
+        );
+        expect(notices.rows).toHaveLength(committed ? 1 : 0);
+        if (committed) {
+          expect(notices.rows[0]).toMatchObject({
+            recipient_user_id: target,
+            profile_id: null,
+            link_route: '/settings/security',
+          });
+          expect(notices.rows[0].localized_content.en.body).toContain('staff');
+          expect(notices.rows[0].localized_content.fa.body).toMatch(/[آ-ی]/u);
+          expect(JSON.stringify(notices.rows[0])).not.toContain(`Reviewed case ${suffix}`);
+        }
       } finally {
         await blocker.query('ROLLBACK');
         blocker.release();
         await request?.catch(() => undefined);
+        if (scenario === 'notice-failure') {
+          await http.pool.query('DROP TRIGGER IF EXISTS reject_crm_notice ON in_app_notifications');
+        }
       }
     });
   }

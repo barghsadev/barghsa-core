@@ -6,6 +6,7 @@ import { getDbPool } from '@barghsa/db';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { SessionService } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import type { PoolClient } from 'pg';
 import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js';
 
 /** Simple email regex for server-side validation */
@@ -624,6 +625,46 @@ export class CrmV2Service {
     }
   }
 
+  private async notifyAccountAction(
+    userId: string,
+    action: 'password' | 'sessions',
+    client: PoolClient
+  ): Promise<void> {
+    const content =
+      action === 'password'
+        ? {
+            fa: {
+              title: 'تغییر رمز عبور لازم است',
+              body: 'کارشناس تغییر رمز عبور حساب شما را درخواست کرده است. هنگام ورود بعدی، رمز عبور جدید انتخاب کنید.',
+            },
+            en: {
+              title: 'Password change required',
+              body: 'A staff member required a password change for your account. Choose a new password the next time you sign in.',
+            },
+          }
+        : {
+            fa: {
+              title: 'نشست‌های شما بسته شد',
+              body: 'کارشناس نشست‌های فعال حساب شما را بسته است. برای ادامه دوباره وارد شوید.',
+            },
+            en: {
+              title: 'Your sessions were signed out',
+              body: 'A staff member signed out your active sessions. Sign in again to continue.',
+            },
+          };
+    await this.notificationsService.create(
+      {
+        userId,
+        type: 'general',
+        title: content.fa.title,
+        body: content.fa.body,
+        localizedContent: content,
+        link: '/settings/security',
+      },
+      client
+    );
+  }
+
   /**
    * Forces a password change for a user by setting must_change_password = true
    * and revoking all their active sessions.
@@ -679,6 +720,7 @@ export class CrmV2Service {
         ]
       );
 
+      await this.notifyAccountAction(userId, 'password', client);
       await client.query('COMMIT');
 
       this.logger.debug(`Password change forced for user ${userId} by ${actorUserId}: ${reason}`);
@@ -744,6 +786,7 @@ export class CrmV2Service {
         ]
       );
 
+      await this.notifyAccountAction(userId, 'sessions', client);
       await client.query('COMMIT');
 
       this.logger.debug(`Sessions expired for user ${userId} by ${actorUserId}: ${reason}`);
