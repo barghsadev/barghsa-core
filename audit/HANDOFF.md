@@ -75,6 +75,8 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 - Privileged read boundaries: 12 new delivery-log/staff/template list checks plus five existing staff-audit cases pass. Verified separate jobs-read permission, revocation, filter preservation and nonnumeric pagination falling back to service defaults. API types and explicit lint pass. No production change. Log `/tmp/barghsa-admin-reads.log`; coverage refresh remains batched.
 
+- Branding controller review: 22 checks pass for separate edit permission, revocation, authenticated actor/draft/version binding, invalid activation versions, unsafe asset URLs and malformed saved settings. API types and lint pass. No production change. Log `/tmp/barghsa-brand-boundaries.log`.
+
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
 - **5,815 unit/integration tests across 461 files pass** at `0494ad4`, with affected web/i18n coverage refreshed at `eb19ed5`. All 11 workspace typechecks and root lint pass, with subsequent label changes checked separately.
