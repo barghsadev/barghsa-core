@@ -17,7 +17,9 @@ import { requireStaffMutationPermission } from '../admin/staff-mutation-permissi
 // ── Result types ─────────────────────────────────────────────────────
 
 export type CreateVerificationCaseResult =
-  { success: true; id: string; status: string; createdAt: string } | { error: string } | null;
+  | { success: true; id: string; status: string; profileId: string; createdAt: string }
+  | { error: string }
+  | null;
 
 export type ListVerificationCasesResult =
   { cases: VerificationCaseListItem[]; total: number } | { error: string };
@@ -213,7 +215,7 @@ export class VerificationCaseService {
         );
       }
       await client.query('COMMIT');
-      return { success: true, id, status: 'Open', createdAt: now };
+      return { success: true, id, status: 'Open', profileId, createdAt: now };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

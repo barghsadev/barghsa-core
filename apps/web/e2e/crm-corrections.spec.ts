@@ -30,7 +30,8 @@ for (const locale of ['en', 'fa'])
     await shell(page, locale);
     let verified = false,
       created = false,
-      uploads = 0;
+      uploads = 0,
+      acknowledgements = 0;
     const bodies: unknown[] = [];
     await page.route('**/api/crm/verification-cases?*', (route) =>
       route.fulfill({
@@ -61,8 +62,16 @@ for (const locale of ['en', 'fa'])
     await page.route(`**/api/crm/profiles/${profileId}/verification-cases`, (route) => {
       bodies.push(route.request().postDataJSON());
       if (!verified) return route.fulfill({ status: 403, json: { requiresStepUp: true } });
+      if (acknowledgements++ === 0)
+        return route.fulfill({
+          status: 201,
+          json: { success: true, id: caseId, status: 'Open', profileId: caseId },
+        });
       created = true;
-      return route.fulfill({ status: 201, json: { success: true, id: caseId, status: 'Open' } });
+      return route.fulfill({
+        status: 201,
+        json: { success: true, id: caseId, status: 'Open', profileId },
+      });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = true;
@@ -94,10 +103,19 @@ for (const locale of ['en', 'fa'])
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(page.locator('#correction-value')).toHaveValue('Corrected');
+    await expect(page.locator('#correction-reason')).toHaveValue('Document checked');
+    await dialog
+      .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
+      .fill('Test-password-123!');
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
     await expect(dialog).toHaveCount(0);
     expect(uploads).toBe(1);
     expect(bodies).toEqual(
-      Array.from({ length: 2 }, () => ({
+      Array.from({ length: 3 }, () => ({
         fieldName: 'first_name',
         requestedValue: 'Corrected',
         reason: 'Document checked',
@@ -130,7 +148,7 @@ test('correction reviewer sees fixed evidence and legacy cases stay blocked', as
   );
   await page.route(`**/api/crm/verification-cases/${caseId}/status`, (route) => {
     expect(route.request().postDataJSON()).toEqual({ decision: 'Approved' });
-    return route.fulfill({ json: { success: true } });
+    return route.fulfill({ json: { success: true, id: caseId, profileId, status: 'Approved' } });
   });
   await page.goto('/admin/crm/corrections');
   await page.getByRole('button', { name: 'Review case', exact: true }).click();
@@ -151,3 +169,92 @@ test('correction reviewer sees fixed evidence and legacy cases stay blocked', as
   await page.locator('#case-notes').fill('Resubmit evidence');
   await expect(page.getByRole('button', { name: 'Review decision', exact: true })).toBeEnabled();
 });
+
+for (const locale of ['en', 'fa'])
+  test(`correction decisions require the selected case and matching acknowledgement (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let detailAttempt = 0;
+    let saves = 0;
+    const bodies: unknown[] = [];
+    const detail = {
+      ...item,
+      currentValue: 'Original',
+      evidenceUrls: ['verification-evidence/fixed'],
+      evidenceDownloadUrls: ['https://storage.example.test/fixed'],
+      reviewerNotes: null,
+    };
+    await page.route('**/api/crm/verification-cases?*', (route) =>
+      route.fulfill({
+        json: {
+          cases: [item],
+          total: 1,
+          viewer: { userId: 'reviewer', canCreate: false, canReview: true },
+        },
+      })
+    );
+    await page.route(`**/api/crm/verification-cases/${caseId}`, (route) => {
+      const invalid = [
+        { ...detail, id: profileId },
+        { ...detail, profileId: caseId },
+      ];
+      return route.fulfill({ json: invalid[detailAttempt++] ?? detail });
+    });
+    const expected = { success: true, id: caseId, profileId, status: 'Approved' };
+    const invalid = [
+      null,
+      {},
+      { ...expected, success: false },
+      { ...expected, id: profileId },
+      { ...expected, profileId: caseId },
+      { ...expected, status: 'Rejected' },
+    ];
+    await page.route(`**/api/crm/verification-cases/${caseId}/status`, (route) => {
+      bodies.push(route.request().postDataJSON());
+      const result = saves < invalid.length ? invalid[saves] : expected;
+      saves++;
+      return route.fulfill({
+        status: 200,
+        body: JSON.stringify(result),
+        contentType: 'application/json',
+      });
+    });
+    await page.goto('/admin/crm/corrections');
+    const open = page.getByRole('button', {
+      name: locale === 'fa' ? 'بررسی درخواست' : 'Review case',
+      exact: true,
+    });
+    const review = page.getByRole('button', {
+      name: locale === 'fa' ? 'بررسی تصمیم' : 'Review decision',
+      exact: true,
+    });
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await open.click();
+      await expect(page.getByRole('alert')).toBeVisible();
+      await expect(review).toHaveCount(0);
+    }
+    await open.click();
+    await expect(page.getByText('Original', { exact: true })).toBeVisible();
+    await page.locator('#case-notes').fill('Evidence checked');
+    await review.click();
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
+    for (let attempt = 0; attempt < invalid.length; attempt++) {
+      await confirm.click();
+      await expect.poll(() => saves).toBe(attempt + 1);
+      await expect(dialog.getByRole('alert')).toBeVisible();
+      await expect(page.locator('#case-notes')).toHaveValue('Evidence checked');
+    }
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    expect(bodies).toEqual(
+      Array.from({ length: invalid.length + 1 }, () => ({
+        decision: 'Approved',
+        reviewerNotes: 'Evidence checked',
+      }))
+    );
+  });

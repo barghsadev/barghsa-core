@@ -9,6 +9,9 @@ import {
   isAllowedInvoiceReceiptFile,
 } from '../lib/invoice-bank-receipt-upload.js';
 type Status = 'Open' | 'Under Review' | 'Approved' | 'Rejected';
+interface CorrectionAction extends TeamAction {
+  expected: { profileId: string; status: Status; id?: string };
+}
 interface Case {
   assignedName?: string | null;
   id: string;
@@ -57,7 +60,7 @@ function Corrections({ profileId }: { profileId: string | undefined }) {
   const [files, setFiles] = useState<File[]>([]),
     [notes, setNotes] = useState(''),
     [decision, setDecision] = useState<Status>('Under Review');
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<CorrectionAction | null>(null);
   const load = useCallback(async () => {
     const current = ++generation.current;
     ++detailGeneration.current;
@@ -121,9 +124,26 @@ function Corrections({ profileId }: { profileId: string | undefined }) {
         credentials: 'include',
       });
       if (!response.ok) throw new Error();
-      const data = await response.json();
+      const data = (await response.json()) as Partial<Detail> | null;
+      if (
+        !data ||
+        data.id !== item.id ||
+        data.profileId !== item.profileId ||
+        data.fieldName !== item.fieldName ||
+        data.requestedValue !== item.requestedValue ||
+        data.createdBy !== item.createdBy ||
+        typeof data.reason !== 'string' ||
+        !['Open', 'Under Review', 'Approved', 'Rejected'].includes(data.status ?? '') ||
+        (data.currentValue !== null && typeof data.currentValue !== 'string') ||
+        !Array.isArray(data.evidenceUrls) ||
+        !data.evidenceUrls.every((key) => typeof key === 'string') ||
+        (data.evidenceDownloadUrls !== undefined &&
+          (!Array.isArray(data.evidenceDownloadUrls) ||
+            !data.evidenceDownloadUrls.every((url) => typeof url === 'string')))
+      )
+        throw new Error('Invalid correction detail');
       if (current === detailGeneration.current) {
-        setDetail(data);
+        setDetail(data as Detail);
         setDecision(data.status === 'Open' ? 'Under Review' : 'Approved');
       }
     } catch {
@@ -132,7 +152,7 @@ function Corrections({ profileId }: { profileId: string | undefined }) {
       if (current === detailGeneration.current) setDetailLoading(false);
     }
   }
-  function captured(next: TeamAction) {
+  function captured(next: CorrectionAction) {
     setSaved(false);
     setAction({
       ...next,
@@ -165,6 +185,7 @@ function Corrections({ profileId }: { profileId: string | undefined }) {
         description: `${profileId} · ${t(`crm.corrections.${field}`, locale)} · ${value.trim()} · ${reason.trim()}`,
         path: `/api/crm/profiles/${encodeURIComponent(profileId)}/verification-cases`,
         method: 'POST',
+        expected: { profileId, status: 'Open' },
         body: {
           fieldName: field,
           requestedValue: value.trim(),
@@ -429,6 +450,7 @@ function Corrections({ profileId }: { profileId: string | undefined }) {
                       description: `${detail.id} · ${detail.requestedValue} · ${notes.trim()}`,
                       path: `/api/crm/verification-cases/${detail.id}/status`,
                       method: 'PUT',
+                      expected: { id: detail.id, profileId: detail.profileId, status: decision },
                       body: { decision, ...(notes.trim() ? { reviewerNotes: notes.trim() } : {}) },
                     })
                   }
@@ -444,7 +466,25 @@ function Corrections({ profileId }: { profileId: string | undefined }) {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
-          onSuccess={async () => {
+          onSuccess={async (value) => {
+            const result = value as {
+              success?: unknown;
+              id?: unknown;
+              profileId?: unknown;
+              status?: unknown;
+            } | null;
+            if (
+              !result ||
+              result.success !== true ||
+              result.profileId !== action.expected.profileId ||
+              result.status !== action.expected.status ||
+              typeof result.id !== 'string' ||
+              !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+                result.id
+              ) ||
+              (action.expected.id !== undefined && result.id !== action.expected.id)
+            )
+              throw new Error('Invalid correction acknowledgement');
             setSaved(true);
             setValue('');
             setReason('');

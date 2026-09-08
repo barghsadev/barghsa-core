@@ -111,7 +111,9 @@ for (const action of ['create', 'approve'] as const) {
     if (action === 'approve') {
       const created = await create(target);
       expect(created.status).toBe(201);
-      caseId = ((await created.json()) as { id: string }).id;
+      const result = (await created.json()) as { id: string };
+      expect(result).toMatchObject({ success: true, profileId: target, status: 'Open' });
+      caseId = result.id;
       expect((await review(caseId, 'Under Review')).status).toBe(200);
     }
     const before = (
