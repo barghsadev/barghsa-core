@@ -155,8 +155,14 @@ for (const deadline of ['idle_deadline', 'expires_at'] as const) {
     }
   });
 
-  for (const action of ['refresh', 'rotate'] as const) {
-    it(`rolls back ${action} if ${deadline} passes during credential writes`, async () => {
+  for (const action of ['refresh', 'rotate', 'step-up'] as const) {
+    it(`rolls back ${action} if ${deadline} passes during credential or audit writes`, async () => {
+      if (action === 'step-up') {
+        const { hash } = await import('argon2');
+        await db.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='cap-user'", [
+          await hash('current-password'),
+        ]);
+      }
       const original = await service.createSession('cap-user', false);
       await db.pool.query(
         `UPDATE sessions SET ${deadline}=clock_timestamp()+INTERVAL '1 second' WHERE session_id=$1`,
@@ -170,12 +176,16 @@ for (const deadline of ['idle_deadline', 'expires_at'] as const) {
       try {
         await lock.query('BEGIN');
         // Permit authorization reads/row locks but delay subsequent writes.
-        await lock.query('LOCK TABLE refresh_tokens IN SHARE MODE');
+        await lock.query(
+          `LOCK TABLE ${action === 'step-up' ? 'audit_log' : 'refresh_tokens'} IN SHARE MODE`
+        );
         const pid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
         const operation =
           action === 'refresh'
             ? service.redeemRefreshToken(original.refreshToken)
-            : service.rotateSession(original.sessionId, 'late deadline');
+            : action === 'rotate'
+              ? service.rotateSession(original.sessionId, 'late deadline')
+              : service.verifyStepUp('cap-user', original.sessionId, 'current-password');
         outcome = operation.then(
           (value) => ({ value }),
           (error) => ({ error })
@@ -205,7 +215,7 @@ for (const deadline of ['idle_deadline', 'expires_at'] as const) {
           .toBe(true);
         await lock.query('COMMIT');
         expect(await outcome).toMatchObject(
-          action === 'refresh' ? { error: { status: 401 } } : { value: null }
+          action === 'rotate' ? { value: null } : { error: { status: 401 } }
         );
         expect((await db.pool.query('SELECT * FROM sessions ORDER BY session_id')).rows).toEqual(
           beforeSession
@@ -213,6 +223,9 @@ for (const deadline of ['idle_deadline', 'expires_at'] as const) {
         expect((await db.pool.query('SELECT * FROM refresh_tokens ORDER BY id')).rows).toEqual(
           beforeTokens
         );
+        expect(
+          (await db.pool.query("SELECT id FROM audit_log WHERE event='step_up_verified'")).rows
+        ).toHaveLength(0);
       } finally {
         await lock.query('ROLLBACK');
         lock.release();
@@ -257,21 +270,84 @@ it.each(['revoked', 'idle-expired', 'expired', 'disabled', 'wrong-owner'])(
   }
 );
 
+it('rotates step-up exactly once under concurrent submission and binds the replacement to its audit', async () => {
+  const { hash } = await import('argon2');
+  await db.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='cap-user'", [
+    await hash('current-password'),
+  ]);
+  const original = await service.createSession('cap-user', false, {
+    ip: '192.0.2.1',
+    userAgent: 'Rotation fixture',
+  });
+  const attempts = await Promise.allSettled([
+    service.verifyStepUp('cap-user', original.sessionId, 'current-password'),
+    service.verifyStepUp('cap-user', original.sessionId, 'current-password'),
+  ]);
+  expect(attempts.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
+  expect(attempts.find((result) => result.status === 'rejected')).toMatchObject({
+    reason: { status: 401 },
+  });
+  const success = attempts.find((result) => result.status === 'fulfilled')!;
+  if (success.status !== 'fulfilled') throw new Error('Expected one success');
+  const rotated = success.value;
+  expect(rotated.sessionId).not.toBe(original.sessionId);
+  expect(rotated.csrfToken).not.toBe(original.csrfToken);
+  expect(rotated.refreshToken).not.toBe(original.refreshToken);
+  expect(rotated.expiresAt).toEqual(original.expiresAt);
+  expect(await service.validateSession(original.sessionId, false)).toBeNull();
+  expect(await service.validateSession(rotated.sessionId, false)).toMatchObject({
+    csrfToken: rotated.csrfToken,
+    stepUpVerifiedAt: rotated.stepUpVerifiedAt,
+    expiresAt: original.expiresAt,
+  });
+  expect(await usable()).toHaveLength(1);
+  const rows = (
+    await db.pool.query('SELECT family_id,device_info FROM sessions ORDER BY session_id')
+  ).rows;
+  expect(rows).toHaveLength(2);
+  expect(rows[0]).toEqual(rows[1]);
+  const audit = (
+    await db.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='step_up_verified'"
+    )
+  ).rows;
+  expect(audit).toEqual([
+    { metadata: { stepUpVerified: true, verifiedAt: rotated.stepUpVerifiedAt.toISOString() } },
+  ]);
+  for (const secret of [
+    original.sessionId,
+    rotated.sessionId,
+    rotated.refreshToken,
+    rotated.csrfToken,
+  ])
+    expect(JSON.stringify(audit)).not.toContain(secret);
+  await expect(service.redeemRefreshToken(original.refreshToken)).rejects.toMatchObject({
+    status: 401,
+  });
+  expect(await service.validateSession(rotated.sessionId, false)).toBeNull();
+  expect((await db.pool.query('SELECT id FROM in_app_notifications')).rows).toHaveLength(1);
+});
+
 it('rolls back step-up if its audit record cannot be persisted', async () => {
   const { hash } = await import('argon2');
   await db.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='cap-user'", [
     await hash('current-password'),
   ]);
   const session = await service.createSession('cap-user', false);
+  const beforeSessions = (await db.pool.query('SELECT * FROM sessions ORDER BY session_id')).rows;
+  const beforeTokens = (await db.pool.query('SELECT * FROM refresh_tokens ORDER BY id')).rows;
   await db.pool
     .query(`CREATE FUNCTION fail_step_up_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$;
     CREATE TRIGGER fail_step_up_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_step_up_audit()`);
   await expect(
     service.verifyStepUp('cap-user', session.sessionId, 'current-password')
   ).rejects.toMatchObject({ status: 500 });
-  expect(
-    (await db.pool.query('SELECT step_up_verified_at FROM sessions')).rows[0].step_up_verified_at
-  ).toBeNull();
+  expect((await db.pool.query('SELECT * FROM sessions ORDER BY session_id')).rows).toEqual(
+    beforeSessions
+  );
+  expect((await db.pool.query('SELECT * FROM refresh_tokens ORDER BY id')).rows).toEqual(
+    beforeTokens
+  );
   expect(
     (await db.pool.query("SELECT id FROM audit_log WHERE event='step_up_verified'")).rows
   ).toHaveLength(0);

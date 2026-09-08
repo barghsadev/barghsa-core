@@ -51,6 +51,20 @@ async function login() {
   };
 }
 
+function adoptRotation(auth: Awaited<ReturnType<typeof login>>, response: Response) {
+  const cookies = response.headers.getSetCookie();
+  const values = Object.fromEntries(cookies.map((cookie) => cookie.split(';')[0]!.split('=')));
+  expect(cookies).toHaveLength(3);
+  expect(cookies.find((cookie) => cookie.startsWith('barghsa_session='))).toContain('HttpOnly');
+  expect(cookies.find((cookie) => cookie.startsWith('barghsa_refresh='))).toContain('HttpOnly');
+  expect(cookies.find((cookie) => cookie.startsWith('barghsa_csrf='))).not.toContain('HttpOnly');
+  expect(values.barghsa_session).not.toBe(auth.sessionId);
+  expect(values.barghsa_csrf).not.toBe(auth.token);
+  auth.cookie = cookies.map((cookie) => cookie.split(';')[0]).join('; ');
+  auth.sessionId = values.barghsa_session!;
+  auth.token = values.barghsa_csrf!;
+}
+
 it('authenticates parsed cookies and rejects unsafe requests before extending or revoking a session', async () => {
   const auth = await login();
   expect(
@@ -105,19 +119,29 @@ it('authenticates parsed cookies and rejects unsafe requests before extending or
       })
     ).status
   ).toBe(403);
+  const old = { ...auth };
+  const verified = await fetch(`${base}/api/auth/step-up`, {
+    method: 'POST',
+    headers: {
+      Cookie: auth.cookie,
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': auth.token,
+    },
+    body: JSON.stringify({ password }),
+  });
+  expect(verified.status).toBe(200);
+  adoptRotation(auth, verified);
+  expect(
+    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: old.cookie } })).status
+  ).toBe(401);
   expect(
     (
-      await fetch(`${base}/api/auth/step-up`, {
+      await fetch(`${base}/api/auth/logout`, {
         method: 'POST',
-        headers: {
-          Cookie: auth.cookie,
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': auth.token,
-        },
-        body: JSON.stringify({ password }),
+        headers: { Cookie: auth.cookie, 'X-CSRF-Token': old.token },
       })
     ).status
-  ).toBe(200);
+  ).toBe(403);
   const otherSession = await login();
   expect(otherSession.token).not.toBe(auth.token);
   expect(
@@ -240,6 +264,9 @@ it('requires recent step-up to revoke a session and retains the ownership bounda
     body: JSON.stringify({ password }),
   });
   expect(verified.status).toBe(200);
+  adoptRotation(auth, verified);
+  headers.Cookie = auth.cookie;
+  headers['X-CSRF-Token'] = auth.token;
   const acknowledgement = (await verified.json()) as { stepUpVerifiedAt: string };
   const audit = (
     await pool.query(

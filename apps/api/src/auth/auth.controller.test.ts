@@ -47,7 +47,13 @@ function fixture() {
       user_id: 'actor',
     }),
     verifyUserPassword: vi.fn().mockResolvedValue(true),
-    verifyStepUp: vi.fn().mockResolvedValue(new Date('2026-09-08T00:00:00.000Z')),
+    verifyStepUp: vi.fn().mockResolvedValue({
+      sessionId: 'rotated-session',
+      csrfToken: 'rotated-csrf',
+      refreshToken: 'rotated-refresh',
+      expiresAt: new Date(sessionResult.expiresAt),
+      stepUpVerifiedAt: new Date('2026-09-08T00:00:00.000Z'),
+    }),
   };
   const cookies = { cookie: vi.fn(), clearCookie: vi.fn() };
   return {
@@ -272,11 +278,56 @@ describe('authentication input and step-up failures', () => {
     expect(a.challengeId).not.toBe(b.challengeId);
     expect(auth.forgotPassword).not.toHaveBeenCalled();
   });
-  it('returns the persisted step-up timestamp and passes request context to the transaction', async () => {
-    const { controller, sessions } = fixture();
-    const result = await controller.stepUp({ password: 'secret' }, request({ ip: '192.0.2.1' }));
-    expect(result.stepUpVerifiedAt).toBe('2026-09-08T00:00:00.000Z');
-    expect(sessions.verifyStepUp).toHaveBeenCalledWith('actor', 'session', 'secret', '192.0.2.1');
+  it.each(['production', 'test'])(
+    'returns the persisted step-up timestamp and replacement cookies in %s',
+    async (env) => {
+      vi.stubEnv('NODE_ENV', env);
+      const { controller, sessions, cookies, res } = fixture();
+      const result = await controller.stepUp(
+        { password: 'secret' },
+        request({ ip: '192.0.2.1' }),
+        res
+      );
+      expect(result).toEqual({
+        message: 'Step-up authentication successful.',
+        stepUpVerifiedAt: '2026-09-08T00:00:00.000Z',
+      });
+      expect(sessions.verifyStepUp).toHaveBeenCalledWith('actor', 'session', 'secret', '192.0.2.1');
+      expect(cookies.cookie).toHaveBeenCalledTimes(3);
+      expect(cookies.cookie).toHaveBeenCalledWith(
+        'barghsa_session',
+        'rotated-session',
+        expect.objectContaining({ httpOnly: true, secure: env === 'production', sameSite: 'lax' })
+      );
+      expect(cookies.cookie).toHaveBeenCalledWith(
+        'barghsa_refresh',
+        'rotated-refresh',
+        expect.objectContaining({
+          httpOnly: true,
+          secure: env === 'production',
+          sameSite: 'lax',
+          path: '/api/auth/refresh',
+        })
+      );
+      expect(cookies.cookie).toHaveBeenCalledWith(
+        'barghsa_csrf',
+        'rotated-csrf',
+        expect.objectContaining({
+          httpOnly: false,
+          secure: env === 'production',
+          sameSite: 'strict',
+          path: '/',
+        })
+      );
+    }
+  );
+  it('issues no replacement cookies when step-up fails to commit', async () => {
+    const { controller, sessions, cookies, res } = fixture();
+    sessions.verifyStepUp.mockRejectedValueOnce(new Error('transaction aborted'));
+    await expect(controller.stepUp({ password: 'secret' }, request(), res)).rejects.toThrow(
+      'transaction aborted'
+    );
+    expect(cookies.cookie).not.toHaveBeenCalled();
   });
   it.each([
     { operation: 'resendOtp' as const, purpose: 'registration' },

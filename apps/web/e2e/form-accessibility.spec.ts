@@ -1177,8 +1177,11 @@ for (const locale of ['en', 'fa']) {
 for (const locale of ['en', 'fa']) {
   test(`session revocation recovers through password step-up and keeps its target (${locale})`, async ({
     page,
+    baseURL,
   }) => {
     await shell(page, locale);
+    let currentCsrf = 'session-ui-csrf';
+    await page.context().addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: currentCsrf }]);
     const sessions = [true, false].map((isCurrentSession, index) => ({
       sessionId: `session-${index}`,
       deviceInfo: { userAgent: 'Windows', ip: '192.0.2.1' },
@@ -1197,13 +1200,20 @@ for (const locale of ['en', 'fa']) {
     );
     const verifications: string[] = [];
     await page.route('**/api/auth/step-up', (route) => {
+      expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
       const password = route.request().postDataJSON().password;
       verifications.push(password);
-      return route.fulfill({ status: password === 'right-password' ? 200 : 422, json: {} });
+      if (password !== 'right-password') return route.fulfill({ status: 422, json: {} });
+      currentCsrf = `rotated-${verifications.length}`;
+      return route.fulfill({
+        headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
+        json: {},
+      });
     });
     let attempts = 0;
     await page.route('**/api/auth/sessions/session-1', (route) => {
       expect(route.request().method()).toBe('DELETE');
+      expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
       attempts++;
       return route.fulfill(
         attempts === 1

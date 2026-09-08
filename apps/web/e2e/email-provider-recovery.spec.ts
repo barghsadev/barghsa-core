@@ -165,13 +165,17 @@ for (const locale of ['en', 'fa'] as const) {
 for (const locale of ['en', 'fa'] as const) {
   test(`provider save completes password step-up with the captured configuration (${locale})`, async ({
     page,
+    baseURL,
   }) => {
     const fa = locale === 'fa';
     let verified = false;
+    let currentCsrf = 'provider-ui-csrf';
+    await page.context().addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: currentCsrf }]);
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/admin/email-providers', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: [] });
+      expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
       attempts.push(route.request().postDataJSON());
       return route.fulfill(
         verified
@@ -188,8 +192,14 @@ for (const locale of ['en', 'fa'] as const) {
       );
     });
     await page.route('**/api/auth/step-up', (route) => {
+      expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
       verified = route.request().postDataJSON().password === 'correct';
-      return route.fulfill({ status: verified ? 200 : 401, json: {} });
+      if (!verified) return route.fulfill({ status: 401, json: {} });
+      currentCsrf = 'rotated-provider-csrf';
+      return route.fulfill({
+        headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
+        json: {},
+      });
     });
     await page.goto('/admin/providers');
     await page.evaluate((lang) => {

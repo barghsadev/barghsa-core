@@ -341,26 +341,20 @@ export class SessionService {
   }
 
   /**
-   * Rotate a session identifier (session rotation).
-   *
-   * Called on: login, MFA step-up, password change, privilege change,
-   * and account recovery.
-   *
-   * This creates a new session record with a fresh UUIDv7, copies the
-   * CSRF token and refresh token family, then revokes the old session.
-   * The old session's CSRF token is also rotated to prevent replay.
-   *
-   * NOTE: This is not yet wired into all auth events (login, registration,
-   * password change) — the initial refactor in T-02.02.01 creates the
-   * infrastructure. Full session rotation wiring across all events is
-   * completed in T-02.02.02 (Session revocation).
+   * Replace the identifier, CSRF and refresh credentials in the same family.
+   * Preserve the original absolute lifetime and revoke the old session.
+   * A supplied transaction belongs to the caller, including commit/rollback.
    */
-  async rotateSession(oldSessionId: string, reason: string): Promise<CreatedSession | null> {
+  async rotateSession(
+    oldSessionId: string,
+    reason: string,
+    transactionClient?: PoolClient
+  ): Promise<CreatedSession | null> {
     const pool = getDbPool();
 
-    const client = await pool.connect();
+    const client = transactionClient ?? (await pool.connect());
     try {
-      await client.query('BEGIN');
+      if (!transactionClient) await client.query('BEGIN');
 
       // Match creation's account-before-session lock order. The old session
       // is re-read after locking, so a concurrent revocation cannot revive it.
@@ -370,7 +364,7 @@ export class SessionService {
         [oldSessionId]
       );
       if (!account.rows[0] || account.rows[0].disabled_at) {
-        await client.query('ROLLBACK');
+        if (!transactionClient) await client.query('ROLLBACK');
         return null;
       }
 
@@ -385,7 +379,7 @@ export class SessionService {
       );
 
       if (oldResult.rows.length === 0) {
-        await client.query('ROLLBACK');
+        if (!transactionClient) await client.query('ROLLBACK');
         return null;
       }
 
@@ -395,7 +389,7 @@ export class SessionService {
         new Date(oldRow.expires_at).getTime() <= now.getTime() ||
         new Date(oldRow.idle_deadline).getTime() <= now.getTime()
       ) {
-        await client.query('ROLLBACK');
+        if (!transactionClient) await client.query('ROLLBACK');
         return null;
       }
 
@@ -462,14 +456,16 @@ export class SessionService {
       );
 
       if (!(await this.sessionDeadlinesCurrent(client, oldRow.expires_at, oldRow.idle_deadline))) {
-        await client.query('ROLLBACK');
+        if (!transactionClient) await client.query('ROLLBACK');
         return null;
       }
-      await client.query('COMMIT');
+      if (!transactionClient) await client.query('COMMIT');
 
-      this.logger.log(
-        `Session rotated: ${oldSessionId} → ${newSessionId} (reason: ${reason}) for user ${oldRow.user_id}`
-      );
+      if (!transactionClient) {
+        this.logger.log(
+          `Session rotated: ${oldSessionId} → ${newSessionId} (reason: ${reason}) for user ${oldRow.user_id}`
+        );
+      }
 
       return {
         sessionId: newSessionId,
@@ -478,11 +474,12 @@ export class SessionService {
         expiresAt,
       };
     } catch (err) {
+      if (transactionClient) throw err;
       await client.query('ROLLBACK').catch(() => {});
       this.logger.error(`Failed to rotate session ${oldSessionId}: ${String(err)}`);
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release();
+      if (!transactionClient) client.release();
     }
   }
 
@@ -729,13 +726,13 @@ export class SessionService {
     return 15 * 60 * 1000; // 15 minutes
   })();
 
-  /** Verify the current password and persist step-up with its audit record. */
+  /** Verify the password, rotate credentials and audit step-up atomically. */
   async verifyStepUp(
     userId: string,
     sessionId: string,
     password: string,
     ip: string | null = null
-  ): Promise<Date> {
+  ): Promise<CreatedSession & { stepUpVerifiedAt: Date }> {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -748,7 +745,7 @@ export class SessionService {
         throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
       }
       const session = await client.query(
-        `SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2
+        `SELECT session_id,expires_at,idle_deadline FROM sessions WHERE session_id=$1 AND user_id=$2
          AND revoked_at IS NULL AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp()
          FOR UPDATE`,
         [sessionId, userId]
@@ -760,13 +757,18 @@ export class SessionService {
       if (!(await verify(account.rows[0].password_hash, password).catch(() => false))) {
         throw new HttpException({ error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code }, 422);
       }
-      // Password hashing and row locks take time; check expiry again at the write.
+      const rotated = await this.rotateSession(sessionId, 'step_up', client);
+      if (!rotated) {
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      }
+      // Stamp only the replacement session after password verification.
+      // The final check below retains the original idle and absolute limits.
       const updated = await client.query<{ step_up_verified_at: Date }>(
         `UPDATE sessions SET step_up_verified_at=date_trunc('milliseconds',clock_timestamp()),updated_at=clock_timestamp()
          WHERE session_id=$1 AND user_id=$2 AND revoked_at IS NULL
          AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp()
          RETURNING step_up_verified_at`,
-        [sessionId, userId]
+        [rotated.sessionId, userId]
       );
       const verifiedAt = updated.rows[0]?.step_up_verified_at;
       if (!verifiedAt) {
@@ -784,8 +786,17 @@ export class SessionService {
           verifiedAt,
         ]
       );
+      if (
+        !(await this.sessionDeadlinesCurrent(
+          client,
+          session.rows[0].expires_at,
+          session.rows[0].idle_deadline
+        ))
+      ) {
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      }
       await client.query('COMMIT');
-      return verifiedAt;
+      return { ...rotated, stepUpVerifiedAt: verifiedAt };
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;

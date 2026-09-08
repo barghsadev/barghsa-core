@@ -93,7 +93,13 @@ it('requires authentication, CSRF and fresh step-up, with no cross-user or nonex
       body: JSON.stringify({ password: secret }),
     });
   expect((await stepUp('wrong-password')).status).toBe(422);
-  expect((await stepUp(password)).status).toBe(200);
+  const verified = await stepUp(password);
+  expect(verified.status).toBe(200);
+  const values = Object.fromEntries(
+    verified.headers.getSetCookie().map((cookie) => cookie.split(';')[0]!.split('='))
+  );
+  session = values.barghsa_session!;
+  csrf = values.barghsa_csrf!;
   for (const id of [other, randomUUID()])
     expect((await fetch(endpoint(id), { method: 'DELETE', headers: headers() })).status).toBe(404);
   expect(
@@ -159,13 +165,15 @@ it.each(['revoke', 'disable', 'step-up', 'expiry'])(
     try {
       await lock.query('BEGIN');
       await lock.query("SELECT user_id FROM users WHERE user_id='trust-owner' FOR UPDATE");
+      const pid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
       removing = fetch(endpoint(), { method: 'DELETE', headers: headers() });
       await expect
         .poll(
           async () =>
             (
               await http.pool.query(
-                `SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT disabled_at FROM users%'`
+                'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+                [pid]
               )
             ).rows[0].count
         )

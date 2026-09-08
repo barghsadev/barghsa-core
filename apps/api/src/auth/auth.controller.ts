@@ -723,13 +723,13 @@ export class AuthController {
    * Performs step-up authentication for sensitive actions (T-02.02.04).
    *
    * Requires the authenticated session (session cookie) and the user's
-   * current password. On success, updates the session's
-   * `step_up_verified_at` timestamp, which the StepUpGuard checks
+   * current password. Success replaces session, refresh and CSRF cookies and
+   * records the replacement session's `step_up_verified_at`, which StepUpGuard checks
    * against the configured window (default 15 minutes).
    *
    * The frontend should call this endpoint when the API returns a
    * `requiresStepUp` flag (403 with AUTHZ:STEP_UP_REQUIRED), then
-   * retry the original sensitive request.
+   * retry the original sensitive request with the current CSRF cookie.
    *
    * Rate limits:
    * - 5 attempts per IP per 60s
@@ -748,7 +748,8 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async stepUp(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
   ): Promise<{ message: string; stepUpVerifiedAt: string }> {
     const StepUpSchema = z
       .object({
@@ -769,16 +770,20 @@ export class AuthController {
     const userId = req.session.userId;
     const sessionId = req.session.sessionId;
 
-    const verifiedAt = await this.sessionService.verifyStepUp(
+    const rotated = await this.sessionService.verifyStepUp(
       userId,
       sessionId,
       parsed.data.password,
       req.ip ?? req.socket?.remoteAddress ?? null
     );
 
+    setSessionCookie(res, rotated.sessionId, rotated.expiresAt);
+    setRefreshCookie(res, rotated.refreshToken, rotated.expiresAt);
+    setCsrfCookie(res, rotated.csrfToken);
+
     return {
       message: 'Step-up authentication successful.',
-      stepUpVerifiedAt: verifiedAt.toISOString(),
+      stepUpVerifiedAt: rotated.stepUpVerifiedAt.toISOString(),
     };
   }
 

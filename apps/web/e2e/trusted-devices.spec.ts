@@ -78,19 +78,26 @@ for (const locale of ['fa', 'en'])
         .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'trusted-ui-csrf' }]);
       await page.route('**/api/auth/trusted-devices', (route) => route.fulfill({ json: records }));
       const verifications: string[] = [];
+      let currentCsrf = 'trusted-ui-csrf';
       await page.route('**/api/auth/step-up', (route) => {
-        expect(route.request().headers()['x-csrf-token']).toBe('trusted-ui-csrf');
+        expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
         const password = route.request().postDataJSON().password;
         verifications.push(password);
-        return route.fulfill(
-          password === 'right-password' ? { json: { verified: true } } : { status: 422, json: {} }
-        );
+        if (password !== 'right-password') return route.fulfill({ status: 422, json: {} });
+        currentCsrf = `rotated-${verifications.length}`;
+        return route.fulfill({
+          headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
+          json: {
+            message: 'Step-up authentication successful.',
+            stepUpVerifiedAt: new Date().toISOString(),
+          },
+        });
       });
       let writes = 0;
       let release: (() => void) | undefined;
       await page.route('**/api/auth/trusted-devices/trusted-current', async (route) => {
         expect(route.request().method()).toBe('DELETE');
-        expect(route.request().headers()['x-csrf-token']).toBe('trusted-ui-csrf');
+        expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
         writes++;
         if (writes === 1)
           return route.fulfill({
