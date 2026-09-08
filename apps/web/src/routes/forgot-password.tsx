@@ -1,3 +1,4 @@
+import { OtpInput, type OtpInputHandle } from '../components/OtpInput.js';
 import { publicAuthFetch } from '../lib/public-auth-fetch.js';
 import { maskDestination } from '../lib/mask-destination.js';
 import { authResponseRecord, hasPasswordChangeAcknowledgement } from '../lib/auth-responses.js';
@@ -95,6 +96,7 @@ function ForgotPasswordPage() {
   const [authorization, setAuthorization] = useState<{ token: string; expiresAt: number } | null>(
     null
   );
+  const otpInput = useRef<OtpInputHandle>(null);
   const pending = useRef(false);
   const abort = useRef<AbortController | null>(null);
   useEffect(() => () => abort.current?.abort(), []);
@@ -179,6 +181,7 @@ function ForgotPasswordPage() {
       setPassword('');
       setConfirmation('');
       setOtp('');
+      otpInput.current?.reset();
       setCooldown(60);
     } catch {
       setError(t('auth.forgotPassword.error.generic', locale));
@@ -188,14 +191,14 @@ function ForgotPasswordPage() {
     }
   }
 
-  async function verify(event: FormEvent) {
-    event.preventDefault();
-    if (pending.current || attemptCooldown > 0 || !/^\d{6}$/.test(otp)) return;
+  async function verify(event?: FormEvent, code = otp) {
+    event?.preventDefault();
+    if (pending.current || attemptCooldown > 0 || !/^\d{6}$/.test(code)) return;
     pending.current = true;
     setBusy(true);
     setError(null);
     try {
-      const body = await request('reset-password/verify', { challengeId, otp });
+      const body = await request('reset-password/verify', { challengeId, otp: code });
       if (!body) return;
       const expiresAt = typeof body.expiresAt === 'string' ? Date.parse(body.expiresAt) : NaN;
       if (
@@ -213,6 +216,8 @@ function ForgotPasswordPage() {
     } catch {
       setError(t('auth.forgotPassword.error.generic', locale));
     } finally {
+      setOtp('');
+      otpInput.current?.reset();
       pending.current = false;
       setBusy(false);
     }
@@ -276,7 +281,7 @@ function ForgotPasswordPage() {
         <h1 className="text-xl font-semibold">
           {t(challengeId ? 'auth.resetPassword.title' : 'auth.forgotPassword.title', locale)}
         </h1>
-        {error && (
+        {error && (!challengeId || authorization) && (
           <Alert variant="destructive" role="alert">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
@@ -288,25 +293,17 @@ function ForgotPasswordPage() {
               {maskDestination(normalized.normalized)}
             </p>
             {!authorization ? (
-              <div className="space-y-2">
-                <Label htmlFor="reset-otp">{t('auth.otp.inputLabel', locale)}</Label>
-                <Input
-                  id="reset-otp"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  dir="ltr"
-                  maxLength={6}
-                  autoFocus
-                  value={otp}
-                  onChange={(event) =>
-                    setOtp(
-                      event.target.value
-                        .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 1776))
-                        .replace(/[٠-٩]/g, (digit) => String(digit.charCodeAt(0) - 1632))
-                        .replace(/\D/g, '')
-                    )
-                  }
-                  disabled={busy}
+              <div id="reset-otp">
+                <OtpInput
+                  ref={otpInput}
+                  locale={locale}
+                  disabled={busy || attemptCooldown > 0}
+                  error={error}
+                  onClearError={() => setError(null)}
+                  onComplete={(code) => {
+                    setOtp(code);
+                    void verify(undefined, code);
+                  }}
                 />
               </div>
             ) : (
