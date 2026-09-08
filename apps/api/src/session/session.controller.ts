@@ -19,6 +19,7 @@ import { SessionAuthGuard } from './session.guard.js';
 import type { AuthenticatedRequest } from './session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { RequiresStepUp, StepUpGuard } from './step-up.guard.js';
+import { sessionLocation } from './session-location.js';
 
 // ─── Zod schemas ──────────────────────────────────────────────────────
 
@@ -66,6 +67,15 @@ export class SessionController {
               userAgent: { type: 'string' },
             },
           },
+          location: {
+            type: 'object',
+            nullable: true,
+            required: ['countryCode'],
+            properties: {
+              countryCode: { type: 'string', pattern: '^[A-Z]{2}$' },
+            },
+            description: 'Approximate IP country; null for unknown or non-public addresses.',
+          },
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
           expiresAt: { type: 'string', format: 'date-time' },
@@ -86,6 +96,7 @@ export class SessionController {
     return sessions.map((s: Record<string, unknown>) => ({
       sessionId: s.session_id,
       deviceInfo: s.device_info ?? null,
+      location: sessionLocation(s.device_info),
       createdAt: s.created_at,
       updatedAt: s.updated_at,
       expiresAt: s.expires_at,

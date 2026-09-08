@@ -293,3 +293,52 @@ for (const locale of ['fa', 'en'])
       );
     });
   }
+
+for (const locale of ['fa', 'en'])
+  for (const darkMode of [false, true]) {
+    test(`session country estimates and unavailable locations remain readable (${locale}, dark=${darkMode})`, async ({
+      page,
+    }) => {
+      await shell(page, locale, darkMode);
+      await page.route('**/api/auth/trusted-devices', (route) => route.fulfill({ json: [] }));
+      await page.route('**/api/auth/sessions', (route) =>
+        route.fulfill({
+          json: [
+            { countryCode: 'US' },
+            { countryCode: 'IR' },
+            null,
+            { countryCode: '<invalid>' },
+            { countryCode: 'XX' },
+          ].map((location, index) => ({
+            sessionId: `location-${index}`,
+            deviceInfo: { userAgent: 'Windows', ip: '2001:4860:4860::8888' },
+            location,
+            createdAt: '2026-09-01T12:00:00.000Z',
+            updatedAt: '2026-09-01T12:00:00.000Z',
+            expiresAt: '2030-01-01T00:00:00Z',
+            idleDeadline: '2030-01-01T00:00:00Z',
+            isCurrentSession: index === 0,
+          })),
+        })
+      );
+      await page.goto('/settings/security');
+      const label = locale === 'fa' ? 'موقعیت تقریبی IP' : 'Approximate IP location';
+      await expect(
+        page.getByText(`${label}: ${locale === 'fa' ? 'ایالات متحده' : 'United States'}`, {
+          exact: true,
+        })
+      ).toBeVisible();
+      await expect(
+        page.getByText(`${label}: ${locale === 'fa' ? 'ایران' : 'Iran'}`, { exact: true })
+      ).toBeVisible();
+      await expect(
+        page.getByText(`${label}: ${locale === 'fa' ? 'نامشخص' : 'Unavailable'}`, { exact: true })
+      ).toHaveCount(3);
+      await expect(
+        page.locator('bdi').filter({ hasText: '2001:4860:4860::8888' }).first()
+      ).toHaveAttribute('dir', 'ltr');
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+      ).toBe(true);
+    });
+  }

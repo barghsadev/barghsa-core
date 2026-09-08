@@ -85,23 +85,39 @@ it('authenticates parsed cookies and rejects unsafe requests before extending or
   // The display endpoint must never expose either, even before those rows expire.
   await pool.query('UPDATE sessions SET device_info=$1::jsonb WHERE session_id=$2', [
     JSON.stringify({
-      ip: '192.0.2.1',
+      ip: '8.8.8.8',
       userAgent: 'Fixture browser',
       fingerprint,
       secret: 'private-field',
     }),
     auth.sessionId,
   ]);
+  const inactive = [randomUUID(), randomUUID(), randomUUID()];
+  for (const [index, id] of inactive.entries()) {
+    await pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,expires_at,idle_deadline,revoked_at)
+       VALUES ($1,'http-user',$1,clock_timestamp()+($2::int*INTERVAL '1 hour'),
+               clock_timestamp()+($3::int*INTERVAL '1 hour'),
+               CASE WHEN $4 THEN clock_timestamp() ELSE NULL END)`,
+      [id, index === 0 ? -1 : 1, index === 1 ? -1 : 1, index === 2]
+    );
+  }
   expect((await fetch(`${base}/api/auth/sessions`)).status).toBe(401);
   const listed = await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } });
   expect(listed.status).toBe(200);
   const display = await listed.text();
+  for (const id of inactive) expect(display).not.toContain(id);
+  expect(
+    JSON.parse(display).find((row: { sessionId: string }) => row.sessionId === auth.sessionId)
+      .location
+  ).toEqual({ countryCode: 'US' });
+  await pool.query('DELETE FROM sessions WHERE session_id=ANY($1::text[])', [inactive]);
   expect(display).not.toContain(fingerprint);
   expect(display).not.toContain('private-field');
   expect(
     JSON.parse(display).find((row: { sessionId: string }) => row.sessionId === auth.sessionId)
       .deviceInfo
-  ).toEqual({ ip: '192.0.2.1', userAgent: 'Fixture browser' });
+  ).toEqual({ ip: '8.8.8.8', userAgent: 'Fixture browser' });
   const before = (
     await pool!.query('SELECT idle_deadline FROM sessions WHERE session_id=$1', [auth.sessionId])
   ).rows[0];

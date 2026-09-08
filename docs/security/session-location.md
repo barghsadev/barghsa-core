@@ -1,0 +1,9 @@
+# Approximate session location
+
+Settings → Security displays an approximate country for each session, derived from the IP already recorded by the server. The API returns only `location.countryCode` or `null`. The browser localizes the country name in Persian or English and labels it as an estimate. Unknown, private, loopback and documentation addresses display an unavailable result. A country estimate does not establish someone's physical location and never influences authentication, permissions or device trust.
+
+Lookups use the packaged IPv4/IPv6 data in `geoip-country@5.0.202609050122`. The lookup runs locally and sends no IP addresses to a service. No database migration or additional per-session location storage is needed. The package and its data are pinned by the workspace lockfile and included in the API deployment. Country granularity keeps the database around 8 MB; this feature does not claim city-level accuracy.
+
+The data includes GeoLite2 country data created by [MaxMind](https://www.maxmind.com/). [Package documentation](https://github.com/sapics/geoip-country) describes the lookup and data updates. The upstream README directs new development toward its successor, while this pinned package supplies current bundled data and supports the project's Node 20+ development range. The current `geoip-lite` release requires Node 24; it was not installed by weakening engine checks. Reconsider the parser during R05 dependency review and include its maintenance status in that disposition.
+
+Refresh country data through a reviewed package/data update and rebuild the API image. Confirm the package's data terms and update procedure during deployment preparation. Do not invoke its updater from a request handler or use location as evidence for account recovery. Local checks verify the packaged lookup, HTTP response and UI behavior; they do not certify future database freshness or deployed proxy IP configuration.

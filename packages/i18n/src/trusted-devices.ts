@@ -1,5 +1,7 @@
 const en = {
   title: 'Trusted devices',
+  location: 'Approximate IP location',
+  locationUnavailable: 'Unavailable',
   description:
     'Trust lasts up to 30 days after verification and applies to the recorded IP address. Staff verify each login.',
   refresh: 'Refresh',
@@ -17,6 +19,8 @@ const en = {
 
 const fa: Record<keyof typeof en, string> = {
   title: 'دستگاه‌های مورد اعتماد',
+  location: 'موقعیت تقریبی IP',
+  locationUnavailable: 'نامشخص',
   description:
     'اعتماد پس از تأیید کد، تا ۳۰ روز و برای آدرس IP ثبت‌شده معتبر است. کارکنان در هر ورود کد تأیید وارد می‌کنند.',
   refresh: 'تازه‌سازی',

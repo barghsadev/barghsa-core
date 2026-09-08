@@ -9058,6 +9058,20 @@
                       "isCurrentSession": {
                         "type": "boolean"
                       },
+                      "location": {
+                        "type": "object",
+                        "nullable": true,
+                        "required": [
+                          "countryCode"
+                        ],
+                        "properties": {
+                          "countryCode": {
+                            "type": "string",
+                            "pattern": "^[A-Z]{2}$"
+                          }
+                        },
+                        "description": "Approximate IP country; null for unknown or non-public addresses."
+                      },
                       "sessionId": {
                         "type": "string"
                       },

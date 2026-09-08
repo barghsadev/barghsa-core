@@ -494,3 +494,10 @@ describe('SessionService', () => {
     });
   });
 });
+
+it('does not present a failed session query as an empty active-session list', async () => {
+  const failure = new Error('session read unavailable');
+  mockQuery.mockRejectedValueOnce(failure);
+  const service = new SessionService();
+  await expect(service.getUserSessions('user-001')).rejects.toBe(failure);
+});

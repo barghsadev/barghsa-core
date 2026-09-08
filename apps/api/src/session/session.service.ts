@@ -1169,7 +1169,8 @@ export class SessionService {
                 END AS device_info, family_id,
                 expires_at, idle_deadline, created_at, updated_at
          FROM sessions
-         WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW()
+         WHERE user_id = $1 AND revoked_at IS NULL
+           AND expires_at > clock_timestamp() AND idle_deadline > clock_timestamp()
          ORDER BY created_at DESC`,
         [userId]
       );
@@ -1177,7 +1178,7 @@ export class SessionService {
       return result.rows;
     } catch (err) {
       this.logger.error(`Failed to get sessions for user ${userId}: ${String(err)}`);
-      return [];
+      throw err;
     }
   }
 }

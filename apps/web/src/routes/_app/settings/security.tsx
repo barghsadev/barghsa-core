@@ -4,6 +4,7 @@ import { useLocale } from '../../../hooks/useLocale.js';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t, type Locale } from '@barghsa/i18n/app';
+import { trustedDeviceText } from '@barghsa/i18n/trusted-devices';
 import {
   MonitorIcon,
   SmartphoneIcon,
@@ -42,6 +43,7 @@ interface DeviceInfo {
 interface SessionItem {
   sessionId: string;
   deviceInfo: DeviceInfo | null;
+  location?: { countryCode: string } | null;
   createdAt: string;
   updatedAt: string;
   expiresAt: string;
@@ -51,6 +53,11 @@ interface SessionItem {
 
 type DeviceType =
   'ios' | 'mac' | 'androidPhone' | 'androidTablet' | 'windows' | 'linux' | 'unknown';
+
+const countryNames = {
+  en: new Intl.DisplayNames(['en'], { type: 'region', fallback: 'none' }),
+  fa: new Intl.DisplayNames(['fa'], { type: 'region', fallback: 'none' }),
+};
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
@@ -115,14 +122,23 @@ function SessionDetails({
   locale: Locale;
   formatTimestamp: (value: string) => string;
 }) {
+  const countryCode = session.location?.countryCode;
+  const country =
+    typeof countryCode === 'string' && /^[A-Z]{2}$/.test(countryCode)
+      ? countryNames[locale].of(countryCode)
+      : undefined;
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
       {session.deviceInfo?.ip && (
         <span className="inline-flex items-center gap-1">
           <GlobeIcon className="h-3 w-3" />
-          {session.deviceInfo.ip}
+          <bdi dir="ltr">{session.deviceInfo.ip}</bdi>
         </span>
       )}
+      <span>
+        {trustedDeviceText('location', locale)}:{' '}
+        {country ?? trustedDeviceText('locationUnavailable', locale)}
+      </span>
       <span>
         {t('settings.security.createdAt', locale)}:{' '}
         <time dateTime={session.createdAt}>{formatTimestamp(session.createdAt)}</time>
