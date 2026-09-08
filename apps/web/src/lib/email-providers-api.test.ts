@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  ProviderStepUpError,
   activateProvider,
   createProvider,
   disableProvider,
@@ -111,4 +112,26 @@ describe('provider response contracts', () => {
     respond({ message: 'private connection detail' }, 500);
     await expect(listProviders()).rejects.not.toThrow('private connection detail');
   });
+});
+
+it('preserves the captured request only for a server step-up challenge', async () => {
+  respond({ error: { code: 'AUTHZ:STEP_UP_REQUIRED' } }, 403);
+  const config = { api_key: 'synthetic-key', from_email: 'sender@example.test' };
+  const pending = createProvider('resend', 'Captured', config);
+  config.api_key = 'changed-after-submit';
+  await expect(pending).rejects.toMatchObject({
+    action: {
+      path: '/api/admin/email-providers',
+      method: 'POST',
+      body: {
+        transport: 'resend',
+        label: 'Captured',
+        config: { api_key: 'synthetic-key', from_email: 'sender@example.test' },
+      },
+    },
+  });
+});
+it('does not turn ordinary permission denial into a step-up prompt', async () => {
+  respond({ error: 'AUTHZ:FORBIDDEN' }, 403);
+  await expect(activateProvider(row.id)).rejects.not.toBeInstanceOf(ProviderStepUpError);
 });

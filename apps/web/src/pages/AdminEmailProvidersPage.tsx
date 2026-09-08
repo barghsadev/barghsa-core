@@ -1,3 +1,4 @@
+import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { providerText } from '@barghsa/i18n/providers';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -10,6 +11,9 @@ import {
   disableProvider,
   listProviders,
   ProviderRequestError,
+  ProviderStepUpError,
+  validateProviderResult,
+  validateConnectionResult,
   rollbackProvider,
   testConnection,
   updateProvider,
@@ -131,6 +135,10 @@ export default function AdminEmailProvidersPage() {
   const [loadFailed, setLoadFailed] = useState(false);
   const readRequest = useRef<AbortController | null>(null);
   const [busy, setBusy] = useState(false);
+  const [protectedAction, setProtectedAction] = useState<{
+    action: TeamAction;
+    onSuccess: (result: unknown) => Promise<void>;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -215,6 +223,20 @@ export default function AdminEmailProvidersPage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
+  function offerStepUp(
+    error: unknown,
+    title: string,
+    description: string,
+    onSuccess: (result: unknown) => Promise<void>
+  ): boolean {
+    if (!(error instanceof ProviderStepUpError)) return false;
+    setProtectedAction({
+      action: { ...error.action, title, description, requiresPassword: true },
+      onSuccess,
+    });
+    return true;
+  }
+
   async function handleSave(e: FormEvent) {
     e.preventDefault();
     if (busy || loading || loadFailed) return;
@@ -251,6 +273,23 @@ export default function AdminEmailProvidersPage() {
       closeEditor();
       await fetchAll();
     } catch (err) {
+      if (
+        offerStepUp(
+          err,
+          providerText(
+            editId ? 'admin.providers.update.title' : 'admin.providers.create.title',
+            uiLocale
+          ),
+          label.trim(),
+          async (result) => {
+            const saved = validateProviderResult(result, 'draft', editId ?? undefined);
+            if (saved.transport !== transport) throw new ProviderRequestError();
+            closeEditor();
+            await fetchAll();
+          }
+        )
+      )
+        return;
       setError(
         err instanceof Error && !(err instanceof ProviderRequestError)
           ? err.message
@@ -269,7 +308,20 @@ export default function AdminEmailProvidersPage() {
       const outcome = await testConnection(p.id, recipient);
       setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
       await fetchAll();
-    } catch {
+    } catch (err) {
+      if (
+        offerStepUp(
+          err,
+          providerText('admin.providers.test.run', uiLocale),
+          p.label,
+          async (result) => {
+            const outcome = validateConnectionResult(result, p.id);
+            setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
+            await fetchAll();
+          }
+        )
+      )
+        return;
       // Connection errors surfaced inline on the row, not as a page error.
       setTestOutcome((prev) => ({
         ...prev,
@@ -287,7 +339,19 @@ export default function AdminEmailProvidersPage() {
     try {
       await activateProvider(p.id);
       await fetchAll();
-    } catch {
+    } catch (err) {
+      if (
+        offerStepUp(
+          err,
+          providerText('admin.providers.activate', uiLocale),
+          p.label,
+          async (result) => {
+            validateProviderResult(result, 'active', p.id);
+            await fetchAll();
+          }
+        )
+      )
+        return;
       setError(providerText('admin.providers.error.activate', uiLocale));
     } finally {
       setBusy(false);
@@ -302,7 +366,19 @@ export default function AdminEmailProvidersPage() {
     try {
       await disableProvider(p.id);
       await fetchAll();
-    } catch {
+    } catch (err) {
+      if (
+        offerStepUp(
+          err,
+          providerText('admin.providers.disable', uiLocale),
+          p.label,
+          async (result) => {
+            validateProviderResult(result, 'disabled', p.id);
+            await fetchAll();
+          }
+        )
+      )
+        return;
       setError(providerText('admin.providers.error.disable', uiLocale));
     } finally {
       setBusy(false);
@@ -318,7 +394,21 @@ export default function AdminEmailProvidersPage() {
       await rollbackProvider(p.id);
       await fetchAll();
       setNotice(providerText('admin.providers.rollback', uiLocale));
-    } catch {
+    } catch (err) {
+      if (
+        offerStepUp(
+          err,
+          providerText('admin.providers.rollback', uiLocale),
+          p.label,
+          async (result) => {
+            const saved = validateProviderResult(result, 'active');
+            if (saved.id === p.id) throw new ProviderRequestError();
+            await fetchAll();
+            setNotice(providerText('admin.providers.rollback', uiLocale));
+          }
+        )
+      )
+        return;
       setError(providerText('admin.providers.error.rollback', uiLocale));
     } finally {
       setBusy(false);
@@ -484,6 +574,14 @@ export default function AdminEmailProvidersPage() {
             </div>
           </fieldset>
         </form>
+      )}
+
+      {protectedAction && (
+        <TeamActionDialog
+          action={protectedAction.action}
+          onSuccess={protectedAction.onSuccess}
+          onClose={() => setProtectedAction(null)}
+        />
       )}
 
       {/* Provider list */}

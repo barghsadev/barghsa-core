@@ -77,6 +77,8 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 - Branding controller review: 22 checks pass for separate edit permission, revocation, authenticated actor/draft/version binding, invalid activation versions, unsafe asset URLs and malformed saved settings. API types and lint pass. No production change. Log `/tmp/barghsa-brand-boundaries.log`.
 
+- Email-provider step-up repair: server metadata requires password step-up for every provider mutation, but the screen previously had no recovery flow. Provider requests now retain an immutable captured action only for a server step-up challenge; the shared action dialog can begin directly with password verification. Create/edit/test/activate/disable/rollback callbacks still validate successful result identity/state. Ordinary permission denial never becomes a step-up prompt. Twenty-six contract tests, 15 Chromium provider/team/agent cases, 30 focused cases across five profiles and two draft-edit checks on Chromium/WebKit pass. Draft edits preserve stored secrets by omitting blank secret fields. Web types, explicit lint, build and all 41 budgets pass. Logs `/tmp/barghsa-email-stepup-unit.log`, `/tmp/barghsa-email-stepup-green.log`, `/tmp/barghsa-email-stepup-all.log`, `/tmp/barghsa-email-edit-stepup.log`, `/tmp/barghsa-email-stepup-budgets.log`. No external provider calls.
+
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
 - **5,815 unit/integration tests across 461 files pass** at `0494ad4`, with affected web/i18n coverage refreshed at `eb19ed5`. All 11 workspace typechecks and root lint pass, with subsequent label changes checked separately.

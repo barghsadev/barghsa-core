@@ -23,6 +23,7 @@ export interface TeamAction {
   method: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
   signsOut?: boolean;
+  requiresPassword?: boolean;
   conflictMessage?: string;
   forbiddenMessage?: string;
   errorMessages?: Record<string, string>;
@@ -42,7 +43,7 @@ export function TeamActionDialog({
   const numbers = useNumberFormatting(locale);
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
-  const [needsPassword, setNeedsPassword] = useState(false);
+  const [needsPassword, setNeedsPassword] = useState(action.requiresPassword === true);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 

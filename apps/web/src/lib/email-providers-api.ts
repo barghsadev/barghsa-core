@@ -1,3 +1,4 @@
+import type { TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from './csrf.js';
 export type Transport = 'smtp' | 'resend';
 export type Status = 'draft' | 'active' | 'superseded' | 'disabled';
@@ -18,6 +19,11 @@ export interface TestConnectionOutcome {
   error: string | null;
 }
 export class ProviderRequestError extends Error {}
+export class ProviderStepUpError extends ProviderRequestError {
+  constructor(readonly action: Pick<TeamAction, 'path' | 'method' | 'body'>) {
+    super();
+  }
+}
 function record(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -55,25 +61,43 @@ function provider(value: unknown): EmailProvider {
 }
 async function request(
   path: string,
-  method = 'GET',
+  method: 'GET' | 'POST' | 'PUT' = 'GET',
   body?: unknown,
   signal?: AbortSignal
 ): Promise<unknown> {
+  const payload = body === undefined ? undefined : JSON.stringify(body);
   try {
     const response = await fetch(`/api/admin/email-providers${path}`, {
       method,
       ...(signal ? { signal } : {}),
       ...(method !== 'GET' ? { headers: withCsrf({ 'Content-Type': 'application/json' }) } : {}),
-      ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+      ...(payload !== undefined ? { body: payload } : {}),
     });
+    if (response.status === 403 && method !== 'GET') {
+      const errorBody = record(
+        await response
+          .clone()
+          .json()
+          .catch(() => null)
+      );
+      const code =
+        typeof errorBody?.error === 'string' ? errorBody.error : record(errorBody?.error)?.code;
+      if (code === 'AUTHZ:STEP_UP_REQUIRED' || errorBody?.requiresStepUp === true) {
+        throw new ProviderStepUpError({
+          path: `/api/admin/email-providers${path}`,
+          method,
+          ...(payload !== undefined ? { body: JSON.parse(payload) as unknown } : {}),
+        });
+      }
+    }
     if (!response.ok) throw new ProviderRequestError();
     return await response.json();
   } catch (error) {
-    if (signal?.aborted) throw error;
+    if (signal?.aborted || error instanceof ProviderStepUpError) throw error;
     throw new ProviderRequestError();
   }
 }
-function saved(value: unknown, status: Status, id?: string): EmailProvider {
+export function validateProviderResult(value: unknown, status: Status, id?: string): EmailProvider {
   const row = provider(value);
   if (row.status !== status || (id !== undefined && row.id !== id))
     throw new ProviderRequestError();
@@ -89,7 +113,10 @@ export async function createProvider(
   label: string,
   config: Record<string, unknown>
 ) {
-  const row = saved(await request('', 'POST', { transport, label, config }), 'draft');
+  const row = validateProviderResult(
+    await request('', 'POST', { transport, label, config }),
+    'draft'
+  );
   if (row.transport !== transport) throw new ProviderRequestError();
   return row;
 }
@@ -97,7 +124,11 @@ export async function updateProvider(
   id: string,
   body: { label?: string; config?: Record<string, unknown> }
 ) {
-  return saved(await request(`/${encodeURIComponent(id)}`, 'PUT', body), 'draft', id);
+  return validateProviderResult(
+    await request(`/${encodeURIComponent(id)}`, 'PUT', body),
+    'draft',
+    id
+  );
 }
 export async function testConnection(
   id: string,
@@ -108,6 +139,9 @@ export async function testConnection(
     'POST',
     recipient ? { recipient } : {}
   );
+  return validateConnectionResult(data, id);
+}
+export function validateConnectionResult(data: unknown, id: string): TestConnectionOutcome {
   const row = provider(data);
   const test = record(record(data)?.test);
   if (
@@ -122,13 +156,24 @@ export async function testConnection(
   return { ok: test.ok, error: test.error as string | null };
 }
 export async function activateProvider(id: string) {
-  return saved(await request(`/${encodeURIComponent(id)}/activate`, 'POST'), 'active', id);
+  return validateProviderResult(
+    await request(`/${encodeURIComponent(id)}/activate`, 'POST'),
+    'active',
+    id
+  );
 }
 export async function disableProvider(id: string) {
-  return saved(await request(`/${encodeURIComponent(id)}/disable`, 'POST'), 'disabled', id);
+  return validateProviderResult(
+    await request(`/${encodeURIComponent(id)}/disable`, 'POST'),
+    'disabled',
+    id
+  );
 }
 export async function rollbackProvider(id: string) {
-  const row = saved(await request(`/${encodeURIComponent(id)}/rollback`, 'POST'), 'active');
+  const row = validateProviderResult(
+    await request(`/${encodeURIComponent(id)}/rollback`, 'POST'),
+    'active'
+  );
   if (row.id === id) throw new ProviderRequestError();
   return row;
 }
