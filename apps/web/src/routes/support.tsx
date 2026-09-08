@@ -87,7 +87,7 @@ function SupportPage() {
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">{t('auth.support.contactEmail', locale)}</p>
                     <a
-                      href="mailto:support@barghsa.com"
+                      href={`mailto:${t('auth.support.emailAddress', locale)}`}
                       className="text-sm text-primary underline-offset-4 hover:underline"
                     >
                       {t('auth.support.emailAddress', locale)}
@@ -100,10 +100,25 @@ function SupportPage() {
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">{t('auth.support.contactPhone', locale)}</p>
                     <a
-                      href="tel:+982112345678"
+                      href="tel:+982126658042"
+                      dir="ltr"
                       className="text-sm text-primary underline-offset-4 hover:underline"
                     >
                       {t('auth.support.phoneNumber', locale)}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium">{t('auth.support.contactMobile', locale)}</p>
+                    <a
+                      href="tel:+989002550292"
+                      dir="ltr"
+                      className="text-sm text-primary underline-offset-4 hover:underline"
+                    >
+                      {t('auth.support.mobileNumber', locale)}
                     </a>
                   </div>
                 </div>
