@@ -1,16 +1,16 @@
 # Remaining repair and acceptance plan
 
-Reconciled on 2026-09-08 at implementation revision `612434d`. [progress.json](progress.json) is the compact execution record and F01–F23 rollup. Update that file after each step; task acceptance lives only in [acceptance-closure.json](acceptance-closure.json).
+Reconciled on 2026-09-08; A02 evidence refresh reviewed at `9635e76`. [progress.json](progress.json) is the compact execution record and F01–F23 rollup. Update that file after each step; task acceptance lives only in [acceptance-closure.json](acceptance-closure.json).
 
 ## Fixed scope and current counts
 
 | Population | Verified in ledger | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 32 | 13 | 218 | 263 |
+| Tasks with merged PR evidence | 33 | 12 | 218 | 263 |
 | Other historical completion claims | 3 | 0 | 56 | 59 |
-| Combined historical task population | 35 | 13 | 274 | 322 |
+| Combined historical task population | 36 | 12 | 274 | 322 |
 
-GitHub's 301 merged PRs were checked on 2026-09-08: no additions to the saved inventory. Of the 35 verified records, 23 reference subsequently changed files and require an evidence refresh. A changed file does not prove regression. These are acceptance counts, not implementation percentages.
+GitHub's 301 merged PRs were checked on 2026-09-08: no additions to the saved inventory. A02 refreshed the 23 verified records that referenced subsequently changed files and closed one database configuration task. Twelve earlier verified records retain unchanged source bindings. These are acceptance counts, not implementation percentages.
 
 The 58 historical skips are already included above: three verified, 55 pending. The separate 737 earlier queue gaps and 296 later tasks are not additional historical completion claims. Broad selectors in the old findings include unstarted tasks; do not expand repair scope to those tasks automatically.
 
@@ -32,13 +32,13 @@ The 58 historical skips are already included above: three verified, 55 pending. 
 
 | Domain | PR-backed tasks still partial or pending |
 | --- | ---: |
-| Infrastructure | 51 |
+| Infrastructure | 50 |
 | Authentication and administration | 92 |
 | Core business | 4 |
 | Finance | 52 |
 | Notifications | 29 |
 | UI foundations | 3 |
-| Total | 231 |
+| Total | 230 |
 
 Also review the 56 unresolved legacy claims. Review by task and domain, associating all contributing PRs with one final implementation. Record canonical requirements, required callers, current source/test evidence, reviewed revision and exact remaining criteria.
 

@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "612434d",
-  "active_step": "A02",
-  "next_action": "Reconcile the 13 partial and 23 changed verified records against subsequent implementation/evidence; preserve prior assessments and update generated dispositions.",
+  "source_revision": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+  "active_step": "R01",
+  "next_action": "Review remaining critical task requirements by domain. Start session/authentication acceptance using current requirements and existing migrated HTTP evidence; fix demonstrated remaining defects before R02 consumers.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -18,12 +18,12 @@
     {
       "id": "A02",
       "title": "Evidence reconciliation",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "id": "R01",
       "title": "Critical acceptance and repairs",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "R02",
@@ -84,7 +84,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Refresh changed database foundation acceptance, including timeout and TLS repairs. Preserve clean/upgrade/repeat and snapshot evidence. Production legacy-data inventory/restore/proxy checks remain external."
+        "Four pool-foundation tasks have refreshed acceptance. Review remaining database/migration requirements and preserve clean/upgrade/repeat/snapshot evidence. Production inventory, restore and proxy checks remain external."
       ]
     },
     {
@@ -284,7 +284,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Reconcile 23 changed verified records, 13 partial and 274 pending records. Cover all301 PRs, 170 deferrals, 58 skips, and distinguish 1033 unrecorded backlog tasks."
+        "Review12 partial and274 pending records; keep36 verified records bound to evidence. Cover all301 PRs,170 deferrals,58 skips and distinguish1033 unrecorded backlog tasks."
       ]
     },
     {
@@ -310,6 +310,20 @@
         "1 loop reconciliation test passes"
       ],
       "remaining": "Task evidence remains historical until A02 reconciliation; product repair and acceptance plan remain open."
+    },
+    {
+      "id": "A02",
+      "date": "2026-09-08",
+      "source_revision": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "summary": "Refreshed23 changed verified records, reconciled13 partial records, closed the pool configuration task and corrected stale Redis migration documentation.",
+      "review": "Preserved every superseded assessment; reviewed source differences and reused unaffected9529872 browser/package evidence. Three database records also receive fresh focused validation.",
+      "checks": [
+        "47 database tests pass",
+        "18 shared export tests pass",
+        "5 UI distribution/strict-consumer tests pass"
+      ],
+      "evidence": "audit/evidence/acceptance-refresh.json",
+      "remaining": "36 verified,12 partial,274 pending. This is task acceptance, not an implementation percentage."
     }
   ],
   "deferred_improvements": [],
