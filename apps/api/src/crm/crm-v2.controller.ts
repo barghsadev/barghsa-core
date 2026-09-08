@@ -868,10 +868,12 @@ export class CrmV2Controller {
   })
   @ApiResponse({
     status: 200,
-    description: 'Pending verification widget data.',
+    description:
+      'Pending verification widget data. Disabled verification returns enabled=false and no profile data.',
     schema: {
       type: 'object',
       properties: {
+        enabled: { type: 'boolean' },
         count: { type: 'integer' },
         profiles: {
           type: 'array',

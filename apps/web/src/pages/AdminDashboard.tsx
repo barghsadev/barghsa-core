@@ -18,6 +18,7 @@ interface PendingVerificationProfile {
 }
 
 interface PendingVerificationData {
+  enabled: boolean;
   count: number;
   profiles: PendingVerificationProfile[];
 }
@@ -43,6 +44,7 @@ export default function AdminDashboard() {
   const [data, setData] = useState<PendingVerificationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [verificationHidden, setVerificationHidden] = useState(false);
   const [chargebacks, setChargebacks] = useState<UnresolvedChargebackWarning | null>(null);
   const [chargebacksLoading, setChargebacksLoading] = useState(true);
   const [chargebacksError, setChargebacksError] = useState(false);
@@ -53,24 +55,49 @@ export default function AdminDashboard() {
   useEffect(() => {
     let cancelled = false;
     let intervalId: ReturnType<typeof setInterval> | null = null;
+    let pendingRequest = false;
 
     const fetchData = async () => {
+      if (pendingRequest) return;
+      pendingRequest = true;
       try {
         const res = await fetch('/api/crm/dashboard/pending-verification', {
           credentials: 'include',
         });
+        if (res.status === 401 || res.status === 403) {
+          if (!cancelled) {
+            setData(null);
+            setVerificationHidden(true);
+            setIsLoading(false);
+            setIsError(false);
+          }
+          return;
+        }
         if (!res.ok) throw new Error('Failed to fetch');
         const json = (await res.json()) as PendingVerificationData;
+        if (
+          !json ||
+          typeof json.enabled !== 'boolean' ||
+          !Number.isSafeInteger(json.count) ||
+          json.count < 0 ||
+          !Array.isArray(json.profiles) ||
+          json.profiles.length > 5
+        )
+          throw new Error('Invalid pending verification response');
         if (!cancelled) {
-          setData(json);
+          setData(json.enabled ? json : null);
+          setVerificationHidden(!json.enabled);
           setIsLoading(false);
           setIsError(false);
         }
       } catch {
         if (!cancelled) {
+          setData(null);
           setIsLoading(false);
           setIsError(true);
         }
+      } finally {
+        pendingRequest = false;
       }
     };
 
@@ -113,7 +140,7 @@ export default function AdminDashboard() {
   return (
     <div dir={isRtl ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-bold mb-4">{t('dashboard.admin.title', locale)}</h1>
-      <p className="text-gray-600 mb-6">{t('dashboard.admin.description', locale)}</p>
+      <p className="text-muted-foreground mb-6">{t('dashboard.admin.description', locale)}</p>
 
       {chargebacksError ? (
         <p className="mb-6 text-sm text-red-600" role="status">
@@ -167,50 +194,54 @@ export default function AdminDashboard() {
       ) : null}
 
       {/* Pending verification widget */}
-      <div
-        className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 max-w-sm"
-        role="region"
-        aria-label={t('dashboard.admin.pendingVerification.aria.widget', locale)}
-      >
-        <div className="flex items-center gap-3 mb-3">
-          {/* Icon */}
-          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-5 h-5 text-amber-600" aria-hidden="true" />
-          </div>
-          <div role="status" aria-live="polite" aria-busy={isLoading}>
-            {isLoading ? (
-              <div
-                className="h-6 w-12 bg-gray-200 animate-pulse rounded"
-                aria-label={t('dashboard.admin.pendingVerification.loading', locale)}
-              />
-            ) : isError ? (
-              <p className="text-sm text-red-500">
-                {t('dashboard.admin.pendingVerification.error', locale)}
-              </p>
-            ) : (
-              <>
-                <p
-                  className="text-2xl font-bold text-gray-900"
-                  aria-label={t('dashboard.admin.pendingVerification.aria.count', locale)}
-                >
-                  {numbers.number(data?.count ?? 0)}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {t('dashboard.admin.pendingVerification.label', locale)}
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-        <Link
-          to="/admin/crm"
-          search={{ verification: 'PENDING' }}
-          className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium"
-          aria-label={t('dashboard.admin.pendingVerification.aria.showAll', locale)}
+      {!verificationHidden && (
+        <div
+          className="bg-card text-card-foreground rounded-lg shadow-sm border p-5 max-w-sm"
+          role="region"
+          aria-label={t('dashboard.admin.pendingVerification.aria.widget', locale)}
         >
-          {t('dashboard.admin.pendingVerification.showAll', locale)}
-        </Link>
-      </div>
+          <div className="flex items-center gap-3 mb-3">
+            {/* Icon */}
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5 text-amber-600" aria-hidden="true" />
+            </div>
+            <div role="status" aria-live="polite" aria-busy={isLoading}>
+              {isLoading ? (
+                <div
+                  className="h-6 w-12 bg-gray-200 animate-pulse rounded"
+                  aria-label={t('dashboard.admin.pendingVerification.loading', locale)}
+                />
+              ) : isError ? (
+                <p className="text-sm text-red-700 dark:text-red-300">
+                  {t('dashboard.admin.pendingVerification.error', locale)}
+                </p>
+              ) : (
+                <>
+                  <p
+                    className="text-2xl font-bold"
+                    aria-label={t('dashboard.admin.pendingVerification.aria.count', locale)}
+                  >
+                    {numbers.number(data?.count ?? 0)}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('dashboard.admin.pendingVerification.label', locale)}
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+          {!isLoading && !isError && data?.enabled && (
+            <Link
+              to="/admin/crm"
+              search={{ verification: 'PENDING' }}
+              className="text-sm text-blue-700 dark:text-blue-300 hover:underline font-medium"
+              aria-label={t('dashboard.admin.pendingVerification.aria.showAll', locale)}
+            >
+              {t('dashboard.admin.pendingVerification.showAll', locale)}
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   );
 }

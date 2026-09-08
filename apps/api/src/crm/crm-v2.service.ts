@@ -1144,27 +1144,30 @@ export class CrmV2Service {
    * Only returns non-archived profiles.
    */
   async getPendingVerification(): Promise<{
+    enabled: boolean;
     count: number;
     profiles: PendingVerificationProfile[];
   }> {
-    // TODO(E-07): check verification-settings toggle before returning data
     const pool = getDbPool();
-
-    const countResult = await pool.query(
-      `SELECT COUNT(*)::int AS cnt
-       FROM profiles
-       WHERE status = 'PENDING_VERIFICATION' AND archived = false`
+    const settings = await pool.query<{ key: string; value: unknown }>(
+      'SELECT key,value FROM app_config WHERE key=ANY($1::text[])',
+      [['profile_verification_mode', 'verification.required']]
     );
-    const count = (countResult.rows[0] as Record<string, unknown>).cnt as number;
+    const config = new Map(settings.rows.map((row) => [row.key, row.value]));
+    const mode = config.get('profile_verification_mode');
+    // Match profile enforcement: an invalid explicit mode cannot disable verification.
+    const enabled =
+      mode != null ? mode !== 'DISABLED' : config.get('verification.required') === true;
+    if (!enabled) return { enabled: false, count: 0, profiles: [] };
 
     const profileResult = await pool.query(
       `SELECT p.id, p.profile_type, p.first_name, p.last_name,
-              lp.legal_name,
-              p.created_at AT TIME ZONE 'UTC' AS created_at
+              lp.legal_name, COUNT(*) OVER()::int AS total_count,
+              to_char(p.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS created_at
        FROM profiles p
        LEFT JOIN legal_profiles lp ON lp.id = p.id
        WHERE p.status = 'PENDING_VERIFICATION' AND p.archived = false
-       ORDER BY p.created_at DESC
+       ORDER BY p.created_at DESC, p.id DESC
        LIMIT 5`
     );
 
@@ -1179,7 +1182,7 @@ export class CrmV2Service {
       })
     );
 
-    return { count, profiles };
+    return { enabled: true, count: (profileResult.rows[0]?.total_count as number) ?? 0, profiles };
   }
 }
 

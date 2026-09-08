@@ -114,7 +114,7 @@ for (const locale of ['en', 'fa']) {
       })
     );
     await page.route('**/api/crm/dashboard/pending-verification', (route) =>
-      route.fulfill({ json: { count: 12, profiles: [] } })
+      route.fulfill({ json: { enabled: true, count: 12, profiles: [] } })
     );
     await page.route('**/api/admin/wallet/chargebacks/unresolved-warning', (route) =>
       route.fulfill({

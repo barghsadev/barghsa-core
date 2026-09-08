@@ -9146,6 +9146,9 @@
                     "count": {
                       "type": "integer"
                     },
+                    "enabled": {
+                      "type": "boolean"
+                    },
                     "profiles": {
                       "items": {
                         "properties": {
@@ -9180,7 +9183,7 @@
                 }
               }
             },
-            "description": "Pending verification widget data."
+            "description": "Pending verification widget data. Disabled verification returns enabled=false and no profile data."
           },
           "401": {
             "description": "Not authenticated"
