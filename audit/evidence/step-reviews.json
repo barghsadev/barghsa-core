@@ -528,6 +528,43 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "Full-profile task remains partial: registration date, representative data, legal document information and missing localized field/location labels remain. Staff address editing follows that view repair."
+    },
+    {
+      "id": "R01-crm-legal-fields",
+      "date": "2026-09-08",
+      "source_revision": "91309f8561d57b89200daa69881239e2ce196e2d",
+      "summary": "CRM exposes stored legal registration and representative fields, localized company/location names and translated profile/address labels. Mobile account controls wrap inside the viewport.",
+      "review": "Read exact full-profile requirement and schema. No schema or mutation changes. Legal and address queries stay profile-scoped, keep inactive reference names and safely handle legacy non-UUID official geography. Document keys remain excluded pending dedicated authorized access. Registration is formatted as a calendar date in UTC, avoiding viewer-timezone date shifts; invalid historical dates show Unknown. Visual review caught clipped mobile actions; wrapping was repaired and measured in fa/en. Reviewed Persian mobile and English desktop field displays.",
+      "checks": [
+        "33 API tests in3 files pass, including stored legal/representative/address data, safe legacy fallbacks and no document-key disclosure.",
+        "40 production Chromium desktop/mobile checks pass before the wrapping refinement. After it,12 affected action/contact/legal cases pass in fa/en. Counts overlap. A screenshot-only diagnostic had2 failures from an incorrect English heading selector; corrected to the existing Legal Entity Info label before the final pass.",
+        "50 dictionary tests, API/web types, focused lint/format, i18n/web builds and41 complete-route budgets pass.",
+        "The previously observed pg client concurrency deprecation recurred during the API batch; this step does not claim to resolve it."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "4fcb03db4d5ff2ffba860ae07c3fe445cfa87ce246bc9f5a0a01a083cb6184a7"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+          "sha256": "5e0b9df263486c8abac4e8c65ec6368db6e34bc7da0b9fb2bee9a1ff41f01a24"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "334f1a4e158ab9f610b07dd1f0d4798c1e3940bb7a9dbf49eb9b08533a9afe3f"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "b8332e1ffce1228c784b4eeeb82d9510287d4b12ac92f9ea948c2104a0102f83"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "23081c9acd15565593871ac5ea9d408e7e5aabf064bc66f2a6f95d200c8aa14a"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "T-05.02.01 remains partial for legal document access and remaining whole-page theme/accessibility acceptance. Staff address editing and correction/archive reviews follow."
     }
   ]
 }
