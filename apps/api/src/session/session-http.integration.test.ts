@@ -219,6 +219,19 @@ it('requires recent step-up to revoke a session and retains the ownership bounda
     body: JSON.stringify({ password }),
   });
   expect(verified.status).toBe(200);
+  const acknowledgement = (await verified.json()) as { stepUpVerifiedAt: string };
+  const audit = (
+    await pool.query(
+      "SELECT metadata,correlation_id,created_at FROM audit_log WHERE user_id='http-user' AND event='step_up_verified' ORDER BY created_at DESC LIMIT 1"
+    )
+  ).rows[0];
+  expect(audit).toBeDefined();
+  expect(JSON.parse(audit.metadata)).toMatchObject({
+    stepUpVerified: true,
+    verifiedAt: acknowledgement.stepUpVerifiedAt,
+  });
+  expect(audit.correlation_id).toBe(verified.headers.get('x-correlation-id'));
+  expect(audit.created_at.toISOString()).toBe(acknowledgement.stepUpVerifiedAt);
   const outsider = randomUUID();
   await pool.query('INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,$3)', [
     outsider,

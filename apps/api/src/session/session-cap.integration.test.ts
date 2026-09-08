@@ -27,6 +27,102 @@ async function usable() {
     AND expires_at>NOW() AND idle_deadline>NOW()`)
   ).rows;
 }
+it('does not acknowledge step-up when the session no longer exists', async () => {
+  await expect(service.verifyStepUp('cap-user', randomUUID(), 'not-used')).rejects.toMatchObject({
+    status: 401,
+  });
+});
+
+it.each(['revoked', 'idle-expired', 'expired', 'disabled', 'wrong-owner'])(
+  'does not grant step-up for a %s session',
+  async (state) => {
+    const session = await service.createSession('cap-user', false);
+    if (state === 'revoked') await service.revokeSession(session.sessionId);
+    if (state === 'idle-expired')
+      await db.pool.query("UPDATE sessions SET idle_deadline=NOW()-INTERVAL '1 minute'");
+    if (state === 'expired')
+      await db.pool.query("UPDATE sessions SET expires_at=NOW()-INTERVAL '1 minute'");
+    if (state === 'disabled')
+      await db.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='cap-user'");
+    if (state === 'wrong-owner') {
+      await db.pool.query(
+        "INSERT INTO users(user_id,username,password_hash) VALUES ('other-user','other@example.test','unused')"
+      );
+      await db.pool.query("UPDATE sessions SET user_id='other-user'");
+    }
+    await expect(
+      service.verifyStepUp('cap-user', session.sessionId, 'unused')
+    ).rejects.toMatchObject({ status: 401 });
+    expect(
+      (await db.pool.query('SELECT step_up_verified_at FROM sessions')).rows[0].step_up_verified_at
+    ).toBeNull();
+    expect(
+      (await db.pool.query("SELECT id FROM audit_log WHERE event='step_up_verified'")).rows
+    ).toHaveLength(0);
+  }
+);
+
+it('rolls back step-up if its audit record cannot be persisted', async () => {
+  const { hash } = await import('argon2');
+  await db.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='cap-user'", [
+    await hash('current-password'),
+  ]);
+  const session = await service.createSession('cap-user', false);
+  await db.pool
+    .query(`CREATE FUNCTION fail_step_up_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$;
+    CREATE TRIGGER fail_step_up_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_step_up_audit()`);
+  await expect(
+    service.verifyStepUp('cap-user', session.sessionId, 'current-password')
+  ).rejects.toMatchObject({ status: 500 });
+  expect(
+    (await db.pool.query('SELECT step_up_verified_at FROM sessions')).rows[0].step_up_verified_at
+  ).toBeNull();
+  expect(
+    (await db.pool.query("SELECT id FROM audit_log WHERE event='step_up_verified'")).rows
+  ).toHaveLength(0);
+});
+
+it('verifies the current password after waiting for an account update', async () => {
+  const { hash } = await import('argon2');
+  const newHash = await hash('new-password');
+  await db.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='cap-user'", [
+    await hash('old-password'),
+  ]);
+  const session = await service.createSession('cap-user', false);
+  const client = await db.pool.connect();
+  let pending: Promise<unknown> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("SELECT user_id FROM users WHERE user_id='cap-user' FOR UPDATE");
+    pending = service.verifyStepUp('cap-user', session.sessionId, 'old-password');
+    const rejected = expect(pending).rejects.toMatchObject({ status: 422 });
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await db.pool.query(`SELECT count(*) AS count FROM pg_stat_activity
+      WHERE datname=current_database() AND wait_event_type='Lock'
+      AND query='SELECT password_hash,disabled_at FROM users WHERE user_id=$1 FOR UPDATE'`)
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query("UPDATE users SET password_hash=$1 WHERE user_id='cap-user'", [newHash]);
+    await client.query('COMMIT');
+    await rejected;
+    expect(
+      (await db.pool.query('SELECT step_up_verified_at FROM sessions')).rows[0].step_up_verified_at
+    ).toBeNull();
+    expect(
+      (await db.pool.query("SELECT id FROM audit_log WHERE event='step_up_verified'")).rows
+    ).toHaveLength(0);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending?.catch(() => {});
+  }
+});
+
 it('records one private security alert when concurrent refresh reuse revokes a token family', async () => {
   const original = await service.createSession('cap-user', false);
   const other = await service.createSession('cap-user', false);

@@ -41,15 +41,13 @@ function fixture() {
     redeemRefreshToken: vi
       .fn()
       .mockResolvedValue({ sessionId: 'new-session', refreshToken: 'new-refresh' }),
-    getSessionById: vi
-      .fn()
-      .mockResolvedValue({
-        expires_at: sessionResult.expiresAt,
-        csrf_token: 'new-csrf',
-        user_id: 'actor',
-      }),
+    getSessionById: vi.fn().mockResolvedValue({
+      expires_at: sessionResult.expiresAt,
+      csrf_token: 'new-csrf',
+      user_id: 'actor',
+    }),
     verifyUserPassword: vi.fn().mockResolvedValue(true),
-    setStepUpVerifiedTimestamp: vi.fn(),
+    verifyStepUp: vi.fn().mockResolvedValue(new Date('2026-09-08T00:00:00.000Z')),
   };
   const cookies = { cookie: vi.fn(), clearCookie: vi.fn() };
   return {
@@ -274,18 +272,11 @@ describe('authentication input and step-up failures', () => {
     expect(a.challengeId).not.toBe(b.challengeId);
     expect(auth.forgotPassword).not.toHaveBeenCalled();
   });
-  it.each([false, true])('only records step-up after a valid password: %s', async (valid) => {
+  it('returns the persisted step-up timestamp and passes request context to the transaction', async () => {
     const { controller, sessions } = fixture();
-    sessions.verifyUserPassword.mockResolvedValue(valid);
-    const result = controller.stepUp({ password: 'secret' }, request());
-    if (valid) {
-      await expect(result).resolves.toHaveProperty('stepUpVerifiedAt');
-      expect(sessions.setStepUpVerifiedTimestamp).toHaveBeenCalledWith('session');
-    } else {
-      await expect(result).rejects.toMatchObject({ status: 422 });
-      expect(sessions.setStepUpVerifiedTimestamp).not.toHaveBeenCalled();
-    }
-    expect(sessions.verifyUserPassword).toHaveBeenCalledWith('actor', 'secret');
+    const result = await controller.stepUp({ password: 'secret' }, request({ ip: '192.0.2.1' }));
+    expect(result.stepUpVerifiedAt).toBe('2026-09-08T00:00:00.000Z');
+    expect(sessions.verifyStepUp).toHaveBeenCalledWith('actor', 'session', 'secret', '192.0.2.1');
   });
   it.each([
     { operation: 'resendOtp' as const, purpose: 'registration' },

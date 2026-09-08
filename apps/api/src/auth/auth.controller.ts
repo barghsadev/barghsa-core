@@ -769,30 +769,16 @@ export class AuthController {
     const userId = req.session.userId;
     const sessionId = req.session.sessionId;
 
-    // ── Verify password ────────────────────────────────────────
-    const passwordValid = await this.sessionService.verifyUserPassword(
+    const verifiedAt = await this.sessionService.verifyStepUp(
       userId,
-      parsed.data.password
-    );
-
-    if (!passwordValid) {
-      throw new HttpException(
-        { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
-        422
-      );
-    }
-
-    // ── Set step-up timestamp ──────────────────────────────────
-    await this.sessionService.setStepUpVerifiedTimestamp(sessionId);
-
-    const now = new Date();
-    this.logger.log(
-      `Step-up verified for user ${userId}, session ${sessionId} at ${now.toISOString()}`
+      sessionId,
+      parsed.data.password,
+      req.ip ?? req.socket?.remoteAddress ?? null
     );
 
     return {
       message: 'Step-up authentication successful.',
-      stepUpVerifiedAt: now.toISOString(),
+      stepUpVerifiedAt: verifiedAt.toISOString(),
     };
   }
 

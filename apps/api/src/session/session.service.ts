@@ -6,6 +6,7 @@ import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { defaultInboxContent, defaultInboxLink } from '@barghsa/shared/notifications';
 import { resolveStaffPermissions } from './staff-permissions.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 /** Session idle timeout: 30 minutes */
 export const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
@@ -646,30 +647,70 @@ export class SessionService {
     return 15 * 60 * 1000; // 15 minutes
   })();
 
-  /**
-   * Set the step_up_verified_at timestamp on a session.
-   *
-   * Called after successful step-up authentication (T-02.02.04).
-   * Records the current time as the last step-up verification,
-   * which the StepUpGuard checks against the configured window.
-   */
-  async setStepUpVerifiedTimestamp(sessionId: string): Promise<void> {
-    const pool = getDbPool();
-    const now = new Date();
-
+  /** Verify the current password and persist step-up with its audit record. */
+  async verifyStepUp(
+    userId: string,
+    sessionId: string,
+    password: string,
+    ip: string | null = null
+  ): Promise<Date> {
+    const client = await getDbPool().connect();
     try {
-      await pool.query(
-        `UPDATE sessions
-         SET step_up_verified_at = $1, updated_at = $1
-         WHERE session_id = $2`,
-        [now, sessionId]
+      await client.query('BEGIN');
+      // Use the same account-before-session order as revocation and refresh.
+      const account = await client.query(
+        'SELECT password_hash,disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+        [userId]
       );
-      this.logger.log(`Step-up verified for session ${sessionId}`);
+      if (!account.rows[0] || account.rows[0].disabled_at) {
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      }
+      const session = await client.query(
+        `SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2
+         AND revoked_at IS NULL AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp()
+         FOR UPDATE`,
+        [sessionId, userId]
+      );
+      if (!session.rows[0]) {
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      }
+      const { verify } = await import('argon2');
+      if (!(await verify(account.rows[0].password_hash, password).catch(() => false))) {
+        throw new HttpException({ error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code }, 422);
+      }
+      // Password hashing and row locks take time; check expiry again at the write.
+      const updated = await client.query<{ step_up_verified_at: Date }>(
+        `UPDATE sessions SET step_up_verified_at=date_trunc('milliseconds',clock_timestamp()),updated_at=clock_timestamp()
+         WHERE session_id=$1 AND user_id=$2 AND revoked_at IS NULL
+         AND expires_at>clock_timestamp() AND idle_deadline>clock_timestamp()
+         RETURNING step_up_verified_at`,
+        [sessionId, userId]
+      );
+      const verifiedAt = updated.rows[0]?.step_up_verified_at;
+      if (!verifiedAt) {
+        throw new UnauthorizedException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code });
+      }
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'step_up_verified',$3,$4,$5,$6)`,
+        [
+          uuidv7(),
+          userId,
+          JSON.stringify({ stepUpVerified: true, verifiedAt: verifiedAt.toISOString() }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          ip,
+          verifiedAt,
+        ]
+      );
+      await client.query('COMMIT');
+      return verifiedAt;
     } catch (err) {
-      this.logger.error(
-        `Failed to set step_up_verified_at for session ${sessionId}: ${String(err)}`
-      );
-      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
+      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof HttpException) throw err;
+      this.logger.error(`Failed to verify step-up: ${String(err)}`);
+      throw new HttpException({ error: ErrorCodes.INTERNAL_SERVER.code }, 500);
+    } finally {
+      client.release();
     }
   }
 
