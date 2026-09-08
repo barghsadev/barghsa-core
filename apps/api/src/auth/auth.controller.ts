@@ -105,7 +105,11 @@ export class AuthController {
   @ApiResponse({ status: 409, description: 'Username already taken' })
   @ApiResponse({ status: 422, description: 'Weak password' })
   @ApiResponse({ status: 429, description: 'Rate limited' })
-  async register(@Body() rawBody: unknown, @Req() req: Request): Promise<RegisterResponse> {
+  async register(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<RegisterResponse> {
     // ── Validate with Zod ───────────────────────────────────────────
     const parsed = RegisterSchema.safeParse(rawBody);
 
@@ -130,7 +134,7 @@ export class AuthController {
 
     // ── Delegate to service ─────────────────────────────────────────
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.authService.register(parsed.data, ip);
+    return this.authService.register(parsed.data, ip, getOrCreateDeviceCookie(req, res));
   }
 
   /**
@@ -321,7 +325,8 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async resendLoginOtp(
     @Body() rawBody: unknown,
-    @Req() req: Request
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
   ): Promise<{ challengeId: string }> {
     const parsed = LoginResendSchema.safeParse(rawBody);
 
@@ -333,7 +338,12 @@ export class AuthController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.otpService.resendChallenge(parsed.data.challengeId, ip, 'login');
+    return this.otpService.resendChallenge(
+      parsed.data.challengeId,
+      ip,
+      'login',
+      getOrCreateDeviceCookie(req, res)
+    );
   }
 
   /**
@@ -439,7 +449,8 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async forgotPassword(
     @Body() rawBody: unknown,
-    @Req() req: Request
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
   ): Promise<ForgotPasswordResponse> {
     const parsed = ForgotPasswordSchema.safeParse(rawBody);
 
@@ -453,7 +464,7 @@ export class AuthController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.authService.forgotPassword(parsed.data, ip);
+    return this.authService.forgotPassword(parsed.data, ip, getOrCreateDeviceCookie(req, res));
   }
 
   @SkipCsrf({ requireJson: true })
@@ -756,7 +767,11 @@ export class AuthController {
     description: 'OTP resent. Returns the same challengeId.',
   })
   @ApiResponse({ status: 429, description: 'Rate limited' })
-  async resendOtp(@Body() rawBody: unknown, @Req() req: Request): Promise<{ challengeId: string }> {
+  async resendOtp(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<{ challengeId: string }> {
     const parsed = ResendOtpSchema.safeParse(rawBody);
 
     if (!parsed.success) {
@@ -767,7 +782,12 @@ export class AuthController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.otpService.resendChallenge(parsed.data.challengeId, ip, 'registration');
+    return this.otpService.resendChallenge(
+      parsed.data.challengeId,
+      ip,
+      'registration',
+      getOrCreateDeviceCookie(req, res)
+    );
   }
 
   /**
@@ -896,7 +916,8 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async sendChangeUsernameOtp(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
   ): Promise<ChangeUsernameSendOtpResponse> {
     const parsed = ChangeUsernameSendOtpSchema.safeParse(rawBody);
 
@@ -909,7 +930,12 @@ export class AuthController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.authService.sendChangeUsernameOtp(req.session.userId, parsed.data.newUsername, ip);
+    return this.authService.sendChangeUsernameOtp(
+      req.session.userId,
+      parsed.data.newUsername,
+      ip,
+      getOrCreateDeviceCookie(req, res)
+    );
   }
 
   /**
@@ -991,7 +1017,8 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async sendAddContactOtp(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
   ): Promise<AddContactSendOtpResponse> {
     const parsed = AddContactSendOtpSchema.safeParse(rawBody);
 
@@ -1008,7 +1035,8 @@ export class AuthController {
       req.session.userId,
       parsed.data.contactType,
       parsed.data.contactValue,
-      ip
+      ip,
+      getOrCreateDeviceCookie(req, res)
     );
   }
 

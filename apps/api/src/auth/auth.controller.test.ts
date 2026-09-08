@@ -274,9 +274,9 @@ describe('authentication input and step-up failures', () => {
     expect(cookies.cookie).not.toHaveBeenCalled();
   });
   it('keeps malformed forgot-password responses generic without sending a challenge', async () => {
-    const { controller, auth } = fixture();
-    const a = await controller.forgotPassword(null, request());
-    const b = await controller.forgotPassword({ username: 'invalid' }, request());
+    const { controller, auth, res } = fixture();
+    const a = await controller.forgotPassword(null, request(), res);
+    const b = await controller.forgotPassword({ username: 'invalid' }, request(), res);
     expect(a.sent).toBe(true);
     expect(b.message).toBe(a.message);
     expect(a.challengeId).not.toBe(b.challengeId);
@@ -337,8 +337,13 @@ describe('authentication input and step-up failures', () => {
     { operation: 'resendOtp' as const, purpose: 'registration' },
     { operation: 'resendLoginOtp' as const, purpose: 'login' },
   ])('binds resend to $purpose rather than a caller purpose', async ({ operation, purpose }) => {
-    const { controller, otp } = fixture();
-    await controller[operation]({ challengeId, purpose: 'password_reset' }, request());
-    expect(otp.resendChallenge).toHaveBeenCalledWith(challengeId, 'unknown', purpose);
+    const { controller, otp, res } = fixture();
+    await controller[operation]({ challengeId, purpose: 'password_reset' }, request(), res);
+    expect(otp.resendChallenge).toHaveBeenCalledWith(
+      challengeId,
+      'unknown',
+      purpose,
+      expect.stringMatching(/^[a-f0-9]{64}$/)
+    );
   });
 });

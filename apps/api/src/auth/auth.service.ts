@@ -87,7 +87,11 @@ export class AuthService {
    * that also stores the password hash and TOS version for atomic consumption
    * on OTP verify. Returns a `challengeId` for the next step (OTP verification).
    */
-  async register(input: RegisterInput, ip: string): Promise<RegisterResponse> {
+  async register(
+    input: RegisterInput,
+    ip: string,
+    deviceToken?: string
+  ): Promise<RegisterResponse> {
     await this.rateLimitService.enforceSecurityRateLimit(
       rateLimitKey(
         'registration:destination',
@@ -163,7 +167,8 @@ export class AuthService {
         ip,
         passwordHash,
         input.tosVersionId,
-        client
+        client,
+        deviceToken
       );
       await client.query('COMMIT');
       return { challengeId };
@@ -362,7 +367,8 @@ export class AuthService {
           input.username,
           ip,
           'login',
-          userResult.rows[0].auth_version
+          userResult.rows[0].auth_version,
+          input.deviceInfo?.fingerprint
         );
 
         this.logger.log(`OTP challenge created for login: user ${userId} from ${ip}`);
@@ -587,7 +593,11 @@ export class AuthService {
    *
    * Rate limits are enforced per-destination and per-IP (5 starts per hour).
    */
-  async forgotPassword(input: ForgotPasswordInput, ip: string): Promise<ForgotPasswordResponse> {
+  async forgotPassword(
+    input: ForgotPasswordInput,
+    ip: string,
+    deviceToken?: string
+  ): Promise<ForgotPasswordResponse> {
     await this.rateLimitService.enforceSecurityRateLimit(
       rateLimitKey(
         'password-reset:destination',
@@ -596,7 +606,11 @@ export class AuthService {
       5,
       3_600_000
     );
-    const { challengeId } = await this.otpService.createPasswordResetChallenge(input.username, ip);
+    const { challengeId } = await this.otpService.createPasswordResetChallenge(
+      input.username,
+      ip,
+      deviceToken
+    );
     return {
       challengeId,
       sent: true,
@@ -1436,7 +1450,8 @@ export class AuthService {
   async sendChangeUsernameOtp(
     userId: string,
     newUsername: string,
-    ip: string
+    ip: string,
+    deviceToken?: string
   ): Promise<{ challengeId: string; destination: string; previousDestination: string }> {
     const pool = getDbPool();
 
@@ -1488,7 +1503,8 @@ export class AuthService {
         undefined,
         undefined,
         binding,
-        client
+        client,
+        deviceToken
       );
       const next = await this.otpService.createChallenge(
         newUsername,
@@ -1496,7 +1512,8 @@ export class AuthService {
         undefined,
         undefined,
         { ...binding, previousChallengeId: previous.challengeId },
-        client
+        client,
+        deviceToken
       );
       await client.query('COMMIT');
       return { ...next, previousDestination: currentUsername };
@@ -1710,7 +1727,8 @@ export class AuthService {
     userId: string,
     contactType: 'email' | 'mobile',
     contactValue: string,
-    ip: string
+    ip: string,
+    deviceToken?: string
   ): Promise<{ challengeId: string; destination: string }> {
     const pool = getDbPool();
 
@@ -1775,11 +1793,19 @@ export class AuthService {
       );
 
     // 4. Create OTP challenge
-    return this.otpService.createChallenge(contactValue, ip, undefined, undefined, {
-      purpose: contactType === 'email' ? 'add_email' : 'add_mobile',
-      userId,
-      authVersion: user.auth_version,
-    });
+    return this.otpService.createChallenge(
+      contactValue,
+      ip,
+      undefined,
+      undefined,
+      {
+        purpose: contactType === 'email' ? 'add_email' : 'add_mobile',
+        userId,
+        authVersion: user.auth_version,
+      },
+      undefined,
+      deviceToken
+    );
   }
 
   /**

@@ -69,9 +69,18 @@ export class OtpService {
           previousChallengeId?: string;
         }
       | undefined = undefined,
-    transactionClient?: Pick<PoolClient, 'query'>
+    transactionClient?: Pick<PoolClient, 'query'>,
+    deviceToken?: string
   ): Promise<OtpChallengeResult> {
-    await this.enforceSendRateLimits(destination, ip);
+    const store = transactionClient
+      ? new PostgresRateLimiterStore((text, params) => transactionClient.query(text, params))
+      : undefined;
+    await this.enforceSendRateLimits(
+      destination,
+      ip,
+      deviceToken,
+      store ? (key, limit, windowMs) => store.incrementSecurity(key, limit, windowMs) : undefined
+    );
 
     return this.queueChallenge(destination, passwordHash, tosVersionId, binding, transactionClient);
   }
@@ -82,13 +91,18 @@ export class OtpService {
     ip: string,
     passwordHash: string,
     tosVersionId: string,
-    client: Pick<PoolClient, 'query'>
+    client: Pick<PoolClient, 'query'>,
+    deviceToken?: string
   ): Promise<OtpChallengeResult> {
-    const store = new PostgresRateLimiterStore((text, params) => client.query(text, params));
-    await this.enforceSendRateLimits(destination, ip, (key, limit, windowMs) =>
-      store.incrementSecurity(key, limit, windowMs)
+    return this.createChallenge(
+      destination,
+      ip,
+      passwordHash,
+      tosVersionId,
+      undefined,
+      client,
+      deviceToken
     );
-    return this.queueChallenge(destination, passwordHash, tosVersionId, undefined, client);
   }
 
   private async queueChallenge(
@@ -159,18 +173,20 @@ export class OtpService {
     destination: string,
     ip: string,
     purpose: 'login' | 'password_reset' = 'login',
-    authVersion?: number
+    authVersion?: number,
+    deviceToken?: string
   ): Promise<OtpChallengeResult> {
-    await this.enforceSendRateLimits(destination, ip);
+    await this.enforceSendRateLimits(destination, ip, deviceToken);
     return this.createAccountChallenge(userId, destination, purpose, authVersion);
   }
 
   /** Apply identical quotas and return an opaque ID for both existing and unknown accounts. */
   async createPasswordResetChallenge(
     destination: string,
-    ip: string
+    ip: string,
+    deviceToken?: string
   ): Promise<{ challengeId: string }> {
-    await this.enforceSendRateLimits(destination, ip);
+    await this.enforceSendRateLimits(destination, ip, deviceToken);
     // Configuration failure must not reveal whether this destination has an account.
     this.deliveryPayload(randomUUID(), { code: '000000', destination });
     const config = await readOtpConfig();
@@ -253,7 +269,8 @@ export class OtpService {
   async resendChallenge(
     challengeId: string,
     ip: string,
-    purpose: OtpPurpose
+    purpose: OtpPurpose,
+    deviceToken?: string
   ): Promise<{ challengeId: string }> {
     const pool = getDbPool();
 
@@ -294,7 +311,7 @@ export class OtpService {
       OtpService.throwRateLimited(perChallenge.resetMs);
     }
 
-    await this.enforceSendRateLimits(destination, ip);
+    await this.enforceSendRateLimits(destination, ip, deviceToken);
 
     const otp = this.generateOtp();
     const otpHash = this.hashOtp(otp);
@@ -429,6 +446,7 @@ export class OtpService {
   private async enforceSendRateLimits(
     destination: string,
     ip: string,
+    deviceToken?: string,
     check = this.rateLimitService.checkSecurityRateLimit.bind(this.rateLimitService)
   ): Promise<void> {
     const perMinute = await check(`otp:dest:${destination}:60s`, 1, 60_000);
@@ -449,6 +467,14 @@ export class OtpService {
     const ipLimit = await check(`otp:ip:${ip}:3600s`, 20, 3_600_000);
     if (!ipLimit.allowed) {
       OtpService.throwRateLimited(ipLimit.resetMs);
+    }
+
+    if (deviceToken) {
+      // Supplemental browser quota across destinations and OTP purposes. Keep
+      // IP/destination protection because users can clear the device cookie.
+      const deviceHash = createHash('sha256').update(deviceToken).digest('hex');
+      const deviceLimit = await check(`otp:device:${deviceHash}:3600s`, 20, 3_600_000);
+      if (!deviceLimit.allowed) OtpService.throwRateLimited(deviceLimit.resetMs);
     }
   }
 }
