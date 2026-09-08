@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+  "source_revision": "ffd77e1a63f5235b9d771a47351627db095ffa87",
   "active_step": "R01",
-  "next_action": "Read selected requirements and existing profile/onboarding evidence, inspect current implementation once, then repair confirmed gaps with focused checks.",
+  "next_action": "Finish profiles/onboarding acceptance using the14-file source comparison and existing evidence. Review remaining individual/legal field and geography/draft/document criteria; keep commercial-order verification dependencies explicit. The settings default control is fixed and verified atffd77e1; do not rebuild it or repeat its10 browser cases.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -801,7 +801,52 @@
         "reason": "Current requirement and historical review pending."
       }
     ],
-    "next_action": "Read selected requirements and existing profile/onboarding evidence, inspect current implementation once, then repair confirmed gaps with focused checks."
+    "next_action": "Finish profiles/onboarding acceptance using the14-file source comparison and existing evidence. Review remaining individual/legal field and geography/draft/document criteria; keep commercial-order verification dependencies explicit. The settings default control is fixed and verified atffd77e1; do not rebuild it or repeat its10 browser cases.",
+    "local_repairs": [
+      {
+        "commit": "ffd77e1a63f5235b9d771a47351627db095ffa87",
+        "summary": "Profile settings now changes the persisted default/active profile through the existing authorized switch endpoint. Uses the already-fetched list; matching acknowledgement required before context refresh. Invalid/failed replies preserve selection. Existing sidebar code and backend are unchanged.",
+        "checks": "10 distinct Chromium cases pass, including2 new fa/en mobile settings cases for HTTP failure, mismatched acknowledgement, CSRF, same-document/sidebar refresh and persistence after reload. Web types/lint/format/build and all42 unchanged budgets pass. Electricity249.87KB/250KB. Initial2 tests reproduced absence; intermediate shared-import budget failures are retained and superseded by final passing checks.",
+        "source_evidence": [
+          {
+            "path": "apps/web/src/routes/_app/settings/profile.tsx",
+            "sha256": "dbb88eaf78e1d1db180aaa856a6820089a51a8f3da342471eb8dd47a3846b72f"
+          },
+          {
+            "path": "apps/web/e2e/profile-switch.spec.ts",
+            "sha256": "ea4ca15d31819b05504d6eb71e62c40b89858694d3d249ed84aa22f5295b070c"
+          }
+        ],
+        "logs": [
+          "audit/evidence/ffd77e1/r01-profiles-default-before.log.gz",
+          "audit/evidence/ffd77e1/r01-profiles-default-browser-final.log.gz",
+          "audit/evidence/ffd77e1/r01-profiles-default-budgets-final.log.gz",
+          "audit/evidence/ffd77e1/r01-profiles-default-build-final.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+        ]
+      }
+    ],
+    "checkpoint": {
+      "revision": "ffd77e1a63f5235b9d771a47351627db095ffa87",
+      "scope": "Current implementation and saved PR bodies reviewed for selection/context, verification mode, create/save/complete, legal draft/upload architecture and settings default-control repair. Combined eight-task acceptance remains pending.",
+      "source_reuse_log": "audit/evidence/ffd77e1/r01-profiles-source-reuse.log.gz",
+      "source_reuse": "14 selected profile/onboarding product files byte-identical to9529872. ProfilesController differs only in2 ownership-actor arguments, already covered by the ownership batch. Reuse relevant recorded checks; this does not renew whole-file dependencies, coverage, images or deployed operation.",
+      "reviewed_sources": [
+        "ProfilesService getProfilesByUserId/setDefaultProfile/createProfile/saveIndividualProfile/completeOnboarding/getVerificationStatus/getVerificationMode/verifyProfileApi/canPlaceCommercialOrder",
+        "LegalProfilesService saveLegalProfile; useOnboardingDraft and legal form save/autosave/upload behavior",
+        "Root profile guard, context revision/remount, required selection modal, ProfileSwitcher, VerificationBanner, completion page",
+        "Saved PR bodies102–110 and exact requirements; relevant archived repair sections only"
+      ],
+      "remaining_review": [
+        "Finish per-field/current UI acceptance for individual/legal forms, geography/draft/document failure paths and source-bound evidence reconciliation.",
+        "Reconcile normal first default creation with intentionally explicit selection after a lost context; preserve the passing only-remaining-profile recovery behavior.",
+        "Keep commercial order verification enforcement assigned to actual order consumers/future submission tasks; guard existence and unavailable provider do not close T-03.01.02.",
+        "Disposition PR106 UI deferral against PR108 and current repaired form; also reconcile PR105 geography seed and PR102/104 temporary placeholder claims.",
+        "Consolidate all8 task/9 PR dispositions once the batch review is complete."
+      ]
+    }
   },
   "open_domain_reviews": [
     {

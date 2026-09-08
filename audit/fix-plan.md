@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `1695680`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `ffd77e1`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -24,7 +24,7 @@ Registration/OTP batch completed locally at `c706820`: **9 tasks verified /9 PR 
 
 Session/recovery batch is consolidated at `1695680`: **4 task acceptances verified, including preserved reset /3 partial; 4 PR reviews closed /3 open**, saved PRs #89–#93, #99 and #100. Session creation/revocation and forgot/reset are locally verified. Pre-login CSRF is implemented; callback/telemetry and sensitive-domain reviews remain assigned. Lost-contact policy/execution remains open. [Consolidated review](evidence/step-reviews.json#R01-session-recovery) preserves repairs, exact checks and prior evidence.
 
-Active **R01-profiles-onboarding**, saved PRs **#102–#110**, eight qualified tasks. Review selection/default/switching, verification restrictions, individual/legal drafts, addresses/documents/autosave and completion. PR106's legal UI deferral and PR108's contributing slice need supported dispositions. Exact membership and next action are in progress.json.active_batch. Current explicit PR totals: **17 closed /4 open /280 not reviewed**. Follow the feature-batch rules below.
+Active **R01-profiles-onboarding**, saved PRs **#102–#110**, eight qualified tasks. Review selection/default/switching, verification restrictions, individual/legal drafts, addresses/documents/autosave and completion. PR106's legal UI deferral and PR108's contributing slice need supported dispositions. Settings default-profile control is repaired atffd77e1;10 browser cases and42 unchanged budgets pass. Exact membership and next action are in progress.json.active_batch. Current explicit PR totals: **17 closed /4 open /280 not reviewed**. Follow the feature-batch rules below.
 
 ## Execution order
 
