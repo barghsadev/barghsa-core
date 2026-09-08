@@ -20,6 +20,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppAiRouteImport } from './routes/_app/ai'
+import { Route as AppAppRouteImport } from './routes/_app/app'
 import { Route as AppChartsRouteImport } from './routes/_app/charts'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
@@ -135,6 +136,11 @@ const TermsRoute = TermsRouteImport.update({
 const AppAiRoute = AppAiRouteImport.update({
   id: '/ai',
   path: '/ai',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAppRoute = AppAppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => AppRoute,
 } as any)
 const AppChartsRoute = AppChartsRouteImport.update({
@@ -463,6 +469,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
+  '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
@@ -534,6 +541,7 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
+  '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
@@ -609,6 +617,7 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/_app/ai': typeof AppAiRoute
+  '/_app/app': typeof AppAppRoute
   '/_app/charts': typeof AppChartsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/documents': typeof AppDocumentsRoute
@@ -685,6 +694,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/ai'
+    | '/app'
     | '/charts'
     | '/dashboard'
     | '/documents'
@@ -756,6 +766,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/ai'
+    | '/app'
     | '/charts'
     | '/dashboard'
     | '/documents'
@@ -830,6 +841,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/_app/ai'
+    | '/_app/app'
     | '/_app/charts'
     | '/_app/dashboard'
     | '/_app/documents'
@@ -986,6 +998,13 @@ declare module '@tanstack/react-router' {
       path: '/ai'
       fullPath: '/ai'
       preLoaderRoute: typeof AppAiRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/app': {
+      id: '/_app/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppAppRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/charts': {
@@ -1427,6 +1446,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppAiRoute: typeof AppAiRoute
+  AppAppRoute: typeof AppAppRoute
   AppChartsRoute: typeof AppChartsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
@@ -1450,6 +1470,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAiRoute: AppAiRoute,
+  AppAppRoute: AppAppRoute,
   AppChartsRoute: AppChartsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDocumentsRoute: AppDocumentsRoute,

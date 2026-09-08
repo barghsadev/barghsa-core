@@ -3,10 +3,34 @@ import { test, expect } from './coverage-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
 
 const challengeId = '11111111-2222-4333-8444-555555555555';
+const sessionAcknowledgement = {
+  requiresOtp: false,
+  userId: 'user',
+  sessionId: 'session',
+  csrfToken: 'csrf',
+  expiresAt: '2030-01-01T00:00:00.000Z',
+};
 const generic = {
   en: 'An error occurred. Please try again',
   fa: 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
 };
+async function mockApp(page: Page, hasProfile = true) {
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: hasProfile
+          ? [{ id: 'profile-one', profileType: 'LEGAL', title: 'Profile', isDefault: true }]
+          : [],
+        activeProfileId: hasProfile ? 'profile-one' : null,
+        hasDefault: hasProfile,
+      },
+    })
+  );
+  await page.route('**/api/dashboard', (route) =>
+    route.fulfill({ json: { profile: { name: 'Profile' } } })
+  );
+}
 async function openLogin(page: Page, locale: 'fa' | 'en') {
   await mockOppositeNumerals(page, locale);
   await page.goto('/login');
@@ -85,22 +109,30 @@ for (const locale of ['en', 'fa'] as const) {
     expect(attempts).toBe(2);
   });
   test(`login accepts a complete session acknowledgement (${locale})`, async ({ page }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockApp(page);
     await page.route('**/api/auth/login', (route) =>
-      route.fulfill({
-        json: {
-          requiresOtp: false,
-          userId: 'user',
-          sessionId: 'session',
-          csrfToken: 'csrf',
-          expiresAt: '2030-01-01T00:00:00.000Z',
-        },
-      })
+      route.fulfill({ json: sessionAcknowledgement })
     );
     await openLogin(page, locale);
     await page.locator('button[type="submit"]').click();
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/app$/);
+    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toContainText(
+      'Profile'
+    );
     await expect(page.locator('[data-sonner-toast]')).toHaveCount(1);
+    await page.reload();
+    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toContainText(
+      'Profile'
+    );
+  });
+  test(`login sends an account without profiles to onboarding (${locale})`, async ({ page }) => {
+    await mockApp(page, false);
+    await page.route('**/api/auth/login', (route) =>
+      route.fulfill({ json: sessionAcknowledgement })
+    );
+    await openLogin(page, locale);
+    await page.locator('button[type="submit"]').click();
+    await expect(page).toHaveURL(/\/onboarding$/);
   });
   for (const response of [
     { name: 'null', body: null },
@@ -125,13 +157,14 @@ for (const locale of ['en', 'fa'] as const) {
   test(`OTP rejects an empty session acknowledgement and permits retry (${locale})`, async ({
     page,
   }) => {
+    await mockApp(page);
     await page.route('**/api/auth/login', (route) =>
       route.fulfill({ json: { requiresOtp: true, challengeId } })
     );
     const attempts: unknown[] = [];
     await page.route('**/api/auth/login/verify', (route) => {
       attempts.push(route.request().postDataJSON());
-      return route.fulfill({ json: null });
+      return route.fulfill({ json: attempts.length === 1 ? null : sessionAcknowledgement });
     });
     await openLogin(page, locale);
     await page.locator('button[type="submit"]').click();
@@ -143,5 +176,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(digits.first()).toBeEnabled();
     expect(attempts).toEqual([{ challengeId, otp: '123456', trustDevice: true }]);
     await expect(page).toHaveURL(/\/login$/);
+    for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(i + 1));
+    await expect(page).toHaveURL(/\/app$/);
+    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toContainText(
+      'Profile'
+    );
+    expect(attempts).toEqual(Array(2).fill({ challengeId, otp: '123456', trustDevice: true }));
   });
 }

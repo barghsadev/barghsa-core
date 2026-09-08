@@ -258,7 +258,7 @@ function LoginPage() {
         const msg = t('auth.login.success', locale);
         toast.success(msg);
 
-        router.navigate({ to: '/' });
+        router.navigate({ to: '/app', replace: true });
       } catch (_err) {
         // Network error or unexpected failure
         const msg = t('auth.login.error.generic', locale);
@@ -395,7 +395,7 @@ function LoginPage() {
           return;
         }
         toast.success(t('auth.login.otpSuccess', locale));
-        router.navigate({ to: '/' });
+        router.navigate({ to: '/app', replace: true });
       } catch {
         setOtpError(t('auth.otp.error.generic', locale));
         setOtpCode('');
