@@ -310,7 +310,11 @@ export class CrmV2Service {
     const sessionResult = await pool.query(
       `SELECT session_id, created_at AT TIME ZONE 'UTC' AS created_at,
               updated_at AT TIME ZONE 'UTC' AS updated_at,
-              device_info, expires_at AT TIME ZONE 'UTC' AS expires_at,
+              CASE WHEN device_info IS NULL THEN NULL
+                   ELSE jsonb_strip_nulls(jsonb_build_object(
+                     'ip',device_info->>'ip','userAgent',device_info->>'userAgent',
+                     'browser',device_info->>'browser','os',device_info->>'os'))
+              END AS device_info, expires_at AT TIME ZONE 'UTC' AS expires_at,
               revoked_at IS NOT NULL AS is_revoked,
               (revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()) AS is_active
        FROM sessions

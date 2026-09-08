@@ -53,10 +53,31 @@ async function login() {
 
 it('authenticates parsed cookies and rejects unsafe requests before extending or revoking a session', async () => {
   const auth = await login();
-  expect((await fetch(`${base}/api/auth/sessions`)).status).toBe(401);
   expect(
-    (await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } })).status
-  ).toBe(200);
+    (await pool.query('SELECT device_info FROM sessions WHERE session_id=$1', [auth.sessionId]))
+      .rows[0].device_info.fingerprint
+  ).toBe(createHash('sha256').update(fingerprint).digest('hex'));
+  // Legacy sessions may still contain the raw browser token and internal fields.
+  // The display endpoint must never expose either, even before those rows expire.
+  await pool.query('UPDATE sessions SET device_info=$1::jsonb WHERE session_id=$2', [
+    JSON.stringify({
+      ip: '192.0.2.1',
+      userAgent: 'Fixture browser',
+      fingerprint,
+      secret: 'private-field',
+    }),
+    auth.sessionId,
+  ]);
+  expect((await fetch(`${base}/api/auth/sessions`)).status).toBe(401);
+  const listed = await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } });
+  expect(listed.status).toBe(200);
+  const display = await listed.text();
+  expect(display).not.toContain(fingerprint);
+  expect(display).not.toContain('private-field');
+  expect(
+    JSON.parse(display).find((row: { sessionId: string }) => row.sessionId === auth.sessionId)
+      .deviceInfo
+  ).toEqual({ ip: '192.0.2.1', userAgent: 'Fixture browser' });
   const before = (
     await pool!.query('SELECT idle_deadline FROM sessions WHERE session_id=$1', [auth.sessionId])
   ).rows[0];

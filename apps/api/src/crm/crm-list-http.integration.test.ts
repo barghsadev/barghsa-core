@@ -131,6 +131,20 @@ it('never exposes usable customer session cookies and excludes expired sessions 
     VALUES ($1,'crm-page-0',$2,$3,NOW()+$4::interval,NOW()+INTERVAL '30 minutes')`,
       [id, randomUUID(), randomUUID(), expiry]
     );
+  await http.pool.query(
+    'UPDATE sessions SET device_info=$1::jsonb WHERE session_id=ANY($2::text[])',
+    [
+      JSON.stringify({
+        ip: '192.0.2.1',
+        userAgent: 'Fixture browser',
+        browser: 'Chrome',
+        os: 'macOS',
+        fingerprint: 'private-browser-token',
+        extraSecret: 'private-internal-data',
+      }),
+      [active, expired],
+    ]
+  );
   const response = await fetch(`${http.base}/api/crm/profiles/${profileId}`, {
     headers: { Cookie: cookie },
   });
@@ -138,10 +152,18 @@ it('never exposes usable customer session cookies and excludes expired sessions 
   const body = await response.text();
   expect(body).not.toContain(active);
   expect(body).not.toContain(expired);
+  expect(body).not.toContain('private-browser-token');
+  expect(body).not.toContain('private-internal-data');
   const data = JSON.parse(body);
   expect(data.sessions.count).toBe(1);
   for (const session of data.sessions.entries) {
     expect(session.sessionId).toMatch(/^session-ref:[a-f0-9]{64}$/);
+    expect(session.deviceInfo).toEqual({
+      ip: '192.0.2.1',
+      userAgent: 'Fixture browser',
+      browser: 'Chrome',
+      os: 'macOS',
+    });
     const impersonation = await fetch(`${http.base}/api/profiles`, {
       headers: { Cookie: `barghsa_session=${session.sessionId}` },
     });

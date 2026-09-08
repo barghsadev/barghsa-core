@@ -15,7 +15,11 @@ import type {
 import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js';
 import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js';
 import { OtpService, OtpAttemptRejected } from './otp.service.js';
-import { SessionService } from '../session/session.service.js';
+import {
+  DeviceTrustRequired,
+  SessionService,
+  type CreatedSession,
+} from '../session/session.service.js';
 import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 import { TosService } from '../tos/tos.service.js';
 import { deviceTrustIp } from './device-trust-ip.js';
@@ -231,7 +235,7 @@ export class AuthService {
 
       // 3b. Extract user properties
       const userId = userResult.rows[0].user_id;
-      const isStaff = userResult.rows[0].is_admin === true || userResult.rows[0].is_staff === true;
+      let isStaff = userResult.rows[0].is_admin === true || userResult.rows[0].is_staff === true;
 
       // 3b2. Reject disabled accounts (T-10.01.01). Checked *after* the
       // password verifies so account existence is not leaked to callers
@@ -287,34 +291,28 @@ export class AuthService {
         : null;
       const trustedIp = deviceTrustIp(ip);
 
-      let requiresOtp = false;
-
-      // Check device trust for all users
-      if (deviceFingerprint && trustedIp) {
-        const trustResult = await pool.query(
-          `SELECT 1 FROM device_trusts
-           WHERE user_id = $1 AND device_fingerprint = $2
-             AND expires_at > NOW() AND ip_address = $3::inet
-           LIMIT 1`,
-          [userId, deviceFingerprint, trustedIp]
-        );
-
-        if (trustResult.rows.length > 0 && !isStaff) {
-          // Trusted device found — skip OTP for customers
-          requiresOtp = false;
-        } else if (isStaff) {
-          // Staff always require MFA, including on trusted devices.
-          requiresOtp = true;
-        } else {
-          // Customer on an untrusted device: risk-based MFA
-          requiresOtp = true;
+      let session: CreatedSession | undefined;
+      if (deviceFingerprint && trustedIp && !isStaff) {
+        try {
+          session = await this.sessionService.createSession(
+            userId,
+            false,
+            {
+              ip,
+              ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}),
+              fingerprint: deviceFingerprint,
+            },
+            userResult.rows[0].auth_version,
+            undefined,
+            { fingerprint: deviceFingerprint, ip: trustedIp }
+          );
+        } catch (error) {
+          if (!(error instanceof DeviceTrustRequired)) throw error;
+          isStaff = error.isStaff;
         }
-      } else {
-        // Missing device identity or usable server address requires OTP.
-        requiresOtp = true;
       }
 
-      if (requiresOtp) {
+      if (!session) {
         const { challengeId } = await this.otpService.createLoginChallenge(
           userId,
           input.username,
@@ -331,18 +329,6 @@ export class AuthService {
           userIsStaff: isStaff,
         };
       }
-
-      // 4. Create session via SessionService
-      const session = await this.sessionService.createSession(
-        userId,
-        isStaff,
-        {
-          ip,
-          ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}),
-          ...(input.deviceInfo?.fingerprint ? { fingerprint: input.deviceInfo.fingerprint } : {}),
-        },
-        userResult.rows[0].auth_version
-      );
 
       // Record last successful login (T-10.01.01) — best-effort; a failed
       // analytics write must never fail the login itself.

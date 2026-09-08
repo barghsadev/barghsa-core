@@ -19,6 +19,13 @@ const CSRF_TOKEN_BYTES = 32;
 /** Max sessions per user to prevent resource abuse */
 const MAX_SESSIONS_PER_USER = 50;
 
+/** Internal signal: password verification must continue through login OTP. */
+export class DeviceTrustRequired extends UnauthorizedException {
+  constructor(readonly isStaff: boolean) {
+    super({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code });
+  }
+}
+
 /** Active session data returned from validation. */
 export interface ValidatedSession {
   sessionId: string;
@@ -91,7 +98,8 @@ export class SessionService {
     isAdmin: boolean,
     deviceInfo?: DeviceInfo,
     expectedAuthVersion?: number,
-    transactionClient?: PoolClient
+    transactionClient?: PoolClient,
+    requiredTrust?: { fingerprint: string; ip: string }
   ): Promise<CreatedSession> {
     const pool = getDbPool();
 
@@ -111,7 +119,7 @@ export class SessionService {
       // Locking existing sessions alone cannot serialize an empty set or
       // prevent another transaction from inserting after the count snapshot.
       const account = await client.query(
-        'SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+        'SELECT auth_version,disabled_at,is_admin,is_staff FROM users WHERE user_id=$1 FOR UPDATE',
         [userId]
       );
       if (
@@ -136,6 +144,29 @@ export class SessionService {
         [userId]
       );
       const currentCount = lockResult.rows.length;
+
+      if (requiredTrust) {
+        const isStaff = account.rows[0].is_admin === true || account.rows[0].is_staff === true;
+        if (isStaff) throw new DeviceTrustRequired(true);
+        // Account -> sessions -> trust is the same lock order as OTP completion.
+        // Hold the trust row through commit so deletion cannot invalidate a
+        // password-only authorization between this check and session insertion.
+        const trust = await client.query(
+          `SELECT id FROM device_trusts
+           WHERE user_id=$1 AND device_fingerprint=$2 FOR SHARE`,
+          [userId, requiredTrust.fingerprint]
+        );
+        if (!trust.rows[0]) throw new DeviceTrustRequired(false);
+        // A separate statement checks the wall clock after any lock wait.
+        // Transaction-start NOW() could accept trust that expired while waiting.
+        const active = await client.query(
+          `SELECT 1 FROM device_trusts
+           WHERE id=$1 AND expires_at>clock_timestamp() AND ip_address=$2::inet`,
+          [trust.rows[0].id, requiredTrust.ip]
+        );
+        if (!active.rows.length) throw new DeviceTrustRequired(false);
+      }
+
       if (currentCount >= MAX_SESSIONS_PER_USER) {
         // Also repair any pre-existing over-cap set while making room.
         await client.query(
@@ -995,7 +1026,12 @@ export class SessionService {
 
     try {
       const result = await pool.query(
-        `SELECT session_id, device_info, family_id,
+        `SELECT session_id,
+                CASE WHEN device_info IS NULL THEN NULL
+                     ELSE jsonb_strip_nulls(jsonb_build_object(
+                       'ip',device_info->>'ip','userAgent',device_info->>'userAgent',
+                       'browser',device_info->>'browser','os',device_info->>'os'))
+                END AS device_info, family_id,
                 expires_at, idle_deadline, created_at, updated_at
          FROM sessions
          WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW()

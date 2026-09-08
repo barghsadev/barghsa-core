@@ -339,57 +339,149 @@ it('requires staff OTP even on a trusted device', async () => {
   });
 });
 
-it('rechecks credentials while creating a trusted-device session', async () => {
+it.each(['password', 'revoke', 'expire', 'address', 'staff'])(
+  'rechecks %s changes after waiting to create a trusted-device session',
+  async (change) => {
+    await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [
+      await argon2.hash(password),
+    ]);
+    const fingerprint = 'c'.repeat(64);
+    await fixture.pool.query(
+      `INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at,ip_address)
+    VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day','127.0.0.1')`,
+      [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')]
+    );
+    const client = await fixture.pool.connect();
+    let loggingIn: Promise<Response> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='provider-admin' FOR UPDATE");
+      loggingIn = post(
+        'auth/login',
+        {
+          username: 'provider@example.test',
+          password,
+          deviceInfo: { fingerprint: 'ignored-client-input' },
+        },
+        { Cookie: `barghsa_device=${fingerprint}` }
+      );
+      await expect
+        .poll(
+          async () =>
+            (
+              await fixture.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
+      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT auth_version,%'`)
+            ).rows[0].count
+        )
+        .toBe(1);
+      if (change === 'password') {
+        await client.query(
+          "UPDATE users SET password_hash='changed-during-login' WHERE user_id='provider-admin'"
+        );
+      } else if (change === 'revoke') {
+        await client.query("DELETE FROM device_trusts WHERE user_id='provider-admin'");
+      } else if (change === 'staff') {
+        await client.query("UPDATE users SET is_staff=true WHERE user_id='provider-admin'");
+      } else if (change === 'address') {
+        await client.query(
+          "UPDATE device_trusts SET ip_address='192.0.2.1' WHERE user_id='provider-admin'"
+        );
+      } else {
+        // Expiry is after the waiting login transaction started. NOW() in that
+        // transaction would still incorrectly regard this trust as current.
+        await client.query(
+          "UPDATE device_trusts SET expires_at=clock_timestamp() WHERE user_id='provider-admin'"
+        );
+      }
+      await client.query('COMMIT');
+      const response = await loggingIn;
+      expect(response.status, await response.clone().text()).toBe(
+        change === 'password' ? 401 : 200
+      );
+      if (change !== 'password') expect(await response.json()).toMatchObject({ requiresOtp: true });
+      expect(response.headers.getSetCookie()).toEqual([]);
+      expect(
+        (
+          await fixture.pool.query(
+            "SELECT count(*)::int AS count FROM sessions WHERE user_id='provider-admin'"
+          )
+        ).rows[0].count
+      ).toBe(0);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await loggingIn;
+    }
+  }
+);
+
+it('holds device trust until session commit and requires OTP after a waiting revocation finishes', async () => {
   await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [
     await argon2.hash(password),
   ]);
-  const fingerprint = 'c'.repeat(64);
+  const token = 'f'.repeat(64);
   await fixture.pool.query(
-    `INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at,ip_address)
-    VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day','127.0.0.1')`,
-    [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')]
+    `INSERT INTO device_trusts(id,user_id,device_fingerprint,ip_address,expires_at)
+     VALUES ($1,'provider-admin',$2,'127.0.0.1',NOW()+INTERVAL '1 day')`,
+    [randomUUID(), createHash('sha256').update(token).digest('hex')]
   );
-  const client = await fixture.pool.connect();
+  await fixture.pool.query(`
+    CREATE FUNCTION hold_trusted_login() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN
+      PERFORM pg_advisory_xact_lock(781423);
+      RETURN NEW;
+    END;
+    $$;
+    CREATE TRIGGER hold_trusted_login BEFORE INSERT ON sessions
+    FOR EACH ROW EXECUTE FUNCTION hold_trusted_login();
+  `);
+  const hold = await fixture.pool.connect();
   let loggingIn: Promise<Response> | undefined;
+  let revoking: Promise<unknown> | undefined;
+  const credentials = { username: 'provider@example.test', password };
+  const headers = { Cookie: `barghsa_device=${token}` };
   try {
-    await client.query('BEGIN');
-    await client.query(
-      "UPDATE users SET password_hash='changed-during-login' WHERE user_id='provider-admin'"
-    );
-    loggingIn = post(
-      'auth/login',
-      {
-        username: 'provider@example.test',
-        password,
-        deviceInfo: { fingerprint: 'ignored-client-input' },
-      },
-      { Cookie: `barghsa_device=${fingerprint}` }
-    );
+    await hold.query('SELECT pg_advisory_lock(781423)');
+    loggingIn = post('auth/login', credentials, headers);
     await expect
       .poll(
         async () =>
           (
             await fixture.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
-      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT auth_version,%'`)
+        WHERE datname=current_database() AND wait_event='advisory' AND query LIKE 'INSERT INTO sessions%'`)
           ).rows[0].count
       )
       .toBe(1);
-    await client.query('COMMIT');
-    const response = await loggingIn;
-    expect(response.status, await response.text()).toBe(401);
+    revoking = fixture.pool.query("DELETE FROM device_trusts WHERE user_id='provider-admin'");
+    await expect
+      .poll(
+        async () =>
+          (
+            await fixture.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
+        WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'DELETE FROM device_trusts%'`)
+          ).rows[0].count
+      )
+      .toBe(1);
+    await hold.query('SELECT pg_advisory_unlock(781423)');
+    const loggedIn = await loggingIn;
+    expect(loggedIn.status, await loggedIn.clone().text()).toBe(200);
+    expect(await loggedIn.json()).toMatchObject({ requiresOtp: false });
+    await revoking;
+    const afterRevoke = await post('auth/login', credentials, headers);
+    expect(afterRevoke.status, await afterRevoke.clone().text()).toBe(200);
+    expect(await afterRevoke.json()).toMatchObject({ requiresOtp: true });
     expect(
-      (
-        await fixture.pool.query(
-          "SELECT count(*)::int AS count FROM sessions WHERE user_id='provider-admin'"
-        )
-      ).rows[0].count
+      (await fixture.pool.query('SELECT count(*)::int AS count FROM sessions')).rows[0].count
+    ).toBe(1);
+    expect(
+      (await fixture.pool.query('SELECT count(*)::int AS count FROM device_trusts')).rows[0].count
     ).toBe(0);
   } finally {
-    await client.query('ROLLBACK');
-    client.release();
-    await loggingIn;
+    await hold.query('SELECT pg_advisory_unlock_all()');
+    hold.release();
+    await Promise.allSettled([loggingIn, revoking]);
   }
-});
+}, 20000);
 
 async function createStaff() {
   await fixture.pool.query("UPDATE users SET is_admin=true WHERE user_id='provider-admin'");
