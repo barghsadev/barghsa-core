@@ -10,7 +10,7 @@ import {
 
 interface MockResponse extends Response {
   _cookies: Record<string, { value: string; options: Record<string, unknown> }>;
-  _cleared: string[];
+  _cleared: Array<{ name: string; options: Record<string, unknown> }>;
 }
 
 /**
@@ -18,14 +18,14 @@ interface MockResponse extends Response {
  */
 function mockRes(): MockResponse {
   const cookies: Record<string, { value: string; options: Record<string, unknown> }> = {};
-  const cleared: string[] = [];
+  const cleared: MockResponse['_cleared'] = [];
 
   return {
     cookie: (name: string, value: string, options?: Record<string, unknown>) => {
       cookies[name] = { value, options: options ?? {} };
     },
-    clearCookie: (name: string) => {
-      cleared.push(name);
+    clearCookie: (name: string, options: Record<string, unknown>) => {
+      cleared.push({ name, options });
     },
     _cookies: cookies,
     _cleared: cleared,
@@ -50,8 +50,14 @@ describe('setSessionCookie', () => {
     expect(res._cookies[SESSION_COOKIE_NAME]?.options).toMatchObject({
       httpOnly: true,
       sameSite: 'lax',
-      path: '/',
+      path: '/api',
     });
+    expect(res._cleared).toEqual([
+      {
+        name: SESSION_COOKIE_NAME,
+        options: expect.objectContaining({ path: '/', httpOnly: true, sameSite: 'lax' }),
+      },
+    ]);
   });
 
   it('sets Secure flag in production', () => {
@@ -93,7 +99,10 @@ describe('clearSessionCookie', () => {
 
     clearSessionCookie(res);
 
-    expect(res._cleared).toContain(SESSION_COOKIE_NAME);
+    expect(res._cleared.map(({ name, options }) => [name, options.path])).toEqual([
+      [SESSION_COOKIE_NAME, '/api'],
+      [SESSION_COOKIE_NAME, '/'],
+    ]);
   });
 });
 

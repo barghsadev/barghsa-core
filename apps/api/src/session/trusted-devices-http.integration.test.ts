@@ -96,7 +96,10 @@ it('requires authentication, CSRF and fresh step-up, with no cross-user or nonex
   const verified = await stepUp(password);
   expect(verified.status).toBe(200);
   const values = Object.fromEntries(
-    verified.headers.getSetCookie().map((cookie) => cookie.split(';')[0]!.split('='))
+    verified.headers
+      .getSetCookie()
+      .filter((cookie) => !cookie.startsWith('barghsa_session=;'))
+      .map((cookie) => cookie.split(';')[0]!.split('='))
   );
   session = values.barghsa_session!;
   csrf = values.barghsa_csrf!;

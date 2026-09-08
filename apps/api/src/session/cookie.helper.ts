@@ -13,24 +13,11 @@ export const SESSION_COOKIE_NAME = 'barghsa_session';
  */
 export const REFRESH_COOKIE_NAME = 'barghsa_refresh';
 
-/**
- * Centralized SameSite policy (owned by E-06).
- *
- * Until E-06 (06-security-testing-observability.md#T-06.02.01.04) is
- * implemented, the default policy is `lax`. This provides CSRF protection
- * for all state-changing requests while allowing top-level navigation
- * (redirects from external auth providers) to carry the cookie.
- *
- * When E-06 is implemented, this value should be moved to a configuration
- * store so it can be changed per-route/topology without code changes.
+/** Same-origin SPA/API policy owned by E-06; see docs/security/cookies.md.
+ * SameSite is supplementary to session-bound CSRF validation, not a replacement.
  */
 export const SESSION_COOKIE_SAMESITE = 'lax' as const;
-
-/**
- * Session cookie path.
- * Narrow path prevents the cookie from being sent to unexpected routes.
- */
-export const SESSION_COOKIE_PATH = '/';
+export const SESSION_COOKIE_PATH = '/api';
 
 /**
  * CSRF token cookie name.
@@ -81,10 +68,10 @@ export function clearCsrfCookie(res: Response): void {
  *
  * Centralizes all cookie configuration so every auth endpoint uses
  * identical settings:
- * - HttpOnly: always true (prevents XSS access)
+ * - HttpOnly: always true (prevents JavaScript reads)
  * - Secure: true in production, false in dev (non-TLS dev exempted)
- * - SameSite: centralized policy (defaults to Lax until E-06 overrides)
- * - Path: '/' (narrow to API scope when path routing is defined)
+ * - SameSite: centralized same-origin policy
+ * - Path: '/api' (the SPA and static assets do not authenticate with this cookie)
  * - MaxAge: based on session expiry (cookie auto-deletes when session expires)
  */
 export function setSessionCookie(res: Response, sessionId: string, expiresAt: Date): void {
@@ -97,6 +84,13 @@ export function setSessionCookie(res: Response, sessionId: string, expiresAt: Da
     sameSite: SESSION_COOKIE_SAMESITE,
     path: SESSION_COOKIE_PATH,
     maxAge,
+  });
+  // Remove the old root-scoped credential when issuing or rotating a session.
+  res.clearCookie(SESSION_COOKIE_NAME, {
+    httpOnly: true,
+    secure: isSecure,
+    sameSite: SESSION_COOKIE_SAMESITE,
+    path: '/',
   });
 }
 
@@ -124,15 +118,17 @@ export function setRefreshCookie(res: Response, refreshToken: string, expiresAt:
 /**
  * Clear the session cookie on the response (logout).
  *
- * Sets maxAge to 0, which tells the browser to immediately delete the cookie.
+ * Express expires both current and historical paths immediately.
  */
 export function clearSessionCookie(res: Response): void {
-  res.clearCookie(SESSION_COOKIE_NAME, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: SESSION_COOKIE_SAMESITE,
-    path: SESSION_COOKIE_PATH,
-  });
+  for (const path of [SESSION_COOKIE_PATH, '/']) {
+    res.clearCookie(SESSION_COOKIE_NAME, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: SESSION_COOKIE_SAMESITE,
+      path,
+    });
+  }
 }
 
 /**
@@ -165,7 +161,7 @@ export function getOrCreateDeviceCookie(req: Request, res: Response): string {
   res.cookie(name, token, {
     httpOnly: true,
     secure,
-    sameSite: 'lax',
+    sameSite: SESSION_COOKIE_SAMESITE,
     path: '/',
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });

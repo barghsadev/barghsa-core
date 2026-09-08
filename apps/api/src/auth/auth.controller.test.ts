@@ -103,7 +103,7 @@ describe('authentication cookies and device possession', () => {
         httpOnly: true,
         secure: env === 'production',
         sameSite: 'lax',
-        path: '/',
+        path: '/api',
       })
     );
     expect(cookies.cookie).toHaveBeenCalledWith(
@@ -221,7 +221,11 @@ describe('refresh and logout boundaries', () => {
       expect(sessions.revokeSession.mock.calls).toEqual(
         session === 'valid-session' ? [['valid-session']] : []
       );
-      expect(cookies.clearCookie).toHaveBeenCalledTimes(3);
+      expect(cookies.clearCookie).toHaveBeenCalledTimes(4);
+      expect(cookies.clearCookie).toHaveBeenCalledWith(
+        'barghsa_session',
+        expect.objectContaining({ path: '/api', httpOnly: true, secure: true })
+      );
       expect(cookies.clearCookie).toHaveBeenCalledWith(
         'barghsa_refresh',
         expect.objectContaining({ path: '/api/auth/refresh', httpOnly: true, secure: true })

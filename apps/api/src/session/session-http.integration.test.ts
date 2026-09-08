@@ -53,8 +53,18 @@ async function login() {
 
 function adoptRotation(auth: Awaited<ReturnType<typeof login>>, response: Response) {
   const cookies = response.headers.getSetCookie();
-  const values = Object.fromEntries(cookies.map((cookie) => cookie.split(';')[0]!.split('=')));
-  expect(cookies).toHaveLength(3);
+  const values = Object.fromEntries(
+    cookies
+      .filter((cookie) => !cookie.startsWith('barghsa_session=;'))
+      .map((cookie) => cookie.split(';')[0]!.split('='))
+  );
+  expect(cookies).toHaveLength(4);
+  expect(cookies.find((cookie) => cookie.startsWith('barghsa_session=;'))).toContain('Path=/;');
+  expect(
+    cookies.find(
+      (cookie) => cookie.startsWith('barghsa_session=') && !cookie.startsWith('barghsa_session=;')
+    )
+  ).toContain('Path=/api;');
   expect(cookies.find((cookie) => cookie.startsWith('barghsa_session='))).toContain('HttpOnly');
   expect(cookies.find((cookie) => cookie.startsWith('barghsa_refresh='))).toContain('HttpOnly');
   expect(cookies.find((cookie) => cookie.startsWith('barghsa_csrf='))).not.toContain('HttpOnly');
