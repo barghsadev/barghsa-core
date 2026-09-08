@@ -149,6 +149,7 @@ export const fa: I18nDictionary = {
   'team.transfer': 'انتقال مالکیت',
   'team.transferWarning':
     'درخواست انتقال مالکیت برای {name} ارسال شود؟ تا زمان پذیرش، مالک باقی می‌مانید.',
+  'team.transferSent': 'درخواست انتقال مالکیت برای {name} ارسال شد. گیرنده باید آن را بپذیرد.',
   'team.pending': 'در انتظار',
   'team.active': 'فعال',
   'team.joined': 'تاریخ عضویت',
@@ -938,6 +939,7 @@ export const en: I18nDictionary = {
   'team.transfer': 'Transfer ownership',
   'team.transferWarning':
     'Send an ownership request to {name}? You remain the owner until they accept.',
+  'team.transferSent': 'Transfer request sent to {name}. They must accept.',
   'team.pending': 'Pending',
   'team.active': 'Active',
   'team.joined': 'Joined',

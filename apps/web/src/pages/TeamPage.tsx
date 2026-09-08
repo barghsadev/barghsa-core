@@ -39,7 +39,7 @@ export function TeamPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [teamMessage, setTeamMessage] = useState<string | null>(null);
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<(TeamAction & { successMessage?: string }) | null>(null);
   const [username, setUsername] = useState('');
   const [role, setRole] = useState<Role>('Manager');
   const [inviting, setInviting] = useState(false);
@@ -144,13 +144,13 @@ export function TeamPage() {
   }
   const invitations = team?.agents.filter((entry) => entry.type === 'invitation') ?? [];
   const base = `/api/profiles/${encodeURIComponent(team?.profileId ?? '')}`;
-  const openAction = (next: TeamAction) => {
+  const openAction = (next: TeamAction & { successMessage?: string }) => {
     setNotice(null);
     setAction(next);
   };
   const finished = async () => {
     await load();
-    setNotice(word('saved'));
+    setNotice(action?.successMessage ?? word('saved'));
   };
 
   return (
@@ -298,11 +298,15 @@ export function TeamPage() {
                               title: word('transfer'),
                               description: word('transferWarning').replace(
                                 '{name}',
-                                member.entry.username ?? member.entry.name ?? userId
+                                member.entry.name ?? member.entry.username ?? userId
                               ),
                               path: `${base}/transfer-ownership`,
                               method: 'POST',
                               body: { newOwnerUserId: userId },
+                              successMessage: word('transferSent').replace(
+                                '{name}',
+                                member.entry.name ?? member.entry.username ?? userId
+                              ),
                             })
                         : undefined
                     }

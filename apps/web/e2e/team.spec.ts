@@ -3,7 +3,12 @@ import { test, expect, type Page } from './coverage-fixture';
 
 const profileId = '00000000-0000-4000-8000-000000000001';
 const transferId = '00000000-0000-4000-8000-000000000002';
-async function shell(page: Page, locale = 'en', canTransfer = true) {
+async function shell(
+  page: Page,
+  locale = 'en',
+  canTransfer = true,
+  memberName: string | null = null
+) {
   await page.addInitScript((value) => {
     if (document.documentElement) document.documentElement.lang = value;
     new MutationObserver(() => {
@@ -43,7 +48,7 @@ async function shell(page: Page, locale = 'en', canTransfer = true) {
             type: 'agent',
             userId: 'member',
             username: 'member@example.test',
-            name: null,
+            name: memberName,
             role: 'Manager',
             status: 'Active',
             joinedAt: '2026-08-01T01:00:00Z',
@@ -278,8 +283,70 @@ for (const action of [
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(requests).toBe(1);
     await expect(page.locator('#dashboard-content').getByRole('status')).toContainText(
-      'Change saved'
+      action.suffix === 'transfer-ownership'
+        ? 'Transfer request sent to member@example.test. They must accept.'
+        : 'Change saved'
     );
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`ownership request reports its recipient only after step-up and successful creation (${locale})`, async ({
+    page,
+  }) => {
+    const recipientName = locale === 'fa' ? 'نماینده نمونه' : 'Example Agent';
+    await shell(page, locale, true, recipientName);
+    let verified = false,
+      conflict = true;
+    const attempts: unknown[] = [];
+    await page.route('**/api/auth/step-up', (route) => {
+      expect(route.request().postDataJSON()).toEqual({ password: 'Team-password-123!' });
+      verified = true;
+      return route.fulfill({ json: { verified: true } });
+    });
+    await page.route(`**/api/profiles/${profileId}/transfer-ownership`, (route) => {
+      attempts.push(route.request().postDataJSON());
+      return route.fulfill(
+        !verified
+          ? { status: 403, json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } } }
+          : conflict
+            ? { status: 409, json: { error: { code: 'CONFLICT:INVALID_STATE' } } }
+            : { status: 201, json: { id: transferId } }
+      );
+    });
+    await page.goto('/settings/team');
+    const success =
+      locale === 'fa'
+        ? 'درخواست انتقال مالکیت برای نماینده نمونه ارسال شد. گیرنده باید آن را بپذیرد.'
+        : 'Transfer request sent to Example Agent. They must accept.';
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'انتقال مالکیت' : 'Transfer ownership',
+        exact: true,
+      })
+      .click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(recipientName);
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
+    await confirm.click();
+    await dialog
+      .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
+      .fill('Team-password-123!');
+    await confirm.click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(page.getByText(success, { exact: true })).toHaveCount(0);
+    conflict = false;
+    await dialog
+      .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
+      .fill('Team-password-123!');
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByText(success, { exact: true })).toBeVisible();
+    expect(attempts).toEqual(Array.from({ length: 3 }, () => ({ newOwnerUserId: 'member' })));
+    await expect(page).toHaveURL(/\/settings\/team$/);
   });
 }
 
