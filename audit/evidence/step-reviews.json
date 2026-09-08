@@ -2558,6 +2558,68 @@
         "audit/evidence/r01/barghsa-force-password-web-format.log.gz",
         "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
       ]
+    },
+    {
+      "id": "R01-session-deadlines",
+      "date": "2026-09-08",
+      "source_revision": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
+      "summary": "Preserve absolute session expiry and reject validation, refresh or rotation that waits past the original deadline.",
+      "review": [
+        "Compared T-02.02.01 and T-06.01.04.03 with validation, identifier rotation, refresh redemption and their callers. Identifier rotation previously started another 24-hour absolute lifetime. It now preserves the original deadline; refresh and idle touch clamp the sliding deadline to that limit.",
+        "Authenticated idle touch now locks account before session, reads current authorization after both waits, and checks the clock after the read. Disabled or revoked sessions cannot be returned from a stale read. Context-only middleware validation remains one read with no idle update, transaction or lock before the global CSRF guard.",
+        "Validation, refresh and identifier rotation recheck both original deadlines with the database wall clock after credential writes. Expiry during a later write wait rolls back every session/refresh mutation. Existing refresh-family reuse revocation and private deduplicated alert remain unchanged.",
+        "Nine new PostgreSQL cases cover deadline preservation, concurrent disable/revocation, idle/absolute expiry while waiting for session locks and expiry during refresh/rotation credential writes. One new unit case proves delayed context-only reads use the later clock.",
+        "Three older fixtures needed corrections: creation eligibility now observes the actual blocking backend instead of an obsolete query string; two CRM rollback tests authorize their actors so they reach the injected audit failure. Production permission checks were unchanged."
+      ],
+      "checks": [
+        "78 distinct session unit/integration/compiled-HTTP cases pass across focused invocations. Initial run passed 75/78; its three obsolete fixtures failed and one early rejection assertion produced an unhandled rejection during cleanup. After fixture corrections, the three selected cases pass with no unhandled rejection. Overlapping cases and 37 selected-out cases are not additional passes or task skips.",
+        "API typecheck, focused ESLint, final Prettier check and git diff check pass. Typecheck ran after Vitest and compiled-app fixtures completed.",
+        "No frontend, API response shape, cookie policy, schema or dependency changed. Earlier browser, OpenAPI, migration and route-budget evidence is reused. No global checkpoint or load result is renewed."
+      ],
+      "remaining": [
+        "T-02.02.01 remains partial. MFA step-up currently stamps the existing session and does not rotate its identifier; rotateSession has no production caller. Next wire atomic step-up rotation with refreshed cookies/CSRF and review retry callers.",
+        "Finish the other required rotation triggers and centralized cookie path/policy review. Session location, remaining revocation/CSRF/caller matrices and lost-contact policy remain R01 work."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "520d2986c064f0374504083ca5e53bf49f5c7fb0bcc34e408257357c84610804"
+        },
+        {
+          "path": "apps/api/src/session/session.service.test.ts",
+          "sha256": "6901d8e3d06c78026c65e8337879123d26eab1dcfa504280c0b094c9c06fb14e"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "99998a2819093d0aa09a83eef52bf859c3e6c3bffb3861fc5f183d824f0a9b40"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "ff5008f407d6d1303b3b670348544dfc2c984c23cfb38c7d93c4dacd8c862601"
+        },
+        {
+          "path": "apps/api/src/session/session-context.middleware.ts",
+          "sha256": "cb64a4f0cd8bcd1e7fd83b62563d6c3a734e3ca93d0d994c67d412e8695f90d7"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "52e2cd32ae344760bd7595e29c7ec3f2ad8056521e6dbd2301a68ae112a2d856"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-session-deadlines-api.log.gz",
+        "audit/evidence/r01/barghsa-session-deadlines-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-session-deadlines-fixtures-final.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-session-deadlines-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+      ]
     }
   ]
 }

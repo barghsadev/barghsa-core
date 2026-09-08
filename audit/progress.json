@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+  "source_revision": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
   "active_step": "R01",
-  "next_action": "R01: review 02-auth-users-admin.md#T-02.02.01 session creation/cookies: required rotation triggers, refresh reuse response and alerts, absolute/idle deadlines and centralized cookie policy. Reuse existing source-bound session and CRM/role evidence before adding checks. Login .01-.04 are locally verified through 8f857aa. Latest step passes 30 API cases, 12 distinct focused browser cases and 50 i18n tests; all 41 route budgets pass. Lost-contact policy question remains pending.",
+  "next_action": "R01: implement required MFA step-up session rotation for 02-auth-users-admin.md#T-02.02.01 and security T-06.01.04.03. Make verification, replacement session/refresh/CSRF, step-up stamp and audit atomic; deliver new cookies and check sensitive-action retry callers for stale CSRF/session IDs. Then finish rotation triggers and centralized cookie policy. Session deadline repair f39132f passes 78 distinct focused API cases, types/lint/format. T-02.02.01 stays partial. Lost-contact policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Login UI/flow/OTP/forced change .01-.04 are verified locally. Review session creation/rotation/reuse .02.02.01, revocation callers, CSRF alternatives, step-up callers and approximate session location."
+        "Login .01-.04 are verified locally. Session deadline repair passes; wire atomic MFA step-up rotation, then finish required rotation/cookie review, revocation callers, CSRF alternatives, sensitive-action callers and approximate location."
       ]
     },
     {
@@ -468,6 +468,10 @@
     {
       "id": "R01-forced-password-change",
       "review_record": "audit/evidence/step-reviews.json#R01-forced-password-change"
+    },
+    {
+      "id": "R01-session-deadlines",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-deadlines"
     }
   ],
   "deferred_improvements": [
