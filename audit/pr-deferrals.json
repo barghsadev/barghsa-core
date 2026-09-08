@@ -404,7 +404,21 @@
       "Deferred (repo convention): admin web UI slice (table view, disable button + confirmation, fa/en dicts, RTL/a11y), re-enable endpoint.",
       "- [ ] Admin web UI table + disable button — deferred UI slice (API contract ready)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Reviewed locally: required staff UI is implemented; re-enable is outside the canonical task.",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "required_part_satisfied_optional_part_separate",
+        "evidence": "Table, confirmation, fa/en and staff-content light/dark accessibility verified. Re-enable is an author-proposed future feature absent from canonical T-10.01.01, not a missing acceptance criterion."
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Staff table and permission-bound disable confirmation are implemented and reviewed."
+      }
+    ],
+    "reviewed_source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+    "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
   },
   {
     "pr": 217,
@@ -935,7 +949,21 @@
       "- [ ] Role assignment at creation (roleIds accepted but not persisted — role management is T-05.03.02 depending on T-09.05.01)",
       "- [ ] Activation link email delivery (email transport — separate epic)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Reviewed locally: both required deferrals are satisfied by current implementation; live delivery remains operational evidence.",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Initial roles persist atomically; creator-only API and UI selection verified."
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Encrypted outbox and email adapter delivery verified with a local provider receiver; production credentials/delivery remain operational."
+      }
+    ],
+    "reviewed_source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+    "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
   },
   {
     "pr": 127,

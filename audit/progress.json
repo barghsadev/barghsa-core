@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "a4cd929e3ed087fd80468139e2fb6c15d299bbbe",
+  "source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
   "active_step": "R01",
-  "next_action": "R01: consolidate staff task acceptance for 02-auth-users-admin.md#T-05.03.01, T-05.03.02 and T-10.01.01 using the current staff API and source-bound UI evidence. Record exact unmet criteria before changing more code. Staff creation and role/disable/resend authentication boundaries are repaired. Then finish remaining domain callers, explicit CSRF alternatives and task-wide session reconciliation. Lost-contact policy remains pending; do not ask again.",
+  "next_action": "R01: review 02-auth-users-admin.md#T-05.04.04 agent-role permission enforcement, current step-up audit/deadlines and UI recovery. Reuse8904b03 credential-invalidation evidence; repair only confirmed remaining criteria. Staff creation, role assignment and staff listing are verified locally atab10771. Then finish remaining agent/invitation/ownership and domain/CSRF dispositions. Lost-contact policy remains pending; do not ask again.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -102,9 +102,9 @@
       "title": "Restore staff permission boundaries",
       "priority": "P0",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Staff creation is repaired at640108c and role-change/disable/resend authentication deadlines and audit ata4cd929; focused checks pass. Consolidate whole staff task acceptance using saved evidence. Deployed administrator-grant inventory remains external."
+        "Staff creation, role assignment and staff-list tasks are verified locally atab10771. Preserve current authority/race evidence; remaining domain permission reviews follow R01. Deployed administrator-grant inventory remains external."
       ]
     },
     {
@@ -287,7 +287,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review 18 partial and 254 pending records; preserve 50 revision-bound verified assessments and reconcile evidence_refresh_queue. Reconcile 301 PRs, 170 deferrals and 58 historical skips without duplicate builds. Keep the 1,033 historical queue gaps separate."
+        "Review18 partial and251 pending records; preserve53 revision-bound verified assessments and reconcile evidence_refresh_queue. Reconcile301 PRs and170 historical deferral statements, including the new explicit dispositions for PR129/218, plus58 historical skips. Keep1,033 queue gaps separate."
       ]
     },
     {
@@ -537,6 +537,10 @@
     {
       "id": "R01-staff-sensitive-actions",
       "review_record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
+    },
+    {
+      "id": "R01-staff-task-acceptance",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
     }
   ],
   "deferred_improvements": [
@@ -555,9 +559,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 50,
+    "acceptance_verified": 53,
     "partial": 18,
-    "pending": 254,
+    "pending": 251,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,

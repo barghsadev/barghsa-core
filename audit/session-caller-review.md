@@ -1,6 +1,6 @@
 # Session caller review
 
-Reviewed through product `a4cd929`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
+Reviewed through product `ab10771`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
 
 | Caller / event | Current credential behavior | Evidence / disposition |
 | --- | --- | --- |
@@ -9,7 +9,7 @@ Reviewed through product `a4cd929`. Scope: session creation/rotation/revocation 
 | Password step-up | Replaces session/refresh/CSRF, retaining the original absolute deadline. | `rotateSession` and `verifyStepUp` unchanged from `9469d35`; existing browser cookie/current-session evidence applies. |
 | Forced password change | Revokes every existing session and refresh credential; next login creates fresh credentials. | `forceChangePassword` unchanged from `8f857aa`; tested token deadline, history, audit rollback and invalidation. |
 | Password-reset recovery | Consumes reset authorization and revokes all credentials atomically; returns to login. | `resetPassword` unchanged from `9827e96`; OTP-first and reset-grant evidence reused. Lost-contact recovery policy remains separate. |
-| Staff creation | Creates target credentials, initial roles and verified individual profile after current creator step-up, with atomic audit and delivery outbox. No target session is started. | `640108c`:8 creation HTTP cases,11 authority/race cases and4 browser cases; deadline expiry or changed actor credentials prevents creation. Whole lifecycle acceptance remains separate. |
+| Staff creation | Creates target credentials, initial roles and verified individual profile after current creator step-up, with atomic audit and delivery outbox. No target session is started. | `640108c`:8 creation HTTP cases,11 authority/race cases and4 browser cases; deadline expiry or changed actor credentials prevents creation. Local creation task acceptance is now verified atab10771. |
 | Staff activation | Consumes activation link, changes password and invalidates old credentials together; requires login afterward. | `a60cce6`:11 selected HTTP cases including expiry across lock/write waits, one-time use and rollback. |
 | Staff role assignment/removal | Changed roles revoke target sessions and refresh credentials; unchanged role sets preserve them. | `a4cd929`: target invalidation, valid self sign-out, audit attribution, expiry rollback and post-guard authority/credential races pass. The final self-session check accepts only its own transaction revocation timestamp. |
 | Staff disablement | Disable flag, all target sessions, refresh consumption and audit commit together. | `a4cd929`: current authentication/audit and rollback cases pass; reuses `ee5beb2` target credential, administrator isolation and idempotence coverage, rerun in the selected staff suite. |
@@ -25,3 +25,5 @@ Reviewed through product `a4cd929`. Scope: session creation/rotation/revocation 
 Exact method comparisons and hashes: [session-method-reuse.json](evidence/r01/session-method-reuse.json). All ten selected methods match their cited evidence revisions. This comparison does not renew dependency, whole-file, browser, coverage or production evidence.
 
 The registration matrix and guard repair are now recorded at `455ed61` in [security-route-review.md](security-route-review.md). Finish explicit CSRF alternatives and sensitive-action/audit/UI dispositions, including authorization lost during waits. Full invitation/decline/details and ownership task acceptance remains in F07. This table verifies the specified credential effects; it does not close the whole authentication group. The four session tasks remain partial until remaining criteria and task-wide evidence are reconciled. Full lost-contact recovery still needs the pending owner policy.
+
+Staff creation, role-assignment and staff-list task acceptance is recorded at `ab10771` in [step reviews](evidence/step-reviews.json#R01-staff-task-acceptance). Credential effects above retain their source-bound evidence; remaining session and profile-agent criteria are still open.

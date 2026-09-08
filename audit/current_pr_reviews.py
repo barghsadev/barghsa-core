@@ -52,7 +52,7 @@ def report(root: Path = ROOT) -> str:
              f'{len(prs)} merged PRs: {counts["Task review remains"]} have unresolved mapped tasks; '
              f'{counts["Unmapped"]} have no current task mapping; '
              f'{counts["Mapped tasks verified"]} map only to verified tasks.',
-             f'{sum(map(len, deferrals.values()))} historical deferral statements from {len(deferrals)} PRs still need explicit reconciliation. '
+             f'{sum(map(len, deferrals.values()))} historical deferral statements from {len(deferrals)} PRs are retained; see the deferral register for explicit dispositions. '
              'Even a verified task does not automatically dispose of every statement in its PR body.', '',
              'Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), '
              '[PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).', '',

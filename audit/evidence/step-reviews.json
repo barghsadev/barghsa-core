@@ -3882,6 +3882,215 @@
           "record": "R01-staff-sensitive-actions"
         }
       ]
+    },
+    {
+      "id": "R01-staff-task-acceptance",
+      "date": "2026-09-08",
+      "source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+      "summary": "Verify staff creation, role assignment and staff listing after fixing initial-role UI access, password guarantees and dark-theme contrast.",
+      "review": [
+        "Read canonical T-05.03.01, T-05.03.02 and T-10.01.01 and saved PR bodies129/130/218. Consolidated current implementation and prior repaired authentication boundaries once per task. All three scoped local task records are now acceptance_verified.",
+        "Creation allowed initial role IDs under admin:users:create, but the UI hid the picker unless the actor also had admin:roles:edit. Added GET staff-role-options for either capability, returning only predefined roleId/name/description. The existing role-management endpoint and later role edits retain their original permission. The native expandable multi-select preserves descriptions and keyboard behavior without a new dependency.",
+        "Repeated random bytes produced2AAAAAAAAAAA, violating the shared lowercase requirement. Reserve one character from each required class before shuffling; cryptographic entropy,12-character length and existing alphabet remain. The deterministic regression passes through real password hashing.",
+        "Staff-content accessibility scans reproduced1.04:1 and2.63:1 dark-theme contrast. Replaced fixed white/gray backgrounds and muted text with existing theme colors. A creator-only form no longer shows an unrelated blanket denial. Subsequent partial scanner failures were during finite CSS transitions; scans now await actual animation completion, with no disabled rules.",
+        "The initial browser run served the prior build and was interrupted with exit130 after the mismatch was verified. It supplies no product acceptance evidence. Rebuilt, verified the current role-options asset, and saved artifact hashes. Later functional and theme runs bind to the current build. Exact failed runs and fixture corrections are retained.",
+        "Current API checks cover creator-only catalog projection, unchanged edit denial, multiple persisted roles, atomic authentication/audit effects, credential invalidation and one-time password policy. Five staff/activation delivery cases verify the outbox/email adapter locally. Exact login, forced-password and activation methods match their reviewed evidence revisions.",
+        "Only one OpenAPI route was added; every existing contract value is unchanged and its original formatting was preserved. Compiled metadata verifies GET plus SessionAuthGuard. Ten immediate-predecessor evidence bindings were reconciled; older verified-record drifts remain.",
+        "PR129 initial-role/email deferrals are implemented locally. PR218 table/confirmation/fa/en/accessibility deferrals are implemented; its re-enable proposal is outside the canonical requirement. Four historical statements receive explicit dispositions without deleting their text. PR130 task requirements are verified in current combined implementation.",
+        "Updated the generated PR-checklist heading to describe retained historical deferrals rather than claiming all remain unreconciled. Explicit dispositions are in pr-deferrals.json; audit integrity and regenerated report checks pass."
+      ],
+      "checks": [
+        "220 distinct API/unit cases pass:215 across five staff files plus5 staff/activation delivery cases. Twelve distinct production-browser cases pass across the final current-build runs:8 creation/role cases include light/dark scans in fa/en on desktop/mobile;4 activation resend cases retain their passing current-build evidence. Overlapping runs are counted once.",
+        "API/web typechecks, focused ESLint/Prettier, OpenAPI comparison, production web build, all41 unchanged route budgets and diff review pass. No full suite, global coverage, migration or production-image renewal."
+      ],
+      "remaining": [
+        "Continue R01 with 02-auth-users-admin.md#T-05.04.04 agent-role authorization, current step-up audit and UI requirements, reusing8904b03 credential evidence. Then remaining agent/invitation/ownership and domain/CSRF dispositions. Lost-contact policy remains pending."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "b0700e1e9e870025a49a48e99a7703ca868b4031ebeb678d077e4fdcdb364c0a"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "2b2a0e930b5fd1ba313ead433eb7ea1bf9c120f206e4b1ea094efa884fb4c21e"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "fb86f431b8509ff7c8ecfa1f1f04092f60bbf64311264d4c49924d28ec4b2d35"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "2f882619805e4b3fc4e26d6887c66cbf8f14bcbc3e8b92fd449ed1b8d95aa018"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "3a4418e02e52b6058b50b4cd0b610e78e3f9f05e14083e5b113d835326be4433"
+        },
+        {
+          "path": "apps/web/e2e/staff-creation.spec.ts",
+          "sha256": "95c5c0cdbb8cffcbfca56f97fe1d74cb0c08fc6c9d6ec86101c4f61396570c88"
+        },
+        {
+          "path": "apps/web/e2e/staff-users.spec.ts",
+          "sha256": "991ad5193e175e7a98ee1e35c4fd0f4154878d351e50c0eb94f14b920f77890d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "f80feddaf74ed96f396d270db2dbbcf207542c5a15456b547c05038f81b6b8c9"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "e6f5b51e57729961ba85c29f95a954be9c13c4255a65e183688826253663d848"
+        },
+        {
+          "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+          "sha256": "32e241eeeebe5f4e44c740c8f498e778bd7f40b9ba4fb73e7c2d4cf9f003dc2b"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "8726d58a5d98796484fcce91511b22fb03ea72df0f55120a426ec5bfe2ffed47"
+        },
+        {
+          "path": "packages/shared/src/admin/staff-permissions.ts",
+          "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+        },
+        {
+          "path": "packages/db/src/schema/staff-roles.ts",
+          "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "b4e190151f5ff48b3f5de445a1181b213428c147d84480e5cf67112cc8cfa214"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-staff-acceptance-accessibility-before.log",
+        "/tmp/barghsa-staff-acceptance-accessibility-final.log",
+        "/tmp/barghsa-staff-acceptance-accessibility-format.log",
+        "/tmp/barghsa-staff-acceptance-api-types.log",
+        "/tmp/barghsa-staff-acceptance-api.log",
+        "/tmp/barghsa-staff-acceptance-artifact-after.log",
+        "/tmp/barghsa-staff-acceptance-artifact-before.log",
+        "/tmp/barghsa-staff-acceptance-artifact-verified.log",
+        "/tmp/barghsa-staff-acceptance-auth-reuse.log",
+        "/tmp/barghsa-staff-acceptance-browser-final.log",
+        "/tmp/barghsa-staff-acceptance-browser-format.log",
+        "/tmp/barghsa-staff-acceptance-browser-verified.log",
+        "/tmp/barghsa-staff-acceptance-browser.log",
+        "/tmp/barghsa-staff-acceptance-budgets-final.log",
+        "/tmp/barghsa-staff-acceptance-budgets.log",
+        "/tmp/barghsa-staff-acceptance-contract-diff.log",
+        "/tmp/barghsa-staff-acceptance-contract-final.log",
+        "/tmp/barghsa-staff-acceptance-contract-update.log",
+        "/tmp/barghsa-staff-acceptance-delivery.log",
+        "/tmp/barghsa-staff-acceptance-format-final.log",
+        "/tmp/barghsa-staff-acceptance-format-verified.log",
+        "/tmp/barghsa-staff-acceptance-format.log",
+        "/tmp/barghsa-staff-acceptance-lint-final.log",
+        "/tmp/barghsa-staff-acceptance-lint.log",
+        "/tmp/barghsa-staff-acceptance-openapi.log",
+        "/tmp/barghsa-staff-acceptance-password-before.log",
+        "/tmp/barghsa-staff-acceptance-route-metadata.log",
+        "/tmp/barghsa-staff-acceptance-test-lint-final.log",
+        "/tmp/barghsa-staff-acceptance-theme-format.log",
+        "/tmp/barghsa-staff-acceptance-web-build-final.log",
+        "/tmp/barghsa-staff-acceptance-web-build-verified.log",
+        "/tmp/barghsa-staff-acceptance-web-build.log",
+        "/tmp/barghsa-staff-acceptance-web-types-final.log",
+        "/tmp/barghsa-staff-acceptance-web-types.log"
+      ],
+      "evidence_reconciliation": [
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.01",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.02",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "01-platform-infrastructure.md#T-06.02.05",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-02.02.03",
+          "paths": [
+            "apps/api/src/admin/staff-http.integration.test.ts"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-02.02.04",
+          "paths": [
+            "apps/api/src/admin/staff-http.integration.test.ts"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.01",
+          "paths": [
+            "apps/api/openapi.json"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.02",
+          "paths": [
+            "apps/api/openapi.json"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.01.01",
+          "paths": [
+            "apps/api/openapi.json"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.05.01",
+          "paths": [
+            "apps/api/openapi.json"
+          ],
+          "record": "R01-staff-task-acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-02.03.02",
+          "paths": [
+            "apps/api/openapi.json"
+          ],
+          "record": "R01-staff-task-acceptance"
+        }
+      ],
+      "accepted_tasks": [
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-10.01.01"
+      ],
+      "reviewed_merged_prs": [
+        129,
+        130,
+        218
+      ]
     }
   ]
 }
