@@ -250,10 +250,24 @@ export class SessionService {
     touchOnValidate = true
   ): Promise<ValidatedSession | null> {
     const pool = getDbPool();
-    const now = new Date();
-
+    let client: PoolClient | undefined;
     try {
-      const result = await pool.query(
+      if (touchOnValidate) {
+        client = await pool.connect();
+        await client.query('BEGIN');
+        // Match credential writers: account first, session second. Read the
+        // authorization fields in a fresh statement after both lock waits.
+        await client.query(
+          `SELECT u.user_id FROM users u JOIN sessions s ON s.user_id=u.user_id
+           WHERE s.session_id=$1 FOR UPDATE OF u`,
+          [sessionId]
+        );
+        await client.query('SELECT session_id FROM sessions WHERE session_id=$1 FOR UPDATE', [
+          sessionId,
+        ]);
+      }
+      const database = client ?? pool;
+      const result = await database.query(
         `SELECT s.session_id, s.user_id, s.csrf_token,
                 u.is_admin, u.disabled_at,
                 ARRAY(SELECT r.permissions FROM user_roles ur
@@ -267,39 +281,34 @@ export class SessionService {
          LIMIT 1`,
         [sessionId]
       );
-
-      if (result.rows.length === 0) {
-        return null;
-      }
-
       const row = result.rows[0];
-
-      // Check revocation
-      if (row.revoked_at || row.disabled_at) {
+      const now = new Date();
+      if (
+        !row ||
+        row.revoked_at ||
+        row.disabled_at ||
+        new Date(row.expires_at).getTime() <= now.getTime() ||
+        new Date(row.idle_deadline).getTime() <= now.getTime()
+      ) {
+        if (client) await client.query('ROLLBACK');
         return null;
       }
 
-      // Check absolute expiry
-      if (new Date(row.expires_at) <= now) {
-        return null;
-      }
-
-      // Check idle timeout
-      if (new Date(row.idle_deadline) <= now) {
-        return null;
-      }
-
-      // Touch the session (extend idle deadline) if requested
-      if (touchOnValidate) {
-        const newIdleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS);
-        await pool.query(
-          `UPDATE sessions
-           SET idle_deadline = $1, updated_at = $2
-           WHERE session_id = $3`,
-          [newIdleDeadline, now, sessionId]
+      let idleDeadline = row.idle_deadline;
+      if (client) {
+        idleDeadline = new Date(
+          Math.min(now.getTime() + SESSION_IDLE_TIMEOUT_MS, new Date(row.expires_at).getTime())
         );
+        await client.query(
+          `UPDATE sessions SET idle_deadline=$1, updated_at=$2 WHERE session_id=$3`,
+          [idleDeadline, now, sessionId]
+        );
+        if (!(await this.sessionDeadlinesCurrent(client, row.expires_at, row.idle_deadline))) {
+          await client.query('ROLLBACK');
+          return null;
+        }
+        await client.query('COMMIT');
       }
-
       return {
         sessionId: row.session_id,
         userId: row.user_id,
@@ -307,14 +316,28 @@ export class SessionService {
         isAdmin: row.is_admin ?? false,
         permissions: resolveStaffPermissions(row.role_permissions),
         expiresAt: row.expires_at,
-        idleDeadline: row.idle_deadline,
+        idleDeadline,
         stepUpVerifiedAt: row.step_up_verified_at ?? null,
       };
     } catch (err) {
+      await client?.query('ROLLBACK').catch(() => {});
       this.logger.error(`Failed to validate session ${sessionId}: ${String(err)}`);
-      // On transient DB errors, return null (conservative — force re-auth)
       return null;
+    } finally {
+      client?.release();
     }
+  }
+
+  private async sessionDeadlinesCurrent(
+    client: PoolClient,
+    expiresAt: Date,
+    idleDeadline: Date
+  ): Promise<boolean> {
+    const current = await client.query(
+      'SELECT $1::timestamptz>clock_timestamp() AND $2::timestamptz>clock_timestamp() AS valid',
+      [expiresAt, idleDeadline]
+    );
+    return current.rows[0]?.valid === true;
   }
 
   /**
@@ -389,8 +412,10 @@ export class SessionService {
       const newCsrfToken = randomBytes(CSRF_TOKEN_BYTES).toString('hex');
       const newRefreshToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex');
       const newRefreshTokenHash = createHash('sha256').update(newRefreshToken).digest('hex');
-      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS);
-      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS);
+      const expiresAt = new Date(oldRow.expires_at);
+      const idleDeadline = new Date(
+        Math.min(now.getTime() + SESSION_IDLE_TIMEOUT_MS, expiresAt.getTime())
+      );
       const familyId = oldRow.family_id ?? uuidv7();
 
       await client.query(
@@ -436,6 +461,10 @@ export class SessionService {
         [now, familyId, tokenId]
       );
 
+      if (!(await this.sessionDeadlinesCurrent(client, oldRow.expires_at, oldRow.idle_deadline))) {
+        await client.query('ROLLBACK');
+        return null;
+      }
       await client.query('COMMIT');
 
       this.logger.log(
@@ -646,9 +675,31 @@ export class SessionService {
         `UPDATE sessions
          SET refresh_token_hash = $1, idle_deadline = $2, updated_at = $3
          WHERE session_id = $4`,
-        [newTokenHash, new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS), now, tokenRow.session_id]
+        [
+          newTokenHash,
+          new Date(
+            Math.min(
+              now.getTime() + SESSION_IDLE_TIMEOUT_MS,
+              new Date(sessionRow.expires_at).getTime()
+            )
+          ),
+          now,
+          tokenRow.session_id,
+        ]
       );
 
+      if (
+        !(await this.sessionDeadlinesCurrent(
+          client,
+          sessionRow.expires_at,
+          sessionRow.idle_deadline
+        ))
+      ) {
+        throw new UnauthorizedException({
+          statusCode: 401,
+          error: ErrorCodes.AUTH_TOKEN_EXPIRED.code,
+        });
+      }
       await client.query('COMMIT');
 
       return {

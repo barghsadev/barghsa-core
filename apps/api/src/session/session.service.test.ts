@@ -75,12 +75,26 @@ describe('SessionService', () => {
   // ────────────────────────────────────────────────────────────
 
   describe('validateSession', () => {
+    it('uses the clock after a delayed read and never touches a context-only validation', async () => {
+      vi.useFakeTimers();
+      try {
+        const row = makeSessionRow({ idle_deadline: new Date(Date.now() + 500) });
+        mockQuery.mockImplementationOnce(async () => {
+          vi.setSystemTime(Date.now() + 1000);
+          return { rows: [row] };
+        });
+        expect(await service.validateSession('session-001', false)).toBeNull();
+        expect(mockConnect).not.toHaveBeenCalled();
+        expect(mockQuery).toHaveBeenCalledTimes(1);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
     it('returns session data for a valid, unexpired session', async () => {
       const row = makeSessionRow();
       mockQuery.mockResolvedValueOnce({ rows: [row] });
-      mockQuery.mockResolvedValueOnce({ rows: [] }); // UPDATE idle_deadline
 
-      const result = await service.validateSession('session-001');
+      const result = await service.validateSession('session-001', false);
 
       expect(result).not.toBeNull();
       expect(result!.sessionId).toBe('session-001');
@@ -91,7 +105,7 @@ describe('SessionService', () => {
     it('returns null when session does not exist', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [] });
 
-      const result = await service.validateSession('nonexistent');
+      const result = await service.validateSession('nonexistent', false);
       expect(result).toBeNull();
     });
 
@@ -100,7 +114,7 @@ describe('SessionService', () => {
         rows: [makeSessionRow({ revoked_at: new Date() })],
       });
 
-      const result = await service.validateSession('session-001');
+      const result = await service.validateSession('session-001', false);
       expect(result).toBeNull();
     });
 
@@ -109,7 +123,7 @@ describe('SessionService', () => {
         rows: [makeSessionRow({ expires_at: new Date(Date.now() - 60_000) })],
       });
 
-      const result = await service.validateSession('session-001');
+      const result = await service.validateSession('session-001', false);
       expect(result).toBeNull();
     });
 
@@ -118,27 +132,30 @@ describe('SessionService', () => {
         rows: [makeSessionRow({ idle_deadline: new Date(Date.now() - 60_000) })],
       });
 
-      const result = await service.validateSession('session-001');
+      const result = await service.validateSession('session-001', false);
       expect(result).toBeNull();
     });
 
     it('slides idle_deadline on successful validation when touchOnValidate is true', async () => {
       const row = makeSessionRow();
-      mockQuery.mockResolvedValueOnce({ rows: [row] });
-      mockQuery.mockResolvedValueOnce({ rows: [] }); // UPDATE
-
-      await service.validateSession('session-001', true);
-
-      // Second query should be the idle_deadline update
-      const secondCall = mockQuery.mock.calls[1]!;
-      expect(secondCall[0]).toContain('UPDATE sessions');
-      expect(secondCall[0]).toContain('idle_deadline');
+      mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.startsWith('SELECT $1::timestamptz')) return { rows: [{ valid: true }] };
+        if (sql.includes('FROM sessions') || sql.includes('FROM users')) return { rows: [row] };
+        return { rows: [] };
+      });
+      const result = await service.validateSession('session-001', true);
+      expect(result).not.toBeNull();
+      const update = mockClient.query.mock.calls.find(([sql]) => sql.includes('UPDATE sessions'))!;
+      expect(update[1][0].getTime()).toBeGreaterThanOrEqual(row.idle_deadline.getTime());
+      expect(result!.idleDeadline).toEqual(update[1][0]);
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+      expect(mockClient.release).toHaveBeenCalled();
     });
 
     it('returns null on transient DB error (conservative failure mode)', async () => {
       mockQuery.mockRejectedValueOnce(new Error('Connection lost'));
 
-      const result = await service.validateSession('session-001');
+      const result = await service.validateSession('session-001', false);
       expect(result).toBeNull();
     });
   });
@@ -240,6 +257,7 @@ describe('SessionService', () => {
       const sessionRow = makeSessionRow();
 
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.startsWith('SELECT $1::timestamptz')) return { rows: [{ valid: true }] };
         if (sql === 'COMMIT') return { rows: [] };
         if (sql.startsWith('ROLLBACK')) return { rows: [] };
         if (sql.includes('token_hash')) return { rows: [tokenRow] };
@@ -436,6 +454,7 @@ describe('SessionService', () => {
       const oldSession = makeSessionRow({ family_id: 'family-001' });
 
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.startsWith('SELECT $1::timestamptz')) return { rows: [{ valid: true }] };
         if (sql.includes('FROM users u'))
           return { rows: [{ user_id: 'user-001', disabled_at: null }] };
         if (sql === 'COMMIT') return { rows: [] };

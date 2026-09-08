@@ -27,6 +27,201 @@ async function usable() {
     AND expires_at>NOW() AND idle_deadline>NOW()`)
   ).rows;
 }
+
+it('preserves the absolute deadline across identifier rotation, refresh and idle touch', async () => {
+  const original = await service.createSession('cap-user', false);
+  const cutoff = (
+    await db.pool.query(
+      "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '5 minutes',idle_deadline=clock_timestamp()+INTERVAL '1 minute' WHERE session_id=$1 RETURNING expires_at",
+      [original.sessionId]
+    )
+  ).rows[0].expires_at;
+  const rotated = await service.rotateSession(original.sessionId, 'deadline test');
+  expect(rotated!.expiresAt).toEqual(cutoff);
+  await service.redeemRefreshToken(rotated!.refreshToken);
+  const validated = await service.validateSession(rotated!.sessionId);
+  expect(validated).toMatchObject({ expiresAt: cutoff, idleDeadline: cutoff });
+  expect(
+    (
+      await db.pool.query('SELECT expires_at,idle_deadline FROM sessions WHERE session_id=$1', [
+        rotated!.sessionId,
+      ])
+    ).rows
+  ).toEqual([{ expires_at: cutoff, idle_deadline: cutoff }]);
+});
+
+it.each(['revoked', 'disabled'] as const)(
+  'does not validate a session made %s while waiting for its account',
+  async (condition) => {
+    const original = await service.createSession('cap-user', false);
+    const before = (
+      await db.pool.query('SELECT idle_deadline FROM sessions WHERE session_id=$1', [
+        original.sessionId,
+      ])
+    ).rows[0];
+    const lock = await db.pool.connect();
+    let validating: ReturnType<typeof service.validateSession> | undefined;
+    try {
+      await lock.query('BEGIN');
+      await lock.query("SELECT user_id FROM users WHERE user_id='cap-user' FOR UPDATE");
+      const pid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      validating = service.validateSession(original.sessionId);
+      await expect
+        .poll(
+          async () =>
+            (
+              await db.pool.query(
+                'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+                [pid]
+              )
+            ).rows[0].count
+        )
+        .toBe(1);
+      if (condition === 'disabled')
+        await lock.query("UPDATE users SET disabled_at=NOW() WHERE user_id='cap-user'");
+      else
+        await lock.query('UPDATE sessions SET revoked_at=NOW() WHERE session_id=$1', [
+          original.sessionId,
+        ]);
+      await lock.query('COMMIT');
+      expect(await validating).toBeNull();
+      expect(
+        (
+          await db.pool.query('SELECT idle_deadline FROM sessions WHERE session_id=$1', [
+            original.sessionId,
+          ])
+        ).rows[0]
+      ).toEqual(before);
+    } finally {
+      await lock.query('ROLLBACK');
+      lock.release();
+      await validating;
+    }
+  }
+);
+
+for (const deadline of ['idle_deadline', 'expires_at'] as const) {
+  it(`does not extend ${deadline} after validation waits for the session row`, async () => {
+    const original = await service.createSession('cap-user', false);
+    await db.pool.query(
+      `UPDATE sessions SET ${deadline}=clock_timestamp()+INTERVAL '1 second' WHERE session_id=$1`,
+      [original.sessionId]
+    );
+    const before = (
+      await db.pool.query('SELECT * FROM sessions WHERE session_id=$1', [original.sessionId])
+    ).rows;
+    const lock = await db.pool.connect();
+    let validating: ReturnType<typeof service.validateSession> | undefined;
+    try {
+      await lock.query('BEGIN');
+      await lock.query('SELECT session_id FROM sessions WHERE session_id=$1 FOR UPDATE', [
+        original.sessionId,
+      ]);
+      const pid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      validating = service.validateSession(original.sessionId);
+      await expect
+        .poll(
+          async () =>
+            (
+              await db.pool.query(
+                'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+                [pid]
+              )
+            ).rows[0].count
+        )
+        .toBe(1);
+      await expect
+        .poll(
+          async () =>
+            (
+              await db.pool.query(
+                `SELECT ${deadline}<=clock_timestamp() AS expired FROM sessions WHERE session_id=$1`,
+                [original.sessionId]
+              )
+            ).rows[0].expired,
+          { timeout: 4000 }
+        )
+        .toBe(true);
+      await lock.query('COMMIT');
+      expect(await validating).toBeNull();
+      expect(
+        (await db.pool.query('SELECT * FROM sessions WHERE session_id=$1', [original.sessionId]))
+          .rows
+      ).toEqual(before);
+    } finally {
+      await lock.query('ROLLBACK');
+      lock.release();
+      await validating;
+    }
+  });
+
+  for (const action of ['refresh', 'rotate'] as const) {
+    it(`rolls back ${action} if ${deadline} passes during credential writes`, async () => {
+      const original = await service.createSession('cap-user', false);
+      await db.pool.query(
+        `UPDATE sessions SET ${deadline}=clock_timestamp()+INTERVAL '1 second' WHERE session_id=$1`,
+        [original.sessionId]
+      );
+      const beforeSession = (await db.pool.query('SELECT * FROM sessions ORDER BY session_id'))
+        .rows;
+      const beforeTokens = (await db.pool.query('SELECT * FROM refresh_tokens ORDER BY id')).rows;
+      const lock = await db.pool.connect();
+      let outcome: Promise<unknown> | undefined;
+      try {
+        await lock.query('BEGIN');
+        // Permit authorization reads/row locks but delay subsequent writes.
+        await lock.query('LOCK TABLE refresh_tokens IN SHARE MODE');
+        const pid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+        const operation =
+          action === 'refresh'
+            ? service.redeemRefreshToken(original.refreshToken)
+            : service.rotateSession(original.sessionId, 'late deadline');
+        outcome = operation.then(
+          (value) => ({ value }),
+          (error) => ({ error })
+        );
+        await expect
+          .poll(
+            async () =>
+              (
+                await db.pool.query(
+                  'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+                  [pid]
+                )
+              ).rows[0].count
+          )
+          .toBe(1);
+        await expect
+          .poll(
+            async () =>
+              (
+                await db.pool.query(
+                  `SELECT ${deadline}<=clock_timestamp() AS expired FROM sessions WHERE session_id=$1`,
+                  [original.sessionId]
+                )
+              ).rows[0].expired,
+            { timeout: 4000 }
+          )
+          .toBe(true);
+        await lock.query('COMMIT');
+        expect(await outcome).toMatchObject(
+          action === 'refresh' ? { error: { status: 401 } } : { value: null }
+        );
+        expect((await db.pool.query('SELECT * FROM sessions ORDER BY session_id')).rows).toEqual(
+          beforeSession
+        );
+        expect((await db.pool.query('SELECT * FROM refresh_tokens ORDER BY id')).rows).toEqual(
+          beforeTokens
+        );
+      } finally {
+        await lock.query('ROLLBACK');
+        lock.release();
+        await outcome;
+      }
+    });
+  }
+}
+
 it('does not acknowledge step-up when the session no longer exists', async () => {
   await expect(service.verifyStepUp('cap-user', randomUUID(), 'not-used')).rejects.toMatchObject({
     status: 401,
@@ -199,21 +394,26 @@ it('rechecks account eligibility after waiting for concurrent disable and commit
   try {
     await client.query('BEGIN');
     await client.query("UPDATE users SET disabled_at=NOW() WHERE user_id='cap-user'");
+    const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
     creating = service.createSession('cap-user', false);
-    const rejected = expect(creating).rejects.toMatchObject({ status: 401 });
+    const outcome = creating.then(
+      (value) => ({ value }),
+      (error) => ({ error })
+    );
     await expect
       .poll(async () =>
         Number(
           (
-            await db.pool
-              .query(`SELECT count(*) AS count FROM pg_stat_activity WHERE datname=current_database()
-      AND wait_event_type='Lock' AND query='SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE'`)
+            await db.pool.query(
+              'SELECT count(*) AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+              [pid]
+            )
           ).rows[0].count
         )
       )
       .toBe(1);
     await client.query('COMMIT');
-    await rejected;
+    expect(await outcome).toMatchObject({ error: { status: 401 } });
     expect(await usable()).toHaveLength(0);
     expect((await db.pool.query('SELECT id FROM refresh_tokens')).rows).toHaveLength(0);
   } finally {
@@ -410,6 +610,7 @@ for (const method of ['forcePasswordChange', 'expireSessions'] as const) {
     const { CrmV2Service } = await import('../crm/crm-v2.service.js');
     const { NotificationsService } = await import('../notifications/notifications.service.js');
     const crm = new CrmV2Service(service, new NotificationsService());
+    await db.pool.query("UPDATE users SET is_admin=true,is_staff=true WHERE user_id='cap-user'");
     const original = await service.createSession('cap-user', false);
     const before = (
       await db.pool.query("SELECT must_change_password FROM users WHERE user_id='cap-user'")
