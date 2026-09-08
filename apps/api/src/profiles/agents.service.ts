@@ -623,6 +623,20 @@ export class AgentsService {
          VALUES ($1,$2,$3,$4,clock_timestamp(),clock_timestamp(),clock_timestamp())`,
         [uuidv7(), profileId, actor.userId, invite.role]
       );
+      // The account lock serializes membership/default changes. Only initialize a
+      // first choice; an unavailable saved/default profile still requires selection.
+      const defaultSelection = await client.query(
+        `INSERT INTO user_profile_contexts(user_id,profile_id)
+         SELECT $1,$2
+         WHERE NOT EXISTS (SELECT 1 FROM profiles WHERE user_id=$1 AND is_default)
+         AND NOT EXISTS (
+           SELECT 1 FROM profiles p WHERE p.id<>$2 AND NOT p.archived
+           AND (p.user_id=$1 OR (p.profile_type='LEGAL' AND EXISTS (
+             SELECT 1 FROM profile_agents pa WHERE pa.profile_id=p.id AND pa.user_id=$1
+             AND pa.role IN ('Manager','Finance','Legal')))))
+         ON CONFLICT(user_id) DO NOTHING RETURNING profile_id`,
+        [actor.userId, profileId]
+      );
       const rotated = await this.sessions.rotateSession(
         actor.sessionId,
         'profile_privilege_change',
@@ -640,7 +654,12 @@ export class AgentsService {
         [
           uuidv7(),
           actor.userId,
-          JSON.stringify({ profileId, inviteId, role: invite.role }),
+          JSON.stringify({
+            profileId,
+            inviteId,
+            role: invite.role,
+            defaultProfileSelected: defaultSelection.rows.length === 1,
+          }),
           correlationIdStorage.getStore() ?? uuidv7(),
         ]
       );

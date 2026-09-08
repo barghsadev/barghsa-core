@@ -64,6 +64,7 @@ async function unchanged() {
   expect(
     (await http.pool.query("SELECT id FROM audit_log WHERE event='invitation_accepted'")).rows
   ).toHaveLength(0);
+  expect((await http.pool.query('SELECT user_id FROM user_profile_contexts')).rows).toHaveLength(0);
   expect((await http.pool.query('SELECT session_id FROM sessions')).rows).toHaveLength(2);
   expect((await http.pool.query('SELECT consumed_at FROM refresh_tokens')).rows).toEqual([
     { consumed_at: null },
@@ -100,11 +101,23 @@ it('rotates the accepting session, invalidates other credentials and keeps new p
         })
       ).status
     ).toBe(401);
-  expect((await fetch(`${http.base}/api/profiles`, { headers: fresh })).status).toBe(200);
+  const profileResponse = await fetch(`${http.base}/api/profiles`, { headers: fresh });
+  expect(profileResponse.status).toBe(200);
+  expect(await profileResponse.json()).toMatchObject({
+    activeProfileId: profileId,
+    hasDefault: true,
+  });
   expect(
     (await fetch(`${http.base}/api/wallet/${profileId}/create`, { method: 'POST', headers: fresh }))
       .status
   ).toBeLessThan(300);
+  expect((await fetch(`${http.base}/api/dashboard`, { headers: fresh })).status).toBe(200);
+  expect(
+    JSON.parse(
+      (await http.pool.query("SELECT metadata FROM audit_log WHERE event='invitation_accepted'"))
+        .rows[0].metadata
+    )
+  ).toMatchObject({ defaultProfileSelected: true });
   const sessions = (
     await http.pool.query('SELECT session_id,expires_at FROM sessions WHERE revoked_at IS NULL')
   ).rows;
@@ -119,6 +132,49 @@ it('rotates the accepting session, invalidates other credentials and keeps new p
     (await http.pool.query('SELECT status FROM profile_invitations WHERE id=$1', [inviteId]))
       .rows[0].status
   ).toBe('Accepted');
+});
+
+it.each([
+  'owned default',
+  'archived owned default',
+  'saved choice',
+  'unavailable saved choice',
+  'multiple agent profiles',
+] as const)('invitation acceptance preserves selection policy with %s', async (scenario) => {
+  const ownedDefault = scenario === 'owned default' || scenario === 'archived owned default';
+  const savedChoice = scenario === 'saved choice' || scenario === 'unavailable saved choice';
+  const previous = (
+    await http.pool.query(
+      `INSERT INTO profiles(user_id,profile_type,is_default,status,archived)
+         VALUES ($1,'LEGAL',$2,'ACTIVE',$3) RETURNING id`,
+      [
+        scenario === 'multiple agent profiles' ? 'owner' : 'invitee',
+        ownedDefault,
+        scenario === 'unavailable saved choice' || scenario === 'archived owned default',
+      ]
+    )
+  ).rows[0].id;
+  if (savedChoice) {
+    await http.pool.query(
+      "INSERT INTO user_profile_contexts(user_id,profile_id) VALUES ('invitee',$1)",
+      [previous]
+    );
+  } else if (scenario === 'multiple agent profiles') {
+    await http.pool.query(
+      "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,'invitee','Finance')",
+      [previous]
+    );
+  }
+  const response = await accept();
+  expect(response.status, await response.clone().text()).toBe(200);
+  const chosen = (
+    await http.pool.query("SELECT profile_id FROM user_profile_contexts WHERE user_id='invitee'")
+  ).rows;
+  expect(chosen).toEqual(savedChoice ? [{ profile_id: previous }] : []);
+  const event = (
+    await http.pool.query("SELECT metadata FROM audit_log WHERE event='invitation_accepted'")
+  ).rows[0];
+  expect(JSON.parse(event.metadata)).toMatchObject({ defaultProfileSelected: false });
 });
 
 it.each(['archive', 'revoke'])(
