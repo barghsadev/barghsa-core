@@ -1,5 +1,12 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useEffect, useRef, useState, type ComponentProps, type FormEvent } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+  type FormEvent,
+  type ReactNode,
+} from 'react';
 import { t } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -32,20 +39,29 @@ export interface TeamAction {
 /** The action is captured when opened; password verification retries that same action. */
 export function TeamActionDialog({
   action,
+  verification,
+  selection,
   onClose,
   onSuccess,
   finalFocus,
-}: {
-  action: TeamAction;
+}: (
+  | { action: TeamAction; verification?: never; selection?: never }
+  | {
+      action?: never;
+      verification: Pick<TeamAction, 'title' | 'description'>;
+      selection?: ReactNode;
+    }
+) & {
   onClose: () => void;
   onSuccess: (result: unknown) => Promise<void>;
   finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
 }) {
   const locale = useLocale();
+  const copy = action ?? verification;
   const numbers = useNumberFormatting(locale);
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
-  const [needsPassword, setNeedsPassword] = useState(action.requiresPassword === true);
+  const [needsPassword, setNeedsPassword] = useState(!action || action.requiresPassword === true);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -79,7 +95,7 @@ export function TeamActionDialog({
     setBusy(true);
     setError(null);
     try {
-      if (needsPassword) {
+      if (needsPassword || !action) {
         const verified = await fetch('/api/auth/step-up', {
           method: 'POST',
           credentials: 'include',
@@ -92,6 +108,11 @@ export function TeamActionDialog({
           setError(t('team.passwordError', locale));
           return;
         }
+      }
+      if (!action) {
+        setNeedsPassword(false);
+        await onSuccess({ verified: true });
+        return;
       }
       const response = await fetch(action.path, {
         method: action.method,
@@ -147,45 +168,53 @@ export function TeamActionDialog({
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         finalFocus={finalFocus}
       >
-        <form onSubmit={submit} className="space-y-4">
-          <DialogHeader className="pr-8">
-            <DialogTitle>{action.title}</DialogTitle>
-            <DialogDescription>{action.description}</DialogDescription>
-          </DialogHeader>
-          {needsPassword && (
-            <div className="space-y-2">
-              <Label htmlFor="team-step-up-password">{t('team.password', locale)}</Label>
-              <Input
-                id="team-step-up-password"
-                type="password"
-                autoComplete="current-password"
-                required
-                autoFocus
-                value={password}
-                disabled={busy}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </div>
-          )}
-          {remaining > 0 && (
-            <p role="status">
-              {t('team.retryAfter', locale).replace('{seconds}', numbers.number(remaining))}
-            </p>
-          )}
-          {error && (
-            <p role="alert" className="text-sm text-red-700 dark:text-red-300">
-              {error}
-            </p>
-          )}
-          <DialogFooter>
-            <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
-              {t('team.cancel', locale)}
-            </Button>
-            <Button type="submit" disabled={busy || remaining > 0 || (needsPassword && !password)}>
-              {t(busy ? 'team.working' : 'team.confirm', locale)}
-            </Button>
-          </DialogFooter>
-        </form>
+        {selection && !needsPassword ? (
+          selection
+        ) : (
+          <form onSubmit={submit} className="space-y-4">
+            <DialogHeader className="pr-8">
+              <DialogTitle>{copy.title}</DialogTitle>
+              <DialogDescription>{copy.description}</DialogDescription>
+            </DialogHeader>
+            {needsPassword && (
+              <div className="space-y-2">
+                <Label htmlFor="team-step-up-password">{t('team.password', locale)}</Label>
+                <Input
+                  id="team-step-up-password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  autoFocus
+                  value={password}
+                  disabled={busy}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </div>
+            )}
+            {remaining > 0 && (
+              <p role="status">
+                {t('team.retryAfter', locale).replace('{seconds}', numbers.number(remaining))}
+              </p>
+            )}
+            {error && (
+              <p role="alert" className="text-sm text-red-700 dark:text-red-300">
+                {error}
+              </p>
+            )}
+            <DialogFooter>
+              <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
+                {t('team.cancel', locale)}
+              </Button>
+              <Button
+                type="submit"
+                autoFocus={!needsPassword}
+                disabled={busy || remaining > 0 || (needsPassword && !password)}
+              >
+                {t(busy ? 'team.working' : 'team.confirm', locale)}
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { formatBrowserDate } from './browser-date';
 import { test, expect, type Page } from './coverage-fixture';
 
@@ -34,6 +35,7 @@ async function shell(
       },
     })
   );
+  await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { verified: true } }));
   await page.route('**/api/profiles/ownership-transfers', (route) =>
     route.fulfill({ json: { transfers: [] } })
   );
@@ -69,7 +71,178 @@ async function shell(
   );
 }
 
+async function chooseOwner(page: Page, locale = 'en') {
+  const dialog = page.getByRole('dialog');
+  await dialog
+    .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
+    .fill('Team-password-123!');
+  await dialog
+    .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+    .click();
+  await dialog.getByLabel(locale === 'fa' ? 'مالک جدید' : 'New owner').selectOption('member');
+  await dialog
+    .getByRole('button', { name: locale === 'fa' ? 'ادامه' : 'Continue', exact: true })
+    .click();
+}
+
 for (const locale of ['fa', 'en'] as const) {
+  test(`invitation modal previews the entity, cancels safely and retries without losing input (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa';
+    await shell(page, locale);
+    const sent: unknown[] = [];
+    await page.route(`**/api/profiles/${profileId}/invitations`, (route) => {
+      sent.push(route.request().postDataJSON());
+      expect(route.request().headers()['x-csrf-token']).toBe('invitation-current-csrf');
+      return route.fulfill(
+        sent.length === 1
+          ? { status: 429, json: {} }
+          : { status: 201, json: { id: 'new-invitation' } }
+      );
+    });
+    await page
+      .context()
+      .addCookies([
+        { name: 'barghsa_csrf', value: 'invitation-current-csrf', url: 'http://127.0.0.1:5173' },
+      ]);
+    await page.goto('/settings/team');
+    // Scope is a real accessible table; invitees expose no registration detail.
+    const table = page.getByRole('table');
+    await expect(table.getByRole('columnheader')).toHaveCount(5);
+    const pendingRow = table.getByRole('row').filter({ hasText: 'invited@example.test' });
+    await expect(pendingRow).toContainText(fa ? 'در انتظار' : 'Pending');
+    const trigger = page.getByRole('button', {
+      name: fa ? 'دعوت عضو تیم' : 'Invite a team member',
+      exact: true,
+    });
+    await trigger.click();
+    const dialog = page.getByRole('dialog');
+    const input = dialog.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number');
+    await expect(input).toBeFocused();
+    await input.fill('new@example.test');
+    await dialog.getByLabel(fa ? 'نقش' : 'Role', { exact: true }).selectOption('Finance');
+    await expect(dialog.getByRole('status')).toContainText('Example company');
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    expect(sent).toEqual([]);
+    await trigger.click();
+    const send = dialog.getByRole('button', { name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation' });
+    await expect(input).toHaveValue('new@example.test');
+    await send.click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(input).toHaveValue('new@example.test');
+    for (const dark of [false, true]) {
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((a) => a.effect?.getComputedTiming().endTime !== Infinity)
+            .map((a) => a.finished.catch(() => {}))
+        );
+      }, dark);
+      expect(
+        (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
+      ).toEqual([]);
+    }
+    await send.click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.locator('#dashboard-content').getByRole('status')).toContainText(
+      fa ? 'دعوت‌نامه ارسال شد' : 'Invitation sent'
+    );
+    await expect(trigger).toBeFocused();
+    expect(sent).toEqual([
+      { username: 'new@example.test', role: 'Finance' },
+      { username: 'new@example.test', role: 'Finance' },
+    ]);
+  });
+
+  test(`invitation banner retries loading and shows private details before a decision (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa';
+    await shell(page, locale);
+    let loads = 0,
+      decisions = 0;
+    const decision = fa ? 'decline' : 'accept';
+    await page.route('**/api/invitations/pending', (route) =>
+      route.fulfill(
+        ++loads === 1
+          ? { status: 503, json: {} }
+          : {
+              json: {
+                invitations: [
+                  {
+                    id: 'detail-invitation',
+                    profileId,
+                    profileName: 'Inviting company',
+                    role: 'Finance',
+                    invitedBy: 'owner',
+                    inviterName: 'owner@example.test',
+                    createdAt: '2026-09-01T01:00:00Z',
+                    expiresAt: '2026-09-08T01:00:00Z',
+                    entity: { nationalIdentifier: '12345678901', registrationNumber: '7654321' },
+                  },
+                ],
+              },
+            }
+      )
+    );
+    await page.route(`**/api/invitations/detail-invitation/${decision}`, (route) => {
+      expect(route.request().method()).toBe('POST');
+      return route.fulfill(++decisions === 1 ? { status: 409, json: {} } : { json: {} });
+    });
+    await page.goto('/settings/team');
+    const retry = page
+      .getByRole('alert')
+      .getByRole('button', { name: fa ? 'تلاش دوباره' : 'Retry' });
+    await retry.click();
+    const banner = page.getByRole('alert').filter({ hasText: 'Inviting company' });
+    await expect(banner).toContainText(fa ? 'مالی' : 'Finance');
+    const details = banner.locator('summary');
+    await details.focus();
+    await page.keyboard.press('Enter');
+    const dialog = banner.locator('details');
+    await expect(dialog).toHaveAttribute('open', '');
+    await expect(dialog).toContainText('owner@example.test');
+    await expect(dialog).toContainText('12345678901');
+    await expect(dialog).toContainText('7654321');
+    await expect(dialog).toContainText(fa ? 'کیف پول' : 'wallet');
+    await expect(dialog).toHaveAttribute('dir', fa ? 'rtl' : 'ltr');
+    await expect(dialog.locator('time')).toHaveCount(2);
+    for (const dark of [false, true]) {
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((a) => a.effect?.getComputedTiming().endTime !== Infinity)
+            .map((a) => a.finished.catch(() => {}))
+        );
+      }, dark);
+      expect((await new AxeBuilder({ page }).include('details').analyze()).violations).toEqual([]);
+    }
+    const box = await dialog.boundingBox();
+    expect(box!.x).toBeGreaterThanOrEqual(0);
+    expect(box!.x + box!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+    await details.focus();
+    await page.keyboard.press('Enter');
+    await expect(dialog).not.toHaveAttribute('open', '');
+    await expect(details).toBeFocused();
+    expect(decisions).toBe(0);
+    const act = banner.getByRole('button', { name: fa ? 'رد کردن' : 'Accept', exact: true });
+    await act.click();
+    await expect(
+      page.getByRole('alert').filter({ hasText: fa ? 'خطا' : 'Error processing invitation' })
+    ).toBeVisible();
+    await expect(act).toBeEnabled();
+    await act.click();
+    await expect(banner).toHaveCount(0);
+    expect(decisions).toBe(2);
+  });
+
   test(`invite and save additive roles through password confirmation (${locale})`, async ({
     page,
   }) => {
@@ -101,9 +274,20 @@ for (const locale of ['fa', 'en'] as const) {
       locale === 'fa' ? 'تیم و مالکیت' : 'Team and ownership'
     );
     await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'دعوت عضو تیم' : 'Invite a team member',
+        exact: true,
+      })
+      .click();
+    await page
       .getByLabel(locale === 'fa' ? 'ایمیل یا شماره موبایل' : 'Email or mobile number')
       .fill('new@example.test');
     await page.locator('#invite-role').selectOption('Legal');
+    await expect(page.getByRole('dialog').getByRole('status')).toHaveText(
+      locale === 'fa'
+        ? 'دعوت new@example.test به عنوان حقوقی برای Example company.'
+        : 'Invite new@example.test as Legal to Example company.'
+    );
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ارسال دعوت‌نامه' : 'Send invitation' })
       .click();
@@ -111,7 +295,7 @@ for (const locale of ['fa', 'en'] as const) {
       locale === 'fa' ? 'دعوت‌نامه ارسال شد' : 'Invitation sent'
     );
     const member = page
-      .getByRole('article')
+      .getByRole('row')
       .filter({ has: page.getByRole('heading', { name: 'member@example.test' }) });
     await expect(member.locator('time')).toHaveText(
       await formatBrowserDate(
@@ -279,6 +463,8 @@ for (const action of [
     await page.goto('/settings/team');
     await page.getByRole('button', { name: action.label, exact: true }).click();
     expect(requests).toBe(0);
+    if (action.suffix === 'transfer-ownership') await chooseOwner(page);
+    expect(requests).toBe(0);
     await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(requests).toBe(1);
@@ -291,62 +477,160 @@ for (const action of [
 }
 
 for (const locale of ['en', 'fa'] as const) {
-  test(`ownership request reports its recipient only after step-up and successful creation (${locale})`, async ({
+  test(`ownership verifies before selection and preserves the recipient through expiry and retry (${locale})`, async ({
     page,
   }) => {
-    const recipientName = locale === 'fa' ? 'نماینده نمونه' : 'Example Agent';
+    const fa = locale === 'fa',
+      recipientName = fa ? 'نماینده نمونه' : 'Example Agent';
     await shell(page, locale, true, recipientName);
-    let verified = false,
-      conflict = true;
+    let verifies = 0;
     const attempts: unknown[] = [];
     await page.route('**/api/auth/step-up', (route) => {
+      verifies++;
       expect(route.request().postDataJSON()).toEqual({ password: 'Team-password-123!' });
-      verified = true;
-      return route.fulfill({ json: { verified: true } });
+      return route.fulfill(
+        verifies === 1
+          ? { status: 401, json: { error: { code: 'AUTH:UNAUTHENTICATED' } } }
+          : {
+              json: { verified: true },
+              headers: { 'Set-Cookie': `barghsa_csrf=verified-${verifies}; Path=/; SameSite=Lax` },
+            }
+      );
     });
     await page.route(`**/api/profiles/${profileId}/transfer-ownership`, (route) => {
       attempts.push(route.request().postDataJSON());
+      expect(route.request().headers()['x-csrf-token']).toBe(`verified-${verifies}`);
       return route.fulfill(
-        !verified
+        attempts.length === 1
           ? { status: 403, json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } } }
-          : conflict
+          : attempts.length === 2
             ? { status: 409, json: { error: { code: 'CONFLICT:INVALID_STATE' } } }
             : { status: 201, json: { id: transferId } }
       );
     });
     await page.goto('/settings/team');
-    const success =
-      locale === 'fa'
-        ? 'درخواست انتقال مالکیت برای نماینده نمونه ارسال شد. گیرنده باید آن را بپذیرد.'
-        : 'Transfer request sent to Example Agent. They must accept.';
+    const success = fa
+      ? 'درخواست انتقال مالکیت برای نماینده نمونه ارسال شد. گیرنده باید آن را بپذیرد.'
+      : 'Transfer request sent to Example Agent. They must accept.';
     await page
-      .getByRole('button', {
-        name: locale === 'fa' ? 'انتقال مالکیت' : 'Transfer ownership',
-        exact: true,
-      })
+      .getByRole('button', { name: fa ? 'انتقال مالکیت' : 'Transfer ownership', exact: true })
       .click();
-    const dialog = page.getByRole('dialog');
-    await expect(dialog).toContainText(recipientName);
-    const confirm = dialog.getByRole('button', {
-      name: locale === 'fa' ? 'تأیید' : 'Confirm',
-      exact: true,
-    });
+    const dialog = page.getByRole('dialog'),
+      password = dialog.getByLabel(fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password');
+    const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+    await expect(password).toBeFocused();
+    await expect(dialog.getByRole('combobox')).toHaveCount(0);
+    await password.fill('Team-password-123!');
     await confirm.click();
-    await dialog
-      .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
-      .fill('Team-password-123!');
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.getByRole('combobox')).toHaveCount(0);
+    expect(attempts).toHaveLength(0);
+    await password.fill('Team-password-123!');
+    await confirm.click();
+    const picker = dialog.getByLabel(fa ? 'مالک جدید' : 'New owner');
+    await expect(picker).toBeFocused();
+    await expect(picker).toHaveValue('');
+    await expect(picker.getByRole('option')).toHaveText([
+      fa ? 'انتخاب مالک جدید' : 'Select the new owner',
+      recipientName,
+    ]);
+    const next = dialog.getByRole('button', { name: fa ? 'ادامه' : 'Continue', exact: true });
+    await expect(next).toBeDisabled();
+    await picker.selectOption('member');
+    for (const dark of [false, true]) {
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((a) => a.effect?.getComputedTiming().endTime !== Infinity)
+            .map((a) => a.finished.catch(() => {}))
+        );
+      }, dark);
+      expect(
+        (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
+      ).toEqual([]);
+    }
+    await expect(dialog).toHaveAttribute('dir', fa ? 'rtl' : 'ltr');
+    await next.click();
+    await expect(dialog).toContainText(recipientName);
+    await expect(password).toHaveCount(0);
+    expect(attempts).toHaveLength(0);
+    await confirm.click();
+    await expect(password).toBeVisible();
+    await password.fill('Team-password-123!');
     await confirm.click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(page.getByText(success, { exact: true })).toHaveCount(0);
-    conflict = false;
-    await dialog
-      .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
-      .fill('Team-password-123!');
+    await password.fill('Team-password-123!');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(page.getByText(success, { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: fa ? 'انتقال مالکیت' : 'Transfer ownership', exact: true })
+    ).toBeFocused();
     expect(attempts).toEqual(Array.from({ length: 3 }, () => ({ newOwnerUserId: 'member' })));
+    expect(verifies).toBe(4);
+    expect(await page.evaluate(() => JSON.stringify(sessionStorage))).not.toContain(
+      'Team-password-123!'
+    );
     await expect(page).toHaveURL(/\/settings\/team$/);
+    for (const dark of [false, true]) {
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((a) => a.effect?.getComputedTiming().endTime !== Infinity)
+            .map((a) => a.finished.catch(() => {}))
+        );
+      }, dark);
+      expect(
+        (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
+      ).toEqual([]);
+    }
+  });
+  test(`ownership cancellation at every stage sends no transfer (${locale})`, async ({ page }) => {
+    const fa = locale === 'fa';
+    await shell(page, locale);
+    let sends = 0,
+      verifies = 0;
+    await page.route('**/api/auth/step-up', (route) => {
+      verifies++;
+      return route.fulfill({ json: { verified: true } });
+    });
+    await page.route(`**/api/profiles/${profileId}/transfer-ownership`, (route) => {
+      sends++;
+      return route.fulfill({ status: 201, json: { id: transferId } });
+    });
+    await page.goto('/settings/team');
+    const start = page.getByRole('button', {
+      name: fa ? 'انتقال مالکیت' : 'Transfer ownership',
+      exact: true,
+    });
+    await start.click();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(start).toBeFocused();
+    expect(verifies).toBe(0);
+    await start.click();
+    let dialog = page.getByRole('dialog');
+    await dialog
+      .getByLabel(fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
+      .fill('Team-password-123!');
+    await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+    await expect(dialog.getByRole('combobox')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(start).toBeFocused();
+    await start.click();
+    await chooseOwner(page, locale);
+    dialog = page.getByRole('dialog');
+    await dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(start).toBeFocused();
+    expect(sends).toBe(0);
+    expect(verifies).toBe(2);
   });
 }
 
@@ -428,7 +712,7 @@ for (const locale of ['en', 'fa'] as const) {
       );
       await page.goto('/settings/team');
       const member = page
-        .getByRole('article')
+        .getByRole('row')
         .filter({ has: page.getByRole('heading', { name: 'member@example.test' }) });
       if (operation === 'roles') {
         await member

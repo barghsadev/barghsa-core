@@ -32,6 +32,11 @@ import {
   expireStaleOnlineTopUps,
 } from './wallet/online-topup-expiry-scanner.js';
 import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
+import {
+  expireInvitations,
+  INVITATION_EXPIRY_INTERVAL_MS,
+  INVITATION_EXPIRY_JOB_TYPE,
+} from './profiles/invitation-expiry.js';
 
 /**
  * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
@@ -662,8 +667,32 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(onlineTopUpExpiryScanner));
   process.on('SIGINT', () => clearInterval(onlineTopUpExpiryScanner));
 
+  const invitationExpiryRaw = Number(
+    process.env['INVITATION_EXPIRY_SCAN_MS'] ?? INVITATION_EXPIRY_INTERVAL_MS
+  );
+  const invitationExpiryInterval =
+    Number.isFinite(invitationExpiryRaw) && invitationExpiryRaw >= 1000
+      ? invitationExpiryRaw
+      : INVITATION_EXPIRY_INTERVAL_MS;
+  if (invitationExpiryInterval !== invitationExpiryRaw)
+    logger.warn(`Invalid INVITATION_EXPIRY_SCAN_MS; using ${INVITATION_EXPIRY_INTERVAL_MS}ms`);
+  pollers.every(async () => {
+    if (draining) return;
+    try {
+      await expireInvitations();
+      await recordJobSuccess(INVITATION_EXPIRY_JOB_TYPE);
+    } catch (error) {
+      logger.error('Invitation expiry failed');
+      await recordJobFailure({
+        jobType: INVITATION_EXPIRY_JOB_TYPE,
+        error: (error as Error)?.message ?? String(error),
+        errorCategory: 'transient',
+      });
+    }
+  }, invitationExpiryInterval);
+
   logger.info(
-    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation + online top-up expiry active'
+    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation + online top-up expiry + invitation expiry active'
   );
 }
 

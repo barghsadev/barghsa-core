@@ -103,6 +103,7 @@ describe('AgentsService', () => {
         ],
       });
 
+      mockPool.query.mockResolvedValueOnce({ rows: [{ name: 'Example company' }] });
       const result = await service.listAgents('prof-1');
       expect(result.profileId).toBe('prof-1');
       expect(result.agents).toHaveLength(2);
@@ -134,6 +135,7 @@ describe('AgentsService', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] });
       mockPool.query.mockResolvedValueOnce({ rows: [] });
 
+      mockPool.query.mockResolvedValueOnce({ rows: [{ name: 'Empty company' }] });
       const result = await service.listAgents('prof-empty');
       expect(result.agents).toHaveLength(0);
     });

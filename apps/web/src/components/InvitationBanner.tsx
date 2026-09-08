@@ -3,11 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { Button } from '@barghsa/ui';
+import { InvitationDetails } from './InvitationDetails.js';
 import { withCsrf } from '../lib/csrf.js';
 
 // ─── Types ────────────────────────────────────────────────────────────
 
-interface PendingInvitation {
+export interface PendingInvitation {
   id: string;
   profileId: string;
   profileName: string;
@@ -16,6 +17,7 @@ interface PendingInvitation {
   inviterName: string | null;
   createdAt: string;
   expiresAt: string | null;
+  entity?: { nationalIdentifier: string | null; registrationNumber: string | null };
 }
 
 interface PendingInvitationsResponse {
@@ -58,6 +60,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
   const [loading, setLoading] = useState(true);
   const [actionStates, setActionStates] = useState<Record<string, ActionState>>({});
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
   const router = useRouter();
 
   const isRtl = locale === 'fa';
@@ -65,6 +68,8 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
   // ── Fetch pending invitations ─────────────────────────────────
 
   const fetchInvitations = useCallback(async () => {
+    setLoading(true);
+    setLoadError(false);
     try {
       const response = await fetch('/api/invitations/pending', {
         method: 'GET',
@@ -73,19 +78,17 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
       });
 
       if (response.status === 401) {
+        setInvitations([]);
         setLoading(false);
         return;
       }
 
-      if (!response.ok) {
-        setLoading(false);
-        return;
-      }
+      if (!response.ok) throw new Error('Invitation list unavailable');
 
       const data: PendingInvitationsResponse = await response.json();
       setInvitations(data.invitations);
     } catch {
-      // Silently fail — banner is non-critical UI
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -95,95 +98,40 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
     fetchInvitations();
   }, [fetchInvitations]);
 
-  // ── Accept invitation ─────────────────────────────────────────
-
-  const handleAccept = useCallback(
-    async (inviteId: string) => {
-      setActionStates((prev) => {
-        const current = prev[inviteId] ?? defaultActionState();
-        return { ...prev, [inviteId]: { ...current, accepting: true, declining: false } };
-      });
+  const handleDecision = useCallback(
+    async (inviteId: string, decision: 'accept' | 'decline') => {
+      setActionStates((previous) => ({
+        ...previous,
+        [inviteId]: {
+          ...(previous[inviteId] ?? defaultActionState()),
+          accepting: decision === 'accept',
+          declining: decision === 'decline',
+        },
+      }));
       setError(null);
-
       try {
-        const response = await fetch(`/api/invitations/${inviteId}/accept`, {
+        const response = await fetch(`/api/invitations/${inviteId}/${decision}`, {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
         });
-
-        if (!response.ok) {
-          setError(t('invitation.banner.error', locale));
-          setActionStates((prev) => {
-            const current = prev[inviteId] ?? defaultActionState();
-            return { ...prev, [inviteId]: { ...current, accepting: false } };
-          });
-          return;
-        }
-
-        setActionStates((prev) => {
-          const current = prev[inviteId] ?? defaultActionState();
-          return {
-            ...prev,
-            [inviteId]: { ...current, accepting: false, done: true, doneAction: 'accept' },
-          };
-        });
-
+        if (!response.ok) throw new Error('Invitation decision failed');
+        setActionStates((previous) => ({
+          ...previous,
+          [inviteId]: { accepting: false, declining: false, done: true, doneAction: decision },
+        }));
         window.dispatchEvent(new Event('barghsa:profiles-changed'));
         void router.invalidate();
       } catch {
         setError(t('invitation.banner.error', locale));
-        setActionStates((prev) => {
-          const current = prev[inviteId] ?? defaultActionState();
-          return { ...prev, [inviteId]: { ...current, accepting: false } };
-        });
-      }
-    },
-    [locale, router]
-  );
-
-  // ── Decline invitation ────────────────────────────────────────
-
-  const handleDecline = useCallback(
-    async (inviteId: string) => {
-      setActionStates((prev) => {
-        const current = prev[inviteId] ?? defaultActionState();
-        return { ...prev, [inviteId]: { ...current, declining: true, accepting: false } };
-      });
-      setError(null);
-
-      try {
-        const response = await fetch(`/api/invitations/${inviteId}/decline`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-        });
-
-        if (!response.ok) {
-          setError(t('invitation.banner.error', locale));
-          setActionStates((prev) => {
-            const current = prev[inviteId] ?? defaultActionState();
-            return { ...prev, [inviteId]: { ...current, declining: false } };
-          });
-          return;
-        }
-
-        setActionStates((prev) => {
-          const current = prev[inviteId] ?? defaultActionState();
-          return {
-            ...prev,
-            [inviteId]: { ...current, declining: false, done: true, doneAction: 'decline' },
-          };
-        });
-
-        window.dispatchEvent(new Event('barghsa:profiles-changed'));
-        void router.invalidate();
-      } catch {
-        setError(t('invitation.banner.error', locale));
-        setActionStates((prev) => {
-          const current = prev[inviteId] ?? defaultActionState();
-          return { ...prev, [inviteId]: { ...current, declining: false } };
-        });
+        setActionStates((previous) => ({
+          ...previous,
+          [inviteId]: {
+            ...(previous[inviteId] ?? defaultActionState()),
+            accepting: false,
+            declining: false,
+          },
+        }));
       }
     },
     [locale, router]
@@ -191,7 +139,21 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
 
   // ── Render ────────────────────────────────────────────────────
 
-  if (loading || invitations.length === 0) {
+  if (loading) return null;
+  if (loadError)
+    return (
+      <div
+        role="alert"
+        dir={isRtl ? 'rtl' : 'ltr'}
+        className="rounded-lg border bg-card p-3 text-card-foreground"
+      >
+        <p>{t('invitation.banner.loadError', locale)}</p>
+        <Button variant="outline" onClick={() => void fetchInvitations()}>
+          {t('team.retry', locale)}
+        </Button>
+      </div>
+    );
+  if (invitations.length === 0) {
     return null;
   }
 
@@ -232,12 +194,12 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
             className="bg-blue-50 border border-blue-200 shadow-sm rounded-lg px-4 py-3 text-sm"
             role="alert"
           >
-            <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
               <div className="flex flex-col gap-1">
                 <span className="font-medium text-blue-900">
                   {t('invitation.banner.title', locale)
                     .replace('{entity}', inv.profileName)
-                    .replace('{role}', inv.role)}
+                    .replace('{role}', t(`team.${inv.role}`, locale))}
                 </span>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-blue-700">
                   <span>
@@ -249,11 +211,11 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
                   <span>{t('invitation.banner.date', locale).replace('{date}', displayDate)}</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <Button
                   variant="default"
                   size="sm"
-                  onClick={() => handleAccept(inv.id)}
+                  onClick={() => handleDecision(inv.id, 'accept')}
                   disabled={state.accepting || state.declining}
                 >
                   {state.accepting
@@ -262,8 +224,9 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
                 </Button>
                 <Button
                   variant="outline"
+                  className="bg-background text-foreground"
                   size="sm"
-                  onClick={() => handleDecline(inv.id)}
+                  onClick={() => handleDecision(inv.id, 'decline')}
                   disabled={state.accepting || state.declining}
                 >
                   {state.declining
@@ -272,6 +235,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
                 </Button>
               </div>
             </div>
+            <InvitationDetails details={inv} locale={locale} />
           </div>
         );
       })}

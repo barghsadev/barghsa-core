@@ -386,6 +386,7 @@ export const fa: I18nDictionary = {
   'admin.jobs.type.invoice_reminder_sender': 'ارسال یادآوری صورتحساب',
   'admin.jobs.type.wallet_reconciliation_scan': 'تطبیق کیف پول',
   'admin.jobs.type.online_topup_expiry_scan': 'بررسی انقضای شارژ کیف پول',
+  'admin.jobs.type.invitation_expiry_scan': 'انقضای دعوت‌نامه‌های تیم',
   'admin.teams.lead': 'سرپرست تیم',
   'admin.teams.noLead': 'بدون سرپرست — ارجاع هشدار به مدیران',
   'admin.teams.leadHelp':
@@ -1233,6 +1234,7 @@ export const en: I18nDictionary = {
   'admin.jobs.type.invoice_reminder_sender': 'Invoice reminder delivery',
   'admin.jobs.type.wallet_reconciliation_scan': 'Wallet reconciliation',
   'admin.jobs.type.online_topup_expiry_scan': 'Top-up expiry checks',
+  'admin.jobs.type.invitation_expiry_scan': 'Team invitation expiry',
   'admin.teams.lead': 'Team lead',
   'admin.teams.noLead': 'No lead — escalate to administrators',
   'admin.teams.leadHelp':

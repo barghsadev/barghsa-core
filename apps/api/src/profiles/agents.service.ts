@@ -13,6 +13,7 @@ import {
 } from '../session/session.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { notifyAgentInvitation } from './invitation-notifications.js';
 
 export interface AgentDto {
   id: string;
@@ -29,6 +30,7 @@ export interface AgentDto {
 export interface AgentListResponseDto {
   profileId: string;
   agents: AgentDto[];
+  profileName?: string;
 }
 
 @Injectable()
@@ -94,7 +96,7 @@ export class AgentsService {
     const invitesResult = await pool.query(
       `SELECT id, username, role, created_at
        FROM profile_invitations
-       WHERE profile_id = $1 AND status = 'Pending'
+       WHERE profile_id = $1 AND status = 'Pending' AND (expires_at IS NULL OR expires_at > clock_timestamp())
        ORDER BY created_at ASC`,
       [profileId]
     );
@@ -113,7 +115,11 @@ export class AgentsService {
       });
     }
 
-    return { profileId, agents };
+    const profile = await pool.query(
+      "SELECT COALESCE(lp.legal_name,NULLIF(p.title,''),'') AS name FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1",
+      [profileId]
+    );
+    return { profileId, agents, profileName: profile.rows[0]?.name ?? '' };
   }
 
   /**
@@ -206,8 +212,9 @@ export class AgentsService {
       query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }>;
     },
     profileId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
-  ): Promise<void> {
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    inviteeUsername?: string
+  ): Promise<string | undefined> {
     const profile = (
       await client.query(
         "SELECT user_id FROM profiles WHERE id=$1 AND profile_type='LEGAL' AND NOT archived FOR UPDATE",
@@ -215,22 +222,40 @@ export class AgentsService {
       )
     ).rows[0];
     if (!profile) throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-    const user = (
-      await client.query(
-        'SELECT disabled_at,activation_token IS NOT NULL AS activation_pending FROM users WHERE user_id=$1 FOR UPDATE',
-        [actor.userId]
-      )
-    ).rows[0];
+    // Lock known recipient and actor in one stable order before the notice's FK
+    // touches either account. Opposite invitations cannot reverse this order.
+    const hint = inviteeUsername
+      ? (await client.query('SELECT user_id FROM users WHERE username=$1', [inviteeUsername]))
+          .rows[0]
+      : undefined;
+    const users = inviteeUsername
+      ? (
+          await client.query(
+            'SELECT user_id,username,disabled_at,activation_token IS NOT NULL AS activation_pending FROM users WHERE user_id=ANY($1::text[]) ORDER BY user_id FOR UPDATE',
+            [[...new Set([actor.userId, ...(hint ? [hint.user_id] : [])])]]
+          )
+        ).rows
+      : (
+          await client.query(
+            'SELECT user_id,disabled_at,activation_token IS NOT NULL AS activation_pending FROM users WHERE user_id=$1 FOR UPDATE',
+            [actor.userId]
+          )
+        ).rows;
+    const user = users.find((row) => row.user_id === actor.userId);
+    const recipient = inviteeUsername
+      ? users.find((row) => row.username === inviteeUsername)
+      : undefined;
     if (!user || user.disabled_at || user.activation_pending)
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
     await requireCurrentSession(client, actor);
-    if (profile.user_id === actor.userId) return;
+    if (profile.user_id === actor.userId) return recipient?.user_id as string | undefined;
     const manager = await client.query(
       "SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE",
       [profileId, actor.userId]
     );
     if (!manager.rows.length)
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    return recipient?.user_id as string | undefined;
   }
 
   /**
@@ -348,7 +373,7 @@ export class AgentsService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      await this.lockInvitationActor(client, profileId, actor);
+      const recipientUserId = await this.lockInvitationActor(client, profileId, actor, normalised);
 
       // ── Check: invitee must not already be a pending invite ──
       // Check runs for both registered and unregistered users
@@ -369,11 +394,8 @@ export class AgentsService {
       }
 
       // ── Check: invitee must not already be an agent (only if registered) ──
-      const userResult = await client.query(`SELECT user_id FROM users WHERE username = $1`, [
-        normalised,
-      ]);
-      if (userResult.rows.length > 0) {
-        const inviteeUserId = userResult.rows[0].user_id as string;
+      if (recipientUserId) {
+        const inviteeUserId = recipientUserId;
 
         const existingAgent = await client.query(
           `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
@@ -409,6 +431,8 @@ export class AgentsService {
         ]
       );
 
+      if (recipientUserId)
+        await notifyAgentInvitation(client, { recipientUserId, profileId, role });
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
     } catch (error) {
@@ -442,6 +466,7 @@ export class AgentsService {
       inviterName: string | null;
       createdAt: string;
       expiresAt: string | null;
+      entity: { nationalIdentifier: string | null; registrationNumber: string | null };
     }>;
   }> {
     const pool = getDbPool();
@@ -459,7 +484,7 @@ export class AgentsService {
               COALESCE(lp.legal_name, NULLIF(concat_ws(' ', p.first_name, p.last_name), ''), p.id::text) AS profile_name,
               pi.role, pi.invited_by,
               u.username AS inviter_name,
-              pi.created_at, pi.expires_at
+              pi.created_at, pi.expires_at, lp.national_identifier, lp.registration_number
        FROM profile_invitations pi
        JOIN profiles p ON p.id = pi.profile_id
        LEFT JOIN legal_profiles lp ON lp.id = p.id
@@ -478,6 +503,10 @@ export class AgentsService {
       inviterName: (row.inviter_name as string) ?? null,
       createdAt: new Date(row.created_at as Date).toISOString(),
       expiresAt: row.expires_at ? new Date(row.expires_at as Date).toISOString() : null,
+      entity: {
+        nationalIdentifier: (row.national_identifier as string) ?? null,
+        registrationNumber: (row.registration_number as string) ?? null,
+      },
     }));
 
     return { invitations };

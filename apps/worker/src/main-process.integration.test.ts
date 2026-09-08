@@ -12,6 +12,7 @@ const intervals = [
   'INVOICE_REMINDER_SEND_MS',
   'WALLET_RECONCILIATION_SCAN_MS',
   'ONLINE_TOPUP_EXPIRY_SCAN_MS',
+  'INVITATION_EXPIRY_SCAN_MS',
 ];
 
 /** Own a fresh migrated database and the actual compiled worker process. */
@@ -166,6 +167,7 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
       'invoice_reminder_sender',
       'wallet_reconciliation_scan',
       'online_topup_expiry_scan',
+      'invitation_expiry_scan',
     ];
     await worker.pool.query(
       `INSERT INTO background_jobs(job_type,error) SELECT unnest($1::text[]),'fixture failure'`,

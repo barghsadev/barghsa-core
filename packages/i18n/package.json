@@ -121,6 +121,11 @@
       "types": "./dist/trusted-devices.d.ts",
       "import": "./dist/trusted-devices.js",
       "default": "./dist/trusted-devices.js"
+    },
+    "./team": {
+      "types": "./dist/team.d.ts",
+      "import": "./dist/team.js",
+      "default": "./dist/team.js"
     }
   },
   "scripts": {
