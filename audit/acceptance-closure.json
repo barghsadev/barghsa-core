@@ -3813,8 +3813,8 @@
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
-      "status": "partial",
-      "reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+      "status": "acceptance_verified",
+      "reviewed_sha": "0023f20a373e0305f6c2ed8babaa3f6ae18940b2",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3822,11 +3822,11 @@
       "source_evidence": [
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "e2bf8aa04f40971527077f178867f8d37421b014317d70275fa7b4accf53c2fb"
+          "sha256": "2f795af775fa72f08acdaae17e598980ac5e14b557eaf8942d746a7d8f4fa656"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "b25415575cdcd24755b909edce9817eb4c90f5e8845bd17cb853866096e915d1"
+          "sha256": "442d6dd4fe9eda467dfe5aed99b2e91bb352678bf572446bbb883eb598afdb10"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -3834,15 +3834,15 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
+          "sha256": "b43851e1761ed8387fa1d6547ad7997859e296d1ee76949164f9a4b6a19f314f"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "2d6c9b7e4a06dfd2fda6e2be47995c9d94cd678f09385c41ff536ec471aa6dfb"
+          "sha256": "898709eb8f0e817d876a42ad5bc6742432855fc9a7c41d9b7579e56a6ef67024"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "28fd8365550635f2890218f2f21b122b79757c17c163a30912d438fd4af2b717"
+          "sha256": "0b0955e928156d369ccfb76fcb2a0035b1e9496adbe3de28097ef8546a939840"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -3870,7 +3870,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "fb2f0d2c92d962334e401be3af54b2a087c328dcfd62879440c23e0506ed56ea"
+          "sha256": "7cc2e8de83786083833ec7912808567a658589ee73bf6313cdd0c23262541a2b"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3879,25 +3879,51 @@
         {
           "path": "apps/web/e2e/crm-address-edit.spec.ts",
           "sha256": "38330cd0a675cfb1e25028e322155ef3035c0ce86e7fad7448da204bae34b033"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-legal.ts",
+          "sha256": "3b64d91021c7aa8d4115bd710f9da2fd5b89a6aa523fd063b7463933a8827db0"
+        },
+        {
+          "path": "apps/api/src/crm/crm-legal-edit-http.integration.test.ts",
+          "sha256": "6f7054b6d7dacb908a36fd2761b3e8f0b316c326d8d5e2c96bcfc27680480851"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.test.ts",
+          "sha256": "8a06c2f678f335114114fef9c602e6247c752bc48dcd4a678390a3a585a3f32b"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalEditor.tsx",
+          "sha256": "bd1aa4f2aaad2ff2e76950753a8b611263fc2343fc16b973aa2da31213802de9"
+        },
+        {
+          "path": "apps/web/e2e/crm-legal-edit.spec.ts",
+          "sha256": "d4d1c2681ce963db8617ab2f29aa366c1e7e5acc75db6303f6b82c8142867e33"
+        },
+        {
+          "path": "kanban/epics/02-auth-users-admin.md",
+          "sha256": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8"
         }
       ],
       "checks": [
         "Profile title/email/mobile editing validates input, retains account sign-in contacts, rejects direct identity edits and writes before/after audit.",
         "Real HTTP permission-loss and contact mutation checks pass in the156 CRM batch; fa/en desktop/mobile browser save/error/retry and confirmation cases pass.",
-        "Existing profile addresses can now be edited with field validation, confirmation, current permissions, stale-version rejection and atomic profile_updated audit.8 new HTTP and16 browser cases pass; see R01-crm-address-edit."
+        "Existing profile addresses can now be edited with field validation, confirmation, current permissions, stale-version rejection and atomic profile_updated audit.8 new HTTP and16 browser cases pass; see R01-crm-address-edit.",
+        "All 20 legal nonidentity registration, company, contact, representative and address fields support validated direct edits. Strict whitelist, exact-version conflict handling, current crm:edit after lock acquisition, and atomic before/after profile_updated audit pass 21 real HTTP cases.",
+        "Legal name and national identifier remain correction-only. Existing contact/address and correction-link checks remain passing. The full CRM batch passed 201 tests; the subsequent focused 21-case run also proves unchanged inactive uppercase geography remains editable.",
+        "20 distinct new production-browser cases pass across final focused runs: all fields, captured confirmation, step-up, failed/mismatched acknowledgement, retained drafts, stale reload, permission/archive gates, fa/en, light/dark and desktop/mobile. Existing detail/address regression has 72 passing cases.",
+        "Final layout review corrected the desktop editor width and dark native date icon. Eight final browser scenarios pass with width assertions and axe scans; API/web types, lint/format, production builds, OpenAPI and all 41 route budgets pass."
       ],
-      "limitations": [
-        "Required legal nonidentity contacts and official/representative address fields remain read-only; review and complete this direct-edit requirement. General profile address editing is implemented and checked.",
-        "Identity correction workflow has its own task; this narrow contact repair does not certify that workflow."
-      ],
+      "limitations": [],
       "merged_prs": [
         124
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
-        "previous_reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
-        "review": "Corrected admin/correction themes and shared confirmation errors.74 distinct CRM browser cases have passing evidence across focused runs; API source unchanged. See R01-crm-correction-theme-and-scope."
+        "source_revision": "0023f20a373e0305f6c2ed8babaa3f6ae18940b2",
+        "previous_reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+        "review": "Staff-editing criteria closed using current legal-field evidence and retained contact/address/correction evidence. Wider CRM profile/list/archive and cross-screen R03 acceptance remain separate.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-legal-edit"
       }
     },
     {

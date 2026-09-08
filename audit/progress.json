@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "943b1170118012dfefc2bb99f5fda23ff02713ef",
+  "source_revision": "0023f20a373e0305f6c2ed8babaa3f6ae18940b2",
   "active_step": "R01",
-  "next_action": "R01: implement required legal nonidentity direct editing for02-auth-users-admin.md#T-05.02.02. Reuse staff address/confirmation/current-permission patterns; keep legal name and national identifier behind the now-verified correction workflow. Review field validation, stale updates and atomic before/after audits, then focused fa/en browser checks. Continue archive and whole-profile/list acceptance afterward. Lost-contact policy question stays pending.",
+  "next_action": "R01: finish 02-auth-users-admin.md#T-05.02.06 archive acceptance. Reuse the passing CRM regressions. Check invoice/contract/wallet writers against profile-lock ordering, unpaid invoices, nonzero posted/reserved balances, canonical legal-owner protection, required confirmation checklist and retention disposition. Then complete T-05.02.01 profile/list review. T-05.02.02/.03/.04/.05 are verified locally. Lost-contact policy question stays pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -403,6 +403,10 @@
     {
       "id": "R01-crm-correction-acceptance",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-acceptance"
+    },
+    {
+      "id": "R01-crm-legal-edit",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-legal-edit"
     }
   ],
   "deferred_improvements": [
@@ -416,8 +420,8 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 40,
-    "partial": 20,
+    "acceptance_verified": 41,
+    "partial": 19,
     "pending": 262,
     "merged_prs": 301,
     "historical_skips": 58,

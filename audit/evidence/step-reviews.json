@@ -1006,6 +1006,148 @@
         "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
       ],
       "remaining": "40 verified,20 partial,262 pending. Next: T-05.02.02 legal nonidentity direct editing, then archive/profile/list acceptance."
+    },
+    {
+      "id": "R01-crm-legal-edit",
+      "date": "2026-09-08",
+      "source_revision": "0023f20a373e0305f6c2ed8babaa3f6ae18940b2",
+      "summary": "Closed staff profile editing with validated direct legal nonidentity changes, version conflicts and atomic audits.",
+      "review": [
+        "Reviewed the constant SQL column whitelist, strict input object and protected identity exclusions. Profile and legal locks cover permission recheck, stale comparison, updates and before/after audit. Failed audits or later validation roll back both base and legal fields.",
+        "Real HTTP tests cover all 20 fields, account/other-profile isolation, stale concurrent writes, invalid and protected inputs, inactive geography, audit failure, permission loss while waiting and archived/individual targets. Legacy text UUIDs are normalized on read; unchanged inactive locations remain valid.",
+        "The editor submits only changed fields. Cancel, tab changes, confirmation retries and invalid acknowledgements preserve drafts. Confirmation shows old/new values and localized reference names; successful saves return focus and display the saved record.",
+        "Early API checks exposed a nonexistent company_types.status query and a stale snake-case SQL mock; both were fixed. Type checks caught a Swagger type import and untyped test JSON. Their failed logs are retained.",
+        "The initial 92-case browser run had 84 passes and eight incorrect exact-link-label assertions. The next 20-case run had 12 passes and eight draft assertions that excluded the inert modal background. Corrected locators then passed eight focused cases. Visual review found the editor occupying one grid column and a dark date-icon contrast defect; final width/color-scheme fixes passed the same eight scenarios.",
+        "Inspected final English desktop and Persian dark mobile screenshots. The editor uses full available width with readable fields and native date icon. Existing outer profile-section themes and terms-status banner remain within the later R03 review; this step does not certify every CRM screen."
+      ],
+      "checks": [
+        "pnpm --filter @barghsa/api test src/crm: 201/201 pass in 14 files, exit 0.",
+        "After normalizing legacy geography reads: focused legal HTTP tests 21/21 pass, exit 0.",
+        "Production browser: 20 distinct new legal cases and 72 existing detail/address cases have passing evidence across focused runs. Final legal flow/layout run 8/8 pass, exit 0, with axe scans.",
+        "API/web typechecks, explicit lint/format, production builds, OpenAPI drift and all 41 route budgets pass. Later changes were CSS and test locators; relevant type and backend evidence remains valid.",
+        "No dependency, migration, quality-floor or remote-state change. No global coverage or full regression renewal claimed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "2f795af775fa72f08acdaae17e598980ac5e14b557eaf8942d746a7d8f4fa656"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "442d6dd4fe9eda467dfe5aed99b2e91bb352678bf572446bbb883eb598afdb10"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "b43851e1761ed8387fa1d6547ad7997859e296d1ee76949164f9a4b6a19f314f"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "898709eb8f0e817d876a42ad5bc6742432855fc9a7c41d9b7579e56a6ef67024"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "0b0955e928156d369ccfb76fcb2a0035b1e9496adbe3de28097ef8546a939840"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "2ac5e9b74e0c04c0cb32eed234967715114bf188f45741f6bce106dd79135400"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-address.ts",
+          "sha256": "5fa7eb59336c66cd3c9a7d3b5e418252d8c54a89b96068a8c2d47ad54e9f3a24"
+        },
+        {
+          "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
+          "sha256": "9149aa45e5d1a75007c899be592fe7ad2d13d3439519bafd39b1c08ecc92c91d"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "7cc2e8de83786083833ec7912808567a658589ee73bf6313cdd0c23262541a2b"
+        },
+        {
+          "path": "apps/web/src/components/CrmAddressEditor.tsx",
+          "sha256": "a59135433c8a5aef91d99356d77e144a65f66f41dcca29bd3426bd5baf6a2c3a"
+        },
+        {
+          "path": "apps/web/e2e/crm-address-edit.spec.ts",
+          "sha256": "38330cd0a675cfb1e25028e322155ef3035c0ce86e7fad7448da204bae34b033"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-legal.ts",
+          "sha256": "3b64d91021c7aa8d4115bd710f9da2fd5b89a6aa523fd063b7463933a8827db0"
+        },
+        {
+          "path": "apps/api/src/crm/crm-legal-edit-http.integration.test.ts",
+          "sha256": "6f7054b6d7dacb908a36fd2761b3e8f0b316c326d8d5e2c96bcfc27680480851"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.test.ts",
+          "sha256": "8a06c2f678f335114114fef9c602e6247c752bc48dcd4a678390a3a585a3f32b"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalEditor.tsx",
+          "sha256": "bd1aa4f2aaad2ff2e76950753a8b611263fc2343fc16b973aa2da31213802de9"
+        },
+        {
+          "path": "apps/web/e2e/crm-legal-edit.spec.ts",
+          "sha256": "d4d1c2681ce963db8617ab2f29aa366c1e7e5acc75db6303f6b82c8142867e33"
+        },
+        {
+          "path": "kanban/epics/02-auth-users-admin.md",
+          "sha256": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-crm-legal-edit-api-2.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-api-3.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-api-build.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-api-final-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-api-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-api-types-3.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-api-types.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-api.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-browser-2.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-browser-3.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-browser-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-browser-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-browser.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-budgets-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-budgets.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-build-2.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-build.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-crm-regression-2.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-crm-regression.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-format-2.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-layout-budgets.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-layout-build.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-ui-final-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-legal-edit-ui-format.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ],
+      "remaining": "41 verified, 19 partial, 262 pending. Next: T-05.02.06 archive writer/constraint/checklist acceptance, then T-05.02.01 profile/list review."
     }
   ]
 }
