@@ -4048,6 +4048,112 @@
         "previous_reviewed_sha": "f74fd83266d1292c468a6db43d289e2515bf4903",
         "review": "Added separate staff address editing and preserved contact/action behavior. All48 existing CRM browser cases and11 current mutation-permission cases passed. Address evidence is R01-crm-address-edit; unrelated task criteria keep their prior disposition."
       }
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.05",
+      "status": "partial",
+      "reviewed_sha": "054d28c15589c3485ccc16e88eec2b1d0d042518",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 428,
+      "requirement": "**T-05.02.05 — Identity correction through verification case**\n\n- Description: Staff cannot directly edit verified identity fields. Instead, they create a verification case (profile correction request) which creates an audit trail. Changes are applied after case resolution.\n- Technical notes: Verification case is a mini-workflow: Corrector creates case with new values and evidence → Reviewer approves/rejects → On approval, identity field updated with before/after audit. Permissions: `crm:edit-identity`. Cases have states: Open, Under Review, Approved, Rejected.\n- UI/UX: \"Request correction\" button on locked fields → form with new value + upload evidence → submission creates case. Staff with review permission see case queue.\n- Dependencies: T-05.02.02\n- Complexity: L",
+      "requirement_sha256": "24ad67479f77d60317105e29cc4ea4adf5d8860c3221c50c417c8f3d5b245bc1",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "19c73a12e5a9121aab29f60bafe5177b066c77badf7675d358d5a1392dc15053"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.controller.ts",
+          "sha256": "c8ba3e2ee9323ffeca6276c6e4ff7e641675fda1442610a1be826512bac27722"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "63216e977228846e798e54e4e03e6531a1b02a6d644831587e096f04cf20b890"
+        },
+        {
+          "path": "apps/api/src/crm/verification-evidence.service.ts",
+          "sha256": "00986bd462dcafd242daec1502f7af1aef6d0247f655f90ba16e5c61cc592719"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "bbddabe4c3b030576a0cc9b7dec163dfd5ff26b20a07bea9618e8588ae9b6bd6"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "725d8c1948917cc6de21ea44f3aa89bb98362df9cb599f65fc339ab03ae18626"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d5cad93ab4ef898a3718d4940e395869ed3cb86cec57e7aa482ada6f6b304194"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "91e7a5bd147cbc58fccc5ffe52202084d6bd42ab580f707701f0ff32add6bf85"
+        }
+      ],
+      "checks": [
+        "Creation records the actual old value and sealed profile-bound evidence; independent current reviewers move Open to Under Review and approve/reject. Approval updates identity and before/after audit atomically. Fresh79-case API evidence includes the retained correction tests.",
+        "Queue, evidence upload, password retry, immutable evidence links, legacy refusal and selected-case/result checks have10 passing production desktop/mobile browser cases. See R01-crm-correction-acknowledgements."
+      ],
+      "limitations": [
+        "The requirement asks for Request correction on locked fields. The profile currently has one general request link; the correction form starts at first_name or legal_name rather than the selected field. Complete the field-specific entry and verify supported identity-field coverage.",
+        "Remaining whole-page keyboard, focus, RTL and theme acceptance and dependency T-05.02.02 remain open. Legacy unsealed evidence needs resubmission; actual remote storage recovery is not certified."
+      ],
+      "merged_prs": [
+        127
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.06",
+      "status": "partial",
+      "reviewed_sha": "054d28c15589c3485ccc16e88eec2b1d0d042518",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 436,
+      "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
+      "requirement_sha256": "da3125bd0d21783d34d31876926e5127d26fde0b4acf66c6bbff2d4c307ed5ee",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "28fd8365550635f2890218f2f21b122b79757c17c163a30912d438fd4af2b717"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "2d6c9b7e4a06dfd2fda6e2be47995c9d94cd678f09385c41ff536ec471aa6dfb"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-finance.integration.test.ts",
+          "sha256": "57f031b4c8da19b80e55d7b964fa72f82da0f61b24fd2e5954def962ff8b508b"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "63216e977228846e798e54e4e03e6531a1b02a6d644831587e096f04cf20b890"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "91e7a5bd147cbc58fccc5ffe52202084d6bd42ab580f707701f0ff32add6bf85"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "32f6d85992c06c4f2b22195f0ea7ebedec9a4c5402570ea717dc1cbfe22b2a07"
+        }
+      ],
+      "checks": [
+        "Soft archival requires current admin:users:edit, recent step-up and a reason, preserves the profile and records actor/reason in profile_deleted. Read guards for unresolved corrections, orders, contracts, unpaid invoices, posted/reserved wallet balances, pending top-ups and canonical legal ownership.",
+        "Current79-case API batch covers order/top-up and correction-versus-archive races and rejection of outstanding archived corrections. Existing profile-action browser and permission evidence is reused where source remains unchanged."
+      ],
+      "limitations": [
+        "Finish the invoice/contract/wallet writer matrix against profile-lock ordering and focused unpaid-invoice/nonzero posted/reserved balance acceptance. The current batch proves order/top-up races, not every business writer.",
+        "Review canonical legal-owner refusal and the required confirmation checklist/retention behavior against exact requirements. Retention is currently an audit note and preserved data; no production retention procedure or operator exercise is certified."
+      ],
+      "merged_prs": [
+        128
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -4180,8 +4286,6 @@
     "02-auth-users-admin.md#T-03.04.02",
     "02-auth-users-admin.md#T-05.01.01",
     "02-auth-users-admin.md#T-05.01.02",
-    "02-auth-users-admin.md#T-05.02.05",
-    "02-auth-users-admin.md#T-05.02.06",
     "02-auth-users-admin.md#T-05.03.01",
     "02-auth-users-admin.md#T-05.03.02",
     "02-auth-users-admin.md#T-05.04.01",

@@ -1,14 +1,14 @@
 # Remaining repair and review plan
 
-Reconciled on 2026-09-08 through product commit `4d2b231`. Start here, then read [progress.json](progress.json) for the next action. All original F01–F23 groups remain there. Detailed completed work now lives in [step evidence](evidence/step-reviews.json).
+Reconciled on 2026-09-08 through product commit `054d28c`. Start here, then read [progress.json](progress.json) for the next action. All original F01–F23 groups remain there. Detailed completed work now lives in [step evidence](evidence/step-reviews.json).
 
 ## Current position
 
 | Historical task population | Verified | Partial | Not yet reviewed | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 36 | 19 | 208 | 263 |
+| Tasks with merged PR evidence | 36 | 21 | 206 | 263 |
 | Other historical completion claims | 3 | 0 | 56 | 59 |
-| Combined | 39 | 19 | 264 | 322 |
+| Combined | 39 | 21 | 262 | 322 |
 
 These are task-acceptance counts, not percentages of implementation effort. A01 cleanup and A02 evidence reconciliation are complete. R01 is in progress; eight later steps remain. The recent session revocation, refresh-reuse alert, atomic step-up, public-auth CSRF, localized support navigation and confirmed contact repairs have focused passing evidence. Auth rate-limit task `02-auth-users-admin.md#T-02.04.01` is now verified locally. Do not rebuild those repairs. CRM verification and account-security tasks 02-auth-users-admin.md#T-05.02.03 and T-05.02.04 are now verified locally; their notices, permission races and confirmation fixes have passing evidence.
 
@@ -20,7 +20,7 @@ The saved inventory contains 301 merged PRs and was checked against GitHub on Se
 | --- | --- | --- |
 | R01 / F03 | Session list lacks required approximate location. Trace all rotation, revocation and sensitive-action callers before closing the four partial session tasks. | Exact current requirements, required caller matrix, meaningful HTTP/browser checks and privacy-safe location behavior. |
 | R01 / F05 | Intake and escalation runbook is implemented; lost-contact recovery still needs owner-defined approvers/evidence policy and a reviewed credential-change method. Unsupported24-hour promise was removed. | Runbook grounded in supported staff actions, evidence/audit requirements and an exercised recovery or explicit escalation path. No invented provider or credential bypass. |
-| R01 / F15 | General staff address editing is implemented and checked. Legal nonidentity contact/address editing remains incomplete. Full profile view still needs remaining page acceptance. Authorized legal-document viewing is implemented and checked. Required URL, lifecycle/registration/representative details, localized field/location names, mobile action wrapping, record tabs, keyboard navigation and password date are implemented and checked. | Complete partial tasks 02-auth-users-admin.md#T-05.02.01 and T-05.02.02 with authorized data, localized controls and focused HTTP/browser checks. Action tasks T-05.02.03/T-05.02.04 are already verified. |
+| R01 / F15 | General staff address editing and correction target/acknowledgement checks are implemented. Field-specific correction entry, legal nonidentity contact/address editing and archive acceptance remain incomplete. Full profile view still needs remaining page acceptance. Authorized legal-document viewing is implemented and checked. Required URL, lifecycle/registration/representative details, localized field/location names, mobile action wrapping, record tabs, keyboard navigation and password date are implemented and checked. | Complete partial tasks 02-auth-users-admin.md#T-05.02.01 and T-05.02.02 with authorized data, localized controls and focused HTTP/browser checks. Action tasks T-05.02.03/T-05.02.04 are already verified. |
 | R02 / F09, F17 | Email and notification renderers do not consume active branding. | Versioned branding reaches the required rendered output; missing assets/configuration and localized behavior are exercised. |
 | R02 / F17 | `02-auth-users-admin.md#T-09.11.02` has document selection but lacks integrated new-document upload. | Authorized upload, validation, persisted KB association, failure/retry and localized controls. Chunking/embedding stays an explicit separate dependency. |
 | R02 / F17 | `02-auth-users-admin.md#T-09.11.04` lacks its actual-agent backend and test-chat panel. | Admin-authenticated chat reaches the selected agent with its required model/KB/policy configuration. A provider connection test does not satisfy this task. |

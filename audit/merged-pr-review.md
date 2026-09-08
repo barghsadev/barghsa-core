@@ -154,8 +154,8 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#124](https://github.com/barghsadev/barghsa-core/pull/124) | 02-auth-users-admin.md#T-05.02.02 (partial) | Task review remains | 0 |
 | [#125](https://github.com/barghsadev/barghsa-core/pull/125) | 02-auth-users-admin.md#T-05.02.03 (acceptance_verified) | Mapped tasks verified | 0 |
 | [#126](https://github.com/barghsadev/barghsa-core/pull/126) | 02-auth-users-admin.md#T-05.02.04 (acceptance_verified) | Mapped tasks verified | 0 |
-| [#127](https://github.com/barghsadev/barghsa-core/pull/127) | 02-auth-users-admin.md#T-05.02.05 (pending) | Task review remains | 1 |
-| [#128](https://github.com/barghsadev/barghsa-core/pull/128) | 02-auth-users-admin.md#T-05.02.06 (pending) | Task review remains | 0 |
+| [#127](https://github.com/barghsadev/barghsa-core/pull/127) | 02-auth-users-admin.md#T-05.02.05 (partial) | Task review remains | 1 |
+| [#128](https://github.com/barghsadev/barghsa-core/pull/128) | 02-auth-users-admin.md#T-05.02.06 (partial) | Task review remains | 0 |
 | [#129](https://github.com/barghsadev/barghsa-core/pull/129) | 02-auth-users-admin.md#T-05.03.01 (pending) | Task review remains | 2 |
 | [#130](https://github.com/barghsadev/barghsa-core/pull/130) | 02-auth-users-admin.md#T-05.03.02 (pending) | Task review remains | 0 |
 | [#131](https://github.com/barghsadev/barghsa-core/pull/131) | 02-auth-users-admin.md#T-05.04.01 (pending) | Task review remains | 0 |
@@ -366,5 +366,5 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `0a2e450188218d7edca39ec9fe9c656e5e1bbce5b3a2498a623bb257efb31c94`
+- `acceptance-closure.json`: `6f688ce272aaf74834edd80b84ea499717d0eb8e419549d2c1052a5ea8bb32da`
 - `pr-deferrals.json`: `7eeb18cad788f86b8967258624d04c1535d0927dbcf93b8912e10fb04df2a5c4`

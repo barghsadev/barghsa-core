@@ -673,6 +673,74 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "T-05.02.02 remains partial for required legal nonidentity contacts/address review and editing. T-05.02.01 still needs whole-page theme/accessibility acceptance. Correction/archive review follows; no whole-group acceptance claimed."
+    },
+    {
+      "id": "R01-crm-correction-acknowledgements",
+      "date": "2026-09-08",
+      "source_revision": "054d28c15589c3485ccc16e88eec2b1d0d042518",
+      "summary": "Correction detail reads now match the selected case and immutable identity fields. Creation/review responses must confirm success, the selected profile, the expected state and the selected review case before clearing input or reporting success. Creation now returns its profile ID.",
+      "review": "Two browser regressions reproduced false success on a mismatched creation profile before the repair. Reviewed captured action data, current detail generations, independent reviewer permissions, immutable evidence and atomic identity/audit transitions. Invalid acknowledgements leave the original draft and captured action available. Read the archive business guards and their correction/order/top-up lock tests; remaining acceptance is listed per task.",
+      "checks": [
+        "79 API cases pass across verification-case controller/service/HTTP and profile-archive-finance files. The real create response now asserts its profile binding; existing cases cover actor permission loss, self-review, simultaneous creation/approval, stale identity, audit rollback, sealed evidence and correction/order/top-up archive races.",
+        "10 production Chromium desktop/mobile browser cases pass. Persian/English creation retains one upload and its draft through password confirmation and a wrong-profile response. Review refuses wrong case/profile details and null, empty, false-success, wrong-case, wrong-profile and wrong-state acknowledgements. Existing legacy-evidence approval refusal still passes.",
+        "API/web typechecks, focused lint/format, production web build,41 unchanged route budgets and OpenAPI check pass. Initial reproduction used the development server and failed as expected. A mistyped budget-script path failed before the correct existing route-budget command passed; both logs are retained."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "19c73a12e5a9121aab29f60bafe5177b066c77badf7675d358d5a1392dc15053"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.controller.ts",
+          "sha256": "c8ba3e2ee9323ffeca6276c6e4ff7e641675fda1442610a1be826512bac27722"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "63216e977228846e798e54e4e03e6531a1b02a6d644831587e096f04cf20b890"
+        },
+        {
+          "path": "apps/api/src/crm/verification-evidence.service.ts",
+          "sha256": "00986bd462dcafd242daec1502f7af1aef6d0247f655f90ba16e5c61cc592719"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "bbddabe4c3b030576a0cc9b7dec163dfd5ff26b20a07bea9618e8588ae9b6bd6"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "725d8c1948917cc6de21ea44f3aa89bb98362df9cb599f65fc339ab03ae18626"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d5cad93ab4ef898a3718d4940e395869ed3cb86cec57e7aa482ada6f6b304194"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "28fd8365550635f2890218f2f21b122b79757c17c163a30912d438fd4af2b717"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "2d6c9b7e4a06dfd2fda6e2be47995c9d94cd678f09385c41ff536ec471aa6dfb"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-finance.integration.test.ts",
+          "sha256": "57f031b4c8da19b80e55d7b964fa72f82da0f61b24fd2e5954def962ff8b508b"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "91e7a5bd147cbc58fccc5ffe52202084d6bd42ab580f707701f0ff32add6bf85"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "32f6d85992c06c4f2b22195f0ea7ebedec9a4c5402570ea717dc1cbfe22b2a07"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Correction task T-05.02.05 remains partial for the required field-specific request entry and remaining identity-field/page acceptance. Archive task T-05.02.06 remains partial for the remaining business-writer/retention/checklist review. General legal nonidentity editing remains in T-05.02.02."
     }
   ]
 }

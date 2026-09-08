@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "4d2b231e1d527b651d31fa88391cf0a94465cd0c",
+  "source_revision": "054d28c15589c3485ccc16e88eec2b1d0d042518",
   "active_step": "R01",
-  "next_action": "R01: review T-05.02.05 correction and T-05.02.06 archive against exact requirements, reusing valid evidence; repair confirmed gaps one at a time. Then finish legal nonidentity contact/address editing and whole-page CRM acceptance. General staff address editing is reviewed. Continue critical role/session/finance review; preserve pending lost-contact policy question.",
+  "next_action": "R01: complete field-specific identity correction entry for T-05.02.05 and review supported identity fields; then finish legal nonidentity contact/address editing for T-05.02.02. Preserve the separate archive writer/retention/checklist review in T-05.02.06 and whole-page CRM acceptance. Current correction target/acknowledgement repair is reviewed. Continue critical role/session/finance review; preserve pending lost-contact policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Full-profile data, authorized documents, record tabs, required URL and general staff address editing are implemented and checked. Finish legal nonidentity contact/address editing, remaining page acceptance and correction/archive/list review."
+        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. General staff address editing and correction target/acknowledgement repairs are reviewed. Finish field-specific correction entry, legal nonidentity contact/address editing, remaining page acceptance and archive/list review."
       ]
     },
     {
@@ -284,7 +284,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review19 partial and264 pending records; retain39 verified task assessments. Reconcile301 PRs,170 deferrals and58 historical skips;1033 unrecorded backlog tasks remain a separate population."
+        "Review21 partial and262 pending records; retain39 verified task assessments. Reconcile301 PRs,170 deferrals and58 historical skips;1033 unrecorded backlog tasks remain a separate population."
       ]
     },
     {
@@ -378,16 +378,26 @@
     {
       "id": "R01-crm-address-edit",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-address-edit"
+    },
+    {
+      "id": "R01-crm-correction-acknowledgements",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-acknowledgements"
     }
   ],
-  "deferred_improvements": [],
+  "deferred_improvements": [
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.05",
+      "issue": "After a successful review, Corrections clears creation-form state even if the reviewer had an unrelated draft. Preserve that independent draft in a later noncritical UI pass. Invalid responses now preserve it.",
+      "source_revision": "054d28c15589c3485ccc16e88eec2b1d0d042518"
+    }
+  ],
   "scope_note": "Group implementation labels summarize recorded repairs, not whole-group acceptance. Historical status counts are generated from the ledger, never inferred from these labels.",
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
     "acceptance_verified": 39,
-    "partial": 19,
-    "pending": 264,
+    "partial": 21,
+    "pending": 262,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
