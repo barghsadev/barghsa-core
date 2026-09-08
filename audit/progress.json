@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-08",
+  "status": "in_progress",
+  "plan": "audit/fix-plan.md",
+  "source_revision": "612434d",
+  "active_step": "A02",
+  "next_action": "Reconcile the 13 partial and 23 changed verified records against subsequent implementation/evidence; preserve prior assessments and update generated dispositions.",
+  "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
+  "acceptance_ledger": "audit/acceptance-closure.json",
+  "evidence_checkpoint": "audit/final-repair-checkpoint.json",
+  "steps": [
+    {
+      "id": "A01",
+      "title": "Audit cleanup",
+      "status": "completed"
+    },
+    {
+      "id": "A02",
+      "title": "Evidence reconciliation",
+      "status": "in_progress"
+    },
+    {
+      "id": "R01",
+      "title": "Critical acceptance and repairs",
+      "status": "pending"
+    },
+    {
+      "id": "R02",
+      "title": "Required administration consumers",
+      "status": "pending"
+    },
+    {
+      "id": "R03",
+      "title": "Errors and UI acceptance",
+      "status": "pending"
+    },
+    {
+      "id": "R04",
+      "title": "Purchase loading",
+      "status": "pending"
+    },
+    {
+      "id": "R05",
+      "title": "Strict dependencies",
+      "status": "pending"
+    },
+    {
+      "id": "V01",
+      "title": "Task and PR dispositions",
+      "status": "pending"
+    },
+    {
+      "id": "R06",
+      "title": "Coverage closure",
+      "status": "pending"
+    },
+    {
+      "id": "V02",
+      "title": "Final checkpoint",
+      "status": "pending"
+    },
+    {
+      "id": "B01",
+      "title": "Skipped-work handoff",
+      "status": "pending"
+    }
+  ],
+  "groups": [
+    {
+      "id": "F01",
+      "title": "Make task identity and completion durable",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Reuse local assignment/state/correction safety evidence; reconcile task dispositions. Remote restart/recovery and PR304 remain blocked."
+      ]
+    },
+    {
+      "id": "F02",
+      "title": "Repair the production migration chain",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Refresh changed database foundation acceptance, including timeout and TLS repairs. Preserve clean/upgrade/repeat and snapshot evidence. Production legacy-data inventory/restore/proxy checks remain external."
+      ]
+    },
+    {
+      "id": "F03",
+      "title": "Fix session loading and CSRF execution order",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish canonical session, rotation, CSRF, logout and step-up acceptance using existing real HTTP evidence."
+      ]
+    },
+    {
+      "id": "F04",
+      "title": "Restore staff permission boundaries",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish task-level role/revocation/activation acceptance; deployed staff administrator-grant inventory remains external."
+      ]
+    },
+    {
+      "id": "F05",
+      "title": "Complete registration and OTP delivery",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish registration/reset/contact/staff OTP acceptance and stable localized recovery. Actual external delivery remains an operational prerequisite."
+      ]
+    },
+    {
+      "id": "F06",
+      "title": "Remove unconditional identity verification",
+      "priority": "P0",
+      "implementation_status": "safe_unavailable_provider",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Keep automatic identity verification unavailable without a provider; certify exact manual/disabled requirements. Provider-backed approval remains blocked."
+      ]
+    },
+    {
+      "id": "F07",
+      "title": "Finish agent membership and ownership transfer",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish task-level agent, invitation, ownership, profile-selection and onboarding acceptance; separate future contract/order/document consumers."
+      ]
+    },
+    {
+      "id": "F08",
+      "title": "Fix address deletion against the actual order schema",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish address/order-snapshot/main-address/manager acceptance; historical address and order reconciliation remains external."
+      ]
+    },
+    {
+      "id": "F09",
+      "title": "Connect real notification delivery and template test-send",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish required branding consumers and template/provider acceptance; retain latest notification step-up and acknowledgement repairs. Real delivery and legacy secrets remain external."
+      ]
+    },
+    {
+      "id": "F10",
+      "title": "Make notification retries and quiet hours correct",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish task-level retries, occurrence identity, leases, independent quiet hours and recovery acceptance. Legacy attempted messages require operator reconciliation."
+      ]
+    },
+    {
+      "id": "F11",
+      "title": "Unify notification inboxes and active-profile context",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish scoped inbox, preserved legacy read history, localized event/link and active-profile acceptance."
+      ]
+    },
+    {
+      "id": "F12",
+      "title": "Resolve payable-overdue and refund transition conflicts",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Close agreed overdue/refund-model requirements with existing evidence; keep new refund module outside this repair."
+      ]
+    },
+    {
+      "id": "F13",
+      "title": "Apply dual approval to every built bank-payment path",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish threshold, independent current reviewer, receipt fingerprint, concurrent settlement and pending UI acceptance. Legacy approvals require manual reconciliation."
+      ]
+    },
+    {
+      "id": "F14",
+      "title": "Close invoice integration and duplicate-payment regression checks",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Review all remaining finance task requirements with production-migrated tests; reuse 0fcf576 callback recovery. Reconcile PR298 incidental overpayment coverage."
+      ]
+    },
+    {
+      "id": "F15",
+      "title": "Complete CRM screens and correct list queries",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish required CRM list/detail/correction/archive acceptance through current capabilities and real API."
+      ]
+    },
+    {
+      "id": "F16",
+      "title": "Finish customer and staff ticket workflows",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish customer/staff ticket, attachment, privacy, assignment, target and transition acceptance."
+      ]
+    },
+    {
+      "id": "F17",
+      "title": "Complete deferred administration screens and required consumers",
+      "priority": "P1",
+      "implementation_status": "partial",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish email/notification branding, KB upload control and actual-agent test chat; review policy integration. Keep document processing and other separate consumers explicitly dependent."
+      ]
+    },
+    {
+      "id": "F18",
+      "title": "Test the actual production images and drain running work",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Refresh affected runtime image evidence after source changes; production backing services, rollout, DNS/TLS and restore remain external."
+      ]
+    },
+    {
+      "id": "F19",
+      "title": "Make quality gates reflect the promised requirements",
+      "priority": "P1",
+      "implementation_status": "partial",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Close three measured coverage gaps with meaningful tests. Meet eager purchase loading within unchanged budgets. Resolve strict dependency declarations. Finish error/correlation and gate acceptance."
+      ]
+    },
+    {
+      "id": "F20",
+      "title": "Verify localization, calendar behavior and accessibility",
+      "priority": "P2",
+      "implementation_status": "partial",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Finish exact shared-control/implemented-screen locale, RTL, theme, keyboard/focus and failure-state acceptance; preserve three verified historical skips."
+      ]
+    },
+    {
+      "id": "F21",
+      "title": "Keep useful follow-up fixes and remove proven implementation drift",
+      "priority": "P2",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Retain useful repeated-task fixes and provenance; reuse consolidated production-server checks. PR304/remote dispatch remains blocked."
+      ]
+    },
+    {
+      "id": "F22",
+      "title": "Run acceptance closure for every recorded task",
+      "priority": "P1",
+      "implementation_status": "not_applicable_acceptance_gate",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Reconcile 23 changed verified records, 13 partial and 274 pending records. Cover all301 PRs, 170 deferrals, 58 skips, and distinguish 1033 unrecorded backlog tasks."
+      ]
+    },
+    {
+      "id": "F23",
+      "title": "Align authentication rate limits with account and destination rules",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "pending",
+      "remaining": [
+        "Close authentication rolling-window and destination/account quota acceptance using migration0120 concurrency/Redis-outage evidence."
+      ]
+    }
+  ],
+  "completed_steps": [
+    {
+      "id": "A01",
+      "date": "2026-09-08",
+      "summary": "Archived 68 historical files; removed three byte-identical copies; preserved 29 referenced logs compressed; established current plan/progress and retained reconciliation input paths.",
+      "review": "All99 original paths retained or mapped to identical evidence; no task acceptance changed. Fixed a README archive-name collision found by checksum validation before commit.",
+      "checks": [
+        "audit/check_audit.py: 322tasks/301PRs/58skips/23groups/99mappings/29logs pass",
+        "11 requirement/skip tests pass",
+        "1 loop reconciliation test passes"
+      ],
+      "remaining": "Task evidence remains historical until A02 reconciliation; product repair and acceptance plan remain open."
+    }
+  ],
+  "deferred_improvements": [],
+  "scope_note": "Group implementation labels summarize recorded repairs, not whole-group acceptance. Historical status counts are generated from the ledger, never inferred from these labels."
+}
