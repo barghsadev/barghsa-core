@@ -287,8 +287,38 @@ function CrmProfileDetailContent() {
       'sessions'
     );
   }
-  async function actionSucceeded() {
+  async function actionSucceeded(response: unknown) {
     const kind = pendingAction?.kind;
+    if (!kind || !response || typeof response !== 'object') {
+      throw new Error('Missing CRM action acknowledgement');
+    }
+    const result = response as Record<string, unknown>;
+    const body = pendingAction.action.body as Record<string, unknown>;
+    const targetMatches =
+      kind === 'password' || kind === 'sessions'
+        ? result.userId === data?.user.userId
+        : result.profileId === profileId;
+    if (kind === 'edit') {
+      const profile = result.profile as Record<string, unknown> | undefined;
+      if (result.updated !== true || profile?.id !== profileId) {
+        throw new Error('Invalid CRM profile update acknowledgement');
+      }
+    } else {
+      if (result.success !== true || !targetMatches) {
+        throw new Error('Invalid CRM action acknowledgement');
+      }
+      if (kind === 'verification') {
+        const expectedStatus =
+          body.action === 'verify'
+            ? 'VERIFIED'
+            : body.action === 'unverify'
+              ? 'ACTIVE'
+              : 'PENDING_VERIFICATION';
+        if (result.newStatus !== expectedStatus) {
+          throw new Error('Unconfirmed CRM verification state');
+        }
+      }
+    }
     if (kind === 'archive') {
       window.location.assign('/admin/crm');
       return;
