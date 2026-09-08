@@ -4208,6 +4208,76 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-api-final.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-api-final.log.gz",
+      "sha256": "0eb7d644a279cf0204ac267b3c92f2eeb409507f39ec267f91b37e449592931b",
+      "encoding": "gzip",
+      "stored_sha256": "5101ae1893c715a05827bdd156147a81b387c4e4484cf8c8e30ec9e8e03ea9c9"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-api-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-api.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-api.log.gz",
+      "sha256": "e2899e7e0d0cc19a53a54e15d535a9f10363953a8d2732f49549964841f439c8",
+      "encoding": "gzip",
+      "stored_sha256": "b0c65202ad0287922f3f18e1ee56416c64ed7bfbaa765e51ff5d2d857b0f2290"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-bootstrap.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-bootstrap.log.gz",
+      "sha256": "7327f5fbde013c344da6348d5fc87e0dad30574a461469d5b71058d55c634bb8",
+      "encoding": "gzip",
+      "stored_sha256": "4e2a478e234c98559335c744fc7f3ee63c351a0fa492bc115681b351c0db3994"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-db-types.log",
+      "path": "audit/evidence/r01/barghsa-device-trust-ip-db-types.log.gz",
+      "sha256": "dc2e083d18e7e4da7a7d19e11fe20a9e11c86eb0b5cee66cd14af018180de630",
+      "encoding": "gzip",
+      "stored_sha256": "9eab10816753ec2e6cb86fbb7a5e991e2fe84788f02415548e0273cd7d09a5f2"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-format-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-format.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-format.log.gz",
+      "sha256": "f9534a48fcd01db31be62b0d89c337c52089cab25e3ddc715590d27ff9903f59",
+      "encoding": "gzip",
+      "stored_sha256": "89f69011e6146cbb796a126c8a2e07ea485c4df1b934c469e5ec20e6b5c1740b"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-shared-types.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-shared-types.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/barghsa-password-policy-staff-final.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-staff-final.log.gz",
+      "sha256": "f44cab7bd23240b26652a70896309ec4cedf71ae41d3c1b0e469e25c61e855c0",
+      "encoding": "gzip",
+      "stored_sha256": "66d998f3196619930daded4ed8dd65ee6c882a78d848d8f71219a38b483f4d77"
     }
   ]
 }

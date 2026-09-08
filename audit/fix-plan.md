@@ -1,6 +1,6 @@
 # Remaining repairs, reviews and skipped work
 
-Refreshed 2026-09-08 through product commit `b18fffd`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
+Refreshed 2026-09-08 through product commit `bf54b8c`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
 
 ## Current numbers
 
@@ -16,7 +16,7 @@ The saved inventory contains **301 merged PRs**, last recorded as checked agains
 
 ## Next bounded step
 
-Login page T-02.01.01 is verified. Device-network checks, atomic authorization/privacy and own trusted-device management are repaired through `b18fffd`. Latest management step passes 17 API/cookie cases and 60 distinct production-browser cases across focused runs, plus all 41 route budgets. Next confirm or align Argon2id hashing parameters and close the remaining .02 login criteria; then review .03 OTP, including trust-creation audit, and .04 forced password change. Reuse valid evidence. Lost-contact approver/evidence policy remains pending.
+Login page T-02.01.01 is verified. Network trust, atomic authorization/privacy, device management and explicit Argon2id policy are repaired through `bf54b8c`. Latest password step passes 35 distinct API cases and four bootstrap cases across focused runs. Both login-success branches still navigate to the public `/` placeholder. Repair and verify the authenticated `/app` destination before closing .02; then review .03 OTP, including trust-creation audit, and .04 forced password change. Reuse valid evidence. Lost-contact approver/evidence policy remains pending.
 
 All nine F15 CRM records are reviewed: eight verified locally; T-05.02.06 remains partial for future contracts and approved retention policy. Latest widget step d87042c passed 31 API cases and 12 distinct built-app browser cases across focused runs. Earlier list/search step passed 47 API and 20 built-app browser cases. See [step evidence](evidence/step-reviews.json). No global checkpoint is renewed.
 

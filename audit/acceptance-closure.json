@@ -521,7 +521,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+      "reviewed_sha": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 192,
       "requirement": "- **T-01.04.05:** Wire `test` and `test:coverage` tasks in `turbo.json`\n  - **Notes:** `test` depends on `^build` (upstream packages must compile first). `test:coverage` passes `--coverage` flag. CI runs `turbo test` with `--filter` for affected packages on PR, full suite on main.\n  - **Dependencies:** T-01.04.01, T-01.01.02\n  - **Complexity:** S",
@@ -561,7 +561,7 @@
         },
         {
           "path": "packages/shared/package.json",
-          "sha256": "a37f9f87fe1e0402167ab35fb6bc998cc5d454de141def2be8c82735de968316"
+          "sha256": "76bfa02fc11f613b29feaaf937efed9bff3a8d7b6ec9bff8fb51c1d87b5155a7"
         },
         {
           "path": "packages/eslint-config/package.json",
@@ -589,12 +589,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
-        "previous_reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
-        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
-        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
+        "source_revision": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
+        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "review": "Only password-creation options and associated hash assertions changed. Existing verification and unrelated methods are unchanged; focused delivery, staff, login-rate and bootstrap checks pass. Earlier unrelated evidence is reused.",
+        "record": "audit/evidence/step-reviews.json#R01-password-hash-policy",
         "paths": [
-          "packages/i18n/package.json"
+          "packages/shared/package.json"
         ]
       }
     },
@@ -3480,7 +3480,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 185,
       "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
@@ -3492,7 +3492,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "7c5724c925dc97c2d6952f8365150bc3f60602234c2a4e11d410f7c3e3b9813c"
+          "sha256": "4e9dfeb68871c0eaa0b26bf642a9bf7fb7a727cfd4d79f108f3e3c12cc677e3c"
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
@@ -3654,10 +3654,10 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "a22de92046b68f548417dbfae8e0c1b934097299",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Only password-creation options and associated hash assertions changed. Existing verification and unrelated methods are unchanged; focused delivery, staff, login-rate and bootstrap checks pass. Earlier unrelated evidence is reused.",
+        "record": "audit/evidence/step-reviews.json#R01-password-hash-policy",
         "paths": [
           "apps/api/src/auth/auth.service.ts"
         ]

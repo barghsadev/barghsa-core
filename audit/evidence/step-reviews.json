@@ -2196,6 +2196,75 @@
           "sha256": "f056d9a22c55ec43769cafd62baec48656561ed139aa783f571f6f74e974a843"
         }
       ]
+    },
+    {
+      "id": "R01-password-hash-policy",
+      "date": "2026-09-08",
+      "source_revision": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
+      "summary": "Apply the written Argon2id password-creation policy across registration, credential changes, staff provisioning and bootstrap. Preserve encoded legacy-password verification.",
+      "review": [
+        "All eight production hash-creation calls now share an immutable data-only export: Argon2id version 19, memory 37888 KiB, three passes, one lane, 32-byte hash. The shared package adds no native dependency and exposes the policy through ESM and CommonJS subpaths.",
+        "The five AuthService calls include registration, forced change, staff activation, reset and the unknown-account timing hash. Both AdminService staff-password creation paths and bootstrap use the same policy. Verification calls remain unchanged and use parameters embedded in each existing hash; no stored-password rewrite or migration is required.",
+        "Compiled HTTP tests inspect persisted parameters and verify credentials for registration, reset, staff activation and temporary passwords. A new forced-change case starts with an old default 64 MiB/four-lane hash, rejects reuse, accepts a fresh password, retains the encoded previous password in history, issues no session and rejects token replay. Bootstrap tests inspect the resulting hash too.",
+        "Initial assertions incorrectly assumed parameter serialization order. API Argon2 serializes m,p,t while another supported format is m,t,p; the exact-value assertion now permits both. The next run exposed a missing argon2 import in the newly extended staff test; corrected and rerun. These were test defects; failed evidence is retained.",
+        "Final login acceptance review found a separate confirmed defect: both login-success branches navigate to /, whose component is a public placeholder, rather than the required authenticated /app destination. Keep T-02.01.02 pending until this flow is repaired and reviewed."
+      ],
+      "checks": [
+        "35 distinct API cases pass across focused invocations: final combined run passes all 24 delivery and five login-rate cases, with the staff import failure; corrected staff-only run passes all six. These overlapping run totals are not added. The delivery run includes the new forced-change compatibility case.",
+        "All four PostgreSQL admin-bootstrap cases pass. API, DB and shared typechecks, focused ESLint, formatting and git diff checks pass. HTTP setup compiled application dependencies including both shared-package exports.",
+        "No frontend, dependency version, migration or permission logic changed. Reuse earlier browser, migration and budget evidence for those unchanged paths. No renewed global checkpoint or live performance benchmark is claimed."
+      ],
+      "remaining": [
+        "Repair and verify both successful login destinations before closing T-02.01.02. Then review .03 OTP including trust-creation audit and .04 forced password change. Lost-contact policy question remains pending.",
+        "Production capacity and response-time sizing for the explicit required hash policy remains operational evidence; existing hashes retain their stored cost parameters until a later password change."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "d47ad86bb7c6bd9296b92785bb811957b95ddfaa9e411e870e6e1bf5106d5add"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "5264bda0345a286ae2e5ee965be4ab416859a1c813a7c9dd5bc13c733f0c7ad4"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "4e9dfeb68871c0eaa0b26bf642a9bf7fb7a727cfd4d79f108f3e3c12cc677e3c"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "99e91a400c367eb38d0289a5aca6d7ace2e86f126248912f63700255fe3a6a85"
+        },
+        {
+          "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+          "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "943b63a9f2835544225b86106227ebf15fdc69ee6b5aff85f8345816522b2313"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "76bfa02fc11f613b29feaaf937efed9bff3a8d7b6ec9bff8fb51c1d87b5155a7"
+        },
+        {
+          "path": "packages/shared/src/password-hash.ts",
+          "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-password-policy-api-final.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-password-policy-api.log.gz",
+        "audit/evidence/r01/barghsa-password-policy-bootstrap.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-db-types.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-password-policy-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-password-policy-shared-types.log.gz",
+        "audit/evidence/r01/barghsa-password-policy-staff-final.log.gz"
+      ]
     }
   ]
 }
