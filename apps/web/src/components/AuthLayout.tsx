@@ -132,6 +132,11 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
         <Card className="w-full max-w-md">
           <CardContent className="pt-6">{children}</CardContent>
           {footer && <div className="px-(--card-spacing) pb-(--card-spacing)">{footer}</div>}
+          <div className="px-(--card-spacing) pb-(--card-spacing) text-center">
+            <Link to="/support" className="text-sm text-primary underline underline-offset-4">
+              {t('auth.forgotPassword.helpLink', locale)}
+            </Link>
+          </div>
         </Card>
       </main>
     </div>

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/auth';
+import { useLocale } from '../hooks/useLocale.js';
 import { Card, CardContent } from '@barghsa/ui';
 import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 
@@ -8,7 +9,7 @@ export const Route = createFileRoute('/support')({
 });
 
 function SupportPage() {
-  const locale: Locale = 'fa'; // TODO: read from user preference / locale context
+  const locale = useLocale();
   const isRtl = locale === 'fa';
   const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon;
 

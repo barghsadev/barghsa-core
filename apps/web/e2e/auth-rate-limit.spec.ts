@@ -38,6 +38,26 @@ for (const locale of ['fa', 'en'] as const) {
       if (path === 'forgot-password')
         await expect(page.locator('button[type="submit"]')).toBeDisabled();
       else await expect(page.locator('#password')).toHaveValue('Browser-rate-password-123!');
+      const support = page.getByRole('link', {
+        name:
+          locale === 'fa'
+            ? 'مشکل دارید؟ با پشتیبانی تماس بگیرید'
+            : 'Having trouble? Contact support',
+      });
+      await support.focus();
+      await support.press('Enter');
+      await expect(page).toHaveURL(/\/support$/);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        locale === 'fa' ? 'پشتیبانی بازیابی حساب' : 'Account Recovery Support'
+      );
+      await expect(page.locator('main').locator('..')).toHaveAttribute(
+        'dir',
+        locale === 'fa' ? 'rtl' : 'ltr'
+      );
+      await page
+        .getByRole('link', { name: locale === 'fa' ? 'بازگشت به فرم ورود' : 'Back to login' })
+        .click();
+      await expect(page).toHaveURL(/\/login$/);
     });
   }
   for (const flow of ['login', 'register'] as const) {
