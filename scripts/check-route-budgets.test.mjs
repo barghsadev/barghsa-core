@@ -44,3 +44,52 @@ test('common dependencies count once, an oversized common chunk fails, and missi
     await rm(dist, { recursive: true, force: true });
   }
 });
+
+test('interaction code has its own gate and cannot be hidden when imported eagerly', async () => {
+  const dist = await mkdtemp(join(tmpdir(), 'barghsa-interaction-budget-'));
+  try {
+    await mkdir(join(dist, '.vite'));
+    const manifest = {
+      'index.html': { file: 'entry.js' },
+      register: { file: 'register.js', dynamicImports: ['strength'] },
+      strength: { file: 'strength.js', imports: ['dictionary'] },
+      dictionary: { file: 'dictionary.js' },
+    };
+    for (const name of ['entry', 'register', 'strength'])
+      await writeFile(join(dist, `${name}.js`), `export const ${name}=1;`);
+    await writeFile(join(dist, 'dictionary.js'), randomBytes(3000));
+    const saveManifest = () =>
+      writeFile(join(dist, '.vite/manifest.json'), JSON.stringify(manifest));
+    await saveManifest();
+    const rules = [
+      { name: 'registration', entries: ['register'], limitKB: 1 },
+      { name: 'estimator', entries: ['strength'], phase: 'interaction', limitKB: 4 },
+    ];
+    const pass = await checkBudgets(dist, rules);
+    assert.deepEqual(
+      pass.map((row) => row.pass),
+      [true, true]
+    );
+    assert.deepEqual(pass[0].files, ['entry.js', 'register.js']);
+    assert.deepEqual(pass[1].files, ['dictionary.js', 'strength.js']);
+    await verifyWithSizeLimit(dist, pass);
+    const tooLarge = await checkBudgets(dist, [rules[0], { ...rules[1], limitKB: 1 }]);
+    assert.deepEqual(
+      tooLarge.map((row) => row.pass),
+      [true, false]
+    );
+    await assert.rejects(verifyWithSizeLimit(dist, tooLarge), /Size Limit rejected route budgets/);
+    manifest.register.imports = ['strength'];
+    await saveManifest();
+    assert.equal((await checkBudgets(dist, rules))[0].pass, false);
+    delete manifest.strength;
+    await saveManifest();
+    await assert.rejects(checkBudgets(dist, rules), /Missing manifest entry/);
+    await assert.rejects(
+      checkBudgets(dist, [{ ...rules[0], phase: 'typo' }]),
+      /Invalid budget phase/
+    );
+  } finally {
+    await rm(dist, { recursive: true, force: true });
+  }
+});

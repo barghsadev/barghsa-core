@@ -26,6 +26,12 @@
     "limitKB": 150
   },
   {
+    "name": "Password strength on demand",
+    "phase": "interaction",
+    "entries": ["src/lib/password-strength.ts"],
+    "limitKB": 900
+  },
+  {
     "name": "Dashboard",
     "entries": [
       "src/routes/_app.tsx?tsr-split=component",

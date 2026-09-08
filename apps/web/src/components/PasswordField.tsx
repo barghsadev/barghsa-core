@@ -1,52 +1,8 @@
 import { type Locale, t } from '@barghsa/i18n/auth';
 import { Input, Label, Progress, ProgressIndicator, ProgressTrack } from '@barghsa/ui';
-import { type ReactNode, useCallback, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
 
-// ─── Password strength evaluation ────────────────────────────────────────
-
-export type StrengthLevel = 'weak' | 'fair' | 'good' | 'strong';
-
-interface StrengthResult {
-  /** 0-100 score for the progress bar */
-  score: number;
-  /** Human-readable level */
-  level: StrengthLevel;
-}
-
-/**
- * Evaluate password strength locally.
- * Scores length, character-class diversity, and extra length bonuses.
- * No data is sent to any third party.
- */
-export function evaluateStrength(password: string): StrengthResult {
-  if (!password) return { score: 0, level: 'weak' };
-
-  const len = password.length;
-
-  // Length score: up to 40 points (40 chars = max)
-  let score = Math.min(len * 2, 40);
-
-  // Character-class diversity: 15 points each
-  if (/[a-z]/.test(password)) score += 15;
-  if (/[A-Z]/.test(password)) score += 15;
-  if (/\d/.test(password)) score += 15;
-
-  // Bonus for mixing multiple character classes
-  const classes = [/[a-z]/, /[A-Z]/, /\d/, /[^a-zA-Z0-9]/].filter((re) => re.test(password)).length;
-  if (classes >= 3) score += 5;
-  if (classes >= 4) score += 10;
-
-  // Clamp to 0-100
-  const clamped = Math.min(Math.max(score, 0), 100);
-
-  let level: StrengthLevel;
-  if (clamped < 25) level = 'weak';
-  else if (clamped < 50) level = 'fair';
-  else if (clamped < 75) level = 'good';
-  else level = 'strong';
-
-  return { score: clamped, level };
-}
+import type { StrengthLevel, StrengthResult } from '../lib/password-strength.js';
 
 const STRENGTH_LABEL_KEYS: Record<StrengthLevel, string> = {
   weak: 'auth.register.passwordStrengthWeak',
@@ -168,15 +124,43 @@ export function PasswordField({
     [isControlled, externalOnChange]
   );
 
-  const strength = evaluateStrength(value);
   const showStrengthMeter = showStrength && focused && !disabled;
+  const [assessment, setAssessment] = useState<{
+    input: string;
+    result?: StrengthResult;
+    failed?: true;
+  } | null>(null);
+  useEffect(() => {
+    if (!showStrengthMeter || !value) return;
+    let cancelled = false;
+    void import('../lib/password-strength.js')
+      .then(({ evaluateStrength }) => {
+        if (!cancelled) setAssessment({ input: value, result: evaluateStrength(value) });
+      })
+      .catch(() => {
+        if (!cancelled) setAssessment({ input: value, failed: true });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [showStrengthMeter, value]);
+  const currentAssessment = assessment?.input === value ? assessment : null;
+  const strength = value ? currentAssessment?.result : { score: 0, level: 'weak' as const };
+  const checkingStrength = !!value && !strength && !currentAssessment?.failed;
   const meetsReq = meetsMinimumRequirements(value);
 
   const handleToggle = useCallback(() => {
     setVisible((v) => !v);
   }, []);
 
-  const strengthLabel = t(STRENGTH_LABEL_KEYS[strength.level], locale);
+  const strengthLabel = t(
+    strength
+      ? STRENGTH_LABEL_KEYS[strength.level]
+      : currentAssessment?.failed
+        ? 'auth.register.passwordStrengthUnavailable'
+        : 'auth.register.passwordStrengthLoading',
+    locale
+  );
 
   return (
     <div className="space-y-2">
@@ -232,13 +216,14 @@ export function PasswordField({
           aria-live="polite"
         >
           <Progress
-            value={strength.score}
+            value={strength?.score ?? 0}
+            aria-busy={checkingStrength}
             aria-label={t('auth.register.passwordStrengthLabel', locale)}
             aria-valuetext={strengthLabel}
           >
             <ProgressTrack>
               <ProgressIndicator
-                className={`transition-all ${STRENGTH_BAR_CLASSES[strength.level]}`}
+                className={`transition-all ${STRENGTH_BAR_CLASSES[strength?.level ?? 'weak']}`}
               />
             </ProgressTrack>
           </Progress>

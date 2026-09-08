@@ -143,7 +143,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **UI/UX:** Loading states for lazy routes must match the app skeleton and respect `prefers-reduced-motion`. Show a skeleton or minimal spinner, never a blank page.
 
 - **T-01.03.04:** Implement bundle budget checking in CI
-  - **Notes:** Use `size-limit` or `@size-limit/preset-app` to set per-route budgets. Initial budgets: login/register pages under 150 KB JS gzip, dashboard under 300 KB JS gzip, electricity ordering under 250 KB JS gzip, admin pages under 500 KB JS gzip. CI compares against a committed `.size-limit.json`. Budget regression fails the PR gate.
+  - **Notes:** Use `size-limit` or `@size-limit/preset-app` to set per-route budgets. Login/register initial page load stays under 150 KB JS gzip; dashboard under 300 KB JS gzip, electricity ordering under 250 KB JS gzip, admin pages under 500 KB JS gzip. Owner clarification on 2026-09-09: the password-strength estimator and dictionaries load only when used and have a separate 900 KB JS gzip budget. Eager estimator imports still count against the initial page budget. Browser checks verify loading happens on interaction. CI compares against a committed `.size-limit.json`. Budget regression fails the PR gate.
   - **Dependencies:** T-01.03.01
   - **Complexity:** M
 

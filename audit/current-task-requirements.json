@@ -4,7 +4,7 @@
   "baseline_register": "audit/task-review.json",
   "baseline_register_sha256": "8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060",
   "source_sha256": {
-    "kanban/epics/01-platform-infrastructure.md": "56a5b45e55f65d791c62af06cfea99a6f0d028f1bcfdb3e60819e863cf5156fa",
+    "kanban/epics/01-platform-infrastructure.md": "cf25ecaad4e9a6484a8a69a6e3528efabbc8af7b5f580df4ca527b2dcf9a0dda",
     "kanban/epics/02-auth-users-admin.md": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8",
     "kanban/epics/05-notifications-documents-ai.md": "7b2275c3c598e25714d530b5ba410bd98d903e752172a7f8b09b709dd02620be",
     "kanban/epics/04-invoices-wallet-contracts.md": "5d72db3278123cdcf42dd5e14c87ae6cab1a089363755537a4c4083cfa313bf7",
@@ -113,8 +113,8 @@
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 145,
       "story_context": "#### S-01.03: Build pipeline with production optimization and route budgets\n\n**Description:** As a platform engineer, I want a production build that bundles route-level code splitting, enforces JavaScript size budgets per route, and produces optimized outputs for deployment.\n\n**Acceptance Criteria:**\n- `pnpm build` produces production-optimized bundles for `apps/web` and `apps/api`\n- Route-level code splitting: heavy editors, charts, AI UI, video tooling, and admin-only features are lazy-loaded; customer purchase paths have minimal bundle size\n- Bundle budget check in CI: per-route JS size is measured and compared against a defined budget with CI failure on regression\n- Production build outputs immutable hashed filenames for public assets (CDN-ready)\n- Environment-specific builds: `.env.production`, `.env.staging` each produce correct output with tree-shaken dev-only code\n- Build output is deterministic within the same source + dependency lock\n\n**Tasks:**",
-      "requirement_extract": "- **T-01.03.04:** Implement bundle budget checking in CI\n  - **Notes:** Use `size-limit` or `@size-limit/preset-app` to set per-route budgets. Initial budgets: login/register pages under 150 KB JS gzip, dashboard under 300 KB JS gzip, electricity ordering under 250 KB JS gzip, admin pages under 500 KB JS gzip. CI compares against a committed `.size-limit.json`. Budget regression fails the PR gate.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M",
-      "context_sha256": "722d6451940476cc21b479f59e4049160452a1da2f209941f4f8b38e5ad66f04"
+      "requirement_extract": "- **T-01.03.04:** Implement bundle budget checking in CI\n  - **Notes:** Use `size-limit` or `@size-limit/preset-app` to set per-route budgets. Login/register initial page load stays under 150 KB JS gzip; dashboard under 300 KB JS gzip, electricity ordering under 250 KB JS gzip, admin pages under 500 KB JS gzip. Owner clarification on 2026-09-09: the password-strength estimator and dictionaries load only when used and have a separate 900 KB JS gzip budget. Eager estimator imports still count against the initial page budget. Browser checks verify loading happens on interaction. CI compares against a committed `.size-limit.json`. Budget regression fails the PR gate.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M",
+      "context_sha256": "8d79223400f3e918570bb7a42045f921df4f21d323aed1d721b405aca7c1827b"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.05",

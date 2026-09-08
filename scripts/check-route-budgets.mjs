@@ -7,9 +7,15 @@ import { resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 // Count each emitted file once, including the bootstrap, layout, and every
-// static dependency. Lazy components required at first render are explicit
-// roots; interaction-only chunks are measured separately when requested.
-export async function measureRoute(dist, manifest, roots) {
+// static dependency. Explicit interaction entries have their own enforced
+// budgets. Static imports of those entries still count against the page.
+export async function measureRoute(
+  dist,
+  manifest,
+  roots,
+  { includeBootstrap = true, deferredEntries = [] } = {}
+) {
+  const deferred = new Set(deferredEntries);
   const seen = new Set(),
     files = new Set();
   function visit(key) {
@@ -21,10 +27,14 @@ export async function measureRoute(dist, manifest, roots) {
     for (const dependency of entry.imports ?? []) visit(dependency);
     if (key !== 'index.html')
       for (const dependency of entry.dynamicImports ?? []) {
-        if (dependency !== 'src/components/RegistrationTermsDialog.tsx') visit(dependency);
+        if (
+          dependency !== 'src/components/RegistrationTermsDialog.tsx' &&
+          !deferred.has(dependency)
+        )
+          visit(dependency);
       }
   }
-  for (const root of ['index.html', ...roots]) visit(root);
+  for (const root of [...(includeBootstrap ? ['index.html'] : []), ...roots]) visit(root);
   let bytes = 0;
   for (const file of files) {
     if (!file.endsWith('.js')) throw new Error(`Expected JavaScript entry: ${file}`);
@@ -35,6 +45,15 @@ export async function measureRoute(dist, manifest, roots) {
 
 export async function checkBudgets(dist, config) {
   if (!Array.isArray(config) || !config.length) throw new Error('No route budgets configured');
+  for (const rule of config) {
+    if (rule.phase !== undefined && !['initial', 'interaction'].includes(rule.phase))
+      throw new Error(`Invalid budget phase: ${rule.name}`);
+    if (rule.phase === 'interaction' && rule.routePrefix)
+      throw new Error(`Interaction budgets require explicit entries: ${rule.name}`);
+  }
+  const interactionEntries = config
+    .filter((rule) => rule.phase === 'interaction')
+    .flatMap((rule) => rule.entries);
   const manifest = JSON.parse(await readFile(resolve(dist, '.vite/manifest.json'), 'utf8'));
   const results = [];
   const rules = config.flatMap((rule) => {
@@ -59,7 +78,10 @@ export async function checkBudgets(dist, config) {
     });
   });
   for (const rule of rules) {
-    const measured = await measureRoute(dist, manifest, rule.entries);
+    const measured = await measureRoute(dist, manifest, rule.entries, {
+      includeBootstrap: rule.phase !== 'interaction',
+      deferredEntries: rule.phase === 'interaction' ? [] : interactionEntries,
+    });
     const limit = rule.limitKB * 1000;
     if (!Number.isFinite(limit) || limit <= 0) throw new Error(`Invalid budget: ${rule.name}`);
     results.push({ name: rule.name, ...measured, limit, pass: measured.bytes < limit });
@@ -115,7 +137,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
       );
     }
     await verifyWithSizeLimit('apps/web/dist', results);
-    console.log(`PASS Size Limit: ${results.length} complete-route gzip budgets`);
+    console.log(`PASS Size Limit: ${results.length} route and interaction gzip budgets`);
     if (results.some((result) => !result.pass)) process.exitCode = 1;
   } catch (error) {
     console.error(error.message);
