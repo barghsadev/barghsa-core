@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "218a3a381f20b0a722d101ac2be5f79b3b527632",
+  "source_revision": "3ff2920e7cf9fb7fd8dfeef85ccebb7f12e84710",
   "active_step": "R01",
-  "next_action": "R01: finish final cookie topology for 02-auth-users-admin.md#T-02.02.01 and its E06 dependency, then approximate session location and required rotation/revocation/CSRF/sensitive-action caller matrices. Current-session refresh is verified at 218a3a3. Reuse focused evidence; no broad checkpoint renewed. Lost-contact policy remains pending.",
+  "next_action": "R01: implement required approximate session location for 02-auth-users-admin.md#T-02.02.02, then reconcile remaining login/password/privilege/recovery rotation, revocation, CSRF and sensitive-action callers. Current-session display and local cookie topology are verified at 218a3a3 and 3ff2920. Reuse focused evidence; no broad checkpoint renewed. Lost-contact policy remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "OTP-first reset and current-session refresh after step-up are locally verified. Finish cookie topology, approximate location and remaining rotation/revocation/CSRF/sensitive-action caller requirements."
+        "OTP-first reset, current-session display refresh and local cookie topology are verified. Finish approximate location and remaining rotation/revocation/CSRF/sensitive-action caller requirements."
       ]
     },
     {
@@ -492,6 +492,10 @@
     {
       "id": "R01-session-display",
       "review_record": "audit/evidence/step-reviews.json#R01-session-display"
+    },
+    {
+      "id": "R01-cookie-policy",
+      "review_record": "audit/evidence/step-reviews.json#R01-cookie-policy"
     }
   ],
   "deferred_improvements": [

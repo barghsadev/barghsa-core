@@ -3080,7 +3080,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
@@ -3105,6 +3105,14 @@
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
           "sha256": "ecdbe31b9ba3079242f510d6af12a2905d7a320692956b5df9250fa763e0ea1b"
+        },
+        {
+          "path": "docs/security/cookies.md",
+          "sha256": "54b26564e793d0e02948e0c45f1a25a6599b612a78a731943bf6293a4dbf83cf"
+        },
+        {
+          "path": "apps/web/e2e/session-cookies.spec.ts",
+          "sha256": "769ed2748457ac0ee3867955f803824e9f9d810c1d8727fa978a0bcadb181087"
         }
       ],
       "checks": [
@@ -3113,11 +3121,12 @@
         "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json.",
         "At f39132f, absolute lifetime survives rotation and every touch/refresh/rotation rejects expiry during lock/write waits. 78 distinct focused cases pass; see audit/evidence/step-reviews.json#R01-session-deadlines. MFA wiring and cookie-policy acceptance remain partial.",
         "At 9469d35, password step-up uses rotateSession in the same transaction as its audit; replacement session/refresh/CSRF cookies and current-token retries pass focused tests. See audit/evidence/step-reviews.json#R01-step-up-rotation.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations."
       ],
       "limitations": [
         "MFA step-up rotation is now wired and tested. Login/password/privilege/recovery boundary reconciliation remains; prior isolated rotation tests alone did not establish these caller requirements.",
-        "The centralized final cookie topology is explicitly dependent on the separate E06 task. Current production-Secure/HttpOnly/SameSite behavior is covered locally; no deployed TLS claim."
+        "Local cookie topology is documented and verified at 3ff2920. Production TLS/proxy execution remains external evidence; no cross-origin topology is claimed."
       ],
       "merged_prs": [
         89
@@ -3170,7 +3179,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
@@ -3202,7 +3211,8 @@
         "Individual revocation now enforces step-up; wrong password, expiry, foreign owner, failed request/retry, refresh invalidation and five-profile focus checks pass.",
         "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json.",
         "Atc29d16c, both staff CRM account actions reject permission revoked during a real target-row lock wait and targets deleted during that wait.30 focused CRM checks pass, including six HTTP races; API types/lint pass. Source/revision-bound detail is in audit/evidence/step-reviews.json#R01-crm-session-permission.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations."
       ],
       "limitations": [
         "The session list displays raw IP addresses, not the required approximate location. No location resolution exists in the inspected device model/UI.",
@@ -3337,7 +3347,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
@@ -3369,7 +3379,8 @@
         "Real HTTP cases cover logout, individual revocation, step-up and refresh CSRF, cross-session token mismatch, safe error envelopes and idle expiry.",
         "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json.",
         "Public-auth form submission reproduced200 plus session creation before repair. Ten public authentication routes now require application/json; credential-bearing cross-origin forms are rejected. A real HTTP preflight test verifies the API does not authorize cross-origin JSON. Refresh keeps its token-bound guard; signed callbacks retain their independent guards.234 auth/session checks and23 later focused checks pass; these runs overlap and are not additive.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations."
       ],
       "limitations": [
         "Complete the state-changing-route/caller matrix. Public auth now uses JSON plus the current same-origin CORS policy; signed callbacks use independent request authentication. Reconcile these alternatives with the literal no-exemption wording before whole-task closure.",
@@ -3424,7 +3435,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
@@ -3455,7 +3466,8 @@
         "Step-up now checks current password and account/session eligibility under consistent locks, rechecks expiry at the write and commits the audit flag/timestamp/correlation together.",
         "HTTP acknowledgement matches the persisted timestamp. Failure of the audit insert rolls back verification; a concurrent password update rejects the old password. Individual session revoke now enforces the window and UI password recovery works in both locales.",
         "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations."
       ],
       "limitations": [
         "The complete matrix of built sensitive actions and their UI recovery remains to be reviewed with each domain.",
@@ -4707,7 +4719,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
+      "reviewed_sha": "3ff2920e7cf9fb7fd8dfeef85ccebb7f12e84710",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 99,
       "requirement": "**T-02.01.02 — Login authentication flow**\n\n- Description: POST `/api/auth/login` with `{ username, password, deviceInfo }`. Server validates credentials using Argon2id. On success: server checks if OTP enforcement is needed (new device, suspicious IP, risk score). If OTP not needed → set session, redirect to `/app`. If OTP needed → return `{ requiresOtp: true, challengeId }`, show OTP UI.\n- Technical notes: Password hashing with Argon2id (mem=37MiB, t=3, p=1 or benchmarked equivalent). Progressive delay after 5 failed attempts per account-and-IP in 15 min. Broad IP/device limits detect password spraying. No permanent lockout. Device trust: store device fingerprint (user agent, public IP hint, etc.) on successful login from trusted device. Trust is revocable, time-limited (default 30 days), and visible in device management.\n- UI/UX: If OTP required, transition to OTP input inline (same page, no redirect). \"Trust this device\" checkbox shown on OTP step.\n- Dependencies: T-01.01.02, T-01.01.03\n- Complexity: L",
@@ -4759,7 +4771,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
         },
         {
           "path": "apps/api/src/session/trusted-devices.controller.ts",
@@ -4791,7 +4803,8 @@
         "36/36 production-browser cases pass across desktop Chromium and mobile Chrome in Persian and English. Direct success, OTP retry/success, invalid acknowledgements, password-change retry, resend and no-profile onboarding pass. Reload of /app retains dashboard content.",
         "Production web build, web typecheck, focused ESLint/formatting, all 41 complete-route budgets and git diff checks pass. Saved served-index equality and index/manifest hashes bind browser evidence to this build. Preview stopped after completion.",
         "Reuse source-reviewed evidence from network trust a22de92, atomic authorization/privacy 7b15638, device management b18fffd and password policy bf54b8c. The last step passes 35 distinct API cases and four bootstrap cases across focused runs. Unchanged API logic was not tested again for this navigation-only change; no global checkpoint renewed.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations."
       ],
       "limitations": [
         "Local risk policy requires OTP on unknown/changed/expired trust or staff login. It does not claim an external IP reputation service or separately configurable numerical score.",
@@ -4815,7 +4828,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.01.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "9827e96c6e439e07c85daead4655a03fff84becd",
+      "reviewed_sha": "3ff2920e7cf9fb7fd8dfeef85ccebb7f12e84710",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 107,
       "requirement": "**T-02.01.03 — Login OTP verification**\n\n- Description: Same OTP input pattern as registration. POST `/api/auth/login/verify` with `{ challengeId, otp, trustDevice }`. On success: set session, optionally mark device as trusted. On failure: increment attempts, invalidate challenge after 5 failed attempts.\n- Technical notes: Same OTP rate limits as registration. Device trust stored with expiry. Customer MFA is risk-based (triggered on new/suspicious device). Staff/admin MFA is mandatory on every new device. Sensitive actions later require step-up auth.\n- UI/UX: OTP input with resend. \"Trust this device\" checkbox visible.\n- Dependencies: T-02.01.02, T-01.02.02\n- Complexity: M",
@@ -4859,7 +4872,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
         },
         {
           "path": "apps/web/src/routes/login.tsx",
@@ -4879,7 +4892,8 @@
         "Existing delivered-code, credential-change, trusted-device, staff-MFA, cross-purpose, resend and partial-session-failure cases pass. The shared OTP input, resend acknowledgement, trust checkbox and retry-to-dashboard behavior reuse the 36 production-browser checks at 53a8bec; frontend sources are unchanged.",
         "93 distinct API/unit cases pass across five files and focused invocations. Initial combined run passed 64/67; its three expiry tests expected the wrong error-code separator. Corrected race-only run passes 3/3. Other two-file run passed 25/26; the new exhausted-code test first encountered the independent IP 429. After explicitly checking that limit and isolating the exhausted challenge, its focused rerun passes 1/1. Overlapping reruns are not extra cases; selected-out tests are not task skips.",
         "API typecheck, focused ESLint, formatting and git diff checks pass. Compiled HTTP fixtures use real PostgreSQL; API typecheck ran only after all fixture builds finished. All failing logs are retained.",
-        "No schema, dependency, frontend or cookie-policy change. Earlier migration, browser and bundle evidence is reused where sources are unchanged. No global checkpoint or production delivery claim is renewed."
+        "No schema, dependency, frontend or cookie-policy change. Earlier migration, browser and bundle evidence is reused where sources are unchanged. No global checkpoint or production delivery claim is renewed.",
+        "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations."
       ],
       "limitations": [
         "Local app and mock-provider delivery are verified. Live provider delivery and deployment remain operational prerequisites.",
@@ -4904,7 +4918,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.01.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "9827e96c6e439e07c85daead4655a03fff84becd",
+      "reviewed_sha": "3ff2920e7cf9fb7fd8dfeef85ccebb7f12e84710",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 115,
       "requirement": "**T-02.01.04 — Password change enforcement on login**\n\n- Description: If server flags user as `mustChangePassword`, after credential verification but before setting session, redirect to password change form. User cannot proceed to `/app` without changing password. After successful change, display login page again.\n- Technical notes: Flag `mustChangePasswordAtNextLogin` on user record. Staff or system sets this flag. Password history (last N passwords, default 5) prevents reuse. New password must satisfy same strength policy. Session is NOT established until password is changed.\n- UI/UX: Inline form within auth layout. \"Your password must be changed before continuing\" explanation. Success message: \"Password changed. Please log in.\" Redirect to login page. API: `/api/auth/force-change-password` with old password verification (already verified in login step, just need new password).\n- Dependencies: T-02.01.02\n- Complexity: M",
@@ -4948,7 +4962,7 @@
         },
         {
           "path": "apps/api/src/session/session-http.integration.test.ts",
-          "sha256": "4f8837e4e1d5b2b7c80c0ed2bad472d21dca8a76205f512b71fd124d63100218"
+          "sha256": "6d77b03629e7df712aa4665f2b2c590386772145f1877290cdec4f6b1ccd9ff1"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -4977,7 +4991,8 @@
         "30/30 API cases pass across the new 15-case forced-password HTTP suite and 15 existing session HTTP cases. Tests use the compiled app and PostgreSQL. Coverage includes weak/oversized input, invalid authorization, history limits, rollback, replay, expiry waits, old-session/refresh invalidation and stale OTP rejection.",
         "12 distinct production-browser cases pass across focused runs on desktop Chromium and mobile Chrome. Initial run passed four existing acknowledgement/retry cases; eight new form cases failed on the unnamed meter and transitional contrast. After the accessibility fix and animation-aware assertion, those eight pass in fa/en and light/dark. New cases cover all five invalid-password classes, confirmation mismatch, pending controls, failed-request input, accessible form and return to login. No whole-application accessibility or new global checkpoint is claimed.",
         "API/web typechecks, focused ESLint, final formatting, 50 i18n tests, i18n build, production web build, all 41 unchanged route budgets and git diff checks pass. Initial and final served-index/manifest hashes bind the browser builds; preview stopped after completion. No API typecheck overlapped fixture builds.",
-        "No dependency version, schema, API shape or cookie policy changed. Earlier migration, OpenAPI and unrelated login/OTP evidence is reused. Failed browser logs are retained; no failures remain in this step."
+        "No dependency version, schema, API shape or cookie policy changed. Earlier migration, OpenAPI and unrelated login/OTP evidence is reused. Failed browser logs are retained; no failures remain in this step.",
+        "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations."
       ],
       "limitations": [
         "Local application acceptance uses the implemented five-entry previous-password window. Existing malformed credential/history records require authorized remediation; this step does not rewrite production data.",
@@ -5002,7 +5017,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "9827e96c6e439e07c85daead4655a03fff84becd",
+      "reviewed_sha": "3ff2920e7cf9fb7fd8dfeef85ccebb7f12e84710",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 167,
       "requirement": "**T-02.03.02 — OTP verification and password reset**\n\n- Description: POST `/api/auth/reset-password` with `{ challengeId, otp, newPassword }`. Backend verifies OTP, validates new password strength (same policy), hashes new password, updates user record.\n- Technical notes: On success: invalidate ALL existing sessions and refresh tokens for that user. Audit: password_reset event with user ID, timestamp, correlation ID. OTP consumed. Password history check enforced. Rate limit: 5 reset attempts per hour per destination.\n- UI/UX: After OTP verified, show new password form with strength meter and confirm password field. Success: redirect to login page with success toast. \"Your password has been reset. Please log in with your new password.\"\n- Dependencies: T-02.03.01, T-01.02.03\n- Complexity: M",
@@ -5034,7 +5049,7 @@
         },
         {
           "path": "apps/api/src/session/session-http.integration.test.ts",
-          "sha256": "4f8837e4e1d5b2b7c80c0ed2bad472d21dca8a76205f512b71fd124d63100218"
+          "sha256": "6d77b03629e7df712aa4665f2b2c590386772145f1877290cdec4f6b1ccd9ff1"
         },
         {
           "path": "apps/web/e2e/password-reset.spec.ts",
@@ -5078,7 +5093,8 @@
         }
       ],
       "checks": [
-        "OTP-first API/database/browser requirements and 151 distinct focused API, 38 browser and three migration cases are detailed in audit/evidence/step-reviews.json#R01-reset-otp-first. Types, lint/format, OpenAPI, snapshot and 41 route budgets passed. Results combine explicit focused runs; no global checkpoint renewed."
+        "OTP-first API/database/browser requirements and 151 distinct focused API, 38 browser and three migration cases are detailed in audit/evidence/step-reviews.json#R01-reset-otp-first. Types, lint/format, OpenAPI, snapshot and 41 route budgets passed. Results combine explicit focused runs; no global checkpoint renewed.",
+        "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations."
       ],
       "limitations": [
         "Local acceptance uses controlled HTTP/provider fixtures and migrated PostgreSQL. Real provider delivery and production rollout remain external."

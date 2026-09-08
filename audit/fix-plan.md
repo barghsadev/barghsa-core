@@ -1,6 +1,6 @@
 # Remaining repairs, reviews and skipped work
 
-Current through product `218a3a3` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
+Current through product `3ff2920` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
 
 ## Current numbers
 
@@ -16,7 +16,7 @@ The saved inventory contains **301 merged PRs**, last recorded as checked agains
 
 ## Next bounded step
 
-Continue R01 session rotation and cookie review for `02-auth-users-admin.md#T-02.02.01` through `T-02.02.04`. Current-session refresh is verified at `218a3a3` with 24 focused desktop/mobile browser cases, types, lint and build. Complete cookie policy, approximate location and required rotation/revocation/CSRF/sensitive-action callers. Review one bounded change and focused evidence before proceeding.
+Continue R01 session rotation and cookie review for `02-auth-users-admin.md#T-02.02.01` through `T-02.02.04`. Current-session refresh is verified at `218a3a3` with 24 focused desktop/mobile browser cases, types, lint and build. Local cookie policy is also verified at `3ff2920` with 73 distinct API cases across focused runs and two browser profiles. Continue approximate location and required rotation/revocation/CSRF/sensitive-action callers. Review one bounded change and focused evidence before proceeding.
 
 OTP-first reset `02-auth-users-admin.md#T-02.03.02` is locally verified at `9827e96`. Successful OTP verification consumes the code and issues a hashed, single-use authorization with the original deadline. Final reset retains strength/history, quotas, atomic audit and all-session revocation. The browser verifies before password entry and handles expiry, retries and login navigation. Recorded checks cover 151 distinct API cases across focused runs, 38 desktop/mobile browser cases, three migration cases, types/lint/format, OpenAPI, snapshot and all 41 route budgets. See [step evidence](evidence/step-reviews.json). No global checkpoint is renewed. Lost-contact policy remains pending.
 
@@ -61,7 +61,7 @@ All 18 partial records are routed below. Read exact requirements and limitations
 | 01-platform-infrastructure.md#T-01.04.06 | Production promotion depends on T-05.04.01 and executed release evidence, V01/B01. |
 | 01-platform-infrastructure.md#T-01.05.01 | Domain errors and downstream correlation, R03. |
 | 01-platform-infrastructure.md#T-04.01.04 | Production sizing, load, replica visibility and actual alerts, V01/external. |
-| 02-auth-users-admin.md#T-02.02.01 | Rotation callers and final cookie topology, R01. |
+| 02-auth-users-admin.md#T-02.02.01 | Remaining rotation callers; local cookie topology verified, R01. |
 | 02-auth-users-admin.md#T-02.02.02 | Approximate session location and remaining revocation callers, R01. |
 | 02-auth-users-admin.md#T-02.02.03 | Complete route/caller matrix and explicit CSRF alternatives, R01. |
 | 02-auth-users-admin.md#T-02.02.04 | Built sensitive-action recovery matrix; future refund/contract consumers separate, R01. |

@@ -5153,6 +5153,83 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-api.log",
+      "path": "audit/evidence/r01/barghsa-cookie-policy-api.log.gz",
+      "sha256": "716ba1001b3fc6a4e40e62c483191f69add068c551e9b189dcdc59d27d4f15d1",
+      "encoding": "gzip",
+      "stored_sha256": "29188bbaf434637d899bf07463143cbd49a76de867f657239e39f5bcf8f8b032"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-browser-complete.log",
+      "path": "audit/evidence/r01/barghsa-cookie-policy-browser-complete.log.gz",
+      "sha256": "8e7ff89bbbda3685a9150f9a2e8c7e86be022a47fc258a45a782b7de1d5faa42",
+      "encoding": "gzip",
+      "stored_sha256": "12a62101a07b3ae813176b8288a69b60ccc970bdfcadd009c21912522c1505f1"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-browser-final.log",
+      "path": "audit/evidence/r01/barghsa-cookie-policy-browser-final.log.gz",
+      "sha256": "9f1100cf83627fe3cbad87d05b64dbafd93e2c7f4c6cef98ea2df288207c9e9a",
+      "encoding": "gzip",
+      "stored_sha256": "400e25a385843ca40aac3068f822e0af18e14e6b43a466c22636cfc468ce80c3"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-browser-format.log",
+      "path": "audit/evidence/r01/barghsa-cookie-policy-browser-format.log.gz",
+      "sha256": "e25ebc48bff08451546c814044b448f4e3335c42f5d53ad22bff458255dd71fc",
+      "encoding": "gzip",
+      "stored_sha256": "d79652d82292348c1ce3a5f87fba2d5d118bc500ac34109c9e98536411537d80"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-browser.log",
+      "path": "audit/evidence/r01/barghsa-cookie-policy-browser.log.gz",
+      "sha256": "02c88e1869426c98732d005863e629d01e0994c2ebcadfa3d6561d5e868b2e74",
+      "encoding": "gzip",
+      "stored_sha256": "bd00a66102dae60ee0a58b014a659e8b2ed5f2a697d37167c29521a9e53b70a6"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-controller-final.log",
+      "path": "audit/evidence/r01/barghsa-cookie-policy-controller-final.log.gz",
+      "sha256": "1eba852f172046cc7b7766f2b7840f0c78c6127b0f196c6be98e9b00ab112029",
+      "encoding": "gzip",
+      "stored_sha256": "bc838dd0f0e18f8daa60691e97ac6705b63d2a54e18dae615c5b42fda5defbce"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-format.log",
+      "path": "audit/evidence/r01/barghsa-cookie-policy-format.log.gz",
+      "sha256": "d9a4ddfa6311f44299362525cef03e7465195e1427b049463b34e8e63bd4928a",
+      "encoding": "gzip",
+      "stored_sha256": "7a1713f89a41d7a69d94f2617aff6577591fa3ecbe3479be8b5d6cc16b773e2d"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-lint-final.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-cookie-policy-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
     }
   ]
 }

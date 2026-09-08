@@ -3046,6 +3046,72 @@
         "/tmp/barghsa-session-display-lint.log",
         "/tmp/barghsa-session-display-types.log"
       ]
+    },
+    {
+      "id": "R01-cookie-policy",
+      "date": "2026-09-08",
+      "source_revision": "3ff2920e7cf9fb7fd8dfeef85ccebb7f12e84710",
+      "summary": "Session cookies now use /api; issuance/rotation expires the historical root cookie and logout clears both scopes. Central same-origin SPA/API cookie policy is documented.",
+      "review": [
+        "All product cookie writers found in cookie.helper.ts. Session readers authenticate API requests; the retained Vite SPA serves documents/assets without server session authentication. No proxy cookie-path rewrite was found in the searched configuration.",
+        "Preserved Secure in production, HttpOnly for credentials, omitted Domain, Lax session/refresh/device and Strict readable CSRF. Documented root exceptions for SPA CSRF reads and __Host- device proof. SameSite is supplementary, not the only CSRF control. No cross-origin credentialed topology is authorized.",
+        "Real browser uses actual compiled product helpers through Express. Tested /api/profiles, refresh endpoint, nonmatching refresh-extra, static assets and /apix, JavaScript visibility, replacement of a legacy root cookie and logout with both paths. Fixture routes are test-only.",
+        "Existing HTTP tests manually collecting Set-Cookie headers now ignore expired root credentials when extracting the current ID. The first API run passed 71/73; two controller cases still expected the old root path. Corrected expectations and all 40 controller cases passed.",
+        "Two browser discovery runs exposed an incorrect compiled path then CommonJS/ESM import mismatch. The final fixture loads the compiled helper with createRequire inside beforeAll, after the shared API build; both browser profiles pass.",
+        "Existing root cookies persist until rotation/logout/original expiry; migration does not recreate or extend sessions. No deployed TLS/proxy verification, global regression, images or coverage renewal claimed."
+      ],
+      "checks": [
+        "73 distinct focused API cases across four files: 33 cookie/session/trusted-device cases passed in the first run; all 40 controller cases passed in the corrected controller run. These runs overlap, not 111 independent cases.",
+        "Two browser cases passed in desktop Chromium/mobile Chrome using a local Express fixture and actual product cookie helpers.",
+        "API types, focused ESLint, Prettier and git diff --check passed. Web product sources and dependency manifests are unchanged, so the prior production web build remains valid."
+      ],
+      "remaining": [
+        "T-02.02.01 remains partial for the remaining login/password/privilege/recovery caller reconciliation. Required approximate session location and other revocation/CSRF/sensitive-action matrices remain. E06 broader security acceptance and deployed topology evidence are not certified."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.test.ts",
+          "sha256": "da501172dabae3d480c686631435d08d9d1e8d0ab13b699641f9f48cf92ab877"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.test.ts",
+          "sha256": "83571994ebfe3a715dc65284ca051687156f25095a77284ecd6c9c983bff69f3"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "6d77b03629e7df712aa4665f2b2c590386772145f1877290cdec4f6b1ccd9ff1"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+          "sha256": "36ba22496b741a88a209d6c60b76d402ca52e5b676fe9edd92eef14f5aed136f"
+        },
+        {
+          "path": "apps/web/e2e/session-cookies.spec.ts",
+          "sha256": "769ed2748457ac0ee3867955f803824e9f9d810c1d8727fa978a0bcadb181087"
+        },
+        {
+          "path": "docs/security/cookies.md",
+          "sha256": "54b26564e793d0e02948e0c45f1a25a6599b612a78a731943bf6293a4dbf83cf"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-cookie-policy-api.log",
+        "/tmp/barghsa-cookie-policy-browser-complete.log",
+        "/tmp/barghsa-cookie-policy-browser-final.log",
+        "/tmp/barghsa-cookie-policy-browser-format.log",
+        "/tmp/barghsa-cookie-policy-browser.log",
+        "/tmp/barghsa-cookie-policy-controller-final.log",
+        "/tmp/barghsa-cookie-policy-format-check.log",
+        "/tmp/barghsa-cookie-policy-format.log",
+        "/tmp/barghsa-cookie-policy-lint-final.log",
+        "/tmp/barghsa-cookie-policy-lint.log",
+        "/tmp/barghsa-cookie-policy-types.log"
+      ]
     }
   ]
 }
