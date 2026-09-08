@@ -845,6 +845,77 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "Finish T-05.02.05 with focused approval evidence for the four remaining protected fields and review-queue/detail keyboard/theme checks. Then complete legal nonidentity direct editing under T-05.02.02. Other admin screens still need their own review."
+    },
+    {
+      "id": "A01-audit-reconciliation-2",
+      "date": "2026-09-08",
+      "source_revision": "0e45382570d96a375be648a731b786436d834101",
+      "summary": "Reconciled all328 audit files, refreshed the remaining fix/PR/skip plan in place, shortened active navigation documents and preserved the interrupted correction test evidence.",
+      "review": [
+        "All23 original repair groups,322 current claims,301 saved PRs,170 deferrals,23 repeat groups and58 historical skips remain represented.",
+        "No byte-identical files remain; unique evidence and stable referenced inputs retained. Historical records remain subordinate to current acceptance.",
+        "No acceptance promotion, product implementation edit or remote mutation. Existing test change remains uncommitted.",
+        "Confirmed support contacts already exist in public support route and recovery runbook. Lost-contact policy question stays pending."
+      ],
+      "checks": [
+        "Final audit integrity check passed:322 tasks,301 PRs,58 skips,23 groups,99 original file mappings and318 logs before archiving this validation.",
+        "Current requirements, merged-PR checklist and skipped-task reports all passed freshness checks.",
+        "All11 requirement-binding and skip-reconciliation tests passed.",
+        "git diff --check passed. All checks in this refresh exited0; no application suite rerun."
+      ],
+      "source_evidence": [
+        {
+          "path": "audit/fix-plan.md",
+          "sha256": "3ed19b782c26f57fb253380bcc376dfe0b276d39810f25e319e39582cdcf09ff"
+        },
+        {
+          "path": "audit/README.md",
+          "sha256": "49404ebcb01d7907b883e9f7406f4539a9e923d74c546a369414a847f99b76bd"
+        },
+        {
+          "path": "audit/HANDOFF.md",
+          "sha256": "ca09cccca3e11a718bce0d9f6728224b70d43caad1e501b1a18548b8eb395126"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "R01 active. Finalize the uncommitted correction test step and reviewer-page acceptance; then follow the nine-phase plan.39 verified,21 partial,262 pending remain unchanged.",
+      "validation_logs": [
+        {
+          "original_path": "/tmp/barghsa-audit-refresh-validation.log",
+          "path": "audit/evidence/r01/barghsa-audit-refresh-validation.log.gz",
+          "sha256": "f48fea71ae809f2f2eabafee40f187be2a1ed2f64d2027a7d61e754f84201c95",
+          "encoding": "gzip",
+          "stored_sha256": "360f0dbaed6324093f025f6260096e074efbd1fd13875beed331e312f7bd34f3"
+        },
+        {
+          "original_path": "/tmp/barghsa-audit-refresh-requirements.log",
+          "path": "audit/evidence/r01/barghsa-audit-refresh-requirements.log.gz",
+          "sha256": "3440ccfe7ab22762a914410f44e797031046f8ca47ba4b8dc809bba221e82700",
+          "encoding": "gzip",
+          "stored_sha256": "dc663d6698ee7407c527b5ba81a50ab619ffc8c73f3cc131b30bdd72a4846b89"
+        },
+        {
+          "original_path": "/tmp/barghsa-audit-refresh-skips.log",
+          "path": "audit/evidence/r01/barghsa-audit-refresh-skips.log.gz",
+          "sha256": "90a055f4fc9d793cad73f500b01e067fd2892e2c8c5282ace100c3cc1e322b7c",
+          "encoding": "gzip",
+          "stored_sha256": "6f21b8872a74b341d9a22401016186da672b8b55504daf6ee553ef7e19cc562e"
+        },
+        {
+          "original_path": "/tmp/barghsa-audit-refresh-prs.log",
+          "path": "audit/evidence/r01/barghsa-audit-refresh-prs.log.gz",
+          "sha256": "18452ee2e6efa69de6ff32ef12cd5002af4073d1308a33ad20d808a41895dcf8",
+          "encoding": "gzip",
+          "stored_sha256": "be23b88c4a47a042e7ea034a41391cd1a4aa6177a509d1c1dd8960f15ce55d16"
+        },
+        {
+          "original_path": "/tmp/barghsa-audit-refresh-report-tests.log",
+          "path": "audit/evidence/r01/barghsa-audit-refresh-report-tests.log.gz",
+          "sha256": "45a07f215e1d0dceab6faa80867e71aa2be4820dfd35eae017de4ea3e94cf3ba",
+          "encoding": "gzip",
+          "stored_sha256": "183009f9d3c387c22981e071b9f38fc955a9de08f32e139495463753bf442278"
+        }
+      ]
     }
   ]
 }

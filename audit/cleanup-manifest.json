@@ -601,11 +601,12 @@
   ],
   "refresh": {
     "date": "2026-09-08",
-    "source_revision": "86bff51",
-    "input_files_read": 169,
-    "input_bytes_read": 7830440,
-    "decoded_bytes_read": 9103527,
-    "method": "Read every file, decode gzip logs, parse JSON inventories, compare hashes, reconcile report findings and later recorded evidence. This is audit-content reconciliation, not a new full application or PR code review.",
+    "source_revision": "0e45382570d96a375be648a731b786436d834101",
+    "input_files_read": 328,
+    "input_bytes_read": 8289539,
+    "decoded_bytes_read": 10248041,
+    "input_inventory_sha256": "16a5e27582e64f9ca9f79f7e81ae81fcecebed4f7b9e1798d06dcdf46f40bee7",
+    "method": "Read every file; decode all gzip logs; parse every JSON and CSV inventory. Reconcile original findings, current task limitations, later step evidence and active plans. This is audit-content reconciliation, not fresh acceptance review of every implementation or PR.",
     "completed_step_detail": "audit/evidence/step-reviews.json",
     "duplicate_logs": [
       {
@@ -711,6 +712,12 @@
         "reason": "Byte-identical compressed log; every original invocation remains a separate index entry."
       }
     ],
-    "preservation": "All99 original audit mappings and82 log invocation records retained. Archive bytes and production-referenced input paths remain unchanged."
+    "current_duplicate_groups": 0,
+    "cleanup": [
+      "Replaced the active plan in place; shortened README and handoff instead of adding another competing plan.",
+      "Kept all unique historical evidence and99 original path mappings; no additional evidence files qualified for deletion.",
+      "Reconciled interrupted18-pass test report without changing task acceptance.",
+      "Recorded GitHub refresh unavailability and corrected stale next action."
+    ]
   }
 }

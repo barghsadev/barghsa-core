@@ -292,7 +292,7 @@
     "pending": 274,
     "changed": false
   },
-  "external_and_deferred_details": "audit/HANDOFF.md",
+  "external_and_deferred_details": "audit/fix-plan.md#external-prerequisites-and-decisions",
   "checkpoint_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
   "production_images": {
     "status": "current_build_and_runtime_checks_passed_locally",

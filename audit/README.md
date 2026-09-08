@@ -1,21 +1,18 @@
 # Audit
 
-Start with [the current fix plan](fix-plan.md), then [progress and next action](progress.json).
+Start with [fix-plan.md](fix-plan.md) and [progress.json](progress.json). [HANDOFF.md](HANDOFF.md) gives continuation instructions, including unfinished worktree changes.
 
-The plan covers remaining repairs, acceptance review of merged work, and historical skips. The latest inventory has 301 merged PRs and 322 task claims. These populations overlap; a merge or a historical completion flag is not acceptance evidence.
+| Record | Purpose |
+| --- | --- |
+| [Acceptance](acceptance-closure.json) | Sole status authority for 322 historical claims |
+| [Requirements](current-task-requirements.json) | Current canonical requirements for every key |
+| [PR checklist](merged-pr-review.md) | 301 saved PRs, deferrals and repeated tasks |
+| [Skipped tasks](current-skipped-tasks.md) | All 58 historical skips and current dispositions |
+| [Checkpoint](final-repair-checkpoint.json) | Revision-bound broad checks and later evidence pointers |
+| [Step reviews](evidence/step-reviews.json) / [logs](evidence/index.json) | Reviewed work and saved check results |
+| [Preflights](preflight/) | Operational prerequisites; execution requires separate evidence |
+| [Archive](archive/README.md) / [manifest](cleanup-manifest.json) | Historical evidence, provenance and latest directory reconciliation |
 
-- [Task acceptance](acceptance-closure.json) is the authoritative task-status ledger.
-- [Merged-PR review checklist](merged-pr-review.md) lists all 301 PRs, remaining mapped-task review, deferrals and repeated-task groups.
-- [Current requirements](current-task-requirements.json) bind those tasks to canonical epic context.
-- [Historical skip dispositions](current-skipped-tasks.md) are generated from that ledger. Review existing implementation before building an unmet requirement.
-- [Latest regression checkpoint](final-repair-checkpoint.json) separates revision-bound full runs from later focused repairs.
-- [Saved evidence](evidence/index.json) maps former temporary logs to durable copies.
-- [Completed-step detail](evidence/step-reviews.json) preserves reviews and check results while keeping progress.json shorter.
-- [Operator preflights](preflight/) retain migration and deployment prerequisites. Their presence does not mean they were executed on production.
-- [Historical archive](archive/README.md) preserves old findings and repair narratives. Read it only to investigate specific evidence.
+Historical root JSON inputs, constraint inventory, staff/template SQL and schema-snapshot review keep their paths because tools, tests and immutable migrations reference them. Old status claims do not override acceptance or authorize dispatch. Keep unique evidence; remove only proven redundant copies and update references.
 
-The root task-review, skipped-task and merged-task JSON files remain as historical inputs to existing validators and reconciliation tools. Their historical assessments are superseded by the current acceptance ledger and requirement overlay. They do not authorize dispatch.
-
-The root constraint inventory, staff-administrator SQL, notification-template-history SQL and schema-snapshot review also retain their original paths: tests, maintenance tools and immutable migrations reference them. The cleanup validator checks these paths.
-
-Checks: `python3 audit/check_audit.py`, `python3 audit/current_requirements.py`, `python3 audit/current_skipped_tasks.py`, and `python3 audit/current_pr_reviews.py`. Use `--write` on a generator only after its inputs were deliberately reviewed.
+Validate with `python3 audit/check_audit.py`, `python3 audit/current_requirements.py`, `python3 audit/current_skipped_tasks.py` and `python3 audit/current_pr_reviews.py`. Use generator `--write` only after deliberate input changes.

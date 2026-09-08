@@ -1,79 +1,92 @@
-# Remaining repair and review plan
+# Remaining repairs, reviews and skipped work
 
-Reconciled on 2026-09-08 through product commit `1aad457`. Start here, then read [progress.json](progress.json) for the next action. All original F01–F23 groups remain there. Detailed completed work now lives in [step evidence](evidence/step-reviews.json).
+Refreshed 2026-09-08 at `0e45382`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
 
-## Current position
+## Current numbers
 
-| Historical task population | Verified | Partial | Not yet reviewed | Total |
+| Population | Verified | Partial | Pending review | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Tasks with merged PR evidence | 36 | 21 | 206 | 263 |
-| Other historical completion claims | 3 | 0 | 56 | 59 |
+| Other historical claims | 3 | 0 | 56 | 59 |
 | Combined | 39 | 21 | 262 | 322 |
 
-These are task-acceptance counts, not percentages of implementation effort. A01 cleanup and A02 evidence reconciliation are complete. R01 is in progress; eight later steps remain. The recent session revocation, refresh-reuse alert, atomic step-up, public-auth CSRF, localized support navigation and confirmed contact repairs have focused passing evidence. Auth rate-limit task `02-auth-users-admin.md#T-02.04.01` is now verified locally. Do not rebuild those repairs. CRM verification and account-security tasks 02-auth-users-admin.md#T-05.02.03 and T-05.02.04 are now verified locally; their notices, permission races and confirmation fixes have passing evidence.
+There are **283 unresolved task reviews**, including the 21 partial reviews. This does not mean 283 unbuilt tasks. The records do not support a reliable percentage of implementation effort remaining.
 
-The saved inventory contains 301 merged PRs and was checked against GitHub on September 8. This refresh uses that inventory; it makes no new remote request. There are 58 historical skips within the 322 claims, with 3 verified and 55 awaiting review. Separately, 737 earlier queue gaps and 296 later tasks have no recorded completion. Those 1,033 gaps are not automatically missing implementations or additions to this repair scope.
+The saved inventory contains **301 merged PRs**, last recorded as checked against GitHub on September 8. A new query during this refresh failed because `gh` is unavailable; no newer inventory is claimed. The **58 historical skips** overlap the task population: 3 verified and 55 pending review. Another **1,033 queue gaps** are separate historical backlog evidence: 737 earlier gaps and 296 later tasks. None is automatically a missing implementation.
 
-## Confirmed remaining local work
+## Resume the interrupted item
 
-| Step / group | Remaining requirement | Completion evidence |
+1. Review the existing uncommitted change in `apps/api/src/crm/verification-case-http.integration.test.ts`. Four new cases cover approval and actual before/after audit for `last_name`, `national_id`, `legal_name` and `national_identifier`. Its saved Vitest report shows **18 passed**. The original process exit is not recoverable in this refresh. Source and log hashes are in progress.json.
+2. Finish correction reviewer queue/detail checks for keyboard use, Persian/English and light/dark themes. Creation, confirmation, permission separation and field-specific links already have passing evidence; reuse it.
+3. Close `02-auth-users-admin.md#T-05.02.05` only after its remaining criteria pass. T-03.03.03 defines exactly five protected fields. Other legal/representative fields belong to the direct-edit review.
+4. Continue legal nonidentity editing under T-05.02.02, archive acceptance under T-05.02.06 and remaining CRM profile/list review.
+
+No application implementation changed during this audit refresh. The pre-existing test change remains uncommitted.
+
+## Ordered work
+
+Each row is a phase. Select one exact requirement or reproduced defect inside it, implement it, review its diff and focused checks, then record evidence before proceeding.
+
+| Order | Step / original groups | Remaining work and exit evidence |
 | --- | --- | --- |
-| R01 / F03 | Session list lacks required approximate location. Trace all rotation, revocation and sensitive-action callers before closing the four partial session tasks. | Exact current requirements, required caller matrix, meaningful HTTP/browser checks and privacy-safe location behavior. |
-| R01 / F05 | Intake and escalation runbook is implemented; lost-contact recovery still needs owner-defined approvers/evidence policy and a reviewed credential-change method. Unsupported24-hour promise was removed. | Runbook grounded in supported staff actions, evidence/audit requirements and an exercised recovery or explicit escalation path. No invented provider or credential bypass. |
-| R01 / F15 | General staff address editing and correction target/acknowledgement checks are implemented. Field-specific correction entry is implemented. Correction-only UI access is repaired. The five protected fields match T-03.03.03; remaining correction work is approval-field and reviewer-page acceptance. Legal nonidentity editing and archive acceptance remain incomplete. Full profile view still needs remaining page acceptance. Authorized legal-document viewing is implemented and checked. Required URL, lifecycle/registration/representative details, localized field/location names, mobile action wrapping, record tabs, keyboard navigation and password date are implemented and checked. | Complete partial tasks 02-auth-users-admin.md#T-05.02.01 and T-05.02.02 with authorized data, localized controls and focused HTTP/browser checks. Action tasks T-05.02.03/T-05.02.04 are already verified. |
-| R02 / F09, F17 | Email and notification renderers do not consume active branding. | Versioned branding reaches the required rendered output; missing assets/configuration and localized behavior are exercised. |
-| R02 / F17 | `02-auth-users-admin.md#T-09.11.02` has document selection but lacks integrated new-document upload. | Authorized upload, validation, persisted KB association, failure/retry and localized controls. Chunking/embedding stays an explicit separate dependency. |
-| R02 / F17 | `02-auth-users-admin.md#T-09.11.04` lacks its actual-agent backend and test-chat panel. | Admin-authenticated chat reaches the selected agent with its required model/KB/policy configuration. A provider connection test does not satisfy this task. |
-| R03 / F19, F20 | Application-specific localized errors and downstream outbox/worker correlation remain incomplete or unreviewed. | Stable error codes, safe localized messages and preserved correlation through the actual required consumers. Unmatched-route disclosure is already repaired. |
-| R04 / F19 | Customer purchase routes remain lazy despite the eager-loading requirement. | Eager required purchase paths within unchanged complete-route budgets. Prior over-budget attempts were reverted; retain Vite SPA. |
-| R05 / F19 | API/web/worker/DB still use `skipLibCheck`; the last strict DB check recorded 146 dependency declaration errors. | Compatible dependency or narrowly reviewed declaration repair, strict consumer checks and frozen installation. No suppressions or weakened requirements. |
-| R06 / F19 | Three coverage groups failed at `9529872`. | Meaningful missing behavior checks and a fresh valid measurement at unchanged thresholds. API critical: 92.34% lines / 81.07% branches; web critical: 73.07% / 70.42%; web general: 66.38% / 62.02%. Required floors: 90/85 critical, 80/75 general. |
+| 1 | R01 / F03–F08, F12–F16, F23 | Complete the critical checklist below. Required callers and negative paths must pass canonical requirements; every confirmed defect needs a repair or explicit disposition. |
+| 2 | R02 / F09–F11, F17 | Active branding in email/notification rendering; integrated KB upload for `02-auth-users-admin.md#T-09.11.02`; actual-agent test-chat backend/panel for T-09.11.04; exact policy integration review. Finish provider/template/retry/inbox acceptance using existing evidence. Verify permissions, persisted results, failures/retries and fa/en. A provider connection test does not substitute for agent chat. |
+| 3 | R03 / F19, F20 | Application-specific localized errors, correlation through required outbox/worker consumers, remaining screen/shared-control accessibility, RTL, themes and failure states. Validate required behavior; scanner warnings become work only when they establish a relevant defect. |
+| 4 | R04 / F19 | Required eager customer purchase routes within unchanged complete-route budgets. Previous over-budget attempts were reverted. Production build, required loading and affected payload checks must pass. Retain Vite SPA. |
+| 5 | R05 / F19 | Strict dependency checks in API/web/worker/DB. Last strict DB run recorded 146 declaration errors, 144 Drizzle and 2 Vite. Verify compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation without broad suppressions or weaker requirements. |
+| 6 | V01 / F01, F02, F18, F21, F22 | Remaining task/PR dispositions, loop durability, migrations, production packaging and repeated-task comparisons. Include every domain not closed above. All 322 claims need evidence-backed dispositions; all PR deferrals need reconciliation. |
+| 7 | R06 / F19 | Close three recorded coverage gaps through meaningful missing-behavior tests. Preserve critical floors of 90% lines / 85% branches and general floors of 80% / 75%. |
+| 8 | V02 / affected groups | One final regression checkpoint: unit/integration, required production-browser profiles, coverage, types, lint/format, OpenAPI, clean/upgrade/repeat migrations, snapshots, route budgets, loop safety and affected production images. Save exact revisions and exits. |
+| 9 | B01 / F22 | Dependency-ordered handoff of only unmet skipped work, with exact identities, criteria and prerequisites. Preserve verified/incidental implementation. New feature builds follow repair closure. |
 
-This table identifies known unmet work. Remaining domain reviews may reproduce further defects within the original scope; record new noncritical improvements separately.
+A01 cleanup and A02 reconciliation are complete. R01 is active; eight later phases remain open. All 23 original groups remain in progress.json. Historical implementation labels do not certify whole-group acceptance.
 
-Confirmed support contacts are now installed: `info@barghsa.com`, office `021-26658042`, mobile `09002550292`. The owner confirmed these contacts. Unsupported24-hour response-time copy was removed in6640012.
+## R01 checklist
 
-## Execution order
+- Sessions/access: required approximate session location is missing. Complete rotation/revocation, trusted-device, CSRF alternatives and sensitive-action caller matrices. Review staff roles, activation, OTP/reset/contact changes, manual verification, profile selection, membership, ownership and address boundaries.
+- CRM: correction reviewer acceptance; direct editing of required legal nonidentity contacts, registration/representative fields and official/representative addresses; full profile/list requirements. Review archive writer lock ordering for invoice/contract/wallet paths, unpaid invoices, nonzero posted/reserved balances, canonical owner protection, confirmation checklist and retention. T-05.02.03/.04 are already verified locally.
+- Tickets/finance: customer/staff privacy, attachments, assignment and transitions; receipt thresholds/independent approval, callbacks/replays, invoice arithmetic/snapshots and ledger integrity. Preserve useful corrective PRs. Future refund, ordering and contract consumers remain separate where the original task requires them separately.
+- Recovery: confirmed contacts and intake/escalation runbook are implemented. Owner policy for lost-contact approvers/identity checks remains pending. A reviewed credential-change method and full case audit remain needed. Continue independent work while awaiting that answer.
 
-1. **R01 Critical acceptance.** Support recovery task `02-auth-users-admin.md#T-02.03.03` awaits owner policy. Continue required session/CSRF/step-up caller matrices and review staff roles/activation, OTP/contact changes, manual verification, profile/agent/ownership/address boundaries, CRM/tickets, receipts, callbacks, invoice arithmetic and ledger integrity. F03–F08, F12–F16, F23. Preserve unavailable automatic verification without a provider.
-2. **R02 Required administration consumers.** Complete branding, KB upload and actual-agent test chat. Review the policy integration against its exact task requirements. Reuse current provider/template authorization and acknowledgement evidence. F09–F11, F17.
-3. **R03 Errors and UI review.** Finish required localization/correlation and keyboard, focus, RTL, themes, loading/error and retry behavior. Review scanner findings against actual behavior; do not turn every warning into work. F19/F20.
-4. **R04 Purchase loading.** Solve the eager-route requirement within current budgets; keep the approved Vite SPA architecture. F19.
-5. **R05 Strict dependencies.** Resolve the recorded declaration failures, verify affected consumers and frozen installation. F19.
-6. **V01 Remaining task and PR dispositions.** Complete domain reviews not already covered above, including loop durability, migrations, production packaging and repeated-task provenance. Use the checklist below. F01/F02/F18/F21/F22. Every claim needs a truthful status and exact remaining criteria; external or future requirements need explicit dispositions.
-7. **R06 Coverage closure.** Measure after the preceding repairs. Add tests for untested required behavior, inspect failures, retain thresholds and classification. F19.
-8. **V02 Final regression.** One complete checkpoint for unit/integration tests, required production-browser profiles, coverage, types, lint/format, OpenAPI, clean/upgrade/repeat migrations, snapshot checks, route budgets, loop safety and affected production images. Record exact revisions and exits. Earlier full runs do not certify later source changes.
-9. **B01 Skipped-work handoff.** Turn reviewed historical skips into a dependency-ordered list of only unmet work. Reconcile incidental implementation in queue gaps before any later build. New skipped features follow current repair closure; this plan does not dispatch them.
+The last full checkpoint at `9529872` recorded API-critical coverage 92.34% lines / 81.07% branches, web-critical 73.07% / 70.42%, and web-general 66.38% / 62.02%. Later focused checks do not renew that measurement or image evidence. See [checkpoint](final-repair-checkpoint.json) and [later step reviews](evidence/step-reviews.json).
 
-## Remaining merged-PR review
+## Merged PR review
 
-[The full PR checklist](merged-pr-review.md) lists every merged PR, its qualified task mapping, current task acceptance, deferral count and all 23 repeated-task groups.
+[The full checklist](merged-pr-review.md) retains every PR and all **23 repeated-task groups**.
 
-- 260 PRs have mapped tasks with partial or pending acceptance.
-- 37 PRs map only to verified tasks. Reuse their task evidence; any separate deferral still needs reconciliation.
-- 4 PRs lack current task mappings: #47 for strict dependencies; #234, #235 and #242 for loop protocol.
-- 170 historical deferral statements across 101 PRs require comparison with later implementation.
+| Disposition | Count |
+| --- | ---: |
+| PRs with unresolved mapped tasks | 260 |
+| PRs mapping only to verified tasks | 37 |
+| PRs with no current task mapping | 4 |
+| Historical deferral statements | 170 across 101 PRs |
 
-Review the final implementation once per qualified task and associate every contributing PR. The remaining PR-backed task counts are infrastructure 50, auth/admin 89, core business 4, finance 52, notifications 29 and UI foundations 3, totaling 227. Also review 56 unresolved legacy claims. These figures overlap the partial/pending task counts above.
+Review current combined implementation once per qualified task and associate all contributing PRs. Verified mappings do not automatically resolve separate PR deferrals. The 227 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 89, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
-Repeated PRs alone do not justify deleting code. Preserve useful wallet/receipt follow-ups and test their combined behavior. Review PR #298's incidental overpayment-credit path before scheduling `04-invoices-wallet-contracts.md#T-04.3.01.06` as unbuilt. Preserve both obsolete task identities in the historical register instead of transferring their completion silently.
+Handle #47 in R05 and #234/#235/#242 in V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before calling that queue gap unbuilt. Repeated PRs alone do not justify code deletion. Preserve obsolete `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users-admin.md#T-05.06.01` as provenance outside the 322 current claims.
 
-## Historical skips and future build order
+Each deferral needs a disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. Checked PR-body boxes are historical author claims.
 
-[The complete skip list](current-skipped-tasks.md) retains all 58 qualified identities and their current dispositions. Three verified tasks must be preserved: timezone utilities, number/currency formatting and the localized DatePicker. The other 55 need source review before any build:
+## Skipped tasks
 
-| Review batch | Pending historical skips | Future ordering |
+[All 58 qualified keys and titles](current-skipped-tasks.md) remain available with [JSON dispositions](current-skipped-tasks.json). Preserve the three verified infrastructure tasks: timezone utilities T-06.02.03, number/currency formatting T-06.02.05 and DatePicker T-06.03.04.
+
+| Review / later build order | Pending skips | Range in `01-platform-infrastructure.md` |
 | --- | ---: | --- |
-| Shared libraries, locale and UI | 14 | Review foundations first; build only unmet controls/consumers. |
-| Development, configuration and documentation | 21 | Follow the shared/security foundations; connect actual required consumers. |
-| Deployment, operations and CI | 20 | Validate local gates first, then staging/production prerequisites and operator exercises. |
+| Shared libraries, locale and UI | 14 | T-06.* excluding the three verified tasks |
+| Development, configuration and documentation | 21 | T-07.* |
+| Deployment, operations and CI | 20 | T-05.* |
 
-This is a dependency review sequence, not a claim that every item lacks code. The separate [earlier queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) remain historical evidence, not a dispatch queue.
+These are review batches. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 283 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
 
-## Review rules and finish criteria
+## External prerequisites and decisions
 
-Keep scope fixed to original confirmed defects and exact claimed-task requirements. Implement one bounded item, review its diff, inspect completed check exits, then record the result before continuing. Keep a short next action in progress.json; store detailed evidence outside it. Use targeted checks, small output and existing valid evidence. Reopen checks only when relevant source, requirements or dependencies changed. Use lower effort for straightforward edits and higher effort for complex or critical review; avoid repeated full-history reads.
+Retain Vite SPA under ADR004. No identity provider exists; automatic verification stays unavailable and manual verification stays supported. Dependency license allowlist waived; coverage and route budgets unchanged. Confirmed contacts: `info@barghsa.com`, office `021-26658042`, mobile `09002550292`. Unsupported 24-hour response promise removed.
 
-All 322 claims must eventually have reviewed dispositions, all 23 groups must retain their remaining work or closure, and all confirmed local repairs must pass. Partial, blocked or deferred requirements must name exactly what remains; they are not acceptance passes. Finish with one regression checkpoint and a concise list of external prerequisites and skipped work.
+Real provider delivery, production sizing/TLS/DNS/proxies, monitoring/alerts, load, backups/restore, deployment and legacy credential/data/notification/receipt reconciliation need actual operational evidence. [Preflights](preflight/) are prerequisites, not proof of execution. Local implementation/commits are authorized; remote scheduler/state, PR #304, push, PR publication, merge and deployment remain outside current authority.
 
-External prerequisites include provider delivery, production topology/TLS/DNS, load/monitoring/alert delivery, backups/restore, and legacy credentials/data/receipt reconciliation. Operator SQL and runbooks are unexecuted prerequisites unless backed by an actual run record. No automatic identity provider exists. Remote loop recovery, PR #304, scheduler/state changes, push, merge and deployment remain outside current local authority.
+## Rules against repeated work
+
+Keep one active plan and compact progress record. After this full refresh, read only the selected task's requirements and relevant evidence. Freeze scope to original defects and exact claimed-task requirements; defer new noncritical improvements separately. Reuse evidence while relevant source, requirements and dependencies match. Keep tool output small; inspect saved log failures. Use focused checks per fix and broad checks at V02 unless a shared change warrants them sooner. Use lower effort for straightforward edits and higher effort for critical review.
+
+Finish means confirmed local repairs pass, all 322 historical claims have truthful dispositions, every original group retains closure or exact remaining requirements, and external prerequisites/skipped work have an explicit handoff. Partial, blocked and deferred criteria never count as acceptance passes.
