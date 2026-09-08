@@ -659,6 +659,48 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-profile-permission-format-final.log",
+      "path": "audit/evidence/r01/barghsa-crm-profile-permission-format-final.log.gz",
+      "sha256": "014d773a99ee1baac2428998e036ae93bcaf0d85e3f281277348dee82ca7e670",
+      "encoding": "gzip",
+      "stored_sha256": "ddf469c9f867ea5f824df9d95e1960ebe6baca9348a817c53f2a0907b38e2437"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-profile-permission-format.log",
+      "path": "audit/evidence/r01/barghsa-crm-profile-permission-format.log.gz",
+      "sha256": "833961673486f2b229b6122976e667557dc7cfb9966b1b2f80733c18d8efc0ba",
+      "encoding": "gzip",
+      "stored_sha256": "c192307a67ecef89580ba5c773e744524635e52c2523bc33bb7193ea25aa2187"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-profile-permission-green.log",
+      "path": "audit/evidence/r01/barghsa-crm-profile-permission-green.log.gz",
+      "sha256": "66eb70fff8772237e934009cf3d0b91302546eb0589c4858aa8257327474b0b1",
+      "encoding": "gzip",
+      "stored_sha256": "1a42d93569f5dc1f61bedee846a5fe68b758da082ba404d03c43c9e3403cc94d"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-profile-permission-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-profile-permission-red.log",
+      "path": "audit/evidence/r01/barghsa-crm-profile-permission-red.log.gz",
+      "sha256": "235e6c5e6bc7590d23bd1ff99ff3489a32c1ed95ba568abadfba5da548409387",
+      "encoding": "gzip",
+      "stored_sha256": "9b6cc5ca3d8dbe18fbb32091107ab2d1646d5c0dfb2739c44b8d9d827a37e361"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-profile-permission-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
     }
   ]
 }

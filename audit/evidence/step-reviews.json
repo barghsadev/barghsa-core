@@ -264,6 +264,42 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "Continue session caller/current-permission review for remaining mutations. No full CRM/session group closure or global regression/coverage claim."
+    },
+    {
+      "id": "R01-crm-profile-permission",
+      "date": "2026-09-08",
+      "source_revision": "05300800be029c391ee223bee3ac37f386711803",
+      "summary": "Rechecked current permissions inside profile edit/verification/archive and correction creation/review transactions after profile locks.",
+      "review": "Five real HTTP races reproduced200/201 after actor permission loss. Final cases reject the actions and retain profile/case state and audit history. Profile-before-case ordering is preserved. Updated the direct verification fixture to supply an authorized actor.",
+      "checks": [
+        "156 CRM tests in11 files pass",
+        "API typecheck and focused ESLint pass after test setup completed",
+        "Formatting and diff review pass"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "c70bae68f6808056f6cd6ad2c17ee104a654e6e9a732cf41e5f029c48db87bd0"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "f4fe957ce07755074c811f70ab4cab044b47e393505d8bdd4b8a67bc898724b1"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "d92fd9506b904abd017210e81b219ba57e08132055c7fe23e4e8057b998c5ed0"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "26dbddddc66008b79228df48ccea46c5db479daa10d9b7b75282b419e3072c98"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "2ac5e9b74e0c04c0cb32eed234967715114bf188f45741f6bce106dd79135400"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Finish CRM task acceptance. T-05.02.04 still requires user notices for forced password change/session expiry; verification UI review remains."
     }
   ]
 }
