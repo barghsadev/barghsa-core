@@ -3480,7 +3480,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
+      "reviewed_sha": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 185,
       "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
@@ -3492,7 +3492,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "193ac82b444e60c982a2e2d64e4355789e2a6bb9338e101e84409412f489cde1"
+          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
@@ -3544,7 +3544,7 @@
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "f727cbc4dbd3ecf887544b4c3ba14c05305162e475a7a6a0816ab0985d77f2fa"
+          "sha256": "b3c45d8c48d19ba44c95aebdfcdd1dc3e1313e3ef0080dbe40efde01a7cc98c4"
         }
       ],
       "checks": [
@@ -3654,19 +3654,20 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
-        "previous_reviewed_sha": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
-        "review": "Reviewed atomic trust-grant audit and late OTP expiry checks. The 93 distinct focused API/unit cases pass across recorded invocations; unrelated auth methods and frontend sources are unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-otp-trust-atomic",
+        "source_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+        "previous_reviewed_sha": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
+        "review": "Reviewed the forced-change method/form and localized strength-meter name. Other auth methods, shared-field rendering and existing dictionary entries are unchanged. Focused API/browser, types, i18n and budget checks pass; prior unrelated evidence is reused.",
+        "record": "audit/evidence/step-reviews.json#R01-forced-password-change",
         "paths": [
-          "apps/api/src/auth/auth.service.ts"
+          "apps/api/src/auth/auth.service.ts",
+          "packages/i18n/src/auth.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.03.03",
       "status": "partial",
-      "reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+      "reviewed_sha": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 175,
       "requirement": "**T-02.03.03 — Account recovery support path**\n\n- Description: On forgot-password page, include \"Having trouble? Contact support\" link for users who no longer control their registered email/phone. Support recovery requires identity verification, full audit history.\n- Technical notes: Link opens ticket creation or directs to support contact. Support path documented in runbook. Staff have verified identity procedure.\n- UI/UX: Styled as secondary link below the form.\n- Dependencies: T-02.03.01\n- Complexity: S",
@@ -3682,7 +3683,7 @@
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "f727cbc4dbd3ecf887544b4c3ba14c05305162e475a7a6a0816ab0985d77f2fa"
+          "sha256": "b3c45d8c48d19ba44c95aebdfcdd1dc3e1313e3ef0080dbe40efde01a7cc98c4"
         },
         {
           "path": "apps/web/e2e/auth-rate-limit.spec.ts",
@@ -3750,12 +3751,12 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
-        "previous_reviewed_sha": "66400126602cf78938a133b2a528f8410ee15fa9",
-        "review": "Authentication, OTP, resend and forced-password-change request/acknowledgement logic is unchanged. Existing 32 production-browser recovery cases pass. The shared layout changes only text colors; no API, permission, dependency, migration or requirements change. Login request payloads and error/rate-limit handlers remain unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-login-ui",
+        "source_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+        "previous_reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+        "review": "Reviewed the forced-change method/form and localized strength-meter name. Other auth methods, shared-field rendering and existing dictionary entries are unchanged. Focused API/browser, types, i18n and budget checks pass; prior unrelated evidence is reused.",
+        "record": "audit/evidence/step-reviews.json#R01-forced-password-change",
         "paths": [
-          "apps/web/src/components/AuthLayout.tsx"
+          "packages/i18n/src/auth.ts"
         ]
       }
     },
@@ -4633,7 +4634,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+      "reviewed_sha": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 91,
       "requirement": "**T-02.01.01 — Login page UI**\n\n- Description: `/login` page with same auth layout. Username field (same unified email/mobile as register), password field with visibility toggle. \"Forgot password?\" link, \"Don't have an account? Register\" link.\n- Technical notes: Shared auth layout component. Username normalization same as register (E.164 formatting). `autocomplete=\"username\"` and `autocomplete=\"current-password\"`.\n- UI/UX: Same two-column layout. Loading spinner on submit. Error states: \"Invalid username or password\" (generic, doesn't reveal which).\n- Dependencies: T-01.01.01\n- Complexity: S",
@@ -4641,7 +4642,7 @@
       "source_evidence": [
         {
           "path": "apps/web/src/routes/login.tsx",
-          "sha256": "e8d924df792921baa59203b3791e2f10547398f15a156c7748d996cc21c46497"
+          "sha256": "905df9e2ed52400e41be0e5cf2e13b86f3e5aa898f9adcb9ab7040ec94777779"
         },
         {
           "path": "apps/web/src/routes/register/index.tsx",
@@ -4653,7 +4654,7 @@
         },
         {
           "path": "apps/web/src/components/PasswordField.tsx",
-          "sha256": "9c52f98a406b0d66fd09416c38474c3ff71d433bfc90dae6fbe138f604a47af7"
+          "sha256": "08099d90db7f5e61142947ba8c1059aea10bd3ed66391cd7f3b1bb352ca2972d"
         },
         {
           "path": "apps/web/e2e/login-ui.spec.ts",
@@ -4661,11 +4662,11 @@
         },
         {
           "path": "apps/web/e2e/login-recovery.spec.ts",
-          "sha256": "707fc71492eba3d6f51e2b06f52dd569011671419f626e03ed25d5ee44f3e1e2"
+          "sha256": "19e77c360d57c6ffa9bd5ffbed662de13d93e3bd04dbcc46485abd0896fcf19d"
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "f727cbc4dbd3ecf887544b4c3ba14c05305162e475a7a6a0816ab0985d77f2fa"
+          "sha256": "b3c45d8c48d19ba44c95aebdfcdd1dc3e1313e3ef0080dbe40efde01a7cc98c4"
         }
       ],
       "checks": [
@@ -4690,20 +4691,22 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
-        "previous_reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
-        "review": "Reviewed the two login-success destinations and new dashboard alias. Existing form behavior and other routes are unchanged; 36 focused production-browser cases pass.",
-        "record": "audit/evidence/step-reviews.json#R01-login-destination",
+        "source_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+        "previous_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+        "review": "Reviewed the forced-change method/form and localized strength-meter name. Other auth methods, shared-field rendering and existing dictionary entries are unchanged. Focused API/browser, types, i18n and budget checks pass; prior unrelated evidence is reused.",
+        "record": "audit/evidence/step-reviews.json#R01-forced-password-change",
         "paths": [
           "apps/web/src/routes/login.tsx",
-          "apps/web/e2e/login-recovery.spec.ts"
+          "apps/web/src/components/PasswordField.tsx",
+          "apps/web/e2e/login-recovery.spec.ts",
+          "packages/i18n/src/auth.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
+      "reviewed_sha": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 99,
       "requirement": "**T-02.01.02 — Login authentication flow**\n\n- Description: POST `/api/auth/login` with `{ username, password, deviceInfo }`. Server validates credentials using Argon2id. On success: server checks if OTP enforcement is needed (new device, suspicious IP, risk score). If OTP not needed → set session, redirect to `/app`. If OTP needed → return `{ requiresOtp: true, challengeId }`, show OTP UI.\n- Technical notes: Password hashing with Argon2id (mem=37MiB, t=3, p=1 or benchmarked equivalent). Progressive delay after 5 failed attempts per account-and-IP in 15 min. Broad IP/device limits detect password spraying. No permanent lockout. Device trust: store device fingerprint (user agent, public IP hint, etc.) on successful login from trusted device. Trust is revocable, time-limited (default 30 days), and visible in device management.\n- UI/UX: If OTP required, transition to OTP input inline (same page, no redirect). \"Trust this device\" checkbox shown on OTP step.\n- Dependencies: T-01.01.02, T-01.01.03\n- Complexity: L",
@@ -4711,7 +4714,7 @@
       "source_evidence": [
         {
           "path": "apps/web/e2e/login-recovery.spec.ts",
-          "sha256": "707fc71492eba3d6f51e2b06f52dd569011671419f626e03ed25d5ee44f3e1e2"
+          "sha256": "19e77c360d57c6ffa9bd5ffbed662de13d93e3bd04dbcc46485abd0896fcf19d"
         },
         {
           "path": "apps/web/src/routeTree.gen.ts",
@@ -4723,7 +4726,7 @@
         },
         {
           "path": "apps/web/src/routes/login.tsx",
-          "sha256": "e8d924df792921baa59203b3791e2f10547398f15a156c7748d996cc21c46497"
+          "sha256": "905df9e2ed52400e41be0e5cf2e13b86f3e5aa898f9adcb9ab7040ec94777779"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -4731,7 +4734,7 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "193ac82b444e60c982a2e2d64e4355789e2a6bb9338e101e84409412f489cde1"
+          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
         },
         {
           "path": "apps/api/src/auth/dto/login.dto.ts",
@@ -4797,20 +4800,21 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
-        "previous_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
-        "review": "Reviewed atomic trust-grant audit and late OTP expiry checks. The 93 distinct focused API/unit cases pass across recorded invocations; unrelated auth methods and frontend sources are unchanged.",
-        "record": "audit/evidence/step-reviews.json#R01-otp-trust-atomic",
+        "source_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+        "previous_reviewed_sha": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
+        "review": "Reviewed the forced-change method/form and localized strength-meter name. Other auth methods, shared-field rendering and existing dictionary entries are unchanged. Focused API/browser, types, i18n and budget checks pass; prior unrelated evidence is reused.",
+        "record": "audit/evidence/step-reviews.json#R01-forced-password-change",
         "paths": [
-          "apps/api/src/auth/auth.service.ts",
-          "apps/api/src/auth/delivery-http.integration.test.ts"
+          "apps/web/e2e/login-recovery.spec.ts",
+          "apps/web/src/routes/login.tsx",
+          "apps/api/src/auth/auth.service.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.01.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
+      "reviewed_sha": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 107,
       "requirement": "**T-02.01.03 — Login OTP verification**\n\n- Description: Same OTP input pattern as registration. POST `/api/auth/login/verify` with `{ challengeId, otp, trustDevice }`. On success: set session, optionally mark device as trusted. On failure: increment attempts, invalidate challenge after 5 failed attempts.\n- Technical notes: Same OTP rate limits as registration. Device trust stored with expiry. Customer MFA is risk-based (triggered on new/suspicious device). Staff/admin MFA is mandatory on every new device. Sensitive actions later require step-up auth.\n- UI/UX: OTP input with resend. \"Trust this device\" checkbox visible.\n- Dependencies: T-02.01.02, T-01.02.02\n- Complexity: M",
@@ -4818,7 +4822,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "193ac82b444e60c982a2e2d64e4355789e2a6bb9338e101e84409412f489cde1"
+          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
         },
         {
           "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -4858,11 +4862,11 @@
         },
         {
           "path": "apps/web/src/routes/login.tsx",
-          "sha256": "e8d924df792921baa59203b3791e2f10547398f15a156c7748d996cc21c46497"
+          "sha256": "905df9e2ed52400e41be0e5cf2e13b86f3e5aa898f9adcb9ab7040ec94777779"
         },
         {
           "path": "apps/web/e2e/login-recovery.spec.ts",
-          "sha256": "707fc71492eba3d6f51e2b06f52dd569011671419f626e03ed25d5ee44f3e1e2"
+          "sha256": "19e77c360d57c6ffa9bd5ffbed662de13d93e3bd04dbcc46485abd0896fcf19d"
         }
       ],
       "checks": [
@@ -4882,6 +4886,104 @@
       ],
       "merged_prs": [
         87
+      ],
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "source_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+        "previous_reviewed_sha": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
+        "review": "Reviewed the forced-change method/form and localized strength-meter name. Other auth methods, shared-field rendering and existing dictionary entries are unchanged. Focused API/browser, types, i18n and budget checks pass; prior unrelated evidence is reused.",
+        "record": "audit/evidence/step-reviews.json#R01-forced-password-change",
+        "paths": [
+          "apps/api/src/auth/auth.service.ts",
+          "apps/web/src/routes/login.tsx",
+          "apps/web/e2e/login-recovery.spec.ts"
+        ]
+      }
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 115,
+      "requirement": "**T-02.01.04 — Password change enforcement on login**\n\n- Description: If server flags user as `mustChangePassword`, after credential verification but before setting session, redirect to password change form. User cannot proceed to `/app` without changing password. After successful change, display login page again.\n- Technical notes: Flag `mustChangePasswordAtNextLogin` on user record. Staff or system sets this flag. Password history (last N passwords, default 5) prevents reuse. New password must satisfy same strength policy. Session is NOT established until password is changed.\n- UI/UX: Inline form within auth layout. \"Your password must be changed before continuing\" explanation. Success message: \"Password changed. Please log in.\" Redirect to login page. API: `/api/auth/force-change-password` with old password verification (already verified in login step, just need new password).\n- Dependencies: T-02.01.02\n- Complexity: M",
+      "requirement_sha256": "6ef8325162e467ce71ebba1f30b1fd414dd2d706a3cdb0b6efdab510d3bfe4e0",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
+        },
+        {
+          "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+          "sha256": "5db9000511dc2a91dbc3c5edd4c518dcd1646e3b532471b91eed8c31db30b4d8"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "19e77c360d57c6ffa9bd5ffbed662de13d93e3bd04dbcc46485abd0896fcf19d"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "08099d90db7f5e61142947ba8c1059aea10bd3ed66391cd7f3b1bb352ca2972d"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "905df9e2ed52400e41be0e5cf2e13b86f3e5aa898f9adcb9ab7040ec94777779"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "b3c45d8c48d19ba44c95aebdfcdd1dc3e1313e3ef0080dbe40efde01a7cc98c4"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        },
+        {
+          "path": "apps/api/src/auth/dto/force-change-password.dto.ts",
+          "sha256": "2410b69271330cc9572ff7ce5d75cd6b56c2e3b8425ddcb74080a872968e37ad"
+        },
+        {
+          "path": "apps/api/src/auth/dto/register.dto.ts",
+          "sha256": "241afe476300ea3ad1dc7a88526fd5118d23215a4167577b001a02c3348f5ed9"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "ff5008f407d6d1303b3b670348544dfc2c984c23cfb38c7d93c4dacd8c862601"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "d0dcb189d7bf03c1fec16081ca2189bfdb368cf16c4dc97f0dc186b4f8f9ec83"
+        },
+        {
+          "path": "packages/db/drizzle/production/0088_staff_activation_delivery.sql",
+          "sha256": "5f10b88715c5bd338a76843c5e5f4cf4020e410eda34df385cd7a96583e2cb6c"
+        },
+        {
+          "path": "packages/shared/src/password-hash.ts",
+          "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+        }
+      ],
+      "checks": [
+        "Compared T-02.01.04 with login token issuance, forced-change transaction, registration/forced-change strength schemas, staff/CRM flag writers and the inline form. Correct credentials issue a five-minute token without a new session. Issuing another token replaces the previous one. CRM forcePasswordChange sets the flag and revokes sessions/refresh credentials in its audited transaction; existing reviewed CRM/cap evidence is reused for this unchanged caller.",
+        "The forced-change handler now rejects disabled accounts, missing/invalid/expired token deadlines and cleared flags under the account lock. A final database wall-clock check after password/history/session/refresh/audit writes also rolls back expiry during later waits. PostgreSQL account/session lock tests confirm credentials and all recorded state remain unchanged on failure.",
+        "Password history verification no longer catches an invalid encoded hash as a non-match. Verifier errors abort the transaction. The current password and the latest five previous hashes by descending version are checked; successful change records the previous hash at the next version. Tests cover current, newest and oldest retained entries, acceptance of an older excluded entry, preserved version history and malformed-history rejection.",
+        "Success inserts one password_changed audit event with forced_change reason, actor, correlation and IP, without password, encoded hash or authorization token. The event commits with the password/history update and session/refresh revocation. Injected audit failure rolls back all changes; concurrent retry has one success and one invalid-token response, with one audit. Old OTP authorization is rejected by the existing authentication-version trigger after the change. No new session or session cookie is issued.",
+        "The form now validates the API minimum length/classes and 128-character limit directly; its visual score is not treated as policy admission. Pending submissions disable the form and back action. Failed requests preserve input; successful acknowledgement or returning to login clears password/token state. Existing localized explanation, new-password autocomplete, matching confirmation and log-in-again success message are exercised.",
+        "The shared PasswordField strength meter lacked an accessible name. It now has a Persian/English name and localized value text. An initial contrast report measured the submit button during its disabled-to-enabled transition. Waiting for that actual CSS animation to finish produces passing settled-state contrast; no button color or scanner threshold was changed. Scope is the forced-change form, with earlier unchanged AuthLayout evidence reused.",
+        "30/30 API cases pass across the new 15-case forced-password HTTP suite and 15 existing session HTTP cases. Tests use the compiled app and PostgreSQL. Coverage includes weak/oversized input, invalid authorization, history limits, rollback, replay, expiry waits, old-session/refresh invalidation and stale OTP rejection.",
+        "12 distinct production-browser cases pass across focused runs on desktop Chromium and mobile Chrome. Initial run passed four existing acknowledgement/retry cases; eight new form cases failed on the unnamed meter and transitional contrast. After the accessibility fix and animation-aware assertion, those eight pass in fa/en and light/dark. New cases cover all five invalid-password classes, confirmation mismatch, pending controls, failed-request input, accessible form and return to login. No whole-application accessibility or new global checkpoint is claimed.",
+        "API/web typechecks, focused ESLint, final formatting, 50 i18n tests, i18n build, production web build, all 41 unchanged route budgets and git diff checks pass. Initial and final served-index/manifest hashes bind the browser builds; preview stopped after completion. No API typecheck overlapped fixture builds.",
+        "No dependency version, schema, API shape or cookie policy changed. Earlier migration, OpenAPI and unrelated login/OTP evidence is reused. Failed browser logs are retained; no failures remain in this step."
+      ],
+      "limitations": [
+        "Local application acceptance uses the implemented five-entry previous-password window. Existing malformed credential/history records require authorized remediation; this step does not rewrite production data.",
+        "Full session rotation/reuse, remaining privileged callers, operational deployment and broader final browser coverage retain their separate requirements."
+      ],
+      "merged_prs": [
+        88
       ],
       "historically_skipped": false
     }
@@ -4994,7 +5096,6 @@
     "02-auth-users-admin.md#T-01.02.01",
     "02-auth-users-admin.md#T-01.02.02",
     "02-auth-users-admin.md#T-01.02.03",
-    "02-auth-users-admin.md#T-02.01.04",
     "02-auth-users-admin.md#T-02.03.01",
     "02-auth-users-admin.md#T-02.03.02",
     "02-auth-users-admin.md#T-03.01.01",

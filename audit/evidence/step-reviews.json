@@ -2454,6 +2454,110 @@
         "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
         "audit/evidence/r01/barghsa-otp-trust-atomic-verification.log.gz"
       ]
+    },
+    {
+      "id": "R01-forced-password-change",
+      "date": "2026-09-08",
+      "source_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+      "summary": "Verify T-02.01.04 after repairing forced-change expiry, history verification, atomic audit and the accessible form.",
+      "review": [
+        "Compared T-02.01.04 with login token issuance, forced-change transaction, registration/forced-change strength schemas, staff/CRM flag writers and the inline form. Correct credentials issue a five-minute token without a new session. Issuing another token replaces the previous one. CRM forcePasswordChange sets the flag and revokes sessions/refresh credentials in its audited transaction; existing reviewed CRM/cap evidence is reused for this unchanged caller.",
+        "The forced-change handler now rejects disabled accounts, missing/invalid/expired token deadlines and cleared flags under the account lock. A final database wall-clock check after password/history/session/refresh/audit writes also rolls back expiry during later waits. PostgreSQL account/session lock tests confirm credentials and all recorded state remain unchanged on failure.",
+        "Password history verification no longer catches an invalid encoded hash as a non-match. Verifier errors abort the transaction. The current password and the latest five previous hashes by descending version are checked; successful change records the previous hash at the next version. Tests cover current, newest and oldest retained entries, acceptance of an older excluded entry, preserved version history and malformed-history rejection.",
+        "Success inserts one password_changed audit event with forced_change reason, actor, correlation and IP, without password, encoded hash or authorization token. The event commits with the password/history update and session/refresh revocation. Injected audit failure rolls back all changes; concurrent retry has one success and one invalid-token response, with one audit. Old OTP authorization is rejected by the existing authentication-version trigger after the change. No new session or session cookie is issued.",
+        "The form now validates the API minimum length/classes and 128-character limit directly; its visual score is not treated as policy admission. Pending submissions disable the form and back action. Failed requests preserve input; successful acknowledgement or returning to login clears password/token state. Existing localized explanation, new-password autocomplete, matching confirmation and log-in-again success message are exercised.",
+        "The shared PasswordField strength meter lacked an accessible name. It now has a Persian/English name and localized value text. An initial contrast report measured the submit button during its disabled-to-enabled transition. Waiting for that actual CSS animation to finish produces passing settled-state contrast; no button color or scanner threshold was changed. Scope is the forced-change form, with earlier unchanged AuthLayout evidence reused."
+      ],
+      "checks": [
+        "30/30 API cases pass across the new 15-case forced-password HTTP suite and 15 existing session HTTP cases. Tests use the compiled app and PostgreSQL. Coverage includes weak/oversized input, invalid authorization, history limits, rollback, replay, expiry waits, old-session/refresh invalidation and stale OTP rejection.",
+        "12 distinct production-browser cases pass across focused runs on desktop Chromium and mobile Chrome. Initial run passed four existing acknowledgement/retry cases; eight new form cases failed on the unnamed meter and transitional contrast. After the accessibility fix and animation-aware assertion, those eight pass in fa/en and light/dark. New cases cover all five invalid-password classes, confirmation mismatch, pending controls, failed-request input, accessible form and return to login. No whole-application accessibility or new global checkpoint is claimed.",
+        "API/web typechecks, focused ESLint, final formatting, 50 i18n tests, i18n build, production web build, all 41 unchanged route budgets and git diff checks pass. Initial and final served-index/manifest hashes bind the browser builds; preview stopped after completion. No API typecheck overlapped fixture builds.",
+        "No dependency version, schema, API shape or cookie policy changed. Earlier migration, OpenAPI and unrelated login/OTP evidence is reused. Failed browser logs are retained; no failures remain in this step."
+      ],
+      "remaining": [
+        "Next review 02-auth-users-admin.md#T-02.02.01 session creation/cookies: required rotation triggers, refresh reuse response and alerts, absolute/idle deadlines and centralized cookie policy. Reuse existing source-bound session tests and CRM/role caller evidence before adding checks.",
+        "Subsequent session-revocation, CSRF alternatives, step-up caller and approximate-location requirements remain in R01. Lost-contact policy question remains pending. Production delivery/deployment remain external."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "075ac4dfe435cef23a5235b478f549c9b36ab52b5adc93e130d2d7d2163cd07a"
+        },
+        {
+          "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+          "sha256": "5db9000511dc2a91dbc3c5edd4c518dcd1646e3b532471b91eed8c31db30b4d8"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "19e77c360d57c6ffa9bd5ffbed662de13d93e3bd04dbcc46485abd0896fcf19d"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "08099d90db7f5e61142947ba8c1059aea10bd3ed66391cd7f3b1bb352ca2972d"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "905df9e2ed52400e41be0e5cf2e13b86f3e5aa898f9adcb9ab7040ec94777779"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "b3c45d8c48d19ba44c95aebdfcdd1dc3e1313e3ef0080dbe40efde01a7cc98c4"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        },
+        {
+          "path": "apps/api/src/auth/dto/force-change-password.dto.ts",
+          "sha256": "2410b69271330cc9572ff7ce5d75cd6b56c2e3b8425ddcb74080a872968e37ad"
+        },
+        {
+          "path": "apps/api/src/auth/dto/register.dto.ts",
+          "sha256": "241afe476300ea3ad1dc7a88526fd5118d23215a4167577b001a02c3348f5ed9"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "ff5008f407d6d1303b3b670348544dfc2c984c23cfb38c7d93c4dacd8c862601"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "d0dcb189d7bf03c1fec16081ca2189bfdb368cf16c4dc97f0dc186b4f8f9ec83"
+        },
+        {
+          "path": "packages/db/drizzle/production/0088_staff_activation_delivery.sql",
+          "sha256": "5f10b88715c5bd338a76843c5e5f4cf4020e410eda34df385cd7a96583e2cb6c"
+        },
+        {
+          "path": "packages/shared/src/password-hash.ts",
+          "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-force-password-a11y-format.log.gz",
+        "audit/evidence/r01/barghsa-force-password-api-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-force-password-api.log.gz",
+        "audit/evidence/r01/barghsa-force-password-browser-final.log.gz",
+        "audit/evidence/r01/barghsa-force-password-browser.log.gz",
+        "audit/evidence/r01/barghsa-force-password-budgets-final.log.gz",
+        "audit/evidence/r01/barghsa-force-password-budgets.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+        "audit/evidence/r01/barghsa-force-password-i18n-tests.log.gz",
+        "audit/evidence/r01/barghsa-force-password-preview-binding-final.log.gz",
+        "audit/evidence/r01/barghsa-force-password-preview-binding.log.gz",
+        "audit/evidence/r01/barghsa-login-destination-preview.log.gz",
+        "audit/evidence/r01/barghsa-force-password-web-build-final.log.gz",
+        "audit/evidence/r01/barghsa-force-password-web-build.log.gz",
+        "audit/evidence/r01/barghsa-force-password-web-format.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ]
     }
   ]
 }
