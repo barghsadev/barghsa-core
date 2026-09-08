@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 const user = {
@@ -45,7 +46,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
       locale === 'fa' ? 'کاربران مدیریت مشتریان' : 'CRM users'
     );
-    await expect(page.getByRole('heading', { name: user.username })).toBeVisible();
+    await expect(page.getByRole('rowheader', { name: user.username })).toBeVisible();
     expect(requests.at(-1)!.searchParams.get('verification')).toBe('PENDING');
     await page
       .getByRole('button', { name: locale === 'fa' ? 'پروفایل‌ها: 1' : 'Profiles: ۱' })
@@ -66,7 +67,7 @@ for (const locale of ['en', 'fa'])
     ).toBeVisible();
     expect(requests.at(-1)!.searchParams.get('cursor')).toBe('page-two');
     await page.locator('#crm-type').selectOption('LEGAL');
-    await expect(page.getByRole('heading', { name: user.username })).toBeVisible();
+    await expect(page.getByRole('rowheader', { name: user.username })).toBeVisible();
     expect(requests.at(-1)!.searchParams.has('cursor')).toBe(false);
     await page.locator('#crm-search').fill('Example');
     await expect.poll(() => requests.at(-1)!.searchParams.get('search')).toBe('Example');
@@ -216,3 +217,224 @@ test('CRM waits for account timezone, retries and displays registration in that 
   await expect(page.getByText('Account timezone: Asia/Tehran', { exact: true })).toBeVisible();
   await expect(page.getByText('21 Mar 2026', { exact: true })).toBeVisible();
 });
+
+for (const locale of ['fa', 'en'])
+  for (const darkMode of [false, true])
+    test(
+      'CRM table sorting, complete columns and failure recovery (' +
+        locale +
+        ', dark=' +
+        darkMode +
+        ')',
+      async ({ page }, testInfo) => {
+        await page.addInitScript((locale) => {
+          const apply = () => {
+            document.documentElement.lang = locale;
+            document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
+          };
+          if (document.documentElement) apply();
+          new MutationObserver(apply).observe(document, { childList: true });
+        }, locale);
+        await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+        await page.route('**/api/public/branding/config', (route) =>
+          route.fulfill({
+            json: {
+              appTitle: 'CRM review',
+              slogan: '',
+              primaryColor: '#2563eb',
+              secondaryColor: '#64748b',
+              accentColor: '#f59e0b',
+              logoUrl: null,
+              faviconUrl: null,
+              darkMode,
+            },
+          })
+        );
+        await page.route('**/api/user/settings/timezone', (route) =>
+          route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+        );
+        let customerProfileChecks = 0;
+        await page.route('**/api/profiles', (route) => {
+          customerProfileChecks++;
+          return route.fulfill({ json: [] });
+        });
+        const twoProfiles = {
+          ...user,
+          profileCount: 2,
+          profiles: [
+            ...user.profiles,
+            {
+              id: '22222222-2222-4222-8222-222222222222',
+              profileType: 'LEGAL',
+              status: 'ACTIVE',
+              title: 'Company profile',
+            },
+          ],
+        };
+        const withoutProfiles = {
+          ...user,
+          userId: 'no-profile-user',
+          username: 'new@example.test',
+          profileCount: 0,
+          profiles: [],
+        };
+        const requests: URL[] = [];
+        let override: unknown = undefined;
+        await page.route('**/api/crm/users?*', (route) => {
+          const url = new URL(route.request().url());
+          requests.push(url);
+          return route.fulfill({
+            json: override ?? {
+              users: url.searchParams.has('cursor')
+                ? [withoutProfiles]
+                : [twoProfiles, withoutProfiles],
+              hasMore: !url.searchParams.has('cursor'),
+              cursor: url.searchParams.has('cursor') ? null : 'page-two',
+            },
+          });
+        });
+        await page.goto('/app/crm?verification=PENDING');
+        await expect(page).toHaveURL(/\/admin\/crm\/?\?verification=PENDING$/);
+        const main = page.getByRole('main'),
+          table = main.getByRole('table');
+        await expect(table).toBeVisible();
+        expect(customerProfileChecks).toBe(0);
+        await expect(table.getByRole('columnheader')).toHaveCount(6);
+        await expect(
+          table.getByRole('rowheader', { name: user.username, exact: true })
+        ).toBeVisible();
+        const types = table
+          .getByRole('row')
+          .filter({ has: page.getByRole('rowheader', { name: user.username, exact: true }) });
+        await expect(types).toContainText(locale === 'fa' ? 'حقیقی' : 'Individual');
+        await expect(types).toContainText(locale === 'fa' ? 'حقوقی' : 'Legal');
+        await expect(types.locator('svg')).toHaveCount(2);
+        await expect(
+          table
+            .getByRole('row')
+            .filter({ has: page.getByRole('rowheader', { name: 'new@example.test' }) })
+            .getByRole('button')
+        ).toBeDisabled();
+        await main
+          .getByRole('button', { name: locale === 'fa' ? 'بعدی' : 'Next', exact: true })
+          .click();
+        await expect.poll(() => requests.at(-1)?.searchParams.get('cursor')).toBe('page-two');
+        for (const [sort, label] of [
+          ['username', locale === 'fa' ? 'نام کاربری' : 'Username'],
+          ['lastLogin', locale === 'fa' ? 'آخرین ورود' : 'Last login'],
+          ['profileCount', locale === 'fa' ? 'پروفایل‌ها' : 'Profiles'],
+          ['createdAt', locale === 'fa' ? 'ثبت‌نام' : 'Registered'],
+        ]) {
+          const header = table.getByRole('columnheader', { name: label!, exact: true });
+          const button = header.getByRole('button');
+          for (const order of ['asc', 'desc']) {
+            await button.focus();
+            await button.press('Enter');
+            await expect(header).toHaveAttribute(
+              'aria-sort',
+              order === 'asc' ? 'ascending' : 'descending'
+            );
+            await expect.poll(() => requests.at(-1)?.searchParams.get('sort')).toBe(sort);
+            await expect.poll(() => requests.at(-1)?.searchParams.get('order')).toBe(order);
+            expect(requests.at(-1)?.searchParams.has('cursor')).toBe(false);
+            await expect(button).toBeFocused();
+          }
+        }
+        const toggle = types.getByRole('button');
+        await toggle.click();
+        await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        await expect(table.getByRole('link', { name: /Company profile/ })).toBeVisible();
+        const scan = await new AxeBuilder({ page })
+          .include('#admin-content')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze();
+        expect(scan.violations).toEqual([]);
+        const region = table.locator('..');
+        const regionBounds = (await region.boundingBox())!;
+        const companyBounds = (await table
+          .getByRole('link', { name: /Company profile/ })
+          .boundingBox())!;
+        expect(companyBounds.x).toBeGreaterThanOrEqual(regionBounds.x);
+        expect(companyBounds.x + companyBounds.width).toBeLessThanOrEqual(
+          regionBounds.x + regionBounds.width
+        );
+        // A horizontal table can clip a text node at the viewport edge.
+        // Prove that clipping, reveal each affected node, and rescan it fully.
+        const clipped = await Promise.all(
+          scan.incomplete
+            .filter((item) => item.id === 'color-contrast')
+            .flatMap((item) => item.nodes)
+            .map(async (node) => {
+              expect(
+                node.any.some((check) => check.data?.messageKey === 'elmPartiallyObscured')
+              ).toBe(true);
+              expect(node.target).toHaveLength(1);
+              expect(typeof node.target[0]).toBe('string');
+              const selector = node.target[0] as string;
+              return { selector, bounds: (await page.locator(selector).boundingBox())! };
+            })
+        );
+        for (const { selector, bounds } of clipped) {
+          expect(
+            bounds.x < regionBounds.x ||
+              bounds.x + bounds.width > regionBounds.x + regionBounds.width
+          ).toBe(true);
+          const node = page.locator(selector);
+          await node.scrollIntoViewIfNeeded();
+          const visible = (await node.boundingBox())!;
+          expect(visible.x).toBeGreaterThanOrEqual(regionBounds.x);
+          expect(visible.x + visible.width).toBeLessThanOrEqual(
+            regionBounds.x + regionBounds.width
+          );
+          const revealed = await new AxeBuilder({ page })
+            .include(selector)
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze();
+          expect(revealed.violations).toEqual([]);
+          expect(revealed.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
+        }
+        await testInfo.attach('revealed-table-contrast', {
+          contentType: 'application/json',
+          body: JSON.stringify(clipped),
+        });
+
+        expect(
+          await main.evaluate((node) => node.scrollWidth - node.clientWidth)
+        ).toBeLessThanOrEqual(1);
+        await main.screenshot({
+          path:
+            '/tmp/barghsa-crm-list-' +
+            locale +
+            '-' +
+            darkMode +
+            '-' +
+            testInfo.project.name +
+            '.png',
+        });
+        await main
+          .getByRole('button', { name: locale === 'fa' ? 'بستن همه' : 'Collapse all', exact: true })
+          .click();
+        await expect(table.getByRole('link')).toHaveCount(0);
+        for (const bad of [
+          { users: 'bad', cursor: null, hasMore: false },
+          { users: [{ ...user, profiles: null }], cursor: null, hasMore: false },
+          { users: [{ ...user, registrationDate: 'bad' }], cursor: null, hasMore: false },
+          { users: [{ ...user, profileCount: 99 }], cursor: null, hasMore: false },
+          { users: [user], cursor: null, hasMore: true },
+        ]) {
+          override = bad;
+          await main
+            .getByRole('button', { name: locale === 'fa' ? 'تازه‌سازی' : 'Refresh', exact: true })
+            .click();
+          await expect(main.getByRole('alert')).toBeVisible();
+          await expect(table).toHaveCount(0);
+        }
+        override = { users: [], cursor: null, hasMore: false };
+        await main
+          .getByRole('button', { name: locale === 'fa' ? 'تازه‌سازی' : 'Refresh', exact: true })
+          .click();
+        await expect(
+          main.getByText(locale === 'fa' ? 'کاربری با این مشخصات پیدا نشد.' : 'No matching users.')
+        ).toBeVisible();
+      }
+    );

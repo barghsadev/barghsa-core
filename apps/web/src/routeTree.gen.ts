@@ -77,6 +77,7 @@ import { Route as AppSettingsTimezoneRouteImport } from './routes/_app/settings/
 import { Route as AppSettingsUsernameRouteImport } from './routes/_app/settings/username'
 import { Route as AdminCrmIndexRouteImport } from './routes/admin/crm/index'
 import { Route as AdminCrmCorrectionsRouteImport } from './routes/admin/crm/corrections'
+import { Route as AppCrmIndexRouteImport } from './routes/app/crm/index'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
 import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
@@ -422,6 +423,11 @@ const AdminCrmCorrectionsRoute = AdminCrmCorrectionsRouteImport.update({
   path: '/corrections',
   getParentRoute: () => AdminCrmRoute,
 } as any)
+const AppCrmIndexRoute = AppCrmIndexRouteImport.update({
+  id: '/app/crm/',
+  path: '/app/crm/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingIndividualProfileIdRoute =
   OnboardingIndividualProfileIdRouteImport.update({
     id: '/individual/$profileId',
@@ -516,6 +522,7 @@ export interface FileRoutesByFullPath {
   '/invoices/': typeof AppInvoicesIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
+  '/app/crm/': typeof AppCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
@@ -585,6 +592,7 @@ export interface FileRoutesByTo {
   '/invoices': typeof AppInvoicesIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/admin/crm': typeof AdminCrmIndexRoute
+  '/app/crm': typeof AppCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
@@ -660,6 +668,7 @@ export interface FileRoutesById {
   '/_app/invoices/': typeof AppInvoicesIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
+  '/app/crm/': typeof AppCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
@@ -735,6 +744,7 @@ export interface FileRouteTypes {
     | '/invoices/'
     | '/settings/'
     | '/admin/crm/'
+    | '/app/crm/'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
   fileRoutesByTo: FileRoutesByTo
@@ -804,6 +814,7 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/settings'
     | '/admin/crm'
+    | '/app/crm'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
   id:
@@ -878,6 +889,7 @@ export interface FileRouteTypes {
     | '/_app/invoices/'
     | '/_app/settings/'
     | '/admin/crm/'
+    | '/app/crm/'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
   fileRoutesById: FileRoutesById
@@ -893,6 +905,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRouteWithChildren
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
+  AppCrmIndexRoute: typeof AppCrmIndexRoute
   AppCrmProfilesProfileIdRoute: typeof AppCrmProfilesProfileIdRoute
 }
 
@@ -1374,6 +1387,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCrmCorrectionsRouteImport
       parentRoute: typeof AdminCrmRoute
     }
+    '/app/crm/': {
+      id: '/app/crm/'
+      path: '/app/crm'
+      fullPath: '/app/crm/'
+      preLoaderRoute: typeof AppCrmIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding/individual/$profileId': {
       id: '/onboarding/individual/$profileId'
       path: '/individual/$profileId'
@@ -1584,6 +1604,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRouteWithChildren,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
+  AppCrmIndexRoute: AppCrmIndexRoute,
   AppCrmProfilesProfileIdRoute: AppCrmProfilesProfileIdRoute,
 }
 export const routeTree = rootRouteImport

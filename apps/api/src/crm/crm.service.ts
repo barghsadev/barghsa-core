@@ -1,5 +1,10 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import { createHash } from 'node:crypto';
+import { z } from 'zod';
+
+export const crmSortFields = ['createdAt', 'username', 'lastLogin', 'profileCount'] as const;
+const timestamp = z.string().datetime({ offset: true });
 
 /**
  * A single user record returned by the CRM users list endpoint.
@@ -43,7 +48,7 @@ export interface CrmListUsersFilters {
   dateTo?: string | null;
   staffOnly?: boolean;
   /** Sort column. Default: createdAt. */
-  sort?: 'createdAt' | null;
+  sort?: (typeof crmSortFields)[number] | null;
   /** Sort order. Default: desc. */
   order?: 'asc' | 'desc' | null;
 }
@@ -59,7 +64,8 @@ export class CrmService {
    * profile summary. Supports filtering by profile type, verification
    * status, date range, and free-text search.
    *
-   * The cursor is a JSON object {id: string, createdAt: string} base64url-encoded.
+   * New cursors bind the sort value, direction and filters. Legacy registration
+   * cursors remain readable for the default column.
    *
    * @param cursor  Opaque pagination cursor from a previous page.
    * @param limit   Max results per page (default 20, max 100).
@@ -72,8 +78,17 @@ export class CrmService {
   ): Promise<CrmUsersResponse> {
     const pool = getDbPool();
     const pageSize = Math.min(Math.max(1, Number.isFinite(limit) ? Math.trunc(limit) : 20), 100);
+    const sort = filters?.sort ?? 'createdAt';
+    const sortOrder = filters?.order === 'asc' ? 'ASC' : 'DESC';
+    const comparison = sortOrder === 'ASC' ? '>' : '<';
+    const sortColumn = {
+      createdAt: 'u.created_at',
+      username: 'u.username',
+      lastLogin: 'u.last_login_at',
+      profileCount: 'COUNT(p.id)',
+    }[sort];
     for (const value of [filters?.dateFrom, filters?.dateTo]) {
-      if (value && !Number.isFinite(Date.parse(value)))
+      if (value && !timestamp.or(z.string().date()).safeParse(value).success)
         throw new BadRequestException('Invalid registration date filter');
     }
     if (
@@ -83,30 +98,59 @@ export class CrmService {
     )
       throw new BadRequestException('Registration date range is reversed');
 
-    // Decode and validate the composite cursor { id, createdAt }
+    const queryBinding = createHash('sha256')
+      .update(
+        JSON.stringify([
+          filters?.type ?? '',
+          filters?.verification ?? '',
+          filters?.search?.trim() ?? '',
+          filters?.dateFrom ?? '',
+          filters?.dateTo ?? '',
+          filters?.staffOnly === true,
+        ])
+      )
+      .digest('hex');
+
+    // Values remain parameters. SQL column names come only from the fixed map.
     let cursorId: string | null = null;
-    let cursorCreatedAt: string | null = null;
+    let cursorValue: string | number | null = null;
     if (cursor) {
       try {
+        if (cursor.length > 4096) throw new Error('Cursor too long');
         const raw = Buffer.from(cursor, 'base64url').toString('utf-8');
-        const parsed = JSON.parse(raw) as { id?: string; createdAt?: string };
+        const parsed = JSON.parse(raw) as Record<string, unknown>;
         if (
-          typeof parsed.id === 'string' &&
-          typeof parsed.createdAt === 'string' &&
-          parsed.id.length > 0 &&
-          parsed.id.length <= 512 &&
-          !isNaN(Date.parse(parsed.createdAt))
-        ) {
-          cursorId = parsed.id;
-          cursorCreatedAt = parsed.createdAt;
-        }
+          !parsed ||
+          typeof parsed !== 'object' ||
+          typeof parsed.id !== 'string' ||
+          !parsed.id.length ||
+          parsed.id.length > 512
+        )
+          throw new Error('Invalid identity');
+        const legacy = !('sort' in parsed);
+        if (
+          legacy
+            ? sort !== 'createdAt'
+            : parsed.sort !== sort || parsed.order !== sortOrder || parsed.query !== queryBinding
+        )
+          throw new Error('Cursor does not match this query');
+        const value = legacy ? parsed.createdAt : parsed.value;
+        const valid =
+          sort === 'profileCount'
+            ? typeof value === 'number' &&
+              Number.isSafeInteger(value) &&
+              value >= 0 &&
+              value <= 2147483647
+            : sort === 'username'
+              ? typeof value === 'string' && value.length > 0 && value.length <= 512
+              : (sort === 'lastLogin' && value === null) || timestamp.safeParse(value).success;
+        if (!valid) throw new Error('Invalid sort value');
+        cursorId = parsed.id;
+        cursorValue = value as string | number | null;
       } catch {
         throw new BadRequestException('Invalid CRM cursor');
       }
     }
-
-    if (cursor && (!cursorId || !cursorCreatedAt))
-      throw new BadRequestException('Invalid CRM cursor');
 
     // Build WHERE clauses dynamically
     const whereClauses: string[] = [];
@@ -114,11 +158,22 @@ export class CrmService {
     let paramIndex = 2;
 
     // Cursor-based pagination
-    if (cursorCreatedAt && cursorId) {
-      whereClauses.push(
-        `(u.created_at, u.user_id) ${filters?.order === 'asc' ? '>' : '<'} ($${paramIndex}::timestamptz, $${paramIndex + 1}::text)`
-      );
-      params.push(cursorCreatedAt, cursorId);
+    let aggregateCursor = '';
+    if (cursorId) {
+      const cast =
+        sort === 'profileCount' ? 'integer' : sort === 'username' ? 'text' : 'timestamptz';
+      const value = `$${paramIndex}::${cast}`,
+        id = `$${paramIndex + 1}::text`;
+      const clause = `(${sortColumn}, u.user_id) ${comparison} (${value}, ${id})`;
+      if (sort === 'profileCount') aggregateCursor = clause;
+      else if (sort === 'lastLogin')
+        whereClauses.push(
+          cursorValue === null
+            ? `(${value} IS NULL AND u.last_login_at IS NULL AND u.user_id ${comparison} ${id})`
+            : `(${clause} OR u.last_login_at IS NULL)`
+        );
+      else whereClauses.push(clause);
+      params.push(cursorValue, cursorId);
       paramIndex += 2;
     }
 
@@ -139,8 +194,8 @@ export class CrmService {
           havingClause = ` HAVING bool_or(p.status = 'VERIFIED') = true`;
           break;
         case 'UNVERIFIED':
-          // Status is not null and never VERIFIED
-          havingClause = ` HAVING NOT COALESCE(bool_or(p.status = 'VERIFIED'), false)`;
+          // Match the displayed status: neither verified nor pending, including no profiles.
+          havingClause = ` HAVING NOT COALESCE(bool_or(p.status IN ('VERIFIED','PENDING_VERIFICATION')), false)`;
           break;
         case 'PENDING':
           havingClause = ` HAVING bool_or(p.status = 'PENDING_VERIFICATION') = true AND NOT bool_or(p.status = 'VERIFIED') = true`;
@@ -150,6 +205,7 @@ export class CrmService {
           break;
       }
     }
+    if (aggregateCursor) havingClause += `${havingClause ? ' AND' : ' HAVING'} ${aggregateCursor}`;
 
     if (filters?.staffOnly) whereClauses.push('u.is_staff = true');
 
@@ -183,18 +239,12 @@ export class CrmService {
         OR sp.last_name ILIKE $${paramIndex + 5}
         OR COALESCE(lp.legal_name, '') ILIKE $${paramIndex + 6}))
       )`);
-      const ilikePattern = `%${searchTerm}%`;
+      const ilikePattern = `%${searchTerm.replace(/[\\%_]/g, '\\$&')}%`;
       for (let i = 0; i < 7; i++) {
         params.push(i < 6 && i % 2 === 0 ? searchTerm : ilikePattern);
       }
       paramIndex += 7;
     }
-
-    // Sort and order
-    const sortColumn =
-      filters?.sort === 'createdAt' || !filters?.sort ? 'u.created_at' : 'u.created_at';
-    const sortOrder = filters?.order === 'asc' ? 'ASC' : 'DESC';
-    const tiebreakerOrder = sortOrder === 'ASC' ? 'ASC' : 'DESC';
 
     const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
 
@@ -216,7 +266,7 @@ export class CrmService {
       ${whereClause}
       GROUP BY u.user_id, u.username, u.email, u.mobile, u.created_at, u.last_login_at
       ${havingClause}
-      ORDER BY ${sortColumn} ${sortOrder}, u.user_id ${tiebreakerOrder}
+      ORDER BY ${sortColumn} ${sortOrder}${sort === 'lastLogin' ? ' NULLS LAST' : ''}, u.user_id ${sortOrder}
       LIMIT $1
     `;
 
@@ -239,13 +289,18 @@ export class CrmService {
       hasVerifiedProfile: (row.has_verified_profile as boolean) ?? false,
     }));
 
-    // Encode composite cursor: { id, createdAt } base64url
+    const last = users.at(-1);
+    // Preserve timestamp strings, including PostgreSQL microseconds.
     const nextCursor: string | null =
       hasMore && users.length > 0
         ? Buffer.from(
             JSON.stringify({
               id: users[users.length - 1]!.userId,
               createdAt: users[users.length - 1]!.registrationDate,
+              sort,
+              order: sortOrder,
+              query: queryBinding,
+              value: sort === 'createdAt' ? last!.registrationDate : last![sort],
             }),
             'utf-8'
           ).toString('base64url')

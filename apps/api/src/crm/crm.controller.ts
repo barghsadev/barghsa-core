@@ -8,9 +8,11 @@ import {
   Query,
   Req,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CrmService, type CrmListUsersFilters } from './crm.service.js';
+import { CrmService, crmSortFields, type CrmListUsersFilters } from './crm.service.js';
+import { z } from 'zod';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -78,7 +80,7 @@ export class CrmController {
     name: 'sort',
     required: false,
     description: 'Sort column. Default: createdAt.',
-    enum: ['createdAt'],
+    enum: crmSortFields,
   })
   @ApiQuery({
     name: 'order',
@@ -103,6 +105,18 @@ export class CrmController {
               mobile: { type: 'string', nullable: true },
               registrationDate: { type: 'string' },
               lastLogin: { type: 'string', nullable: true },
+              profiles: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string' },
+                    profileType: { type: 'string' },
+                    status: { type: 'string' },
+                    title: { type: 'string', nullable: true },
+                  },
+                },
+              },
               profileCount: { type: 'integer' },
               hasIndividualProfile: { type: 'boolean' },
               hasLegalProfile: { type: 'boolean' },
@@ -145,6 +159,19 @@ export class CrmController {
     }
 
     // Build filters object from query params
+    const query = z
+      .object({
+        sort: z.enum(crmSortFields).optional(),
+        order: z.enum(['asc', 'desc']).optional(),
+        type: z.enum(['INDIVIDUAL', 'LEGAL']).optional(),
+        verification: z.enum(['VERIFIED', 'UNVERIFIED', 'PENDING', 'DISABLED']).optional(),
+        staffOnly: z.enum(['true', 'false']).optional(),
+        search: z.string().max(256).optional(),
+        cursor: z.string().max(4096).optional(),
+        limit: z.string().regex(/^\d+$/).optional(),
+      })
+      .safeParse({ sort, order, type, verification, staffOnly, search, cursor, limit });
+    if (!query.success) throw new BadRequestException('Invalid CRM list query');
     const filters: CrmListUsersFilters = {};
     if (staffOnly === 'true') filters.staffOnly = true;
     if (type === 'INDIVIDUAL' || type === 'LEGAL') {
@@ -167,8 +194,8 @@ export class CrmController {
     if (dateTo) {
       filters.dateTo = dateTo;
     }
-    if (sort === 'createdAt') {
-      filters.sort = sort;
+    if (query.data.sort) {
+      filters.sort = query.data.sort;
     }
     if (order === 'asc' || order === 'desc') {
       filters.order = order;

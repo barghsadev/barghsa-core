@@ -1,5 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { ArrowDown, ArrowUp, Building2, UserRound } from 'lucide-react';
 import { useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
 import {
@@ -26,6 +27,7 @@ const emptyFilters = {
   verification: '',
   dateFrom: '',
   dateTo: '',
+  sort: 'createdAt',
   order: 'desc',
   staffOnly: false,
 };
@@ -54,6 +56,14 @@ export default function CrmProfileList() {
   const [error, setError] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const generation = useRef(0);
+  const sortFocus = useRef<string | null>(null);
+  useEffect(() => {
+    if (loading) return;
+    const sort = sortFocus.current;
+    sortFocus.current = null;
+    if (sort && document.activeElement === document.body)
+      document.getElementById('crm-sort-' + sort)?.focus();
+  }, [loading, result]);
   useEffect(() => {
     if (text.trim() === term) return;
     const timer = setTimeout(() => {
@@ -95,7 +105,39 @@ export default function CrmProfileList() {
       const response = await fetch(`/api/crm/users?${params}`, { credentials: 'include' });
       if (!response.ok) throw new Error('CRM unavailable');
       const data = await response.json();
-      if (!Array.isArray(data.users)) throw new Error('Invalid CRM response');
+      if (
+        !data ||
+        !Array.isArray(data.users) ||
+        typeof data.hasMore !== 'boolean' ||
+        !(data.cursor === null || (typeof data.cursor === 'string' && data.cursor.length > 0)) ||
+        data.hasMore !== (data.cursor !== null) ||
+        (data.hasMore && data.users.length === 0) ||
+        !data.users.every(
+          (user: User) =>
+            user &&
+            typeof user.userId === 'string' &&
+            typeof user.username === 'string' &&
+            typeof user.registrationDate === 'string' &&
+            Number.isFinite(Date.parse(user.registrationDate)) &&
+            (user.lastLogin === null ||
+              (typeof user.lastLogin === 'string' &&
+                Number.isFinite(Date.parse(user.lastLogin)))) &&
+            Number.isSafeInteger(user.profileCount) &&
+            user.profileCount >= 0 &&
+            typeof user.hasVerifiedProfile === 'boolean' &&
+            Array.isArray(user.profiles) &&
+            user.profiles.length === user.profileCount &&
+            user.profiles.every(
+              (profile) =>
+                profile &&
+                typeof profile.id === 'string' &&
+                ['LEGAL', 'INDIVIDUAL'].includes(profile.profileType) &&
+                typeof profile.status === 'string' &&
+                (profile.title === null || typeof profile.title === 'string')
+            )
+        )
+      )
+        throw new Error('Invalid CRM response');
       if (current === generation.current) setResult(data);
     } catch {
       if (current === generation.current) setError(true);
@@ -124,7 +166,7 @@ export default function CrmProfileList() {
   return (
     <section className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-semibold">{t('crm.list.title', locale)}</h1>
-      <div className="grid gap-4 rounded-lg border bg-white p-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 rounded-lg border bg-card text-card-foreground p-4 sm:grid-cols-2 xl:grid-cols-3">
         <div>
           <Label htmlFor="crm-search">{t('crm.list.search', locale)}</Label>
           <Input id="crm-search" value={text} onChange={(event) => setText(event.target.value)} />
@@ -140,13 +182,16 @@ export default function CrmProfileList() {
             <Label htmlFor={`crm-${key}`}>{t(`crm.list.${key}`, locale)}</Label>
             <select
               id={`crm-${key}`}
-              className="block w-full rounded border p-2"
+              className="block w-full rounded border border-input bg-background text-foreground p-2"
               value={filters[key]}
               onChange={(event) => update(key, event.target.value)}
             >
               {options.map((value) => (
                 <option key={value} value={value}>
-                  {t(`crm.list.${value || 'all'}`, locale)}
+                  {t(
+                    `crm.list.${key === 'order' ? (value === 'asc' ? 'sortAscending' : 'sortDescending') : value || 'all'}`,
+                    locale
+                  )}
                 </option>
               ))}
             </select>
@@ -226,7 +271,7 @@ export default function CrmProfileList() {
       </div>
       <div className="flex flex-wrap gap-2">
         {Object.entries(filters)
-          .filter(([key, value]) => value && key !== 'order')
+          .filter(([key, value]) => value && key !== 'order' && key !== 'sort')
           .map(([key, value]) => (
             <Button
               key={key}
@@ -252,70 +297,166 @@ export default function CrmProfileList() {
       ) : !result?.users.length ? (
         <p>{t('crm.list.empty', locale)}</p>
       ) : (
-        <ul className="space-y-3">
-          {result.users.map((user) => (
-            <li key={user.userId} className="rounded-lg border bg-white p-4 space-y-3 break-words">
-              <h2 className="font-semibold" dir="auto">
-                {user.username}
-              </h2>
-              <p className="text-sm text-gray-600">
-                {Array.from(new Set(user.profiles.map((profile) => profile.profileType)))
-                  .map((type) => t(`crm.list.${type}`, locale))
-                  .join(' · ')}
-              </p>
-              <dl className="grid gap-2 text-sm sm:grid-cols-3">
-                <div>
-                  <dt>{t('crm.list.registered', locale)}</dt>
-                  <dd>{date(user.registrationDate)}</dd>
-                </div>
-                <div>
-                  <dt>{t('crm.list.lastLogin', locale)}</dt>
-                  <dd>{date(user.lastLogin)}</dd>
-                </div>
-                <div>
-                  <dt>{t('crm.list.verification', locale)}</dt>
-                  <dd>
-                    {t(
-                      `crm.list.${user.hasVerifiedProfile ? 'VERIFIED' : user.profiles.some((profile) => profile.status === 'PENDING_VERIFICATION') ? 'PENDING' : 'UNVERIFIED'}`,
-                      locale
-                    )}
-                  </dd>
-                </div>
-              </dl>
-              <Button
-                variant="outline"
-                aria-expanded={!!expanded[user.userId]}
-                aria-controls={`profiles-${user.userId}`}
-                onClick={() =>
-                  setExpanded((previous) => ({
-                    ...previous,
-                    [user.userId]: !previous[user.userId],
-                  }))
-                }
-              >
-                {t('crm.list.profiles', locale)}: {numbers.number(user.profileCount)}
-              </Button>
-              {expanded[user.userId] && (
-                <ul id={`profiles-${user.userId}`} className="space-y-2">
-                  {user.profiles.map((profile) => (
-                    <li key={profile.id}>
-                      <a
-                        className="text-blue-700 underline"
-                        href={`/admin/crm/profiles/${encodeURIComponent(profile.id)}`}
+        <div
+          className="overflow-x-auto rounded-lg border bg-card text-card-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll every table column.
+          tabIndex={0}
+          role="region"
+          aria-label={t('crm.list.title', locale)}
+        >
+          <table className="w-full min-w-[48rem] text-start text-sm">
+            <caption className="sr-only">{t('crm.list.title', locale)}</caption>
+            <thead>
+              <tr className="border-b">
+                {[
+                  ['username', 'username'],
+                  ['', 'type'],
+                  ['createdAt', 'registered'],
+                  ['lastLogin', 'lastLogin'],
+                  ['', 'verification'],
+                  ['profileCount', 'profiles'],
+                ].map(([sort, label]) => (
+                  <th
+                    key={label}
+                    scope="col"
+                    className="p-3 text-start font-semibold"
+                    aria-sort={
+                      sort
+                        ? filters.sort === sort
+                          ? filters.order === 'asc'
+                            ? 'ascending'
+                            : 'descending'
+                          : 'none'
+                        : undefined
+                    }
+                  >
+                    {sort ? (
+                      <button
+                        id={'crm-sort-' + sort}
+                        type="button"
+                        className="inline-flex items-center gap-1 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        onClick={() => {
+                          sortFocus.current = sort;
+                          setFilters((previous) => ({
+                            ...previous,
+                            sort: sort!,
+                            order:
+                              previous.sort === sort && previous.order === 'asc' ? 'desc' : 'asc',
+                          }));
+                          setCursors(['']);
+                        }}
                       >
-                        {profile.title || t(`crm.list.${profile.profileType}`, locale)} ·{' '}
-                        {t('crm.list.view', locale)}
-                      </a>
-                      <span className="ms-2 text-sm">
-                        {t(`crm.list.${profile.status}`, locale)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
+                        {t('crm.list.' + label, locale)}
+                        {filters.sort === sort &&
+                          (filters.order === 'asc' ? (
+                            <ArrowUp aria-hidden="true" className="size-4" />
+                          ) : (
+                            <ArrowDown aria-hidden="true" className="size-4" />
+                          ))}
+                      </button>
+                    ) : (
+                      t('crm.list.' + label, locale)
+                    )}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {result.users.map((user) => {
+                const profileListId = 'profiles-' + encodeURIComponent(user.userId);
+                return (
+                  <Fragment key={user.userId}>
+                    <tr className="border-b">
+                      <th scope="row" className="p-3 text-start font-medium">
+                        <span dir="auto" className="break-all">
+                          {user.username}
+                        </span>
+                      </th>
+                      <td className="p-3">
+                        <div className="flex flex-wrap gap-2">
+                          {(['INDIVIDUAL', 'LEGAL'] as const)
+                            .filter((type) =>
+                              user.profiles.some((profile) => profile.profileType === type)
+                            )
+                            .map((type) => (
+                              <span
+                                key={type}
+                                className="inline-flex items-center gap-1 whitespace-nowrap"
+                              >
+                                {type === 'LEGAL' ? (
+                                  <Building2 aria-hidden="true" className="size-4" />
+                                ) : (
+                                  <UserRound aria-hidden="true" className="size-4" />
+                                )}
+                                {t('crm.list.' + type, locale)}
+                              </span>
+                            ))}
+                          {user.profileCount === 0 && '—'}
+                        </div>
+                      </td>
+                      <td className="p-3">{date(user.registrationDate)}</td>
+                      <td className="p-3">{date(user.lastLogin)}</td>
+                      <td className="p-3">
+                        {t(
+                          'crm.list.' +
+                            (user.hasVerifiedProfile
+                              ? 'VERIFIED'
+                              : user.profiles.some(
+                                    (profile) => profile.status === 'PENDING_VERIFICATION'
+                                  )
+                                ? 'PENDING'
+                                : 'UNVERIFIED'),
+                          locale
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <Button
+                          variant="outline"
+                          disabled={user.profileCount === 0}
+                          aria-expanded={!!expanded[user.userId]}
+                          aria-controls={profileListId}
+                          onClick={() =>
+                            setExpanded((previous) => ({
+                              ...previous,
+                              [user.userId]: !previous[user.userId],
+                            }))
+                          }
+                        >
+                          {t('crm.list.profiles', locale)}: {numbers.number(user.profileCount)}
+                        </Button>
+                      </td>
+                    </tr>
+                    {expanded[user.userId] && (
+                      <tr className="border-b">
+                        <td colSpan={6} className="p-3">
+                          <ul
+                            id={profileListId}
+                            className="sticky start-0 w-fit max-w-[calc(100vw-4rem)] space-y-2 break-words"
+                          >
+                            {user.profiles.map((profile) => (
+                              <li key={profile.id}>
+                                <a
+                                  className="text-blue-700 dark:text-blue-300 underline"
+                                  href={'/admin/crm/profiles/' + encodeURIComponent(profile.id)}
+                                >
+                                  {profile.title || t('crm.list.' + profile.profileType, locale)} ·{' '}
+                                  {t('crm.list.view', locale)}
+                                </a>
+                                <span className="ms-2">
+                                  {t('crm.list.' + profile.status, locale)}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
       <nav aria-label={t('crm.list.title', locale)} className="flex gap-2">
         <Button
