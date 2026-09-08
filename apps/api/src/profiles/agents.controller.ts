@@ -156,13 +156,13 @@ export class AgentsController {
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    await this.agentsService.setAgentRoles(
+    const result = await this.agentsService.setAgentRoles(
       profileId,
       targetUserId,
       parsed.data.roles,
-      req.session.userId
+      req.session
     );
-    return { roles: parsed.data.roles };
+    return { roles: parsed.data.roles, ...result };
   }
 
   @Delete('agents/:userId')
@@ -179,7 +179,7 @@ export class AgentsController {
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    await this.agentsService.setAgentRoles(profileId, targetUserId, [], req.session.userId);
-    return { removed: true };
+    const result = await this.agentsService.setAgentRoles(profileId, targetUserId, [], req.session);
+    return { removed: true, ...result };
   }
 }

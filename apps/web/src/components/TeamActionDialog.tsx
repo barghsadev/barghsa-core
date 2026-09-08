@@ -121,7 +121,7 @@ export function TeamActionDialog({
         );
         return;
       }
-      if (action.signsOut) {
+      if (action.signsOut || data?.sessionRevoked === true) {
         window.location.assign('/login');
         return;
       }

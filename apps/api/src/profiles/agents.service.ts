@@ -11,6 +11,7 @@ import {
   type CreatedSession,
   type ValidatedSession,
 } from '../session/session.service.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 export interface AgentDto {
@@ -1127,8 +1128,8 @@ export class AgentsService {
     profileId: string,
     targetUserId: string,
     roles: string[],
-    actorUserId: string
-  ): Promise<void> {
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<{ sessionRevoked: boolean }> {
     if (
       roles.some((role) => !AgentsService.VALID_INVITE_ROLES.has(role)) ||
       new Set(roles).size !== roles.length
@@ -1152,10 +1153,20 @@ export class AgentsService {
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
           404
         );
-      if (profile.user_id !== actorUserId) {
+      // Match invitation/ownership locking: profile, sorted accounts, then session/memberships.
+      const users = await client.query(
+        `SELECT user_id,disabled_at,activation_token IS NOT NULL AS activation_pending
+         FROM users WHERE user_id=ANY($1::text[]) ORDER BY user_id FOR UPDATE`,
+        [[...new Set([actor.userId, targetUserId])]]
+      );
+      const currentActor = users.rows.find((row) => row.user_id === actor.userId);
+      if (!currentActor || currentActor.disabled_at || currentActor.activation_pending)
+        throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+      const stepUpVerifiedAt = await requireSessionStepUp(client, actor);
+      if (profile.user_id !== actor.userId) {
         const manager = await client.query(
           `SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE`,
-          [profileId, actorUserId]
+          [profileId, actor.userId]
         );
         if (!manager.rows.length)
           throw new HttpException({ statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
@@ -1170,8 +1181,6 @@ export class AgentsService {
           409
         );
       }
-      // Serialize privilege changes with login/session creation and credential revocation.
-      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [targetUserId]);
       const existing = await client.query(
         'SELECT id,role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 FOR UPDATE',
         [profileId, targetUserId]
@@ -1186,20 +1195,22 @@ export class AgentsService {
         previousRoles.length === roles.length &&
         previousRoles.every((role) => roles.includes(role))
       ) {
+        await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
-        return;
+        return { sessionRevoked: false };
       }
       await client.query(
         'DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND NOT (role=ANY($3::text[]))',
         [profileId, targetUserId, roles]
       );
+      const revokedAt = new Date();
       await client.query(
-        'UPDATE sessions SET revoked_at=clock_timestamp(),updated_at=clock_timestamp() WHERE user_id=$1 AND revoked_at IS NULL',
-        [targetUserId]
+        'UPDATE sessions SET revoked_at=$2,updated_at=$2 WHERE user_id=$1 AND revoked_at IS NULL',
+        [targetUserId, revokedAt]
       );
       await client.query(
-        'UPDATE refresh_tokens SET consumed_at=clock_timestamp() WHERE user_id=$1 AND consumed_at IS NULL',
-        [targetUserId]
+        'UPDATE refresh_tokens SET consumed_at=$2 WHERE user_id=$1 AND consumed_at IS NULL',
+        [targetUserId, revokedAt]
       );
       await client.query(
         `INSERT INTO profile_agents(id,profile_id,user_id,role,joined_at,created_at,updated_at)
@@ -1209,19 +1220,25 @@ export class AgentsService {
       );
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,$2,$3::jsonb,uuid_generate_v7(),NOW())`,
+        VALUES (uuid_generate_v7(),$1,$2,$3::jsonb,$4,clock_timestamp())`,
         [
-          actorUserId,
+          actor.userId,
           roles.length ? 'agent_roles_changed' : 'agent_removed',
           JSON.stringify({
             profileId,
             targetUserId,
             before: existing.rows.map((r) => r.role),
             after: roles,
+            stepUpVerified: true,
+            stepUpVerifiedAt: stepUpVerifiedAt.toISOString(),
           }),
+          correlationIdStorage.getStore() ?? uuidv7(),
         ]
       );
+      const sessionRevoked = actor.userId === targetUserId;
+      await requireSessionStepUp(client, actor, sessionRevoked ? revokedAt : undefined);
       await client.query('COMMIT');
+      return { sessionRevoked };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

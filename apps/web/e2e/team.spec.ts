@@ -350,3 +350,36 @@ for (const locale of ['en', 'fa']) {
     );
   });
 }
+
+for (const locale of ['en', 'fa'] as const) {
+  for (const operation of ['roles', 'remove'] as const) {
+    test(`own ${operation} change follows server sign-out (${locale})`, async ({ page }) => {
+      await shell(page, locale, false);
+      await page.route(
+        `**/api/profiles/${profileId}/agents/member${operation === 'roles' ? '/roles' : ''}`,
+        (route) => route.fulfill({ json: { sessionRevoked: true } })
+      );
+      await page.goto('/settings/team');
+      const member = page
+        .getByRole('article')
+        .filter({ has: page.getByRole('heading', { name: 'member@example.test' }) });
+      if (operation === 'roles') {
+        await member
+          .getByRole('checkbox', { name: locale === 'fa' ? 'مالی' : 'Finance', exact: true })
+          .check();
+        await member
+          .getByRole('button', { name: locale === 'fa' ? 'ذخیره نقش‌ها' : 'Save roles' })
+          .click();
+      } else {
+        await member
+          .getByRole('button', { name: locale === 'fa' ? 'حذف عضو' : 'Remove member' })
+          .click();
+      }
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page).toHaveURL(/\/login$/);
+    });
+  }
+}

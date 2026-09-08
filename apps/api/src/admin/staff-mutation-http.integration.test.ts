@@ -124,7 +124,7 @@ for (const operation of operations)
             .split('\n')
             .find((line) =>
               line.includes(
-                `CSRF check failed: staff session token changed | correlationId=${current.headers['X-Correlation-ID']}`
+                `CSRF check failed: session token changed | correlationId=${current.headers['X-Correlation-ID']}`
               )
             );
           expect(log).toBeDefined();
