@@ -381,7 +381,17 @@ it('serializes removing a target with ownership acceptance', async () => {
     await client.query('COMMIT');
     const results = await Promise.all(attempts);
     expect(results.map((r) => r.status).filter((s) => s === 200)).toHaveLength(1);
-    expect(results.map((r) => r.status).every((s) => [200, 403, 409].includes(s))).toBe(true);
+    // Either winner revokes the losing actor's credentials. A request that
+    // already passed its guards must also reject that now-revoked session.
+    expect(results.map((r) => r.status).every((s) => [200, 401, 403, 409].includes(s))).toBe(true);
+    if (results.some((r) => r.status === 401)) {
+      const losingUser = results[0]!.status === 401 ? 'target' : 'owner';
+      expect(
+        (
+          await http.pool.query('SELECT revoked_at FROM sessions WHERE user_id=$1', [losingUser])
+        ).rows.every((row) => row.revoked_at instanceof Date)
+      ).toBe(true);
+    }
     const owner = (await http.pool.query('SELECT user_id FROM profiles WHERE id=$1', [profileId]))
       .rows[0].user_id;
     const agents = (

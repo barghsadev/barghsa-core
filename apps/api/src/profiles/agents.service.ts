@@ -747,9 +747,10 @@ export class AgentsService {
   async initiateOwnershipTransfer(
     profileId: string,
     newOwnerUserId: string,
-    userId: string
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
   ): Promise<{ id: string }> {
     const pool = getDbPool();
+    const userId = actor.userId;
 
     // ── Verify the profile exists ───────────────────────────────
     const profileResult = await pool.query(
@@ -806,7 +807,7 @@ export class AgentsService {
 
     // ── Verify the target user is an existing agent of the profile ──
     const agentResult = await pool.query(
-      `SELECT id, role FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
+      `SELECT id, role FROM profile_agents WHERE profile_id = $1 AND user_id = $2 AND role IN ('Manager','Finance','Legal')`,
       [profileId, newOwnerUserId]
     );
     if (agentResult.rows.length === 0) {
@@ -839,7 +840,7 @@ export class AgentsService {
 
     // ── Wrap creation and audit log in a transaction ──────────────
     const transferId = uuidv7();
-    const correlationId = uuidv7();
+    const correlationId = correlationIdStorage.getStore() ?? uuidv7();
     const client = await pool.connect();
     let transactionStarted = false;
     try {
@@ -854,9 +855,10 @@ export class AgentsService {
       if (lockedProfile.rows[0]?.user_id !== userId) {
         throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code }, 409);
       }
+      const stepUpVerifiedAt = await this.requireOwnershipStepUp(client, actor, [newOwnerUserId]);
       const target = await client.query(
         `SELECT pa.id FROM profile_agents pa JOIN users u ON u.user_id=pa.user_id
-         WHERE pa.profile_id=$1 AND pa.user_id=$2 AND u.disabled_at IS NULL FOR SHARE OF pa,u`,
+         WHERE pa.profile_id=$1 AND pa.user_id=$2 AND pa.role IN ('Manager','Finance','Legal') AND u.disabled_at IS NULL AND u.activation_token IS NULL FOR SHARE OF pa,u`,
         [profileId, newOwnerUserId]
       );
       if (!target.rows.length)
@@ -866,8 +868,8 @@ export class AgentsService {
            UPDATE profile_ownership_transfers SET status='Expired',updated_at=NOW()
            WHERE profile_id=$1 AND status='Pending' AND expires_at<=clock_timestamp() RETURNING id
          ) INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-           SELECT uuid_generate_v7(),$2,'ownership_transfer_expired',jsonb_build_object('transferId',id,'profileId',$1::text),uuid_generate_v7(),NOW() FROM expired`,
-        [profileId, userId]
+           SELECT uuid_generate_v7(),$2,'ownership_transfer_expired',jsonb_build_object('transferId',id,'profileId',$1::text,'stepUpVerified',true,'stepUpVerifiedAt',$4::text),$3::uuid,clock_timestamp() FROM expired`,
+        [profileId, userId, correlationId, stepUpVerifiedAt.toISOString()]
       );
 
       await client.query(
@@ -883,11 +885,18 @@ export class AgentsService {
           uuidv7(),
           userId,
           'ownership_transfer_initiated',
-          JSON.stringify({ profileId, transferId, toUserId: newOwnerUserId }),
+          JSON.stringify({
+            profileId,
+            transferId,
+            toUserId: newOwnerUserId,
+            stepUpVerified: true,
+            stepUpVerifiedAt: stepUpVerifiedAt.toISOString(),
+          }),
           correlationId,
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       transactionStarted = false;
     } catch (error) {
@@ -947,12 +956,32 @@ export class AgentsService {
     };
   }
 
+  private async requireOwnershipStepUp(
+    client: {
+      query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }>;
+    },
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    parties: string[]
+  ): Promise<Date> {
+    const users = await client.query(
+      `SELECT user_id,disabled_at,activation_token IS NOT NULL AS activation_pending
+       FROM users WHERE user_id=ANY($1::text[]) ORDER BY user_id FOR UPDATE`,
+      [[...new Set([actor.userId, ...parties])]]
+    );
+    const current = users.rows.find((row) => row.user_id === actor.userId);
+    if (!current || current.disabled_at || current.activation_pending)
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    return requireSessionStepUp(client, actor);
+  }
+
   async resolveOwnershipTransfer(
     profileId: string,
     transferId: string,
-    userId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     decision: 'accept' | 'decline' | 'cancel'
   ): Promise<{ status: string }> {
+    const userId = actor.userId;
+    const correlationId = correlationIdStorage.getStore() ?? uuidv7();
     const client = await getDbPool().connect();
     let committed = false;
     try {
@@ -988,37 +1017,38 @@ export class AgentsService {
       ) {
         throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code }, 409);
       }
+      const stepUpVerifiedAt = await this.requireOwnershipStepUp(client, actor, [
+        transfer.from_user_id,
+        transfer.to_user_id,
+      ]);
       let targetExists = true;
       if (decision === 'accept') {
-        // Use the same account-first credential lock order for both parties.
-        // Sorting prevents opposite transfers from reversing account lock order.
-        await client.query(
-          'SELECT user_id FROM users WHERE user_id=ANY($1::text[]) ORDER BY user_id FOR UPDATE',
-          [[transfer.from_user_id, transfer.to_user_id]]
-        );
         const target = await client.query(
           `SELECT pa.id FROM profile_agents pa JOIN users u ON u.user_id=pa.user_id
-           WHERE pa.profile_id=$1 AND pa.user_id=$2 AND u.disabled_at IS NULL FOR UPDATE OF pa FOR SHARE OF u`,
+           WHERE pa.profile_id=$1 AND pa.user_id=$2 AND pa.role IN ('Manager','Finance','Legal') AND u.disabled_at IS NULL AND u.activation_token IS NULL FOR UPDATE OF pa FOR SHARE OF u`,
           [profileId, transfer.to_user_id]
         );
         targetExists = target.rows.length > 0;
       }
       // Check time after every possible lock wait, before applying ownership.
-      const expired = (
+      let expired = (
         await client.query('SELECT $1::timestamptz<=clock_timestamp() AS expired', [
           transfer.expires_at,
         ])
       ).rows[0].expired;
-      const status = expired
+      let status = expired
         ? 'Expired'
         : decision === 'accept'
           ? 'Completed'
           : decision === 'decline'
             ? 'Declined'
             : 'Cancelled';
+      await client.query('SAVEPOINT ownership_decision');
+      let revokedAt: Date | undefined;
       if (status === 'Completed') {
         if (!targetExists)
           throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code }, 409);
+        revokedAt = new Date();
         // The profile changes owner, never acquires a second one. Both users
         // choose their context again after applicable sessions are revoked.
         await client.query(
@@ -1029,39 +1059,61 @@ export class AgentsService {
           profileId,
         ]);
         await client.query(
-          `UPDATE sessions SET revoked_at=NOW(),updated_at=NOW()
+          `UPDATE sessions SET revoked_at=$2,updated_at=$2
           WHERE user_id=ANY($1::text[]) AND revoked_at IS NULL`,
-          [[transfer.from_user_id, transfer.to_user_id]]
+          [[transfer.from_user_id, transfer.to_user_id], revokedAt]
         );
         await client.query(
-          `UPDATE refresh_tokens SET consumed_at=NOW()
+          `UPDATE refresh_tokens SET consumed_at=$2
           WHERE user_id=ANY($1::text[]) AND consumed_at IS NULL`,
-          [[transfer.from_user_id, transfer.to_user_id]]
+          [[transfer.from_user_id, transfer.to_user_id], revokedAt]
         );
       }
-      await client.query(
-        `UPDATE profile_ownership_transfers SET status=$2,updated_at=NOW(),
+      const recordDecision = async () => {
+        await client.query(
+          `UPDATE profile_ownership_transfers SET status=$2,updated_at=NOW(),
         completed_at=CASE WHEN $2='Completed' THEN NOW() ELSE completed_at END,
         declined_at=CASE WHEN $2='Declined' THEN NOW() ELSE declined_at END,
         cancelled_at=CASE WHEN $2='Cancelled' THEN NOW() ELSE cancelled_at END WHERE id=$1`,
-        [transferId, status]
-      );
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+          [transferId, status]
+        );
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
         VALUES ($1,$2,$3,$4::jsonb,$5,NOW())`,
-        [
-          uuidv7(),
-          userId,
-          `ownership_transfer_${status.toLowerCase()}`,
-          JSON.stringify({
-            profileId,
-            transferId,
-            fromUserId: transfer.from_user_id,
-            toUserId: transfer.to_user_id,
-          }),
-          uuidv7(),
-        ]
-      );
+          [
+            uuidv7(),
+            userId,
+            `ownership_transfer_${status.toLowerCase()}`,
+            JSON.stringify({
+              profileId,
+              transferId,
+              fromUserId: transfer.from_user_id,
+              toUserId: transfer.to_user_id,
+              stepUpVerified: true,
+              stepUpVerifiedAt: stepUpVerifiedAt.toISOString(),
+            }),
+            correlationId,
+          ]
+        );
+      };
+      await recordDecision();
+      // Discard a decision that expires during writes, while retaining the locks
+      // acquired before this savepoint and recording only the expired outcome.
+      if (
+        !expired &&
+        (
+          await client.query('SELECT $1::timestamptz<=clock_timestamp() AS expired', [
+            transfer.expires_at,
+          ])
+        ).rows[0].expired
+      ) {
+        await client.query('ROLLBACK TO SAVEPOINT ownership_decision');
+        expired = true;
+        status = 'Expired';
+        revokedAt = undefined;
+        await recordDecision();
+      }
+      await requireSessionStepUp(client, actor, revokedAt);
       await client.query('COMMIT');
       committed = true;
       if (expired)

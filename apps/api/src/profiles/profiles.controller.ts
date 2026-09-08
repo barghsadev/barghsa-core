@@ -323,7 +323,7 @@ export class ProfilesController {
     return this.agentsService.resolveOwnershipTransfer(
       profileId,
       parsed.data.transferId,
-      req.session.userId,
+      req.session,
       decision
     );
   }
@@ -638,7 +638,7 @@ export class ProfilesController {
     const result = await this.agentsService.initiateOwnershipTransfer(
       profileId,
       parsed.data.newOwnerUserId,
-      userId
+      req.session
     );
 
     this.logger.log(
