@@ -3441,7 +3441,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "66400126602cf78938a133b2a528f8410ee15fa9",
+      "reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 185,
       "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
@@ -3493,7 +3493,7 @@
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
-          "sha256": "5dca16f6953314afb118b3994ecc4bd0f4ce5bebfc29bad51a8db631ba6f61d1"
+          "sha256": "2e914e61d309c55c169324be39fc81e3f4ac921e5822b0a55271a9db0842fa5a"
         },
         {
           "path": "apps/web/src/routes/support.tsx",
@@ -3613,12 +3613,21 @@
           ],
           "historically_skipped": false
         }
-      ]
+      ],
+      "evidence_refresh": {
+        "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+        "previous_reviewed_sha": "66400126602cf78938a133b2a528f8410ee15fa9",
+        "review": "Authentication, OTP, resend and forced-password-change request/acknowledgement logic is unchanged. Existing 32 production-browser recovery cases pass. The shared layout changes only text colors; no API, permission, dependency, migration or requirements change. Login request payloads and error/rate-limit handlers remain unchanged.",
+        "record": "audit/evidence/step-reviews.json#R01-login-ui",
+        "paths": [
+          "apps/web/src/components/AuthLayout.tsx"
+        ]
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.03.03",
       "status": "partial",
-      "reviewed_sha": "66400126602cf78938a133b2a528f8410ee15fa9",
+      "reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 175,
       "requirement": "**T-02.03.03 — Account recovery support path**\n\n- Description: On forgot-password page, include \"Having trouble? Contact support\" link for users who no longer control their registered email/phone. Support recovery requires identity verification, full audit history.\n- Technical notes: Link opens ticket creation or directs to support contact. Support path documented in runbook. Staff have verified identity procedure.\n- UI/UX: Styled as secondary link below the form.\n- Dependencies: T-02.03.01\n- Complexity: S",
@@ -3626,7 +3635,7 @@
       "source_evidence": [
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
-          "sha256": "5dca16f6953314afb118b3994ecc4bd0f4ce5bebfc29bad51a8db631ba6f61d1"
+          "sha256": "2e914e61d309c55c169324be39fc81e3f4ac921e5822b0a55271a9db0842fa5a"
         },
         {
           "path": "apps/web/src/routes/support.tsx",
@@ -3700,7 +3709,16 @@
           ],
           "historically_skipped": false
         }
-      ]
+      ],
+      "evidence_refresh": {
+        "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+        "previous_reviewed_sha": "66400126602cf78938a133b2a528f8410ee15fa9",
+        "review": "Authentication, OTP, resend and forced-password-change request/acknowledgement logic is unchanged. Existing 32 production-browser recovery cases pass. The shared layout changes only text colors; no API, permission, dependency, migration or requirements change. Login request payloads and error/rate-limit handlers remain unchanged.",
+        "record": "audit/evidence/step-reviews.json#R01-login-ui",
+        "paths": [
+          "apps/web/src/components/AuthLayout.tsx"
+        ]
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
@@ -4570,6 +4588,66 @@
         136
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 91,
+      "requirement": "**T-02.01.01 — Login page UI**\n\n- Description: `/login` page with same auth layout. Username field (same unified email/mobile as register), password field with visibility toggle. \"Forgot password?\" link, \"Don't have an account? Register\" link.\n- Technical notes: Shared auth layout component. Username normalization same as register (E.164 formatting). `autocomplete=\"username\"` and `autocomplete=\"current-password\"`.\n- UI/UX: Same two-column layout. Loading spinner on submit. Error states: \"Invalid username or password\" (generic, doesn't reveal which).\n- Dependencies: T-01.01.01\n- Complexity: S",
+      "requirement_sha256": "bf0da4a895c6b90e6877d4c4002aa880ee039daf999090980c7e1c3759bce65f",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "4da7296e9a3d26ffeb6f246e253f59871ab8fb5c5e0861ac783729ac42fafe11"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "96028662d3e0d77b488f97abacdee9c638740db13f1b0d1d904992bd988de2a2"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "2e914e61d309c55c169324be39fc81e3f4ac921e5822b0a55271a9db0842fa5a"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "9c52f98a406b0d66fd09416c38474c3ff71d433bfc90dae6fbe138f604a47af7"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "e1501fd7aafbb191c6b33355025dbd33a0affd2a1a1010f6aa0939afb9b66acb"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "7f2af0c57a8709d41f73c227ca3de4a06170ef8227631bb71024b5a7d289b736"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "f727cbc4dbd3ecf887544b4c3ba14c05305162e475a7a6a0816ab0985d77f2fa"
+        }
+      ],
+      "checks": [
+        "Compared T-02.01.01 with shared AuthLayout, username normalization, PasswordField, loading state and error/link behavior. Login and registration use the same Iranian/E.164/email normalization logic. Both fields now exist immediately and readiness derives from the current username instead of blur-dependent state, supporting saved-credential entry.",
+        "Browser checks confirm autocomplete=username/current-password, password visibility, register/recovery links, normalized mixed-case email and Iranian/international mobile request bodies, disabled fields/spinner during a held submission, and preserved retry input with generic credentials errors. Server-provided private account detail is never displayed. Redundant English-only hidden Error titles were removed.",
+        "Visual review found RTL phone rendering put the plus sign at the end. The username field and formatted hint now use left-to-right direction within the Persian layout. Final four Persian light/dark desktop/mobile cases and the inspected final mobile screenshot confirm the correction.",
+        "Measured and fixed login hover contrast at 3.27:1, shared brand footer text at 2.23:1, brand-column supporting text at 4.19:1, dark links at 3.84:1 and dark error text at 3.52:1. Fixes use opaque primary hover, theme-aware brand text and readable dark links/errors; the shared gradient is preserved.",
+        "Axe cannot determine gradient contrast directly. The test requires every incomplete contrast node to identify only a gradient background, then checks each actual CSS gradient stop while keeping text styles unchanged and restores the original styles. These fixtures vary opacity of one primary color over the page background. Each endpoint passes with no unresolved contrast result; unknown causes are not suppressed.",
+        "Final Persian dark mobile and English light desktop screenshots show the correct responsive layout, readable messages/links and input direction. This evidence covers the configured test palette and browser profiles, not every possible future branding color or password-manager implementation.",
+        "Authentication, OTP, resend and forced-password-change request/acknowledgement logic is unchanged. Existing 32 production-browser recovery cases pass. The shared layout changes only text colors; no API, permission, dependency, migration or requirements change.",
+        "40 distinct passing production-browser cases across focused runs: 32 login-recovery cases pass in the combined run; four light-theme UI cases pass in verified-browser; four dark-theme UI cases pass in dark-browser; final four Persian direction cases pass after the direction-only refinement. Overlapping reruns are not extra cases and no final single 40-case invocation is claimed.",
+        "Every browser command used PLAYWRIGHT_BASE_URL=http://127.0.0.1:4179. Saved index equality and manifest hashes bind the preview to its successive builds. New UI cases cover three identifier formats each and all fa/en, light/dark, desktop/mobile variants.",
+        "Web typecheck and focused lint pass. Subsequent product edits after typecheck are CSS and direction attributes. Final formatting, production build, git diff check and all 41 complete-route budgets pass. Existing backend/i18n checks are reused because those sources are unchanged.",
+        "All failed scanner/diagnostic runs are retained. The initial run exposed hover contrast; the first full run had 32 passes and eight gradient-incomplete failures. Endpoint checks exposed footer/supporting-text contrast; the next run had four light passes/four dark failures; affected dark and then Persian direction runs pass. No threshold was relaxed or global checkpoint renewed."
+      ],
+      "limitations": [
+        "Authentication/OTP/password-change service acceptance belongs to the following tasks. Real password-manager integrations, all branding palettes and the final broader browser checkpoint are not certified by these fixtures.",
+        "Noncritical duplicated Register wording in the login footer is recorded for later copy cleanup, outside the controlled repair stopping criteria."
+      ],
+      "merged_prs": [
+        77
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -4680,7 +4758,6 @@
     "02-auth-users-admin.md#T-01.02.01",
     "02-auth-users-admin.md#T-01.02.02",
     "02-auth-users-admin.md#T-01.02.03",
-    "02-auth-users-admin.md#T-02.01.01",
     "02-auth-users-admin.md#T-02.01.02",
     "02-auth-users-admin.md#T-02.01.03",
     "02-auth-users-admin.md#T-02.01.04",

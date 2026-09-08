@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+  "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
   "active_step": "R01",
-  "next_action": "R01: review 02-auth-users-admin.md#T-02.01.01 login page UI, then T-02.01.02 login flow, .03 login OTP and .04 forced password change. Reuse prior auth/session evidence; check exact remaining criteria before editing. F15 now has eight verified tasks and one partial archival task for contracts/retention. Lost-contact approver/evidence question remains pending.",
+  "next_action": "R01: review 02-auth-users-admin.md#T-02.01.02 login authentication flow, then .03 login OTP and .04 forced password change. Reuse prior auth/session API evidence and 40 distinct passing built-app login UI/recovery cases; inspect exact remaining criteria before editing. Login page .01 is verified. F15 has eight verified tasks and one archival partial for contracts/retention. Lost-contact approver/evidence question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Reviewed session repairs and both CRM session-action permission races. Finish remaining rotation/revocation callers, CSRF alternatives, approximate IP location and trusted-device criteria."
+        "Login UI T-02.01.01 is verified. Next review login/OTP/forced-password-change criteria and reuse session repairs/CRM permission-race evidence. Finish remaining rotation/revocation callers, CSRF alternatives, approximate IP location and trusted-device criteria."
       ]
     },
     {
@@ -265,7 +265,8 @@
       "acceptance_status": "pending",
       "remaining": [
         "Finish exact shared-control/implemented-screen locale, RTL, theme, keyboard/focus and failure-state acceptance; preserve three verified historical skips.",
-        "R03: visually review the terms-status error banner under dark admin theme. The failed-status fixture shows light text on its pale background; measure and fix that required error state without reopening the completed correction workflow."
+        "R03: visually review the terms-status error banner under dark admin theme. The failed-status fixture shows light text on its pale background; measure and fix that required error state without reopening the completed correction workflow.",
+        "R03: default shared primary-button hover opacity, primary links and destructive alerts can lose contrast. Login and shared auth-layout text are repaired in R01-login-ui; review other required consumers without broad suppressions."
       ]
     },
     {
@@ -285,7 +286,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review 18 partial and 259 pending records; retain 45 verified task assessments. Reconcile 301 PRs, 170 deferrals and 58 historical skips. The 1,033 unrecorded backlog tasks remain separate."
+        "Review 18 partial and 258 pending records; retain 46 verified task assessments. Reconcile 301 PRs, 170 deferrals and 58 historical skips. The 1,033 unrecorded backlog tasks remain separate."
       ]
     },
     {
@@ -435,6 +436,10 @@
     {
       "id": "R01-crm-pending-widget",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-pending-widget"
+    },
+    {
+      "id": "R01-login-ui",
+      "review_record": "audit/evidence/step-reviews.json#R01-login-ui"
     }
   ],
   "deferred_improvements": [
@@ -442,15 +447,20 @@
       "task_key": "02-auth-users-admin.md#T-05.02.05",
       "issue": "After a successful review, Corrections clears creation-form state even if the reviewer had an unrelated draft. Preserve that independent draft in a later noncritical UI pass. Invalid responses now preserve it.",
       "source_revision": "054d28c15589c3485ccc16e88eec2b1d0d042518"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.01",
+      "issue": "Noncritical duplicated Register wording in the login footer is recorded for later copy cleanup, outside the controlled repair stopping criteria.",
+      "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59"
     }
   ],
   "scope_note": "Group implementation labels summarize recorded repairs, not whole-group acceptance. Historical status counts are generated from the ledger, never inferred from these labels.",
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 45,
+    "acceptance_verified": 46,
     "partial": 18,
-    "pending": 259,
+    "pending": 258,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,

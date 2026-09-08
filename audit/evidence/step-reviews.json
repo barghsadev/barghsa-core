@@ -1785,6 +1785,103 @@
           "sha256": "4ed19e6ce816927fc2ee454282b1342e5989e3befb674f4d08d4aeeb5de05f5c"
         }
       ]
+    },
+    {
+      "id": "R01-login-ui",
+      "date": "2026-09-08",
+      "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+      "summary": "Verified login-page requirements; fixed initial field availability, blur-dependent readiness, contrast and RTL phone rendering.",
+      "review": [
+        "Compared T-02.01.01 with shared AuthLayout, username normalization, PasswordField, loading state and error/link behavior. Login and registration use the same Iranian/E.164/email normalization logic. Both fields now exist immediately and readiness derives from the current username instead of blur-dependent state, supporting saved-credential entry.",
+        "Browser checks confirm autocomplete=username/current-password, password visibility, register/recovery links, normalized mixed-case email and Iranian/international mobile request bodies, disabled fields/spinner during a held submission, and preserved retry input with generic credentials errors. Server-provided private account detail is never displayed. Redundant English-only hidden Error titles were removed.",
+        "Visual review found RTL phone rendering put the plus sign at the end. The username field and formatted hint now use left-to-right direction within the Persian layout. Final four Persian light/dark desktop/mobile cases and the inspected final mobile screenshot confirm the correction.",
+        "Measured and fixed login hover contrast at 3.27:1, shared brand footer text at 2.23:1, brand-column supporting text at 4.19:1, dark links at 3.84:1 and dark error text at 3.52:1. Fixes use opaque primary hover, theme-aware brand text and readable dark links/errors; the shared gradient is preserved.",
+        "Axe cannot determine gradient contrast directly. The test requires every incomplete contrast node to identify only a gradient background, then checks each actual CSS gradient stop while keeping text styles unchanged and restores the original styles. These fixtures vary opacity of one primary color over the page background. Each endpoint passes with no unresolved contrast result; unknown causes are not suppressed.",
+        "Final Persian dark mobile and English light desktop screenshots show the correct responsive layout, readable messages/links and input direction. This evidence covers the configured test palette and browser profiles, not every possible future branding color or password-manager implementation.",
+        "Authentication, OTP, resend and forced-password-change request/acknowledgement logic is unchanged. Existing 32 production-browser recovery cases pass. The shared layout changes only text colors; no API, permission, dependency, migration or requirements change."
+      ],
+      "checks": [
+        "40 distinct passing production-browser cases across focused runs: 32 login-recovery cases pass in the combined run; four light-theme UI cases pass in verified-browser; four dark-theme UI cases pass in dark-browser; final four Persian direction cases pass after the direction-only refinement. Overlapping reruns are not extra cases and no final single 40-case invocation is claimed.",
+        "Every browser command used PLAYWRIGHT_BASE_URL=http://127.0.0.1:4179. Saved index equality and manifest hashes bind the preview to its successive builds. New UI cases cover three identifier formats each and all fa/en, light/dark, desktop/mobile variants.",
+        "Web typecheck and focused lint pass. Subsequent product edits after typecheck are CSS and direction attributes. Final formatting, production build, git diff check and all 41 complete-route budgets pass. Existing backend/i18n checks are reused because those sources are unchanged.",
+        "All failed scanner/diagnostic runs are retained. The initial run exposed hover contrast; the first full run had 32 passes and eight gradient-incomplete failures. Endpoint checks exposed footer/supporting-text contrast; the next run had four light passes/four dark failures; affected dark and then Persian direction runs pass. No threshold was relaxed or global checkpoint renewed."
+      ],
+      "remaining": [
+        "Next T-02.01.02 login authentication, T-02.01.03 OTP and T-02.01.04 forced-password-change acceptance. UI-only verification does not certify those flows.",
+        "Shared default-button hover, destructive-alert and primary-link contrast across other consumers remains in R03. The login/shared-auth cases are repaired here.",
+        "Noncritical duplicated Register wording in the login footer is recorded for later copy cleanup, outside the controlled repair stopping criteria."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "4da7296e9a3d26ffeb6f246e253f59871ab8fb5c5e0861ac783729ac42fafe11"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "96028662d3e0d77b488f97abacdee9c638740db13f1b0d1d904992bd988de2a2"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "2e914e61d309c55c169324be39fc81e3f4ac921e5822b0a55271a9db0842fa5a"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "9c52f98a406b0d66fd09416c38474c3ff71d433bfc90dae6fbe138f604a47af7"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "e1501fd7aafbb191c6b33355025dbd33a0affd2a1a1010f6aa0939afb9b66acb"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "7f2af0c57a8709d41f73c227ca3de4a06170ef8227631bb71024b5a7d289b736"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "f727cbc4dbd3ecf887544b4c3ba14c05305162e475a7a6a0816ab0985d77f2fa"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-login-ui-browser.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-budgets.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-build.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-dark-browser.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-dark-budgets.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-dark-build.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-dark-format.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-dark-target.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-direction-browser.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-direction-budgets.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-direction-build.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-direction-target.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-final-budgets.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-final-build.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-final-target.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-format.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-gradient-final.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-gradient-format.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-gradient.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-hover-build.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-hover-format.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-initial.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-target.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-verified-browser.log.gz",
+        "audit/evidence/r01/barghsa-login-ui-verified-build.log.gz"
+      ],
+      "visual_evidence": [
+        {
+          "path": "audit/evidence/r01/barghsa-login-ui-fa-true-mobile-chrome.png",
+          "sha256": "cb3633a0e00aca788a588c770587c8efca8989e37770f7c1159c3899a2a5e774"
+        },
+        {
+          "path": "audit/evidence/r01/barghsa-login-ui-en-false-chromium.png",
+          "sha256": "6f0339ade3ea069defe50fed7977fbe15d31dd803389fdb5f60ca6c724cdca52"
+        }
+      ]
     }
   ]
 }

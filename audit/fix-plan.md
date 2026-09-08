@@ -1,22 +1,22 @@
 # Remaining repairs, reviews and skipped work
 
-Refreshed 2026-09-08 through product commit `d87042c`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
+Refreshed 2026-09-08 through product commit `f461e5d`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
 
 ## Current numbers
 
 | Population | Verified | Partial | Pending review | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 42 | 18 | 203 | 263 |
+| Tasks with merged PR evidence | 43 | 18 | 202 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| Combined | 45 | 18 | 259 | 322 |
+| Combined | 46 | 18 | 258 | 322 |
 
-There are **277 unresolved task reviews**, including the 18 partial reviews. Unresolved review does not establish that a task is unbuilt. The records do not support a reliable percentage of implementation effort remaining.
+There are **276 unresolved task reviews**, including the 18 partial reviews. Unresolved review does not establish that a task is unbuilt. The records do not support a reliable percentage of implementation effort remaining.
 
 The saved inventory contains **301 merged PRs**, last recorded as checked against GitHub on September 8. A new query during this refresh failed because `gh` is unavailable; no newer inventory is claimed. The **58 historical skips** overlap the task population: 3 verified and 55 pending review. Another **1,033 queue gaps** are separate historical backlog evidence: 737 earlier gaps and 296 later tasks. None is automatically a missing implementation.
 
 ## Next bounded step
 
-Next review `02-auth-users-admin.md#T-02.01.01` login page UI, then login authentication, OTP and forced password change. Reuse prior auth/session evidence and inspect exact remaining criteria. Lost-contact approver/evidence policy remains pending.
+Login page T-02.01.01 is verified at f461e5d: initial fields, normalization, generic errors, loading, contrast and RTL phone direction. Forty distinct built-app UI/recovery cases pass across focused runs. Next review `02-auth-users-admin.md#T-02.01.02` login authentication, then OTP and forced password change. Reuse prior auth/session evidence and inspect exact remaining criteria. Lost-contact approver/evidence policy remains pending.
 
 All nine F15 CRM records are reviewed: eight verified locally; T-05.02.06 remains partial for future contracts and approved retention policy. Latest widget step d87042c passed 31 API cases and 12 distinct built-app browser cases across focused runs. Earlier list/search step passed 47 API and 20 built-app browser cases. See [step evidence](evidence/step-reviews.json). No global checkpoint is renewed.
 
@@ -28,7 +28,7 @@ Each row is a phase. Select one exact requirement or reproduced defect inside it
 | --- | --- | --- |
 | 1 | R01 / F03–F08, F12–F16, F23 | Complete the critical checklist below. Required callers and negative paths must pass canonical requirements; every confirmed defect needs a repair or explicit disposition. |
 | 2 | R02 / F09–F11, F17 | Active branding in email/notification rendering; integrated KB upload for `02-auth-users-admin.md#T-09.11.02`; actual-agent test-chat backend/panel for T-09.11.04; exact policy integration review. Finish provider/template/retry/inbox acceptance using existing evidence. Verify permissions, persisted results, failures/retries and fa/en. A provider connection test does not substitute for agent chat. |
-| 3 | R03 / F19, F20 | Application-specific localized errors, correlation through required outbox/worker consumers, remaining screen/shared-control accessibility, RTL, themes and failure states. Validate required behavior; review the observed dark-theme terms-status error banner. Scanner warnings become work only when they establish a relevant defect. |
+| 3 | R03 / F19, F20 | Application-specific localized errors, correlation through required outbox/worker consumers, remaining screen/shared-control accessibility, RTL, themes and failure states. Validate required behavior; review the observed dark-theme terms-status error banner and remaining shared button/link/alert contrast consumers. Scanner warnings become work only when they establish a relevant defect. |
 | 4 | R04 / F19 | Required eager customer purchase routes within unchanged complete-route budgets. Previous over-budget attempts were reverted. Production build, required loading and affected payload checks must pass. Retain Vite SPA. |
 | 5 | R05 / F19 | Strict dependency checks in API/web/worker/DB. Last strict DB run recorded 146 declaration errors, 144 Drizzle and 2 Vite. Verify compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation without broad suppressions or weaker requirements. |
 | 6 | V01 / F01, F02, F18, F21, F22 | Remaining task/PR dispositions, loop durability, migrations, production packaging and repeated-task comparisons. Include every domain not closed above. All 322 claims need evidence-backed dispositions; all PR deferrals need reconciliation. |
@@ -53,12 +53,12 @@ The last full checkpoint at `9529872` recorded API-critical coverage 92.34% line
 
 | Disposition | Count |
 | --- | ---: |
-| PRs with unresolved mapped tasks | 254 |
-| PRs mapping only to verified tasks | 43 |
+| PRs with unresolved mapped tasks | 253 |
+| PRs mapping only to verified tasks | 44 |
 | PRs with no current task mapping | 4 |
 | Historical deferral statements | 170 across 101 PRs |
 
-Review current combined implementation once per qualified task and associate all contributing PRs. Verified mappings do not automatically resolve separate PR deferrals. The 221 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 83, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review current combined implementation once per qualified task and associate all contributing PRs. Verified mappings do not automatically resolve separate PR deferrals. The 220 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 82, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
 Handle #47 in R05 and #234/#235/#242 in V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before calling that queue gap unbuilt. Repeated PRs alone do not justify code deletion. Preserve obsolete `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users-admin.md#T-05.06.01` as provenance outside the 322 current claims.
 
@@ -74,7 +74,7 @@ Each deferral needs a disposition: satisfied by later implementation, confirmed 
 | Development, configuration and documentation | 21 | T-07.* |
 | Deployment, operations and CI | 20 | T-05.* |
 
-These are review batches. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 277 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
+These are review batches. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 276 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
 
 ## External prerequisites and decisions
 
