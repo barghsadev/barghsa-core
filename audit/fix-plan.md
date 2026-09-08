@@ -16,6 +16,8 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
+Execute this work inside the first feature batch, agents/invitations/ownership, covering saved PRs #131–#135. The detailed repair below remains the starting point. Apply the [feature-batch rules](#feature-batch-rules) before starting another isolated repair/review cycle.
+
 R01: finish ownership presentation T-05.04.05. API authority/expiry/audit is verified at b4a0c83; named success and selected-name consistency at a80c807. Confirmed remaining requirement: TeamPage selects the member before step-up, while the written sequence requires step-up first, then agent selection and confirmation. Repair that sequence using existing dialog behavior; verify cancel/retry/fresh-CSRF/exact recipient, incoming banner and relevant fa/en/RTL/theme/error states. Then finish invitation list/details/preview/confirmation and current role/domain consumers. Reuse unchanged backend and browser evidence. Lost-contact policy remains pending; do not ask again.
 
 Named transfer success and selected-name consistency repaired at `a80c807`.36 team browser cases, types/lint/format/build and41 route budgets pass. [Scoped evidence](evidence/step-reviews.json#R01-ownership-recipient-notice).
@@ -30,7 +32,7 @@ Staff creation T-05.03.01, role assignment T-05.03.02 and staff list T-10.01.01 
 
 ## Execution order
 
-Fix confirmed defects first. Review each changed step with focused checks, record its evidence, then move on. An unresolved review does not authorize rebuilding an implementation.
+Fix confirmed defects in feature batches. Review each meaningful change with focused checks, then record one consolidated batch checkpoint. An unresolved review does not authorize rebuilding an implementation.
 
 | Step / original groups | Remaining work | Exit evidence |
 | --- | --- | --- |
@@ -45,6 +47,28 @@ Fix confirmed defects first. Review each changed step with focused checks, recor
 | B01 / F22 | Dependency-ordered handoff of unmet skipped work. | Exact keys, criteria and prerequisites; preserve verified and incidental implementation. Build new features after repair closure. |
 
 Audit cleanup and inventory reconciliation are complete. R01 is active; eight phases are queued. Their sizes differ, so phase counts are not an effort estimate. The original 23 groups and their remaining requirements remain in progress.json.
+
+## Feature-batch rules
+
+Approved September 8 to reduce repeated discovery, checks and audit work. This changes execution granularity, not requirements, acceptance thresholds, authority or phase order. Finish an in-flight change/check safely before switching. The supervisor's one-task/one-PR dispatch protocol remains separate and unchanged.
+
+1. **Bound the batch.** Group tasks and contributing PRs by one workflow and shared dependencies. Around 5–15 PRs can be a useful starting size, never a quota. Before editing, record exact PR numbers, qualified task keys, remaining criteria, historical deferrals and existing evidence. Split an oversized batch at a workflow boundary.
+2. **Review the current implementation once.** Combine duplicate requirements while preserving their task/PR links. Reuse valid earlier reviews and tests. Read historical diffs only to resolve behavior, provenance, deferrals or conflicting implementations. A repeated PR is not a reason to rebuild or delete code.
+3. **Fix and review meaningful changes.** Repair confirmed gaps within the frozen batch scope. Review each logical change and run its relevant checks before proceeding, especially authorization, money and transaction changes. Use cohesive commits; avoid a full acceptance cycle or audit rewrite per small edit. Record newly found noncritical improvements for later.
+4. **Verify the workflow once at the batch checkpoint.** Run the affected integration/browser checks and relevant quality gates after the batch repairs. Reuse valid unchanged evidence. Broaden or repeat only for new failures, shared changes or unresolved risk. Keep the complete repository regression at V02 unless a shared change requires it earlier.
+5. **Close items individually and report once.** Record one batch review in `evidence/step-reviews.json`, then reconcile `acceptance-closure.json`, relevant `pr-deferrals.json` entries and `progress.json` together. Include explicit PR dispositions: closed, open, or blocked, with task links, evidence and remaining criteria. A PR closes only when every mapped requirement and historical deferral has an explicit supported disposition, with required evidence current. Task verification alone does not close a PR. An unresolved item does not prevent other items closing. Never count future/deferred requirements as passed.
+
+Keep the active batch summary in `progress.json`: batch name, exact PR/task membership, confirmed remaining defects, reused/new evidence and next action. Save detailed closure once per batch in the existing step-review file; use a small interruption checkpoint only when needed. Do not create another parallel progress history. Regenerate the existing review summaries using their scripts after changing the ledgers; do not hand-edit generated tables. Report explicit closed/open/blocked PR counts separately from the existing task-mapping counts, and count each PR once.
+
+Start with this concrete batch:
+
+| Feature batch | Saved PRs | Qualified tasks | Boundary |
+| --- | --- | --- | --- |
+| Agents, invitations and ownership | #131, #132, #133, #134, #135 | `02-auth-users-admin.md#T-05.04.01` through `T-05.04.05` | Consolidate list/privacy, invitation preview/delivery/decisions, role authority and ownership presentation with existing API repairs. Explicitly resolve PR132's three recorded deferrals. |
+
+T-05.04.04 spans several domains. Assign each remaining wallet/invoice/contract/order permission criterion to its owning feature batch and link the resulting evidence back; do not pull those entire domains into this first batch or mark the task closed early. Local batch work can finish while that task remains partial.
+
+Then form bounded batches within the existing phase order, such as remaining account/session recovery, wallet/ledger, receipts/approvals, payments/callbacks, invoices and ticket workflows in R01; related notification/branding and KB/agent-chat work in R02. Derive their exact PR membership from the saved inventory when selecting each batch. These are grouping candidates, not new features or claimed completed reviews. Keep skipped builds in B01 and dependencies in their recorded phases.
 
 ## R01 remaining acceptance
 
