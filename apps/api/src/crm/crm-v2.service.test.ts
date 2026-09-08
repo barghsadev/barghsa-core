@@ -323,6 +323,8 @@ describe('CrmV2Service.forcePasswordChange', () => {
     mockConnect.mockResolvedValueOnce(client);
     mockClientQuery
       .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: ACTOR_USER_ID, is_admin: true }] }) // current permission
+      .mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] }) // locked target still exists
       .mockResolvedValueOnce(undefined) // UPDATE users
       .mockResolvedValueOnce(undefined) // INSERT audit_log
       .mockResolvedValueOnce(undefined); // COMMIT
@@ -399,6 +401,8 @@ describe('CrmV2Service.forcePasswordChange', () => {
     mockConnect.mockResolvedValueOnce(client);
     mockClientQuery
       .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: ACTOR_USER_ID, is_admin: true }] }) // current permission
+      .mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] }) // locked target still exists
       .mockResolvedValueOnce(undefined) // UPDATE users
       .mockRejectedValueOnce(new Error('DB insert failed')); // audit_log INSERT
 
@@ -434,6 +438,8 @@ describe('CrmV2Service.expireSessions', () => {
     mockConnect.mockResolvedValueOnce(client);
     mockClientQuery
       .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: ACTOR_USER_ID, is_admin: true }] }) // current permission
+      .mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] }) // locked target still exists
       .mockResolvedValueOnce(undefined) // INSERT audit_log
       .mockResolvedValueOnce(undefined); // COMMIT
 
@@ -495,6 +501,8 @@ describe('CrmV2Service.expireSessions', () => {
     mockConnect.mockResolvedValueOnce(client);
     mockClientQuery
       .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: ACTOR_USER_ID, is_admin: true }] }) // current permission
+      .mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] }) // locked target still exists
       .mockRejectedValueOnce(new Error('DB insert failed')); // audit_log INSERT
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }));

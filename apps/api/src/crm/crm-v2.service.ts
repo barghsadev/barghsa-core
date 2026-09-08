@@ -5,6 +5,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { SessionService } from '../session/session.service.js';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js';
 
 /** Simple email regex for server-side validation */
@@ -647,6 +648,13 @@ export class CrmV2Service {
     try {
       await client.query('BEGIN');
 
+      await requireStaffMutationPermission(client, actorUserId, 'admin:users:edit', userId);
+      const target = await client.query('SELECT user_id FROM users WHERE user_id=$1', [userId]);
+      if (!target.rows.length) {
+        await client.query('ROLLBACK');
+        return null;
+      }
+
       await client.query(
         `UPDATE users SET must_change_password = true, updated_at = NOW() WHERE user_id = $1`,
         [userId]
@@ -709,6 +717,13 @@ export class CrmV2Service {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+
+      await requireStaffMutationPermission(client, actorUserId, 'admin:users:edit', userId);
+      const target = await client.query('SELECT user_id FROM users WHERE user_id=$1', [userId]);
+      if (!target.rows.length) {
+        await client.query('ROLLBACK');
+        return null;
+      }
 
       await this.sessionService.revokeAllUserSessions(userId, undefined, client);
 
