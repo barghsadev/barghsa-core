@@ -14,7 +14,7 @@ import { t, type Locale } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';
 import { Button, Input, Label, Alert, AlertDescription } from '@barghsa/ui';
 import { AuthLayout } from '../components/AuthLayout.js';
-import { PasswordField, evaluateStrength } from '../components/PasswordField.js';
+import { PasswordField } from '../components/PasswordField.js';
 import { OtpInput } from '../components/OtpInput.js';
 
 export const Route = createFileRoute('/login')({
@@ -275,6 +275,7 @@ function LoginPage() {
   const handleForceChange = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+      if (changingPassword) return;
       setChangeError(null);
 
       // Validate passwords match
@@ -283,9 +284,14 @@ function LoginPage() {
         return;
       }
 
-      // Check strength
-      const strength = evaluateStrength(newPassword);
-      if (strength.score < 40) {
+      // Match the API policy; the strength meter is only a visual estimate.
+      if (
+        newPassword.length < 8 ||
+        newPassword.length > 128 ||
+        !/[a-z]/.test(newPassword) ||
+        !/[A-Z]/.test(newPassword) ||
+        !/[0-9]/.test(newPassword)
+      ) {
         setChangeError(t('auth.register.error.weakPassword', locale));
         return;
       }
@@ -324,6 +330,9 @@ function LoginPage() {
         }
         toast.success(t('auth.login.passwordChanged', locale));
         setPasswordChangeStep(false);
+        setPasswordChangeToken('');
+        setNewPassword('');
+        setConfirmPassword('');
         setPassword('');
         setFormError(null);
       } catch {
@@ -332,7 +341,7 @@ function LoginPage() {
         setChangingPassword(false);
       }
     },
-    [newPassword, confirmPassword, passwordChangeToken, locale]
+    [newPassword, confirmPassword, passwordChangeToken, locale, changingPassword]
   );
 
   // ── OTP verification callbacks ──────────────────────────────────────────
@@ -457,11 +466,15 @@ function LoginPage() {
   }, []);
 
   const handleBackToLoginFromChange = useCallback(() => {
+    if (changingPassword) return;
     setPasswordChangeStep(false);
+    setPasswordChangeToken('');
+    setNewPassword('');
+    setConfirmPassword('');
     setChangeError(null);
     setFormError(null);
     setPassword('');
-  }, []);
+  }, [changingPassword]);
 
   const handleOtpClearError = useCallback(() => {
     setOtpError(null);
@@ -492,6 +505,7 @@ function LoginPage() {
               <button
                 type="button"
                 onClick={handleBackToLoginFromChange}
+                disabled={changingPassword}
                 className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
                 aria-label={t('auth.login.backToLogin', locale)}
               >

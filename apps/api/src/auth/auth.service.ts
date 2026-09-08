@@ -386,7 +386,7 @@ export class AuthService {
 
       // 1. Look up the user by password change token
       const userResult = await client.query(
-        `SELECT user_id, password_hash, must_change_password,
+        `SELECT user_id, password_hash, must_change_password, disabled_at,
                 password_change_token, password_change_token_expires_at
          FROM users
          WHERE password_change_token = $1
@@ -404,17 +404,15 @@ export class AuthService {
       const user = userResult.rows[0];
 
       // 2. Verify the token hasn't expired
-      if (!user.must_change_password) {
+      if (!user.must_change_password || user.disabled_at) {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
           400
         );
       }
 
-      if (
-        user.password_change_token_expires_at &&
-        new Date(user.password_change_token_expires_at) < new Date()
-      ) {
+      const tokenExpiresAt = new Date(user.password_change_token_expires_at).getTime();
+      if (!Number.isFinite(tokenExpiresAt) || tokenExpiresAt <= Date.now()) {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
           400
@@ -433,9 +431,7 @@ export class AuthService {
       const newHash = await argon2.hash(input.newPassword, PASSWORD_HASH_OPTIONS);
 
       // 3a. Check against the current password (must differ from current)
-      const isSameAsCurrent = await argon2
-        .verify(user.password_hash, input.newPassword)
-        .catch(() => false);
+      const isSameAsCurrent = await argon2.verify(user.password_hash, input.newPassword);
       if (isSameAsCurrent) {
         await client.query('ROLLBACK');
         this.logger.warn(
@@ -449,9 +445,7 @@ export class AuthService {
 
       // 3b. Check password history (last 5 passwords)
       for (const entry of historyResult.rows) {
-        const isReused = await argon2
-          .verify(entry.password_hash, input.newPassword)
-          .catch(() => false);
+        const isReused = await argon2.verify(entry.password_hash, input.newPassword);
         if (isReused) {
           await client.query('ROLLBACK');
           this.logger.warn(`Password reuse detected for user ${user.user_id} from ${ip}`);
@@ -499,6 +493,29 @@ export class AuthService {
          WHERE user_id = $2 AND consumed_at IS NULL`,
         [now, user.user_id]
       );
+
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'password_changed',$3,$4,$5,clock_timestamp())`,
+        [
+          uuidv7(),
+          user.user_id,
+          JSON.stringify({ reason: 'forced_change' }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          ip,
+        ]
+      );
+      // Hashing and credential/session writes may outlast the token deadline.
+      // Keep every effect provisional until its final wall-clock check.
+      const currentToken = await client.query('SELECT $1::timestamptz>clock_timestamp() AS valid', [
+        user.password_change_token_expires_at,
+      ]);
+      if (!currentToken.rows[0]?.valid) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
+          400
+        );
+      }
 
       await client.query('COMMIT');
 

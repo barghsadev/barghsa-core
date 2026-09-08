@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
+import AxeBuilder from '@axe-core/playwright';
 
 const challengeId = '11111111-2222-4333-8444-555555555555';
 const sessionAcknowledgement = {
@@ -31,8 +32,24 @@ async function mockApp(page: Page, hasProfile = true) {
     route.fulfill({ json: { profile: { name: 'Profile' } } })
   );
 }
-async function openLogin(page: Page, locale: 'fa' | 'en') {
+async function openLogin(page: Page, locale: 'fa' | 'en', darkMode = false) {
   await mockOppositeNumerals(page, locale);
+  if (darkMode)
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({
+        json: {
+          appTitle: 'Preference test',
+          slogan: '',
+          primaryColor: '#2563eb',
+          secondaryColor: '#64748b',
+          accentColor: '#f59e0b',
+          logoUrl: null,
+          faviconUrl: null,
+          darkMode: true,
+          numberStyle: locale === 'fa' ? 'western' : 'persian',
+        },
+      })
+    );
   await page.goto('/login');
   await page.evaluate((value) => {
     document.documentElement.lang = value;
@@ -43,6 +60,106 @@ async function openLogin(page: Page, locale: 'fa' | 'en') {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  for (const darkMode of [false, true]) {
+    test(`forced password change validates policy, protects the pending request and returns to login (${locale}, dark=${darkMode})`, async ({
+      page,
+    }) => {
+      await page.route('**/api/auth/login', (route) =>
+        route.fulfill({
+          json: {
+            requiresOtp: false,
+            mustChangePassword: true,
+            passwordChangeToken: 'change-token',
+          },
+        })
+      );
+      const attempts: unknown[] = [];
+      let release: (() => void) | undefined;
+      await page.route('**/api/auth/force-change-password', async (route) => {
+        attempts.push(route.request().postDataJSON());
+        if (attempts.length === 1) {
+          await new Promise<void>((resolve) => {
+            release = resolve;
+          });
+          return route.fulfill({ status: 503, json: {} });
+        }
+        return route.fulfill({ json: { message: 'Password changed' } });
+      });
+      await openLogin(page, locale, darkMode);
+      await page.locator('button[type="submit"]').click();
+      const password = page.locator('#new-password');
+      const confirm = page.locator('#confirm-password');
+      const submit = page.locator('button[type="submit"]');
+      const back = page.getByRole('button', {
+        name: locale === 'fa' ? 'بازگشت به فرم ورود' : 'Back to login',
+        exact: true,
+      });
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        locale === 'fa' ? 'تغییر رمز عبور الزامی است' : 'Password change required'
+      );
+      await expect(password).toBeFocused();
+      await expect(password).toHaveAttribute('autocomplete', 'new-password');
+      await expect(confirm).toHaveAttribute('autocomplete', 'new-password');
+      for (const weak of [
+        'Short1A',
+        'lowercase12345',
+        'UPPERCASE12345',
+        'NoNumericValue',
+        'Aa1' + 'x'.repeat(126),
+      ]) {
+        await password.fill(weak);
+        await confirm.fill(weak);
+        await submit.click();
+        await expect(page.getByRole('alert').first()).toContainText(
+          locale === 'fa'
+            ? 'رمز عبور الزامات امنیتی را ندارد'
+            : 'Password does not meet security requirements'
+        );
+        expect(attempts).toHaveLength(0);
+      }
+      await password.fill('Fresh-browser-password-123!');
+      await confirm.fill('Different-browser-password-123!');
+      await expect(submit).toBeDisabled();
+      await expect(confirm).toHaveAttribute('aria-invalid', 'true');
+      await confirm.fill('Fresh-browser-password-123!');
+      await submit.click();
+      await expect.poll(() => attempts.length).toBe(1);
+      await expect(password).toBeDisabled();
+      await expect(confirm).toBeDisabled();
+      await expect(submit).toBeDisabled();
+      await expect(back).toBeDisabled();
+      await page.keyboard.press('Enter');
+      expect(attempts).toHaveLength(1);
+      release!();
+      await expect(submit).toBeEnabled();
+      await expect(page.getByRole('alert').first()).toBeVisible();
+      await expect(password).toHaveValue('Fresh-browser-password-123!');
+      await expect(confirm).toHaveValue('Fresh-browser-password-123!');
+      await submit.evaluate(async (element) => {
+        await Promise.all(element.getAnimations().map((animation) => animation.finished));
+      });
+      const accessibility = await new AxeBuilder({ page })
+        .include('form')
+        .withTags(['wcag2a', 'wcag2aa'])
+        .analyze();
+      expect(accessibility.violations).toEqual([]);
+      expect(accessibility.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
+      await submit.click();
+      await expect(password).toHaveCount(0);
+      await expect(page.locator('#password')).toHaveValue('');
+      await expect(page.locator('#username')).toHaveValue('user@example.test');
+      await expect(page).toHaveURL(/\/login$/);
+      await expect(page.locator('[data-sonner-toast]')).toContainText(
+        locale === 'fa' ? 'لطفاً با رمز جدید وارد شوید' : 'Please log in with your new password'
+      );
+      expect(attempts).toEqual(
+        Array(2).fill({
+          passwordChangeToken: 'change-token',
+          newPassword: 'Fresh-browser-password-123!',
+        })
+      );
+    });
+  }
   test(`password change needs acknowledgement and preserves retry input (${locale})`, async ({
     page,
   }) => {

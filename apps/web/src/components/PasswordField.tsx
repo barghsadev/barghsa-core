@@ -217,7 +217,11 @@ export function PasswordField({
 
       {showStrengthMeter && (
         <div id={`${id}-strength`} className="space-y-1" aria-live="polite">
-          <Progress value={strength.score}>
+          <Progress
+            value={strength.score}
+            aria-label={t('auth.register.passwordStrengthLabel', locale)}
+            aria-valuetext={strengthLabel}
+          >
             <ProgressTrack>
               <ProgressIndicator
                 className={`transition-all ${STRENGTH_BAR_CLASSES[strength.level]}`}
