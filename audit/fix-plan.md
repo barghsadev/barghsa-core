@@ -1,34 +1,26 @@
 # Remaining fix plan
 
-Current through product `a80c807`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product `1bf4680`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 50 | 18 | 195 | 263 |
+| Tasks with merged PR evidence | 54 | 19 | 190 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 53 | 18 | 251 | 322 |
+| All claims | 57 | 19 | 246 | 322 |
 
-**269 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twelve verified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
+**265 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twelve verified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Execute this work inside the first feature batch, agents/invitations/ownership, covering saved PRs #131–#135. The detailed repair below remains the starting point. Apply the [feature-batch rules](#feature-batch-rules) before starting another isolated repair/review cycle.
+First feature batch completed locally at `1bf4680`: agents, invitations and ownership, saved PRs #131–#135. **4 PR reviews closed / 1 open / 0 blocked**. Tasks T-05.04.01, .02, .03 and .05 are verified; T-05.04.04 remains partial until wallet/invoice/contract/order role evidence is linked from its assigned batches. All three PR132 deferrals are satisfied locally. [Consolidated batch review](evidence/step-reviews.json#R01-agents-invitations-ownership).
 
-R01: finish ownership presentation T-05.04.05. API authority/expiry/audit is verified at b4a0c83; named success and selected-name consistency at a80c807. Confirmed remaining requirement: TeamPage selects the member before step-up, while the written sequence requires step-up first, then agent selection and confirmation. Repair that sequence using existing dialog behavior; verify cancel/retry/fresh-CSRF/exact recipient, incoming banner and relevant fa/en/RTL/theme/error states. Then finish invitation list/details/preview/confirmation and current role/domain consumers. Reuse unchanged backend and browser evidence. Lost-contact policy remains pending; do not ask again.
+Current evidence:92 API cases,13 worker cases,80 distinct production-browser cases,50 i18n cases, applicable types/lint/format/OpenAPI and all41 unchanged route budgets. Focused reruns overlap these counts. Previous ownership API evidence is reused because its method bodies are unchanged. Deployed operations and the broad V02/coverage checkpoint are separate.
 
-Named transfer success and selected-name consistency repaired at `a80c807`.36 team browser cases, types/lint/format/build and41 route budgets pass. [Scoped evidence](evidence/step-reviews.json#R01-ownership-recipient-notice).
-
-Ownership initiation/acceptance/decline/cancel repaired at `b4a0c83`: current actor account/session/CSRF/step-up checks hold through commit; audit records verified time/correlation. Mid-write transfer expiry restores ownership and credentials and persists only Expired.70 distinct selected API/unit cases and quality/contract checks pass. [Scoped evidence](evidence/step-reviews.json#R01-ownership-authority).
-
-Invitation creation/withdrawal/decline repaired at `e48bf58`: current profile/account/session/grants hold through commit; former inviters cannot withdraw; current username controls decline; state/audit roll back on expiry/failure. Acceptance/decline lock-order deadlock is fixed.120 selected API/unit cases and API quality/contract checks pass. [Scoped evidence](evidence/step-reviews.json#R01-invitation-authority). Existing frontend evidence is reused.
-
-Agent role changes/removal now recheck current authorization through commit and record verified step-up time/correlation. Self-mutations return to login; no-op preserves credentials. Product `417ab33` passes51 selected API cases and32 production-browser cases, plus types/lint/format/OpenAPI/build and41 unchanged budgets. [Scoped review](evidence/step-reviews.json#R01-agent-sensitive-actions). Whole role-matrix acceptance remains open.
-
-Staff creation T-05.03.01, role assignment T-05.03.02 and staff list T-10.01.01 are now verified locally at `ab10771`. Repairs fixed creator-only initial-role selection, a temporary-password character-class failure and dark-theme staff content. The role picker is expandable and supports multiple selections. Current checks pass: 220 distinct API/unit cases, 12 distinct production-browser cases across the final runs, light/dark staff-content scans in fa/en on desktop/mobile, types/lint/format, OpenAPI and all41 route budgets. [Exact review and scope](evidence/step-reviews.json#R01-staff-task-acceptance). No broad checkpoint is renewed.
+Continue R01 by selecting a bounded account/session recovery batch from saved task requirements and PR inventory. Reuse completed staff, CRM, invitation and ownership work. Keep lost-contact policy pending without asking again. Preserve R01–B01 order; link cross-domain agent checks when their owning batches run. Apply the feature-batch rules below.
 
 ## Execution order
 
@@ -60,7 +52,7 @@ Approved September 8 to reduce repeated discovery, checks and audit work. This c
 
 Keep the active batch summary in `progress.json`: batch name, exact PR/task membership, confirmed remaining defects, reused/new evidence and next action. Save detailed closure once per batch in the existing step-review file; use a small interruption checkpoint only when needed. Do not create another parallel progress history. Regenerate the existing review summaries using their scripts after changing the ledgers; do not hand-edit generated tables. Report explicit closed/open/blocked PR counts separately from the existing task-mapping counts, and count each PR once.
 
-Start with this concrete batch:
+First batch, now locally complete with PR134 still open for linked domain review:
 
 | Feature batch | Saved PRs | Qualified tasks | Boundary |
 | --- | --- | --- | --- |
@@ -72,13 +64,13 @@ Then form bounded batches within the existing phase order, such as remaining acc
 
 ## R01 remaining acceptance
 
-- Sessions and permissions: finish profile selection, agent roles, membership/ownership, activation, OTP/reset/contact changes, manual verification and address boundaries. Reuse [session caller evidence](session-caller-review.md) and [route/CSRF review](security-route-review.md). Guard registration alone does not prove handler, transaction or UI behavior.
+- Sessions and permissions: finish profile selection, activation, OTP/reset/contact changes, manual verification and address boundaries; link the remaining cross-domain agent-role checks. Local agent/invitation/ownership acceptance is recorded above. Reuse [session caller evidence](session-caller-review.md) and [route/CSRF review](security-route-review.md). Guard registration alone does not prove handler, transaction or UI behavior.
 - CSRF alternatives: explicitly disposition public JSON authentication, refresh, signed callbacks and CSP telemetry. Review the state-changing payment return GET with finance. Current inventory has 343 routes, 203 unsafe-method registrations and 121 guarded step-up routes.
 - Finance and tickets: receipt thresholds and independent current approval; callback/replay safety; invoice arithmetic, snapshots and ledger integrity; customer/staff privacy, attachments, assignment and transitions. Preserve corrective PRs. Refund, order and contract features remain separate where requirements define them separately.
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all 18 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM contract/summary/count partials map to V01/B01. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all 19 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM contract/summary/count partials map to V01/B01. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 
@@ -86,15 +78,15 @@ For all 18 partial records, use the exact limitations in [acceptance](acceptance
 
 | Current mapping | PRs |
 | --- | ---: |
-| At least one unresolved mapped task | 246 |
-| Only recorded verified tasks | 51 |
+| At least one unresolved mapped task | 242 |
+| Only recorded verified tasks | 55 |
 | No current task mapping | 4 |
 
 These are mapping counts, not completed PR-review counts. Even a PR mapped only to verified tasks may have an unresolved deferral or stale source evidence.
 
-Review the combined implementation once per qualified task, then associate every contributing PR. The 213 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 75, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review the combined implementation once per qualified task, then associate every contributing PR. The 209 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 71, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
-For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Four statements in PR129/218 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery and staff UI are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR130 is covered by current role-assignment acceptance.
+For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Seven statements in PR129/132/218 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR130 is covered by current role-assignment acceptance.
 
 Specific reconciliation remains for #47 in R05 and #234/#235/#242 in V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before treating that gap as unbuilt. Five Docker groups were rebuilt after completion loss; fifteen wallet groups include useful corrective work. The other three repeated groups concern legal-profile slices, bookkeeping and replaced invoice snapshots. Repeated PRs alone do not justify deleting code.
 
@@ -111,7 +103,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Deployment, operations and CI, T-05.* | 20 |
 | Total | 55 |
 
-Task dependencies override batch order. These 55 overlap the 269 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
+Task dependencies override batch order. These 55 overlap the 265 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 

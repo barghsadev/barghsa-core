@@ -937,7 +937,26 @@
       "- [ ] Accept/decline UI (T-05.04.03 — separate task)",
       "- [ ] Invitation expiry worker (follow-up)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "All three historical deferrals are satisfied locally; deployed worker operation remains operational evidence.",
+    "reviewed_source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+    "review_record": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Withdrawal remains current owner/Manager-only and is verified by e48bf58 plus the current API/browser batch. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Accept/decline and private details/banner are verified together with current credentials, retry and profile-refresh behavior. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Invitation expiry worker is implemented and verified with real migrated PostgreSQL and compiled worker scheduling/failure recovery/shutdown. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      }
+    ]
   },
   {
     "pr": 129,

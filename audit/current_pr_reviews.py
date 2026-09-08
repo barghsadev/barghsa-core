@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def report(root: Path = ROOT) -> str:
     names = ['merged-pr-evidence.json', 'task-review.json',
-             'acceptance-closure.json', 'pr-deferrals.json']
+             'acceptance-closure.json', 'pr-deferrals.json', 'evidence/step-reviews.json']
     raw = {name: (root / 'audit' / name).read_bytes() for name in names}
     data = {name: json.loads(value) for name, value in raw.items()}
     prs = data[names[0]]
@@ -31,6 +31,18 @@ def report(root: Path = ROOT) -> str:
     if not set(deferrals) <= numbers:
         raise ValueError('Deferral references absent PR')
 
+    dispositions = {}
+    for step in data[names[4]]['steps']:
+        seen = set()
+        for row in step.get('pr_dispositions', []):
+            number = row['pr']
+            if number in seen or number not in numbers:
+                raise ValueError('Duplicate or absent PR in batch disposition')
+            if row['status'] not in {'closed', 'open', 'blocked'}:
+                raise ValueError('Unknown PR disposition')
+            seen.add(number)
+            dispositions[number] = {**row, 'review_record': step['id']}
+
     def status(task: dict) -> str:
         return reviewed.get(task['task_key'], {}).get('status', 'pending')
 
@@ -42,6 +54,15 @@ def report(root: Path = ROOT) -> str:
         return 'Task review remains'
 
     counts = Counter(state(pr['number']) for pr in prs)
+    closure_counts = Counter(row['status'] for row in dispositions.values())
+    for number, row in dispositions.items():
+        if row['status'] == 'closed':
+            if state(number) != 'Mapped tasks verified':
+                raise ValueError(f'PR #{number} cannot close with unresolved mapped tasks')
+            saved = next((p for p in data[names[3]] if p['pr'] == number), {})
+            resolved = {item['statement_index'] for item in saved.get('dispositions', [])}
+            if resolved != set(range(len(deferrals.get(number, [])))):
+                raise ValueError(f'PR #{number} has undispositioned historical deferrals')
     domains = Counter(task['task_key'].split('#')[0] for task in tasks
                       if task['merged_prs'] and status(task) != 'acceptance_verified')
     legacy = sum(not task['merged_prs'] and status(task) != 'acceptance_verified'
@@ -54,6 +75,10 @@ def report(root: Path = ROOT) -> str:
              f'{counts["Mapped tasks verified"]} map only to verified tasks.',
              f'{sum(map(len, deferrals.values()))} historical deferral statements from {len(deferrals)} PRs are retained; see the deferral register for explicit dispositions. '
              'Even a verified task does not automatically dispose of every statement in its PR body.', '',
+             f'Explicit PR dispositions: **{closure_counts["closed"]} closed / '
+             f'{closure_counts["open"]} open / {closure_counts["blocked"]} blocked**; '
+             f'{len(prs) - len(dispositions)} have no explicit PR review yet. '
+             'These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.', '',
              'Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), '
              '[PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).', '',
              '## Remaining task review by domain', '',
@@ -64,14 +89,17 @@ def report(root: Path = ROOT) -> str:
               'Their exact keys are retained in the task ledger. Historical skips overlap these populations.', '',
               '## Every merged PR', '',
               'The task-status column is derived. It is not a new PR approval or a claim that historical deferrals are resolved.', '',
-              '| PR | Qualified tasks and current acceptance | Review remaining | Historical deferrals |',
-              '| --- | --- | --- | ---: |']
+              '| PR | Qualified tasks and current acceptance | Task mapping | PR disposition | Historical deferrals |',
+              '| --- | --- | --- | --- | ---: |']
     for pr in sorted(prs, key=lambda row: row['number']):
         number = pr['number']
         keys = '<br>'.join(f"{task['task_key']} ({status(task)})" for task in by_pr[number])
         if not keys:
             keys = pr['title'].replace('|', '\\|').replace('\n', ' ')
-        lines.append(f'| [#{number}]({pr["html_url"]}) | {keys} | {state(number)} | '
+        disposition = dispositions.get(number)
+        label = (f'[{disposition["status"]}](evidence/step-reviews.json#{disposition["review_record"]})'
+                 if disposition else 'Not reviewed')
+        lines.append(f'| [#{number}]({pr["html_url"]}) | {keys} | {state(number)} | {label} | '
                      f'{len(deferrals.get(number, []))} |')
     repeated = [task for task in tasks if len(task['merged_prs']) > 1]
     lines += ['', '## Repeated task groups', '',

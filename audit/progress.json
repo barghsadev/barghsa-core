@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "a80c80768f715d2e235eef713d61cc992176b900",
+  "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
   "active_step": "R01",
-  "next_action": "R01: finish ownership presentation T-05.04.05. API authority/expiry/audit is verified at b4a0c83; named success and selected-name consistency at a80c807. Confirmed remaining requirement: TeamPage selects the member before step-up, while the written sequence requires step-up first, then agent selection and confirmation. Repair that sequence using existing dialog behavior; verify cancel/retry/fresh-CSRF/exact recipient, incoming banner and relevant fa/en/RTL/theme/error states. Then finish invitation list/details/preview/confirmation and current role/domain consumers. Reuse unchanged backend and browser evidence. Lost-contact policy remains pending; do not ask again.",
+  "next_action": "First feature batch is complete locally: PR131/132/133/135 closed; PR134 remains open for its assigned wallet/invoice/contract/order role evidence. Select the next bounded R01 account/session recovery batch from saved requirements and PR evidence, reusing completed work. Keep lost-contact policy pending without another question; preserve R01–B01 order and skipped builds in B01.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -132,10 +132,10 @@
       "title": "Finish agent membership and ownership transfer",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "R01: finish ownership presentation T-05.04.05. API authority/expiry/audit is verified at b4a0c83; named success and selected-name consistency at a80c807. Confirmed remaining requirement: TeamPage selects the member before step-up, while the written sequence requires step-up first, then agent selection and confirmation. Repair that sequence using existing dialog behavior; verify cancel/retry/fresh-CSRF/exact recipient, incoming banner and relevant fa/en/RTL/theme/error states. Then finish invitation list/details/preview/confirmation and current role/domain consumers. Reuse unchanged backend and browser evidence. Lost-contact policy remains pending; do not ask again.",
-        "Full role/domain, profile-selection and onboarding acceptance remains. Future contract/order/document consumers stay separate."
+        "Agent list, invitations, decisions and ownership local requirements are verified. T-05.04.04 remains partial for linked wallet/receipt/payment/refund, invoice, contract/document and order/address role evidence.",
+        "Remaining profile-selection/onboarding acceptance stays in R01."
       ]
     },
     {
@@ -558,6 +558,10 @@
     {
       "id": "R01-ownership-recipient-notice",
       "review_record": "audit/evidence/step-reviews.json#R01-ownership-recipient-notice"
+    },
+    {
+      "id": "R01-agents-invitations-ownership",
+      "review_record": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
     }
   ],
   "deferred_improvements": [
@@ -576,9 +580,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 53,
-    "partial": 18,
-    "pending": 251,
+    "acceptance_verified": 57,
+    "partial": 19,
+    "pending": 246,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -688,5 +692,209 @@
     "record": "audit/cleanup-manifest.json#refresh",
     "scope": "Directory reconciliation and plan cleanup only; product files and acceptance statuses unchanged.",
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
+  },
+  "active_batch": {
+    "id": "R01-agents-invitations-ownership",
+    "name": "Agents, invitations and ownership",
+    "status": "local_batch_complete_domain_review_open",
+    "prs": [
+      131,
+      132,
+      133,
+      134,
+      135
+    ],
+    "task_keys": [
+      "02-auth-users-admin.md#T-05.04.01",
+      "02-auth-users-admin.md#T-05.04.02",
+      "02-auth-users-admin.md#T-05.04.03",
+      "02-auth-users-admin.md#T-05.04.04",
+      "02-auth-users-admin.md#T-05.04.05"
+    ],
+    "remaining_checklist": [
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.01",
+        "criteria": [
+          "Current owner/Manager-only list; invited registration status remains private.",
+          "Required name/role/status/joined/actions table and empty state; withdrawal and removal."
+        ],
+        "evidence": [
+          "e48bf58 invitation authority/withdrawal",
+          "417ab33 agent mutations",
+          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        ],
+        "review_status": "acceptance_verified"
+      },
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.02",
+        "criteria": [
+          "Email/mobile invitation modal, role choice, named entity preview, confirmation and truthful success.",
+          "Registered-user notification and registration-time invitation linking.",
+          "10/hour/profile, one owner, seven-day expiry and complete invitation states/audit."
+        ],
+        "evidence": [
+          "e48bf58 invitation current authorization and duplicate/audit/expiry tests",
+          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        ],
+        "review_status": "acceptance_verified"
+      },
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.03",
+        "criteria": [
+          "Current-user private pending banner and view-details with entity/inviter/role description/date.",
+          "Accept/decline exact invitation, current credentials, scoped audit and refreshed membership; no extra confirmation required by canonical text."
+        ],
+        "evidence": [
+          "5543cc2 invitation acceptance/rotation",
+          "e48bf58 private decline, current authorization and deadlock repair",
+          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        ],
+        "review_status": "acceptance_verified"
+      },
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.04",
+        "criteria": [
+          "Additive current agent roles; owner protection; immediate access revocation and preserved history.",
+          "Conditional agent/ownership controls; link wallet/invoice/payment/receipt/refund, contract/document and order/address domain checks."
+        ],
+        "evidence": [
+          "417ab33 agent mutation authority/step-up/revocation",
+          "b4a0c83 ownership authority and expiry",
+          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        ],
+        "review_status": "partial: linked domain review pending"
+      },
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.05",
+        "criteria": [
+          "Verify password, select eligible agent, confirm exact target, show named success and incoming banner.",
+          "Current owner retains control until acceptance; decline/expiry cancel; audit, one owner, both owners credential invalidation.",
+          "Cancellation, expiry/retry, refreshed CSRF, fa/en, RTL, theme, keyboard/focus and relevant error states."
+        ],
+        "evidence": [
+          "b4a0c83:70 API/unit cases",
+          "a80c807:36 team browser cases",
+          "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        ],
+        "review_status": "acceptance_verified"
+      }
+    ],
+    "confirmed_defects": [],
+    "historical_deferrals": [
+      {
+        "pr": 132,
+        "statement": "Withdraw/withdraw fix already exists (T-05.04.01)",
+        "disposition": "Withdrawal remains current owner/Manager-only and is verified by e48bf58 plus the current API/browser batch. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      },
+      {
+        "pr": 132,
+        "statement": "Accept/decline UI (T-05.04.03 — separate task)",
+        "disposition": "Accept/decline and private details/banner are verified together with current credentials, retry and profile-refresh behavior. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      },
+      {
+        "pr": 132,
+        "statement": "Invitation expiry worker (follow-up)",
+        "disposition": "Invitation expiry worker is implemented and verified with real migrated PostgreSQL and compiled worker scheduling/failure recovery/shutdown. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      }
+    ],
+    "cross_domain_evidence": [
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.04",
+        "owner_batch": "wallet/ledger and receipts/approvals/payments",
+        "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
+        "status": "pending linked acceptance"
+      },
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.04",
+        "owner_batch": "invoices",
+        "criteria": "Finance invoice visibility and additive scope",
+        "status": "pending linked acceptance"
+      },
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.04",
+        "owner_batch": "contracts/documents",
+        "criteria": "Legal accept/sign/reject/change rights; Finance signing denial",
+        "status": "pending linked acceptance"
+      },
+      {
+        "task_key": "02-auth-users-admin.md#T-05.04.04",
+        "owner_batch": "orders and addresses",
+        "criteria": "Manager operations, documents/comments/consultation and protected identity denial",
+        "status": "pending linked acceptance"
+      }
+    ],
+    "pr_dispositions": [
+      {
+        "pr": 131,
+        "status": "closed",
+        "task_keys": [
+          "02-auth-users-admin.md#T-05.04.01"
+        ],
+        "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
+        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      },
+      {
+        "pr": 132,
+        "status": "closed",
+        "task_keys": [
+          "02-auth-users-admin.md#T-05.04.02"
+        ],
+        "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
+        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      },
+      {
+        "pr": 133,
+        "status": "closed",
+        "task_keys": [
+          "02-auth-users-admin.md#T-05.04.03"
+        ],
+        "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
+        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      },
+      {
+        "pr": 134,
+        "status": "open",
+        "task_keys": [
+          "02-auth-users-admin.md#T-05.04.04"
+        ],
+        "reason": "Cross-domain role criteria await linked wallet/invoice/contract/order batch evidence.",
+        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      },
+      {
+        "pr": 135,
+        "status": "closed",
+        "task_keys": [
+          "02-auth-users-admin.md#T-05.04.05"
+        ],
+        "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
+        "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      }
+    ],
+    "reused_evidence": [
+      "R01-agent-sensitive-actions",
+      "R01-invitation-authority",
+      "R01-invitation-credentials",
+      "R01-ownership-authority",
+      "R01-ownership-recipient-notice"
+    ],
+    "new_evidence": [
+      "92 API cases across six selected files pass, including registration-time invitation discovery and quota. 13 real-PostgreSQL/compiled-worker cases pass.",
+      "80 distinct production-browser cases pass across final/reused runs:64 team/profile-switch cases,16 staff cases. Final ownership/shared-focus correction additionally passes16 overlapping focused cases; do not add them to the distinct count.",
+      "50 i18n tests, API/web/worker/shared/i18n types, focused ESLint/Prettier, generated OpenAPI semantic match and all41 unchanged complete-route/Size Limit budgets pass.",
+      "Ownership method bodies match batch-base source exactly; prior b4a0c83 authority evidence remains valid. No schema, dependency installation, loop-state, remote publication or production operation changed."
+    ],
+    "next_action": "First feature batch is complete locally: PR131/132/133/135 closed; PR134 remains open for its assigned wallet/invoice/contract/order role evidence. Select the next bounded R01 account/session recovery batch from saved requirements and PR evidence, reusing completed work. Keep lost-contact policy pending without another question; preserve R01–B01 order and skipped builds in B01.",
+    "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+    "pr_counts": {
+      "closed": 4,
+      "open": 1,
+      "blocked": 0
+    },
+    "review_record": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
   }
 }

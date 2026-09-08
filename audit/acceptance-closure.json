@@ -573,13 +573,14 @@
         },
         {
           "path": "packages/i18n/package.json",
-          "sha256": "27f1a558e080f84a89bddf16060cff14a1e6215ac88cf37a34aa6d7e78c1488b"
+          "sha256": "cfe1a5fe7fa026420046ce942c7657f911a5e765b9a03948f6031cbaca18abe8"
         }
       ],
       "checks": [
         "Reviewed changed workspace/build/test manifests and root configuration against this task; existing Vitest4 projects compatibility limitation remains recorded where applicable.",
         "Runtime/build configuration and lockfile are unchanged since full checkpoint9529872; reuse its frozen production-image builds, workspace typechecks, route budgets and applicable test evidence.",
-        "Fresh package consumer verification passes all18 shared ESM/CJS export tests and all5 UI distribution/strict consumer tests. Every advertised shared/UI/i18n export target exists."
+        "Fresh package consumer verification passes all18 shared ESM/CJS export tests and all5 UI distribution/strict consumer tests. Every advertised shared/UI/i18n export target exists.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "This verifies test orchestration, not passing domain coverage thresholds. Hosted workflow execution is not claimed."
@@ -589,13 +590,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
-        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
-        "review": "Only password-creation options and associated hash assertions changed. Existing verification and unrelated methods are unchanged; focused delivery, staff, login-rate and bootstrap checks pass. Earlier unrelated evidence is reused.",
-        "record": "audit/evidence/step-reviews.json#R01-password-hash-policy",
-        "paths": [
-          "packages/shared/package.json"
-        ]
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
+        "changed_paths_reviewed": [
+          "packages/i18n/package.json"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -1015,7 +1015,7 @@
         },
         {
           "path": "apps/web/e2e/team.spec.ts",
-          "sha256": "17e4a4c7af4ecb6aa28c75a4de60cd638fd6d9aa0d1546bea0dbd28816df7217"
+          "sha256": "e8df6e3958f16bfcce9d8251813602c5c32716fdd836901f0586f46a693eae2b"
         },
         {
           "path": "apps/web/e2e/tickets.spec.ts",
@@ -1039,7 +1039,8 @@
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
-        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations."
+        "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
+        "Current team test-file evidence refreshed at 1bf4680: account-local invitation, ownership and terms dates pass in fa/en on desktop/mobile in the full64-case workflow run. This replaces the older test-file binding on current test evidence, not an assumed unchanged file. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Production database deployment is not certified by this local review. Global coverage and broader F20 localization/numeral requirements remain separate open gates."
@@ -1047,13 +1048,13 @@
       "merged_prs": [],
       "historically_skipped": true,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
-        "paths": [
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ]
+        "date": "2026-09-08",
+        "prior_reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
+        "prior_test_file_sha256": "17e4a4c7af4ecb6aa28c75a4de60cd638fd6d9aa0d1546bea0dbd28816df7217",
+        "changed_paths_reviewed": [
+          "apps/web/e2e/team.spec.ts"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       },
       "superseded_assessments": [
         {
@@ -3917,7 +3918,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
+          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3986,7 +3987,8 @@
         "Compared T-05.02.01 with the current GET controller/service and all seven UI tabs. Profile/account contacts, verification, dates, safe session references/count/activity, addresses/main marker, sibling profiles, scoped agents/history and authorized legal documents are present. The required /app/crm/profiles/:profileId alias reaches the staff detail page.",
         "The legal read moved to readCrmLegalInfo in the already-reviewed legal-edit step. Its SQL column whitelist, references and module/test hashes remain unchanged. Other changed API lines concern edit/archive mutations, not the detail permission boundary. Reuse earlier backend evidence instead of repeating the CRM suite.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed."
+        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Large production history-volume performance and legacy immutable-document recovery remain operational prerequisites. The detail session list contains the latest 20 records; active count is computed separately. The written task does not specify session pagination.",
@@ -4002,7 +4004,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -4020,7 +4022,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -4064,7 +4066,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
+          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -4115,7 +4117,8 @@
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
-        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [],
       "merged_prs": [
@@ -4126,10 +4129,10 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
         "changed_paths_reviewed": [
-          "apps/api/openapi.json",
-          "apps/api/src/session/session-step-up.ts"
+          "apps/web/src/components/TeamActionDialog.tsx",
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -4147,7 +4150,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -4193,7 +4196,8 @@
         "50 dictionary tests, web types/lint/build and41 route budgets pass at this revision.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
-        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Manual staff verification is covered. No automatic identity provider or external notification delivery is claimed.",
@@ -4207,9 +4211,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "changed_paths_reviewed": [
-          "apps/api/src/session/session-step-up.ts"
+          "apps/web/src/components/TeamActionDialog.tsx"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -4227,7 +4231,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -4285,7 +4289,8 @@
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
-        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "User notices are durable private in-app notices. Email/SMS delivery is not claimed.",
@@ -4299,9 +4304,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
         "changed_paths_reviewed": [
-          "apps/api/src/session/session-step-up.ts"
+          "apps/web/src/components/TeamActionDialog.tsx"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -4339,7 +4344,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -4375,7 +4380,8 @@
         "All18 real PostgreSQL/HTTP correction cases pass with exit0, including independent approval, correct identity table updates and actual before/after audits for the four additional protected fields.",
         "All24 distinct correction production-browser cases pass across the final focused runs. Eight reviewer cases cover fa/en, light/dark, desktop/mobile, status filtering, immutable evidence links, keyboard navigation, Escape cancellation, focus restoration, approval and legacy rejection. Queue/detail axe checks report no violations or incomplete contrast results.",
         "API/web typechecks, explicit changed-file lint, formatting, production build and all41 complete-route budgets pass. Backend product sources remain unchanged; prior transaction/evidence/permission regressions remain applicable.",
-        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "This verifies the local correction workflow and its five canonical protected identity fields. Legacy unsealed evidence requires resubmission; no live storage-provider recovery or production reconciliation is certified.",
@@ -4391,7 +4397,7 @@
         "changed_paths_reviewed": [
           "apps/web/src/components/TeamActionDialog.tsx"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -4525,7 +4531,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
         },
         {
           "path": "packages/i18n/src/crm.ts",
@@ -4557,7 +4563,8 @@
         "Explicit built-app archive browser recheck passes in R01-crm-profile-page-acceptance; earlier default-server run was development.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
-        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
@@ -4571,9 +4578,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "changed_paths_reviewed": [
-          "apps/api/src/session/session-step-up.ts"
+          "apps/web/src/components/TeamActionDialog.tsx"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -4607,7 +4614,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
+          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4642,7 +4649,8 @@
         "50 i18n tests pass. API and web typechecks, focused lint, final formatting, production web build, all 41 complete-route budgets and OpenAPI drift check pass. Index equality and manifest hashes bind the preview target to its build.",
         "Initial browser runs retained: first 12 pass/8 fail and next 6 pass/2 fail. Failures identified the Unicode arrow and partly clipped mobile text; proper icon markup and per-node revealed-text scans pass. The initial API typecheck error log is preserved alongside the later passing typecheck; no global checkpoint is renewed.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed."
+        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Production-scale search/aggregate performance, deployment and the final global checkpoint remain separate evidence."
@@ -4657,7 +4665,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -4744,7 +4752,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
+          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4772,7 +4780,8 @@
         "Initial combined browser run had four passes/eight failures because the test clock was installed after the polling interval. Installing it before navigation corrected the fixture. Product code stayed unchanged; the final eight cases pass permission/settings changes, malformed-response recovery, held-request polling and keyboard Show all.",
         "API/web typechecks, focused lint, final formatting, production web build, all 41 complete-route budgets and OpenAPI generation/drift pass. Served-index equality and manifest hashes bind browser evidence to the build. No global coverage or production image checkpoint is renewed.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
-        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed."
+        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Visibility and local reads are verified. Provider approval, deployed settings and final global regression remain separate evidence."
@@ -4787,7 +4796,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -5182,7 +5191,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
+          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5255,7 +5264,8 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
         "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain.",
-        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed."
+        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Local acceptance uses controlled HTTP/provider fixtures and migrated PostgreSQL. Real provider delivery and production rollout remain external."
@@ -5270,7 +5280,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -5324,7 +5334,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
         },
         {
           "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -5370,7 +5380,8 @@
         "Link creation stores a hash and24-hour expiry with encrypted delivery payload. Five current staff/activation delivery HTTP cases exercise the email adapter with a local receiver, expired-message cancellation, queue-failure rollback, replacement and one-time activation. activateStaff exactly matches the reviewed a60cce6 method.",
         "A creator without view/edit-role/disable grants can now select initial roles through the restricted role-options response. Existing role-management and later role edits still return403. The fa/en form provides normalized name/username fields, a keyboard-operated multi-select with descriptions and activation radios. Two selected roles survive step-up; fresh CSRF is used on retry; temporary password clears on dismissal/reload. Light/dark axe checks pass on desktop/mobile.",
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
-        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5384,9 +5395,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/api/src/session/session-step-up.ts"
+          "apps/web/src/components/TeamActionDialog.tsx"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -5440,7 +5451,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
         },
         {
           "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -5461,7 +5472,8 @@
         "The role_change audit contains target, before/after sets, actor, optional reason, verified step-up time and request correlation. Current authentication/permission checks survive waits; expiry or audit failure rolls back roles and credentials. R01-staff-sensitive-actions retains the17 authority races and constrained self-revocation review.",
         "The UI shows current role badges and an expandable checkbox multi-select with translated names/descriptions. It preserves the selected target, roles and reason through confirmation, failed password, failed save and retry. Staff creation/role editor light/dark axe scans and fa/en desktop/mobile cases pass.",
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
-        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5475,9 +5487,9 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/api/src/session/session-step-up.ts"
+          "apps/web/src/components/TeamActionDialog.tsx"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
     },
     {
@@ -5531,7 +5543,7 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
         },
         {
           "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -5564,7 +5576,8 @@
         "Disable uses a target-specific TeamActionDialog confirmation and admin:staff:edit plus step-up. Self-disable is prohibited. HTTP commit/rollback cases prove the disable flag, all target sessions, refresh credentials and audit are atomic; the administrator remains active and repeated disable is idempotent. Current login and session authorization reject disabled accounts.",
         "Reviewed the localized table, name fallback, role/status/last-login cells, pagination, retry and permission-loss behavior. Staff list and role editor axe scans pass in light/dark for fa/en on desktop/mobile. Replaced fixed white/gray page colors after reproducing dark text contrast failures.",
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
-        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions."
+        "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5578,10 +5591,364 @@
         "date": "2026-09-08",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/api/src/session/session-step-up.ts"
+          "apps/web/src/components/TeamActionDialog.tsx"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invitation-authority"
+        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
       }
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 464,
+      "requirement": "**T-05.04.01 — Agent list for legal entity**\n\n- Description: User with active legal profile (owner or manager role) can view list of agents — invited or already joined. Shows: name, role, invitation status, joined date. Can withdraw pending invite.\n- Technical notes: GET `/api/profiles/:profileId/agents` returns agents with user info (if registered) and invite status. Permission: owner or manager of the legal profile. API does NOT reveal whether invited user is already registered (privacy). Withdraw: DELETE `/api/profiles/:profileId/invitations/:inviteId`.\n- UI/UX: Table with columns: Agent name/username, Role badge, Status (Pending/Active), Joined date, Actions (Remove/Withdraw). Invite button. Empty state: \"No agents yet. Invite your team.\"\n- Dependencies: T-03.03.01\n- Complexity: M",
+      "requirement_sha256": "d9f9d2d4980afad07de779059d2944dce81671ed893656dcce8e4003800ba35b",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
+          "sha256": "a6634f7c79b3e37f3f69c341f1b2ea41e83d03359dcd3607137bba0a4e37caab"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.test.ts",
+          "sha256": "c702e726ce6606e2e9c399eb2eb684347decbdb409199d4c6254ed375fcb6b15"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "c377f5784f27b2201d250124bf89918e92442601428611b4309726025a4ef60f"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "e8df6e3958f16bfcce9d8251813602c5c32716fdd836901f0586f46a693eae2b"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "9d2241eb5d3531142b02119158f5f3c4e8c7ab9b3e82dbad0080d762d200db54"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+        },
+        {
+          "path": "packages/i18n/src/team.ts",
+          "sha256": "cd85910dc75257ea309e5c5ef2857d2e52335084361b7530a4e475d6b15eab5f"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.controller.ts",
+          "sha256": "7142644b09cbcce73d89b7d2336832b9bc4943c7648cbcabfb123436692d6195"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        }
+      ],
+      "checks": [
+        "Current owner/Manager list authorization, legal-profile scope and invited-account privacy pass actual HTTP checks. Expired Pending rows are excluded without exposing registration status.",
+        "Native table contains username/name, role badges, Active/Pending, joined date and Remove/Withdraw. Empty state and active-legal/permission branches were reviewed. Browser cases cover table, localized dates, invitations, withdrawal/removal and owner-only transfer controls. Existing e48bf58/417ab33 transaction evidence is retained.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      ],
+      "limitations": [
+        "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
+      ],
+      "merged_prs": [
+        131
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 472,
+      "requirement": "**T-05.04.02 — Agent invitation flow**\n\n- Description: Owner/manager invites by email or mobile number. Must select role: Manager, Finance, Legal. If user is registered, send notification. If not registered, they see the invite when they register with that username.\n- Technical notes: POST `/api/profiles/:profileId/invitations` with `{ username, role }`. Constraints: legal profile must have exactly one owner at all times. Owner cannot be removed without ownership transfer. Rate limited: 10 invitations per hour per profile. Audit: invitation_created. When invited user registers, check pending invitations and link automatically. Invitation states: Pending, Accepted, Withdrawn, Declined, Expired (default 7 days).\n- UI/UX: Modal: username field (email/mobile), role dropdown. Preview: \"Invite [username] as [role] to [legal entity name].\" Confirmation. Success: \"Invitation sent. User will be notified when available.\"\n- Dependencies: T-05.04.01\n- Complexity: L",
+      "requirement_sha256": "77c232f77e23d8e0bdc9a7f9598035caa6774ffddc4ad452cf957a327a0883a6",
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
+          "sha256": "a6634f7c79b3e37f3f69c341f1b2ea41e83d03359dcd3607137bba0a4e37caab"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "c377f5784f27b2201d250124bf89918e92442601428611b4309726025a4ef60f"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-notifications.ts",
+          "sha256": "28ffc9a648a9568c532e300360831a59a96aeae1e1bed26a4cf6d12f1a3e98b9"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "e8df6e3958f16bfcce9d8251813602c5c32716fdd836901f0586f46a693eae2b"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "9d2241eb5d3531142b02119158f5f3c4e8c7ab9b3e82dbad0080d762d200db54"
+        },
+        {
+          "path": "apps/worker/src/main-process.integration.test.ts",
+          "sha256": "de99606cbcf43139cfba4af48753d84787a3b6b048f8f63f4649ffb7f26ce252"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "d485a28edf1db7d2288d30b1e7e5f9923c1d612421bc44d46a634fbe2bcad560"
+        },
+        {
+          "path": "apps/worker/src/profiles/invitation-expiry.integration.test.ts",
+          "sha256": "b55077e06cf0e27efb6401f57e9836c951d9a3912b4212a7c3203c4a05805235"
+        },
+        {
+          "path": "apps/worker/src/profiles/invitation-expiry.ts",
+          "sha256": "54ac4f4101bbfcba8d1a46cf2c2bc839c45e878aa2ac946f888de1f5bed37cbd"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "782875e3d2c9bb71c568db70d6672153e0b1a4d76b072fd4795d1880640266fe"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+        },
+        {
+          "path": "packages/i18n/src/team.ts",
+          "sha256": "cd85910dc75257ea309e5c5ef2857d2e52335084361b7530a4e475d6b15eab5f"
+        },
+        {
+          "path": "packages/shared/src/admin/background-jobs.ts",
+          "sha256": "356431a1570ccd993ed76644718e8640e5c6abd227ecfbc4890e6ee4baa53357"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "82a348ce87b1752e74604cf359796c239b0b3d23045bc8c1bc442a37552c293d"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
+        }
+      ],
+      "checks": [
+        "Modal has email/mobile input, Manager/Finance/Legal choices and named username/role/entity preview before Send. Cancel makes no request; errors preserve draft and retry; success follows committed response. Legal entity name comes from the API, not a custom profile label.",
+        "Registered invitees receive a localized, user-scoped in-app notice in the same transaction as invitation and audit. Sorted actor/known-recipient account locks avoid reciprocal-invitation deadlock; the locked row must still own the invited username. Notification/audit/session failure rolls back every effect.",
+        "Real registration and OTP verification with a pre-existing normalized invitation exposes that pending invitation through returned credentials. Registration grants no membership; acceptance provides consent. Transport was replaced with a fixture OTP, and transport delivery is outside this check.",
+        "HTTP checks prove ten successful invitations per profile/hour, rejection of the eleventh without writes, exact seven-day default, duplicate rejection and current authorization. Existing ownership/removal evidence preserves the single owner.",
+        "The compiled worker polls invitation expiry, records failure/recovery and drains on shutdown. Real migrated PostgreSQL proves bounded expiry, concurrent SKIP LOCKED decisions, idempotent correlated audit and rollback/retry. All three PR132 deferrals have explicit supported dispositions.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      ],
+      "limitations": [
+        "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
+        "Production expiry needs the existing configured active worker audit actor or an active administrator fallback. Invalid configured actors produce a visible failed job. Legacy invitations with no expiry timestamp are preserved for historical reconciliation."
+      ],
+      "merged_prs": [
+        132
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 480,
+      "requirement": "**T-05.04.03 — Accept/decline invitation**\n\n- Description: Invited user sees pending invitation on their dashboard (as a banner/message). Can view legal entity details and the inviter's info. Can Accept or Decline.\n- Technical notes: GET `/api/invitations/pending` returns pending invites for current user. POST `/api/invitations/:inviteId/accept` — adds user as agent with specified role. POST `/api/invitations/:inviteId/decline` — marks declined. Audit: invitation_accepted/declined.\n- UI/UX: Dashboard banner: \"[Legal Entity Name] has invited you as [Role]. [View Details] [Accept] [Decline]\". Details: entity info, inviter name, role description, date invited.\n- Dependencies: T-05.04.02, T-03.03.01\n- Complexity: M",
+      "requirement_sha256": "6a8cf0ed0795d7bea01f4eeecb03ddf267b4fa3a3d3e3fec362e0f22a7b064a6",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
+          "sha256": "a6634f7c79b3e37f3f69c341f1b2ea41e83d03359dcd3607137bba0a4e37caab"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "c377f5784f27b2201d250124bf89918e92442601428611b4309726025a4ef60f"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "e8df6e3958f16bfcce9d8251813602c5c32716fdd836901f0586f46a693eae2b"
+        },
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "c11f2ad47268bcad9999a23a8a8cf011bc6b34fd8f6bd2df4b0561983b75b9eb"
+        },
+        {
+          "path": "apps/web/src/components/InvitationDetails.tsx",
+          "sha256": "002a1451c50bed83653d6f2efceb82436f079f4720596eb19ca560dd06e06dd1"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+        },
+        {
+          "path": "apps/api/src/profiles/invitations.controller.ts",
+          "sha256": "d7d65ecdaa1bf47938ce28b72bd05704890a66cce80d15a858057079bb09c142"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+          "sha256": "ef1133893104ed49810d3198f9fdefc2dae3ed850b674db94a2520fc21f8fd63"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "221caf47f5bbcc37fd4470ace69303d4872b37d88d35c899a8562eb8fdaab006"
+        }
+      ],
+      "checks": [
+        "Only the invited current username sees pending, unexpired invitations. Entity national identifier/registration number and inviter identity are returned only in that private response.",
+        "Dashboard banner exposes View details, Accept and Decline. Native details disclosure shows entity identifiers, inviter, localized role description, account-local dates and expiry. Keyboard expansion/collapse, fa/en/RTL, mobile fit and stable light/dark contrast pass.",
+        "The existing acceptance transaction alone grants the selected role and rotates credentials atomically. Failed accept/decline remains retryable; successful decisions refresh profiles and subsequent selection uses rotated CSRF. Direct banner decisions satisfy the canonical requirement; it does not require an extra confirmation dialog.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      ],
+      "limitations": [
+        "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
+      ],
+      "merged_prs": [
+        133
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "status": "partial",
+      "reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 488,
+      "requirement": "**T-05.04.04 — Agent role permissions enforcement**\n\n- Description: At every API call, enforce the agent's role-based permissions on the legal profile's data.\n- Technical notes: Permission matrix:\n  - Owner: full customer-side control, including agents, orders, contracts, invoices, wallet, addresses, cancellation requests. Ownership transfer requires step-up + acceptance.\n  - Manager: operational access (addresses, orders, consultation, documents, comments, inviting/removing non-owner agents). Cannot transfer ownership or change protected identity fields.\n  - Finance: view invoices, wallet, payments, receipts, refunds; charge wallet, submit bank receipts. Cannot accept/sign contracts.\n  - Legal: view, accept, sign, reject, request changes to contracts and legal documents. Cannot move wallet funds.\n  - Permissions additive when agent has multiple roles.\n  - Removing agent immediately revokes new access but preserves historical authorship.\n  - Last owner cannot remove themselves without completing ownership transfer.\n- UI/UX: N/A (backend enforcement + UI conditional rendering based on permissions)\n- Dependencies: T-05.04.02, authorization framework\n- Complexity: XL",
+      "requirement_sha256": "e78b6844e685f9f1176cf00c98a3ce01668e56aaf2720448a7a63b093c2b9b91",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "c377f5784f27b2201d250124bf89918e92442601428611b4309726025a4ef60f"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "e8df6e3958f16bfcce9d8251813602c5c32716fdd836901f0586f46a693eae2b"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "9d2241eb5d3531142b02119158f5f3c4e8c7ab9b3e82dbad0080d762d200db54"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+        },
+        {
+          "path": "packages/i18n/src/team.ts",
+          "sha256": "cd85910dc75257ea309e5c5ef2857d2e52335084361b7530a4e475d6b15eab5f"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.controller.ts",
+          "sha256": "7142644b09cbcce73d89b7d2336832b9bc4943c7648cbcabfb123436692d6195"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "82a348ce87b1752e74604cf359796c239b0b3d23045bc8c1bc442a37552c293d"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        }
+      ],
+      "checks": [
+        "Local owner/Manager controls and additive agent grants are reviewed. Existing 417ab33 mutation evidence proves current authorization, owner protection, immediate credential/access revocation and preserved history. The batch preserves unchanged domain implementations.",
+        "Wallet/receipt/payment/refund, invoice, contract/document and order/address role criteria remain assigned to their owning feature batches. This task and PR134 remain open until linked domain evidence is complete.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      ],
+      "limitations": [
+        "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
+        "Required cross-domain role matrix remains unresolved. See progress.json.active_batch.cross_domain_evidence; no future requirement is counted as passed."
+      ],
+      "merged_prs": [
+        134
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 503,
+      "requirement": "**T-05.04.05 — Ownership transfer**\n\n- Description: Legal profile owner can transfer ownership to another agent. Requires step-up auth, acceptance by new owner, and audit trail.\n- Technical notes: POST `/api/profiles/:profileId/transfer-ownership` with `{ newOwnerUserId }`. Creates pending transfer. New owner accepts via POST `/api/profiles/:profileId/ownership-accept`. If declined or expired, transfer cancelled. During transfer, current owner retains control. Cannot transfer if new owner is not an existing agent of that profile. Audit: ownership_transfer_initiated, ownership_transfer_completed/declined.\n- UI/UX: Step-up auth prompt → Select new owner from agents list → Confirmation → \"Transfer request sent to [name]. They must accept.\" Pending banner for new owner.\n- Dependencies: T-05.04.04\n- Complexity: L",
+      "requirement_sha256": "d5eb05fd83b5922fc79bb86ffd701d54635d7fdb6587e78210f21a243c6c8d00",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "c377f5784f27b2201d250124bf89918e92442601428611b4309726025a4ef60f"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "e8df6e3958f16bfcce9d8251813602c5c32716fdd836901f0586f46a693eae2b"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "9d2241eb5d3531142b02119158f5f3c4e8c7ab9b3e82dbad0080d762d200db54"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+        },
+        {
+          "path": "packages/i18n/src/team.ts",
+          "sha256": "cd85910dc75257ea309e5c5ef2857d2e52335084361b7530a4e475d6b15eab5f"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "82a348ce87b1752e74604cf359796c239b0b3d23045bc8c1bc442a37552c293d"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
+          "sha256": "06b98b37271eac465b1317c4d654ccb722b31fe5bf8df4e724a6781b9a9fa82f"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "sha256": "58a9c92042c790bf36bcdf4b57944e35360551011e1fc2051aadb9fbaa987987"
+        },
+        {
+          "path": "apps/web/src/components/OwnershipBanner.tsx",
+          "sha256": "ff331961bd0a0617eeea23254ed7ade394a765b96351d426f7e36d4a3888359f"
+        }
+      ],
+      "checks": [
+        "Ownership UI now follows password verification, blank eligible-agent selector, target-specific confirmation and named acceptance-needed success. One dialog retains focus across stages; cancellation, reauthentication, current CSRF and immutable target retries pass.",
+        "No ownership API method body changed from the immediate batch base. Reuse b4a0c83 authority/expiry/audit and earlier credential evidence: current owner retains control until acceptance, recipient must be an existing agent, decline/expiry cancel, audit is atomic and successful acceptance invalidates both owners credentials.",
+        "Incoming banner, exact transfer decisions, expired/conflicting response without false success, localized recipient-name fallback, fa/en/RTL, light/dark and keyboard/focus checks pass. Final review restricted automatic confirmation focus to the ownership flow, preserving existing shared-dialog behavior.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      ],
+      "limitations": [
+        "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
+      ],
+      "merged_prs": [
+        135
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -5707,11 +6074,6 @@
     "02-auth-users-admin.md#T-03.03.06",
     "02-auth-users-admin.md#T-03.04.01",
     "02-auth-users-admin.md#T-03.04.02",
-    "02-auth-users-admin.md#T-05.04.01",
-    "02-auth-users-admin.md#T-05.04.02",
-    "02-auth-users-admin.md#T-05.04.03",
-    "02-auth-users-admin.md#T-05.04.04",
-    "02-auth-users-admin.md#T-05.04.05",
     "02-auth-users-admin.md#T-05.05.02",
     "02-auth-users-admin.md#T-06.01.01",
     "02-auth-users-admin.md#T-06.01.02",

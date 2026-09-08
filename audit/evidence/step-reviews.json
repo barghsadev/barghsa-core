@@ -4394,6 +4394,342 @@
         "/tmp/r01-ownership-presentation-source-review.log",
         "/tmp/r01-ownership-presentation-types.log"
       ]
+    },
+    {
+      "id": "R01-agents-invitations-ownership",
+      "date": "2026-09-08",
+      "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+      "base_revision": "55bae1f46c3c212e1013303de5ef984b85d99e0a",
+      "product_commits": [
+        "bcbbe1ba635b3d2a365561bcbd9d133799774eac",
+        "1bf4680cefc77361392ae47addc292d7d90b999e"
+      ],
+      "summary": "Agent/invitation/ownership feature batch: four tasks and four PR reviews close locally; cross-domain role enforcement stays partial/open.",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.04.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.04.03",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-05.04.05"
+      ],
+      "review": [
+        "Current owner/Manager list authorization, legal-profile scope and invited-account privacy pass actual HTTP checks. Expired Pending rows are excluded without exposing registration status.",
+        "Native table contains username/name, role badges, Active/Pending, joined date and Remove/Withdraw. Empty state and active-legal/permission branches were reviewed. Browser cases cover table, localized dates, invitations, withdrawal/removal and owner-only transfer controls. Existing e48bf58/417ab33 transaction evidence is retained.",
+        "Modal has email/mobile input, Manager/Finance/Legal choices and named username/role/entity preview before Send. Cancel makes no request; errors preserve draft and retry; success follows committed response. Legal entity name comes from the API, not a custom profile label.",
+        "Registered invitees receive a localized, user-scoped in-app notice in the same transaction as invitation and audit. Sorted actor/known-recipient account locks avoid reciprocal-invitation deadlock; the locked row must still own the invited username. Notification/audit/session failure rolls back every effect.",
+        "Real registration and OTP verification with a pre-existing normalized invitation exposes that pending invitation through returned credentials. Registration grants no membership; acceptance provides consent. Transport was replaced with a fixture OTP, and transport delivery is outside this check.",
+        "HTTP checks prove ten successful invitations per profile/hour, rejection of the eleventh without writes, exact seven-day default, duplicate rejection and current authorization. Existing ownership/removal evidence preserves the single owner.",
+        "The compiled worker polls invitation expiry, records failure/recovery and drains on shutdown. Real migrated PostgreSQL proves bounded expiry, concurrent SKIP LOCKED decisions, idempotent correlated audit and rollback/retry. All three PR132 deferrals have explicit supported dispositions.",
+        "Only the invited current username sees pending, unexpired invitations. Entity national identifier/registration number and inviter identity are returned only in that private response.",
+        "Dashboard banner exposes View details, Accept and Decline. Native details disclosure shows entity identifiers, inviter, localized role description, account-local dates and expiry. Keyboard expansion/collapse, fa/en/RTL, mobile fit and stable light/dark contrast pass.",
+        "The existing acceptance transaction alone grants the selected role and rotates credentials atomically. Failed accept/decline remains retryable; successful decisions refresh profiles and subsequent selection uses rotated CSRF. Direct banner decisions satisfy the canonical requirement; it does not require an extra confirmation dialog.",
+        "Local owner/Manager controls and additive agent grants are reviewed. Existing 417ab33 mutation evidence proves current authorization, owner protection, immediate credential/access revocation and preserved history. The batch preserves unchanged domain implementations.",
+        "Wallet/receipt/payment/refund, invoice, contract/document and order/address role criteria remain assigned to their owning feature batches. This task and PR134 remain open until linked domain evidence is complete.",
+        "Ownership UI now follows password verification, blank eligible-agent selector, target-specific confirmation and named acceptance-needed success. One dialog retains focus across stages; cancellation, reauthentication, current CSRF and immutable target retries pass.",
+        "No ownership API method body changed from the immediate batch base. Reuse b4a0c83 authority/expiry/audit and earlier credential evidence: current owner retains control until acceptance, recipient must be an existing agent, decline/expiry cancel, audit is atomic and successful acceptance invalidates both owners credentials.",
+        "Incoming banner, exact transfer decisions, expired/conflicting response without false success, localized recipient-name fallback, fa/en/RTL, light/dark and keyboard/focus checks pass. Final review restricted automatic confirmation focus to the ownership flow, preserving existing shared-dialog behavior.",
+        "Reused completed work and valid revision-bound evidence. One affected-workflow checkpoint plus focused failure/shared-focus rechecks; no full repository regression or broad-checkpoint renewal.",
+        "Failed experiments are retained. Initial concurrency test blocked session validation before the intended barrier; fixed fixture. Native table duplicate landmark repaired. Theme scans now wait for finite animations. Optional chunk extraction exceeded the unchanged budget and was replaced by native disclosure; team-only dictionary extraction and shared handler consolidation restored every budget."
+      ],
+      "checks": [
+        "92 API cases across six selected files pass, including registration-time invitation discovery and quota. 13 real-PostgreSQL/compiled-worker cases pass.",
+        "80 distinct production-browser cases pass across final/reused runs:64 team/profile-switch cases,16 staff cases. Final ownership/shared-focus correction additionally passes16 overlapping focused cases; do not add them to the distinct count.",
+        "50 i18n tests, API/web/worker/shared/i18n types, focused ESLint/Prettier, generated OpenAPI semantic match and all41 unchanged complete-route/Size Limit budgets pass.",
+        "Ownership method bodies match batch-base source exactly; prior b4a0c83 authority evidence remains valid. No schema, dependency installation, loop-state, remote publication or production operation changed."
+      ],
+      "remaining": [
+        "PR134/T-05.04.04 requires linked cross-domain role evidence. Local first-batch work is complete.",
+        "Continue bounded R01 account/session recovery review from the saved inventory; lost-contact policy remains pending, do not ask again.",
+        "Twelve older source-evidence drifts, other historical PR dispositions, coverage and final V02 regression remain in their original phases."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 131,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.04.01"
+          ],
+          "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
+          "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+          "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        },
+        {
+          "pr": 132,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.04.02"
+          ],
+          "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
+          "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+          "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        },
+        {
+          "pr": 133,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.04.03"
+          ],
+          "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
+          "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+          "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        },
+        {
+          "pr": 134,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.04.04"
+          ],
+          "reason": "Cross-domain role criteria await linked wallet/invoice/contract/order batch evidence.",
+          "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+          "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        },
+        {
+          "pr": 135,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.04.05"
+          ],
+          "reason": "Mapped requirements reviewed against current implementation; applicable historical deferrals explicitly satisfied.",
+          "source_revision": "1bf4680cefc77361392ae47addc292d7d90b999e",
+          "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        }
+      ],
+      "pr_counts": {
+        "closed": 4,
+        "open": 1,
+        "blocked": 0
+      },
+      "cross_domain_evidence": [
+        {
+          "task_key": "02-auth-users-admin.md#T-05.04.04",
+          "owner_batch": "wallet/ledger and receipts/approvals/payments",
+          "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
+          "status": "pending linked acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.04.04",
+          "owner_batch": "invoices",
+          "criteria": "Finance invoice visibility and additive scope",
+          "status": "pending linked acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.04.04",
+          "owner_batch": "contracts/documents",
+          "criteria": "Legal accept/sign/reject/change rights; Finance signing denial",
+          "status": "pending linked acceptance"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.04.04",
+          "owner_batch": "orders and addresses",
+          "criteria": "Manager operations, documents/comments/consultation and protected identity denial",
+          "status": "pending linked acceptance"
+        }
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
+          "sha256": "a6634f7c79b3e37f3f69c341f1b2ea41e83d03359dcd3607137bba0a4e37caab"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.test.ts",
+          "sha256": "c702e726ce6606e2e9c399eb2eb684347decbdb409199d4c6254ed375fcb6b15"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "c377f5784f27b2201d250124bf89918e92442601428611b4309726025a4ef60f"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-notifications.ts",
+          "sha256": "28ffc9a648a9568c532e300360831a59a96aeae1e1bed26a4cf6d12f1a3e98b9"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "e8df6e3958f16bfcce9d8251813602c5c32716fdd836901f0586f46a693eae2b"
+        },
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "c11f2ad47268bcad9999a23a8a8cf011bc6b34fd8f6bd2df4b0561983b75b9eb"
+        },
+        {
+          "path": "apps/web/src/components/InvitationDetails.tsx",
+          "sha256": "002a1451c50bed83653d6f2efceb82436f079f4720596eb19ca560dd06e06dd1"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "76a1d56283f94d041006407760f977457d2da6a354a7b9b062af5680dfdecd2f"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "9d2241eb5d3531142b02119158f5f3c4e8c7ab9b3e82dbad0080d762d200db54"
+        },
+        {
+          "path": "apps/worker/src/main-process.integration.test.ts",
+          "sha256": "de99606cbcf43139cfba4af48753d84787a3b6b048f8f63f4649ffb7f26ce252"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "d485a28edf1db7d2288d30b1e7e5f9923c1d612421bc44d46a634fbe2bcad560"
+        },
+        {
+          "path": "apps/worker/src/profiles/invitation-expiry.integration.test.ts",
+          "sha256": "b55077e06cf0e27efb6401f57e9836c951d9a3912b4212a7c3203c4a05805235"
+        },
+        {
+          "path": "apps/worker/src/profiles/invitation-expiry.ts",
+          "sha256": "54ac4f4101bbfcba8d1a46cf2c2bc839c45e878aa2ac946f888de1f5bed37cbd"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "cfe1a5fe7fa026420046ce942c7657f911a5e765b9a03948f6031cbaca18abe8"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "782875e3d2c9bb71c568db70d6672153e0b1a4d76b072fd4795d1880640266fe"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+        },
+        {
+          "path": "packages/i18n/src/team.ts",
+          "sha256": "cd85910dc75257ea309e5c5ef2857d2e52335084361b7530a4e475d6b15eab5f"
+        },
+        {
+          "path": "packages/shared/src/admin/background-jobs.ts",
+          "sha256": "356431a1570ccd993ed76644718e8640e5c6abd227ecfbc4890e6ee4baa53357"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.controller.ts",
+          "sha256": "7142644b09cbcce73d89b7d2336832b9bc4943c7648cbcabfb123436692d6195"
+        },
+        {
+          "path": "apps/api/src/profiles/invitations.controller.ts",
+          "sha256": "d7d65ecdaa1bf47938ce28b72bd05704890a66cce80d15a858057079bb09c142"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "82a348ce87b1752e74604cf359796c239b0b3d23045bc8c1bc442a37552c293d"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+          "sha256": "ef1133893104ed49810d3198f9fdefc2dae3ed850b674db94a2520fc21f8fd63"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
+          "sha256": "06b98b37271eac465b1317c4d654ccb722b31fe5bf8df4e724a6781b9a9fa82f"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "sha256": "58a9c92042c790bf36bcdf4b57944e35360551011e1fc2051aadb9fbaa987987"
+        },
+        {
+          "path": "apps/web/src/components/OwnershipBanner.tsx",
+          "sha256": "ff331961bd0a0617eeea23254ed7ade394a765b96351d426f7e36d4a3888359f"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "221caf47f5bbcc37fd4470ace69303d4872b37d88d35c899a8562eb8fdaab006"
+        },
+        {
+          "path": "apps/web/e2e/staff-users.spec.ts",
+          "sha256": "991ad5193e175e7a98ee1e35c4fd0f4154878d351e50c0eb94f14b920f77890d"
+        },
+        {
+          "path": "apps/web/e2e/staff-creation.spec.ts",
+          "sha256": "95c5c0cdbb8cffcbfca56f97fe1d74cb0c08fc6c9d6ec86101c4f61396570c88"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/r01-agent-batch-api-checkpoint.log",
+        "/tmp/r01-agent-batch-api-types-final.log",
+        "/tmp/r01-agent-batch-browser-checkpoint.log",
+        "/tmp/r01-agent-batch-browser-final.log",
+        "/tmp/r01-agent-batch-browser-recheck.log",
+        "/tmp/r01-agent-batch-budgets-consolidated.log",
+        "/tmp/r01-agent-batch-budgets-final.log",
+        "/tmp/r01-agent-batch-budgets-merged.log",
+        "/tmp/r01-agent-batch-budgets-native.log",
+        "/tmp/r01-agent-batch-budgets-recheck.log",
+        "/tmp/r01-agent-batch-budgets.log",
+        "/tmp/r01-agent-batch-decision-format.log",
+        "/tmp/r01-agent-batch-decision-lint.log",
+        "/tmp/r01-agent-batch-decision-types.log",
+        "/tmp/r01-agent-batch-details-final-format.log",
+        "/tmp/r01-agent-batch-details-format.log",
+        "/tmp/r01-agent-batch-final-format.log",
+        "/tmp/r01-agent-batch-focus-browser.log",
+        "/tmp/r01-agent-batch-focus-budgets.log",
+        "/tmp/r01-agent-batch-focus-build.log",
+        "/tmp/r01-agent-batch-focus-commit.log",
+        "/tmp/r01-agent-batch-focus-lint.log",
+        "/tmp/r01-agent-batch-focus-types.log",
+        "/tmp/r01-agent-batch-format-check.log",
+        "/tmp/r01-agent-batch-format-final.log",
+        "/tmp/r01-agent-batch-i18n-build.log",
+        "/tmp/r01-agent-batch-i18n-checkpoint.log",
+        "/tmp/r01-agent-batch-i18n-concise.log",
+        "/tmp/r01-agent-batch-i18n-details.log",
+        "/tmp/r01-agent-batch-i18n-final.log",
+        "/tmp/r01-agent-batch-i18n-merged.log",
+        "/tmp/r01-agent-batch-i18n-team.log",
+        "/tmp/r01-agent-batch-i18n-tests.log",
+        "/tmp/r01-agent-batch-invitation-api-focused.log",
+        "/tmp/r01-agent-batch-invitation-api-recheck.log",
+        "/tmp/r01-agent-batch-invitation-details-types.log",
+        "/tmp/r01-agent-batch-invitation-service-types.log",
+        "/tmp/r01-agent-batch-invitation-ui-types.log",
+        "/tmp/r01-agent-batch-lint-final.log",
+        "/tmp/r01-agent-batch-lint-recheck.log",
+        "/tmp/r01-agent-batch-lint.log",
+        "/tmp/r01-agent-batch-merged-lint.log",
+        "/tmp/r01-agent-batch-openapi.log",
+        "/tmp/r01-agent-batch-ownership-dialog-build.log",
+        "/tmp/r01-agent-batch-ownership-dialog-check.log",
+        "/tmp/r01-agent-batch-ownership-flow-build.log",
+        "/tmp/r01-agent-batch-ownership-flow-check.log",
+        "/tmp/r01-agent-batch-ownership-flow-final.log",
+        "/tmp/r01-agent-batch-ownership-focus-build.log",
+        "/tmp/r01-agent-batch-ownership-focused-recheck.log",
+        "/tmp/r01-agent-batch-ownership-focused.log",
+        "/tmp/r01-agent-batch-ownership-return-focus-build.log",
+        "/tmp/r01-agent-batch-ownership-theme-build.log",
+        "/tmp/r01-agent-batch-ownership-types.log",
+        "/tmp/r01-agent-batch-product-commit.log",
+        "/tmp/r01-agent-batch-source-review.log",
+        "/tmp/r01-agent-batch-team-dictionary-format.log",
+        "/tmp/r01-agent-batch-test-format.log",
+        "/tmp/r01-agent-batch-types-merged.log",
+        "/tmp/r01-agent-batch-types-recheck.log",
+        "/tmp/r01-agent-batch-types.log",
+        "/tmp/r01-agent-batch-ui-format.log",
+        "/tmp/r01-agent-batch-web-build.log",
+        "/tmp/r01-agent-batch-web-checkpoint.log",
+        "/tmp/r01-agent-batch-web-concise.log",
+        "/tmp/r01-agent-batch-web-details.log",
+        "/tmp/r01-agent-batch-web-final-verified.log",
+        "/tmp/r01-agent-batch-web-final.log",
+        "/tmp/r01-agent-batch-web-landmark.log",
+        "/tmp/r01-agent-batch-web-merged.log",
+        "/tmp/r01-agent-batch-web-native-details.log",
+        "/tmp/r01-agent-batch-web-team-dictionary.log",
+        "/tmp/r01-agent-batch-web-types-final.log",
+        "/tmp/r01-agent-batch-worker-focused.log",
+        "/tmp/r01-agent-batch-worker-format.log",
+        "/tmp/r01-ownership-flow-types-initial.log"
+      ]
     }
   ]
 }
