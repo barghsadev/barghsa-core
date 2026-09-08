@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+  "source_revision": "56498a12d726418a0990faa415573b706d6a84e0",
   "active_step": "R01",
-  "next_action": "Review R01-account-settings saved PRs111–114 using exact requirements and existing profile/contact/settings evidence. Repair confirmed defects with focused checks, then reconcile four tasks once. Preserve profile/onboarding closure and the commercial-order dependency.",
+  "next_action": "Continue R01-account-settings. First reproduce required all-available notification defaults for newly registered/staff accounts, inspect contact synchronization and preserve saved user choices. Profile confirmation repair56498a1 passes9 distinct browser cases and42 budgets; reuse it. Complete remaining profile/contact/timezone acceptance before one batch reconciliation.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -731,14 +731,76 @@
       "IANA timezone persistence/default, searchable preview and actual date/time consumers; assign shared display gaps to R03."
     ],
     "historical_deferrals": [],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "task_keys": [
+          "02-auth-users-admin.md#T-03.03.03"
+        ],
+        "summary": "Profile Save bypasses confirmation, accepts any successful HTTP body, and lacks required editable-field icons and keyboard-accessible lock tooltips.",
+        "status": "fixed_and_verified",
+        "commit": "56498a12d726418a0990faa415573b706d6a84e0"
+      },
+      {
+        "task_keys": [
+          "02-auth-users-admin.md#T-03.03.05"
+        ],
+        "summary": "New-user notification preference schema defaults to IN_APP only; creation paths do not set all available channels. Validate via HTTP before repair.",
+        "status": "under_review"
+      }
+    ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#R01-profiles-onboarding",
       "R01-session-recovery",
       "Existing source-bound contact-change, settings and timezone repairs; compare only affected sources before reuse."
     ],
     "pr_dispositions": [],
-    "next_action": "Review R01-account-settings saved PRs111–114 using exact requirements and existing profile/contact/settings evidence. Repair confirmed defects with focused checks, then reconcile four tasks once. Preserve profile/onboarding closure and the commercial-order dependency."
+    "next_action": "Continue R01-account-settings. First reproduce required all-available notification defaults for newly registered/staff accounts, inspect contact synchronization and preserve saved user choices. Profile confirmation repair56498a1 passes9 distinct browser cases and42 budgets; reuse it. Complete remaining profile/contact/timezone acceptance before one batch reconciliation.",
+    "local_repairs": [
+      {
+        "commit": "56498a12d726418a0990faa415573b706d6a84e0",
+        "summary": "Profile settings requires confirmation before save, serializes repeated submissions and accepts success only for the requested profile ID/type. Failures stay localized in the dialog and preserve edits; cancel and successful refresh return focus. Editable fields show pencils; locked fields retain visible explanations and native hover hints on focusable buttons.",
+        "checks": "9 distinct production Chromium cases pass at the final workflow run;2 overlapping fa/en cases pass again after the final icon-button correction. Web types/lint/format/build and all42 unchanged budgets pass. Electricity249.93KB/250KB. API/schema/dependencies unchanged.",
+        "review": "Reviewed single in-flight guard, modal pending/cancel policy, changed-field payload, CSRF, response binding, refresh/focus and unchanged verified/staff field policy. Initial2 browser cases reproduce missing confirmation. Intermediate failures were premature second-save selection during dialog exit and test keyboard modality; the tooltip import caused budget regression and was removed. Native hint has a persistent visible equivalent; no custom tooltip library is added.",
+        "source_evidence": [
+          {
+            "path": "apps/web/src/routes/_app/settings/profile.tsx",
+            "sha256": "64f8346f7691e38bc7bc671ddd5e7f2ccdf0158574707f7f2eec146d49577c1f"
+          },
+          {
+            "path": "apps/web/e2e/form-accessibility.spec.ts",
+            "sha256": "1839f4b16488a7b9ada75a4d949a054160a74dd899e65842e4d601eda7897f9b"
+          }
+        ],
+        "logs": [
+          "audit/evidence/56498a1/r01-profile-settings-before.log.gz",
+          "audit/evidence/56498a1/r01-profile-settings-browser-final.log.gz",
+          "audit/evidence/56498a1/r01-profile-settings-browser-hints.log.gz",
+          "audit/evidence/56498a1/r01-profile-settings-budgets-v5.log.gz",
+          "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+          "audit/evidence/56498a1/r01-profile-settings-build-v5.log.gz"
+        ]
+      }
+    ],
+    "checkpoint": {
+      "revision": "56498a12d726418a0990faa415573b706d6a84e0",
+      "reviewed_sources": [
+        "Profile settings UI and ProfilesService.updateProfile with its controller schema boundary. Backend permission/transaction acceptance remains to reconcile.",
+        "UserSettingsController notification/timezone GET/PUT: notifications validate availability against email/mobile and persist an account string; timezone validates using Intl. New-user default is IN_APP; registration INSERT does not supply preferences. Two product creation sites found: AuthService.completeRegistration and AdminService.createStaffUser.",
+        "Timezone and notification UI sources are unchanged from9529872; reuse after their specific requirement review. Contact page likewise unchanged; old/new OTP and session-effect review still needed."
+      ],
+      "source_reuse_log": "audit/evidence/56498a1/r01-account-settings-source-reuse.log.gz",
+      "evidence_reuse": "Previous profile/onboarding closure remains valid: no onboarding product file changed. Form-accessibility changes add settings cases and adapt four existing settings saves;19 previous onboarding cases retain their source. Two current default-settings cases pass again, refreshing the changed SettingsProfilePage binding for T-03.03.02 without rebuilding its endpoint or first-default transaction.",
+      "remaining_review": [
+        "Reproduce new-account notification defaults through HTTP, inspect primary-contact synchronization and repair defaults without overwriting saved choices.",
+        "Finish current profile edit permission/staff exception/address-history and contact-field criteria; do not claim whole task verified from UI repair.",
+        "Read username/contact OTP and alternate-login transaction evidence once; preserve current-session revocation policy.",
+        "Reconcile notification preference account scope and required security guidance; downstream delivery consumers remain R02.",
+        "Reconcile timezone selector/preview/persistence and actual display consumers; shared display gaps remain R03.",
+        "Record one consolidated four-task/four-PR review after the batch, retaining partial criteria individually."
+      ]
+    }
   },
   "open_domain_reviews": [
     {
