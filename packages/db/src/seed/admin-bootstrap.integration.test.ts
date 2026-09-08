@@ -52,6 +52,7 @@ it('creates one admin across concurrent identities, hashes credentials, audits o
   ).rows;
   expect(admins).toHaveLength(1);
   expect(admins[0]).toMatchObject({ is_admin: true, is_staff: true, must_change_password: true });
+  expect(admins[0].password_hash).toMatch(/^\$argon2id\$v=19\$m=37888,(?:t=3,p=1|p=1,t=3)\$/);
   expect(await argon2.verify(admins[0].password_hash, password)).toBe(true);
   const audit = (
     await fixture.pool.query("SELECT metadata FROM audit_log WHERE event='admin_bootstrapped'")

@@ -22,6 +22,7 @@ let received: Array<{ text: string; to: string[]; key: string | undefined }>;
 let failProvider: boolean;
 const terms = randomUUID();
 const password = 'Delivery-test-password-123!';
+const requiredPasswordHash = /^\$argon2id\$v=19\$m=37888,(?:t=3,p=1|p=1,t=3)\$/;
 
 beforeEach(async () => {
   vi.stubEnv('AUTH_DELIVERY_ENCRYPTION_KEY', 'http-fixture-delivery-key-only');
@@ -101,6 +102,13 @@ it('registers using the message received by the provider and wipes the encrypted
   expect(otp).toBeTruthy();
   const response = await post('auth/register/verify', { challengeId, otp });
   expect(response.status, await response.text()).toBe(200);
+  const registered = (
+    await fixture.pool.query(
+      "SELECT password_hash FROM users WHERE username='delivery@example.test'"
+    )
+  ).rows[0].password_hash;
+  expect(registered).toMatch(requiredPasswordHash);
+  expect(await argon2.verify(registered, password)).toBe(true);
   expect(await deliver()).toBe('idle');
   const delivery = (
     await fixture.pool.query(
@@ -227,6 +235,7 @@ it('resets a password using the delivered code and returns opaque IDs for unknow
   const stored = (
     await fixture.pool.query("SELECT password_hash FROM users WHERE user_id='provider-admin'")
   ).rows[0].password_hash;
+  expect(stored).toMatch(requiredPasswordHash);
   expect(await argon2.verify(stored, newPassword)).toBe(true);
   expect(await argon2.verify(stored, password)).toBe(false);
   const repeat = await post('auth/reset-password', {
@@ -235,6 +244,57 @@ it('resets a password using the delivered code and returns opaque IDs for unknow
     newPassword: 'Another-password-123!',
   });
   expect(repeat.status, await repeat.text()).toBe(409);
+});
+
+it('changes a legacy password through the forced-login flow using the required hash policy', async () => {
+  const original = await argon2.hash(password);
+  expect(original).toMatch(/^\$argon2id\$v=19\$m=65536,(?:t=3,p=4|p=4,t=3)\$/);
+  await fixture.pool.query(
+    "UPDATE users SET password_hash=$1,must_change_password=true WHERE user_id='provider-admin'",
+    [original]
+  );
+  const login = await post('auth/login', { username: 'provider@example.test', password });
+  expect(login.status).toBe(200);
+  const body = (await login.json()) as { mustChangePassword: boolean; passwordChangeToken: string };
+  expect(body).toMatchObject({ mustChangePassword: true, passwordChangeToken: expect.any(String) });
+  const reused = await post('auth/force-change-password', {
+    passwordChangeToken: body.passwordChangeToken,
+    newPassword: password,
+  });
+  expect(reused.status).toBe(422);
+  const newPassword = 'Forced-policy-password-123!';
+  const changed = await post('auth/force-change-password', {
+    passwordChangeToken: body.passwordChangeToken,
+    newPassword,
+  });
+  expect(changed.status, await changed.clone().text()).toBe(200);
+  const account = (
+    await fixture.pool.query(
+      "SELECT password_hash,must_change_password,password_change_token FROM users WHERE user_id='provider-admin'"
+    )
+  ).rows[0];
+  expect(account.password_hash).toMatch(requiredPasswordHash);
+  expect(await argon2.verify(account.password_hash, newPassword)).toBe(true);
+  expect(await argon2.verify(account.password_hash, password)).toBe(false);
+  expect(account).toMatchObject({ must_change_password: false, password_change_token: null });
+  expect(
+    (
+      await fixture.pool.query(
+        "SELECT password_hash FROM password_history WHERE user_id='provider-admin'"
+      )
+    ).rows
+  ).toEqual([{ password_hash: original }]);
+  expect(
+    (await fixture.pool.query('SELECT count(*)::int AS count FROM sessions')).rows[0].count
+  ).toBe(0);
+  expect(
+    (
+      await post('auth/force-change-password', {
+        passwordChangeToken: body.passwordChangeToken,
+        newPassword,
+      })
+    ).status
+  ).toBe(400);
 });
 
 it('rejects a delivered login code after credentials change, including a change racing verification', async () => {
@@ -516,6 +576,10 @@ async function createStaff() {
 
 it('creates staff with a queued link and consumes the delivered link only once', async () => {
   const userId = await createStaff();
+  expect(
+    (await fixture.pool.query('SELECT password_hash FROM users WHERE user_id=$1', [userId])).rows[0]
+      .password_hash
+  ).toMatch(requiredPasswordHash);
   expect(await deliver()).toBe('sent');
   expect(received).toHaveLength(1);
   const link = received[0]!.text.match(/https:\/\/[^\s]+/)?.[0];
@@ -545,6 +609,7 @@ it('creates staff with a queued link and consumes the delivered link only once',
   ).rows[0];
   expect(activated.activation_token).toBeNull();
   expect(activated.must_change_password).toBe(false);
+  expect(activated.password_hash).toMatch(requiredPasswordHash);
   expect(await argon2.verify(activated.password_hash, newPassword)).toBe(true);
   expect(
     (

@@ -2,6 +2,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import * as argon2 from 'argon2';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -57,6 +58,11 @@ it('creates staff with named roles without granting platform administration, inc
     const body = (await response.json()) as { userId: string; temporaryPassword: string };
     expect(response.status, JSON.stringify(body) + http.logs()).toBe(201);
     expect(body.temporaryPassword).toBeTruthy();
+    const hash = (
+      await http.pool.query('SELECT password_hash FROM users WHERE user_id=$1', [body.userId])
+    ).rows[0].password_hash;
+    expect(hash).toMatch(/^\$argon2id\$v=19\$m=37888,(?:t=3,p=1|p=1,t=3)\$/);
+    expect(await argon2.verify(hash, body.temporaryPassword)).toBe(true);
     const user = (
       await http.pool.query(
         'SELECT is_admin,is_staff,must_change_password FROM users WHERE user_id=$1',

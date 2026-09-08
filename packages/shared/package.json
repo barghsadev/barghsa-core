@@ -169,6 +169,16 @@
         "types": "./dist/cjs/ai-models/index.d.ts",
         "default": "./dist/cjs/ai-models/index.js"
       }
+    },
+    "./password-hash": {
+      "import": {
+        "types": "./dist/password-hash.d.ts",
+        "default": "./dist/password-hash.js"
+      },
+      "require": {
+        "types": "./dist/cjs/password-hash.d.ts",
+        "default": "./dist/cjs/password-hash.js"
+      }
     }
   },
   "scripts": {

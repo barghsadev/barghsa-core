@@ -2,6 +2,7 @@ import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { v7 as uuidv7 } from 'uuid';
 import * as argon2 from 'argon2';
+import { PASSWORD_HASH_OPTIONS } from '@barghsa/shared/password-hash';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { rateLimitKey } from '@barghsa/shared/rate-limit';
@@ -60,7 +61,7 @@ export class AuthService {
     if (AuthService._dummyHash) return;
     if (!AuthService._dummyHashPromise) {
       AuthService._dummyHashPromise = argon2
-        .hash('__barghsa_timing_constant__')
+        .hash('__barghsa_timing_constant__', PASSWORD_HASH_OPTIONS)
         .then((hash) => {
           AuthService._dummyHash = hash;
         })
@@ -120,7 +121,7 @@ export class AuthService {
     }
 
     // ── Create OTP challenge (storing password hash and TOS version) ──
-    const passwordHash = await argon2.hash(input.password);
+    const passwordHash = await argon2.hash(input.password, PASSWORD_HASH_OPTIONS);
     const { challengeId } = await this.otpService.createChallenge(
       input.username,
       ip,
@@ -428,7 +429,7 @@ export class AuthService {
         [user.user_id]
       );
 
-      const newHash = await argon2.hash(input.newPassword);
+      const newHash = await argon2.hash(input.newPassword, PASSWORD_HASH_OPTIONS);
 
       // 3a. Check against the current password (must differ from current)
       const isSameAsCurrent = await argon2
@@ -549,7 +550,7 @@ export class AuthService {
     ip: string
   ): Promise<{ activated: true }> {
     const tokenHash = createHash('sha256').update(token).digest('hex');
-    const passwordHash = await argon2.hash(newPassword);
+    const passwordHash = await argon2.hash(newPassword, PASSWORD_HASH_OPTIONS);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -1112,7 +1113,7 @@ export class AuthService {
       }
 
       const currentHash = userResult.rows[0].password_hash;
-      const newHash = await argon2.hash(input.newPassword);
+      const newHash = await argon2.hash(input.newPassword, PASSWORD_HASH_OPTIONS);
 
       // 4a. Check against current password
       const isSameAsCurrent = await argon2

@@ -2,6 +2,7 @@ import { and, eq, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { v7 as uuidv7 } from 'uuid';
 import * as argon2 from 'argon2';
+import { PASSWORD_HASH_OPTIONS } from '@barghsa/shared/password-hash';
 import { Pool } from 'pg';
 import { createDirectDbPool } from '../index';
 import { products } from '../schema/products';
@@ -95,7 +96,7 @@ export async function seedAdmin(db: DbInstance, _force: boolean): Promise<Seeder
       }
       const userId = uuidv7(),
         now = new Date(),
-        passwordHash = await argon2.hash(password);
+        passwordHash = await argon2.hash(password, PASSWORD_HASH_OPTIONS);
       await tx.insert(users).values({
         userId,
         username,

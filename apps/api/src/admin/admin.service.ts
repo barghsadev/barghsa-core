@@ -5,6 +5,7 @@ import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { Injectable, Logger, HttpException, Optional, BadRequestException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import * as argon2 from 'argon2';
+import { PASSWORD_HASH_OPTIONS } from '@barghsa/shared/password-hash';
 import { getDbPool, PREDEFINED_ROLES } from '@barghsa/db';
 import {
   DELIVERY_WINDOW_CONFIG_KEY,
@@ -577,12 +578,12 @@ export class AdminService {
 
     if (input.activationMethod === 'tempPassword') {
       temporaryPassword = generateTemporaryPassword();
-      passwordHash = await argon2.hash(temporaryPassword);
+      passwordHash = await argon2.hash(temporaryPassword, PASSWORD_HASH_OPTIONS);
       mustChangePassword = true;
     } else {
       // Generate a strong random password for the user (they'll set their own via link)
       const strongPassword = generateTemporaryPassword();
-      passwordHash = await argon2.hash(strongPassword);
+      passwordHash = await argon2.hash(strongPassword, PASSWORD_HASH_OPTIONS);
       mustChangePassword = true;
       const prepared = this.prepareStaffActivation(input.username);
       activationToken = prepared.tokenHash;
