@@ -1,115 +1,67 @@
-# Repair handoff
+# Repair status and handoff
 
-Updated 2026-09-08. Read this file first; do not reload the repair-progress archive.
+Updated 2026-09-08. Read this file first. The original 23-group fix plan remains open; this checkpoint is not whole-plan completion.
 
-## Workspace, authority and scope
+## Workspace and authority
 
-- Repository `/Users/majid/www/barghsa/barghsa-core`; existing branch `codex/audit-fixes`.
-- Previous full implementation/test checkpoint: `a4e5fa99dfec2279a135fdbd9037e99fdcbeb424`, production build `469641a73df7f8cbd7789bd2a2b05b9069e306ad`. Resumed repairs below supersede those production sources; read current HEAD and the resumed section before reusing evidence.
-- Original audit baseline: `2f80d92df51556d47f778b5230e5eea577e2a8d4`.
-- Local edits/commits only. No push, PR, merge, deployment, remote scheduler/state or PR304 action. User authorized direct Codex building and review, overriding the Cursor/Codex split.
-- AGENTS.md and `/Users/majid/.codex/RTK.md` were read. Prefix commands with `rtk`; stage explicit paths. Prefer codebase-memory project `Users-majid-www-barghsa-barghsa-core`; graph access works in the resumed session; use narrow file-search fallback when graph results are insufficient.
-- Work is active. The prior regression checkpoint was not completion of the fix plan. Continue local API critical and web general coverage gaps, then eager purchase-route loading and remaining confirmed plan defects. Review each step, reuse valid evidence and keep external/historical acceptance limits explicit. Do not restart exhaustive historical acceptance or claim unavailable checks passed.
-- Automatic identity verification remains unavailable/fail closed; manual verification is supported. Retain Vite SPA under ADR004. User waived the dependency license allowlist restriction.
-- Historical ledger unchanged: 35 verified, 13 partial, 274 pending. Of 58 historical skips, 3 were verified and must not be rebuilt; 55 await acceptance. Use qualified `<epic filename>#<task ID>` identities.
+- Repo `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Current implementation/test/image revision `9529872`; read HEAD before changing anything. Original audit baseline `2f80d92df51556d47f778b5230e5eea577e2a8d4`.
+- Local edits and commits only. No push, PR, merge, deployment, scheduler/state or PR304 action. User authorized Codex implementation directly despite the Cursor/Codex loop split.
+- Retain Vite SPA under ADR004. No identity provider exists; automatic verification stays unavailable/fail-closed, manual verification supported. Dependency license allowlist restriction was waived.
+- Fix confirmed original-plan defects. Review each step and run focused checks. Reuse unchanged evidence, batch full regressions, defer new noncritical improvements and exhaustive historical acceptance. Do not weaken gates or invent passes.
+- Commands start with `rtk`; explicitly stage paths. Prefer codebase-memory project `Users-majid-www-barghsa-barghsa-core`. Avoid API typechecks during Vitest package rebuilds and builds during browser fixtures. Commit clean source before collecting browser coverage; generated Python caches can invalidate its clean-tree binding.
 
-## Completed runtime repairs
+## Current evidence
 
-### F23 rolling authentication limits
+| Check | Result |
+| --- | --- |
+| Unit/integration | 5,923 tests, 465 files pass using the 5,815-test full run plus affected package refreshes. This is not one new full workspace run. |
+| Production browser | 408/408 Chromium cases pass at 9529872, no skips/flakes/failures. Focused repairs also pass across five browser profiles. |
+| Browser coverage | 408 records mapped to 224 files and merged on the exact clean revision. |
+| Types/lint | All 11 workspace typechecks and root lint pass. |
+| Route payload | All 41 unchanged complete-route gzip budgets pass. |
+| Production images | API, worker and web rebuilt at 9529872. Disposable PostgreSQL migrations, read-only/non-root startup, outage recovery, shutdown and retry checks pass. Containers/network removed. |
+| Unchanged checks | Prior backlog, 55 loop tests, OpenAPI and migration chain/snapshot through 0120 reused. |
 
-Migration 0120 adds serialized PostgreSQL rolling histories. Database time and transaction advisory locks govern increments, peeks and resets per namespace/key; window lengths remain independent. PostgreSQL is authoritative through Redis flush/outage.
+Exact revision bindings, image IDs and logs: `audit/final-repair-checkpoint.json`. Image test procedure/limits: `audit/production-image-review.md`.
 
-Storage retains the latest quota + 1 attempts. Login ceiling is now 10 because ten failures already saturate the existing delay; retaining eleven preserves all lower thresholds during expiry. The sixth concurrent failure still delays. This is not a token bucket. Configured quotas support 1–100000 attempts, with storage bounded by quota + 1 per key/window.
+## Latest completed repairs
 
-Legacy buckets are imported once at their latest possible timestamp, conservatively retaining protection across epoch boundaries. Truncated history remains conservative if a quota increases. Expired histories use server-time cleanup. Deployment requires draining old fixed-window writers before switching; no deployment occurred.
+- Receipt transitions require persisted expected states before committing money, notices or approvals; PostgreSQL failure-injection checks verify rollback and retry.
+- Login, registration and password recovery validate acknowledgements/challenges and preserve retry; body-independent rate limits work.
+- Privileged CRM, provider, template, branding and list boundaries have added capability, revocation, input and actor-binding checks.
+- Geography has localized keyboard-managed dialogs, response validation and retry; fallback primary contrast repaired.
+- Email provider mutations validate outcomes and recover through password step-up for create/edit/test/activate/disable/rollback. No external email sent.
+- Role lookup validates data and requested identity, cancels obsolete requests and clears stale permissions. 25 five-profile checks pass.
+- OTP boxes normalize Persian/Arabic digits, preserve left-to-right order in RTL, and submit exact ASCII codes. 20 five-profile checks pass.
+- Coverage classifier now recognizes PascalCase/camelCase critical files. Older 11/13 gate results missed 41 critical files and are superseded.
 
-Review covered lock/snapshot behavior, concurrent admissions and failures from separate database clients, expiry, reset ordering, namespace/window isolation, legacy carry-over, cleanup, Retry-After and Redis loss. Clean installation, historical upgrade, repeat migration and schema snapshot checks pass. Thirteen API regression failures were stale fixture resets/count reads against retired tables; corrected without weakening production quotas. All affected fixtures pass.
+## Remaining local work
 
-### F02 database deadlines
+Coverage still fails **3 of 13 groups**, with no report errors. Thresholds and scope have not been waived:
 
-Default pools set PostgreSQL statement_timeout per SQL command, 10 seconds for reads and 30 seconds for writes, including modifying CTEs and transaction completion. Adjacent SET/query pairs prevent concurrent callers exchanging deadlines. Explicit uniform overrides retain their existing behavior. Unknown SQL and multi-statement batches use the write budget; SELECT function side effects cannot be inferred from text.
+| Group | Lines | Branches | Required |
+| --- | --- | --- | --- |
+| API critical | 92.34% | 81.07% | 90% / 85% |
+| Web critical | 73.07% | 70.42% | 90% / 85% |
+| Web general | 66.38% | 62.02% | 80% / 75% |
 
-Final review reproduced COMMIT inheriting a read deadline and corrected it. Broader testing then reproduced duplicate client/server cancellation hitting a following write. Automatic mode now relies on its server deadline for active queries and retains client guards for queued work. Explicit numeric client-cancellation overrides retain their prior implementation. Tests verify server timeout reason, successful following writes, callback behavior and rollback recovery.
+- Broader coverage/acceptance work remains. Prioritize meaningful critical-path regressions; do not add implementation-mirroring tests for percentages.
+- Customer purchase paths still use lazy loading. Earlier eager-loading attempts exceeded auth/order budgets and were reverted. No requirement or threshold was weakened; architecture work remains.
+- Strict DB dependency declarations still have 146 errors, primarily upstream Drizzle declarations. `skipLibCheck` remains. UI strict consumer checks pass; no dependency patch/upgrade has resolved the DB gap.
+- Historical role/session/notification/finance/localization/operations acceptance, AI chat/KB/policy-test acceptance and remaining branding consumers are not certified.
 
-Live PgBouncer/proxy behavior remains unverified. Session SET requires session-affine routing; do not claim transaction-pooling compatibility or production cancellation-transport certification.
+## External and deferred acceptance
 
-## Additional repairs and review
+- No real identity provider; delivery, TLS/DNS, backups/restore, production proxy/cancellation, legacy notification secrets/attempts and address/order/orphan-upload inventories remain unverified.
+- Legacy receipt approvals without trusted fingerprints require manual reconciliation while preserving history. Remote loop recovery/PR304/scheduler/state remains outside this local authorization.
+- Historical ledger unchanged: 35 verified, 13 partial, 274 pending. Of 58 skips, 3 verified must not be rebuilt; 55 remain pending. Always use `<epic filename>#<task ID>`.
+- No new skipped-task features. Future refund/contract/profile-credential/document-processing dependencies remain separate.
 
-- **Database TLS/startup (`3bf1e3a`, `1441f31`):** reproduced URL `sslmode=disable` overriding explicit TLS. Explicit application/environment TLS now removes competing URL parameters. Missing, empty or malformed configured CA certificates fail startup; invalid timeout configuration cannot poison the pool singleton. Eighteen security tests plus existing connection checks pass.
-- **Permissions (`9770ffb`):** 144 controller-boundary checks across 22 operations cover denial, unrelated/explicit/wildcard capabilities, admin access, revocation and malformed privileged input. Denied requests never invoke services. This supplements existing HTTP/step-up coverage; the complete historical role matrix remains unaccepted.
-- **Money/order boundaries (`71da3fd`, `de0e14f`):** 39 added payment-adapter cases cover exact server amount/order binding, malformed responses, unsafe IRR, uncertain HTTP failures and recovery/idempotency; no external PSP contacted. Thirty-one order cases cover duplicate submission, exact acknowledgement, address persistence and safe retry.
-- **Receipt responses (`081eccd`, `799cc66`, `a4e5fa9`):** reproduced four null-JSON crashes in profile lookup, presigning, verification and receipt acknowledgement. Responses are narrowed to objects before field access and malformed acknowledgements cannot confirm success. Tests cover exact int8 IRR, Persian/Arabic-Indic input, failed upload stages, HTTP outages and invalid amount display.
-- **Shared formats (`e76c901`):** ESM/CommonJS NodeNext output and conditional types/runtime exports for all 16 public entries. Eighteen build checks verify exports, module identity and strict consumers.
-- **Shared UI (`da37b52`):** EmptyState, PageLoading, ErrorState and ErrorBoundary, localized route recovery/support links, live loading announcements, reduced-motion and RTL fixes. Explicit retry/resource-key recovery avoids retry loops and raw exception disclosure. Fourteen focused UI/web checks pass.
-- **UI distribution (`427f315`, `5ae5457`):** TSUP ESM/CommonJS with paired declarations and external React. Component entries preserve tree shaking; the initial single-module bundle regression was corrected. Five distribution checks verify runtime identity, consumer rendering and strict types under TS5.9 and workspace TS7. UI-local TS5.9.3 is required for TSUP's compiler API.
-- **Clean production builds (`c74ecc5`, `469641a`):** packaged CSS now includes its referenced Tailwind config; pnpm refreshes injected workspace copies after builds. These fix two independently reproduced clean web-image failures.
-- **Route experiment:** eager purchase loading exceeded authentication's unchanged 150 KB budget. A dictionary split also pushed ordering above 250 KB and was reverted (`0aa4c97`). Final ordering is 249.62 KB; all 41 budgets pass. Eager loading remains open, and no threshold was weakened.
+## Read only what the next fix needs
 
-## Final checkpoint
-
-### Resumed work after ed3f7fd
-
-- Added 49 verification-case controller boundary checks: independent read/create/review capabilities, denial before service access, immediate revocation, malformed correction/decision input, audit actor binding, missing resources and terminal conflicts. All 49 pass; the existing 11 real HTTP cases also pass. API types and explicit lint pass. No production change was needed for this step; coverage checkpoint remains the previous revision until refreshed.
-- Do not run API typechecking concurrently with Vitest global setup, which rebuilds shared packages. One such race produced transient missing-declaration errors; the sequential typecheck passed after fixture build completion.
-- Authentication controller checks now cover production cookie scopes, device-cookie possession instead of caller fingerprints, OTP/password-change gating, refresh rejection without cookie issuance, logout clearing, malformed input, purpose-bound resends and failed-password step-up. All 49 tests in the focused controller/login-rate/contact HTTP run pass; API types and explicit lint pass. This extends evidence without changing authentication behavior or claiming the critical coverage gate passed.
-- Invoice receipt transition repair: PostgreSQL failure injection reproduced confirmation committing money while its receipt update returned no row, rejection emitting a notice without a saved rejection, and approval parking committing without a saved UnderReview state. All three writes now require the returned row to have the expected state before committing. Removed fabricated-success fallbacks. Existing five-file invoice/approval run passed 53 tests; six final injected cases cover suppressed writes and unchanged returned rows, rollback, no stray credits/notices/approvals and successful retry. Initial parameterized tests reused attachment keys; fixed unique fixture keys before the passing run. Production code passed API types and explicit lint. Logs `/tmp/barghsa-invoice-transitions.log` and `/tmp/barghsa-invoice-transition-readback.log`. The prior full regression and coverage are historical evidence, not certification of this new production revision.
-- Wallet receipt transitions had the same defect. Four real PostgreSQL cases first reproduced false success for confirmation/rejection with suppressed or unchanged writes. Release/rejection now require the expected returned state and roll back otherwise. All 41 wallet/cross-flow checks pass, including rollback of balance/credits/notices and idempotent successful retries. API types and explicit lint pass. Log `/tmp/barghsa-wallet-transition-green.log`.
-- API coverage refreshed at `9babc0e`: all 3,453 tests in 243 files pass. Critical API coverage improved to 91.18% lines / 79.55% branches, still below the unchanged 85% branch requirement; general API passes 93.66% / 80.94%. Log `/tmp/barghsa-resumed-api-coverage.log`. The combined checkpoint file remains historical, pending current web evidence.
-- Login acknowledgement repair: successful null/empty responses previously triggered a success toast/navigation; non-string OTP/password-change identifiers entered invalid steps. Login now validates its discriminated response and OTP verification requires session fields before success. Fourteen contract tests pass. Browser evidence: 29 Chromium login/rate/feedback cases, 50 malformed-response cases across five profiles and 10 valid-session cases across five profiles pass. Feedback fixture now returns the real successful-response shape. Web types, explicit lint, production build and all 41 unchanged route budgets pass. Logs `/tmp/barghsa-login-ack-green.log`, `/tmp/barghsa-login-all-browsers.log`, `/tmp/barghsa-login-positive.log`. Browser coverage has not yet been refreshed for this new frontend revision.
-- Password-change and resend acknowledgements: four Chromium regressions reproduced reporting success for a null password-change response or a different resend challenge. Both actions now require their response contract before resetting forms/timers or announcing success. All 20 focused cases across five browser profiles pass, preserving input and allowing a valid retry. All 15 response-contract tests, web types, explicit lint, build and all 41 route budgets pass. Log `/tmp/barghsa-recovery-ack-green.log`.
-- Geography and provider controller boundaries: 81 focused controller/service checks pass for capability isolation/revocation, malformed input, missing records, pagination and disabled provider defaults. API types and explicit lint pass. No real provider was added or called. Log `/tmp/barghsa-admin-boundaries.log`; coverage will be refreshed after the next batch.
-
-- Geography repair: replaced inaccessible, English-only province dialogs with shared keyboard-managed dialogs and Persian/English text. List requests cancel obsolete results; malformed read/write acknowledgements stay errors, preserving retry. Corrected the shared fallback light-theme primary foreground after a settled dialog contrast failure. Nineteen API response contract tests and 25 focused browser checks across all five profiles pass, covering localized CRUD, conflict/input recovery, focus restoration, dialog axe checks, malformed-list retry, pagination and filters. Web types, explicit lint, build and all 41 route budgets pass. Logs `/tmp/barghsa-geography-unit.log`, `/tmp/barghsa-geography-all.log`, `/tmp/barghsa-geography-other-browsers.log`, `/tmp/barghsa-geography-filters.log`, `/tmp/barghsa-geography-budgets.log`. Combined coverage and full regression remain pending current sources.
-
-- Registration verification/resend repair: the same incomplete-success defects also affected account creation. Verification now requires a session acknowledgement and resend must acknowledge the assigned challenge before clearing input, resetting cooldown or announcing success. Existing feedback fixture now uses the API response shape. Fifteen shared contract tests, 13 Chromium recovery/feedback cases and 16 recovery cases across the other four profiles pass. Web types, explicit lint, build and all 41 route budgets pass. Logs `/tmp/barghsa-registration-contracts.log`, `/tmp/barghsa-registration-green.log`, `/tmp/barghsa-registration-other.log`, `/tmp/barghsa-registration-budgets.log`.
-
-- Registration challenge repair: reject non-string and blank challenge identifiers before navigation, preserving input for retry. Sixteen Chromium registration/recovery/consent checks and 12 invalid-challenge checks across the other four profiles pass. Web types, lint, build and all 41 route budgets pass. Logs `/tmp/barghsa-registration-start-green.log`, `/tmp/barghsa-registration-start-other.log`, `/tmp/barghsa-registration-start-budgets.log`.
-
-- Resumed full checkpoint at `0494ad4`: all 5,815 unit/integration tests in 461 files, all 11 workspace typechecks and root lint pass. Initial build stopped on a missing local injected UI copy; frozen-lockfile installation repaired it without tracked dependency changes. Log `/tmp/barghsa-resumed-full-coverage.log`. Browser run passed 376/378; two cases exposed a changed geography filter accessible name. Restored the existing distinct filter label in both languages; all 15 focused checks across five profiles now pass (`/tmp/barghsa-geography-label-green.log`). The failed browser run was not merged or credited as a full pass; refresh browser coverage on the corrected revision.
-
-- Notification-template boundaries: 48 new checks cover separate capabilities, admin revocation, malformed creation/edit/preview/test-send requests, authenticated actor binding and partial updates without clearing omitted fields. Together with existing admin permission cases, 192 tests pass. API types and explicit lint pass. Initial empty-permission table fixture was corrected before the passing run. No production change or external delivery occurred. Log `/tmp/barghsa-template-boundaries.log`; API coverage awaits the next batch refresh.
-
-- Password recovery repair after the full checkpoint: eight browser regressions reproduced empty reset acknowledgements reporting success, null recovery responses silently doing nothing, blank challenge identifiers and null 429 bodies bypassing cooldown. Reused auth response guards, preserved retry input and honored rate-limit headers independently of body shape. All 55 recovery cases across five profiles pass; web types, explicit lint, build and 41 route budgets pass. Logs `/tmp/barghsa-password-reset-red.log`, `/tmp/barghsa-password-reset-green.log`, `/tmp/barghsa-password-reset-budgets.log`. The full browser/coverage checkpoint below predates this source change and will need affected coverage refresh in the next batch.
-
-- Email-provider response/recovery repair: malformed list data no longer crashes the screen; failed reads disable writes and retain a visible retry. Save, test, activate, disable and rollback acknowledgements validate provider identity, state and test outcome; empty save responses preserve form input. Obsolete list reads are aborted, form fields freeze during save, and closing clears secret form state. Remote request failures use localized text. All 24 response contract tests and 40 focused browser checks across five profiles pass, including existing SMTP/Resend labels and version lifecycle retries. Web types, explicit lint, build and all 41 route budgets pass. Logs `/tmp/barghsa-email-api-tests.log`, `/tmp/barghsa-email-recovery-all.log`, `/tmp/barghsa-email-recovery-budgets.log`. Requests were mocked; no external email was sent. Current full coverage predates this repair and password recovery; refresh affected coverage after the batch.
-
-- Privileged read boundaries: 12 new delivery-log/staff/template list checks plus five existing staff-audit cases pass. Verified separate jobs-read permission, revocation, filter preservation and nonnumeric pagination falling back to service defaults. API types and explicit lint pass. No production change. Log `/tmp/barghsa-admin-reads.log`; coverage refresh remains batched.
-
-- Branding controller review: 22 checks pass for separate edit permission, revocation, authenticated actor/draft/version binding, invalid activation versions, unsafe asset URLs and malformed saved settings. API types and lint pass. No production change. Log `/tmp/barghsa-brand-boundaries.log`.
-
-- Email-provider step-up repair: server metadata requires password step-up for every provider mutation, but the screen previously had no recovery flow. Provider requests now retain an immutable captured action only for a server step-up challenge; the shared action dialog can begin directly with password verification. Create/edit/test/activate/disable/rollback callbacks still validate successful result identity/state. Ordinary permission denial never becomes a step-up prompt. Twenty-six contract tests, 15 Chromium provider/team/agent cases, 30 focused cases across five profiles and two draft-edit checks on Chromium/WebKit pass. Draft edits preserve stored secrets by omitting blank secret fields. Web types, explicit lint, build and all 41 budgets pass. Logs `/tmp/barghsa-email-stepup-unit.log`, `/tmp/barghsa-email-stepup-green.log`, `/tmp/barghsa-email-stepup-all.log`, `/tmp/barghsa-email-edit-stepup.log`, `/tmp/barghsa-email-stepup-budgets.log`. No external provider calls.
-
-- Coverage classification repair: the gate missed PascalCase/camelCase critical frontend files such as AdminWalletReceiptsPage, AuthLayout, AuthenticatedAppLayout and OTPInput. Domain matching now normalizes name boundaries and recognizes authenticated layouts. All 11 gate tests pass, including whole-file 90/85 enforcement and unrelated substring checks. Previous critical-frontend pass and 11/13 count used the defective classifier; do not cite them as current certification. Recompute after current browser coverage. Logs `/tmp/barghsa-critical-classification-red.log`, `/tmp/barghsa-critical-classification-green.log`. API batch independently refreshed: 3,584 tests in 248 files pass (`/tmp/barghsa-resumed-api-next-coverage.log`).
-
-- Role-permission display repair after checkpoint `1e53352`: reject malformed role lists and lookup results, require the requested user identity, cancel pending lookups and clear old results when input changes. Localized retry and error announcements preserve recovery. Five browser regressions first failed; all 25 cases across five profiles now pass. Web types/lint, 50 dictionary tests, production build and all 41 budgets pass. Initial retry run exposed stale local compiled dictionaries; rebuilding i18n corrected the fixture build. Logs `/tmp/barghsa-role-recovery-red.log`, `/tmp/barghsa-role-recovery-final.log`, `/tmp/barghsa-role-budgets.log`. Full browser/combined coverage above remain bound to `1e53352`; this focused repair is not yet included.
-
-- OTP numeral/order repair: shared login/registration code boxes normalize Persian and Arabic-Indic keyboard/paste input to ASCII and retain left-to-right digit order in RTL layouts. Four corrected browser regressions failed before the fix; all 20 cases across five profiles pass, including ASCII entry and exact submitted challenge/code. The initial run passed 19/20; Firefox synthetic clipboard data needed a test-fixture correction, with production code unchanged. A prematurely recorded pass was corrected before final verification. Initial test setup omitted login username blur and was corrected before the red run. Web types/lint/format, production build and all 41 budgets pass. Logs `/tmp/barghsa-otp-numerals-red.log`, `/tmp/barghsa-otp-numerals-final.log`, `/tmp/barghsa-otp-budgets.log`. Combined coverage remains the earlier checkpoint.
-
-Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
-
-- Current checkpoint `1e53352`: **5,923 unit/integration tests in 465 files** using the full 5,815-test run plus affected API/web/i18n refreshes. All 11 workspace typechecks and root lint pass.
-- **399/399 production Chromium cases pass**, no skips/flakes/failures. Clean-run collector mapped 399 records to 223 source files; exact-revision merge succeeded. The first passing run was rejected for generated Python cache dirtiness and was not merged. Logs and revision bindings are in `final-repair-checkpoint.json`. Other browser profiles have focused checks only.
-- **10/13 coverage groups pass**, no report errors. API critical 92.34% lines / 81.07% branches; web critical 71.51% / 69.83%; web general 66.76% / 63.00%. Critical thresholds remain 90/85, general 80/75. The corrected classifier adds previously missed critical frontend files, so older 11/13 results are superseded.
-- Unchanged backlog, 55 loop tests, OpenAPI and migration chain/snapshot through 0120 reuse prior evidence. All 41 route budgets pass. Production images predate resumed repairs; no current image rebuild, push or deployment.
-
-## External blockers
-
-Provider delivery and real identity-provider availability; real TLS/DNS/backups and production restore/proxy/cancellation behavior; legacy notification secret rotation and attempt reconciliation; historical address/order/orphan-upload inventories; legacy receipt-approval reconciliation; remote loop recovery/PR304/scheduler/state operations. F13 legacy requests without trusted initiation fingerprints fail closed and require manual reconciliation with history preserved. These cannot be certified by local builds/tests.
-
-## Deferred local work and dependencies
-
-- API critical branch, critical web and general web coverage remain below policy; broader test expansion remains open. Do not equate test counts with acceptance.
-- Strict DB dependency declarations still fail: 146 errors, comprising 144 upstream Drizzle cross-dialect declarations and two Vite test-tool declarations. DB `skipLibCheck` remains; UI strict consumer declarations pass. Log `/tmp/barghsa-drizzle-current.log`.
-- Eager purchase-route loading needs further architecture work within existing budgets.
-- Remaining historical role, session/rotation, notification, finance, localization/accessibility and operations acceptance; exhaustive 322-task/55-skip review explicitly deferred.
-- AI chat/KB and policy-test acceptance (verify exact qualified identity before dispatch), remaining branding consumers, and future refund/contract/profile-credential/document-processing dependencies.
-
-## Evidence map
-
-- `audit/final-repair-checkpoint.json`: current tests, checks, image identities and revision bindings.
-- `audit/combined-coverage-checkpoint.json`: current failed gate details; 10/13 pass.
-- `audit/authentication-window-review.md`, `audit/database-foundation-review.md`: targeted original constraints and operational limits.
-- `audit/fix-plan.md`: original 23 groups; read only the relevant section.
-- `audit/current-task-requirements.json`: canonical requirements overlay; historical extracts are provenance only.
-- `audit/acceptance-closure.json`, `audit/current-skipped-tasks.*`: unchanged dispositions.
-- `audit/repair-progress.md`: large archive; search only a relevant heading if needed.
+- `audit/fix-plan.md`: original 23 groups, not a current completion percentage.
+- `audit/current-task-requirements.json`: current requirements overlay.
+- `audit/combined-coverage-checkpoint.json`: current gate details.
+- `audit/acceptance-closure.json`, `audit/current-skipped-tasks.*`: unchanged individual dispositions.
+- `audit/resumed-repair-evidence.md`: chronological resumed evidence, only if a specific prior check needs investigation.
+- `audit/repair-progress.md`: older large archive; do not reload routinely.

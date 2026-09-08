@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-09-08",
-  "runtime_revision": "1e53352f0d2a361ae85978e8b65e1048c24cc238",
+  "runtime_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
   "branch": "codex/audit-fixes",
   "scope": "Bounded confirmed runtime and build repairs with focused review. Three coverage gates, eager purchase loading, strict dependency declarations and historical/external acceptance remain open.",
   "remote_actions_performed": false,
@@ -137,6 +137,22 @@
         "1e53352"
       ],
       "summary": "Enforce critical coverage for PascalCase/camelCase frontend files; previously missed 41 critical files."
+    },
+    {
+      "group": "F04",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "25708af"
+      ],
+      "summary": "Validate role/permission responses, bind results to requested user, cancel obsolete reads and preserve retry."
+    },
+    {
+      "group": "F03/F05/F20",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "9529872"
+      ],
+      "summary": "Normalize Persian/Arabic OTP digits and keep digit boxes left-to-right; 20 five-profile checks pass."
     }
   ],
   "regression": {
@@ -172,25 +188,36 @@
           "/tmp/barghsa-current-i18n-coverage.log"
         ],
         "reuse_note": "Other package sources unchanged from full 5815-test run. 5923 is the combined current count, not a single full run."
+      },
+      {
+        "revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
+        "packages": [
+          "web",
+          "i18n"
+        ],
+        "logs": [
+          "/tmp/barghsa-final-web-coverage.log",
+          "/tmp/barghsa-final-i18n-coverage.log"
+        ],
+        "reuse_note": "API and all other package sources unchanged since their passing runs."
       }
     ]
   },
   "browser": {
     "status": "passed",
-    "revision": "1e53352f0d2a361ae85978e8b65e1048c24cc238",
+    "revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
     "project": "production Chromium",
-    "passed": 399,
+    "passed": 408,
     "skipped": 0,
     "flaky": 0,
     "failed": 0,
-    "coverage_records": 399,
-    "mapped_source_files": 223,
-    "log": "/tmp/barghsa-current-browser-clean.log",
-    "build_log": "/tmp/barghsa-current-browser-build.log",
-    "collector_log": "/tmp/barghsa-current-browser-clean-collect.log",
-    "merge_log": "/tmp/barghsa-current-browser-merge.log",
-    "reuse_limit": "Exact committed production revision. Full Chromium run; other browser profiles were checked only for focused repairs.",
-    "rejected_evidence": "Initial 399-pass run had generated Python cache dirtiness and was not merged. Removed generated cache and repeated all 399 checks successfully on clean source."
+    "coverage_records": 408,
+    "mapped_source_files": 224,
+    "log": "/tmp/barghsa-final-browser.log",
+    "build_log": "/tmp/barghsa-final-browser-build.log",
+    "collector_log": "/tmp/barghsa-final-browser-collect.log",
+    "merge_log": "/tmp/barghsa-final-browser-merge.log",
+    "reuse_limit": "Exact committed production revision. Full Chromium run; other browser profiles were checked only for focused repairs."
   },
   "checks": {
     "root_lint": "passed",
@@ -208,13 +235,13 @@
       "status": "passed",
       "routes": 41,
       "ordering_limit_kb": 250,
-      "log": "/tmp/barghsa-email-stepup-budgets.log"
+      "log": "/tmp/barghsa-otp-budgets.log"
     },
     "migration_clean_upgrade_repeat": "passed through 0120",
     "migration_snapshot": "passed",
     "logs": {
-      "lint": "/tmp/barghsa-current-root-lint.log",
-      "types": "/tmp/barghsa-current-workspace-types.log",
+      "lint": "/tmp/barghsa-final-root-lint.log",
+      "types": "/tmp/barghsa-final-workspace-types.log",
       "latest_test_types": "/tmp/barghsa-invoice-final-types.log",
       "backlog": "/tmp/barghsa-repair-final-backlog.log",
       "loop": "/tmp/barghsa-repair-final-loop.log",
@@ -243,21 +270,21 @@
       {
         "package": "apps/web",
         "critical": false,
-        "lines_percent": 66.76,
-        "branches_percent": 63.0,
+        "lines_percent": 66.38,
+        "branches_percent": 62.02,
         "required_lines": 80,
         "required_branches": 75
       },
       {
         "package": "apps/web",
         "critical": true,
-        "lines_percent": 71.51,
-        "branches_percent": 69.83,
+        "lines_percent": 73.07,
+        "branches_percent": 70.42,
         "required_lines": 90,
         "required_branches": 85
       }
     ],
-    "log": "/tmp/barghsa-current-coverage-gate.log"
+    "log": "/tmp/barghsa-final-coverage-gate.log"
   },
   "historical_acceptance": {
     "verified": 35,
@@ -266,30 +293,41 @@
     "changed": false
   },
   "external_and_deferred_details": "audit/HANDOFF.md",
-  "checkpoint_revision": "1e53352f0d2a361ae85978e8b65e1048c24cc238",
+  "checkpoint_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
   "production_images": {
-    "status": "historical_build_and_smoke_passed_locally",
-    "network": "none during smoke",
-    "temporary_containers": "removed",
+    "status": "current_build_and_runtime_checks_passed_locally",
+    "source_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
+    "network": "disposable Docker network with PostgreSQL 17; no published host ports or external providers",
+    "temporary_containers": "removed; network removed; verified no test resources remain",
     "pushed": false,
     "images": [
       {
-        "name": "barghsa-audit-api:081eccd",
-        "id": "sha256:2152d6df8be3ae1794d489077988cf8f32fb8f79467af64976c255cd20e3001b",
-        "log": "/tmp/barghsa-final-api-image.log"
+        "name": "barghsa-audit-api:9529872",
+        "id": "sha256:c3d24e3288d9c7be95dd81b0d24ea251b415be1ddfc1a7bc5aac87db080576ef",
+        "source_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
+        "log": "/tmp/barghsa-current-api-image.log"
       },
       {
-        "name": "barghsa-audit-worker:081eccd",
-        "id": "sha256:c403ed6d09df5e0406af2aaef11fe23d1bc09a9753ad7caf9f5cb88476365bdc",
-        "log": "/tmp/barghsa-final-worker-image.log"
+        "name": "barghsa-audit-worker:9529872",
+        "id": "sha256:d9ee90c6e5d72ff2a6cece9b6ce892bac36f880db6091cf1acf003660674f75c",
+        "source_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
+        "log": "/tmp/barghsa-current-worker-image.log"
       },
       {
-        "name": "barghsa-audit-web:repaired",
-        "id": "sha256:9bbc587f9c5f832ffce92bc1aa87c87e5747e25947e0bfaf0502f2513a389c90",
-        "source_revision": "469641a73df7f8cbd7789bd2a2b05b9069e306ad",
-        "log": "/tmp/barghsa-web-image-synced.log"
+        "name": "barghsa-audit-web:9529872",
+        "id": "sha256:11c6a99356858e76a5c81643502da013ff0675d01e6ae5be100309ec3931173c",
+        "source_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
+        "log": "/tmp/barghsa-current-web-image.log"
       }
     ],
-    "reuse_limit": "Images predate resumed runtime repairs; current source images have not been rebuilt."
+    "log": "/tmp/barghsa-current-images-smoke.log",
+    "checks": [
+      "Non-root read-only startup and packaged migrations",
+      "Optional Redis fallback; database loss/recovery readiness and liveness",
+      "SIGTERM drains concurrent notification and invoice commits",
+      "Forced deadline preserves retryable work; restart commits once; clean API/web exit"
+    ],
+    "test_invocation": "Executed scripts/test-production-images.py with image tag strings :f18 replaced by :9529872 in memory. No production or existing database accessed.",
+    "reuse_limit": "Local image behavior only. Real provider/proxy/TLS/restore and production rollout remain unverified."
   }
 }

@@ -1,33 +1,36 @@
 {
   "schema_version": 1,
-  "head_sha": "11d46d51fbd5fe19182cd3100c282f9f131df71b",
+  "head_sha": "95298723dd5744c5ee457bb700633652bbc6bf92",
   "working_tree_dirty": false,
   "pnpm": "10.11.1",
   "images": [
     {
-      "tags": [
-        "barghsa-audit-api:f18"
-      ],
-      "id": "sha256:85579b6085c4dc9f218638071fb80e82fd981796c88b1b55d5d9c4a2dbf1f504"
+      "name": "barghsa-audit-api:9529872",
+      "id": "sha256:c3d24e3288d9c7be95dd81b0d24ea251b415be1ddfc1a7bc5aac87db080576ef",
+      "source_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
+      "log": "/tmp/barghsa-current-api-image.log"
     },
     {
-      "tags": [
-        "barghsa-audit-worker:f18"
-      ],
-      "id": "sha256:d8d80a5118b48449354c7caf44eda1875541ef6071d7fc1cdd8bcd37a3c946ff"
+      "name": "barghsa-audit-worker:9529872",
+      "id": "sha256:d9ee90c6e5d72ff2a6cece9b6ce892bac36f880db6091cf1acf003660674f75c",
+      "source_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
+      "log": "/tmp/barghsa-current-worker-image.log"
     },
     {
-      "tags": [
-        "barghsa-audit-web:f18"
-      ],
-      "id": "sha256:59f756f5dc312525c6165c7418d216c0b72aaf2ef16179c3c7a9074b894dc5b1"
+      "name": "barghsa-audit-web:9529872",
+      "id": "sha256:11c6a99356858e76a5c81643502da013ff0675d01e6ae5be100309ec3931173c",
+      "source_revision": "95298723dd5744c5ee457bb700633652bbc6bf92",
+      "log": "/tmp/barghsa-current-web-image.log"
     }
   ],
   "checks": [
-    "PASS non-root/read-only boot, packaged migrations, optional Redis fallback",
-    "PASS database loss/recovery changes readiness but preserves liveness",
-    "PASS SIGTERM waits for concurrent notification and finance commits",
-    "PASS forced deadline leaves retryable work; restart commits once; web/API SIGTERM exit cleanly"
+    "Non-root read-only startup and packaged migrations",
+    "Optional Redis fallback; database loss/recovery readiness and liveness",
+    "SIGTERM drains concurrent notification and invoice commits",
+    "Forced deadline preserves retryable work; restart commits once; clean API/web exit"
   ],
-  "scope": "Disposable PostgreSQL 17 and Docker network; no deployment, external providers or existing database."
+  "log": "/tmp/barghsa-current-images-smoke.log",
+  "scope": "disposable Docker network with PostgreSQL 17; no published host ports or external providers",
+  "test_invocation": "Executed scripts/test-production-images.py with image tag strings :f18 replaced by :9529872 in memory. No production or existing database accessed.",
+  "cleanup_verified": true
 }

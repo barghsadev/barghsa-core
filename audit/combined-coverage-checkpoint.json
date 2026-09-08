@@ -399,9 +399,9 @@
         "apps/web/src/routes/terms.tsx"
       ],
       "lines": 3742,
-      "covered_lines": 2498,
+      "covered_lines": 2484,
       "branches": 4505,
-      "covered_branches": 2838,
+      "covered_branches": 2794,
       "required_lines": 80,
       "required_branches": 75,
       "passed": false
@@ -498,10 +498,10 @@
         "apps/web/src/routes/admin/verification.tsx",
         "apps/web/src/routes/admin/wallet-receipts.tsx"
       ],
-      "lines": 4114,
-      "covered_lines": 2942,
-      "branches": 4981,
-      "covered_branches": 3478,
+      "lines": 4137,
+      "covered_lines": 3023,
+      "branches": 5050,
+      "covered_branches": 3556,
       "required_lines": 90,
       "required_branches": 85,
       "passed": false
@@ -713,7 +713,7 @@
       "lines": 67,
       "covered_lines": 66,
       "branches": 115,
-      "covered_branches": 95,
+      "covered_branches": 97,
       "required_lines": 80,
       "required_branches": 75,
       "passed": true
@@ -886,5 +886,5 @@
   ],
   "errors": [],
   "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
-  "head_sha": "1e53352f0d2a361ae85978e8b65e1048c24cc238"
+  "head_sha": "95298723dd5744c5ee457bb700633652bbc6bf92"
 }
