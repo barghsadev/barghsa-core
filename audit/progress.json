@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-08",
+  "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "adf9020f93d387a1baacfdd18f281ad9e7d26272",
+  "source_revision": "f7086b61013633eeafb3f0e6da98a8bc96b0d4ca",
   "active_step": "R01",
-  "next_action": "Continue the same registration/OTP batch with duplicate submission handling and configurable OTP expiry. Preserve 029905c/adf9020 fixes and76 browser/21 API checks. Complete remaining acceptance review and consolidate once; do not restart completed UI or atomic-audit work.",
+  "next_action": "Finish strength-library, desktop terms-link and device-aggregate gaps within this registration/OTP batch. Review remaining session/cookie/CSRF criteria and PR71/73/74 claims, then run the final affected workflow checkpoint and one consolidated per-task/per-PR closure.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -750,8 +750,9 @@
       "R01-agents-invitations-ownership: real registration-time invitation discovery; cookie and delivery prior evidence by exact source binding"
     ],
     "confirmed_defects": [
-      "Registration does not deduplicate identical submissions.",
-      "OTP expiry is a fixed five-minute constant, with no admin setting."
+      "Password strength is a class/length heuristic rather than the required zxcvbn-or-similar client library; existing unit tests copy the heuristic instead of importing production code.",
+      "Registration terms trigger is a button opening a modal at all widths; desktop /terms link/new-tab requirement remains unmet.",
+      "OTP send quotas cover destination and IP; registration has no device aggregate quota yet."
     ],
     "pr_dispositions": [
       {
@@ -800,7 +801,7 @@
         "reason": "Current requirement and historical claim review in progress."
       }
     ],
-    "next_action": "Continue the same registration/OTP batch with duplicate submission handling and configurable OTP expiry. Preserve 029905c/adf9020 fixes and76 browser/21 API checks. Complete remaining acceptance review and consolidate once; do not restart completed UI or atomic-audit work.",
+    "next_action": "Finish strength-library, desktop terms-link and device-aggregate gaps within this registration/OTP batch. Review remaining session/cookie/CSRF criteria and PR71/73/74 claims, then run the final affected workflow checkpoint and one consolidated per-task/per-PR closure.",
     "completed_work": [
       {
         "revision": "029905c",
@@ -883,14 +884,120 @@
           "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
           "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
         ]
+      },
+      {
+        "revision": "3507fc64cc70cdf51aa060d8335674a4c2eca4b9",
+        "summary": "Canonical username normalization and pending registration deduplication. Destination advisory lock serializes starts; canonical username/TOS and salted-password verification identify identical requests. New challenges, encrypted delivery and send quotas commit on the same connection. Other OTP callers retain their existing quota behavior.",
+        "checks": "51 focused cases pass across eight new HTTP cases and43 existing OTP/DTO cases. Includes4-connection concurrency,1-connection pool, mobile normalization, changed password/TOS, terminal challenges and queue rollback. API types, focused lint/format and diff checks pass.",
+        "logs": [
+          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "audit/evidence/f7086b6/r01-registration-dedup-api.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+        ],
+        "source_evidence": [
+          {
+            "path": "apps/api/src/auth/auth.service.ts",
+            "sha256": "6ff3b943af932d8a11dd564eac390d37555030afd3c709cc8d3ae33fd796c899"
+          },
+          {
+            "path": "apps/api/src/auth/otp.service.ts",
+            "sha256": "975a5bbe64e6019ac6cd80205d4bbe70f56689c5e847da897c5646bb052f33d9"
+          },
+          {
+            "path": "apps/api/src/auth/dto/register.dto.ts",
+            "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+          },
+          {
+            "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+            "sha256": "1a32cea97203d7f915f89d67eb0e8f6305a44c75b67953caf2043a264454e3ce"
+          }
+        ]
+      },
+      {
+        "revision": "f7086b61013633eeafb3f0e6da98a8bc96b0d4ca",
+        "summary": "Admin-configurable OTP expiry uses existing app_config with a 300-second default and 60–900-second bounds. Versioned updates recheck current staff permission, session, CSRF and password confirmation inside the audit transaction. New registration/login/reset/contact sends and resends read the current setting; already-sent deadlines stay unchanged. Localized admin UI validates read/write acknowledgments, freezes pending drafts, confirms password and supports explicit conflict reload.",
+        "checks": "24 distinct API cases pass in final isolated runs:9 real-PostgreSQL HTTP cases and15 existing OTP cases.28 distinct production-browser cases pass across Chromium/mobile Chrome:16 OTP editor cases and12 existing verification-page cases. API/web types, focused lint/format, OpenAPI contract and all41 unchanged route budgets pass. Compiled metadata confirms33 modules/64 controllers/345 routes/204 unsafe methods/122 step-up routes.",
+        "review_notes": "Review fixed account enumeration during malformed OTP configuration by validating settings before the reset-account lookup. HTTP checks cover a one-connection pool, concurrent version conflicts, audit rollback, actor revocation and session/step-up expiry during lock waits. Browser fixture corrections preserve real modal background hiding, changing submit labels and cleared passwords after attempts. An earlier combined API process exited without a summary; both selected suites passed separately afterward. Initial contract output was stale; regenerated from the built app and retained existing JSON order. No schema, provider, session-cookie policy, dependency or budget change.",
+        "logs": [
+          "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-api-final.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-api-reviewed.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-api-verified.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-api.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-browser-final.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-browser-format.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-browser-reviewed.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-browser.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-budgets.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-commit.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-contract.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-final-format-write.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-format-write.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-openapi-generate.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-unit-verified.log.gz",
+          "audit/evidence/f7086b6/r01-otp-config-web-build.log.gz",
+          "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+          "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz"
+        ],
+        "source_evidence": [
+          {
+            "path": "apps/api/openapi.json",
+            "sha256": "0bf8600354f1c440734209436fc55c898ae2eb2a49f73e3db8b2a4d71c79fb98"
+          },
+          {
+            "path": "apps/api/src/auth/auth.module.ts",
+            "sha256": "89ebc88d35412bfd9da4b77ce34c2a0eacede9e7f6e2580e632eaf28d12d2f71"
+          },
+          {
+            "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+            "sha256": "c0436a0733d059987f1e519f517b7924e8fe69afe600775f5d4040b9f4167bc7"
+          },
+          {
+            "path": "apps/api/src/auth/otp-config.controller.ts",
+            "sha256": "fbeac35e1e2dbfeced4a708b8af1a327c6c66f77d1c6c664671896d8dccf259f"
+          },
+          {
+            "path": "apps/api/src/auth/otp-config.ts",
+            "sha256": "4a929a88daa2fe0c780f9f0f7bea85a89f67b2991c02b6a5ab32a85c9fd1c237"
+          },
+          {
+            "path": "apps/api/src/auth/otp.service.spec.ts",
+            "sha256": "7864f55b8eb3aef20d84d20240a0a4c1ba6684533f7a4a1b84e871f825132d9b"
+          },
+          {
+            "path": "apps/api/src/auth/otp.service.ts",
+            "sha256": "a77844de50cee2f170fe59b61ffd55895bf89ceea2bb256806c5e08cab34726e"
+          },
+          {
+            "path": "apps/web/e2e/form-accessibility.spec.ts",
+            "sha256": "c95e7219735bfbde1c7f524c29468dcf7df4cf6952c6db29f9ad055ea87b8551"
+          },
+          {
+            "path": "apps/web/e2e/otp-config.spec.ts",
+            "sha256": "9763b583b0837cc8fc8f5fcc03ea4be1c14df183cd86c2616e9ce5b8c19b3b24"
+          },
+          {
+            "path": "apps/web/src/components/OtpConfigPanel.tsx",
+            "sha256": "2f185436a2ba70ab52522a3df51a0aee9ca1c5a858aafded14e0be473a4ee350"
+          },
+          {
+            "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
+            "sha256": "73e58fd3f63f8eb81600fc46da5da21766d50b6447123680dd2480982bbfece4"
+          },
+          {
+            "path": "packages/i18n/src/verification-config.ts",
+            "sha256": "8eaec56af345142c9b79be711b49dc7c28e0fd33753c5e5bcb9658219cf3c746"
+          }
+        ]
       }
     ],
     "remaining_acceptance_review": [
-      "Finish server username normalization and exact registration deduplication semantics without single-connection pool deadlocks.",
-      "Disposition admin-configurable OTP expiry and aggregate device quota literally against the requirement.",
-      "Review strength-estimator equivalence and terms-link desktop/mobile requirements; current local heuristic and exact-version dialog must not be silently treated as an approved requirements change.",
-      "Verify complete task-specific cookie/session/CSRF/OTP-consumption criteria, reuse unchanged delivery and session evidence, and resolve the three historical PR-body claims.",
-      "Run one remaining affected-workflow checkpoint, then individually close supported tasks and PRs in a consolidated batch report."
+      "Finish strength-library, desktop terms-link and device-aggregate gaps within this registration/OTP batch. Review remaining session/cookie/CSRF criteria and PR71/73/74 claims, then run the final affected workflow checkpoint and one consolidated per-task/per-PR closure.",
+      "Reuse completed UI, atomic registration, deduplication and OTP settings evidence. No registration task or PR has closed yet. Preserve previous batch and cross-domain role assignments."
     ]
   },
   "open_domain_reviews": [

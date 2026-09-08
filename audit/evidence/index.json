@@ -7512,6 +7512,223 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r01-registration-dedup-api.log",
+      "path": "audit/evidence/f7086b6/r01-registration-dedup-api.log.gz",
+      "sha256": "782847b47122c2bdf9809e224742d3244906cfa6256d7c23ff9e346db352050d",
+      "encoding": "gzip",
+      "stored_sha256": "9c5b137de87208a24e5814f5abe8d63dfd3b7e846de986a293fcc72ae4afec71"
+    },
+    {
+      "original_path": "/tmp/r01-registration-dedup-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-registration-dedup-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-registration-dedup-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-all-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-api-final.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-api-final.log.gz",
+      "sha256": "59aa8fdf9ae0a5ef2592fc999bfbd2eae2395d22c8434ec6976c873eb6908c16",
+      "encoding": "gzip",
+      "stored_sha256": "ebc78b18f2a5961e560688c5380795b3a41596b3ec4d62a034659f8449440715"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-api-reviewed.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-api-reviewed.log.gz",
+      "sha256": "3b8ed9cfb89c6e7bb57ef4e48dbf944a51f2f8a83c0c8d1d22365ec20c0e9139",
+      "encoding": "gzip",
+      "stored_sha256": "7eebb0e057e7949338b9bcbc5c37152c51fe1a752a95441d3954f7becfe7cc3b"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-api-verified.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-api-verified.log.gz",
+      "sha256": "d6710ba5346163299e580315c2fc35549ce9c54a1f144eb4737b541309a262a3",
+      "encoding": "gzip",
+      "stored_sha256": "b668801cb4c68b3243c8cbf15e4277f01705149f08a3a41ae80d0713bda231de"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-api.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-api.log.gz",
+      "sha256": "5f10745ad06b0877b642ab5c7425a59196b5875febf88547b2508a723873cf85",
+      "encoding": "gzip",
+      "stored_sha256": "0957c733e07dbc08a6aa7907b12d2f606777a48ac09eb958a19a8d7a9029f4fb"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-browser-final.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-browser-final.log.gz",
+      "sha256": "092598c614b86e2924348e203e1b7dae10efe644ff8f173e22088917bc62ea48",
+      "encoding": "gzip",
+      "stored_sha256": "b8355c345dd6fb05bfdaf28a4c1e0c7c0621c65a9a18b63d7013a377a99714cc"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-browser-format.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-browser-format.log.gz",
+      "sha256": "1fd88ea2e30d5aa893af844b1611a4a31dba2cfd7f5bf44981e21bd45dd472dc",
+      "encoding": "gzip",
+      "stored_sha256": "25e2cc1ca35f24bdf366a2115ec27d87dc00539853272d1410d4fee1a3df8d96"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-browser-reviewed.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-browser-reviewed.log.gz",
+      "sha256": "8e17dbde60c2c58b8939ffdc5d6658e49290aea621a38469fc80a12a266c8f6e",
+      "encoding": "gzip",
+      "stored_sha256": "3b43ac301a758957c6a6a8c342d51b22f7dd6c8bc47f336d02734d6f2310ca5a"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-browser.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-browser.log.gz",
+      "sha256": "f07012f77342129c7580989e80cd4f7a9afb871225decafa157146c966a07e70",
+      "encoding": "gzip",
+      "stored_sha256": "dbff6c0324d7b6a00cafcfd6dbea65bc7377780833e476b00d25283d7a3b0fad"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-budgets.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-budgets.log.gz",
+      "sha256": "e8f1cd0fa52b3b7c9af3273d126e99e8dec47541af1fd766d9a604cfd6685af5",
+      "encoding": "gzip",
+      "stored_sha256": "f0fbc5ad63852757a9e52f0922c78556976a0a32f32078e5ee327a8c06613c9f"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-commit.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-commit.log.gz",
+      "sha256": "ae5e6fe7003007009159ddfbd518d14cbfc3c93db860dc60a0d88315df8f1fd9",
+      "encoding": "gzip",
+      "stored_sha256": "70fda6395b5e3c5ec864a961d2e0c696fcd5b7a953c37458159bd2ad9237bde0"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-contract-update.log",
+      "path": "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+      "sha256": "b0033c99fdb9671aa92cce17ac7fd7851ff4944686d046198cd83485322b98de",
+      "encoding": "gzip",
+      "stored_sha256": "7780e008e3d2103c805cd25a25716a1aba1b788f8b9623180fae2c2524508f30"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-contract.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-contract.log.gz",
+      "sha256": "dc98a62bdacaf0a186fe04e8dbfd576f0e0c7e02de40cef45b359592a0e3dce8",
+      "encoding": "gzip",
+      "stored_sha256": "f9166b85a3bbad4985eabb2074478dfcbe9cc7fcb9b133c2f0dbb05149f092a9"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-final-format-write.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-final-format-write.log.gz",
+      "sha256": "bade8039743484396dd37aec23906eec029e7bd3f6a1d4a0bdb3d2cd0de5c9b8",
+      "encoding": "gzip",
+      "stored_sha256": "edf8a6e5a32ab55a89c7ad3ecf85321d65be85c6fd7d955e8cb721723ec42a07"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-final-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-final-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-format-write.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-format-write.log.gz",
+      "sha256": "33a3ab567175e357e31ee5ffce42cb0478430218d4dabb1e84eb79eb7f717bf2",
+      "encoding": "gzip",
+      "stored_sha256": "20a445873c29bd234b67efccc7a1236e5f5941e4b4273f3c8a5f314698f37728"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-i18n-build.log",
+      "path": "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+      "sha256": "e96c18cf633b90ecae7f4d8c8fadef8b222995210eddf31da455e2a436493ae6",
+      "encoding": "gzip",
+      "stored_sha256": "efa98b77f7947a1708258290f0d1f9cd008002c7e204044a1c2f8fcc4fb48bd3"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-openapi-generate.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-openapi-generate.log.gz",
+      "sha256": "66ac84e41b3002ac74e7dd9c6cfaded651cc8539445f705af2de4e466eb07ddb",
+      "encoding": "gzip",
+      "stored_sha256": "95844967904caac32dd8012f1481e4d06bef8f529a60567fe2ab9c26c4f23642"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-reviewed-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-types-initial.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-unit-verified.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-unit-verified.log.gz",
+      "sha256": "ada20f8fe50382892d92ddb0a9d7e99c03356b2a98af7f91e0a0778fdce6f9fe",
+      "encoding": "gzip",
+      "stored_sha256": "060f87422f79442d8114de5aeb55266e189bc88f35f26e2abdcd0121aeb455b7"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-web-build.log",
+      "path": "audit/evidence/f7086b6/r01-otp-config-web-build.log.gz",
+      "sha256": "4c353a1a79c200c27d072599fe818a9b1423d5262e4495397b762e0cfde77f8e",
+      "encoding": "gzip",
+      "stored_sha256": "71e31b43d626d3f241631455a7e1bc1c4be8e61e5ca9e80a5c100f4aaca51cb9"
+    },
+    {
+      "original_path": "/tmp/r01-otp-config-web-types.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
     }
   ]
 }

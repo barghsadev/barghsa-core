@@ -1,17 +1,17 @@
 # CSRF and sensitive-action review
 
-Current through product `b4a0c83`, 2026-09-08. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
+Current through product `f7086b6`, 2026-09-09. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
 
-The inventory reflects compiled Nest module/controller metadata without starting the application. It follows imports and forward references from AppModule, reads global/controller/method guards and route decorators, and expands registered paths. There are 33 modules, 63 controllers and 343 routes. Global guards are RateLimitGuard and CsrfGuard.
+The inventory reflects compiled Nest module/controller metadata without starting the application. It follows imports and forward references from AppModule, reads global/controller/method guards and route decorators, and expands registered paths. There are 33 modules, 64 controllers and 345 routes. Global guards are RateLimitGuard and CsrfGuard. The September9 refresh adds the OTP settings GET/PUT pair; every previous route, guard, flag and source hash is unchanged. OTP settings PUT has current permission/session/CSRF/step-up checks and atomic audit evidence in progress.json.active_batch.
 
 | State-changing route classification | Count | Current boundary |
 | --- | ---: | --- |
-| SessionAuthGuard and StepUpGuard | 117 | Global session-bound CSRF plus recent verification |
+| SessionAuthGuard and StepUpGuard | 118 | Global session-bound CSRF plus recent verification |
 | Above plus StorageAdminGuard | 4 | Additional storage permission guard |
 | SessionAuthGuard only | 65 | Global session-bound CSRF; service permissions and confirmation vary |
 | RefreshCsrfGuard | 1 | CSRF bound to presented refresh credential |
 | No route guard | 16 | Public or independently authenticated routes below |
-| Total unsafe-method registrations | 203 | All 121 RequiresStepUp routes have StepUpGuard |
+| Total unsafe-method registrations | 204 | All 122 RequiresStepUp routes have StepUpGuard |
 
 ## Public routes and alternatives
 
