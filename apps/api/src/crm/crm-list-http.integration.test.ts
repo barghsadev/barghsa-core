@@ -315,3 +315,102 @@ it('archives an empty profile once and blocks funds and canonical legal ownershi
       .rows[0]
   ).toMatchObject({ archived: true, archived_reason: 'Closure requested' });
 });
+
+it('returns stored legal and address details with readable reference names and safe legacy fallbacks', async () => {
+  const profileId = randomUUID();
+  const provinceId = randomUUID();
+  const cityId = randomUUID();
+  const addressId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO provinces(id,name_fa,name_en,status) VALUES ($1,'استان قدیمی','Former province','inactive')",
+    [provinceId]
+  );
+  await http.pool.query(
+    "INSERT INTO cities(id,province_id,name_fa,name_en,status) VALUES ($1,$2,'شهر قدیمی','Former city','inactive')",
+    [cityId, provinceId]
+  );
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,profile_type,status) VALUES ($1,'crm-page-6','LEGAL','ACTIVE')",
+    [profileId]
+  );
+  await http.pool.query(
+    `INSERT INTO legal_profiles(id,legal_name,national_identifier,registration_number,company_type_id,
+     registration_date,representative_title,representative_relationship,
+     representative_honorific,representative_first_name,representative_last_name,representative_national_id,
+     representative_province_id,representative_city_id,representative_full_address,representative_postal_code,
+     official_province_id,official_city_id,official_full_address,official_postal_code,documents)
+     VALUES ($1,'CRM Legal Company','14012345671','reg-42','limited-liability','2020-03-20',
+      'Director','Board member','Dr','Sara','Example','0012345678',$2,$3,'Representative street','1234567890',
+      $4,$5,'Company street','2345678901','["legal-profile-documents/private-proof"]')`,
+    [profileId, provinceId, cityId, provinceId.toUpperCase(), cityId.toUpperCase()]
+  );
+  await http.pool.query(
+    `INSERT INTO addresses(id,profile_id,province_id,city_id,full_address,postal_code,main_address)
+     VALUES ($1,$2,$3,$4,'Delivery street','3456789012',true)`,
+    [addressId, profileId, provinceId, cityId]
+  );
+  const read = () =>
+    fetch(`${http.base}/api/crm/profiles/${profileId}`, { headers: { Cookie: cookie } });
+  const response = await read();
+  expect(response.status).toBe(200);
+  const body = await response.text();
+  const data = JSON.parse(body) as CrmProfileDetail;
+  const provinceName = { nameFa: 'استان قدیمی', nameEn: 'Former province' };
+  const cityName = { nameFa: 'شهر قدیمی', nameEn: 'Former city' };
+  expect(data.legalInfo).toMatchObject({
+    legalName: 'CRM Legal Company',
+    registrationDate: '2020-03-20',
+    companyTypeName: { nameFa: 'مسئولیت محدود', nameEn: 'Limited Liability' },
+    officialProvinceName: provinceName,
+    officialCityName: cityName,
+    representativeHonorific: 'Dr',
+    representativeFirstName: 'Sara',
+    representativeLastName: 'Example',
+    representativeNationalId: '0012345678',
+    representativeTitle: 'Director',
+    representativeRelationship: 'Board member',
+    representativeProvinceId: provinceId,
+    representativeCityId: cityId,
+    representativeProvinceName: provinceName,
+    representativeCityName: cityName,
+    representativeFullAddress: 'Representative street',
+    representativePostalCode: '1234567890',
+    createdAt: expect.stringMatching(/Z$/),
+    updatedAt: expect.stringMatching(/Z$/),
+  });
+  expect(data.addresses).toEqual([
+    expect.objectContaining({
+      id: addressId,
+      provinceId,
+      cityId,
+      provinceName,
+      cityName,
+      fullAddress: 'Delivery street',
+      postalCode: '3456789012',
+      mainAddress: true,
+    }),
+  ]);
+  expect(body).not.toContain('private-proof');
+  // Legacy official geography is text, and can contain obsolete non-UUID identifiers.
+  await http.pool.query(
+    "UPDATE legal_profiles SET official_province_id='old-province',official_city_id='old-city' WHERE id=$1",
+    [profileId]
+  );
+  const legacy = await read();
+  expect(legacy.status).toBe(200);
+  expect(((await legacy.json()) as CrmProfileDetail).legalInfo).toMatchObject({
+    officialProvinceId: 'old-province',
+    officialCityId: 'old-city',
+    officialProvinceName: null,
+    officialCityName: null,
+    representativeProvinceName: provinceName,
+    representativeCityName: cityName,
+  });
+  const individualId = (await http.pool.query("SELECT id FROM profiles WHERE user_id='crm-page-5'"))
+    .rows[0].id;
+  const individual = await fetch(`${http.base}/api/crm/profiles/${individualId}`, {
+    headers: { Cookie: cookie },
+  });
+  expect(individual.status).toBe(200);
+  expect(await individual.json()).toMatchObject({ legalInfo: null, addresses: [] });
+});

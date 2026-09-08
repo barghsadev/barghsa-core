@@ -1,3 +1,4 @@
+import { formatDate } from '@barghsa/i18n/date-time';
 import { CrmProfileRecords } from '../components/CrmProfileRecords.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -46,10 +47,17 @@ interface UserInfo {
   createdAt: string;
 }
 
+interface LocalizedName {
+  nameFa: string;
+  nameEn: string;
+}
+
 interface Address {
   id: string;
   provinceId: string;
   cityId: string;
+  provinceName: LocalizedName | null;
+  cityName: LocalizedName | null;
   fullAddress: string;
   postalCode: string;
   mainAddress: boolean;
@@ -77,11 +85,29 @@ interface LegalInfo {
   nationalIdentifier: string;
   registrationNumber: string;
   companyTypeId: string | null;
+  companyTypeName: LocalizedName | null;
+  registrationDate: string | null;
   economicCode: string | null;
   officialPhone: string | null;
   officialEmail: string | null;
+  officialProvinceId: string | null;
+  officialCityId: string | null;
   officialFullAddress: string | null;
   officialPostalCode: string | null;
+  officialProvinceName: LocalizedName | null;
+  officialCityName: LocalizedName | null;
+  representativeHonorific: string | null;
+  representativeFirstName: string | null;
+  representativeLastName: string | null;
+  representativeNationalId: string | null;
+  representativeProvinceId: string | null;
+  representativeCityId: string | null;
+  representativeProvinceName: LocalizedName | null;
+  representativeCityName: LocalizedName | null;
+  representativeFullAddress: string | null;
+  representativePostalCode: string | null;
+  createdAt: string;
+  updatedAt: string;
   representativeTitle: string;
   representativeRelationship: string;
 }
@@ -116,6 +142,19 @@ interface EditableFields {
   title: string;
   email: string;
   mobile: string;
+}
+
+function referenceName(name: LocalizedName | null | undefined, locale: Locale): string {
+  return (locale === 'fa' ? name?.nameFa : name?.nameEn) || t('crm.records.unknown', locale);
+}
+
+function registrationDate(value: string | null, locale: Locale): string {
+  // Registration is a calendar date. A viewer timezone must never move it to another day.
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return t('crm.records.unknown', locale);
+  const date = new Date(value + 'T00:00:00Z');
+  if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== value)
+    return t('crm.records.unknown', locale);
+  return formatDate(date, 'UTC', locale);
 }
 
 function getStatusBadgeClass(status: string): string {
@@ -396,7 +435,7 @@ function CrmProfileDetailContent() {
         <Link to="/admin/crm/" className="text-blue-600 hover:underline text-sm">
           {t('crm.profile.backToUsers', locale)}
         </Link>
-        <h1 className="text-2xl font-bold mt-1 flex items-center gap-3">
+        <h1 className="text-2xl font-bold mt-1 flex flex-wrap items-center gap-3">
           {t('crm.profile.title', locale)}
           <span
             className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.archived ? 'ARCHIVED' : profile.status)}`}
@@ -408,7 +447,7 @@ function CrmProfileDetailContent() {
           <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">
             {getProfileTypeLabel(profile.profileType, locale)}
           </span>
-          <span className="ml-auto flex gap-2">
+          <span className="flex w-full flex-wrap gap-2 lg:ms-auto lg:w-auto">
             {!isEditing ? (
               <>
                 {data.viewerPermissions?.canEdit && !profile.archived && (
@@ -456,7 +495,7 @@ function CrmProfileDetailContent() {
             )}
           </span>
         </h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <p className="text-gray-500 text-sm mt-1 break-words">
           {profile.firstName && profile.lastName
             ? `${profile.firstName} ${profile.lastName}`
             : (legalInfo?.legalName ?? profileId)}
@@ -716,8 +755,8 @@ function CrmProfileDetailContent() {
       {activeTab === 'details' && (
         <div id="panel-details" role="tabpanel" aria-labelledby="tab-details" className="space-y-6">
           <Section title={t('crm.profile.section.userInfo', locale)}>
-            <DetailRow label="User ID" value={user.userId} />
-            <DetailRow label="Username" value={user.username} />
+            <DetailRow label={t('crm.profile.field.userId', locale)} value={user.userId} />
+            <DetailRow label={t('crm.profile.field.username', locale)} value={user.username} />
             <DetailRow label={t('crm.profile.label.email', locale)} value={user.email ?? '—'} />
             <DetailRow label={t('crm.profile.label.mobile', locale)} value={user.mobile ?? '—'} />
             <DetailRow
@@ -772,8 +811,11 @@ function CrmProfileDetailContent() {
           </Section>
 
           <Section title={t('crm.profile.section.profile', locale)}>
-            <DetailRow label="Profile ID" value={profile.id} />
-            <DetailRow label="Type" value={getProfileTypeLabel(profile.profileType, locale)} />
+            <DetailRow label={t('crm.profile.field.profileId', locale)} value={profile.id} />
+            <DetailRow
+              label={t('crm.profile.field.type', locale)}
+              value={getProfileTypeLabel(profile.profileType, locale)}
+            />
             <DetailRow
               label={t('crm.profile.label.status', locale)}
               value={t(`crm.list.${profile.status}`, locale)}
@@ -803,30 +845,32 @@ function CrmProfileDetailContent() {
             )}
             {isEditing ? (
               <EditRow
-                label="Title"
+                label={t('crm.profile.field.title', locale)}
                 value={editFields.title}
                 onChange={(v) => setEditFields((prev) => ({ ...prev, title: v }))}
                 placeholder={profile.title ?? t('crm.profile.edit.noChanges', locale)}
               />
             ) : (
-              <DetailRow label="Title" value={profile.title ?? '—'} />
+              <DetailRow
+                label={t('crm.profile.field.title', locale)}
+                value={profile.title ?? '—'}
+              />
             )}
             {/* Identity fields — always read-only with lock icon */}
             <DetailRow
-              label="First Name"
+              label={t('crm.profile.field.firstName', locale)}
               value={profile.firstName ?? '—'}
-              valueClass={isEditing ? undefined : undefined}
               icon={isEditing ? '🔒' : undefined}
               iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
             />
             <DetailRow
-              label="Last Name"
+              label={t('crm.profile.field.lastName', locale)}
               value={profile.lastName ?? '—'}
               icon={isEditing ? '🔒' : undefined}
               iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
             />
             <DetailRow
-              label="National ID"
+              label={t('crm.profile.field.nationalId', locale)}
               value={profile.nationalId ?? '—'}
               icon={isEditing ? '🔒' : undefined}
               iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
@@ -840,24 +884,49 @@ function CrmProfileDetailContent() {
               label={t('crm.profile.label.created', locale)}
               value={time.format(profile.createdAt)}
             />
-            <DetailRow label="Updated" value={time.format(profile.updatedAt)} />
+            <DetailRow
+              label={t('crm.profile.field.updatedAt', locale)}
+              value={time.format(profile.updatedAt)}
+            />
           </Section>
 
           {legalInfo && (
             <Section title={t('crm.profile.section.legalEntity', locale)}>
-              <DetailRow label="Legal Name" value={legalInfo.legalName} />
-              <DetailRow label="National Identifier" value={legalInfo.nationalIdentifier} />
-              <DetailRow label="Registration Number" value={legalInfo.registrationNumber} />
-              <DetailRow label="Company Type" value={legalInfo.companyTypeId ?? '—'} />
-              <DetailRow label="Economic Code" value={legalInfo.economicCode ?? '—'} />
-              <DetailRow label="Official Phone" value={legalInfo.officialPhone ?? '—'} />
-              <DetailRow label="Official Email" value={legalInfo.officialEmail ?? '—'} />
-              <DetailRow label="Official Address" value={legalInfo.officialFullAddress ?? '—'} />
-              <DetailRow label="Official Postal Code" value={legalInfo.officialPostalCode ?? '—'} />
-              <DetailRow
-                label="Representative"
-                value={`${legalInfo.representativeTitle} (${legalInfo.representativeRelationship})`}
-              />
+              {[
+                ['legalName', legalInfo.legalName],
+                ['nationalIdentifier', legalInfo.nationalIdentifier],
+                ['registrationNumber', legalInfo.registrationNumber],
+                ['registrationDate', registrationDate(legalInfo.registrationDate, locale)],
+                ['companyType', referenceName(legalInfo.companyTypeName, locale)],
+                ['economicCode', legalInfo.economicCode],
+                ['officialPhone', legalInfo.officialPhone],
+                ['officialEmail', legalInfo.officialEmail],
+                ['officialProvince', referenceName(legalInfo.officialProvinceName, locale)],
+                ['officialCity', referenceName(legalInfo.officialCityName, locale)],
+                ['officialFullAddress', legalInfo.officialFullAddress],
+                ['officialPostalCode', legalInfo.officialPostalCode],
+                ['representativeHonorific', legalInfo.representativeHonorific],
+                ['representativeFirstName', legalInfo.representativeFirstName],
+                ['representativeLastName', legalInfo.representativeLastName],
+                ['representativeNationalId', legalInfo.representativeNationalId],
+                ['representativeTitle', legalInfo.representativeTitle],
+                ['representativeRelationship', legalInfo.representativeRelationship],
+                [
+                  'representativeProvince',
+                  referenceName(legalInfo.representativeProvinceName, locale),
+                ],
+                ['representativeCity', referenceName(legalInfo.representativeCityName, locale)],
+                ['representativeFullAddress', legalInfo.representativeFullAddress],
+                ['representativePostalCode', legalInfo.representativePostalCode],
+                ['createdAt', time.format(legalInfo.createdAt)],
+                ['updatedAt', time.format(legalInfo.updatedAt)],
+              ].map(([field, value]) => (
+                <DetailRow
+                  key={field}
+                  label={t('crm.profile.field.' + field, locale)}
+                  value={value ?? '—'}
+                />
+              ))}
             </Section>
           )}
         </div>
@@ -886,9 +955,18 @@ function CrmProfileDetailContent() {
                     )}
                   </div>
                   <p className="text-gray-900">{addr.fullAddress}</p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Postal code: {addr.postalCode} | Province/City: {addr.provinceId}/{addr.cityId}
-                  </p>
+                  <DetailRow
+                    label={t('crm.profile.field.postalCode', locale)}
+                    value={addr.postalCode}
+                  />
+                  <DetailRow
+                    label={t('crm.profile.field.province', locale)}
+                    value={referenceName(addr.provinceName, locale)}
+                  />
+                  <DetailRow
+                    label={t('crm.profile.field.city', locale)}
+                    value={referenceName(addr.cityName, locale)}
+                  />
                   <p className="text-xs text-gray-400 mt-1">
                     {t('crm.profile.label.created', locale)}: {time.format(addr.createdAt)}
                   </p>
@@ -1006,14 +1084,14 @@ function CrmProfileDetailContent() {
                       <span
                         className={`text-xs px-1.5 py-0.5 rounded-full ${getStatusBadgeClass(sp.status)}`}
                       >
-                        {sp.status}
+                        {t('crm.list.' + sp.status, locale)}
                       </span>
                       <span className="text-xs px-1.5 py-0.5 rounded-full bg-gray-200 text-gray-700">
                         {getProfileTypeLabel(sp.profileType, locale)}
                       </span>
                       {sp.isDefault && (
                         <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full">
-                          Default
+                          {t('crm.profile.label.default', locale)}
                         </span>
                       )}
                     </div>

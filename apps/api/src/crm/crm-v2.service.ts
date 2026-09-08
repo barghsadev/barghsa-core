@@ -86,13 +86,18 @@ export interface PendingVerificationProfile {
   createdAt: string;
 }
 
-/**
- * A single address record on a CRM profile.
- */
+export interface CrmLocalizedName {
+  nameFa: string;
+  nameEn: string;
+}
+
+/** A single address record on a CRM profile. */
 export interface CrmProfileAddress {
   id: string;
   provinceId: string;
   cityId: string;
+  provinceName: CrmLocalizedName | null;
+  cityName: CrmLocalizedName | null;
   fullAddress: string;
   postalCode: string;
   mainAddress: boolean;
@@ -120,6 +125,8 @@ export interface CrmLegalInfo {
   nationalIdentifier: string;
   registrationNumber: string;
   companyTypeId: string | null;
+  companyTypeName: CrmLocalizedName | null;
+  registrationDate: string | null;
   economicCode: string | null;
   officialPhone: string | null;
   officialEmail: string | null;
@@ -127,6 +134,20 @@ export interface CrmLegalInfo {
   officialCityId: string | null;
   officialFullAddress: string | null;
   officialPostalCode: string | null;
+  officialProvinceName: CrmLocalizedName | null;
+  officialCityName: CrmLocalizedName | null;
+  representativeHonorific: string | null;
+  representativeFirstName: string | null;
+  representativeLastName: string | null;
+  representativeNationalId: string | null;
+  representativeProvinceId: string | null;
+  representativeCityId: string | null;
+  representativeProvinceName: CrmLocalizedName | null;
+  representativeCityName: CrmLocalizedName | null;
+  representativeFullAddress: string | null;
+  representativePostalCode: string | null;
+  createdAt: string;
+  updatedAt: string;
   representativeTitle: string;
   representativeRelationship: string;
 }
@@ -183,6 +204,14 @@ export interface CrmProfileDetail {
   siblingProfiles: CrmSiblingProfile[];
   agentRelationships: CrmRecordPage<CrmAgentRecord>;
   verificationHistory: CrmRecordPage<CrmVerificationRecord>;
+}
+
+function localizedName(value: unknown): CrmLocalizedName | null {
+  if (!value || typeof value !== 'object') return null;
+  const name = value as Partial<CrmLocalizedName>;
+  return typeof name.nameFa === 'string' && typeof name.nameEn === 'string'
+    ? { nameFa: name.nameFa, nameEn: name.nameEn }
+    : null;
 }
 
 @Injectable()
@@ -244,11 +273,15 @@ export class CrmV2Service {
 
     // 3. Fetch addresses for this profile
     const addressResult = await pool.query(
-      `SELECT id, profile_id, province_id, city_id, full_address, postal_code, main_address,
-              created_at AT TIME ZONE 'UTC' AS created_at
-       FROM addresses
-       WHERE profile_id = $1
-       ORDER BY main_address DESC, created_at ASC`,
+      `SELECT a.id, a.province_id, a.city_id, a.full_address, a.postal_code, a.main_address,
+              a.created_at,
+              json_build_object('nameFa', p.name_fa, 'nameEn', p.name_en) AS province_name,
+              json_build_object('nameFa', c.name_fa, 'nameEn', c.name_en) AS city_name
+       FROM addresses a
+       LEFT JOIN provinces p ON p.id=a.province_id
+       LEFT JOIN cities c ON c.id=a.city_id AND c.province_id=p.id
+       WHERE a.profile_id = $1
+       ORDER BY a.main_address DESC, a.created_at ASC`,
       [profileId]
     );
 
@@ -257,6 +290,8 @@ export class CrmV2Service {
         id: row.id as string,
         provinceId: row.province_id as string,
         cityId: row.city_id as string,
+        provinceName: localizedName(row.province_name),
+        cityName: localizedName(row.city_name),
         fullAddress: row.full_address as string,
         postalCode: row.postal_code as string,
         mainAddress: row.main_address as boolean,
@@ -322,13 +357,26 @@ export class CrmV2Service {
     let legalInfo: CrmLegalInfo | null = null;
     if (profileRow.profile_type === 'LEGAL') {
       const legalResult = await pool.query(
-        `SELECT legal_name, national_identifier, registration_number, company_type_id,
-                economic_code, official_phone, official_email,
-                official_province_id, official_city_id,
-                official_full_address, official_postal_code,
-                representative_title, representative_relationship
-         FROM legal_profiles
-         WHERE id = $1`,
+        `SELECT l.legal_name, l.national_identifier, l.registration_number, l.company_type_id,
+                l.registration_date, l.economic_code, l.official_phone, l.official_email,
+                l.official_province_id, l.official_city_id,
+                l.official_full_address, l.official_postal_code,
+                l.representative_title, l.representative_relationship,
+                l.representative_honorific, l.representative_first_name, l.representative_last_name,
+                l.representative_national_id, l.representative_province_id, l.representative_city_id,
+                l.representative_full_address, l.representative_postal_code, l.created_at, l.updated_at,
+                json_build_object('nameFa', ct.name_fa, 'nameEn', ct.name_en) AS company_type_name,
+                json_build_object('nameFa', op.name_fa, 'nameEn', op.name_en) AS official_province_name,
+                json_build_object('nameFa', oc.name_fa, 'nameEn', oc.name_en) AS official_city_name,
+                json_build_object('nameFa', rp.name_fa, 'nameEn', rp.name_en) AS representative_province_name,
+                json_build_object('nameFa', rc.name_fa, 'nameEn', rc.name_en) AS representative_city_name
+         FROM legal_profiles l
+         LEFT JOIN company_types ct ON ct.id=l.company_type_id
+         LEFT JOIN provinces op ON op.id::text=LOWER(l.official_province_id)
+         LEFT JOIN cities oc ON oc.id::text=LOWER(l.official_city_id) AND oc.province_id=op.id
+         LEFT JOIN provinces rp ON rp.id=l.representative_province_id
+         LEFT JOIN cities rc ON rc.id=l.representative_city_id AND rc.province_id=rp.id
+         WHERE l.id = $1`,
         [profileId]
       );
 
@@ -339,6 +387,8 @@ export class CrmV2Service {
           nationalIdentifier: lr.national_identifier as string,
           registrationNumber: lr.registration_number as string,
           companyTypeId: (lr.company_type_id as string) ?? null,
+          companyTypeName: localizedName(lr.company_type_name),
+          registrationDate: (lr.registration_date as string) ?? null,
           economicCode: (lr.economic_code as string) ?? null,
           officialPhone: (lr.official_phone as string) ?? null,
           officialEmail: (lr.official_email as string) ?? null,
@@ -346,6 +396,20 @@ export class CrmV2Service {
           officialCityId: (lr.official_city_id as string) ?? null,
           officialFullAddress: (lr.official_full_address as string) ?? null,
           officialPostalCode: (lr.official_postal_code as string) ?? null,
+          officialProvinceName: localizedName(lr.official_province_name),
+          officialCityName: localizedName(lr.official_city_name),
+          representativeHonorific: (lr.representative_honorific as string) ?? null,
+          representativeFirstName: (lr.representative_first_name as string) ?? null,
+          representativeLastName: (lr.representative_last_name as string) ?? null,
+          representativeNationalId: (lr.representative_national_id as string) ?? null,
+          representativeProvinceId: (lr.representative_province_id as string) ?? null,
+          representativeCityId: (lr.representative_city_id as string) ?? null,
+          representativeProvinceName: localizedName(lr.representative_province_name),
+          representativeCityName: localizedName(lr.representative_city_name),
+          representativeFullAddress: (lr.representative_full_address as string) ?? null,
+          representativePostalCode: (lr.representative_postal_code as string) ?? null,
+          createdAt: (lr.created_at as string) ?? '',
+          updatedAt: (lr.updated_at as string) ?? '',
           representativeTitle: lr.representative_title as string,
           representativeRelationship: lr.representative_relationship as string,
         };

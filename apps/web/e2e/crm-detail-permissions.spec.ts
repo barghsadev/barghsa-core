@@ -577,3 +577,165 @@ for (const locale of ['fa', 'en'] as const)
       })
     );
   });
+
+for (const locale of ['fa', 'en'] as const)
+  test(`CRM legal details show localized fields, reference names and calendar dates (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((lang) => {
+      if (document.documentElement) document.documentElement.lang = lang;
+      new MutationObserver(() => {
+        document.documentElement.lang = lang;
+      }).observe(document, { childList: true });
+    }, locale);
+    const province = { nameFa: 'استان تهران', nameEn: 'Tehran province' };
+    const city = { nameFa: 'شهر تهران', nameEn: 'Tehran city' };
+    const current = {
+      ...detail(false, true),
+      legalInfo: {
+        legalName: 'Example Legal Company',
+        nationalIdentifier: '14012345671',
+        registrationNumber: 'reg-42',
+        companyTypeId: 'limited-liability',
+        companyTypeName: { nameFa: 'مسئولیت محدود', nameEn: 'Limited Liability' },
+        registrationDate: '2020-03-20',
+        economicCode: '87654',
+        officialPhone: '02100000000',
+        officialEmail: 'company@example.test',
+        officialFullAddress: 'Company street',
+        officialPostalCode: '2345678901',
+        officialProvinceName: province,
+        officialCityName: city,
+        representativeHonorific: 'Dr',
+        representativeFirstName: 'Sara',
+        representativeLastName: 'Example',
+        representativeNationalId: '0012345678',
+        representativeTitle: 'Director',
+        representativeRelationship: 'Board member',
+        representativeProvinceName: province,
+        representativeCityName: city,
+        representativeFullAddress: 'Representative street',
+        representativePostalCode: '1234567890',
+        createdAt: '2026-08-01T01:00:00Z',
+        updatedAt: '2026-08-02T01:00:00Z',
+      },
+      addresses: [
+        {
+          id: 'address-one',
+          provinceId: 'private-province-id',
+          cityId: 'private-city-id',
+          provinceName: province,
+          cityName: city,
+          fullAddress: 'Delivery street',
+          postalCode: '3456789012',
+          mainAddress: true,
+          createdAt: '2026-08-01T01:00:00Z',
+        },
+      ],
+    };
+    current.profile.profileType = 'LEGAL';
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
+    await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
+    await page.goto(`/admin/crm/profiles/${id}`);
+    for (const action of locale === 'fa'
+      ? ['ویرایش', 'تغییر اجباری رمز عبور', 'پایان تمام نشست‌ها']
+      : ['Edit', 'Force Password Change', 'Expire Sessions']) {
+      const button = page.getByRole('button', { name: action, exact: true });
+      const bounds = await button.boundingBox();
+      expect(bounds).not.toBeNull();
+      expect(bounds!.x).toBeGreaterThanOrEqual(0);
+      expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    }
+    await page.screenshot({
+      path: '/tmp/barghsa-crm-legal-header-' + locale + '-' + test.info().project.name + '.png',
+    });
+    const openDetails = () =>
+      page
+        .getByRole('tab', {
+          name: locale === 'fa' ? 'جزئیات پروفایل' : 'Profile Details',
+          exact: true,
+        })
+        .click();
+    await openDetails();
+    const panel = page.getByRole('tabpanel');
+    for (const value of [
+      'Example Legal Company',
+      'reg-42',
+      'Sara',
+      '0012345678',
+      'Representative street',
+      '1234567890',
+      'Board member',
+    ])
+      await expect(panel).toContainText(value);
+    for (const label of locale === 'fa'
+      ? [
+          'شناسه کاربر',
+          'عنوان',
+          'نام خانوادگی',
+          'تاریخ ثبت',
+          'نوع شرکت',
+          'نام نماینده',
+          'کد ملی نماینده',
+          'استان نماینده',
+          'آخرین تغییر',
+        ]
+      : [
+          'User ID',
+          'Title',
+          'Last Name',
+          'Registration Date',
+          'Company Type',
+          'Representative first name',
+          'Representative national ID',
+          'Representative province',
+          'Updated',
+        ])
+      await expect(panel).toContainText(label);
+    await expect(panel).toContainText(locale === 'fa' ? 'مسئولیت محدود' : 'Limited Liability');
+    await expect(panel).toContainText(locale === 'fa' ? province.nameFa : province.nameEn);
+    await expect(panel).toContainText(locale === 'fa' ? city.nameFa : city.nameEn);
+    const registration = panel
+      .locator('div')
+      .filter({
+        has: page.getByText(locale === 'fa' ? 'تاریخ ثبت' : 'Registration Date', { exact: true }),
+      })
+      .last();
+    await expect(registration).toContainText(
+      await formatBrowserDate(
+        page,
+        locale,
+        { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' },
+        '2020-03-20T00:00:00Z'
+      )
+    );
+    await expect(panel).not.toContainText('limited-liability');
+    await page
+      .getByRole('heading', {
+        name: locale === 'fa' ? 'اطلاعات شخص حقوقی' : 'Legal Entity Info',
+        exact: true,
+      })
+      .scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: '/tmp/barghsa-crm-legal-fields-' + locale + '-' + test.info().project.name + '.png',
+    });
+    await page
+      .getByRole('tab', { name: locale === 'fa' ? 'آدرس‌ها' : 'Addresses', exact: true })
+      .click();
+    await expect(panel).toContainText(locale === 'fa' ? 'کد پستی' : 'Postal code');
+    await expect(panel).toContainText(locale === 'fa' ? 'اصلی' : 'Main');
+    await expect(panel).toContainText(locale === 'fa' ? city.nameFa : city.nameEn);
+    await expect(panel).not.toContainText('private-city-id');
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+    ).toBe(true);
+    current.legalInfo.registrationDate = '2020-02-31';
+    Object.assign(current.legalInfo, { officialProvinceName: null, officialCityName: null });
+    await page.reload();
+    await openDetails();
+    await expect(registration).toContainText(locale === 'fa' ? 'نامشخص' : 'Unknown');
+    await expect(panel).toContainText('Representative street');
+  });
