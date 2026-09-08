@@ -1490,7 +1490,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "106658bf096ce68543fe5073ba293b628a29f585ad0b7faa55c555297327ae5b"
+          "sha256": "5a7b389322d0404da89efb17395b5fe4b40f31417034dc70d11e34d4a7d54e02"
         }
       ],
       "checks": [
@@ -1499,7 +1499,8 @@
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
-        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged."
+        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
@@ -1510,13 +1511,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
         "paths": [
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ]
+          "apps/api/src/admin/admin.controller.ts"
+        ],
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
       },
       "superseded_assessments": [
         {
@@ -1658,7 +1659,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "106658bf096ce68543fe5073ba293b628a29f585ad0b7faa55c555297327ae5b"
+          "sha256": "5a7b389322d0404da89efb17395b5fe4b40f31417034dc70d11e34d4a7d54e02"
         }
       ],
       "checks": [
@@ -1667,7 +1668,8 @@
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
-        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged."
+        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
@@ -1677,13 +1679,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
         "paths": [
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ]
+          "apps/api/src/admin/admin.controller.ts"
+        ],
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
       },
       "superseded_assessments": [
         {
@@ -1800,7 +1802,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "106658bf096ce68543fe5073ba293b628a29f585ad0b7faa55c555297327ae5b"
+          "sha256": "5a7b389322d0404da89efb17395b5fe4b40f31417034dc70d11e34d4a7d54e02"
         },
         {
           "path": "apps/api/src/admin/brand-config.service.ts",
@@ -1881,7 +1883,8 @@
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
         "Audit refresh at86bff51: Only new session-revocation browser cases were added; existing task-specific browser cases and product sources are unchanged. Reused their recorded evidence.",
         "At 218a3a3, reviewed the bounded session-display change and 24 selected browser cases; see audit/evidence/step-reviews.json#R01-session-display. Other task criteria retain their prior evidence and limitations.",
-        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged."
+        "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "This certifies the implemented numeral-formatting task, not every F20 localization or screen-reader requirement. Identifiers, customer-authored content, canonical input values and business date strings retain their own semantics. Production deployment and failing combined coverage groups remain separate gates."
@@ -1889,13 +1892,13 @@
       "merged_prs": [],
       "historically_skipped": true,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
         "paths": [
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ]
+          "apps/api/src/admin/admin.controller.ts"
+        ],
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
       },
       "superseded_assessments": [
         {
@@ -2267,18 +2270,19 @@
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "bbdbc65f479e10c1d5ec3c0ee708093557dcce87f13e1edb0a6a7000979927d6"
+          "sha256": "294eedd94a379655b8b63081cea1f9b1227b9a586b642fb804263be033de76cf"
         },
         {
           "path": "apps/api/src/common/error-http.integration.test.ts",
-          "sha256": "bc5639e7dae7d863dc3846f0a92961e970b09b68798058aac1b5834ce523112e"
+          "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
         }
       ],
       "checks": [
         "Reviewed changed workspace/build/test manifests and root configuration against this task; existing Vitest4 projects compatibility limitation remains recorded where applicable.",
         "Runtime/build configuration and lockfile are unchanged since full checkpoint9529872; reuse its frozen production-image builds, workspace typechecks, route budgets and applicable test evidence.",
         "Fresh package consumer verification passes all18 shared ESM/CJS export tests and all5 UI distribution/strict consumer tests. Every advertised shared/UI/i18n export target exists.",
-        "Audit refresh at86bff51: Unmatched-route localization is the only product change. Reviewed the exact diff and reused the passing34 focused/707 HTTP checks from9f00e2c; error envelope and correlation requirements are preserved."
+        "Audit refresh at86bff51: Unmatched-route localization is the only product change. Reviewed the exact diff and reused the passing34 focused/707 HTTP checks from9f00e2c; error envelope and correlation requirements are preserved.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-guard-boundaries review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "CDN-ready output and local server behavior are verified; this is not evidence of deployment to a live CDN."
@@ -2288,12 +2292,14 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
-        "prior_reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
-        "changed_paths_reviewed": [
-          "apps/api/src/common/http-exception.filter.ts"
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+        "paths": [
+          "apps/api/src/common/http-exception.filter.ts",
+          "apps/api/src/common/error-http.integration.test.ts"
         ],
-        "evidence": "audit/evidence/acceptance-refresh.json"
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
       },
       "superseded_assessments": [
         {
@@ -3080,7 +3086,7 @@
         },
         {
           "path": "apps/api/src/session/refresh-csrf.guard.ts",
-          "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+          "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
@@ -3088,7 +3094,7 @@
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
-          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -3130,7 +3136,8 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
-        "At 5543cc2, invitation acceptance rotates current credentials and revokes others with the membership/audit transaction. See audit/session-caller-review.md and the14-case HTTP suite."
+        "At 5543cc2, invitation acceptance rotates current credentials and revokes others with the membership/audit transaction. See audit/session-caller-review.md and the14-case HTTP suite.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-guard-boundaries review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "Reviewed session callers now include profile role change/removal and invitation acceptance. Finish task-wide evidence/requirement reconciliation after the CSRF/sensitive-action matrices; full invitation/decline/details acceptance remains in F07.",
@@ -3141,15 +3148,14 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
         "paths": [
-          "apps/api/src/session/session.service.ts",
-          "apps/api/src/session/session-cap.integration.test.ts",
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ]
+          "apps/api/src/session/refresh-csrf.guard.ts",
+          "apps/api/src/session/step-up.guard.ts"
+        ],
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
       }
     },
     {
@@ -3183,7 +3189,7 @@
         },
         {
           "path": "apps/api/src/session/refresh-csrf.guard.ts",
-          "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+          "sha256": "0040c8444bcb857a50cbf8325dcf8e52bff99d10c2411ad9fe44959fdd21672a"
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
@@ -3191,7 +3197,7 @@
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
-          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -3246,7 +3252,8 @@
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
         "At ee5beb2, reviewed staff disablement, both ownership-transfer parties and unchanged CRM revocation primitives; see audit/session-caller-review.md. Other authorization criteria remain separate.",
-        "At 5543cc2, invitation acceptance rotates current credentials and revokes others with the membership/audit transaction. See audit/session-caller-review.md and the14-case HTTP suite."
+        "At 5543cc2, invitation acceptance rotates current credentials and revokes others with the membership/audit transaction. See audit/session-caller-review.md and the14-case HTTP suite.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-guard-boundaries review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "Reviewed session callers now include profile role change/removal and invitation acceptance. Finish task-wide evidence/requirement reconciliation after the CSRF/sensitive-action matrices; full invitation/decline/details acceptance remains in F07."
@@ -3334,15 +3341,14 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
         "paths": [
-          "apps/api/src/session/session.service.ts",
-          "apps/api/src/session/session-cap.integration.test.ts",
-          "apps/web/e2e/form-accessibility.spec.ts"
-        ]
+          "apps/api/src/session/refresh-csrf.guard.ts",
+          "apps/api/src/session/step-up.guard.ts"
+        ],
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
       }
     },
     {
@@ -3623,7 +3629,7 @@
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "bbdbc65f479e10c1d5ec3c0ee708093557dcce87f13e1edb0a6a7000979927d6"
+          "sha256": "294eedd94a379655b8b63081cea1f9b1227b9a586b642fb804263be033de76cf"
         },
         {
           "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
@@ -3670,7 +3676,8 @@
         "20 production browser checks on desktop/mobile Chromium pass in fa/en, covering429 input preservation, retry timing, resend cooldowns and keyboard navigation to localized support. Rerun after owner-confirmed contact update at this revision also passes20.",
         "2 auth-error unit tests pass;50 dictionary tests, web build/types/lint and41 complete-route budgets pass. Logs saved through audit/evidence/index.json.",
         "At6640012 only unsupported support response-time copy changed; rate-limit behavior and prior browser evidence unchanged. Dictionary checks/build and41 route budgets pass.",
-        "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain."
+        "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-guard-boundaries review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "Local application and supplied edge configuration verified. Actual production proxy deployment, trusted forwarding topology and live provider delivery remain operational prerequisites.",
@@ -3770,15 +3777,13 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "9827e96c6e439e07c85daead4655a03fff84becd",
-        "previous_reviewed_sha": "e86936264cd1bd699658b5118a148cef9a5d9b16",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "9827e96c6e439e07c85daead4655a03fff84becd",
         "paths": [
-          "apps/api/src/auth/auth.controller.ts",
-          "apps/api/src/auth/auth.service.ts",
-          "apps/api/src/auth/otp.service.ts"
+          "apps/api/src/common/http-exception.filter.ts"
         ],
-        "review": "Reviewed selected reset/issuance/schema/contract changes and their shared callers. Unchanged behavior reuses valid evidence. Earlier unrelated source drift is not silently refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-reset-otp-first"
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
       }
     },
     {
@@ -4031,7 +4036,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4098,7 +4103,8 @@
         "Legal name and national identifier remain correction-only. Existing contact/address and correction-link checks remain passing. The full CRM batch passed 201 tests; the subsequent focused 21-case run also proves unchanged inactive uppercase geography remains editable.",
         "20 distinct new production-browser cases pass across final focused runs: all fields, captured confirmation, step-up, failed/mismatched acknowledgement, retained drafts, stale reload, permission/archive gates, fa/en, light/dark and desktop/mobile. Existing detail/address regression has 72 passing cases.",
         "Final layout review corrected the desktop editor width and dark native date icon. Eight final browser scenarios pass with width assertions and axe scans; API/web types, lint/format, production builds, OpenAPI and all 41 route budgets pass.",
-        "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed."
+        "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [],
       "merged_prs": [
@@ -4106,13 +4112,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9827e96c6e439e07c85daead4655a03fff84becd",
-        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
         "paths": [
-          "apps/api/openapi.json"
+          "apps/api/src/admin/staff-mutation-permission.ts"
         ],
-        "review": "Reviewed selected reset/issuance/schema/contract changes and their shared callers. Unchanged behavior reuses valid evidence. Earlier unrelated source drift is not silently refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-reset-otp-first"
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
       }
     },
     {
@@ -4150,7 +4156,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4169,7 +4175,8 @@
         "Read the exact task and PR125 against current implementation: reverify now means PENDING_VERIFICATION, not the historical PR body's DRAFT.",
         "Current crm:verify/admin permission is checked inside the transaction after the profile lock. State/audit/owner notice commit together; concurrency, owner change and notice rollback checks are in the reused156 CRM suite at0530080. The later backend diff only added account-action notices.",
         "All three actions pass fa/en desktop/mobile browser checks with required unverify/reverify reasons, confirmation, invalid-response rejection, current status display and retry.",
-        "50 dictionary tests, web types/lint/build and41 route budgets pass at this revision."
+        "50 dictionary tests, web types/lint/build and41 route budgets pass at this revision.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "Manual staff verification is covered. No automatic identity provider or external notification delivery is claimed.",
@@ -4180,13 +4187,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "paths": [
-          "apps/api/src/crm/crm-v2.service.ts"
-        ]
+          "apps/api/src/admin/staff-mutation-permission.ts"
+        ],
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
       }
     },
     {
@@ -4224,7 +4231,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -4255,7 +4262,8 @@
         "API/web types, focused lint, production build and41 route budgets pass.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
-        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "User notices are durable private in-app notices. Email/SMS delivery is not claimed.",
@@ -4266,13 +4274,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
-        "previous_reviewed_sha": "f39132fe13078cff4bef3868be7d9abfb745e2cb",
-        "review": "Reviewed atomic step-up rotation and replacement cookie delivery. Other controller/session methods remain unchanged. Focused 131 API and 16 browser checks pass; only immediate-predecessor matching source hashes were refreshed. Earlier drift and task limitations remain.",
-        "record": "audit/evidence/step-reviews.json#R01-step-up-rotation",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
         "paths": [
-          "apps/api/src/session/session.service.ts"
-        ]
+          "apps/api/src/admin/staff-mutation-permission.ts"
+        ],
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
       }
     },
     {
@@ -4392,7 +4400,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
-          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -4521,7 +4529,8 @@
         "The client already checked success and target profile before this step. The earlier archive-wallet audit overstated that gap. This repair additionally requires a canonical ISO archival timestamp before redirecting; malformed, impossible-date and mismatched acknowledgements preserve the retry dialog.",
         "Archive refusals now return specific fa/en messages, localized counts and the existing error/status codes. The shared action dialog forwards the locale and supports response-aware mappings while preserving existing string mappings, CSRF, step-up and captured-action retries.",
         "Real PostgreSQL/HTTP tests verify canonical legal-owner protection even with Manager and Finance agents, no mutation/audit on refusal, exact staff actor/trimmed reason/timestamp, retained paid invoice and sibling profile, and no duplicate archival audit. Two existing concurrency tests now wait for the active-profile CTE introduced in the prior wallet step.",
-        "Explicit built-app archive browser recheck passes in R01-crm-profile-page-acceptance; earlier default-server run was development."
+        "Explicit built-app archive browser recheck passes in R01-crm-profile-page-acceptance; earlier default-server run was development.",
+        "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain."
       ],
       "limitations": [
         "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
@@ -4532,13 +4541,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "paths": [
-          "apps/api/src/crm/crm-v2.service.ts"
-        ]
+          "apps/api/src/admin/staff-mutation-permission.ts"
+        ],
+        "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
+        "record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
       }
     },
     {

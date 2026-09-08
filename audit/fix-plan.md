@@ -1,6 +1,6 @@
 # Remaining repairs, reviews and skipped work
 
-Current through product `455ed61` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
+Current through product `640108c` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
 
 ## Current numbers
 
@@ -16,9 +16,9 @@ The saved inventory contains **301 merged PRs**, last recorded as checked agains
 
 ## Next bounded step
 
-Continue R01 from the [security route review](security-route-review.md). The complete registration matrix contains 342 routes, 203 unsafe-method routes and 120 guarded step-up routes. Next verify staff creation that grants roles and verification-provider configuration, then finish required domain audit/UI recovery and explicit public-auth/callback/telemetry dispositions. Metadata alone is not task acceptance.
+Continue R01 from the [security route review](security-route-review.md). Next finish step-up audit/deadline checks for built staff role changes, disablement and activation resend, reusing the new session helper and corrected authority-race fixtures. The current registration matrix has 342 routes, 203 unsafe-method routes and 121 guarded step-up routes. Domain and explicit public-auth/callback/telemetry dispositions remain.
 
-Latest repair `455ed61` rejects invalid/future step-up times, removes session credentials from guard logs, logs all CSRF rejection paths and returns the required `requiresStepUp` error flag. The final combined run passes 83 distinct API cases plus types/lint/format. The [session caller matrix](session-caller-review.md) retains earlier credential effects and reusable evidence. No broad checkpoint is renewed; lost-contact policy remains pending.
+Latest repair `640108c` requires current step-up through staff creation commit and binds its audit to the verified session and request correlation. 215 distinct API/unit cases and 4 desktop/mobile browser cases pass across recorded runs, plus types/lint/format and unchanged OpenAPI. Production has no verification adapter, so its configuration writer is unreachable; enabling a real provider has an explicit security/integration prerequisite. Fourteen immediate-predecessor source bindings were reconciled with the reviewed changes; the 12 older verified-record drifts remain. No broad checkpoint is renewed; lost-contact policy remains pending.
 
 ## Ordered work
 

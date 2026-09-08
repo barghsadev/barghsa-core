@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "455ed6193831daaa1e8836880de3004be4dd4c18",
+  "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
   "active_step": "R01",
-  "next_action": "R01: continue sensitive-action caller/audit/UI review from audit/security-route-review.md. First verify staff creation with role grants and verification-provider configuration, which lack route step-up metadata. Guard boundary repair455ed61 passes83 focused API cases. Public-auth/callback/telemetry CSRF dispositions and task-wide session reconciliation remain. Lost-contact policy remains pending; reuse valid prior evidence.",
+  "next_action": "R01: finish current step-up/audit/deadline acceptance for built staff role changes, disablement and activation resend, reusing requireStaffStepUp and the corrected service-boundary fixtures. Staff creation is repaired at640108c; production verification-provider writes are unavailable and future provider setup has an explicit prerequisite. Then finish other domain callers, CSRF alternatives and task-wide session reconciliation. Lost-contact policy remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -104,7 +104,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Finish task-level role/revocation/activation acceptance; deployed staff administrator-grant inventory remains external."
+        "Staff creation now requires current step-up through commit and records verification/correlation; reviewed API/browser evidence at640108c. Finish role-change/disable/resend session deadlines, audit and task-level acceptance. Deployed administrator-grant inventory remains external."
       ]
     },
     {
@@ -124,7 +124,7 @@
       "implementation_status": "safe_unavailable_provider",
       "acceptance_status": "pending",
       "remaining": [
-        "Keep automatic identity verification unavailable without a provider; certify exact manual/disabled requirements. Provider-backed approval remains blocked."
+        "Production has no registered provider and cannot write adapter configuration. Keep automatic verification unavailable; finish manual/disabled task acceptance. Real-provider setup must add its contract, current authorization/step-up, encrypted configuration, audit and atomic version persistence before enabling it."
       ]
     },
     {
@@ -529,6 +529,10 @@
     {
       "id": "R01-guard-boundaries",
       "review_record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
+    },
+    {
+      "id": "R01-staff-creation-step-up",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
     }
   ],
   "deferred_improvements": [

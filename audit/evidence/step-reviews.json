@@ -3595,6 +3595,180 @@
         "/tmp/barghsa-guard-review-staff.log",
         "/tmp/barghsa-guard-review-types-final.log",
         "/tmp/barghsa-guard-review-types.log"
+      ],
+      "route_inventory_correction": "At640108c, corrected route CSV source bindings for9 controllers/78 routes. Runtime export-cache lookup had selected re-export files. Declaration files now come from the indexed Class nodes and each is checked for its controller declaration before hashing. Route metadata/counts and runtime test evidence are unchanged;62 controllers own the342 recorded routes, out of63 registered controller classes."
+    },
+    {
+      "id": "R01-staff-creation-step-up",
+      "date": "2026-09-08",
+      "source_revision": "640108cd09e39a8ff1bb55b5d905ccc727eabe54",
+      "summary": "Require current step-up through staff creation commit and bind its audit to the verified session and request correlation.",
+      "review": [
+        "T-05.03.01 explicitly depends on step-up and defines admin:users:create as its permission. Retained that permission contract and initial-role support. Added the missing route guard and pass the acting session into the service. Seven initial HTTP failures reproduced missing/expired/future verification acceptance, missing audit verification/correlation and creation after session/step-up expiry during persistence. Audit-failure rollback already passed.",
+        "The transaction retains actor account/permission locks, locks the acting session, then checks current ownership, CSRF, revocation, absolute/idle expiry and the15-minute verification window using the database clock after lock waits. Checks run before writes and again after audit, before commit. User, individual verified profile, initial roles, login identifier, activation outbox and audit remain atomic. Audit records the persisted step-up timestamp, request correlation and deduplicated actual role set.",
+        "Eight creation HTTP cases cover absent/stale/future verification, both activation methods, exact audit attribution, and rollback on write failure or deadline expiry. Sequence witnesses prove expiry tests reached the audit write; row-count snapshots verify all creation effects rolled back.",
+        "Eight older staff authority fixtures waited on the actor account before SessionAuthGuard completed, so they timed out before reaching their claimed service boundary. Creation now pauses its post-authentication uniqueness lookup; other mutations pause a target that sorts before the actor in the established account-lock order. Each fixture observes its own blocker PID and exact query before changing authority. All eight original actor-role/disable scenarios pass, plus actor-session revocation and CSRF-change races and the original reciprocal-role-removal case. The changed CSRF race verifies a correlated security log without credentials.",
+        "Reviewed unchanged AdminStaffUsersPage and TeamActionDialog. Four production-browser cases, fa/en on desktop/mobile, prove no submission before confirmation, wrong-password recovery, retained normalized draft/role target, fresh CSRF on retry, and one-time password removal after dismissal/reload. Browser API responses are fixtures; actual permission, credential and persistence behavior is covered by API cases.",
+        "Provider configuration disposition: no real adapter is registered. Production/staging/unspecified environments refuse the stub even with its flag set; development/test require explicit opt-in. The controller requires a registered adapter before configuration writes, so no production provider credential writer is reachable today. Five current registration checks pass. Before a real provider is enabled, its contract must include guarded/current authorization, encrypted configuration, audit and atomic version persistence; no provider integration was built or enabled.",
+        "At640108c, corrected route CSV source bindings for9 controllers/78 routes. Runtime export-cache lookup had selected re-export files. Declaration files now come from the indexed Class nodes and each is checked for its controller declaration before hashing. Route metadata/counts and runtime test evidence are unchanged;62 controllers own the342 recorded routes, out of63 registered controller classes."
+      ],
+      "checks": [
+        "215 distinct API/unit cases pass across recorded focused runs: the five selected staff files total210 after repairing eight stale fixtures and adding two session-binding cases; five provider-registration cases are separate. Earlier overlapping runs are not added. Four production-browser cases pass. Final API typecheck, focused ESLint/Prettier, regenerated OpenAPI comparison and diff review pass.",
+        "No frontend product, schema or dependency change. The authority suite reports a pg concurrent-query deprecation warning; assertions pass and this step does not claim that warning was repaired. No broad checkpoint, coverage, route-budget or production-image renewal."
+      ],
+      "remaining": [
+        "Finish current step-up/audit/deadline acceptance for built staff role changes, disablement and activation resend using the new session helper, then remaining domain callers and CSRF alternatives. Whole staff-creation/lifecycle task acceptance is still pending its consolidated review; this record proves the repaired boundary and specified behavior."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "5a7b389322d0404da89efb17395b5fe4b40f31417034dc70d11e34d4a7d54e02"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "cac7105b5daed8a8fafb58820dbe940e065a5306a4b6cb758809b556c7e9b040"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "e5ef61f5a9cbb60b5ac1349e3c232e6f6c9faf5dea80c4f137faae142d40be85"
+        },
+        {
+          "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
+          "sha256": "65d54f2498af734050f947e6234e20e532a7b727f0201ef58f431c9b20df9b4d"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-http.integration.test.ts",
+          "sha256": "4240ef48e7857ae749f8600a595c696f800b8abd40e72f538dc1ff931c338b8c"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "a77110da5bece565ad2370c04de17b25b90a02edcf780a2c7622713fc00457c3"
+        },
+        {
+          "path": "apps/web/e2e/staff-creation.spec.ts",
+          "sha256": "350aab322ef0cadb705dc513c4c13377dc3e65eea51171a7c2619eaa4eb06f59"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "60efe8700d4b1ae4397fbb9e3dca2f2a3d31b29aef0def32ebb3dd8c8c8ce9f5"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.service.ts",
+          "sha256": "c986149e2de2f8885867665d426da1d5e8ee95b8b0af6450b28d3de7f17a402a"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.controller.ts",
+          "sha256": "4c5c8805e9f501da37f5e0785110b921574df68a5c10e683f7f705b68ef0a3e7"
+        },
+        {
+          "path": "apps/api/src/verification/provider-registration.test.ts",
+          "sha256": "d6e0412044a23c7ba4b82ac592057371c5e7337e830da4843b85418ac375a03b"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-staff-create-after.log",
+        "/tmp/barghsa-staff-create-api-types.log",
+        "/tmp/barghsa-staff-create-authority-final.log",
+        "/tmp/barghsa-staff-create-authority-format.log",
+        "/tmp/barghsa-staff-create-before.log",
+        "/tmp/barghsa-staff-create-browser-format.log",
+        "/tmp/barghsa-staff-create-browser.log",
+        "/tmp/barghsa-staff-create-contract.log",
+        "/tmp/barghsa-staff-create-fixtures-format.log",
+        "/tmp/barghsa-staff-create-format-final.log",
+        "/tmp/barghsa-staff-create-format-tests.log",
+        "/tmp/barghsa-staff-create-format.log",
+        "/tmp/barghsa-staff-create-http-final.log",
+        "/tmp/barghsa-staff-create-lint.log",
+        "/tmp/barghsa-staff-create-openapi.log",
+        "/tmp/barghsa-staff-create-provider-disposition.log"
+      ],
+      "evidence_reconciliation": [
+        {
+          "task_key": "01-platform-infrastructure.md#T-01.03.05",
+          "paths": [
+            "apps/api/src/common/http-exception.filter.ts",
+            "apps/api/src/common/error-http.integration.test.ts"
+          ],
+          "record": "R01-guard-boundaries"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-02.02.01",
+          "paths": [
+            "apps/api/src/session/refresh-csrf.guard.ts",
+            "apps/api/src/session/step-up.guard.ts"
+          ],
+          "record": "R01-guard-boundaries"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-02.02.02",
+          "paths": [
+            "apps/api/src/session/refresh-csrf.guard.ts",
+            "apps/api/src/session/step-up.guard.ts"
+          ],
+          "record": "R01-guard-boundaries"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-02.04.01",
+          "paths": [
+            "apps/api/src/common/http-exception.filter.ts"
+          ],
+          "record": "R01-guard-boundaries"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.01",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-creation-step-up"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-09.03.02",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-creation-step-up"
+        },
+        {
+          "task_key": "01-platform-infrastructure.md#T-06.02.05",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "record": "R01-staff-creation-step-up"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.02",
+          "paths": [
+            "apps/api/src/admin/staff-mutation-permission.ts"
+          ],
+          "record": "R01-staff-creation-step-up"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.03",
+          "paths": [
+            "apps/api/src/admin/staff-mutation-permission.ts"
+          ],
+          "record": "R01-staff-creation-step-up"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.04",
+          "paths": [
+            "apps/api/src/admin/staff-mutation-permission.ts"
+          ],
+          "record": "R01-staff-creation-step-up"
+        },
+        {
+          "task_key": "02-auth-users-admin.md#T-05.02.06",
+          "paths": [
+            "apps/api/src/admin/staff-mutation-permission.ts"
+          ],
+          "record": "R01-staff-creation-step-up"
+        }
       ]
     }
   ]
