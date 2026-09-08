@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "a7a423b172aea26c7f0b8025fdec51127f46688a",
+  "source_revision": "87116037b109a9c377f8c65a36f581931d4e033a",
   "active_step": "R01",
-  "next_action": "R01: complete CRM Agent Invites/relationships and Verification History tabs, then required address editing. Last recorded password change is implemented; action tasks02#T-05.02.03/.04 remain verified. Continue correction/archive and critical role/session/finance review; preserve pending lost-contact policy question.",
+  "next_action": "R01: finish T-05.02.01 required-route and full-field acceptance, then implement T-05.02.02 address editing. CRM record tabs and last recorded password date are implemented; T-05.02.03/.04 remain verified. Continue correction/archive and critical role/session/finance review; preserve pending lost-contact policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Verification and account-security tasks02#T-05.02.03/.04 are verified locally. Last recorded password date is implemented. Full profile view/editing remain partial: relationships/history tabs and address editing. Review correction/archive/list task criteria."
+        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Record tabs, keyboard navigation and last recorded password date are implemented. Finish full-profile route/field acceptance, required address editing and correction/archive/list task review."
       ]
     },
     {
@@ -358,6 +358,10 @@
     {
       "id": "R01-crm-password-change-date",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-password-change-date"
+    },
+    {
+      "id": "R01-crm-profile-records",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-records"
     }
   ],
   "deferred_improvements": [],

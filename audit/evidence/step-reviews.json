@@ -425,6 +425,64 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "The profile detail task stays partial: agent relationships and verification history tabs remain placeholders; required route and accessibility review remain. Historical/imported accounts without trustworthy password-history records remain Not recorded."
+    },
+    {
+      "id": "R01-crm-profile-records",
+      "date": "2026-09-08",
+      "source_revision": "87116037b109a9c377f8c65a36f581931d4e033a",
+      "summary": "Replaced CRM Agent Invites and Verification History placeholders with persisted, paginated records. Added complete keyboard navigation and labelled tab panels.",
+      "review": "Legal profiles show memberships and invitation lifecycle records; individuals show represented companies and invitations to their current sign-in contact. Verification history uses selected-profile events and preserves timestamp precision across pages. Only display fields leave the API; hashes, identity correction values and evidence keys are excluded. Review caught a permission gap before commit: correction-case history now additionally requires verification:read in both embedded and paged responses. Other CRM readers retain ordinary verification/onboarding history. The cursor is bound to profile and record kind, including canonical UUID case; malformed legacy metadata is safely excluded. Requests retain prior rows on failure, retry the same cursor and abort on unmount.",
+      "checks": [
+        "164 CRM tests in12 files passed before the final read-permission refinement. After it,31 affected CRM checks pass in3 files, including6 real-HTTP record cases; counts overlap and must not be added.",
+        "32 production Chromium checks pass across desktop/mobile in fa/en, including both new record tabs, date formatting, loading, failed/malformed response retry, pagination, refresh/empty state and RTL arrow/Home/End focus. Subsequent edits affected only backend permissions and tests.",
+        "50 dictionary tests, API/web typechecks, API/web/i18n builds, focused ESLint/Prettier and41 complete-route budgets pass.",
+        "Generated OpenAPI was reviewed: two embedded page fields and one typed-kind paging endpoint; the saved contract matches the rebuilt API.",
+        "A broad batch emitted an existing pg client concurrency deprecation. New detail queries are sequential. A single-case diagnostic passed without reproducing it; no warning suppression or broader runtime fix was introduced."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-profile-records.ts",
+          "sha256": "c19ac007d0810d776a37ab9e821e0d382f648fa30babb90fa2b79f9c437bfeae"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+          "sha256": "224423828f6a11096bc195be7c27e82a8fb745d6f204e2b860936a5d7cf25c20"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "29659649f5b60873e88a4374f0a87c7a2403afc5138939483b4c1620552bf66d"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "b3e87c387b673f3f348eaa291f7260c4ed8d3c995488b7f486b8052f5fa5403d"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.test.ts",
+          "sha256": "67473a6cfd6a0e44f57c7054eb1405b5214b472ef7dc48ca8bdc660a2fac0397"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "0ac6d5c1dec69b3caa44041e75931d62ed3adb2e3fe16a9d723c50a6ff2b6bde"
+        },
+        {
+          "path": "apps/web/src/components/CrmProfileRecords.tsx",
+          "sha256": "e2510e997261bb5a26ce21e02f77abbfea499305fe71c38cb9e0a7867272fa5b"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "cb8271c9e1459bef585698d2f9d70988e4d6a10822ace8333b3796fc0c0ca78f"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "b658453808580f0066ed04a91f48d78889649728eabeb16f7921e7e145af1ef5"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "ccc4b9113e7f75fa6c822de856c74632a59ca3cd8707fb9fc24633631bf9338e"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "T-05.02.01 stays partial pending its specified route and complete field/visual acceptance. Address editing and correction/archive task review remain. Large production audit-volume performance is not certified by fixture pagination checks."
     }
   ]
 }

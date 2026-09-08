@@ -1,6 +1,6 @@
 # Remaining repair and review plan
 
-Reconciled on 2026-09-08 through product commit `a7a423b`. Start here, then read [progress.json](progress.json) for the next action. All original F01–F23 groups remain there. Detailed completed work now lives in [step evidence](evidence/step-reviews.json).
+Reconciled on 2026-09-08 through product commit `8711603`. Start here, then read [progress.json](progress.json) for the next action. All original F01–F23 groups remain there. Detailed completed work now lives in [step evidence](evidence/step-reviews.json).
 
 ## Current position
 
@@ -20,7 +20,7 @@ The saved inventory contains 301 merged PRs and was checked against GitHub on Se
 | --- | --- | --- |
 | R01 / F03 | Session list lacks required approximate location. Trace all rotation, revocation and sensitive-action callers before closing the four partial session tasks. | Exact current requirements, required caller matrix, meaningful HTTP/browser checks and privacy-safe location behavior. |
 | R01 / F05 | Intake and escalation runbook is implemented; lost-contact recovery still needs owner-defined approvers/evidence policy and a reviewed credential-change method. Unsupported24-hour promise was removed. | Runbook grounded in supported staff actions, evidence/audit requirements and an exercised recovery or explicit escalation path. No invented provider or credential bypass. |
-| R01 / F15 | Full CRM profile view still lacks agent relationships and verification history; staff address editing is absent. Last recorded password change is implemented and checked. | Complete partial tasks 02-auth-users-admin.md#T-05.02.01 and T-05.02.02 with authorized data, localized controls and focused HTTP/browser checks. Action tasks T-05.02.03/T-05.02.04 are already verified. |
+| R01 / F15 | Staff address editing is absent. Full profile view still needs its required-route and complete field/visual review. Record tabs, keyboard navigation and last recorded password change are implemented and checked. | Complete partial tasks 02-auth-users-admin.md#T-05.02.01 and T-05.02.02 with authorized data, localized controls and focused HTTP/browser checks. Action tasks T-05.02.03/T-05.02.04 are already verified. |
 | R02 / F09, F17 | Email and notification renderers do not consume active branding. | Versioned branding reaches the required rendered output; missing assets/configuration and localized behavior are exercised. |
 | R02 / F17 | `02-auth-users-admin.md#T-09.11.02` has document selection but lacks integrated new-document upload. | Authorized upload, validation, persisted KB association, failure/retry and localized controls. Chunking/embedding stays an explicit separate dependency. |
 | R02 / F17 | `02-auth-users-admin.md#T-09.11.04` lacks its actual-agent backend and test-chat panel. | Admin-authenticated chat reaches the selected agent with its required model/KB/policy configuration. A provider connection test does not satisfy this task. |
