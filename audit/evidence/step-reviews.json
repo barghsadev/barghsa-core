@@ -916,6 +916,96 @@
           "stored_sha256": "183009f9d3c387c22981e071b9f38fc955a9de08f32e139495463753bf442278"
         }
       ]
+    },
+    {
+      "id": "R01-crm-correction-acceptance",
+      "date": "2026-09-08",
+      "source_revision": "943b1170118012dfefc2bb99f5fda23ff02713ef",
+      "summary": "Verified all five protected identity correction fields and the reviewer workflow; repaired focus lost when its confirmation closes.",
+      "review": [
+        "The four new HTTP cases exercise real profile/case/audit transactions with independent reviewer identity, not mocked persistence. API product sources match prior reviewed hashes.",
+        "Cancellation returns focus to Review decision. Completed reviews return focus to the queue filter; completed creation returns to the field selector after the submit button becomes disabled. Uses the installed Base UI finalFocus API without timers or global focus interception.",
+        "Initial focused run: four mobile cases reproduced lost focus; four desktop cases stopped at a native-select test interaction. The intermediate full correction run had20 passes and four desktop fixture failures. After correcting select setup, all eight reviewer cases pass; combined evidence covers24 distinct cases, not a single green24-case invocation.",
+        "Inspected final Persian dark/mobile and English light/desktop screenshots. The correction details, evidence and controls are readable and fit the viewport. The separate terms-status error banner remains an R03/F20 review item.",
+        "Only this task is promoted. Staff legal nonidentity editing and the wider CRM group remain open."
+      ],
+      "checks": [
+        "API correction HTTP:18/18 pass, exit0.",
+        "Production browser:24 distinct passing cases across final focused runs; final reviewer run8/8 pass, exit0. Queue/detail axe scans have no violations or unresolved contrast nodes.",
+        "API/web types, explicit lint, formatting, production build and all41 route budgets pass.",
+        "Diff reviewed; no dependency, schema, authorization-policy, quality-floor or remote-state change."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "19c73a12e5a9121aab29f60bafe5177b066c77badf7675d358d5a1392dc15053"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.controller.ts",
+          "sha256": "c8ba3e2ee9323ffeca6276c6e4ff7e641675fda1442610a1be826512bac27722"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "b17e6eca9b6133ee36c3f878cf6d8100165c1b4aa4e6c660f3163ff9c1bcf0c8"
+        },
+        {
+          "path": "apps/api/src/crm/verification-evidence.service.ts",
+          "sha256": "00986bd462dcafd242daec1502f7af1aef6d0247f655f90ba16e5c61cc592719"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "51249114e3b4a47f89d68705c9f6159330632cf2ca41ac381020423b68e3161d"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "af7490a27c1d297a9099201ee339cf9b2b89f7146093b06b95274f1b1709288c"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "442d6dd4fe9eda467dfe5aed99b2e91bb352678bf572446bbb883eb598afdb10"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "e2bf8aa04f40971527077f178867f8d37421b014317d70275fa7b4accf53c2fb"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/corrections.tsx",
+          "sha256": "a2e12cbaa6432662902d82e16cd7812c06e2323c34311db2d078abb27c075cf3"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "bba8ad5a71af2b4e7648599cbd0d5443659ea057f20c6d44d985686cc78e12bd"
+        },
+        {
+          "path": "kanban/epics/02-auth-users-admin.md",
+          "sha256": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-api.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-browser.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-budgets.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-build.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-focus-build.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-focus-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-reviewer-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-correction-closure-reviewer.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ],
+      "remaining": "40 verified,20 partial,262 pending. Next: T-05.02.02 legal nonidentity direct editing, then archive/profile/list acceptance."
     }
   ]
 }

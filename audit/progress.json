@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "0e45382570d96a375be648a731b786436d834101",
+  "source_revision": "943b1170118012dfefc2bb99f5fda23ff02713ef",
   "active_step": "R01",
-  "next_action": "R01: finalize the existing four-field correction HTTP test change and its review; saved report shows 18 passes. Then finish reviewer queue/detail keyboard, fa/en and light/dark acceptance for 02-auth-users-admin.md#T-05.02.05. Reuse passing creation/confirmation evidence. Continue legal nonidentity editing under T-05.02.02, then archive/profile/list acceptance. Keep the lost-contact policy question pending.",
+  "next_action": "R01: implement required legal nonidentity direct editing for02-auth-users-admin.md#T-05.02.02. Reuse staff address/confirmation/current-permission patterns; keep legal name and national identifier behind the now-verified correction workflow. Review field validation, stale updates and atomic before/after audits, then focused fa/en browser checks. Continue archive and whole-profile/list acceptance afterward. Lost-contact policy question stays pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "T-05.02.03/.04 verified locally. Four remaining protected-field HTTP cases now report 18 passes in the uncommitted test change; finalize its review. Finish reviewer-page acceptance, legal nonidentity direct editing, whole profile/list and archive requirements. Reuse saved address, acknowledgement, field-link, correction-only access and theme evidence."
+        "T-05.02.03/.04/.05 are verified locally. Finish legal nonidentity direct editing, whole-profile/list acceptance and archive writer/checklist/retention review. Preserve current address, identity correction, permission and confirmation evidence."
       ]
     },
     {
@@ -264,7 +264,8 @@
       "implementation_status": "partial",
       "acceptance_status": "pending",
       "remaining": [
-        "Finish exact shared-control/implemented-screen locale, RTL, theme, keyboard/focus and failure-state acceptance; preserve three verified historical skips."
+        "Finish exact shared-control/implemented-screen locale, RTL, theme, keyboard/focus and failure-state acceptance; preserve three verified historical skips.",
+        "R03: visually review the terms-status error banner under dark admin theme. The failed-status fixture shows light text on its pale background; measure and fix that required error state without reopening the completed correction workflow."
       ]
     },
     {
@@ -284,7 +285,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review21 partial and262 pending records; retain39 verified task assessments. Reconcile301 PRs,170 deferrals and58 historical skips;1033 unrecorded backlog tasks remain a separate population."
+        "Review20 partial and262 pending records; retain40 verified task assessments. Reconcile301 PRs,170 deferrals and58 historical skips. The1033 unrecorded backlog tasks remain separate."
       ]
     },
     {
@@ -398,6 +399,10 @@
     {
       "id": "A01-audit-reconciliation-2",
       "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-2"
+    },
+    {
+      "id": "R01-crm-correction-acceptance",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-acceptance"
     }
   ],
   "deferred_improvements": [
@@ -411,8 +416,8 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 39,
-    "partial": 21,
+    "acceptance_verified": 40,
+    "partial": 20,
     "pending": 262,
     "merged_prs": 301,
     "historical_skips": 58,
@@ -433,21 +438,6 @@
       "independent_work": "R01 session/capability callers"
     }
   ],
-  "pending_worktree": {
-    "base_revision": "0e45382570d96a375be648a731b786436d834101",
-    "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-    "sha256": "b17e6eca9b6133ee36c3f878cf6d8100165c1b4aa4e6c660f3163ff9c1bcf0c8",
-    "status": "pre_existing_uncommitted_test_change",
-    "task_key": "02-auth-users-admin.md#T-05.02.05",
-    "change": "Four independent approval and real before/after audit cases for the remaining protected fields. No product implementation change.",
-    "report": "18 tests passed in 1 file in 8.67s; no matching test process remained when inspected.",
-    "exit_code": null,
-    "limitation": "Original process handle/exit could not be recovered. Test diff still needs final review and commit; reviewer-page acceptance remains. No task status promoted.",
-    "logs": [
-      "audit/evidence/r01/barghsa-crm-correction-acceptance-api-format.log.gz",
-      "audit/evidence/r01/barghsa-crm-correction-acceptance-api.log.gz"
-    ]
-  },
   "inventory_freshness": {
     "saved_merged_prs": 301,
     "last_recorded_github_check": "2026-09-08",

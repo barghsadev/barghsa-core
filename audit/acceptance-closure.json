@@ -4051,8 +4051,8 @@
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.05",
-      "status": "partial",
-      "reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+      "status": "acceptance_verified",
+      "reviewed_sha": "943b1170118012dfefc2bb99f5fda23ff02713ef",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 428,
       "requirement": "**T-05.02.05 — Identity correction through verification case**\n\n- Description: Staff cannot directly edit verified identity fields. Instead, they create a verification case (profile correction request) which creates an audit trail. Changes are applied after case resolution.\n- Technical notes: Verification case is a mini-workflow: Corrector creates case with new values and evidence → Reviewer approves/rejects → On approval, identity field updated with before/after audit. Permissions: `crm:edit-identity`. Cases have states: Open, Under Review, Approved, Rejected.\n- UI/UX: \"Request correction\" button on locked fields → form with new value + upload evidence → submission creates case. Staff with review permission see case queue.\n- Dependencies: T-05.02.02\n- Complexity: L",
@@ -4068,7 +4068,7 @@
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "d3e1252fc222d49613dd62ec96faf89e0659b2a9bdce60f56f84f13a8e3b8198"
+          "sha256": "b17e6eca9b6133ee36c3f878cf6d8100165c1b4aa4e6c660f3163ff9c1bcf0c8"
         },
         {
           "path": "apps/api/src/crm/verification-evidence.service.ts",
@@ -4076,15 +4076,15 @@
         },
         {
           "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
-          "sha256": "9a1bb68f39382d672686d2e5dda59d45e664e87abd5a83c505af1a2c56cc41c7"
+          "sha256": "51249114e3b4a47f89d68705c9f6159330632cf2ca41ac381020423b68e3161d"
         },
         {
           "path": "apps/web/e2e/crm-corrections.spec.ts",
-          "sha256": "7fdf91d82b1135135ec0e21f7e2a01935ed3cebed9c12af4b135b7c44c462ca8"
+          "sha256": "af7490a27c1d297a9099201ee339cf9b2b89f7146093b06b95274f1b1709288c"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "b25415575cdcd24755b909edce9817eb4c90f5e8845bd17cb853866096e915d1"
+          "sha256": "442d6dd4fe9eda467dfe5aed99b2e91bb352678bf572446bbb883eb598afdb10"
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -4116,20 +4116,23 @@
         "Queue, evidence upload, password retry, immutable evidence links, legacy refusal and selected-case/result checks have10 passing production desktop/mobile browser cases. See R01-crm-correction-acknowledgements.",
         "The five currently supported identity fields now have permission-gated, field-specific Request identity correction links.8 new fa/en desktop/mobile cases pass for individual/legal targets, keyboard activation, unauthorized/archived states and unsupported fields.",
         "Role-limited correction creation is now available independently of verification:read.14 HTTP and22 production browser cases verify allowed creation, denied queue/detail/review access, profile failure/retry and archived/revoked capability. See R01-crm-correction-only-access.",
-        "Protected-field scope matches the five fields named in T-03.03.03. Creation and confirmation errors have fa/en light/dark keyboard and contrast evidence; see R01-crm-correction-theme-and-scope."
+        "Protected-field scope matches the five fields named in T-03.03.03. Creation and confirmation errors have fa/en light/dark keyboard and contrast evidence; see R01-crm-correction-theme-and-scope.",
+        "All18 real PostgreSQL/HTTP correction cases pass with exit0, including independent approval, correct identity table updates and actual before/after audits for the four additional protected fields.",
+        "All24 distinct correction production-browser cases pass across the final focused runs. Eight reviewer cases cover fa/en, light/dark, desktop/mobile, status filtering, immutable evidence links, keyboard navigation, Escape cancellation, focus restoration, approval and legacy rejection. Queue/detail axe checks report no violations or incomplete contrast results.",
+        "API/web typechecks, explicit changed-file lint, formatting, production build and all41 complete-route budgets pass. Backend product sources remain unchanged; prior transaction/evidence/permission regressions remain applicable."
       ],
       "limitations": [
-        "Complete focused HTTP approval checks for last_name, national_id, legal_name and national_identifier; current transaction/evidence HTTP cases exercise first_name. Finish review-queue/detail keyboard/theme acceptance. Protected-field scope is resolved; do not invent extra identity-case fields.",
-        "Legacy unsealed evidence requires resubmission. No remote storage recovery or production reconciliation is certified. Legal nonidentity editing is a separate T-05.02.02 requirement."
+        "This verifies the local correction workflow and its five canonical protected identity fields. Legacy unsealed evidence requires resubmission; no live storage-provider recovery or production reconciliation is certified.",
+        "Legal nonidentity editing remains a separate T-05.02.02 requirement. Broader application theme acceptance remains under R03/F20."
       ],
       "merged_prs": [
         127
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
-        "previous_reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
-        "review": "Corrected admin/correction themes and shared confirmation errors.74 distinct CRM browser cases have passing evidence across focused runs; API source unchanged. See R01-crm-correction-theme-and-scope."
+        "source_revision": "943b1170118012dfefc2bb99f5fda23ff02713ef",
+        "previous_reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+        "review": "Closed the remaining protected-field approval and reviewer-page criteria. Native finalFocus restores the correction action on cancellation and a usable field/filter after success. See R01-crm-correction-acceptance."
       }
     },
     {
