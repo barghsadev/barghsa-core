@@ -2864,6 +2864,143 @@
       ],
       "evidence": "audit/cleanup-manifest.json#refresh",
       "logs": []
+    },
+    {
+      "id": "R01-reset-otp-first",
+      "date": "2026-09-08",
+      "source_revision": "9827e96c6e439e07c85daead4655a03fff84becd",
+      "summary": "Verified OTP-first password reset with consuming verification, single-use hashed authorization, atomic replacement, preserved credential protections and reviewed browser recovery. T-02.03.02 is locally acceptance_verified.",
+      "review": [
+        "OTP verification now consumes the code and persists a 32-byte random authorization hash with the original deadline. Final completion consumes that grant in the password/history/revocation/audit transaction. The legacy combined OTP/password API remains supported.",
+        "The account current-reset identity serializes replacement with verification/completion without locking old challenges during issuance. The account update, challenge and encrypted outbox insert are one SQL statement. New requests invalidate old grants; failed outbox insertion preserves the old grant. Account credential changes still invalidate authorization through auth_version.",
+        "Destination verification and completion each enforce five attempts/hour before checking out the transaction connection. Successful fifth OTP verification can complete without double-charging the verification quota. Tests use an application pool limited to one connection.",
+        "Disabled/mid-change account issuance returns an opaque nonpersisted challenge to preserve generic recovery responses. Login issuance still rejects stale credentials. The final type check caught a missing internal destination result field; restored it. AuthService only returns challengeId/sent/message publicly, so the verified public response is unchanged.",
+        "New verification audit contains user/correlation/IP and no OTP, token or challenge secret. Cache-Control retains the existing private/no-store policy. Replay, wrong grant, account changes, history/audit failure and expiry during account/session/refresh/audit waits are covered.",
+        "The staged browser keeps authorization only in component memory. Password entry waits for a matching valid acknowledgement, then receives focus. Expiry clears secrets. First browser run found countdowns failing elapsed-time checks; separate absolute deadlines repaired both verification and completion retry controls.",
+        "The DTO union initially broke staff activation through its old .pick call. Activation now shares the password-strength schema directly; affected delivery and auth-controller tests pass. No requirement or threshold was relaxed.",
+        "Reviewed the generated additive migration and snapshot. Nullable fields preserve existing rows. Database checks require a consumed password-reset challenge for a grant and reject malformed/duplicate token hashes. The current-reset identity intentionally remains usable as a stale-ID fence after challenge cleanup.",
+        "No live provider, production deployment, remote PR or scheduler action occurred. No broad regression, global coverage or production-image checkpoint is renewed."
+      ],
+      "checks": [
+        "28 distinct reset HTTP cases passed across the 26-case completion run and two targeted privacy/outbox cases. The last run selected two cases and skipped the 26 already-passing cases; it was not a new full-file run.",
+        "29 delivery HTTP and 16 session HTTP cases passed in the 71-case run; that run had 12 new reset-test failures caused by an overly exact Cache-Control assertion. The corrected reset checks passed separately. 11 unchanged OTP HTTP cases retain the first run evidence.",
+        "67 existing auth-service/controller/OTP unit cases passed. Combined focused API evidence covers 151 distinct cases across seven files, not one all-green invocation.",
+        "38 production browser cases passed on desktop Chromium and mobile Chrome, including fa/en, first-stage verification, matching acknowledgements, password confirmation, login toast, secret clearing, expiry, independent cooldowns and duplicate pending submissions.",
+        "Three real-PostgreSQL migration cases passed: clean production baseline plus historical upgrade/repeat, prior device-trust upgrade with 0122, and reset-specific data preservation/constraint/repeat checks. Snapshot checker passed.",
+        "API, web, worker and DB types passed. Relevant lint/format and diff checks passed. Generated OpenAPI matches the saved contract; only two reset paths changed. Fresh production web build and all 41 unchanged complete-route budgets passed."
+      ],
+      "remaining": [
+        "Continue R01 session rotation/cookie policy, current-session refresh, approximate location and remaining caller matrices. Lost-contact policy remains pending."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e598e98df7665547721f7991114f96b9fa69fd3b78e32d5323325c4782d803b9"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "b39f7fde743ab5f69b11b3eff544a37a12de0d3aef1c25309da706890cd41255"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "724bef3c3df59466d702d2b10073ddd623d35a777218009378069fb3c84df757"
+        },
+        {
+          "path": "apps/api/src/auth/dto/reset-password.dto.ts",
+          "sha256": "49bdc9d40ad0378ab428e9c352d1b577c8182d47332ccda637f3f6ea549f93a6"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "575fc4eaa67d7d8c34ef983dfbd7ce0cb55c13664a509a62b0d772fb7c551be4"
+        },
+        {
+          "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
+          "sha256": "f483b1db5a2bd324cba30ae653c63cf70e847564ad05d5f0717a50da5338cb3a"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "4f8837e4e1d5b2b7c80c0ed2bad472d21dca8a76205f512b71fd124d63100218"
+        },
+        {
+          "path": "apps/web/e2e/password-reset.spec.ts",
+          "sha256": "0725385b491de39900b6dcf7c0bb6c54bd89913322d5352c44474eb6c09e54e5"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "6e7895b47ba71fea062806fc7bfa5ddcdfee5189e3d6bb0c9dffa1b769d1c13d"
+        },
+        {
+          "path": "packages/db/drizzle/production/0122_password_reset_authorization.sql",
+          "sha256": "bda131ec6b6b75080c7dc19f305eb5a6a192d3aadfe95a1217d2aa26d47e24e9"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0122_snapshot.json",
+          "sha256": "96eabf757d937734937d854804beeaa9ec63127a0272e1ddbca849772c02d708"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "83738556380d9c0be3fe9ef6e6eddf01267ff997eff8281b1086ed9751947078"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "8eac72e718f61aebad57e039bc0dbd7588c2ab82880282885c0497d0bfc2942d"
+        },
+        {
+          "path": "packages/db/src/migrate.device-trust-ip.test.ts",
+          "sha256": "c78a3bb1a430db90294aec2f8cf1080a2f67340a2598923f0757fc8bfbddc1a5"
+        },
+        {
+          "path": "packages/db/src/migrate.password-reset-authorization.test.ts",
+          "sha256": "0294fab569bb8ebff8234108b4419d459bf5e0f29a8eb99ebf41f8f56da61854"
+        },
+        {
+          "path": "packages/db/src/schema/otp-challenge.ts",
+          "sha256": "060dff1853f976a07d106d10d2b4843738dce505fe83b1f0722a6fa9bb49a15e"
+        },
+        {
+          "path": "packages/db/src/schema/users.ts",
+          "sha256": "7d42977fbbd37cae00542a20607d595694365c72d71ac1a2f6cb8df05b2e3261"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-reset-stages-api-baseline.log",
+        "/tmp/barghsa-reset-stages-api-reset-final.log",
+        "/tmp/barghsa-reset-stages-api-types-complete.log",
+        "/tmp/barghsa-reset-stages-api-types-final.log",
+        "/tmp/barghsa-reset-stages-api-types-reviewed.log",
+        "/tmp/barghsa-reset-stages-api-types.log",
+        "/tmp/barghsa-reset-stages-api.log",
+        "/tmp/barghsa-reset-stages-auth-unit.log",
+        "/tmp/barghsa-reset-stages-browser-final.log",
+        "/tmp/barghsa-reset-stages-browser.log",
+        "/tmp/barghsa-reset-stages-budgets-final.log",
+        "/tmp/barghsa-reset-stages-budgets.log",
+        "/tmp/barghsa-reset-stages-contract.log",
+        "/tmp/barghsa-reset-stages-db-types.log",
+        "/tmp/barghsa-reset-stages-format-check.log",
+        "/tmp/barghsa-reset-stages-format-final.log",
+        "/tmp/barghsa-reset-stages-format-reviewed.log",
+        "/tmp/barghsa-reset-stages-format-tests.log",
+        "/tmp/barghsa-reset-stages-format.log",
+        "/tmp/barghsa-reset-stages-lint-reviewed.log",
+        "/tmp/barghsa-reset-stages-lint.log",
+        "/tmp/barghsa-reset-stages-migration-account.log",
+        "/tmp/barghsa-reset-stages-migration-generate-final.log",
+        "/tmp/barghsa-reset-stages-migration-generate.log",
+        "/tmp/barghsa-reset-stages-migrations.log",
+        "/tmp/barghsa-reset-stages-openapi-generate.log",
+        "/tmp/barghsa-reset-stages-privacy-format.log",
+        "/tmp/barghsa-reset-stages-privacy-lint.log",
+        "/tmp/barghsa-reset-stages-privacy.log",
+        "/tmp/barghsa-reset-stages-snapshot.log",
+        "/tmp/barghsa-reset-stages-web-build-final.log",
+        "/tmp/barghsa-reset-stages-web-build.log",
+        "/tmp/barghsa-reset-stages-web-types-final.log",
+        "/tmp/barghsa-reset-stages-web-types-reviewed.log",
+        "/tmp/barghsa-reset-stages-web-types.log",
+        "/tmp/barghsa-reset-stages-worker-types.log"
+      ]
     }
   ]
 }

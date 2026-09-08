@@ -1,29 +1,24 @@
 # Remaining repairs, reviews and skipped work
 
-Refreshed 2026-09-08 from audit HEAD `9a114cf`, product `e869362`, and the unfinished reset worktree. This is the single active plan. This refresh reconciles saved evidence; it does not certify new implementation or tests. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
+Current through product `9827e96` on 2026-09-08. This is the single active plan. Read [progress.json](progress.json) for the next action and original F01–F23 groups. [Task acceptance](acceptance-closure.json) owns revision-bound task status.
 
 ## Current numbers
 
 | Population | Recorded verified | Partial | Pending review | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 46 | 19 | 198 | 263 |
+| Tasks with merged PR evidence | 47 | 18 | 198 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| Combined | 49 | 19 | 254 | 322 |
+| Combined | 50 | 18 | 254 | 322 |
 
-There are **273 unresolved task reviews**, including the 19 partial reviews. Unresolved review does not establish that a task is unbuilt. These counts measure acceptance records, not coding effort or percentage of the repair plan completed. Eight verified records reference files changed by later commits; reconcile the relevant changes and later reviews before reusing their evidence. Exact keys and paths are in `progress.json.evidence_refresh_queue`. Unfinished OTP changes also affect three verified records.
+There are **272 unresolved task reviews**, including the 18 partial reviews. Unresolved review does not establish that a task is unbuilt. These counts measure acceptance records, not coding effort or percentage of the repair plan completed. Eight verified records reference files changed by later commits; reconcile the relevant changes and later reviews before reusing their evidence. Exact keys and paths are in `progress.json.evidence_refresh_queue`.
 
 The saved inventory contains **301 merged PRs**, last recorded as checked against GitHub on September 8. All saved PR bodies were read; their latest merge is September 3. GitHub could not be refreshed because `gh` remains unavailable; no newer inventory is claimed. The **58 historical skips** overlap the task population: 3 verified and 55 pending review. Another **1,033 queue gaps** are separate historical backlog evidence: 737 earlier gaps and 296 later tasks. None is automatically a missing implementation.
 
 ## Next bounded step
 
-Resume **R01, `02-auth-users-admin.md#T-02.03.02`**, before another repair. Six unfinished files already change the reset DTO, OTP issuance and database schema, including migration 0122 and its metadata. Their paths and hashes are in `progress.json.unfinished_worktree`. Service, controller and browser integration are still incomplete; no completed runtime verification is recorded for these changes.
+Continue R01 session rotation and cookie review for `02-auth-users-admin.md#T-02.02.01` through `T-02.02.04`. Start with the current-session display after password step-up; then complete cookie policy, approximate location and required revocation/CSRF/sensitive-action callers. Review one bounded change and focused evidence before proceeding.
 
-1. Verify OTP before showing password fields. Successful verification must consume the OTP and issue a short-lived, single-use reset authorization. Store only its hash and retain the original challenge deadline and account-version binding.
-2. Finish service/controller/browser integration. Preserve the original combined request if retaining rollout compatibility. Check validation errors, acknowledgement shape, cooldowns, pending submissions, retry and expiry. Keep authorization out of URLs and persistent browser storage.
-3. Review replacement-challenge invalidation and lock ordering. Preserve five-attempt destination limits, password strength/history, atomic audit, all-session revocation and acknowledged return to login. Invalid, expired, replayed or stale-account authorization must fail without credential changes.
-4. Review the whole step and its callers. Run focused migrated-PostgreSQL/HTTP cases, fa/en browser checks, applicable types/lint/OpenAPI, clean/upgrade/repeat migrations, schema snapshots and affected route budgets before committing the completed step.
-
-Product `e869362` has saved evidence for 54 distinct API cases, 10 browser cases and associated quality checks. Reuse it only for unchanged behavior. Then resume rotation/cookie policy, current-session refresh after step-up, approximate session location and caller matrices. Lost-contact policy remains pending; continue independent work without repeating that question.
+OTP-first reset `02-auth-users-admin.md#T-02.03.02` is locally verified at `9827e96`. Successful OTP verification consumes the code and issues a hashed, single-use authorization with the original deadline. Final reset retains strength/history, quotas, atomic audit and all-session revocation. The browser verifies before password entry and handles expiry, retries and login navigation. Recorded checks cover 151 distinct API cases across focused runs, 38 desktop/mobile browser cases, three migration cases, types/lint/format, OpenAPI, snapshot and all 41 route budgets. See [step evidence](evidence/step-reviews.json). No global checkpoint is renewed. Lost-contact policy remains pending.
 
 ## Ordered work
 
@@ -54,7 +49,7 @@ The last full checkpoint at `9529872` recorded API-critical coverage 92.34% line
 
 ## Every currently partial task
 
-All 19 partial records are routed below. Read exact requirements and limitations in [acceptance](acceptance-closure.json) and [current requirements](current-task-requirements.json). Future features and operational evidence remain explicit dependencies.
+All 18 partial records are routed below. Read exact requirements and limitations in [acceptance](acceptance-closure.json) and [current requirements](current-task-requirements.json). Future features and operational evidence remain explicit dependencies.
 
 | Qualified task | Remaining disposition / phase |
 | --- | --- |
@@ -70,7 +65,6 @@ All 19 partial records are routed below. Read exact requirements and limitations
 | 02-auth-users-admin.md#T-02.02.02 | Approximate session location and remaining revocation callers, R01. |
 | 02-auth-users-admin.md#T-02.02.03 | Complete route/caller matrix and explicit CSRF alternatives, R01. |
 | 02-auth-users-admin.md#T-02.02.04 | Built sensitive-action recovery matrix; future refund/contract consumers separate, R01. |
-| 02-auth-users-admin.md#T-02.03.02 | OTP-first reset, current unfinished step, R01. |
 | 02-auth-users-admin.md#T-02.03.03 | Approved recovery policy, credential-change method and complete case audit, R01/external. |
 | 02-auth-users-admin.md#T-05.02.06 | Future contract writer and approved retention policy, V01/B01/external. |
 | 02-auth-users-admin.md#T-08.01.01 | Real contract summaries and future order/contract lists, V01/B01. |
@@ -84,12 +78,12 @@ All 19 partial records are routed below. Read exact requirements and limitations
 
 | Disposition | Count |
 | --- | ---: |
-| PRs with unresolved mapped tasks | 250 |
-| PRs mapping only to verified tasks | 47 |
+| PRs with unresolved mapped tasks | 249 |
+| PRs mapping only to verified tasks | 48 |
 | PRs with no current task mapping | 4 |
 | Historical deferral statements | 170 across 101 PRs |
 
-Review current combined implementation once per qualified task and associate all contributing PRs. The 47 PRs mapping only to verified tasks are not automatically 47 completed PR reviews. Their deferrals and changed-source evidence still need reconciliation. The 217 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 79, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review current combined implementation once per qualified task and associate all contributing PRs. The 48 PRs mapping only to verified tasks are not automatically 48 completed PR reviews. Their deferrals and changed-source evidence still need reconciliation. The 216 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 78, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
 Handle #47 in R05 and #234/#235/#242 in V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before calling that queue gap unbuilt. Five Docker groups were rebuilt after completion loss; fifteen wallet groups contain useful follow-up fixes. The other three repeated groups concern legal-profile slices, bookkeeping and replaced invoice snapshots. Repeated PRs alone do not justify code deletion. Preserve obsolete `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users-admin.md#T-05.06.01` as provenance outside the 322 current claims.
 
@@ -105,7 +99,7 @@ Each deferral needs a disposition: satisfied by later implementation, confirmed 
 | Development, configuration and documentation | 21 | T-07.* |
 | Deployment, operations and CI | 20 | T-05.* |
 
-These are review batches; task dependencies override their order. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 273 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
+These are review batches; task dependencies override their order. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 272 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
 
 ## External prerequisites and decisions
 
