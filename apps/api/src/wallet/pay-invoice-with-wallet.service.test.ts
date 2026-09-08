@@ -146,6 +146,9 @@ function paymentQueries(
   const idempotencyReclaim = opts.idempotencyReclaim ?? [];
   const idempotencyPersist = opts.idempotencyPersist ?? [{ id: 'idem-persist-1' }];
   mockQuery((sql) => {
+    if (sql.startsWith('SELECT id, archived FROM profiles')) {
+      return { rows: [{ id: PROFILE_ID, archived: false }] };
+    }
     if (sql.includes('INSERT INTO idempotency_keys')) {
       return { rows: idempotencyInsert };
     }

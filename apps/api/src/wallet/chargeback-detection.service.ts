@@ -1,3 +1,4 @@
+import { WalletProfileArchivedError } from './profile-lock.js';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import {
   BadRequestException,
@@ -282,7 +283,7 @@ export class ChargebackDetectionService {
               };
             }
           }
-          if (isInsufficientReversalError(error)) {
+          if (isInsufficientReversalError(error) || error instanceof WalletProfileArchivedError) {
             await this.finalizeEvent(client, eventId, {
               status: 'unresolved',
               originalTransactionId: match.original.id,

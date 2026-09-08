@@ -123,6 +123,9 @@ type ScriptOptions = {
 
 function script(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string) => {
+    if (sql.startsWith('SELECT id, archived FROM profiles')) {
+      return { rows: [{ id: PROFILE_ID, archived: false }] };
+    }
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
       return { rows: [] };
     }

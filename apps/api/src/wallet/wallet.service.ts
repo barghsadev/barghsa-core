@@ -1,4 +1,9 @@
 import {
+  lockWalletProfile,
+  assertWalletProfileWritable,
+  assertWalletProfileMatches,
+} from './profile-lock.js';
+import {
   Injectable,
   Optional,
   BadRequestException,
@@ -145,16 +150,20 @@ export class WalletService {
   async createWallet(profileId: string): Promise<WalletRow> {
     const pool = getDbPool();
 
-    // Try INSERT; if concurrent insert won the race, fall back to SELECT
+    // Lock an active profile before inserting. Existing wallets remain readable
+    // after archival; a no-op retry must not create or alter financial records.
     const result = await pool.query(
-      `INSERT INTO wallets (profile_id) VALUES ($1)
+      `WITH active_profile AS MATERIALIZED (
+         SELECT id FROM profiles WHERE id = $1 AND NOT archived FOR SHARE
+       )
+       INSERT INTO wallets (profile_id) SELECT id FROM active_profile
        ON CONFLICT (profile_id) DO NOTHING
        RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
       [profileId]
     );
 
     if (result.rows.length === 0) {
-      // Another request created the wallet first — return that one
+      // Return the existing wallet, including after archival.
       const existing = await this.getWallet(profileId);
       if (!existing) throw new NotFoundException('Wallet creation failed despite insert attempt');
       return existing;
@@ -193,7 +202,8 @@ export class WalletService {
    * matching ledger row in the same transaction (S-04.2.01).
    *
    * Pass `client` to participate in an open transaction; omit it to
-   * run against the shared pool.
+   * run against the shared pool. The profile must be active. Transaction owners
+   * must lock the profile before other financial rows.
    *
    * @returns the updated wallet row
    * @throws ConflictException when zero rows match (version mismatch,
@@ -233,11 +243,15 @@ export class WalletService {
         : [delta, walletId, expectedVersion];
     const queryable = client ?? getDbPool();
     const result = await queryable.query(
-      `UPDATE wallets
+      `WITH active_profile AS MATERIALIZED (
+         SELECT id FROM profiles WHERE id = $2 AND NOT archived FOR SHARE
+       )
+       UPDATE wallets
        SET posted_balance = posted_balance + $1::bigint,
            version = version + 1,
            updated_at = NOW()
        WHERE profile_id = $2
+         AND EXISTS (SELECT 1 FROM active_profile)
          AND version = $3${postedGuard}${availableGuard}
        RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
       params
@@ -302,6 +316,7 @@ export class WalletService {
         await queryable.query('BEGIN');
       }
 
+      const profile = await lockWalletProfile(queryable, 'profile', walletId);
       const walletResult = await queryable.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
         [walletId]
@@ -314,6 +329,7 @@ export class WalletService {
         profile_id: string;
       };
       canonicalWalletId = wallet.profile_id;
+      assertWalletProfileMatches(profile, canonicalWalletId);
 
       const idemResult = await queryable.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
@@ -327,6 +343,8 @@ export class WalletService {
         }
         return mapTransaction(existing);
       }
+
+      assertWalletProfileWritable(profile);
 
       const txResult = await queryable.query(
         `INSERT INTO wallet_transactions
@@ -437,6 +455,7 @@ export class WalletService {
         await queryable.query('BEGIN');
       }
 
+      const profile = await lockWalletProfile(queryable, 'profile', walletId);
       const walletResult = await queryable.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
         [walletId]
@@ -451,6 +470,7 @@ export class WalletService {
         reserved_balance: string | number | bigint;
       };
       canonicalWalletId = wallet.profile_id;
+      assertWalletProfileMatches(profile, canonicalWalletId);
 
       const idemResult = await queryable.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
@@ -464,6 +484,8 @@ export class WalletService {
         }
         return mapTransaction(existing);
       }
+
+      assertWalletProfileWritable(profile);
 
       if (
         ref.expectedVersion !== undefined &&
@@ -598,6 +620,7 @@ export class WalletService {
     try {
       await client.query('BEGIN');
 
+      const profile = await lockWalletProfile(client, 'profile', walletId);
       const walletResult = await client.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
         [walletId]
@@ -612,6 +635,7 @@ export class WalletService {
         reserved_balance: string | number | bigint;
       };
       canonicalWalletId = wallet.profile_id;
+      assertWalletProfileMatches(profile, canonicalWalletId);
 
       const idemResult = await client.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
@@ -623,6 +647,8 @@ export class WalletService {
         await client.query('COMMIT');
         return mapTransaction(existing);
       }
+
+      assertWalletProfileWritable(profile);
 
       const posted = BigInt(wallet.posted_balance);
       const reserved = BigInt(wallet.reserved_balance);
@@ -713,6 +739,7 @@ export class WalletService {
     try {
       await client.query('BEGIN');
 
+      const profile = await lockWalletProfile(client, 'transaction', reservationId);
       const reservationResult = await client.query(
         `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
         [reservationId]
@@ -730,6 +757,7 @@ export class WalletService {
       // PostgreSQL UUID columns return canonical lowercase; callers may pass
       // any valid spelling. Mutations must use the locked row's id.
       const canonicalReservationId = reservation.id;
+      assertWalletProfileMatches(profile, reservation.wallet_id);
       if (reservation.type !== 'reservation') {
         throw new ConflictException('Ledger row is not a reservation');
       }
@@ -742,6 +770,8 @@ export class WalletService {
           `Reservation cannot be released from state ${reservation.state}`
         );
       }
+
+      assertWalletProfileWritable(profile);
 
       const amount = BigInt(reservation.amount);
       if (amount <= 0n) {
@@ -852,6 +882,7 @@ export class WalletService {
         await queryable.query('BEGIN');
       }
 
+      const profile = await lockWalletProfile(queryable, 'transaction', originalTransactionId);
       const originalResult = await queryable.query(
         `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
         [originalTransactionId]
@@ -868,6 +899,7 @@ export class WalletService {
         ref_id: string | null;
       };
       canonicalOriginalId = original.id;
+      assertWalletProfileMatches(profile, original.wallet_id);
       originalAmount = BigInt(original.amount);
 
       if (!isReversibleWalletLedgerType(original.type)) {
@@ -918,6 +950,8 @@ export class WalletService {
       if (existingReversal.rows.length > 0) {
         throw new ConflictException(WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(canonicalOriginalId));
       }
+
+      assertWalletProfileWritable(profile);
 
       const posted = BigInt(wallet.posted_balance);
       const reserved = BigInt(wallet.reserved_balance);

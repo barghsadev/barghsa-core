@@ -28,6 +28,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { WALLET_CHARGEBACK_REASON } from '@barghsa/shared/finance';
 import { WalletService } from './wallet.service.js';
 import { ChargebackDetectionService } from './chargeback-detection.service.js';
+import { ChargebackAlertService } from './chargeback-alert.service.js';
 import { onlineTopUpCreditIdempotencyKey } from './online-topup-callback.service.js';
 import { signPaymentCallback } from './payment-callback-verifier.js';
 
@@ -191,6 +192,77 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
       reverses_transaction_id: creditId,
       description: WALLET_CHARGEBACK_REASON,
     });
+  });
+
+  it('keeps an archived-profile chargeback unresolved and invokes the finance alert path on retries', async () => {
+    const profileId = uuidv7(),
+      pending = uuidv7(),
+      eventId = 'evt-cb-archived';
+    await ctx.pool.query("INSERT INTO profiles(id,user_id) VALUES ($1,'wallet-test-owner')", [
+      profileId,
+    ]);
+    await walletService.createWallet(profileId);
+    const credit = await walletService.credit(
+      profileId,
+      AMOUNT,
+      { type: 'topup', metadata: { channel: 'online', pendingTransactionId: pending } },
+      onlineTopUpCreditIdempotencyKey(pending)
+    );
+    await ctx.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [profileId]);
+    const alert = new ChargebackAlertService(),
+      notify = vi.spyOn(alert, 'notifyUnresolved');
+    const handler = new ChargebackDetectionService(
+      walletService,
+      { webhookSecret: SECRET, merchantId: MERCHANT },
+      alert
+    );
+    const input = () =>
+      signed(
+        {
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          merchantOrderId: pending,
+          amountIrR: AMOUNT.toString(),
+        },
+        eventId
+      );
+    try {
+      expect(await handler.handle(input())).toMatchObject({
+        processed: true,
+        reversed: false,
+        status: 'unresolved',
+        originalTransactionId: credit.id,
+      });
+      expect(await handler.handle(input())).toMatchObject({
+        processed: false,
+        reversed: false,
+        status: 'unresolved',
+      });
+      expect(notify).toHaveBeenCalledTimes(2);
+      expect(notify).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ eventId, status: 'unresolved', walletId: profileId })
+      );
+      expect(
+        (
+          await ctx.pool.query(
+            'SELECT status,reversal_transaction_id FROM wallet_chargeback_events WHERE event_id=$1',
+            [eventId]
+          )
+        ).rows[0]
+      ).toEqual({ status: 'unresolved', reversal_transaction_id: null });
+      expect(
+        (
+          await ctx.pool.query(
+            'SELECT id FROM wallet_transactions WHERE reverses_transaction_id=$1',
+            [credit.id]
+          )
+        ).rows
+      ).toHaveLength(0);
+      expect((await walletService.getWallet(profileId))?.postedBalance).toBe(AMOUNT);
+    } finally {
+      notify.mockRestore();
+    }
   });
 
   it('does not reverse on a tampered signature', async () => {

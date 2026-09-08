@@ -6,6 +6,14 @@ import {
 } from '@barghsa/shared/finance';
 import { WalletService } from './wallet.service.js';
 
+// These fixtures isolate ledger/idempotency behavior. Real PostgreSQL archival
+// and lock ordering are covered in profile-archive-wallet.integration.test.ts.
+vi.mock('./profile-lock.js', async (original) => ({
+  ...(await original<typeof import('./profile-lock.js')>()),
+  lockWalletProfile: async () => ({ id: 'profile-1', archived: false }),
+  assertWalletProfileMatches: () => {},
+}));
+
 const mockPool = {
   query: vi.fn(),
   connect: vi.fn(),

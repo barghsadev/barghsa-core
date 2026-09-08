@@ -1,3 +1,8 @@
+import {
+  lockWalletProfile,
+  assertWalletProfileWritable,
+  assertWalletProfileMatches,
+} from '../wallet/profile-lock.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { requireCurrentFinancePermission } from '../admin/approval-permissions.js';
@@ -320,12 +325,14 @@ export class InvoiceBankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
+        const profile = await lockWalletProfile(client, 'receipt', input.receiptId);
         await requireStaffMutationPermission(
           client,
           input.actorUserId,
           'admin:finance:invoices:bank-receipt-confirm'
         );
         const receipt = await this.lockReceipt(client, input.receiptId);
+        assertWalletProfileMatches(profile, receipt.profileId);
 
         if (receipt.state === 'Confirmed') {
           const extra = await this.loadConfirmedAllocation(client, receipt);
@@ -341,6 +348,8 @@ export class InvoiceBankReceiptConfirmationService {
             409
           );
         }
+
+        assertWalletProfileWritable(profile);
 
         if (!isInvoiceBankReceiptConfirmableState(receipt.state)) {
           await client.query('ROLLBACK');
@@ -577,12 +586,14 @@ export class InvoiceBankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
+        const profile = await lockWalletProfile(client, 'receipt', input.receiptId);
         await requireStaffMutationPermission(
           client,
           input.actorUserId,
           'admin:finance:invoices:bank-receipt-confirm'
         );
         const receipt = await this.lockReceipt(client, input.receiptId);
+        assertWalletProfileMatches(profile, receipt.profileId);
 
         if (receipt.state === 'Rejected') {
           if (receipt.rejection_reason === parsed.reason) {

@@ -14,6 +14,7 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ONLINE_TOPUP_EXPIRY_REASON } from '@barghsa/shared/finance';
@@ -194,6 +195,59 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
       ['evt-int-1']
     );
     expect(events.rows).toHaveLength(1);
+  });
+
+  it('preserves a paid legacy intent and retry claim when profile archival prevents credit', async () => {
+    const profileId = randomUUID(),
+      pending = randomUUID(),
+      eventId = 'evt-paid-archived';
+    await ctx.pool.query("INSERT INTO profiles(id,user_id) VALUES ($1,'wallet-test-owner')", [
+      profileId,
+    ]);
+    await walletService.createWallet(profileId);
+    await ctx.pool.query(
+      "INSERT INTO wallet_transactions(id,wallet_id,type,amount,state,idempotency_key,ref_id,metadata) VALUES ($1,$2,'topup',$3,'Pending',$4,$5,$6::jsonb)",
+      [
+        pending,
+        profileId,
+        AMOUNT.toString(),
+        randomUUID(),
+        AUTHORITY,
+        JSON.stringify({
+          channel: 'online',
+          gateway: { authority: AUTHORITY, redirectUrl: 'https://pay.test/start' },
+        }),
+      ]
+    );
+    await ctx.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [profileId]);
+    const input = () =>
+      signed(
+        {
+          merchantOrderId: pending,
+          merchantId: MERCHANT,
+          authority: AUTHORITY,
+          amountIrR: AMOUNT.toString(),
+          status: 'paid',
+        },
+        eventId
+      );
+    for (let retry = 0; retry < 2; retry++)
+      await expect(service.handle(input())).rejects.toMatchObject({ status: 409 });
+    expect((await walletService.getWallet(profileId))?.postedBalance).toBe(0n);
+    expect(
+      (
+        await ctx.pool.query('SELECT id,state FROM wallet_transactions WHERE wallet_id=$1', [
+          profileId,
+        ])
+      ).rows
+    ).toEqual([{ id: pending, state: 'Pending' }]);
+    expect(
+      (
+        await ctx.pool.query('SELECT status FROM wallet_topup_callback_events WHERE event_id=$1', [
+          eventId,
+        ])
+      ).rows[0]
+    ).toEqual({ status: 'processing' });
   });
 
   it('does not credit a different pending order that reuses a claimed event id', async () => {

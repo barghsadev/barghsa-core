@@ -1,3 +1,4 @@
+import { lockWalletProfile, assertWalletProfileWritable } from './profile-lock.js';
 /**
  * PayInvoiceWithWalletService — settle an invoice with a single full
  * wallet debit (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.03 / S-04.2.03).
@@ -156,6 +157,7 @@ export class PayInvoiceWithWalletService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      const profile = await lockWalletProfile(client, 'profile', ids.profileId);
 
       const claim = await this.idempotencyKeys.claimOrLoad(client, {
         key,
@@ -177,8 +179,8 @@ export class PayInvoiceWithWalletService {
         throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT());
       }
 
-      // Wallet first, then invoice: every other money mutation already
-      // locks the wallet row, so this order cannot deadlock against them.
+      assertWalletProfileWritable(profile);
+      // Lock profile, then wallet, then invoice to coordinate with archival.
       const wallet = await this.lockWallet(client, ids.profileId);
       const invoice = await this.lockInvoice(client, ids.invoiceId);
       if (invoice.profile_id.toLowerCase() !== ids.profileId) {

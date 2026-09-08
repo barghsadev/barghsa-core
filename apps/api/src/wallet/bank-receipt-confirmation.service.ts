@@ -1,3 +1,8 @@
+import {
+  lockWalletProfile,
+  assertWalletProfileWritable,
+  assertWalletProfileMatches,
+} from './profile-lock.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import {
   gateWalletReceiptApproval,
@@ -283,12 +288,14 @@ export class BankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
+        const profile = await lockWalletProfile(client, 'transaction', input.transactionId);
         await requireStaffMutationPermission(
           client,
           input.actorUserId,
           'admin:finance:wallet:bank-receipt-confirm'
         );
         const pending = await this.lockBankReceipt(client, input.transactionId);
+        assertWalletProfileMatches(profile, pending.walletId);
 
         if (pending.state === 'Released') {
           const existing = await this.findExistingCredit(client, pending.id);
@@ -317,6 +324,8 @@ export class BankReceiptConfirmationService {
             409
           );
         }
+
+        assertWalletProfileWritable(profile);
 
         if (!isPendingBankReceiptTopUp(pending)) {
           await client.query('ROLLBACK');
@@ -473,12 +482,14 @@ export class BankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
+        const profile = await lockWalletProfile(client, 'transaction', input.transactionId);
         await requireStaffMutationPermission(
           client,
           input.actorUserId,
           'admin:finance:wallet:bank-receipt-confirm'
         );
         const pending = await this.lockBankReceipt(client, input.transactionId);
+        assertWalletProfileMatches(profile, pending.walletId);
 
         if (pending.state === 'Rejected') {
           const existing = readBankReceiptStaffDecision(pending.metadata);
