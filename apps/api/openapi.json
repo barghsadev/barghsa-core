@@ -13949,6 +13949,47 @@
           "Auth"
         ]
       }
+    },
+    "/api/admin/staff-role-options": {
+      "get": {
+        "operationId": "AdminController_staffRoleOptions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "description": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "roleId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "roleId",
+                      "name",
+                      "description"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read assignable staff role names and descriptions",
+        "tags": [
+          "Admin"
+        ]
+      }
     }
   },
   "servers": [],

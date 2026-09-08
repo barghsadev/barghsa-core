@@ -229,6 +229,36 @@ export class AdminController {
     };
   }
 
+  @Get('staff-role-options')
+  @ApiOperation({ summary: 'Read assignable staff role names and descriptions' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['roleId', 'name', 'description'],
+        properties: {
+          roleId: { type: 'string' },
+          name: { type: 'string' },
+          description: { type: 'string' },
+        },
+      },
+    },
+  })
+  async staffRoleOptions(
+    @Req() req: AuthenticatedRequest
+  ): Promise<Pick<StaffRoleDto, 'roleId' | 'name' | 'description'>[]> {
+    if (
+      !hasStaffPermission(req, 'admin:users:create') &&
+      !hasStaffPermission(req, 'admin:roles:edit')
+    )
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    return (await this.adminService.listStaffRoles())
+      .filter((role) => role.predefined)
+      .map(({ roleId, name, description }) => ({ roleId, name, description }));
+  }
+
   @Post('users/:userId/resend-activation')
   @HttpCode(200)
   @UseGuards(StepUpGuard)

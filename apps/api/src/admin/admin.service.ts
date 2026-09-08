@@ -296,56 +296,20 @@ function parsePermissionsStored(raw: unknown): string[] {
  * rather than at fixed offsets.
  */
 function generateTemporaryPassword(): string {
-  const crypto = globalThis.crypto;
   const length = 12;
-  const array = new Uint8Array(length);
-  crypto.getRandomValues(array);
-
-  // Build a random string from the character set
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += PASSWORD_CHARS[array[i]! % PASSWORD_CHARS.length];
+  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(length));
+  const required = ['ABCDEFGHJKLMNPQRSTUVWXYZ', 'abcdefghjkmnpqrstuvwxyz', '23456789'];
+  // Reserve distinct characters before shuffling; one class cannot overwrite another.
+  const characters = Array.from(bytes, (value, index) => {
+    const alphabet = required[index] ?? PASSWORD_CHARS;
+    return alphabet[value % alphabet.length]!;
+  });
+  const positions = globalThis.crypto.getRandomValues(new Uint8Array(length - 1));
+  for (let i = length - 1; i > 0; i--) {
+    const j = positions[i - 1]! % (i + 1);
+    [characters[i], characters[j]] = [characters[j]!, characters[i]!];
   }
-
-  // Ensure at least one uppercase, one lowercase, one digit by
-  // replacing characters at random positions if the character class
-  // is missing from the generated result.
-  const upperRe = /[A-Z]/;
-  const lowerRe = /[a-z]/;
-  const digitRe = /[2-9]/;
-
-  const UPPER_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-  const LOWER_CHARS = 'abcdefghjkmnpqrstuvwxyz';
-  const DIGITS = '23456789';
-
-  const posBuf = new Uint8Array(1);
-  const selBuf = new Uint8Array(1);
-
-  if (!upperRe.test(result)) {
-    crypto.getRandomValues(posBuf);
-    const pos = posBuf[0]! % length;
-    crypto.getRandomValues(selBuf);
-    const replacement = UPPER_CHARS[selBuf[0]! % UPPER_CHARS.length];
-    result = result.slice(0, pos) + replacement + result.slice(pos + 1);
-  }
-
-  if (!lowerRe.test(result)) {
-    crypto.getRandomValues(posBuf);
-    const pos = posBuf[0]! % length;
-    crypto.getRandomValues(selBuf);
-    const replacement = LOWER_CHARS[selBuf[0]! % LOWER_CHARS.length];
-    result = result.slice(0, pos) + replacement + result.slice(pos + 1);
-  }
-
-  if (!digitRe.test(result)) {
-    crypto.getRandomValues(posBuf);
-    const pos = posBuf[0]! % length;
-    crypto.getRandomValues(selBuf);
-    const replacement = DIGITS[selBuf[0]! % DIGITS.length];
-    result = result.slice(0, pos) + replacement + result.slice(pos + 1);
-  }
-
-  return result;
+  return characters.join('');
 }
 
 /**

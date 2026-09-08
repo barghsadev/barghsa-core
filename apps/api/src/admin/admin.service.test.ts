@@ -139,7 +139,11 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
     expect(mockRelease).toHaveBeenCalled();
   });
 
-  it('generates a password that satisfies strength policy', async () => {
+  it('generates a password that satisfies strength policy even with repeated random bytes', async () => {
+    vi.spyOn(globalThis.crypto, 'getRandomValues').mockImplementation((array) => {
+      if (array) new Uint8Array(array.buffer, array.byteOffset, array.byteLength).fill(0);
+      return array;
+    });
     const { pool, mockConnect } = mockPool();
     const { client, mockClientQuery, mockRelease } = mockClient();
 

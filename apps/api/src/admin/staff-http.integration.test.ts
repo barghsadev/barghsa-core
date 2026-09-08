@@ -42,6 +42,73 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 
+it('lets staff creators select initial roles without granting role-management access', async () => {
+  const userId = randomUUID();
+  const roleId = `creator-${randomUUID()}`;
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'fixture-only',true)",
+    [userId, `${userId}@example.test`]
+  );
+  await http.pool.query(
+    'INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$2,$3,$4)',
+    [roleId, 'Creator only', 'Creates staff', JSON.stringify(['admin:users:create'])]
+  );
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [userId, roleId]);
+  const headers = await session(userId);
+  const response = await fetch(`${http.base}/api/admin/staff-role-options`, { headers });
+  expect(response.status).toBe(200);
+  const options = (await response.json()) as {
+    roleId: string;
+    name: string;
+    description: string;
+  }[];
+  expect(options.map((role) => role.roleId).sort()).toEqual([
+    'role-admin',
+    'role-crm-verification',
+    'role-customer-support',
+    'role-finance',
+    'role-legal-contracts',
+    'role-operations',
+  ]);
+  for (const option of options) {
+    expect(Object.keys(option).sort()).toEqual(['description', 'name', 'roleId']);
+    expect(option.description.length).toBeGreaterThan(0);
+  }
+  expect((await fetch(`${http.base}/api/admin/roles`, { headers })).status).toBe(403);
+  const created = await fetch(`${http.base}/api/admin/users/create-staff`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      username: `${randomUUID()}@example.test`,
+      firstName: 'Initial',
+      lastName: 'Roles',
+      activationMethod: 'tempPassword',
+      roleIds: ['role-finance', 'role-operations'],
+    }),
+  });
+  expect(created.status, await created.clone().text()).toBe(201);
+  const target = (await created.json()) as { userId: string };
+  expect(
+    (
+      await http.pool.query('SELECT role_id FROM user_roles WHERE user_id=$1 ORDER BY role_id', [
+        target.userId,
+      ])
+    ).rows
+  ).toEqual([{ role_id: 'role-finance' }, { role_id: 'role-operations' }]);
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/users/${target.userId}/roles`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ roleIds: [] }),
+      })
+    ).status
+  ).toBe(403);
+  await http.pool.query('DELETE FROM user_roles WHERE user_id=$1', [userId]);
+  expect((await fetch(`${http.base}/api/admin/staff-role-options`, { headers })).status).toBe(403);
+  expect((await fetch(`${http.base}/api/admin/staff-role-options`)).status).toBe(401);
+});
+
 it('creates staff with named roles without granting platform administration, including staff without roles', async () => {
   for (const roles of [[], ['role-customer-support'], ['role-finance'], ['role-legal-contracts']]) {
     const response = await fetch(`${http.base}/api/admin/users/create-staff`, {

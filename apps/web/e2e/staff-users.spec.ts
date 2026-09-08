@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import AxeBuilder from '@axe-core/playwright';
 
 test.use({ timezoneId: 'America/Los_Angeles' });
 
@@ -33,7 +34,7 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
-    await page.route('**/api/admin/roles', (route) =>
+    await page.route('**/api/admin/staff-role-options', (route) =>
       route.fulfill({
         json: [{ roleId: 'role-finance', name: 'Finance', description: 'Manage finances' }],
       })
@@ -87,7 +88,24 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .getByRole('button', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
       .click();
+    await page.locator('form summary').click();
     await page.getByRole('checkbox', { name: fa ? /مالی/ : /Finance/ }).check();
+    for (const dark of [false, true]) {
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((animation) => animation.effect?.getComputedTiming().endTime !== Infinity)
+            .map((animation) => animation.finished.catch(() => {}))
+        );
+      }, dark);
+      const report = await new AxeBuilder({ page }).include('#admin-content > section').analyze();
+      expect(report.violations, `staff list and role editor accessibility, dark=${dark}`).toEqual(
+        []
+      );
+    }
+    await page.evaluate(() => document.documentElement.classList.remove('dark'));
     await page.locator('#staff-role-reason').fill('New duties');
     await page
       .getByRole('button', { name: fa ? 'ذخیره نقش‌ها' : 'Save roles', exact: true })
@@ -287,6 +305,7 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
+    await page.route('**/api/admin/staff-role-options', (route) => route.fulfill({ json: [] }));
     await page.route('**/api/admin/staff?*', (route) =>
       route.fulfill({
         json: {

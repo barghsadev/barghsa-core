@@ -75,7 +75,9 @@ export default function AdminStaffUsersPage() {
       const nextAccess = (await response.json()) as Access;
       const [staffResponse, rolesResponse] = await Promise.all([
         nextAccess.canView ? fetch(`/api/admin/staff?limit=25&offset=${offset}`) : null,
-        nextAccess.canEditRoles ? fetch('/api/admin/roles') : null,
+        nextAccess.canCreate || nextAccess.canEditRoles
+          ? fetch('/api/admin/staff-role-options')
+          : null,
       ]);
       if ((staffResponse && !staffResponse.ok) || (rolesResponse && !rolesResponse.ok))
         throw new Error('Unavailable');
@@ -117,25 +119,34 @@ export default function AdminStaffUsersPage() {
   const selectRoles = (selected: string[], change: (value: string[]) => void) => (
     <fieldset className="space-y-2">
       <legend className="font-medium">{label('roles')}</legend>
-      {roles.map((role) => (
-        <label key={role.roleId} className="flex items-start gap-2 rounded border p-3">
-          <input
-            type="checkbox"
-            checked={selected.includes(role.roleId)}
-            onChange={(event) =>
-              change(
-                event.target.checked
-                  ? [...selected, role.roleId]
-                  : selected.filter((id) => id !== role.roleId)
-              )
-            }
-          />
-          <span>
-            <span className="block font-medium">{roleText(role, 'name')}</span>
-            <span className="text-sm text-gray-600">{roleText(role, 'description')}</span>
-          </span>
-        </label>
-      ))}
+      <details className="rounded border">
+        <summary className="cursor-pointer p-3 focus-visible:outline focus-visible:outline-2">
+          {roleSummary(selected)}
+        </summary>
+        <div className="space-y-2 border-t p-3">
+          {roles.map((role) => (
+            <label key={role.roleId} className="flex items-start gap-2 rounded border p-3">
+              <input
+                type="checkbox"
+                checked={selected.includes(role.roleId)}
+                onChange={(event) =>
+                  change(
+                    event.target.checked
+                      ? [...selected, role.roleId]
+                      : selected.filter((id) => id !== role.roleId)
+                  )
+                }
+              />
+              <span>
+                <span className="block font-medium">{roleText(role, 'name')}</span>
+                <span className="text-sm text-muted-foreground">
+                  {roleText(role, 'description')}
+                </span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </details>
     </fieldset>
   );
   return (
@@ -144,7 +155,7 @@ export default function AdminStaffUsersPage() {
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">{label('title')}</h1>
-          <p className="mt-2 text-sm text-gray-600">{label('description')}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
         </div>
         {access?.canView && (
           <Button variant="outline" disabled={disabled} onClick={() => setHistory('all')}>
@@ -168,7 +179,7 @@ export default function AdminStaffUsersPage() {
       {saved && <p role="status">{label('saved')}</p>}
       {activationNotice && <p role="status">{label('linkQueued')}</p>}
       {created && (
-        <section className="space-y-3 rounded-lg border bg-white p-4" aria-label={label('created')}>
+        <section className="space-y-3 rounded-lg border bg-card p-4" aria-label={label('created')}>
           <h2 className="font-semibold">{label('created')}</h2>
           <p dir="ltr">{created.username}</p>
           {created.password ? (
@@ -202,10 +213,10 @@ export default function AdminStaffUsersPage() {
         </div>
       ) : (
         <>
-          {!access?.canView && <p role="status">{label('forbidden')}</p>}
+          {!access?.canView && !access?.canCreate && <p role="status">{label('forbidden')}</p>}
           {access?.canView && (
             <>
-              <div className="overflow-x-auto rounded border bg-white">
+              <div className="overflow-x-auto rounded border bg-card">
                 <table className="w-full text-sm text-start">
                   <caption className="sr-only">{label('title')}</caption>
                   <thead>
@@ -231,12 +242,12 @@ export default function AdminStaffUsersPage() {
                         <td className="p-3">
                           <div className="flex flex-wrap gap-1">
                             {staff.isAdmin && (
-                              <span className="rounded bg-gray-100 px-2 py-1">
+                              <span className="rounded bg-muted px-2 py-1">
                                 {label('administrator')}
                               </span>
                             )}
                             {staff.roles.map((role) => (
-                              <span key={role.roleId} className="rounded bg-gray-100 px-2 py-1">
+                              <span key={role.roleId} className="rounded bg-muted px-2 py-1">
                                 {roleText(role, 'name')}
                               </span>
                             ))}
@@ -366,7 +377,7 @@ export default function AdminStaffUsersPage() {
           )}
           {showCreate && access?.canCreate && (
             <form
-              className="space-y-4 rounded-lg border bg-white p-4"
+              className="space-y-4 rounded-lg border bg-card p-4"
               onSubmit={(event) => {
                 event.preventDefault();
                 setSaved(false);
@@ -404,11 +415,7 @@ export default function AdminStaffUsersPage() {
                     />
                   </div>
                 ))}
-                {access.canEditRoles ? (
-                  selectRoles(draft.roleIds, (value) => setDraft({ ...draft, roleIds: value }))
-                ) : (
-                  <p>{label('noInitialRoles')}</p>
-                )}
+                {selectRoles(draft.roleIds, (value) => setDraft({ ...draft, roleIds: value }))}
                 <fieldset className="space-y-2">
                   <legend>{label('activation')}</legend>
                   {(['link', 'tempPassword'] as const).map((method) => (
@@ -455,7 +462,7 @@ export default function AdminStaffUsersPage() {
           )}
           {editing && access?.canEditRoles && (
             <form
-              className="space-y-4 rounded-lg border bg-white p-4"
+              className="space-y-4 rounded-lg border bg-card p-4"
               onSubmit={(event) => {
                 event.preventDefault();
                 setAction({

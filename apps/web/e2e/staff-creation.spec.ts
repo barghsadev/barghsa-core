@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import AxeBuilder from '@axe-core/playwright';
 
 for (const locale of ['en', 'fa'] as const) {
   test(`staff creation retains its draft through step-up and uses rotated CSRF (${locale})`, async ({
@@ -22,19 +23,22 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({
         json: {
           userId: 'admin',
-          canView: true,
+          canView: false,
           canCreate: true,
-          canEditRoles: true,
-          canDisable: true,
+          canEditRoles: false,
+          canDisable: false,
         },
       })
     );
     await page.route('**/api/admin/staff?*', (route) =>
       route.fulfill({ json: { items: [], total: 0 } })
     );
-    await page.route('**/api/admin/roles', (route) =>
+    await page.route('**/api/admin/staff-role-options', (route) =>
       route.fulfill({
-        json: [{ roleId: 'role-finance', name: 'Finance', description: 'Manage finances' }],
+        json: [
+          { roleId: 'role-finance', name: 'Finance', description: 'Manage finances' },
+          { roleId: 'role-operations', name: 'Operations', description: 'Manage operations' },
+        ],
       })
     );
     let verified = false;
@@ -79,7 +83,28 @@ for (const locale of ['en', 'fa'] as const) {
       .fill('New.Staff@Example.Test');
     await form.getByLabel(fa ? 'نام' : 'First name', { exact: true }).fill('New');
     await form.getByLabel(fa ? 'نام خانوادگی' : 'Last name', { exact: true }).fill('Staff');
+    await form.locator('summary').focus();
+    await page.keyboard.press('Enter');
     await form.getByRole('checkbox', { name: fa ? /مالی/ : /Finance/ }).check();
+    await form.getByRole('checkbox', { name: fa ? /عملیات/ : /Operations/ }).check();
+    await expect(form.getByRole('checkbox', { checked: true })).toHaveCount(2);
+    for (const dark of [false, true]) {
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((animation) => animation.effect?.getComputedTiming().endTime !== Infinity)
+            .map((animation) => animation.finished.catch(() => {}))
+        );
+      }, dark);
+      const report = await new AxeBuilder({ page }).include('#admin-content > section').analyze();
+      expect(report.violations, `staff creation accessibility, dark=${dark}`).toEqual([]);
+    }
+    await page.evaluate(() => document.documentElement.classList.remove('dark'));
+    await form.locator('summary').click();
+    await expect(form.locator('summary')).toContainText(fa ? 'مالی' : 'Finance');
+    await expect(form.locator('summary')).toContainText(fa ? 'عملیات' : 'Operations');
     await form
       .getByRole('radio', { name: fa ? 'رمز عبور موقت یک‌بارمصرف' : 'One-time temporary password' })
       .check();
@@ -100,7 +125,7 @@ for (const locale of ['en', 'fa'] as const) {
       username: 'new.staff@example.test',
       firstName: 'New',
       lastName: 'Staff',
-      roleIds: ['role-finance'],
+      roleIds: ['role-finance', 'role-operations'],
       activationMethod: 'tempPassword',
     };
     expect(attempts).toEqual([
