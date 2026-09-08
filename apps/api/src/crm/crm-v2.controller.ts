@@ -24,6 +24,7 @@ import { CrmV2Service } from './crm-v2.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { t } from '@barghsa/i18n/crm';
 
 /**
  * DTO for updating a CRM profile's editable fields.
@@ -828,11 +829,19 @@ export class CrmV2Controller {
           ? 409
           : 400;
 
+      const locale = req.headers['accept-language']?.toLowerCase().startsWith('fa') ? 'fa' : 'en';
+      const message = result.blocker
+        ? t(`crm.profile.archive.blocked.${result.blocker}`, locale).replace(
+            '{count}',
+            new Intl.NumberFormat(locale).format(result.count ?? 0)
+          )
+        : result.error;
+
       throw new HttpException(
         {
           statusCode: httpStatus,
           error: result.errorCode,
-          message: result.error,
+          message,
         },
         httpStatus
       );

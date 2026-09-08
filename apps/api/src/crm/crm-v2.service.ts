@@ -934,7 +934,11 @@ export class CrmV2Service {
       await requireStaffMutationPermission(client, actorUserId, 'admin:users:edit');
       if (profileRow.archived === true) {
         await client.query('ROLLBACK');
-        return { errorCode: 'CRM:PROFILE:ALREADY_ARCHIVED', error: 'Profile is already archived' };
+        return {
+          errorCode: 'CRM:PROFILE:ALREADY_ARCHIVED',
+          error: 'Profile is already archived',
+          blocker: 'alreadyArchived',
+        };
       }
       const profileType = profileRow.profile_type as string;
 
@@ -949,6 +953,7 @@ export class CrmV2Service {
         await client.query('ROLLBACK');
         return {
           errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+          blocker: 'corrections',
           error: 'Resolve open identity corrections before archiving this profile.',
         };
       }
@@ -965,6 +970,8 @@ export class CrmV2Service {
         await client.query('ROLLBACK');
         return {
           errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+          blocker: 'orders',
+          count: activeOrderCount,
           error: `Profile has ${activeOrderCount} active order(s). Cancel orders before deletion.`,
         };
       }
@@ -987,6 +994,8 @@ export class CrmV2Service {
           await client.query('ROLLBACK');
           return {
             errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+            blocker: 'contracts',
+            count: activeContractCount,
             error: `Profile has ${activeContractCount} contract(s). Resolve contracts before deletion.`,
           };
         }
@@ -1012,6 +1021,8 @@ export class CrmV2Service {
           await client.query('ROLLBACK');
           return {
             errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+            blocker: 'invoices',
+            count: unpaidInvoiceCount,
             error: `Profile has ${unpaidInvoiceCount} unpaid invoice(s). Resolve invoices before deletion.`,
           };
         }
@@ -1038,6 +1049,7 @@ export class CrmV2Service {
             await client.query('ROLLBACK');
             return {
               errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+              blocker: 'wallet',
               error: 'Profile has a non-zero wallet balance. Zero the balance before deletion.',
             };
           }
@@ -1054,6 +1066,7 @@ export class CrmV2Service {
         await client.query('ROLLBACK');
         return {
           errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+          blocker: 'pendingPayments',
           error: 'Resolve pending wallet transactions before archiving this profile.',
         };
       }
@@ -1064,6 +1077,7 @@ export class CrmV2Service {
         await client.query('ROLLBACK');
         return {
           errorCode: 'CRM:PROFILE:LAST_OWNER',
+          blocker: 'lastOwner',
           error: 'Cannot archive a legal profile while its canonical ownership remains active.',
         };
       }
@@ -1174,5 +1188,18 @@ export class CrmV2Service {
  */
 export type CrmDeleteProfileResult =
   | { success: true; profileId: string; reason: string; archivedAt: string }
-  | { errorCode: string; error: string }
+  | {
+      errorCode: string;
+      error: string;
+      blocker?:
+        | 'orders'
+        | 'contracts'
+        | 'invoices'
+        | 'wallet'
+        | 'corrections'
+        | 'pendingPayments'
+        | 'lastOwner'
+        | 'alreadyArchived';
+      count?: number;
+    }
   | null;

@@ -1,5 +1,6 @@
 import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
+import AxeBuilder from '@axe-core/playwright';
 const id = '11111111-1111-4111-8111-111111111111';
 function detail(targetAdmin: boolean, allowed: boolean) {
   return {
@@ -399,7 +400,7 @@ for (const locale of ['fa', 'en'] as const) {
         route.request().method() === 'DELETE'
           ? route.fulfill(
               archiveAllowed
-                ? { json: { success: true, profileId: id } }
+                ? { json: { success: true, profileId: id, archivedAt: '2026-09-08T09:00:00.000Z' } }
                 : {
                     status: 409,
                     json: { error: { code: 'CRM:PROFILE:DELETION_BLOCKED' } },
@@ -475,6 +476,7 @@ for (const locale of ['fa', 'en'] as const) {
         const archive = locale === 'fa' ? 'بایگانی پروفایل' : 'Archive profile';
         await page.getByRole('button', { name: archive, exact: true }).click();
         await dialog.locator('textarea').fill('Closure requested');
+        for (const checkbox of await dialog.getByRole('checkbox').all()) await checkbox.check();
         await dialog.getByRole('button', { name: archive, exact: true }).click();
         await confirm.click();
         await expect(dialog.getByRole('alert')).toBeVisible();
@@ -933,3 +935,201 @@ for (const locale of ['en', 'fa'] as const)
         await expect(links).toHaveCount(0);
       }
     });
+
+for (const locale of ['fa', 'en'] as const)
+  for (const darkMode of [false, true]) {
+    test(`CRM archive checklist, blocker details and acknowledgement survive retries (${locale}, dark=${darkMode})`, async ({
+      page,
+    }, testInfo) => {
+      await page.addInitScript((locale) => {
+        const apply = () => {
+          document.documentElement.lang = locale;
+          document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
+        };
+        if (document.documentElement) apply();
+        new MutationObserver(apply).observe(document, { childList: true });
+      }, locale);
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Archive review',
+            slogan: '',
+            primaryColor: '#2563eb',
+            secondaryColor: '#64748b',
+            accentColor: '#f59e0b',
+            logoUrl: null,
+            faviconUrl: null,
+            darkMode,
+          },
+        })
+      );
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'UTC' } })
+      );
+      const blocked =
+        locale === 'fa'
+          ? 'موجودی ثبت‌شده یا رزروشده کیف پول صفر نیست. پیش از بایگانی، هر دو موجودی باید صفر باشند.'
+          : 'The posted or reserved wallet balance is not zero. Both balances must be zero before archiving.';
+      let reply: { status: number; json: unknown } = {
+        status: 409,
+        json: { error: { code: 'CRM:PROFILE:DELETION_BLOCKED', message: blocked } },
+      };
+      const bodies: unknown[] = [];
+      await page.route(`**/api/crm/profiles/${id}`, (route) => {
+        if (route.request().method() !== 'DELETE')
+          return route.fulfill({ json: detail(false, true) });
+        expect(route.request().headers()['accept-language']).toBe(locale);
+        bodies.push(route.request().postDataJSON());
+        return route.fulfill(reply);
+      });
+      await page.goto(`/admin/crm/profiles/${id}`);
+      const archiveLabel = locale === 'fa' ? 'بایگانی پروفایل' : 'Archive profile';
+      const archive = page.getByRole('button', { name: archiveLabel, exact: true });
+      await archive.click();
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toContainText('Customer profile');
+      await expect(dialog.getByRole('checkbox')).toHaveCount(3);
+      const reason = dialog.getByRole('textbox');
+      await reason.fill('  ');
+      for (const checkbox of await dialog.getByRole('checkbox').all()) await checkbox.check();
+      await expect(dialog.getByRole('button', { name: archiveLabel, exact: true })).toBeDisabled();
+      await reason.fill('Closure requested');
+      await page.keyboard.press('Escape');
+      await expect(dialog).toHaveCount(0);
+      await expect(archive).toBeFocused();
+      await archive.click();
+      await expect(dialog.getByRole('checkbox').first()).not.toBeChecked();
+      const checks = await dialog.getByRole('checkbox').all();
+      for (const checkbox of checks) {
+        await expect(
+          dialog.getByRole('button', { name: archiveLabel, exact: true })
+        ).toBeDisabled();
+        await checkbox.focus();
+        await checkbox.press('Space');
+        await expect(checkbox).toBeChecked();
+      }
+      await expect(reason).toHaveValue('Closure requested');
+      // The button fades from its disabled opacity after the last checkbox.
+      // Measure the enabled state once that transition has finished.
+      await expect
+        .poll(() =>
+          dialog
+            .getByRole('button', { name: archiveLabel, exact: true })
+            .evaluate((node) => getComputedStyle(node).opacity)
+        )
+        .toBe('1');
+      await expect
+        .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
+        .toBe(darkMode);
+      const a11y = await new AxeBuilder({ page })
+        .include('[role="dialog"]')
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+        .analyze();
+      expect(a11y.violations).toEqual([]);
+      // Axe can leave wrapped transparent descriptions unresolved on mobile.
+      // Verify only that known node using its rendered colors and unobscured text.
+      for (const item of a11y.incomplete.filter((item) => item.id === 'color-contrast')) {
+        expect(item.nodes).toHaveLength(1);
+        expect(item.nodes[0]!.html).toContain('data-slot="dialog-description"');
+        const measured = await dialog
+          .locator('[data-slot="dialog-description"]')
+          .evaluate((node) => {
+            const popup = node.closest('[role="dialog"]')!;
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = 1;
+            const ctx = canvas.getContext('2d')!;
+            const color = (value: string) => {
+              ctx.clearRect(0, 0, 1, 1);
+              ctx.fillStyle = value;
+              ctx.fillRect(0, 0, 1, 1);
+              return Array.from(ctx.getImageData(0, 0, 1, 1).data);
+            };
+            const fg = color(getComputedStyle(node).color),
+              bg = color(getComputedStyle(popup).backgroundColor);
+            const luminance = (rgb: number[]) =>
+              rgb.slice(0, 3).reduce((sum, value, index) => {
+                const s = value / 255;
+                return (
+                  sum +
+                  [0.2126, 0.7152, 0.0722][index]! *
+                    (s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4)
+                );
+              }, 0);
+            const f = luminance(fg),
+              b = luminance(bg);
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const unobscured = Array.from(range.getClientRects()).every((rect) =>
+              node.contains(
+                document.elementFromPoint(
+                  rect.x + Math.min(10, rect.width / 2),
+                  rect.y + rect.height / 2
+                )
+              )
+            );
+            let opaque = true;
+            for (let ancestor: Element | null = node; ancestor; ancestor = ancestor.parentElement)
+              if (getComputedStyle(ancestor).opacity !== '1') opaque = false;
+            return {
+              ratio: (Math.max(f, b) + 0.05) / (Math.min(f, b) + 0.05),
+              fg,
+              bg,
+              unobscured,
+              opaque,
+            };
+          });
+        expect(measured.fg[3]).toBe(255);
+        expect(measured.bg[3]).toBe(255);
+        expect(measured.opaque).toBe(true);
+        expect(measured.unobscured).toBe(true);
+        expect(measured.ratio).toBeGreaterThanOrEqual(4.5);
+        await testInfo.attach('resolved-description-contrast', {
+          contentType: 'application/json',
+          body: JSON.stringify(measured),
+        });
+      }
+      const bounds = await dialog.boundingBox();
+      expect(bounds!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+      const titleBounds = await dialog.getByRole('heading').boundingBox();
+      const closeBounds = await dialog
+        .getByRole('button', { name: 'Close', exact: true })
+        .boundingBox();
+      expect(titleBounds!.x + titleBounds!.width).toBeLessThanOrEqual(closeBounds!.x);
+      await dialog.screenshot({
+        path: `/tmp/barghsa-archive-dialog-${locale}-${darkMode ? 'dark' : 'light'}-${testInfo.project.name}.png`,
+      });
+      expect(bodies).toEqual([]);
+      await dialog.getByRole('button', { name: archiveLabel, exact: true }).click();
+      const confirm = dialog.getByRole('button', {
+        name: locale === 'fa' ? 'تأیید' : 'Confirm',
+        exact: true,
+      });
+      await confirm.click();
+      await expect(dialog.getByRole('alert')).toHaveText(blocked);
+      for (const json of [
+        {},
+        { success: false, profileId: id, archivedAt: '2026-09-08T09:00:00.000Z' },
+        {
+          success: true,
+          profileId: '22222222-2222-4222-8222-222222222222',
+          archivedAt: '2026-09-08T09:00:00.000Z',
+        },
+        { success: true, profileId: id },
+        { success: true, profileId: id, archivedAt: 'not-a-date' },
+        { success: true, profileId: id, archivedAt: '2026-02-30T09:00:00.000Z' },
+      ]) {
+        reply = { status: 200, json };
+        await confirm.click();
+        await expect(dialog.getByRole('alert')).toBeVisible();
+        await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}$`));
+      }
+      reply = {
+        status: 200,
+        json: { success: true, profileId: id, archivedAt: '2026-09-08T09:00:00.000Z' },
+      };
+      await confirm.click();
+      await expect(page).toHaveURL(/\/admin\/crm\/?$/);
+      expect(bodies).toEqual(Array(8).fill({ reason: 'Closure requested' }));
+    });
+  }

@@ -168,6 +168,25 @@ export const fa: I18nDictionary = {
   'crm.profile.verification.reason': 'دلیل (برای لغو یا تجدید تأیید الزامی است)',
   'crm.profile.verification.review': 'بررسی تغییر تأیید هویت',
   'crm.profile.verification.saved': 'تغییر تأیید هویت ثبت شد.',
+  'crm.profile.archive.checklist.availability': 'این پروفایل دیگر در دسترس مشتری نخواهد بود.',
+  'crm.profile.archive.checklist.history': 'پروفایل، سوابق کاری و تاریخچه ممیزی حفظ می‌شوند.',
+  'crm.profile.archive.checklist.account': 'حساب کاربری و سایر پروفایل‌ها فعال می‌مانند.',
+  'crm.profile.archive.blocked.orders':
+    'این پروفایل {count} سفارش فعال دارد. پیش از بایگانی، سفارش‌ها را لغو کنید.',
+  'crm.profile.archive.blocked.contracts':
+    'این پروفایل {count} قرارداد دارد. پیش از بایگانی، وضعیت قراردادها را تعیین تکلیف کنید.',
+  'crm.profile.archive.blocked.invoices':
+    'این پروفایل {count} فاکتور پرداخت‌نشده دارد. پیش از بایگانی، فاکتورها را تعیین تکلیف کنید.',
+  'crm.profile.archive.blocked.wallet':
+    'موجودی ثبت‌شده یا رزروشده کیف پول صفر نیست. پیش از بایگانی، هر دو موجودی باید صفر باشند.',
+  'crm.profile.archive.blocked.corrections':
+    'پیش از بایگانی، درخواست‌های باز اصلاح هویت را تعیین تکلیف کنید.',
+  'crm.profile.archive.blocked.pendingPayments':
+    'پیش از بایگانی، تراکنش‌های در انتظار کیف پول را تعیین تکلیف کنید.',
+  'crm.profile.archive.blocked.lastOwner':
+    'پروفایل حقوقی با مالکیت فعال قابل بایگانی نیست. نماینده جایگزین مالک قانونی نمی‌شود.',
+  'crm.profile.archive.blocked.alreadyArchived':
+    'این پروفایل قبلاً بایگانی شده است. برای مشاهده وضعیت، صفحه را تازه‌سازی کنید.',
   'crm.profile.archive.title': 'بایگانی پروفایل',
   'crm.profile.archive.warning':
     'پروفایل پنهان و سوابق آن حفظ می‌شود. سفارش یا قرارداد فعال، فاکتور پرداخت‌نشده، موجودی کیف پول یا پرداخت در انتظار، درخواست اصلاح هویت باز و محدودیت مالکیت ممکن است مانع بایگانی شوند. دلیل را وارد کنید.',
@@ -468,6 +487,27 @@ export const en: I18nDictionary = {
   'crm.profile.verification.reason': 'Reason (required to remove or renew verification)',
   'crm.profile.verification.review': 'Review verification change',
   'crm.profile.verification.saved': 'Verification change saved.',
+  'crm.profile.archive.checklist.availability':
+    'This profile will no longer be available to the customer.',
+  'crm.profile.archive.checklist.history':
+    'The profile, business records and audit history will be retained.',
+  'crm.profile.archive.checklist.account': 'The account and other profiles will remain active.',
+  'crm.profile.archive.blocked.orders':
+    'This profile has {count} active order(s). Cancel them before archiving.',
+  'crm.profile.archive.blocked.contracts':
+    'This profile has {count} contract(s). Resolve them before archiving.',
+  'crm.profile.archive.blocked.invoices':
+    'This profile has {count} unpaid invoice(s). Resolve them before archiving.',
+  'crm.profile.archive.blocked.wallet':
+    'The posted or reserved wallet balance is not zero. Both balances must be zero before archiving.',
+  'crm.profile.archive.blocked.corrections':
+    'Resolve open identity corrections before archiving this profile.',
+  'crm.profile.archive.blocked.pendingPayments':
+    'Resolve pending wallet transactions before archiving this profile.',
+  'crm.profile.archive.blocked.lastOwner':
+    'A legal profile with active ownership cannot be archived. An agent cannot replace its legal owner.',
+  'crm.profile.archive.blocked.alreadyArchived':
+    'This profile is already archived. Reload the page to see its current status.',
   'crm.profile.archive.title': 'Archive profile',
   'crm.profile.archive.warning':
     'This hides the profile while preserving its history. Active orders, contracts, unpaid invoices, wallet balances or pending payments, open identity corrections and ownership constraints can block archiving. Enter the reason.',

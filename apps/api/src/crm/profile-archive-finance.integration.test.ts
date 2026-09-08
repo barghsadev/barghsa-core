@@ -121,7 +121,7 @@ for (const channel of ['online', 'bank'] as const) {
           Number(
             (
               await http.pool.query(`SELECT count(*) AS count FROM pg_stat_activity
-        WHERE datname=current_database() AND wait_event_type='Lock' AND query='SELECT archived FROM profiles WHERE id=$1 FOR SHARE'`)
+        WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%WITH active_profile%'`)
             ).rows[0].count
           )
         )

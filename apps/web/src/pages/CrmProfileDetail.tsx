@@ -16,7 +16,7 @@ import {
   Button,
   Label,
 } from '@barghsa/ui';
-import { useState, useEffect, useId, useRef } from 'react';
+import { useState, useEffect, useId, useRef, type ComponentProps } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/crm';
 import { useLocale } from '../hooks/useLocale.js';
@@ -236,6 +236,7 @@ function CrmProfileDetailContent() {
   const [verificationReason, setVerificationReason] = useState('');
   const [showArchive, setShowArchive] = useState(false);
   const [archiveReason, setArchiveReason] = useState('');
+  const archiveButton = useRef<HTMLButtonElement>(null);
   const [showForcePwChange, setShowForcePwChange] = useState(false);
   const [showExpireSessions, setShowExpireSessions] = useState(false);
   const [forcePwChangeReason, setForcePwChangeReason] = useState('');
@@ -382,6 +383,14 @@ function CrmProfileDetailContent() {
       }
     }
     if (kind === 'archive') {
+      const archivedAt = typeof result.archivedAt === 'string' ? new Date(result.archivedAt) : null;
+      if (
+        !archivedAt ||
+        !Number.isFinite(archivedAt.valueOf()) ||
+        archivedAt.toISOString() !== result.archivedAt
+      ) {
+        throw new Error('Invalid CRM archival timestamp');
+      }
       window.location.assign('/admin/crm');
       return;
     }
@@ -588,14 +597,24 @@ function CrmProfileDetailContent() {
           </div>
         )}
       {data.viewerPermissions?.canManageUser && !profile.archived && (
-        <Button variant="outline" className="mb-4" onClick={() => setShowArchive(true)}>
+        <Button
+          ref={archiveButton}
+          variant="outline"
+          className="mb-4"
+          onClick={() => setShowArchive(true)}
+        >
           {t('crm.profile.archive.title', locale)}
         </Button>
       )}
       {showArchive && (
         <AdminActionConfirmModal
           title={t('crm.profile.archive.title', locale)}
-          message={t('crm.profile.archive.warning', locale)}
+          message={`${t('crm.profile.archive.warning', locale)} ${profile.title ?? profileId}`}
+          checklist={['availability', 'history', 'account'].map((item) =>
+            t(`crm.profile.archive.checklist.${item}`, locale)
+          )}
+          reasonLabel={t('crm.profile.archivedReason', locale)}
+          finalFocus={archiveButton}
           reason={archiveReason}
           onReasonChange={setArchiveReason}
           onCancel={() => setShowArchive(false)}
@@ -611,8 +630,22 @@ function CrmProfileDetailContent() {
                 path: `/api/crm/profiles/${profileId}`,
                 method: 'DELETE',
                 errorMessages: {
-                  'CRM:PROFILE:DELETION_BLOCKED': t('crm.profile.archive.warning', locale),
-                  'CRM:PROFILE:LAST_OWNER': t('crm.profile.archive.warning', locale),
+                  ...Object.fromEntries(
+                    [
+                      'CRM:PROFILE:DELETION_BLOCKED',
+                      'CRM:PROFILE:LAST_OWNER',
+                      'CRM:PROFILE:ALREADY_ARCHIVED',
+                    ].map((code) => [
+                      code,
+                      (response: unknown) => {
+                        const message = (response as { error?: { message?: unknown } } | null)
+                          ?.error?.message;
+                        return typeof message === 'string' && message.trim()
+                          ? message
+                          : t('crm.profile.archive.warning', locale);
+                      },
+                    ])
+                  ),
                 },
                 body: { reason: archiveReason.trim() },
               },
@@ -1274,6 +1307,7 @@ function CrmProfileDetailContent() {
       {pendingAction && (
         <TeamActionDialog
           action={pendingAction.action}
+          finalFocus={pendingAction.kind === 'archive' ? archiveButton : undefined}
           onClose={() => setPendingAction(null)}
           onSuccess={actionSucceeded}
         />
@@ -1436,6 +1470,9 @@ function AdminActionConfirmModal({
   cancelLabel,
   confirmLabel,
   loading,
+  checklist,
+  reasonLabel,
+  finalFocus,
 }: {
   title: string;
   message: string;
@@ -1446,7 +1483,12 @@ function AdminActionConfirmModal({
   cancelLabel: string;
   confirmLabel: string;
   loading: boolean;
+  checklist?: string[];
+  reasonLabel?: string;
+  finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
 }) {
+  const [checked, setChecked] = useState<string[]>([]);
+  const confirmed = checklist?.every((item) => checked.includes(item)) ?? true;
   return (
     <Dialog
       open
@@ -1454,19 +1496,42 @@ function AdminActionConfirmModal({
         if (!open && !loading) onCancel();
       }}
     >
-      <DialogContent>
+      <DialogContent finalFocus={finalFocus}>
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            if (reason.trim()) onConfirm();
+            if (!loading && reason.trim() && confirmed) onConfirm();
           }}
           className="space-y-4"
         >
-          <DialogHeader>
+          <DialogHeader className="pr-8">
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{message}</DialogDescription>
           </DialogHeader>
-          <Label htmlFor="crm-action-reason">{message}</Label>
+          {checklist && (
+            <div className="space-y-3">
+              {checklist.map((item) => (
+                <label key={item} className="flex items-start gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={checked.includes(item)}
+                    disabled={loading}
+                    className="mt-1 shrink-0"
+                    onChange={(event) =>
+                      setChecked((current) =>
+                        event.target.checked
+                          ? [...current, item]
+                          : current.filter((value) => value !== item)
+                      )
+                    }
+                  />
+                  <span>{item}</span>
+                </label>
+              ))}
+            </div>
+          )}
+          <Label htmlFor="crm-action-reason">{reasonLabel ?? message}</Label>
           <textarea
             id="crm-action-reason"
             required
@@ -1481,7 +1546,7 @@ function AdminActionConfirmModal({
             <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>
               {cancelLabel}
             </Button>
-            <Button type="submit" disabled={loading || !reason.trim()}>
+            <Button type="submit" disabled={loading || !reason.trim() || !confirmed}>
               {confirmLabel}
             </Button>
           </DialogFooter>

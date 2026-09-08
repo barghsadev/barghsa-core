@@ -26,7 +26,7 @@ export interface TeamAction {
   requiresPassword?: boolean;
   conflictMessage?: string;
   forbiddenMessage?: string;
-  errorMessages?: Record<string, string>;
+  errorMessages?: Record<string, string | ((response: unknown) => string)>;
 }
 
 /** The action is captured when opened; password verification retries that same action. */
@@ -96,7 +96,7 @@ export function TeamActionDialog({
       const response = await fetch(action.path, {
         method: action.method,
         credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        headers: withCsrf({ 'Content-Type': 'application/json', 'Accept-Language': locale }),
         ...(action.body === undefined ? {} : { body: JSON.stringify(action.body) }),
       });
       const data = await response.json().catch(() => null);
@@ -110,8 +110,9 @@ export function TeamActionDialog({
       }
       if (rateLimited(response)) return;
       if (!response.ok) {
+        const mappedMessage = action.errorMessages?.[code];
         setError(
-          action.errorMessages?.[code] ??
+          (typeof mappedMessage === 'function' ? mappedMessage(data) : mappedMessage) ??
             (response.status === 409
               ? (action.conflictMessage ?? t('team.conflict', locale))
               : response.status === 403
@@ -147,7 +148,7 @@ export function TeamActionDialog({
         finalFocus={finalFocus}
       >
         <form onSubmit={submit} className="space-y-4">
-          <DialogHeader>
+          <DialogHeader className="pr-8">
             <DialogTitle>{action.title}</DialogTitle>
             <DialogDescription>{action.description}</DialogDescription>
           </DialogHeader>
