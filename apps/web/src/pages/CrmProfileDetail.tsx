@@ -1,3 +1,4 @@
+import { CrmProfileRecords } from '../components/CrmProfileRecords.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -102,6 +103,8 @@ interface ProfileDetail {
   addresses: Address[];
   sessions: SessionsInfo;
   siblingProfiles: SiblingProfile[];
+  agentRelationships: unknown;
+  verificationHistory: unknown;
 }
 
 /** Editable fields (non-identity) */
@@ -608,10 +611,28 @@ function CrmProfileDetailContent() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              id={'tab-' + tab.id}
               role="tab"
+              tabIndex={activeTab === tab.id ? 0 : -1}
               aria-selected={activeTab === tab.id}
               aria-controls={`panel-${tab.id}`}
               onClick={() => setActiveTab(tab.id)}
+              onKeyDown={(event) => {
+                if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+                event.preventDefault();
+                const current = tabs.findIndex((item) => item.id === tab.id);
+                const direction =
+                  (event.key === 'ArrowRight' ? 1 : -1) * (locale === 'fa' ? -1 : 1);
+                const next =
+                  event.key === 'Home'
+                    ? 0
+                    : event.key === 'End'
+                      ? tabs.length - 1
+                      : (current + direction + tabs.length) % tabs.length;
+                const target = tabs[next]!;
+                setActiveTab(target.id);
+                document.getElementById('tab-' + target.id)?.focus();
+              }}
               className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
                   ? 'border-blue-600 text-blue-600'
@@ -910,14 +931,11 @@ function CrmProfileDetailContent() {
       {/* Tab: Agent Invites */}
       {activeTab === 'agent-invites' && (
         <div id="panel-agent-invites" role="tabpanel" aria-labelledby="tab-agent-invites">
-          <div className="border border-gray-200 rounded-lg p-6 text-center">
-            <p className="text-gray-500 text-sm">
-              {t('crm.profile.agentInvites.placeholder', locale)}
-            </p>
-            <p className="text-gray-400 text-xs mt-2">
-              {t('crm.profile.agentInvites.description', locale)}
-            </p>
-          </div>
+          <CrmProfileRecords
+            profileId={profileId}
+            kind="agents"
+            initial={data.agentRelationships}
+          />
         </div>
       )}
 
@@ -928,14 +946,11 @@ function CrmProfileDetailContent() {
           role="tabpanel"
           aria-labelledby="tab-verification-history"
         >
-          <div className="border border-gray-200 rounded-lg p-6 text-center">
-            <p className="text-gray-500 text-sm">
-              {t('crm.profile.verificationHistory.placeholder', locale)}
-            </p>
-            <p className="text-gray-400 text-xs mt-2">
-              {t('crm.profile.verificationHistory.description', locale)}
-            </p>
-          </div>
+          <CrmProfileRecords
+            profileId={profileId}
+            kind="verification"
+            initial={data.verificationHistory}
+          />
         </div>
       )}
 

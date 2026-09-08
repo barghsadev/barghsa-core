@@ -9278,6 +9278,10 @@
                       },
                       "type": "array"
                     },
+                    "agentRelationships": {
+                      "description": "Memberships and invitations with a nextCursor for older records",
+                      "type": "object"
+                    },
                     "legalInfo": {
                       "nullable": true,
                       "type": "object"
@@ -9310,6 +9314,10 @@
                       "type": "array"
                     },
                     "user": {
+                      "type": "object"
+                    },
+                    "verificationHistory": {
+                      "description": "Verification events with a nextCursor for older records",
                       "type": "object"
                     }
                   },
@@ -9392,6 +9400,76 @@
           }
         },
         "summary": "Update editable profile fields (staff)",
+        "tags": [
+          "CRM V2"
+        ]
+      }
+    },
+    "/api/crm/profiles/{profileId}/records/{kind}": {
+      "get": {
+        "operationId": "CrmV2Controller_getProfileRecords",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "kind",
+            "required": true,
+            "schema": {
+              "enum": [
+                "agents",
+                "verification"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Opaque nextCursor from the preceding page for this profile and kind",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "items": {
+                      "items": {
+                        "type": "object"
+                      },
+                      "maxItems": 20,
+                      "type": "array"
+                    },
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "nextCursor"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Items and nextCursor; records remain scoped to the selected profile"
+          }
+        },
+        "summary": "Page through CRM profile agent or verification records",
         "tags": [
           "CRM V2"
         ]

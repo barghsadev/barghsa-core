@@ -8,6 +8,13 @@ import { SessionService } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import type { PoolClient } from 'pg';
 import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js';
+import {
+  readAgentRecords,
+  readVerificationRecords,
+  type CrmRecordPage,
+  type CrmAgentRecord,
+  type CrmVerificationRecord,
+} from './crm-profile-records.js';
 
 /** Simple email regex for server-side validation */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -170,6 +177,8 @@ export interface CrmProfileDetail {
     entries: CrmProfileSession[];
   };
   siblingProfiles: CrmSiblingProfile[];
+  agentRelationships: CrmRecordPage<CrmAgentRecord>;
+  verificationHistory: CrmRecordPage<CrmVerificationRecord>;
 }
 
 @Injectable()
@@ -188,7 +197,10 @@ export class CrmV2Service {
    * profile data, user info, verification state, session metadata,
    * addresses, and sibling profiles.
    */
-  async getProfileDetail(profileId: string): Promise<CrmProfileDetail | null> {
+  async getProfileDetail(
+    profileId: string,
+    includeCorrections = false
+  ): Promise<CrmProfileDetail | null> {
     const pool = getDbPool();
 
     // 1. Fetch the profile
@@ -338,6 +350,18 @@ export class CrmV2Service {
 
     // Determine last active session
     const lastActive = sessionsList.length > 0 ? sessionsList[0]!.lastActive : null;
+    const agentRelationships = await readAgentRecords(pool, {
+      id: String(profileRow.id),
+      userId: String(userRow.user_id),
+      profileType: String(profileRow.profile_type),
+      username: String(userRow.username),
+    });
+    const verificationHistory = await readVerificationRecords(
+      pool,
+      String(profileRow.id),
+      undefined,
+      includeCorrections
+    );
 
     return {
       profile: {
@@ -371,7 +395,29 @@ export class CrmV2Service {
         entries: sessionsList,
       },
       siblingProfiles,
+      agentRelationships,
+      verificationHistory,
     };
+  }
+
+  async getProfileRecords(
+    profileId: string,
+    kind: 'agents' | 'verification',
+    cursor?: string,
+    includeCorrections = false
+  ) {
+    const pool = getDbPool();
+    const scope = (
+      await pool.query<{ id: string; userId: string; profileType: string; username: string }>(
+        `SELECT p.id,p.user_id AS "userId",p.profile_type AS "profileType",u.username
+       FROM profiles p JOIN users u ON u.user_id=p.user_id WHERE p.id=$1`,
+        [profileId]
+      )
+    ).rows[0];
+    if (!scope) return null;
+    return kind === 'agents'
+      ? readAgentRecords(pool, scope, cursor)
+      : readVerificationRecords(pool, scope.id, cursor, includeCorrections);
   }
 
   /**

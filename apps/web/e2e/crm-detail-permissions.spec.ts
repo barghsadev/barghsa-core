@@ -62,6 +62,174 @@ for (const allowed of [true, false])
       allowed ? 1 : 0
     );
   });
+
+for (const locale of ['fa', 'en'] as const) {
+  test(`CRM profile records support keyboard access, paging and retry (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((lang) => {
+      if (document.documentElement) document.documentElement.lang = lang;
+      new MutationObserver(() => {
+        document.documentElement.lang = lang;
+      }).observe(document, { childList: true });
+    }, locale);
+    const invitation = {
+      id: 'invitation:one',
+      kind: 'invitation',
+      profileId: id,
+      profileTitle: 'Example Company',
+      username: 'invite@example.test',
+      role: 'Legal',
+      status: 'Expired',
+      createdAt: '2026-08-02T01:00:00.000001Z',
+      expiresAt: '2026-08-03T01:00:00.000000Z',
+    };
+    const verification = {
+      id: 'verification-one',
+      event: 'verification_change',
+      actor: 'reviewer@example.test',
+      previousStatus: 'ACTIVE',
+      newStatus: 'VERIFIED',
+      reason: 'Initial evidence checked',
+      createdAt: '2026-08-02T01:00:00.000001Z',
+    };
+    const current = {
+      ...detail(false, true),
+      agentRelationships: { items: [invitation], nextCursor: 'older-agents' },
+      verificationHistory: { items: [verification], nextCursor: 'older-history' },
+    };
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
+    await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
+    let agentAttempts = 0,
+      historyAttempts = 0;
+    const requests: string[] = [];
+    let finishFirst: (() => void) | undefined;
+    const firstResponse = new Promise<void>((resolve) => {
+      finishFirst = resolve;
+    });
+    await page.route(`**/api/crm/profiles/${id}/records/agents?*`, async (route) => {
+      requests.push(new URL(route.request().url()).searchParams.get('cursor')!);
+      if (++agentAttempts === 1) {
+        await firstResponse;
+        return route.fulfill({ status: 503, json: {} });
+      }
+      return route.fulfill({
+        json: {
+          items: [
+            {
+              ...invitation,
+              id: 'agent:two',
+              kind: 'agent',
+              username: 'member@example.test',
+              status: 'Active',
+              expiresAt: null,
+            },
+          ],
+          nextCursor: null,
+        },
+      });
+    });
+    await page.route(`**/api/crm/profiles/${id}/records/verification*`, (route) => {
+      const cursor = new URL(route.request().url()).searchParams.get('cursor');
+      if (!cursor) return route.fulfill({ json: { items: [], nextCursor: null } });
+      requests.push(cursor);
+      if (++historyAttempts === 1)
+        return route.fulfill({ json: { items: 'invalid', nextCursor: null } });
+      return route.fulfill({
+        json: {
+          items: [
+            {
+              ...verification,
+              id: 'verification-two',
+              event: 'verification_case_reviewed',
+              previousStatus: null,
+              newStatus: 'Approved',
+              reason: 'Correction approved',
+            },
+          ],
+          nextCursor: null,
+        },
+      });
+    });
+    await page.goto(`/admin/crm/profiles/${id}`);
+    const tabs = page.getByRole('tablist');
+    const first = tabs.getByRole('tab').first();
+    await first.focus();
+    await first.press('End');
+    const backwards = locale === 'fa' ? 'ArrowRight' : 'ArrowLeft';
+    await page.getByRole('tab', { selected: true }).press(backwards);
+    await expect(page.getByRole('tab', { selected: true })).toHaveText(
+      locale === 'fa' ? 'تاریخچه تأیید' : 'Verification History'
+    );
+    await page.getByRole('tab', { selected: true }).press(backwards);
+    const agentTab = page.getByRole('tab', {
+      name: locale === 'fa' ? 'دعوت‌نامه نمایندگی' : 'Agent Invites',
+      exact: true,
+    });
+    await expect(agentTab).toBeFocused();
+    await expect(tabs.locator('[tabindex="0"]')).toHaveCount(1);
+    const panel = page.getByRole('tabpanel');
+    await expect(panel).toHaveAccessibleName(
+      locale === 'fa' ? 'دعوت‌نامه نمایندگی' : 'Agent Invites'
+    );
+    await expect(panel).toContainText('invite@example.test');
+    await expect(panel).toContainText(locale === 'fa' ? 'منقضی‌شده' : 'Expired');
+    await expect(panel).toContainText(
+      await formatBrowserDate(
+        page,
+        locale,
+        { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
+        invitation.createdAt
+      )
+    );
+    const older = page.getByRole('button', {
+      name: locale === 'fa' ? 'نمایش سوابق قدیمی‌تر' : 'Load older records',
+      exact: true,
+    });
+    await older.click();
+    await expect(panel.getByRole('status')).toBeVisible();
+    await expect(older).toBeDisabled();
+    finishFirst!();
+    await expect(panel.getByRole('alert')).toBeVisible();
+    await expect(panel).toContainText('invite@example.test');
+    const retry = page.getByRole('button', {
+      name: locale === 'fa' ? 'تلاش دوباره' : 'Retry',
+      exact: true,
+    });
+    await retry.click();
+    await expect(panel).toContainText('member@example.test');
+    await expect(panel).toContainText('invite@example.test');
+    await expect(older).toHaveCount(0);
+    await page
+      .getByRole('tab', {
+        name: locale === 'fa' ? 'تاریخچه تأیید' : 'Verification History',
+        exact: true,
+      })
+      .click();
+    await expect(panel).toContainText('Initial evidence checked');
+    await older.click();
+    await expect(panel.getByRole('alert')).toBeVisible();
+    await expect(panel).toContainText('Initial evidence checked');
+    await retry.click();
+    await expect(panel).toContainText('Correction approved');
+    await expect(panel).toContainText(
+      locale === 'fa' ? 'بررسی اصلاح هویت' : 'Identity correction reviewed'
+    );
+    expect(requests).toEqual(['older-agents', 'older-agents', 'older-history', 'older-history']);
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'تازه‌سازی' : 'Refresh', exact: true })
+      .click();
+    await expect(panel).toContainText(
+      locale === 'fa' ? 'سابقه‌ای ثبت نشده است.' : 'No records yet.'
+    );
+    await expect(panel.getByRole('table')).toHaveCount(0);
+    await page.getByRole('tab', { selected: true }).press('Home');
+    await expect(first).toBeFocused();
+  });
+}
 for (const locale of ['fa', 'en'] as const) {
   for (const action of ['expire-sessions', 'force-password-change'] as const)
     test(`CRM ${action} confirms the customer and preserves reason on failure (${locale})`, async ({

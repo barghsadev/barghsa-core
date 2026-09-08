@@ -4,7 +4,7 @@ import { CrmV2Service } from './crm-v2.service.js';
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
-  const mockQuery = vi.fn();
+  const mockQuery = vi.fn().mockResolvedValue({ rows: [] });
   const mockConnect = vi.fn();
   const pool = { query: mockQuery, connect: mockConnect };
   return { mockQuery, mockConnect, pool };

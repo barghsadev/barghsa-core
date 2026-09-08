@@ -12,10 +12,11 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CrmV2Service } from './crm-v2.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -113,6 +114,14 @@ export class CrmV2Controller {
           },
         },
         siblingProfiles: { type: 'array', items: { type: 'object' } },
+        agentRelationships: {
+          type: 'object',
+          description: 'Memberships and invitations with a nextCursor for older records',
+        },
+        verificationHistory: {
+          type: 'object',
+          description: 'Verification events with a nextCursor for older records',
+        },
       },
     },
   })
@@ -136,7 +145,10 @@ export class CrmV2Controller {
       );
     }
 
-    const result = await this.crmV2Service.getProfileDetail(profileId);
+    const result = await this.crmV2Service.getProfileDetail(
+      profileId,
+      hasStaffPermission(req, 'verification:read')
+    );
 
     if (!result) {
       throw new HttpException(
@@ -163,6 +175,55 @@ export class CrmV2Controller {
         canManageUser: hasStaffPermission(req, 'admin:users:edit'),
       },
     };
+  }
+
+  @Get('profiles/:profileId/records/:kind')
+  @ApiOperation({ summary: 'Page through CRM profile agent or verification records' })
+  @ApiParam({ name: 'profileId', schema: { type: 'string', format: 'uuid' } })
+  @ApiParam({ name: 'kind', enum: ['agents', 'verification'] })
+  @ApiQuery({
+    name: 'cursor',
+    required: false,
+    type: String,
+    description: 'Opaque nextCursor from the preceding page for this profile and kind',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Items and nextCursor; records remain scoped to the selected profile',
+    schema: {
+      type: 'object',
+      required: ['items', 'nextCursor'],
+      properties: {
+        items: { type: 'array', items: { type: 'object' }, maxItems: 20 },
+        nextCursor: { type: 'string', nullable: true },
+      },
+    },
+  })
+  async getProfileRecords(
+    @Param('profileId') profileId: string,
+    @Param('kind') kind: string,
+    @Query() query: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (!hasStaffPermission(req, 'crm:read'))
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    const params = z
+      .object({ profileId: z.string().uuid(), kind: z.enum(['agents', 'verification']) })
+      .safeParse({ profileId, kind });
+    const page = z
+      .object({ cursor: z.string().min(1).max(2048).optional() })
+      .strict()
+      .safeParse(query);
+    if (!params.success || !page.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const result = await this.crmV2Service.getProfileRecords(
+      params.data.profileId,
+      params.data.kind,
+      page.data.cursor,
+      hasStaffPermission(req, 'verification:read')
+    );
+    if (!result) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    return result;
   }
 
   /**
