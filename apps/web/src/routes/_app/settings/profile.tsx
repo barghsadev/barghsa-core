@@ -1,6 +1,6 @@
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { LegalProfileDocuments } from '../../../components/LegalProfileDocuments.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t, type Locale } from '@barghsa/i18n/crm';
@@ -11,11 +11,25 @@ import {
   LockIcon,
   AlertCircleIcon,
   SaveIcon,
+  PencilIcon,
   Loader2Icon,
   BadgeCheckIcon,
   ShieldAlertIcon,
 } from 'lucide-react';
-import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import {
+  Button,
+  Input,
+  Label,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { refreshProfileContext } from '../../../lib/profile-context.js';
@@ -119,6 +133,23 @@ function getStatusBadge(status: string, locale: Locale): { label: string; varian
 
 // ─── Page Component ────────────────────────────────────────────────────
 
+function ProfileFieldHint({ locked = false, locale }: { locked?: boolean; locale: Locale }) {
+  if (!locked)
+    return <PencilIcon aria-hidden="true" className="ms-1 inline size-3 text-muted-foreground" />;
+  const description = t('settings.profile.identityLocked', locale);
+  // Native hover hint; the same explanation remains visible below the field.
+  return (
+    <button
+      type="button"
+      aria-label={description}
+      title={description}
+      className="ms-1 inline-flex rounded focus-visible:outline focus-visible:outline-2"
+    >
+      <LockIcon aria-hidden="true" className="size-3 text-muted-foreground" />
+    </button>
+  );
+}
+
 function SettingsProfilePage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -126,6 +157,10 @@ function SettingsProfilePage() {
   const [profile, setProfile] = useState<ProfileDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const saveInFlight = useRef(false);
+  const saveButton = useRef<HTMLButtonElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [defaultProfileId, setDefaultProfileId] = useState<string | null>(null);
   const [availableProfiles, setAvailableProfiles] = useState<ProfileSummary[]>([]);
@@ -204,73 +239,76 @@ function SettingsProfilePage() {
 
   // ── Fetch profile data ──────────────────────────────────────────────
 
-  const fetchProfile = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const fetchProfile = useCallback(
+    async (refresh = false) => {
+      if (!refresh) setLoading(true);
+      setError(null);
 
-    try {
-      // First get the default/active profile ID
-      const listResponse = await fetch('/api/profiles');
-      if (!listResponse.ok) {
-        setError(t('settings.profile.error.load', locale));
-        return;
-      }
-
-      const listData: {
-        profiles: ProfileSummary[];
-        hasDefault: boolean;
-        activeProfileId: string | null;
-      } = await listResponse.json();
-
-      setAvailableProfiles(listData.profiles);
-      if (!listData.activeProfileId) {
-        setError(t('settings.profile.error.notFound', locale));
-        return;
-      }
-
-      setDefaultProfileId(listData.activeProfileId);
-
-      // Fetch full profile details
-      const detailResponse = await fetch(`/api/profiles/${listData.activeProfileId}`);
-      if (!detailResponse.ok) {
-        if (detailResponse.status === 404) {
-          setError(t('settings.profile.error.notFound', locale));
-        } else {
-          setError(t('settings.profile.error.loadRetry', locale));
+      try {
+        // First get the default/active profile ID
+        const listResponse = await fetch('/api/profiles');
+        if (!listResponse.ok) {
+          setError(t('settings.profile.error.load', locale));
+          return;
         }
-        return;
+
+        const listData: {
+          profiles: ProfileSummary[];
+          hasDefault: boolean;
+          activeProfileId: string | null;
+        } = await listResponse.json();
+
+        setAvailableProfiles(listData.profiles);
+        if (!listData.activeProfileId) {
+          setError(t('settings.profile.error.notFound', locale));
+          return;
+        }
+
+        setDefaultProfileId(listData.activeProfileId);
+
+        // Fetch full profile details
+        const detailResponse = await fetch(`/api/profiles/${listData.activeProfileId}`);
+        if (!detailResponse.ok) {
+          if (detailResponse.status === 404) {
+            setError(t('settings.profile.error.notFound', locale));
+          } else {
+            setError(t('settings.profile.error.loadRetry', locale));
+          }
+          return;
+        }
+
+        const data: ProfileDetail = await detailResponse.json();
+        setProfile(data);
+
+        // Populate form fields
+        setTitle(data.title ?? '');
+        setFirstName(data.firstName ?? '');
+        setLastName(data.lastName ?? '');
+        setNationalId(data.nationalId ?? '');
+        setLegalName(data.legalInfo?.legalName ?? '');
+        setNationalIdentifier(data.legalInfo?.nationalIdentifier ?? '');
+
+        // Populate main address
+        const mainAddress = data.addresses.find((a) => a.mainAddress);
+        if (mainAddress) {
+          setProvinceId(mainAddress.provinceId);
+          setCityId(mainAddress.cityId);
+          setFullAddress(mainAddress.fullAddress);
+          setPostalCode(mainAddress.postalCode);
+        } else {
+          setProvinceId('');
+          setCityId('');
+          setFullAddress('');
+          setPostalCode('');
+        }
+      } catch {
+        setError(t('settings.profile.error.loadRetry', locale));
+      } finally {
+        if (!refresh) setLoading(false);
       }
-
-      const data: ProfileDetail = await detailResponse.json();
-      setProfile(data);
-
-      // Populate form fields
-      setTitle(data.title ?? '');
-      setFirstName(data.firstName ?? '');
-      setLastName(data.lastName ?? '');
-      setNationalId(data.nationalId ?? '');
-      setLegalName(data.legalInfo?.legalName ?? '');
-      setNationalIdentifier(data.legalInfo?.nationalIdentifier ?? '');
-
-      // Populate main address
-      const mainAddress = data.addresses.find((a) => a.mainAddress);
-      if (mainAddress) {
-        setProvinceId(mainAddress.provinceId);
-        setCityId(mainAddress.cityId);
-        setFullAddress(mainAddress.fullAddress);
-        setPostalCode(mainAddress.postalCode);
-      } else {
-        setProvinceId('');
-        setCityId('');
-        setFullAddress('');
-        setPostalCode('');
-      }
-    } catch {
-      setError(t('settings.profile.error.loadRetry', locale));
-    } finally {
-      setLoading(false);
-    }
-  }, [locale]);
+    },
+    [locale]
+  );
 
   useEffect(() => {
     fetchProfile();
@@ -300,12 +338,13 @@ function SettingsProfilePage() {
   // ── Save handler ─────────────────────────────────────────────────────
 
   const handleSave = useCallback(async () => {
-    if (!defaultProfileId) return;
+    if (!defaultProfileId || !profile || saveInFlight.current) return;
 
+    saveInFlight.current = true;
     setSaving(true);
+    setSaveError(false);
 
     try {
-      if (!profile) return;
       const payload: Record<string, unknown> = {};
       if (title !== (profile.title ?? '')) payload.title = title;
       const editable =
@@ -338,32 +377,40 @@ function SettingsProfilePage() {
           !fullAddress.trim() ||
           !postalCode.trim()
         ) {
-          toast.error(t('settings.profile.error.save', locale));
+          setSaveError(true);
           return;
         }
         Object.assign(payload, { provinceId, cityId, fullAddress, postalCode });
       }
-      if (!Object.keys(payload).length) return;
+      if (!Object.keys(payload).length) {
+        setConfirmOpen(false);
+        return;
+      }
       const response = await fetch(`/api/profiles/${defaultProfileId}`, {
         method: 'PUT',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        const message = (body as { message?: string }).message;
-        toast.error(message || t('settings.profile.error.save', locale));
-        return;
-      }
+      if (!response.ok) throw new Error('Profile update failed');
+      const result: unknown = await response.json();
+      if (
+        !result ||
+        typeof result !== 'object' ||
+        !('id' in result) ||
+        result.id !== defaultProfileId ||
+        !('profileType' in result) ||
+        result.profileType !== profile.profileType
+      )
+        throw new Error('Unexpected profile update');
 
       toast.success(t('settings.profile.success', locale));
-
-      // Refresh profile data
-      fetchProfile();
+      await fetchProfile(true);
+      setConfirmOpen(false);
     } catch {
-      toast.error(t('settings.profile.error.save', locale));
+      setSaveError(true);
     } finally {
+      saveInFlight.current = false;
       setSaving(false);
     }
   }, [
@@ -488,8 +535,8 @@ function SettingsProfilePage() {
                 <div>
                   <Label htmlFor="profile-legalName" className="text-xs text-muted-foreground">
                     {t('settings.profile.legalName', locale)}
-                    {profile.status === 'VERIFIED' && <LockIcon className="inline h-3 w-3 ms-1" />}
                   </Label>
+                  <ProfileFieldHint locked={profile.status === 'VERIFIED'} locale={locale} />
                   <Input
                     id="profile-legalName"
                     value={legalName}
@@ -508,8 +555,8 @@ function SettingsProfilePage() {
                     className="text-xs text-muted-foreground"
                   >
                     {t('settings.profile.nationalIdentifier', locale)}
-                    {profile.status === 'VERIFIED' && <LockIcon className="inline h-3 w-3 ms-1" />}
                   </Label>
+                  <ProfileFieldHint locked={profile.status === 'VERIFIED'} locale={locale} />
                   <Input
                     id="profile-nationalIdentifier"
                     value={nationalIdentifier}
@@ -559,6 +606,7 @@ function SettingsProfilePage() {
             <Label htmlFor="profile-title" className="text-xs">
               {t('settings.profile.title.label', locale)}
             </Label>
+            <ProfileFieldHint locale={locale} />
             <Input
               id="profile-title"
               placeholder={t('settings.profile.title.placeholder', locale)}
@@ -594,10 +642,8 @@ function SettingsProfilePage() {
                 <div className="space-y-1.5">
                   <Label htmlFor="profile-first-name" className="text-xs">
                     {t('settings.profile.firstName', locale)}
-                    {isIdentityLocked && (
-                      <LockIcon className="h-3 w-3 inline ml-1 text-muted-foreground" />
-                    )}
                   </Label>
+                  <ProfileFieldHint locked={isIdentityLocked} locale={locale} />
                   <Input
                     id="profile-first-name"
                     value={firstName}
@@ -616,10 +662,8 @@ function SettingsProfilePage() {
                 <div className="space-y-1.5">
                   <Label htmlFor="profile-last-name" className="text-xs">
                     {t('settings.profile.lastName', locale)}
-                    {isIdentityLocked && (
-                      <LockIcon className="h-3 w-3 inline ml-1 text-muted-foreground" />
-                    )}
                   </Label>
+                  <ProfileFieldHint locked={isIdentityLocked} locale={locale} />
                   <Input
                     id="profile-last-name"
                     value={lastName}
@@ -639,10 +683,8 @@ function SettingsProfilePage() {
               <div className="space-y-1.5 max-w-sm">
                 <Label htmlFor="profile-national-id" className="text-xs">
                   {t('settings.profile.nationalId', locale)}
-                  {isIdentityLocked && (
-                    <LockIcon className="h-3 w-3 inline ml-1 text-muted-foreground" />
-                  )}
                 </Label>
+                <ProfileFieldHint locked={isIdentityLocked} locale={locale} />
                 <Input
                   id="profile-national-id"
                   value={nationalId}
@@ -677,6 +719,7 @@ function SettingsProfilePage() {
                 <Label htmlFor="profile-province" className="text-xs">
                   {t('settings.profile.province', locale)}
                 </Label>
+                <ProfileFieldHint locale={locale} />
                 <select
                   id="profile-province"
                   value={provinceId}
@@ -711,6 +754,7 @@ function SettingsProfilePage() {
                 <Label htmlFor="profile-city" className="text-xs">
                   {t('settings.profile.city', locale)}
                 </Label>
+                <ProfileFieldHint locale={locale} />
                 <select
                   id="profile-city"
                   value={cityId}
@@ -764,6 +808,7 @@ function SettingsProfilePage() {
               <Label htmlFor="profile-address" className="text-xs">
                 {t('settings.profile.fullAddress', locale)}
               </Label>
+              <ProfileFieldHint locale={locale} />
               <textarea
                 id="profile-address"
                 value={fullAddress}
@@ -780,6 +825,7 @@ function SettingsProfilePage() {
               <Label htmlFor="profile-postal-code" className="text-xs">
                 {t('settings.profile.postalCode', locale)}
               </Label>
+              <ProfileFieldHint locale={locale} />
               <Input
                 id="profile-postal-code"
                 value={postalCode}
@@ -800,16 +846,54 @@ function SettingsProfilePage() {
             )}
           </div>
 
-          {/* Save button */}
           <div className="flex justify-end">
-            <Button onClick={handleSave} disabled={saving} className="gap-2">
-              {saving ? (
-                <Loader2Icon className="h-4 w-4 animate-spin" />
-              ) : (
-                <SaveIcon className="h-4 w-4" />
-              )}
-              {saving ? t('settings.profile.saving', locale) : t('settings.profile.save', locale)}
-            </Button>
+            <Dialog
+              open={confirmOpen}
+              onOpenChange={(open) => {
+                if (saving) return;
+                setSaveError(false);
+                setConfirmOpen(open);
+              }}
+            >
+              <Button
+                ref={saveButton}
+                disabled={saving || settingDefault}
+                className="gap-2"
+                onClick={() => {
+                  setSaveError(false);
+                  setConfirmOpen(true);
+                }}
+              >
+                <SaveIcon data-icon="inline-start" />
+                {t('settings.profile.save', locale)}
+              </Button>
+              <DialogContent
+                finalFocus={saveButton}
+                showCloseButton={false}
+                dir={locale === 'fa' ? 'rtl' : 'ltr'}
+              >
+                <DialogHeader>
+                  <DialogTitle>{t('crm.profile.edit.confirm.title', locale)}</DialogTitle>
+                  <DialogDescription>
+                    {t('crm.profile.edit.confirm.message', locale)}
+                  </DialogDescription>
+                </DialogHeader>
+                {saveError && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{t('settings.profile.error.save', locale)}</AlertDescription>
+                  </Alert>
+                )}
+                <DialogFooter>
+                  <Button variant="outline" disabled={saving} onClick={() => setConfirmOpen(false)}>
+                    {t('crm.profile.edit.cancel', locale)}
+                  </Button>
+                  <Button disabled={saving} onClick={handleSave}>
+                    {saving && <Loader2Icon data-icon="inline-start" className="animate-spin" />}
+                    {t(saving ? 'settings.profile.saving' : 'settings.profile.save', locale)}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       )}

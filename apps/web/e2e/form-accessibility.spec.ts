@@ -954,7 +954,15 @@ for (const locale of ['en', 'fa']) {
       exact: true,
     });
     await save.click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', {
+        name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+        exact: true,
+      })
+      .click();
     await expect.poll(() => bodies).toEqual([{ firstName: 'Changed' }]);
+    await expect(page.getByRole('dialog')).toBeHidden();
     await expect(firstName).toHaveValue('Changed');
     const province = page.locator('#profile-province');
     const city = page.locator('#profile-city');
@@ -967,6 +975,13 @@ for (const locale of ['en', 'fa']) {
     await city.selectOption('city-b');
     await page.locator('#profile-address').fill('New Street');
     await save.click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', {
+        name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+        exact: true,
+      })
+      .click();
     await expect
       .poll(() => bodies[1])
       .toEqual({
@@ -1026,9 +1041,17 @@ for (const locale of ['en', 'fa']) {
         exact: true,
       })
       .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', {
+        name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+        exact: true,
+      })
+      .click();
     await expect
       .poll(() => bodies)
       .toEqual([{ legalName: 'Changed Company', nationalIdentifier: '12345678902' }]);
+    await expect(page.getByRole('dialog')).toBeHidden();
     await expect(name).toHaveValue('Changed Company');
     detail.status = 'VERIFIED';
     await page.reload();
@@ -2987,3 +3010,124 @@ for (const locale of ['en', 'fa'])
       await expect(name).toHaveValue('Retained identity');
       await expect(cityInput).toHaveValue('city-one');
     });
+
+for (const locale of ['en', 'fa']) {
+  test(`profile save requires confirmation and a matching response (${locale})`, async ({
+    page,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shell(page, locale);
+    await page
+      .context()
+      .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'browser-csrf' }]);
+    let attempts = 0;
+    let release: (() => void) | undefined;
+    const detail = {
+      id: 'profile-one',
+      profileType: 'INDIVIDUAL',
+      status: 'VERIFIED',
+      isDefault: true,
+      title: 'Original',
+      firstName: 'Owner',
+      lastName: 'One',
+      nationalId: '1234567891',
+      addresses: [],
+    };
+    await page.route('**/api/profiles/profile-one', async (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: detail });
+      attempts++;
+      expect(route.request().headers()['x-csrf-token']).toBe('browser-csrf');
+      expect(route.request().postDataJSON()).toEqual({ title: 'Changed' });
+      if (attempts === 1)
+        return route.fulfill({ json: { id: 'different-profile', profileType: 'INDIVIDUAL' } });
+      if (attempts === 2)
+        return route.fulfill({ status: 503, json: { message: 'Internal backend text' } });
+      await new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      detail.title = 'Changed';
+      return route.fulfill({ json: detail });
+    });
+    await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    await page.goto('/settings/profile');
+    const title = page.locator('#profile-title');
+    await title.fill('Changed');
+    const save = page.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+      exact: true,
+    });
+    const dialog = page.getByRole('dialog', {
+      name: locale === 'fa' ? 'تأیید تغییرات' : 'Confirm Changes',
+    });
+    await save.click();
+    await expect(dialog).toBeVisible();
+    expect(attempts).toBe(0);
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'لغو' : 'Cancel', exact: true })
+      .click();
+    await expect(dialog).toBeHidden();
+    await expect(save).toBeFocused();
+    await expect(title).toHaveValue('Changed');
+    expect(attempts).toBe(0);
+    await save.click();
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+      exact: true,
+    });
+    await confirm.click();
+    await expect(dialog.getByRole('alert')).toHaveText(
+      locale === 'fa' ? 'خطا در ذخیره اطلاعات' : 'Failed to save profile information'
+    );
+    await expect(title).toHaveValue('Changed');
+    await expect(
+      page.getByText(
+        locale === 'fa'
+          ? 'اطلاعات پروفایل با موفقیت به‌روزرسانی شد'
+          : 'Profile information updated successfully',
+        { exact: true }
+      )
+    ).toHaveCount(0);
+    await confirm.click();
+    await expect.poll(() => attempts).toBe(2);
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog).not.toContainText('Internal backend text');
+    await confirm.evaluate((button: HTMLButtonElement) => {
+      button.click();
+      button.click();
+    });
+    try {
+      await expect.poll(() => release !== undefined).toBe(true);
+      await expect(
+        dialog.getByRole('button', { name: locale === 'fa' ? 'لغو' : 'Cancel', exact: true })
+      ).toBeDisabled();
+      await page.keyboard.press('Escape');
+      await expect(dialog).toBeVisible();
+      expect(attempts).toBe(3);
+    } finally {
+      release?.();
+    }
+    await expect(dialog).toBeHidden();
+    await expect(title).toHaveValue('Changed');
+    await expect(save).toBeFocused();
+    await page.reload();
+    await expect(title).toHaveValue('Changed');
+    const lock = page
+      .getByRole('button', {
+        name:
+          locale === 'fa'
+            ? 'این فیلد پس از تأیید پروفایل غیرقابل ویرایش است. برای تغییر با پشتیبانی تماس بگیرید'
+            : 'This field is read-only after verification. Contact support to make changes.',
+        exact: true,
+      })
+      .first();
+    await title.focus();
+    await page.keyboard.press('Tab');
+    await expect(lock).toBeFocused();
+    await expect(lock).toHaveAttribute('title', (await lock.getAttribute('aria-label')) as string);
+    await expect(
+      page.getByText((await lock.getAttribute('aria-label')) as string, { exact: true }).first()
+    ).toBeVisible();
+    await expect(page.locator('#profile-first-name')).toBeDisabled();
+  });
+}
