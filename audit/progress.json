@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "87116037b109a9c377f8c65a36f581931d4e033a",
+  "source_revision": "bb2d1160d6fafd437d39731c57d7d9537bfb4d67",
   "active_step": "R01",
-  "next_action": "R01: finish T-05.02.01 required-route and full-field acceptance, then implement T-05.02.02 address editing. CRM record tabs and last recorded password date are implemented; T-05.02.03/.04 remain verified. Continue correction/archive and critical role/session/finance review; preserve pending lost-contact policy question.",
+  "next_action": "R01: finish missing CRM legal-profile fields (registration date, representative identity/address and documents) and localized field/location labels for T-05.02.01; then implement T-05.02.02 address editing. Required URL, lifecycle details, record tabs and password date are implemented. Continue correction/archive and critical role/session/finance review; preserve pending lost-contact policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Record tabs, keyboard navigation and last recorded password date are implemented. Finish full-profile route/field acceptance, required address editing and correction/archive/list task review."
+        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Required profile URL, lifecycle details, record tabs, keyboard navigation and password date are implemented. Finish missing legal fields/localized labels, staff address editing and correction/archive/list review."
       ]
     },
     {
@@ -362,6 +362,10 @@
     {
       "id": "R01-crm-profile-records",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-records"
+    },
+    {
+      "id": "R01-crm-profile-route-lifecycle",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-route-lifecycle"
     }
   ],
   "deferred_improvements": [],

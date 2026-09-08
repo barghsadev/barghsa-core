@@ -483,6 +483,51 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "T-05.02.01 stays partial pending its specified route and complete field/visual acceptance. Address editing and correction/archive task review remain. Large production audit-volume performance is not certified by fixture pagination checks."
+    },
+    {
+      "id": "R01-crm-profile-route-lifecycle",
+      "date": "2026-09-08",
+      "source_revision": "bb2d1160d6fafd437d39731c57d7d9537bfb4d67",
+      "summary": "Restored the specified /app/crm/profiles/:profileId entry point through a fixed-target redirect and exposed default/archive details in CRM.",
+      "review": "The legacy URL redirects to the existing staff CRM page with the same profile identity and backend permission gates. Browser checks prove it does not trigger customer-profile onboarding. Retained archived records show their flag, reason and account-timezone date; profile editing, verification, correction and re-archive controls are hidden. Account-security actions remain available because archiving a profile does not disable its owning account.",
+      "checks": [
+        "Red:the lifecycle HTTP test failed on absent default/archive fields.",
+        "32 focused CRM API tests in3 files pass.",
+        "36 production Chromium desktop/mobile cases pass in fa/en, including archived profile entry through the required URL and existing record/action/edit behavior.",
+        "API/web types,50 dictionary tests,i18n/web builds,focused lint/format and41 complete-route budgets pass. Generated route-tree diff contains only the new alias."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "b162a3454a33baf12db70e5297d9eea9b1474b62291a34ad5102f4d1480763ab"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+          "sha256": "1d9348567f7892221f979a7eee7a58e6310ed6a1b93d68dccba33d6d88c6ab86"
+        },
+        {
+          "path": "apps/web/src/routes/app/crm/profiles.$profileId.tsx",
+          "sha256": "8389aa97454aa02e55127c28b5d3646fb3d6a257edb4a4d28a9999fe640ef3bb"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "48c664c75295ea8bac32ec35dc16546d92d4ca9fb7f1e1930e3d435179eac500"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "e02fa67c4a302b96b8d0c499c9420aeb86f655fe21681b4b1377d735be89409b"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "c24c2b07e9c1cbf4c4593a5466a2f8e3e0861d819751c87b3e3474df593e2c3d"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "a51dfad09101ab9161fa4a9fa903a80165e05d9d3999aaf8dfb700dad169378d"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Full-profile task remains partial: registration date, representative data, legal document information and missing localized field/location labels remain. Staff address editing follows that view repair."
     }
   ]
 }
