@@ -73,6 +73,8 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 - Email-provider response/recovery repair: malformed list data no longer crashes the screen; failed reads disable writes and retain a visible retry. Save, test, activate, disable and rollback acknowledgements validate provider identity, state and test outcome; empty save responses preserve form input. Obsolete list reads are aborted, form fields freeze during save, and closing clears secret form state. Remote request failures use localized text. All 24 response contract tests and 40 focused browser checks across five profiles pass, including existing SMTP/Resend labels and version lifecycle retries. Web types, explicit lint, build and all 41 route budgets pass. Logs `/tmp/barghsa-email-api-tests.log`, `/tmp/barghsa-email-recovery-all.log`, `/tmp/barghsa-email-recovery-budgets.log`. Requests were mocked; no external email was sent. Current full coverage predates this repair and password recovery; refresh affected coverage after the batch.
 
+- Privileged read boundaries: 12 new delivery-log/staff/template list checks plus five existing staff-audit cases pass. Verified separate jobs-read permission, revocation, filter preservation and nonnumeric pagination falling back to service defaults. API types and explicit lint pass. No production change. Log `/tmp/barghsa-admin-reads.log`; coverage refresh remains batched.
+
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
 - **5,815 unit/integration tests across 461 files pass** at `0494ad4`, with affected web/i18n coverage refreshed at `eb19ed5`. All 11 workspace typechecks and root lint pass, with subsequent label changes checked separately.
