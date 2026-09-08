@@ -3809,7 +3809,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "0023f20a373e0305f6c2ed8babaa3f6ae18940b2",
+      "reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3817,27 +3817,27 @@
       "source_evidence": [
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "2f795af775fa72f08acdaae17e598980ac5e14b557eaf8942d746a7d8f4fa656"
+          "sha256": "d1a438a815c231d7db43f216692f1cb1ed73b12ccaf07a9afe6a6056b03a9238"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "442d6dd4fe9eda467dfe5aed99b2e91bb352678bf572446bbb883eb598afdb10"
+          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-          "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+          "sha256": "3c247463a7de2d7afaa457c9f06fc9e933b88f351cc2535a7c94259b6d15f370"
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "b43851e1761ed8387fa1d6547ad7997859e296d1ee76949164f9a4b6a19f314f"
+          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "898709eb8f0e817d876a42ad5bc6742432855fc9a7c41d9b7579e56a6ef67024"
+          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "0b0955e928156d369ccfb76fcb2a0035b1e9496adbe3de28097ef8546a939840"
+          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -3915,16 +3915,16 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "0023f20a373e0305f6c2ed8babaa3f6ae18940b2",
-        "previous_reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
-        "review": "Staff-editing criteria closed using current legal-field evidence and retained contact/address/correction evidence. Wider CRM profile/list/archive and cross-screen R03 acceptance remain separate.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-legal-edit"
+        "source_revision": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
+        "previous_reviewed_sha": "0023f20a373e0305f6c2ed8babaa3f6ae18940b2",
+        "review": "Preserve verified CRM tasks T-05.02.02/.03/.04/.05: every other recorded source hash still matches. API diff is confined to archive blocker metadata/localization; other handlers remain unchanged. Existing 28 CRM browser cases passed before the final header-only spacing change, which the final eight archive cases cover. New translations only add archive keys.",
+        "record": "audit/evidence/step-reviews.json#R01-archive-confirmation-and-retention"
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+      "reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 412,
       "requirement": "**T-05.02.03 — Verification state management**\n\n- Description: Staff can change verification state of a profile. Options: Verify, Unverify, Mark for re-verification.\n- Technical notes: POST `/api/crm/profiles/:profileId/verify` with `{ action: 'verify' | 'unverify' | 'reverify', reason? }`. Permissions: `crm:verify` or admin. Audit: verification_change with before/after state, actor, reason. Notifications sent to profile owner.\n- UI/UX: Current status badge (Verified/Unverified/Pending). Dropdown with actions. Reason required for unverify/reverify. Confirmation dialog.\n- Dependencies: T-05.02.01, E-07 (admin verification settings)\n- Complexity: M",
@@ -3932,27 +3932,27 @@
       "source_evidence": [
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "e2bf8aa04f40971527077f178867f8d37421b014317d70275fa7b4accf53c2fb"
+          "sha256": "d1a438a815c231d7db43f216692f1cb1ed73b12ccaf07a9afe6a6056b03a9238"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "b25415575cdcd24755b909edce9817eb4c90f5e8845bd17cb853866096e915d1"
+          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-          "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+          "sha256": "3c247463a7de2d7afaa457c9f06fc9e933b88f351cc2535a7c94259b6d15f370"
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
+          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "2d6c9b7e4a06dfd2fda6e2be47995c9d94cd678f09385c41ff536ec471aa6dfb"
+          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "28fd8365550635f2890218f2f21b122b79757c17c163a30912d438fd4af2b717"
+          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -3986,15 +3986,16 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
-        "previous_reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
-        "review": "Corrected admin/correction themes and shared confirmation errors.74 distinct CRM browser cases have passing evidence across focused runs; API source unchanged. See R01-crm-correction-theme-and-scope."
+        "source_revision": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
+        "previous_reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+        "review": "Preserve verified CRM tasks T-05.02.02/.03/.04/.05: every other recorded source hash still matches. API diff is confined to archive blocker metadata/localization; other handlers remain unchanged. Existing 28 CRM browser cases passed before the final header-only spacing change, which the final eight archive cases cover. New translations only add archive keys.",
+        "record": "audit/evidence/step-reviews.json#R01-archive-confirmation-and-retention"
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+      "reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 420,
       "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
@@ -4002,27 +4003,27 @@
       "source_evidence": [
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "e2bf8aa04f40971527077f178867f8d37421b014317d70275fa7b4accf53c2fb"
+          "sha256": "d1a438a815c231d7db43f216692f1cb1ed73b12ccaf07a9afe6a6056b03a9238"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "b25415575cdcd24755b909edce9817eb4c90f5e8845bd17cb853866096e915d1"
+          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-          "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+          "sha256": "3c247463a7de2d7afaa457c9f06fc9e933b88f351cc2535a7c94259b6d15f370"
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
+          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "2d6c9b7e4a06dfd2fda6e2be47995c9d94cd678f09385c41ff536ec471aa6dfb"
+          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "28fd8365550635f2890218f2f21b122b79757c17c163a30912d438fd4af2b717"
+          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -4065,15 +4066,16 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
-        "previous_reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
-        "review": "Corrected admin/correction themes and shared confirmation errors.74 distinct CRM browser cases have passing evidence across focused runs; API source unchanged. See R01-crm-correction-theme-and-scope."
+        "source_revision": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
+        "previous_reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
+        "review": "Preserve verified CRM tasks T-05.02.02/.03/.04/.05: every other recorded source hash still matches. API diff is confined to archive blocker metadata/localization; other handlers remain unchanged. Existing 28 CRM browser cases passed before the final header-only spacing change, which the final eight archive cases cover. New translations only add archive keys.",
+        "record": "audit/evidence/step-reviews.json#R01-archive-confirmation-and-retention"
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "943b1170118012dfefc2bb99f5fda23ff02713ef",
+      "reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 428,
       "requirement": "**T-05.02.05 — Identity correction through verification case**\n\n- Description: Staff cannot directly edit verified identity fields. Instead, they create a verification case (profile correction request) which creates an audit trail. Changes are applied after case resolution.\n- Technical notes: Verification case is a mini-workflow: Corrector creates case with new values and evidence → Reviewer approves/rejects → On approval, identity field updated with before/after audit. Permissions: `crm:edit-identity`. Cases have states: Open, Under Review, Approved, Rejected.\n- UI/UX: \"Request correction\" button on locked fields → form with new value + upload evidence → submission creates case. Staff with review permission see case queue.\n- Dependencies: T-05.02.02\n- Complexity: L",
@@ -4105,11 +4107,11 @@
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
-          "sha256": "442d6dd4fe9eda467dfe5aed99b2e91bb352678bf572446bbb883eb598afdb10"
+          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "e2bf8aa04f40971527077f178867f8d37421b014317d70275fa7b4accf53c2fb"
+          "sha256": "d1a438a815c231d7db43f216692f1cb1ed73b12ccaf07a9afe6a6056b03a9238"
         },
         {
           "path": "apps/web/src/routes/admin/crm/corrections.tsx",
@@ -4117,11 +4119,11 @@
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-          "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+          "sha256": "3c247463a7de2d7afaa457c9f06fc9e933b88f351cc2535a7c94259b6d15f370"
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
+          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
         },
         {
           "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -4151,15 +4153,16 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "943b1170118012dfefc2bb99f5fda23ff02713ef",
-        "previous_reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
-        "review": "Closed the remaining protected-field approval and reviewer-page criteria. Native finalFocus restores the correction action on cancellation and a usable field/filter after success. See R01-crm-correction-acceptance."
+        "source_revision": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
+        "previous_reviewed_sha": "943b1170118012dfefc2bb99f5fda23ff02713ef",
+        "review": "Preserve verified CRM tasks T-05.02.02/.03/.04/.05: every other recorded source hash still matches. API diff is confined to archive blocker metadata/localization; other handlers remain unchanged. Existing 28 CRM browser cases passed before the final header-only spacing change, which the final eight archive cases cover. New translations only add archive keys.",
+        "record": "audit/evidence/step-reviews.json#R01-archive-confirmation-and-retention"
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "7af0a7697f86b89339fea04a8c79078f14b78d95",
+      "reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -4167,19 +4170,19 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "8cefc743b466b4e20222a4f58629a984e5de97dfcf7b498a99bdec82d097f05e"
+          "sha256": "74e084b28291d59af4182e51a41209591e8b6d2ddf9deb6b8713f6add6783cb5"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "2d6c9b7e4a06dfd2fda6e2be47995c9d94cd678f09385c41ff536ec471aa6dfb"
+          "sha256": "558bc5ce490dddd15ec0ac0fc453adea21e2226b84fc0af9c09ffba46987e822"
         },
         {
           "path": "apps/api/src/crm/profile-archive-finance.integration.test.ts",
-          "sha256": "57f031b4c8da19b80e55d7b964fa72f82da0f61b24fd2e5954def962ff8b508b"
+          "sha256": "0e04ae859bf9d2a865009fec42a6cdfe9a39ed83faf7131fae680a13c62f8534"
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "d3e1252fc222d49613dd62ec96faf89e0659b2a9bdce60f56f84f13a8e3b8198"
+          "sha256": "b17e6eca9b6133ee36c3f878cf6d8100165c1b4aa4e6c660f3163ff9c1bcf0c8"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -4187,11 +4190,11 @@
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "e2bf8aa04f40971527077f178867f8d37421b014317d70275fa7b4accf53c2fb"
+          "sha256": "d1a438a815c231d7db43f216692f1cb1ed73b12ccaf07a9afe6a6056b03a9238"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-          "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+          "sha256": "3c247463a7de2d7afaa457c9f06fc9e933b88f351cc2535a7c94259b6d15f370"
         },
         {
           "path": "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
@@ -4280,6 +4283,22 @@
         {
           "path": "apps/api/src/crm/profile-archive-wallet.integration.test.ts",
           "sha256": "a86297fc893a41ece9f8ab2a4dffb50b475cedfd75ef7ca36a9a4c563e7f028d"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-acceptance.integration.test.ts",
+          "sha256": "9620d4d896f61442f504231c118601f59ebbf3f0cc4d5085c86682c7f5522555"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d9bf007c13a213475e32d9a16f13e9492138dd0909e971121e2c3be3a8af56dc"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
+        },
+        {
+          "path": "docs/runbooks/profile-archival.md",
+          "sha256": "87a6a9bbf0124affbe476aca4eef95713a222be96594e5ca5b6a5cd35cd24798"
         }
       ],
       "checks": [
@@ -4288,22 +4307,28 @@
         "Manual, automatic, replacement and adjustment invoice creation now acquire a shared active-profile lock before staff/order/invoice locks. The locked source profile must still match. Archived targets fail without invoice, line or invoice-audit writes.",
         "28 PostgreSQL/HTTP cases pass: archived targets and both lock-race directions for all invoice creation paths, real queued archival, every invoice state, issued credit notes and credit notes alongside separate unpaid debt. Credit notes are no longer misclassified as unpaid bills.",
         "Reused passing 38 invoice unit cases, 44 existing invoice/order/top-up integration cases and 27 auto-invoice/CRM cases, totaling 137 distinct passing cases across focused runs. Types, lint/format, production API build and OpenAPI drift pass. See R01-archive-invoice-writers.",
-        "Wallet and payment archival guards reviewed at 7af0a76: 38 new PostgreSQL/HTTP archive cases, two provider cases, and 648 distinct passing related cases across focused runs. Safe replay, lock ordering, nonzero posted/reserved constraints and provider retry/exception handling are checked. See R01-archive-wallet-writers."
+        "Wallet and payment archival guards reviewed at 7af0a76: 38 new PostgreSQL/HTTP archive cases, two provider cases, and 648 distinct passing related cases across focused runs. Safe replay, lock ordering, nonzero posted/reserved constraints and provider retry/exception handling are checked. See R01-archive-wallet-writers.",
+        "API archive acceptance, invoice, wallet and verification-case HTTP batch: 94/94 pass. The unchanged finance race file passed 10/10 in the earlier batch. Combined 104 distinct API cases pass across focused runs, not one 104-case invocation.",
+        "Production browser: existing 28 CRM cases passed in the initial Chromium run; final focused fa/en x light/dark x desktop/mobile archive run passes 8/8. Browser fixture includes current production API/package builds. The previously failed scanner readings and test-fixture logs are retained.",
+        "pnpm --filter @barghsa/i18n test: 50/50 pass, exit 0.",
+        "Archive confirmation requires three explicit acknowledgements and a nonblank reason. Cancel/Escape restores focus; reopening resets the checklist and retains the reason. Current permission and recent step-up checks remain unchanged.",
+        "The client already checked success and target profile before this step. The earlier archive-wallet audit overstated that gap. This repair additionally requires a canonical ISO archival timestamp before redirecting; malformed, impossible-date and mismatched acknowledgements preserve the retry dialog.",
+        "Archive refusals now return specific fa/en messages, localized counts and the existing error/status codes. The shared action dialog forwards the locale and supports response-aware mappings while preserving existing string mappings, CSRF, step-up and captured-action retries.",
+        "Real PostgreSQL/HTTP tests verify canonical legal-owner protection even with Manager and Finance agents, no mutation/audit on refusal, exact staff actor/trimmed reason/timestamp, retained paid invoice and sibling profile, and no duplicate archival audit. Two existing concurrency tests now wait for the active-profile CTE introduced in the prior wallet step."
       ],
       "limitations": [
-        "Review canonical legal-owner refusal, the required archive confirmation checklist, target/timestamp success validation and explicit blocker messages. The current UI redirects after any successful response without validating the acknowledgement.",
-        "No production contracts table or creation writer was identified. Reconcile the future contract dependency before claiming contract acceptance.",
-        "Retention preserves records and an audit note. The required local handling and operational retention procedure still need disposition."
+        "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
+        "Local soft archival and retained records are verified. Retention duration, legal basis, holds, disposal authorization and production evidence require an approved organizational policy; see docs/runbooks/profile-archival.md."
       ],
       "merged_prs": [
         128
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7af0a7697f86b89339fea04a8c79078f14b78d95",
-        "previous_reviewed_sha": "8f86af00b02185cf0e4173681d167e8de4a421b6",
-        "review": "Wallet writer and balance constraints advanced; task stays partial for ownership, confirmation and retention.",
-        "record": "audit/evidence/step-reviews.json#R01-archive-wallet-writers"
+        "source_revision": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
+        "previous_reviewed_sha": "7af0a7697f86b89339fea04a8c79078f14b78d95",
+        "review": "Local archival criteria checked; partial status retained for contract integration and approved retention policy. Earlier acknowledgement statement corrected.",
+        "record": "audit/evidence/step-reviews.json#R01-archive-confirmation-and-retention"
       }
     }
   ],
