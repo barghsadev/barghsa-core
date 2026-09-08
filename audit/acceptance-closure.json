@@ -2552,6 +2552,310 @@
       ],
       "merged_prs": [],
       "historically_skipped": true
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.01",
+      "status": "partial",
+      "reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 125,
+      "requirement": "**T-02.02.01 — Session creation and cookie management**\n\n- Description: On successful authentication, create server-side session. Store session data in PostgreSQL (or encrypted cookie with server-side revocation). Set HttpOnly and production-Secure cookies using the centralized SameSite policy owned by E-06. Rotate session identifier on login, MFA, password change, privilege change, and account recovery.\n- Technical notes: Opaque or signed session identifiers. Production cookies: Secure, narrow Path, and the centralized SameSite policy from E-06. Non-TLS dev may disable Secure through explicit dev setting. Refresh tokens rotate on use; reuse revokes token family and alerts user. Absolute session timeout (24h default), idle timeout (30 min default).\n- UI/UX: N/A (backend)\n- Dependencies: T-02.01.02\n- Complexity: L",
+      "requirement_sha256": "99a926bfbd3934b01cd4c08640458ddb223edfde4ecf779a04d6d636b82944e9",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+        },
+        {
+          "path": "apps/api/src/session/session.module.ts",
+          "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+        },
+        {
+          "path": "apps/api/src/session/session-context.middleware.ts",
+          "sha256": "cb64a4f0cd8bcd1e7fd83b62563d6c3a734e3ca93d0d994c67d412e8695f90d7"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "2a60792f376464c8459c72499cf267857cd5f1804438c5df8338f1ee4ed6bd58"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.ts",
+          "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "25a72ee6d57b1532ccf92726d7dd00331a581e9fc0a559997b6a0dc051baf837"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "d0dcb189d7bf03c1fec16081ca2189bfdb368cf16c4dc97f0dc186b4f8f9ec83"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "4b052258c2817e6b63ba02e2ae1b3ab6e144346e25af8ade5af4758c90461ec5"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+        }
+      ],
+      "checks": [
+        "Reviewed PostgreSQL credentials, cookie policy,30min idle/24h absolute expiry, rotation/refresh/revocation transactions and account lock order.",
+        "Refresh-reuse alert is now private, localized and unique per family; concurrent replays do not revoke unrelated sessions.",
+        "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json."
+      ],
+      "limitations": [
+        "End-to-end identifier rotation at every required login/MFA/privilege/recovery boundary remains to be traced. rotateSession has no production caller; its isolated tests alone do not establish caller acceptance.",
+        "The centralized final cookie topology is explicitly dependent on the separate E06 task. Current production-Secure/HttpOnly/SameSite behavior is covered locally; no deployed TLS claim."
+      ],
+      "merged_prs": [
+        89
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.02",
+      "status": "partial",
+      "reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 133,
+      "requirement": "**T-02.02.02 — Session revocation**\n\n- Description: Users can view and revoke their own active sessions/devices from Settings → Security. Staff can revoke any user's sessions. Password reset, staff disablement, ownership transfer, and suspected compromise revoke applicable sessions immediately.\n- Technical notes: Session list shows device name, IP location (approximate), last active time, created time. Revoke is immediate (server removes session from active store). API: GET `/api/auth/sessions`, DELETE `/api/auth/sessions/:id`. Revoke all by POST `/api/auth/sessions/revoke-all` (requires password confirmation or OTP).\n- UI/UX: Card/list view of active sessions with Revoke button per session and \"Revoke all other sessions\" action. Confirm dialog before revoke.\n- Dependencies: T-02.02.01\n- Complexity: M",
+      "requirement_sha256": "68e38f31d3aa97f19dae579d7452fe1baba5c6f35978898212580e503862445a",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+        },
+        {
+          "path": "apps/api/src/session/session.module.ts",
+          "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+        },
+        {
+          "path": "apps/api/src/session/session-context.middleware.ts",
+          "sha256": "cb64a4f0cd8bcd1e7fd83b62563d6c3a734e3ca93d0d994c67d412e8695f90d7"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "2a60792f376464c8459c72499cf267857cd5f1804438c5df8338f1ee4ed6bd58"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.ts",
+          "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "25a72ee6d57b1532ccf92726d7dd00331a581e9fc0a559997b6a0dc051baf837"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "d0dcb189d7bf03c1fec16081ca2189bfdb368cf16c4dc97f0dc186b4f8f9ec83"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "4b052258c2817e6b63ba02e2ae1b3ab6e144346e25af8ade5af4758c90461ec5"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+        }
+      ],
+      "checks": [
+        "Reviewed customer list/revoke/revoke-all ownership, current-session exclusion, database invalidation and localized confirmation behavior.",
+        "Individual revocation now enforces step-up; wrong password, expiry, foreign owner, failed request/retry, refresh invalidation and five-profile focus checks pass.",
+        "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json."
+      ],
+      "limitations": [
+        "The session list displays raw IP addresses, not the required approximate location. No location resolution exists in the inspected device model/UI.",
+        "Remaining staff/ownership/compromise revocation callers and trusted-device-management acceptance must be reconciled during their domain reviews."
+      ],
+      "merged_prs": [
+        90
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "status": "partial",
+      "reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 141,
+      "requirement": "**T-02.02.03 — CSRF protection**\n\n- Description: Every state-changing POST/PUT/PATCH/DELETE requires a server-generated CSRF token bound to the authenticated session, sent in a custom header (e.g. `X-CSRF-Token`). Validate server-side. Rotate token after auth/session rotation.\n- Technical notes: Double-submit cookie pattern or signed token. Frontend reads CSRF token from meta tag or cookie and sends in header. CSRF failures return 403 with safe error + correlation ID, logged as security event. No exception for API endpoints — every state change requires this.\n- UI/UX: N/A (transparent to user; errors caught by frontend interceptor → redirect to login or show error).\n- Dependencies: T-02.02.01\n- Complexity: M",
+      "requirement_sha256": "ebde7f339c3e80893ca748d0daa24ca6c478a42f710c409a3f8f2e22ec2d32e6",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+        },
+        {
+          "path": "apps/api/src/session/session.module.ts",
+          "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+        },
+        {
+          "path": "apps/api/src/session/session-context.middleware.ts",
+          "sha256": "cb64a4f0cd8bcd1e7fd83b62563d6c3a734e3ca93d0d994c67d412e8695f90d7"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "2a60792f376464c8459c72499cf267857cd5f1804438c5df8338f1ee4ed6bd58"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.ts",
+          "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "25a72ee6d57b1532ccf92726d7dd00331a581e9fc0a559997b6a0dc051baf837"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "d0dcb189d7bf03c1fec16081ca2189bfdb368cf16c4dc97f0dc186b4f8f9ec83"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "4b052258c2817e6b63ba02e2ae1b3ab6e144346e25af8ade5af4758c90461ec5"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+        }
+      ],
+      "checks": [
+        "Reviewed parsed-cookie middleware before global CSRF and session touch; unsafe authenticated requests cannot prolong or revoke a session when the token is missing/wrong.",
+        "Real HTTP cases cover logout, individual revocation, step-up and refresh CSRF, cross-session token mismatch, safe error envelopes and idle expiry.",
+        "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json."
+      ],
+      "limitations": [
+        "The no-exemption wording needs reconciliation with explicit public-auth SkipCsrf routes and authenticated provider callbacks. Verify the alternative protection of public auth flows before closing this task.",
+        "Complete the required state-changing-route/caller matrix; the focused session checks do not establish every endpoint."
+      ],
+      "merged_prs": [
+        91
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.04",
+      "status": "partial",
+      "reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 149,
+      "requirement": "**T-02.02.04 — Step-up authentication for sensitive actions**\n\n- Description: Sensitive actions require recent step-up authentication (re-enter password or OTP). Actions include: role changes, storage/payment credentials change, payment confirmation, refunds, contract cancellation, price changes, session revocation, profile deletion, ownership transfer.\n- Technical notes: Step-up requirement lasts for a short configured period (default 15 min) after verification. Audit flag: `stepUpVerified: true` with timestamp. If session idle exceeds the step-up window, re-prompt. API returns `requiresStepUp` flag; frontend shows step-up dialog.\n- UI/UX: Modal dialog asking for password or OTP before proceeding. Shows which action requires it.\n- Dependencies: T-02.02.01, T-02.01.02\n- Complexity: L",
+      "requirement_sha256": "0c3ec68776b355752d96bd0cbd60ca77d3f1f46315c9e8af05ffe0425afe0544",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+        },
+        {
+          "path": "apps/api/src/session/session.module.ts",
+          "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+        },
+        {
+          "path": "apps/api/src/session/session-context.middleware.ts",
+          "sha256": "cb64a4f0cd8bcd1e7fd83b62563d6c3a734e3ca93d0d994c67d412e8695f90d7"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "2a60792f376464c8459c72499cf267857cd5f1804438c5df8338f1ee4ed6bd58"
+        },
+        {
+          "path": "apps/api/src/session/refresh-csrf.guard.ts",
+          "sha256": "bf145a75804b7cd2414d89beaa43ad5c5a97e23b55e1f827a3f57422b0fae060"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "25a72ee6d57b1532ccf92726d7dd00331a581e9fc0a559997b6a0dc051baf837"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "d0dcb189d7bf03c1fec16081ca2189bfdb368cf16c4dc97f0dc186b4f8f9ec83"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "4b052258c2817e6b63ba02e2ae1b3ab6e144346e25af8ade5af4758c90461ec5"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+        }
+      ],
+      "checks": [
+        "Step-up now checks current password and account/session eligibility under consistent locks, rechecks expiry at the write and commits the audit flag/timestamp/correlation together.",
+        "HTTP acknowledgement matches the persisted timestamp. Failure of the audit insert rolls back verification; a concurrent password update rejects the old password. Individual session revoke now enforces the window and UI password recovery works in both locales.",
+        "Latest focused execution:141 session/auth tests pass at eccf7be;20 production-built session-dialog browser cases at a1132c1 remain valid because those web sources are unchanged. Logs are indexed in audit/evidence/index.json."
+      ],
+      "limitations": [
+        "The complete matrix of built sensitive actions and their UI recovery remains to be reviewed with each domain.",
+        "Refund and contract-cancellation consumers that belong to separate unbuilt tasks remain future dependencies, not acceptance evidence for existing callers."
+      ],
+      "merged_prs": [
+        92
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -2666,10 +2970,6 @@
     "02-auth-users-admin.md#T-02.01.02",
     "02-auth-users-admin.md#T-02.01.03",
     "02-auth-users-admin.md#T-02.01.04",
-    "02-auth-users-admin.md#T-02.02.01",
-    "02-auth-users-admin.md#T-02.02.02",
-    "02-auth-users-admin.md#T-02.02.03",
-    "02-auth-users-admin.md#T-02.02.04",
     "02-auth-users-admin.md#T-02.03.01",
     "02-auth-users-admin.md#T-02.03.02",
     "02-auth-users-admin.md#T-02.03.03",

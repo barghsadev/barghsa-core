@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+  "source_revision": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
   "active_step": "R01",
-  "next_action": "Continue R01 session/step-up acceptance: setStepUpVerifiedTimestamp currently updates even expired/revoked/missing sessions and returns no persisted timestamp or audit event. Fix truthful step-up acknowledgement and audit, then disposition the four session tasks against rotation callers and remaining device/CSRF criteria.",
+  "next_action": "Continue R01 from four reviewed partial session tasks in acceptance-closure.json: trace required rotation/revocation callers and reconcile public-auth CSRF alternatives, then review auth rate limiting. Do not repeat the completed error/revocation/reuse-alert/atomic-step-up repairs or their unchanged checks.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Finish canonical session, rotation, CSRF, logout and step-up acceptance using existing real HTTP evidence."
+        "Four session tasks reviewed partial. Errors, single-session step-up, refresh-reuse notices and atomic audited step-up repaired. Finish rotation/revocation caller coverage, CSRF alternatives and exact device/session criteria."
       ]
     },
     {
@@ -284,7 +284,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review12 partial and274 pending records; keep36 verified records bound to evidence. Cover all301 PRs,170 deferrals,58 skips and distinguish1033 unrecorded backlog tasks."
+        "Review16 partial and270 pending records; keep36 verified records bound to evidence. Cover all301 PRs,170 deferrals,58 skips and distinguish1033 unrecorded backlog tasks."
       ]
     },
     {
@@ -418,6 +418,19 @@
         }
       ],
       "remaining": "This is an immediately visible in-app security notice. No claim of external email/SMS delivery. Full session and step-up acceptance remains open."
+    },
+    {
+      "id": "R01-atomic-step-up",
+      "date": "2026-09-08",
+      "source_revision": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
+      "summary": "Made password verification, current account/session eligibility, step-up timestamp and correlation-bound audit atomic. HTTP returns the actual persisted time. Recorded four session tasks as reviewed partial with explicit unmet criteria.",
+      "review": "Reproduced missing-session success and missing audit. Account-before-session locks protect password/revocation races; expiry is checked again after password verification. Audit metadata uses the existing text schema; corrected the initial test to parse its stored JSON.",
+      "checks": [
+        "141 focused session/auth tests in10 files pass",
+        "API typecheck, focused ESLint and diff review pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "36 verified,16 partial,270 pending. Four reviewed partial tasks retain missing criteria; no whole-group acceptance claim."
     }
   ],
   "deferred_improvements": [],

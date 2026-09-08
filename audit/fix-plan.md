@@ -6,11 +6,11 @@ Reconciled on 2026-09-08; A02 evidence refresh reviewed at `9635e76`. [progress.
 
 | Population | Verified in ledger | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 33 | 12 | 218 | 263 |
+| Tasks with merged PR evidence | 33 | 16 | 214 | 263 |
 | Other historical completion claims | 3 | 0 | 56 | 59 |
-| Combined historical task population | 36 | 12 | 274 | 322 |
+| Combined historical task population | 36 | 16 | 270 | 322 |
 
-GitHub's 301 merged PRs were checked on 2026-09-08: no additions to the saved inventory. A02 refreshed the 23 verified records that referenced subsequently changed files and closed one database configuration task. Twelve earlier verified records retain unchanged source bindings. These are acceptance counts, not implementation percentages.
+GitHub's 301 merged PRs were checked on 2026-09-08: no additions to the saved inventory. A02 refreshed the 23 verified records that referenced subsequently changed files and closed one database configuration task. Twelve earlier verified records retain unchanged source bindings. R01 has also reviewed four session tasks as partial and fixed their confirmed revocation, reuse-alert and step-up defects. These are acceptance counts, not implementation percentages.
 
 The 58 historical skips are already included above: three verified, 55 pending. The separate 737 earlier queue gaps and 296 later tasks are not additional historical completion claims. Broad selectors in the old findings include unstarted tasks; do not expand repair scope to those tasks automatically.
 
