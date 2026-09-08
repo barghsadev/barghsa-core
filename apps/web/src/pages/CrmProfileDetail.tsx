@@ -1,3 +1,4 @@
+import { CrmLegalDocuments } from '../components/CrmLegalDocuments.js';
 import { formatDate } from '@barghsa/i18n/date-time';
 import { CrmProfileRecords } from '../components/CrmProfileRecords.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -122,6 +123,7 @@ interface SiblingProfile {
 
 interface ProfileDetail {
   viewerPermissions?: {
+    canReadDocuments?: boolean;
     canEdit: boolean;
     canEditIdentity?: boolean;
     canVerify: boolean;
@@ -927,6 +929,15 @@ function CrmProfileDetailContent() {
                   value={value ?? '—'}
                 />
               ))}
+            </Section>
+          )}
+          {legalInfo && (
+            <Section title={t('crm.documents.title', locale)}>
+              <CrmLegalDocuments
+                key={profile.id}
+                profileId={profile.id}
+                canRead={data.viewerPermissions?.canReadDocuments === true}
+              />
             </Section>
           )}
         </div>

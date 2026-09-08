@@ -169,6 +169,7 @@ export class CrmV2Controller {
     return {
       ...result,
       viewerPermissions: {
+        canReadDocuments: hasStaffPermission(req, 'verification:read'),
         canEdit: hasStaffPermission(req, 'crm:edit'),
         canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
         canVerify: hasStaffPermission(req, 'crm:verify'),
@@ -353,6 +354,7 @@ export class CrmV2Controller {
     return {
       ...result,
       viewerPermissions: {
+        canReadDocuments: hasStaffPermission(req, 'verification:read'),
         canEdit: hasStaffPermission(req, 'crm:edit'),
         canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
         canVerify: hasStaffPermission(req, 'crm:verify'),

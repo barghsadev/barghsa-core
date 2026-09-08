@@ -739,3 +739,116 @@ for (const locale of ['fa', 'en'] as const)
     await expect(registration).toContainText(locale === 'fa' ? 'نامشخص' : 'Unknown');
     await expect(panel).toContainText('Representative street');
   });
+
+for (const locale of ['fa', 'en'] as const)
+  for (const allowed of [false, true])
+    test(`CRM legal documents require access and reject failed or malformed links (${locale}, ${allowed})`, async ({
+      page,
+    }) => {
+      await page.addInitScript((lang) => {
+        if (document.documentElement) document.documentElement.lang = lang;
+        new MutationObserver(() => {
+          document.documentElement.lang = lang;
+        }).observe(document, { childList: true });
+      }, locale);
+      const current = {
+        ...detail(false, true),
+        legalInfo: { legalName: 'Documents Company' },
+        viewerPermissions: { ...detail(false, true).viewerPermissions, canReadDocuments: allowed },
+      };
+      current.profile.profileType = 'LEGAL';
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+      );
+      await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
+      let attempts = 0;
+      let finishFirst!: () => void;
+      const first = new Promise<void>((resolve) => {
+        finishFirst = resolve;
+      });
+      const url = 'https://files.example.test/company-proof.pdf?signature=test-only';
+      await page.route(`**/api/crm/profiles/${id}/documents`, async (route) => {
+        attempts++;
+        if (attempts === 1) {
+          await first;
+          return route.fulfill({ status: 503, json: {} });
+        }
+        if (attempts === 2)
+          return route.fulfill({
+            json: { profileId: 'another-profile', documents: [{ name: 'private.pdf', url }] },
+          });
+        if (attempts === 3)
+          return route.fulfill({
+            json: {
+              profileId: id,
+              documents: [{ name: 'unsafe.pdf', url: 'javascript:alert(1)' }],
+            },
+          });
+        if (attempts === 4)
+          return route.fulfill({
+            json: { profileId: id, documents: [{ name: 'company-proof.pdf', url }] },
+          });
+        if (attempts === 5) return route.fulfill({ status: 403, json: {} });
+        return route.fulfill({ json: { profileId: id, documents: [] } });
+      });
+      await page.goto(`/admin/crm/profiles/${id}`);
+      await page
+        .getByRole('tab', {
+          name: locale === 'fa' ? 'جزئیات پروفایل' : 'Profile Details',
+          exact: true,
+        })
+        .click();
+      const load = page.getByRole('button', {
+        name: locale === 'fa' ? 'نمایش مدارک' : 'View documents',
+        exact: true,
+      });
+      if (!allowed) {
+        await expect(load).toHaveCount(0);
+        await expect(
+          page.getByText(
+            locale === 'fa'
+              ? 'برای مشاهده این مدارک به دسترسی بررسی هویت نیاز دارید.'
+              : 'Verification access is required to view these documents.',
+            { exact: true }
+          )
+        ).toBeVisible();
+        expect(attempts).toBe(0);
+        return;
+      }
+      await load.click();
+      await expect(
+        page.getByRole('button', {
+          name: locale === 'fa' ? 'در حال بارگذاری مدارک…' : 'Loading documents…',
+          exact: true,
+        })
+      ).toBeDisabled();
+      finishFirst();
+      const retry = page.getByRole('button', {
+        name: locale === 'fa' ? 'تلاش دوباره برای مدارک' : 'Retry documents',
+        exact: true,
+      });
+      await expect(retry).toBeVisible();
+      for (let i = 0; i < 2; i++) {
+        await retry.click();
+        await expect(retry).toBeVisible();
+        await expect(page.getByRole('link', { name: /private.pdf|unsafe.pdf/ })).toHaveCount(0);
+      }
+      await retry.click();
+      const link = page.getByRole('link', { name: 'company-proof.pdf', exact: true });
+      await expect(link).toHaveAttribute('href', url);
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+      await page
+        .getByRole('button', {
+          name: locale === 'fa' ? 'تازه‌سازی پیوندهای مدارک' : 'Refresh document links',
+          exact: true,
+        })
+        .click();
+      await expect(retry).toBeVisible();
+      await expect(link).toHaveCount(0);
+      await retry.click();
+      await expect(page.getByRole('tabpanel').getByRole('status')).toContainText(
+        locale === 'fa' ? 'مدرکی ثبت نشده است.' : 'No documents are recorded.'
+      );
+      expect(attempts).toBe(6);
+    });

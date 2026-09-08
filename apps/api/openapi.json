@@ -9405,6 +9405,77 @@
         ]
       }
     },
+    "/api/crm/profiles/{profileId}/documents": {
+      "get": {
+        "operationId": "CrmLegalDocumentsController_read",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "documents": {
+                      "items": {
+                        "properties": {
+                          "name": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "url": {
+                            "format": "uri",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "url"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "profileId": {
+                      "format": "uuid",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "profileId",
+                    "documents"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Profile-bound documents with five-minute download links"
+          },
+          "403": {
+            "description": "CRM and verification read permissions required"
+          },
+          "404": {
+            "description": "Legal profile not found"
+          },
+          "503": {
+            "description": "Document copies or storage unavailable"
+          }
+        },
+        "summary": "Read sealed legal documents with CRM and verification access",
+        "tags": [
+          "CRM"
+        ]
+      }
+    },
     "/api/crm/profiles/{profileId}/records/{kind}": {
       "get": {
         "operationId": "CrmV2Controller_getProfileRecords",

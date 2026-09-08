@@ -1,5 +1,5 @@
 import { createServer, type Server } from 'node:http';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import type { Pool } from 'pg';
@@ -253,3 +253,99 @@ it('seals only owned, verified legal documents and serves the immutable copy to 
     'Original registration evidence'
   );
 }, 20000);
+
+it('CRM document reads enforce live staff access, sealed profile binding and short-lived links', async () => {
+  const profileId = randomUUID();
+  const bytes = Buffer.from('%PDF-1.7\nCRM sealed copy\n%%EOF');
+  const key =
+    'legal-profile-documents/' +
+    randomUUID() +
+    '/' +
+    createHash('sha256').update(bytes).digest('hex');
+  objects.set(key, bytes);
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,profile_type,status) VALUES ($1,'owner','LEGAL','ACTIVE')",
+    [profileId]
+  );
+  await http.pool.query(
+    "INSERT INTO legal_profiles(id,legal_name,national_identifier,registration_number,representative_title,representative_relationship,documents) VALUES ($1,'Document Company','14012345678','42','Director','Board member',$2::jsonb)",
+    [profileId, JSON.stringify([key])]
+  );
+  await http.pool.query(
+    "INSERT INTO storage_records(storage_key,status,metadata,file_size,content_type,category,file_name,signed_at,signed_by) VALUES ($1,'immutable',$2::jsonb,$3,'application/pdf','document','company-proof.pdf',NOW(),'owner')",
+    [key, JSON.stringify({ purpose: 'legal_profile_document', profileId }), bytes.length]
+  );
+  const read = (id: string = profileId, actor: Record<string, string> = headers.other!) =>
+    fetch(http.base + '/api/crm/profiles/' + id + '/documents', { headers: actor });
+  expect((await read(profileId, {})).status).toBe(401);
+  expect((await read(profileId, headers.owner!)).status).toBe(403);
+  expect((await read()).status).toBe(403);
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES ('other','role-crm-verification')"
+  );
+  expect((await read('invalid-id')).status).toBe(400);
+  expect((await read(randomUUID())).status).toBe(404);
+  const response = await read();
+  expect(response.status).toBe(200);
+  expect(response.headers.get('cache-control')).toContain('no-store');
+  const data = (await response.json()) as {
+    profileId: string;
+    documents: { name: string; url: string }[];
+  };
+  expect(data.profileId).toBe(profileId);
+  expect(data.documents).toHaveLength(1);
+  expect(Object.keys(data.documents[0]!).sort()).toEqual(['name', 'url']);
+  expect(data.documents[0]!.name).toBe('company-proof.pdf');
+  expect(new URL(data.documents[0]!.url).searchParams.get('X-Amz-Expires')).toBe('300');
+  expect(await (await fetch(data.documents[0]!.url)).text()).toBe(bytes.toString());
+  const capabilities = await fetch(http.base + '/api/crm/profiles/' + profileId, {
+    headers: headers.other!,
+  });
+  expect(await capabilities.json()).toMatchObject({
+    viewerPermissions: { canReadDocuments: true },
+  });
+  const originalPermissions = (
+    await http.pool.query(
+      "SELECT permissions FROM staff_roles WHERE role_id='role-crm-verification'"
+    )
+  ).rows[0].permissions;
+  for (const permissions of [['crm:read'], ['verification:read']]) {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='role-crm-verification'",
+      [JSON.stringify(permissions)]
+    );
+    expect((await read()).status).toBe(403);
+  }
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='role-crm-verification'",
+    [originalPermissions]
+  );
+  for (const metadata of [
+    { purpose: 'legal_profile_document', profileId: randomUUID() },
+    { purpose: 'ticket_attachment', profileId },
+  ]) {
+    await http.pool.query('UPDATE storage_records SET metadata=$2::jsonb WHERE storage_key=$1', [
+      key,
+      JSON.stringify(metadata),
+    ]);
+    const denied = await read();
+    expect(denied.status).toBe(503);
+    expect(await denied.text()).not.toContain('X-Amz-Signature');
+  }
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=$2::jsonb,status='removed' WHERE storage_key=$1",
+    [key, JSON.stringify({ purpose: 'legal_profile_document', profileId })]
+  );
+  expect((await read()).status).toBe(503);
+  await http.pool.query('UPDATE legal_profiles SET documents=$2::jsonb WHERE id=$1', [
+    profileId,
+    JSON.stringify(['uploads/document/unsealed.pdf']),
+  ]);
+  expect((await read()).status).toBe(503);
+  await http.pool.query("UPDATE legal_profiles SET documents='[]'::jsonb WHERE id=$1", [profileId]);
+  const empty = await read();
+  expect(empty.status).toBe(200);
+  expect(await empty.json()).toEqual({ profileId, documents: [] });
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='other'");
+  expect((await read()).status).toBe(403);
+});

@@ -2,6 +2,18 @@ import { lookup } from './lookup.js';
 import { t as sharedText, type I18nDictionary, type Locale } from './index.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'crm.documents.title': 'مدارک شخص حقوقی',
+  'crm.documents.restricted': 'برای مشاهده این مدارک به دسترسی بررسی هویت نیاز دارید.',
+  'crm.documents.expiry':
+    'پیوندهای دریافت پس از پنج دقیقه منقضی می‌شوند. برای دریافت پیوند تازه، تازه‌سازی کنید.',
+  'crm.documents.load': 'نمایش مدارک',
+  'crm.documents.loading': 'در حال بارگذاری مدارک…',
+  'crm.documents.retry': 'تلاش دوباره برای مدارک',
+  'crm.documents.refresh': 'تازه‌سازی پیوندهای مدارک',
+  'crm.documents.error':
+    'مدارک بارگذاری نشد. دسترسی خود را بررسی و دوباره تلاش کنید؛ نسخه‌های در دسترس نبودۀ مدارک نیاز به بررسی پشتیبانی دارند.',
+  'crm.documents.empty': 'مدرکی ثبت نشده است.',
+  'crm.documents.unnamed': 'مدرک',
   'crm.profile.field.userId': 'شناسه کاربر',
   'crm.profile.field.username': 'نام کاربری',
   'crm.profile.field.profileId': 'شناسه پروفایل',
@@ -258,6 +270,17 @@ export const fa: I18nDictionary = {
   'crm.list.PENDING_VERIFICATION': 'در انتظار تأیید',
 };
 export const en: I18nDictionary = {
+  'crm.documents.title': 'Legal documents',
+  'crm.documents.restricted': 'Verification access is required to view these documents.',
+  'crm.documents.expiry': 'Download links expire after five minutes. Refresh to obtain new links.',
+  'crm.documents.load': 'View documents',
+  'crm.documents.loading': 'Loading documents…',
+  'crm.documents.retry': 'Retry documents',
+  'crm.documents.refresh': 'Refresh document links',
+  'crm.documents.error':
+    'Documents could not be loaded. Check your access and retry; unavailable copies require support review.',
+  'crm.documents.empty': 'No documents are recorded.',
+  'crm.documents.unnamed': 'Document',
   'crm.profile.field.userId': 'User ID',
   'crm.profile.field.username': 'Username',
   'crm.profile.field.profileId': 'Profile ID',

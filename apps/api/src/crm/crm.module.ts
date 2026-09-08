@@ -1,3 +1,5 @@
+import { CrmLegalDocumentsController } from './crm-legal-documents.controller.js';
+import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { VerificationEvidenceService } from './verification-evidence.service.js';
 import { StaffAssignmentModule } from '../staff-assignment/staff-assignment.module.js';
 import { Module } from '@nestjs/common';
@@ -12,8 +14,19 @@ import { NotificationsModule } from '../notifications/index.js';
 
 @Module({
   imports: [StaffAssignmentModule, SessionModule, NotificationsModule],
-  controllers: [CrmController, CrmV2Controller, VerificationCaseController],
-  providers: [VerificationEvidenceService, CrmService, CrmV2Service, VerificationCaseService],
+  controllers: [
+    CrmLegalDocumentsController,
+    CrmController,
+    CrmV2Controller,
+    VerificationCaseController,
+  ],
+  providers: [
+    VerifiedAttachmentsService,
+    VerificationEvidenceService,
+    CrmService,
+    CrmV2Service,
+    VerificationCaseService,
+  ],
   exports: [CrmService, CrmV2Service, VerificationCaseService],
 })
 export class CrmModule {}
