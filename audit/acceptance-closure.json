@@ -3762,7 +3762,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+      "reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -3818,7 +3818,7 @@
         },
         {
           "path": "apps/web/src/routeTree.gen.ts",
-          "sha256": "627ad86810031a69a775b80bf1091a8b84e7a092c3c7fa71f5f4838064cea3f2"
+          "sha256": "9127f1b8833ff0f20a77e67631b6d4c5a8d56447926713a7b1539fa58ba4bf40"
         },
         {
           "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
@@ -3868,12 +3868,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
-        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
-        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
+        "source_revision": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "review": "Reviewed the two login-success destinations and new dashboard alias. Existing form behavior and other routes are unchanged; 36 focused production-browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-login-destination",
         "paths": [
-          "apps/api/openapi.json"
+          "apps/web/src/routeTree.gen.ts"
         ]
       }
     },
@@ -4421,7 +4421,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+      "reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 378,
       "requirement": "**T-05.01.01 — CRM users list page**\n\n- Description: `/app/crm` — list of all registered users. Columns: Username, profiles (legal/individual indicators), registration date, last login, verification status, profile count. Staff and admin only.\n- Technical notes: Backend: GET `/api/crm/users` with pagination, search, sort, filter. Server-side filtering/sorting. Cursor pagination recommended for large datasets. Permission: staff roles `crm:read` or `admin`. Profile type columns: \"Legal\" icon and \"Individual\" icon shown per user if they have that profile type. Search by username (email/mobile).\n- UI/UX: Table with sortable columns. Filter bar: profile type (all/individual/legal), verification status (verified/unverified/pending), registration date range. Search input. Pagination controls. \"Collapse all\" on row expansion.\n- Dependencies: T-03.01.01, authorization framework\n- Complexity: L",
@@ -4465,7 +4465,7 @@
         },
         {
           "path": "apps/web/src/routeTree.gen.ts",
-          "sha256": "627ad86810031a69a775b80bf1091a8b84e7a092c3c7fa71f5f4838064cea3f2"
+          "sha256": "9127f1b8833ff0f20a77e67631b6d4c5a8d56447926713a7b1539fa58ba4bf40"
         },
         {
           "path": "packages/i18n/src/crm.ts",
@@ -4492,12 +4492,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
-        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
-        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
+        "source_revision": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+        "previous_reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "review": "Reviewed the two login-success destinations and new dashboard alias. Existing form behavior and other routes are unchanged; 36 focused production-browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-login-destination",
         "paths": [
-          "apps/api/openapi.json"
+          "apps/web/src/routeTree.gen.ts"
         ]
       }
     },
@@ -4633,7 +4633,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+      "reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 91,
       "requirement": "**T-02.01.01 — Login page UI**\n\n- Description: `/login` page with same auth layout. Username field (same unified email/mobile as register), password field with visibility toggle. \"Forgot password?\" link, \"Don't have an account? Register\" link.\n- Technical notes: Shared auth layout component. Username normalization same as register (E.164 formatting). `autocomplete=\"username\"` and `autocomplete=\"current-password\"`.\n- UI/UX: Same two-column layout. Loading spinner on submit. Error states: \"Invalid username or password\" (generic, doesn't reveal which).\n- Dependencies: T-01.01.01\n- Complexity: S",
@@ -4641,7 +4641,7 @@
       "source_evidence": [
         {
           "path": "apps/web/src/routes/login.tsx",
-          "sha256": "4da7296e9a3d26ffeb6f246e253f59871ab8fb5c5e0861ac783729ac42fafe11"
+          "sha256": "e8d924df792921baa59203b3791e2f10547398f15a156c7748d996cc21c46497"
         },
         {
           "path": "apps/web/src/routes/register/index.tsx",
@@ -4661,7 +4661,7 @@
         },
         {
           "path": "apps/web/e2e/login-recovery.spec.ts",
-          "sha256": "7f2af0c57a8709d41f73c227ca3de4a06170ef8227631bb71024b5a7d289b736"
+          "sha256": "707fc71492eba3d6f51e2b06f52dd569011671419f626e03ed25d5ee44f3e1e2"
         },
         {
           "path": "packages/i18n/src/auth.ts",
@@ -4687,6 +4687,113 @@
       ],
       "merged_prs": [
         77
+      ],
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "source_revision": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+        "previous_reviewed_sha": "f461e5dd05fb8659d9adfacb2f96688b09492d59",
+        "review": "Reviewed the two login-success destinations and new dashboard alias. Existing form behavior and other routes are unchanged; 36 focused production-browser cases pass.",
+        "record": "audit/evidence/step-reviews.json#R01-login-destination",
+        "paths": [
+          "apps/web/src/routes/login.tsx",
+          "apps/web/e2e/login-recovery.spec.ts"
+        ]
+      }
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 99,
+      "requirement": "**T-02.01.02 — Login authentication flow**\n\n- Description: POST `/api/auth/login` with `{ username, password, deviceInfo }`. Server validates credentials using Argon2id. On success: server checks if OTP enforcement is needed (new device, suspicious IP, risk score). If OTP not needed → set session, redirect to `/app`. If OTP needed → return `{ requiresOtp: true, challengeId }`, show OTP UI.\n- Technical notes: Password hashing with Argon2id (mem=37MiB, t=3, p=1 or benchmarked equivalent). Progressive delay after 5 failed attempts per account-and-IP in 15 min. Broad IP/device limits detect password spraying. No permanent lockout. Device trust: store device fingerprint (user agent, public IP hint, etc.) on successful login from trusted device. Trust is revocable, time-limited (default 30 days), and visible in device management.\n- UI/UX: If OTP required, transition to OTP input inline (same page, no redirect). \"Trust this device\" checkbox shown on OTP step.\n- Dependencies: T-01.01.02, T-01.01.03\n- Complexity: L",
+      "requirement_sha256": "b574792d5fcc2d3ce7e7010da9ddc040425cb58b440b3402c7086ce665fb5bf4",
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "707fc71492eba3d6f51e2b06f52dd569011671419f626e03ed25d5ee44f3e1e2"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "9127f1b8833ff0f20a77e67631b6d4c5a8d56447926713a7b1539fa58ba4bf40"
+        },
+        {
+          "path": "apps/web/src/routes/_app/app.tsx",
+          "sha256": "af7f573097cecfb98c5346b6ed72afb59280f2a73905879ca20bc8b1c38501f7"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "e8d924df792921baa59203b3791e2f10547398f15a156c7748d996cc21c46497"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "4e9dfeb68871c0eaa0b26bf642a9bf7fb7a727cfd4d79f108f3e3c12cc677e3c"
+        },
+        {
+          "path": "apps/api/src/auth/dto/login.dto.ts",
+          "sha256": "e55ee47070d30d4ea5db0f17939501119379b66a7f44481710d19c849ba4ce88"
+        },
+        {
+          "path": "apps/api/src/auth/device-trust-ip.ts",
+          "sha256": "17f24d8563a3b1ed5a7a0f167bfb3ac46a9f12d820d0100e22a2b7200c58f4e9"
+        },
+        {
+          "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+          "sha256": "84505dc936ea2475f70255b0d7985fc30d03ec96b26d7dc53e0ab8eebb55002f"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "99e91a400c367eb38d0289a5aca6d7ace2e86f126248912f63700255fe3a6a85"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices.controller.ts",
+          "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "84db9bc90bc87098959424038ed26c2b19235ca5adeecb7a41a89bf8308fb3e9"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+        },
+        {
+          "path": "packages/shared/src/password-hash.ts",
+          "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+        }
+      ],
+      "checks": [
+        "Both successful login branches now navigate with history replacement to /app. A route alias renders the existing DashboardPage inside the existing customer layout. The /dashboard route and CRM paths remain unchanged; generated route diff adds only the new alias.",
+        "Browser checks now require actual dashboard content after direct login and OTP verification, including reload. The existing malformed-OTP acknowledgement test retries with a valid acknowledgement before asserting dashboard content. New no-profile cases exercise the existing onboarding guard through the successful-login route.",
+        "T-02.01.02 requirements were compared with the combined current implementation. The controller normalizes credentials through LoginSchema and substitutes the server-issued opaque browser cookie and observed user agent for submitted fingerprint hints. Argon2id creation parameters now match the written requirement; existing encoded hashes still verify.",
+        "OTP risk decisions use a conservative local rule: only a customer with an unexpired server-issued trust proof at the same valid public-address hint may use password-only login. Missing, revoked, expired, changed-address or legacy null-address trust requires OTP; staff always require OTP. Authorization is serialized with current account state and session creation. There is no separate external IP reputation service or numeric risk-score engine in this local policy.",
+        "Reused reviewed PostgreSQL/API evidence covers account-plus-IP progressive delay after five failures in fifteen minutes, broad IP/device controls, expiry without permanent lockout, atomic trust authorization, thirty-day opt-in trust, own-device listing and audited revocation. Inline OTP and its explicit trust checkbox are exercised by the updated browser tests. Successful sessions use the reviewed centralized cookie helpers.",
+        "36/36 production-browser cases pass across desktop Chromium and mobile Chrome in Persian and English. Direct success, OTP retry/success, invalid acknowledgements, password-change retry, resend and no-profile onboarding pass. Reload of /app retains dashboard content.",
+        "Production web build, web typecheck, focused ESLint/formatting, all 41 complete-route budgets and git diff checks pass. Saved served-index equality and index/manifest hashes bind browser evidence to this build. Preview stopped after completion.",
+        "Reuse source-reviewed evidence from network trust a22de92, atomic authorization/privacy 7b15638, device management b18fffd and password policy bf54b8c. The last step passes 35 distinct API cases and four bootstrap cases across focused runs. Unchanged API logic was not tested again for this navigation-only change; no global checkpoint renewed."
+      ],
+      "limitations": [
+        "Local risk policy requires OTP on unknown/changed/expired trust or staff login. It does not claim an external IP reputation service or separately configurable numerical score.",
+        "Live provider delivery, trusted proxy deployment and load/capacity evidence remain operational prerequisites. Full OTP, forced-password-change and remaining session caller acceptance belong to their separate tasks."
+      ],
+      "merged_prs": [
+        78
       ],
       "historically_skipped": false
     }
@@ -4799,7 +4906,6 @@
     "02-auth-users-admin.md#T-01.02.01",
     "02-auth-users-admin.md#T-01.02.02",
     "02-auth-users-admin.md#T-01.02.03",
-    "02-auth-users-admin.md#T-02.01.02",
     "02-auth-users-admin.md#T-02.01.03",
     "02-auth-users-admin.md#T-02.01.04",
     "02-auth-users-admin.md#T-02.03.01",

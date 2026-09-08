@@ -2265,6 +2265,110 @@
         "audit/evidence/r01/barghsa-password-policy-shared-types.log.gz",
         "audit/evidence/r01/barghsa-password-policy-staff-final.log.gz"
       ]
+    },
+    {
+      "id": "R01-login-destination",
+      "date": "2026-09-08",
+      "source_revision": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+      "summary": "Repair successful-login navigation and complete local acceptance of T-02.01.02.",
+      "review": [
+        "Both successful login branches now navigate with history replacement to /app. A route alias renders the existing DashboardPage inside the existing customer layout. The /dashboard route and CRM paths remain unchanged; generated route diff adds only the new alias.",
+        "Browser checks now require actual dashboard content after direct login and OTP verification, including reload. The existing malformed-OTP acknowledgement test retries with a valid acknowledgement before asserting dashboard content. New no-profile cases exercise the existing onboarding guard through the successful-login route.",
+        "T-02.01.02 requirements were compared with the combined current implementation. The controller normalizes credentials through LoginSchema and substitutes the server-issued opaque browser cookie and observed user agent for submitted fingerprint hints. Argon2id creation parameters now match the written requirement; existing encoded hashes still verify.",
+        "OTP risk decisions use a conservative local rule: only a customer with an unexpired server-issued trust proof at the same valid public-address hint may use password-only login. Missing, revoked, expired, changed-address or legacy null-address trust requires OTP; staff always require OTP. Authorization is serialized with current account state and session creation. There is no separate external IP reputation service or numeric risk-score engine in this local policy.",
+        "Reused reviewed PostgreSQL/API evidence covers account-plus-IP progressive delay after five failures in fifteen minutes, broad IP/device controls, expiry without permanent lockout, atomic trust authorization, thirty-day opt-in trust, own-device listing and audited revocation. Inline OTP and its explicit trust checkbox are exercised by the updated browser tests. Successful sessions use the reviewed centralized cookie helpers."
+      ],
+      "checks": [
+        "36/36 production-browser cases pass across desktop Chromium and mobile Chrome in Persian and English. Direct success, OTP retry/success, invalid acknowledgements, password-change retry, resend and no-profile onboarding pass. Reload of /app retains dashboard content.",
+        "Production web build, web typecheck, focused ESLint/formatting, all 41 complete-route budgets and git diff checks pass. Saved served-index equality and index/manifest hashes bind browser evidence to this build. Preview stopped after completion.",
+        "Reuse source-reviewed evidence from network trust a22de92, atomic authorization/privacy 7b15638, device management b18fffd and password policy bf54b8c. The last step passes 35 distinct API cases and four bootstrap cases across focused runs. Unchanged API logic was not tested again for this navigation-only change; no global checkpoint renewed."
+      ],
+      "remaining": [
+        "Next review T-02.01.03 OTP including trust-creation audit, then T-02.01.04 forced password change. Lost-contact policy question remains pending.",
+        "Real delivery, deployment, proxy configuration and capacity evidence remain external; this acceptance covers the supplied local risk policy and application behavior."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "707fc71492eba3d6f51e2b06f52dd569011671419f626e03ed25d5ee44f3e1e2"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "9127f1b8833ff0f20a77e67631b6d4c5a8d56447926713a7b1539fa58ba4bf40"
+        },
+        {
+          "path": "apps/web/src/routes/_app/app.tsx",
+          "sha256": "af7f573097cecfb98c5346b6ed72afb59280f2a73905879ca20bc8b1c38501f7"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "e8d924df792921baa59203b3791e2f10547398f15a156c7748d996cc21c46497"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "4e9dfeb68871c0eaa0b26bf642a9bf7fb7a727cfd4d79f108f3e3c12cc677e3c"
+        },
+        {
+          "path": "apps/api/src/auth/dto/login.dto.ts",
+          "sha256": "e55ee47070d30d4ea5db0f17939501119379b66a7f44481710d19c849ba4ce88"
+        },
+        {
+          "path": "apps/api/src/auth/device-trust-ip.ts",
+          "sha256": "17f24d8563a3b1ed5a7a0f167bfb3ac46a9f12d820d0100e22a2b7200c58f4e9"
+        },
+        {
+          "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+          "sha256": "84505dc936ea2475f70255b0d7985fc30d03ec96b26d7dc53e0ab8eebb55002f"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "99e91a400c367eb38d0289a5aca6d7ace2e86f126248912f63700255fe3a6a85"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices.controller.ts",
+          "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "84db9bc90bc87098959424038ed26c2b19235ca5adeecb7a41a89bf8308fb3e9"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+        },
+        {
+          "path": "packages/shared/src/password-hash.ts",
+          "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-login-destination-browser.log.gz",
+        "audit/evidence/r01/barghsa-login-destination-budgets.log.gz",
+        "audit/evidence/r01/barghsa-login-destination-build.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-login-destination-format.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-login-destination-preview-binding.log.gz",
+        "audit/evidence/r01/barghsa-login-destination-preview.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ]
     }
   ]
 }

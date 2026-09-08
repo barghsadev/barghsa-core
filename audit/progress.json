@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
+  "source_revision": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
   "active_step": "R01",
-  "next_action": "R01: repair both successful login branches that currently navigate to the public / placeholder. Verify the authenticated /app destination before closing 02-auth-users-admin.md#T-02.01.02. Explicit Argon2id policy is repaired through bf54b8c, with 35 distinct API cases and four bootstrap cases passing across focused runs. Then review .03 OTP including trust-creation audit and .04 forced password change. Reuse valid evidence; lost-contact policy question remains pending.",
+  "next_action": "R01: review 02-auth-users-admin.md#T-02.01.03 OTP, including durable trust-creation audit and challenge validity after lock waits, then .04 forced password change. Login flow .02 is locally verified through 53a8bec using reviewed backend evidence and 36 production-browser cases. Reuse valid evidence; lost-contact policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Login UI .01 is verified. Network trust, atomic authorization/privacy, device management and hash policy for .02 are repaired. Fix successful-login navigation to /app and finish acceptance. Then review .03 OTP / .04 forced password change, remaining rotation/revocation callers, CSRF alternatives and approximate session location."
+        "Login UI .01 and login flow .02 are verified locally. Review .03 OTP / .04 forced password change, remaining rotation/revocation callers, CSRF alternatives and approximate session location."
       ]
     },
     {
@@ -456,6 +456,10 @@
     {
       "id": "R01-password-hash-policy",
       "review_record": "audit/evidence/step-reviews.json#R01-password-hash-policy"
+    },
+    {
+      "id": "R01-login-destination",
+      "review_record": "audit/evidence/step-reviews.json#R01-login-destination"
     }
   ],
   "deferred_improvements": [
@@ -474,9 +478,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 46,
+    "acceptance_verified": 47,
     "partial": 18,
-    "pending": 258,
+    "pending": 257,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
