@@ -3112,6 +3112,113 @@
         "/tmp/barghsa-cookie-policy-lint.log",
         "/tmp/barghsa-cookie-policy-types.log"
       ]
+    },
+    {
+      "id": "R01-session-location",
+      "date": "2026-09-08",
+      "source_revision": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
+      "summary": "Security sessions show locally resolved approximate IP countries in fa/en; inactive sessions are excluded and failed reads no longer appear empty.",
+      "review": [
+        "Country lookup uses the saved server-observed IP and the pinned bundled geoip-country database; it exposes only countryCode or null and never changes authorization, recovery, device trust or stored session data. IPv4, IPv6 and mapped IPv4 work. Invalid/private/loopback/documentation inputs remain unavailable.",
+        "Current geoip-lite required Node24 and the strict install correctly rejected local Node22. The selected country-only package supports the existing development range and includes current data. Its upstream maintenance status is explicitly recorded for R05. No engine, license allowlist, coverage or bundle policy was relaxed.",
+        "The active-session query now checks both absolute and idle deadlines. Actual PostgreSQL HTTP evidence excludes idle-expired, absolute-expired and revoked rows. Query failures propagate to the existing error handler instead of returning a false empty list. Revoke-all count reads retain the same method.",
+        "The UI uses Intl.DisplayNames for country labels, marks estimates/unavailable values and isolates IPv6 text in RTL. Two new labels initially raised the purchase route to250.02KB; moving them into the existing Security-only dictionary restored249.98KB under the unchanged250KB limit.",
+        "One web typecheck overlapped the API test builder deleting shared declarations and failed with missing shared-module errors. The final check after all builders completed passed. Do not overlap any consumer typecheck with the shared/API test rebuild.",
+        "Reviewed the additive lockfile: only the country lookup and its dependency graph were added. Frozen offline installation and self-contained API deployment passed. The deployed artifact resolves IPv4/IPv6 with8130228bytes across3data files under Node22.23.1. This is packaging evidence, not a new Node24 image or deployed-service check."
+      ],
+      "checks": [
+        "68 API cases passed across country lookup, session service/controller and real-PostgreSQL session HTTP files. Includes19 lookup cases, unavailable inputs, metadata isolation, inactive-row filtering and error propagation.",
+        "16 distinct production browser cases passed on desktop Chromium/mobile Chrome:8 existing session revocation cases and8 new country cases across fa/en and both themes. After dictionary extraction, reran the8 country cases successfully; prior dialog checks are reused.",
+        "API/web types, focused ESLint/Prettier, fresh web dependency build, all41 complete-route budgets, generated OpenAPI comparison and diff check passed.",
+        "pnpm install --frozen-lockfile --offline passed. pnpm --filter @barghsa/api deploy --prod to an isolated temporary artifact passed; compiled lookup in that artifact returned US for IPv4/IPv6 and null for loopback."
+      ],
+      "remaining": [
+        "T-02.02.02 remains partial for remaining revocation callers and their domain acceptance. Continue rotation/revocation/CSRF/sensitive-action matrices.",
+        "R05 must retain the new parser maintenance/data-update disposition. New lockfile/API dependency means previous image and dependency-bound historical evidence must be reconciled; no full regression, global coverage, production image or external topology claim renewed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "42c3d076f27ad55514bb03b32f49db3d63af9b0fb586d9f315e8065bffd015a1"
+        },
+        {
+          "path": "apps/api/package.json",
+          "sha256": "c036b2ec2f1f70c930976ef7c6e6374b48a96e9384a4d40627a606ce7ade1c8e"
+        },
+        {
+          "path": "apps/api/src/session/geoip-country.d.ts",
+          "sha256": "e999f9875b732e53ffd964e668bada52be77881ccaf6495a68c4d91e430001c7"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "fc22cbc76f04d457b2488b5cdd34362b68e79aae2f9a4424d35a9e7e46490634"
+        },
+        {
+          "path": "apps/api/src/session/session-location.test.ts",
+          "sha256": "05ef44e31f4c06ee1f79da3c40f23298ca4cb7b171da405383326a57a598a455"
+        },
+        {
+          "path": "apps/api/src/session/session-location.ts",
+          "sha256": "c1b59ac80a2e02433281852c09dcb934b184a981973e1e647bd935a3f3a5c371"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "249311b3810ab955282adbbf1a889472e9a39aa6ce93d6ba0dbdf329208cd15b"
+        },
+        {
+          "path": "apps/api/src/session/session.service.test.ts",
+          "sha256": "9cb99ad311c60a5f2cc56e01c204f2a0798390c122279aaa969e075a75470e0a"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "39914c92c2cbb2cca67db8fef1587d2f26e23e0e1253f594f02ccea681e6e8ca"
+        },
+        {
+          "path": "apps/web/e2e/trusted-devices.spec.ts",
+          "sha256": "8dbdc01902724e43f2c9e29d7413acd6864f6dd0792f859829c9a73242c24132"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "b2127003434ef04f0f1161cf7211bdb2407c01cf515607494989ef58379a2a9a"
+        },
+        {
+          "path": "docs/security/session-location.md",
+          "sha256": "7fb228d81f807bdb35fc0aa7db8dba67fe916bf91ac11619e22a62d6254abcf6"
+        },
+        {
+          "path": "packages/i18n/src/trusted-devices.ts",
+          "sha256": "e48ca0133ceddf0a2396cb6bc6bff23529cb81634e19adf8ffbd7e2b44fea764"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "7cf2f3c4af14d910be9691e12fce2f8e0fd427233d1e6d365effad9a6fbf54a0"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-session-location-api-types.log",
+        "/tmp/barghsa-session-location-api.log",
+        "/tmp/barghsa-session-location-browser-final.log",
+        "/tmp/barghsa-session-location-browser.log",
+        "/tmp/barghsa-session-location-budgets-final.log",
+        "/tmp/barghsa-session-location-budgets.log",
+        "/tmp/barghsa-session-location-contract-final.log",
+        "/tmp/barghsa-session-location-contract.log",
+        "/tmp/barghsa-session-location-deploy-lookup.log",
+        "/tmp/barghsa-session-location-deploy.log",
+        "/tmp/barghsa-session-location-format-check.log",
+        "/tmp/barghsa-session-location-format.log",
+        "/tmp/barghsa-session-location-frozen-install.log",
+        "/tmp/barghsa-session-location-install-compatible.log",
+        "/tmp/barghsa-session-location-install.log",
+        "/tmp/barghsa-session-location-lint-final.log",
+        "/tmp/barghsa-session-location-lint.log",
+        "/tmp/barghsa-session-location-openapi.log",
+        "/tmp/barghsa-session-location-web-build-final.log",
+        "/tmp/barghsa-session-location-web-build.log",
+        "/tmp/barghsa-session-location-web-types-final.log",
+        "/tmp/barghsa-session-location-web-types.log"
+      ]
     }
   ]
 }
