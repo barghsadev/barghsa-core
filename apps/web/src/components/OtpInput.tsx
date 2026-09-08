@@ -3,6 +3,12 @@ import { t, type Locale } from '@barghsa/i18n/auth';
 
 const DIGIT_COUNT = 6;
 
+function asciiDigits(value: string): string {
+  return value
+    .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 0x06f0))
+    .replace(/[٠-٩]/g, (digit) => String(digit.charCodeAt(0) - 0x0660));
+}
+
 export interface OtpInputHandle {
   reset: () => void;
 }
@@ -54,6 +60,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
 
   const handleChange = useCallback(
     (index: number, value: string) => {
+      value = asciiDigits(value);
       // Only allow digits
       if (!/^\d*$/.test(value)) return;
 
@@ -133,7 +140,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
   const handlePaste = useCallback(
     (e: React.ClipboardEvent) => {
       e.preventDefault();
-      const pasted = e.clipboardData.getData('text/plain').replace(/\D/g, '');
+      const pasted = asciiDigits(e.clipboardData.getData('text/plain')).replace(/\D/g, '');
       if (!pasted) return;
 
       if (error) onClearError();
@@ -175,6 +182,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
         className={`flex items-center justify-center gap-2 sm:gap-3 ${
           shaking ? 'animate-shake' : ''
         }`}
+        dir="ltr"
         role="group"
         aria-label={t('auth.otp.inputLabel', locale)}
       >
