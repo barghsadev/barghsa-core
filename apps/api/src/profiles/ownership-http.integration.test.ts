@@ -4,6 +4,25 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string;
 const headers: Record<string, Record<string, string>> = {};
+async function issueSession(user: string) {
+  const session = randomUUID(),
+    csrf = randomUUID(),
+    family = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+      VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+    [session, user, csrf, family]
+  );
+  await http.pool.query(
+    'INSERT INTO refresh_tokens(id,family_id,token_hash,user_id,session_id) VALUES ($1,$2,$3,$4,$5)',
+    [randomUUID(), family, randomUUID(), user, session]
+  );
+  headers[user] = {
+    Cookie: `barghsa_session=${session}`,
+    'X-CSRF-Token': csrf,
+    'Content-Type': 'application/json',
+  };
+}
 beforeEach(async () => {
   if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
   http = await startHttpFixture(process.env.TEST_DATABASE_URL);
@@ -13,23 +32,7 @@ beforeEach(async () => {
       `${user}@example.test`,
       'test-only',
     ]);
-    const session = randomUUID(),
-      csrf = randomUUID(),
-      family = randomUUID();
-    await http.pool.query(
-      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
-      VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
-      [session, user, csrf, family]
-    );
-    await http.pool.query(
-      'INSERT INTO refresh_tokens(id,family_id,token_hash,user_id,session_id) VALUES ($1,$2,$3,$4,$5)',
-      [randomUUID(), family, randomUUID(), user, session]
-    );
-    headers[user] = {
-      Cookie: `barghsa_session=${session}`,
-      'X-CSRF-Token': csrf,
-      'Content-Type': 'application/json',
-    };
+    await issueSession(user);
   }
   profileId = (
     await http.pool.query(
@@ -302,6 +305,11 @@ it('supports additive roles and immediately removes financial access when Financ
       ])
     ).rows
   ).toEqual([{ role: 'Finance' }, { role: 'Legal' }]);
+  expect((await fetch(`${http.base}/api/auth/sessions`, { headers: headers.target! })).status).toBe(
+    401
+  );
+  // A fresh authenticated session must use the changed roles.
+  await issueSession('target');
   expect(
     (
       await fetch(`${http.base}/api/wallet/${profileId}/create`, {
@@ -311,6 +319,10 @@ it('supports additive roles and immediately removes financial access when Financ
     ).status
   ).toBeLessThan(300);
   expect((await edit(['Legal'])).status).toBe(200);
+  expect((await fetch(`${http.base}/api/auth/sessions`, { headers: headers.target! })).status).toBe(
+    401
+  );
+  await issueSession('target');
   expect(
     (await fetch(`${http.base}/api/wallet/${profileId}`, { headers: headers.target! })).status
   ).toBe(404);
@@ -385,3 +397,61 @@ it('serializes removing a target with ownership acceptance', async () => {
     await Promise.allSettled(attempts);
   }
 }, 15000);
+
+it.each(['change', 'remove'])('invalidates old credentials on profile role %s', async (action) => {
+  const response = await fetch(
+    `${http.base}/api/profiles/${profileId}/agents/target${action === 'change' ? '/roles' : ''}`,
+    {
+      method: action === 'change' ? 'PUT' : 'DELETE',
+      headers: headers.owner!,
+      body: JSON.stringify({ roles: ['Legal'] }),
+    }
+  );
+  expect(response.status, await response.clone().text()).toBe(200);
+  expect((await fetch(`${http.base}/api/auth/sessions`, { headers: headers.target! })).status).toBe(
+    401
+  );
+  expect(
+    (
+      await http.pool.query(
+        'SELECT user_id,consumed_at IS NOT NULL AS consumed FROM refresh_tokens ORDER BY user_id'
+      )
+    ).rows
+  ).toEqual([
+    { user_id: 'owner', consumed: false },
+    { user_id: 'stranger', consumed: false },
+    { user_id: 'target', consumed: true },
+  ]);
+});
+
+it.each(['unchanged', 'audit-failure'])(
+  'preserves credentials when profile role update is %s',
+  async (mode) => {
+    if (mode === 'audit-failure')
+      await http.pool
+        .query(`CREATE FUNCTION deny_agent_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+        BEGIN IF NEW.event='agent_roles_changed' THEN RAISE EXCEPTION 'controlled agent audit failure'; END IF; RETURN NEW; END $$;
+        CREATE TRIGGER deny_agent_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION deny_agent_audit()`);
+    const response = await fetch(`${http.base}/api/profiles/${profileId}/agents/target/roles`, {
+      method: 'PUT',
+      headers: headers.owner!,
+      body: JSON.stringify({ roles: [mode === 'unchanged' ? 'Manager' : 'Legal'] }),
+    });
+    expect(response.status, await response.clone().text()).toBe(mode === 'unchanged' ? 200 : 500);
+    expect(
+      (await fetch(`${http.base}/api/auth/sessions`, { headers: headers.target! })).status
+    ).toBe(200);
+    expect((await http.pool.query('SELECT consumed_at FROM refresh_tokens')).rows).toEqual([
+      { consumed_at: null },
+      { consumed_at: null },
+      { consumed_at: null },
+    ]);
+    expect(
+      (await http.pool.query('SELECT role FROM profile_agents WHERE profile_id=$1', [profileId]))
+        .rows
+    ).toEqual([{ role: 'Manager' }]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='agent_roles_changed'")).rows
+    ).toHaveLength(0);
+  }
+);

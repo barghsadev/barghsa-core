@@ -1184,6 +1184,8 @@ export class AgentsService {
           409
         );
       }
+      // Serialize privilege changes with login/session creation and credential revocation.
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [targetUserId]);
       const existing = await client.query(
         'SELECT id,role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 FOR UPDATE',
         [profileId, targetUserId]
@@ -1193,9 +1195,25 @@ export class AgentsService {
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
           404
         );
+      const previousRoles = existing.rows.map((row) => row.role as string);
+      if (
+        previousRoles.length === roles.length &&
+        previousRoles.every((role) => roles.includes(role))
+      ) {
+        await client.query('COMMIT');
+        return;
+      }
       await client.query(
         'DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND NOT (role=ANY($3::text[]))',
         [profileId, targetUserId, roles]
+      );
+      await client.query(
+        'UPDATE sessions SET revoked_at=clock_timestamp(),updated_at=clock_timestamp() WHERE user_id=$1 AND revoked_at IS NULL',
+        [targetUserId]
+      );
+      await client.query(
+        'UPDATE refresh_tokens SET consumed_at=clock_timestamp() WHERE user_id=$1 AND consumed_at IS NULL',
+        [targetUserId]
       );
       await client.query(
         `INSERT INTO profile_agents(id,profile_id,user_id,role,joined_at,created_at,updated_at)
