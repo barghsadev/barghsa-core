@@ -776,6 +776,38 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "The creation form still depends on queue.viewer.canCreate from a verification:read endpoint, so staff with crm:read and crm:edit-identity but without verification:read cannot use their authorized creation path. Separate creation capability from queue access next. Review remaining identity-field coverage and page acceptance before closing T-05.02.05."
+    },
+    {
+      "id": "R01-crm-correction-only-access",
+      "date": "2026-09-08",
+      "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
+      "summary": "Correction creation uses the selected profile capability independently of review-queue access. Queue403 has a localized permission notice; profile errors support retry and fail closed.",
+      "review": "The two new production-browser regressions reproduced the missing form before the repair. Current profile identity/type, crm:edit-identity capability and archived status determine creation visibility. Queue reads and review capabilities keep their existing API guards. The focused HTTP case proves a role with crm:read and crm:edit-identity can create but cannot read either queue, read case detail or review; removal of the role blocks creation.",
+      "checks": [
+        "14 correction HTTP cases pass, including the new least-privilege creation case and retained permission-loss, atomic approval, evidence and archive checks.",
+        "22 production Chromium desktop/mobile browser cases pass in fa/en. Correction-only creation preserves its upload through step-up and malformed acknowledgement; queue access remains denied. Profile capability overrides a conflicting queue capability, failed metadata reload can retry, and archived/revoked creation is unavailable. Existing field links and review acknowledgements remain covered.",
+        "50 dictionary tests, API/web types, focused lint/format, i18n/web builds and41 route budgets pass. API typecheck initially found two possibly undefined test headers; explicit fixture assertions corrected those types without changing runtime behavior. The failed reproduction/typecheck logs are retained."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "6f43238b949eb902a2555fed6649096e751f7cbb44dfab19cc2a8650a4572d26"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "cb90f17ce3f4f7c0b3c6ee58e295de43d4405ccc482964099a2b7e1021f0402d"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "d3e1252fc222d49613dd62ec96faf89e0659b2a9bdce60f56f84f13a8e3b8198"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "T-05.02.05 still needs supported identity-field coverage and remaining page acceptance review. Review the additional locked legal/representative fields before closing the task. Legal nonidentity editing and archive review remain separate requirements."
     }
   ]
 }

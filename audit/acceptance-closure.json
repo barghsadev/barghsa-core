@@ -3710,7 +3710,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "partial",
-      "reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+      "reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -3754,7 +3754,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "8a0b17faf8a77d423c6eb30d3440b4f84f9e699adf132b24b38da5789b68f209"
+          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
         },
         {
           "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
@@ -3806,15 +3806,15 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
-        "previous_reviewed_sha": "4d2b231e1d527b651d31fa88391cf0a94465cd0c",
-        "review": "Added field-specific identity correction navigation and safe form preselection.66 profile/correction browser cases pass; backend source is unchanged. See R01-crm-correction-field-entry."
+        "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
+        "previous_reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+        "review": "Separated correction creation permission from queue access and added two dictionary entries. Other CRM mutation/page behavior is unchanged; reuse the66-case field-entry checkpoint for unaffected paths. Focused evidence:R01-crm-correction-only-access."
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "partial",
-      "reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+      "reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3834,7 +3834,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "8a0b17faf8a77d423c6eb30d3440b4f84f9e699adf132b24b38da5789b68f209"
+          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -3895,15 +3895,15 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
-        "previous_reviewed_sha": "4d2b231e1d527b651d31fa88391cf0a94465cd0c",
-        "review": "Added field-specific identity correction navigation and safe form preselection.66 profile/correction browser cases pass; backend source is unchanged. See R01-crm-correction-field-entry."
+        "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
+        "previous_reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+        "review": "Separated correction creation permission from queue access and added two dictionary entries. Other CRM mutation/page behavior is unchanged; reuse the66-case field-entry checkpoint for unaffected paths. Focused evidence:R01-crm-correction-only-access."
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+      "reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 412,
       "requirement": "**T-05.02.03 — Verification state management**\n\n- Description: Staff can change verification state of a profile. Options: Verify, Unverify, Mark for re-verification.\n- Technical notes: POST `/api/crm/profiles/:profileId/verify` with `{ action: 'verify' | 'unverify' | 'reverify', reason? }`. Permissions: `crm:verify` or admin. Audit: verification_change with before/after state, actor, reason. Notifications sent to profile owner.\n- UI/UX: Current status badge (Verified/Unverified/Pending). Dropdown with actions. Reason required for unverify/reverify. Confirmation dialog.\n- Dependencies: T-05.02.01, E-07 (admin verification settings)\n- Complexity: M",
@@ -3923,7 +3923,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "8a0b17faf8a77d423c6eb30d3440b4f84f9e699adf132b24b38da5789b68f209"
+          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -3965,15 +3965,15 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
-        "previous_reviewed_sha": "4d2b231e1d527b651d31fa88391cf0a94465cd0c",
-        "review": "Added field-specific identity correction navigation and safe form preselection.66 profile/correction browser cases pass; backend source is unchanged. See R01-crm-correction-field-entry."
+        "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
+        "previous_reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+        "review": "Separated correction creation permission from queue access and added two dictionary entries. Other CRM mutation/page behavior is unchanged; reuse the66-case field-entry checkpoint for unaffected paths. Focused evidence:R01-crm-correction-only-access."
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+      "reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 420,
       "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
@@ -3993,7 +3993,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "8a0b17faf8a77d423c6eb30d3440b4f84f9e699adf132b24b38da5789b68f209"
+          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -4044,15 +4044,15 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
-        "previous_reviewed_sha": "4d2b231e1d527b651d31fa88391cf0a94465cd0c",
-        "review": "Added field-specific identity correction navigation and safe form preselection.66 profile/correction browser cases pass; backend source is unchanged. See R01-crm-correction-field-entry."
+        "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
+        "previous_reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+        "review": "Separated correction creation permission from queue access and added two dictionary entries. Other CRM mutation/page behavior is unchanged; reuse the66-case field-entry checkpoint for unaffected paths. Focused evidence:R01-crm-correction-only-access."
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.05",
       "status": "partial",
-      "reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+      "reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 428,
       "requirement": "**T-05.02.05 — Identity correction through verification case**\n\n- Description: Staff cannot directly edit verified identity fields. Instead, they create a verification case (profile correction request) which creates an audit trail. Changes are applied after case resolution.\n- Technical notes: Verification case is a mini-workflow: Corrector creates case with new values and evidence → Reviewer approves/rejects → On approval, identity field updated with before/after audit. Permissions: `crm:edit-identity`. Cases have states: Open, Under Review, Approved, Rejected.\n- UI/UX: \"Request correction\" button on locked fields → form with new value + upload evidence → submission creates case. Staff with review permission see case queue.\n- Dependencies: T-05.02.02\n- Complexity: L",
@@ -4068,7 +4068,7 @@
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "63216e977228846e798e54e4e03e6531a1b02a6d644831587e096f04cf20b890"
+          "sha256": "d3e1252fc222d49613dd62ec96faf89e0659b2a9bdce60f56f84f13a8e3b8198"
         },
         {
           "path": "apps/api/src/crm/verification-evidence.service.ts",
@@ -4076,11 +4076,11 @@
         },
         {
           "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
-          "sha256": "d95f9cb56f150db52b543c0a8c69ee0de08291790c04681a9ec0656dccba260a"
+          "sha256": "6f43238b949eb902a2555fed6649096e751f7cbb44dfab19cc2a8650a4572d26"
         },
         {
           "path": "apps/web/e2e/crm-corrections.spec.ts",
-          "sha256": "dff5327a342ba3d28baa713dea80d74dee42436a6cd5552b0420948d674ecc15"
+          "sha256": "cb90f17ce3f4f7c0b3c6ee58e295de43d4405ccc482964099a2b7e1021f0402d"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -4097,15 +4097,20 @@
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
           "sha256": "214d065ee0602e72c0cb3c62948438431c17d55ece0079fcd200641d302b7d0a"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "09a0e7ba789cb1c316b4c731fcb923b43902d7237527b0b1c51563a1d0a3e5d9"
         }
       ],
       "checks": [
         "Creation records the actual old value and sealed profile-bound evidence; independent current reviewers move Open to Under Review and approve/reject. Approval updates identity and before/after audit atomically. Fresh79-case API evidence includes the retained correction tests.",
         "Queue, evidence upload, password retry, immutable evidence links, legacy refusal and selected-case/result checks have10 passing production desktop/mobile browser cases. See R01-crm-correction-acknowledgements.",
-        "The five currently supported identity fields now have permission-gated, field-specific Request identity correction links.8 new fa/en desktop/mobile cases pass for individual/legal targets, keyboard activation, unauthorized/archived states and unsupported fields."
+        "The five currently supported identity fields now have permission-gated, field-specific Request identity correction links.8 new fa/en desktop/mobile cases pass for individual/legal targets, keyboard activation, unauthorized/archived states and unsupported fields.",
+        "Role-limited correction creation is now available independently of verification:read.14 HTTP and22 production browser cases verify allowed creation, denied queue/detail/review access, profile failure/retry and archived/revoked capability. See R01-crm-correction-only-access."
       ],
       "limitations": [
-        "Correction-only staff are blocked in the UI: creation uses queue.viewer.canCreate, but that queue requires verification:read while the create API requires crm:edit-identity. Separate creation access from review-queue access. Review remaining identity-field coverage against full profile requirements.",
+        "Review the remaining legal and representative identity fields against exact profile requirements. The current case API supports first_name, last_name, national_id, legal_name and national_identifier; other legal fields are blocked from direct editing and need explicit disposition.",
         "Remaining whole-page keyboard, focus, RTL and theme acceptance and dependency T-05.02.02 remain open. Legacy unsealed evidence needs resubmission; actual remote storage recovery is not certified."
       ],
       "merged_prs": [
@@ -4113,15 +4118,15 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
-        "previous_reviewed_sha": "054d28c15589c3485ccc16e88eec2b1d0d042518",
-        "review": "Added field-specific identity correction navigation and safe form preselection.66 profile/correction browser cases pass; backend source is unchanged. See R01-crm-correction-field-entry."
+        "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
+        "previous_reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+        "review": "Separated correction creation permission from queue access and added two dictionary entries. Other CRM mutation/page behavior is unchanged; reuse the66-case field-entry checkpoint for unaffected paths. Focused evidence:R01-crm-correction-only-access."
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+      "reviewed_sha": "05ce7421f8ba787464b441bc03c205f6b74bef15",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -4141,7 +4146,7 @@
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "63216e977228846e798e54e4e03e6531a1b02a6d644831587e096f04cf20b890"
+          "sha256": "d3e1252fc222d49613dd62ec96faf89e0659b2a9bdce60f56f84f13a8e3b8198"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -4169,9 +4174,9 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
-        "previous_reviewed_sha": "054d28c15589c3485ccc16e88eec2b1d0d042518",
-        "review": "Added field-specific identity correction navigation and safe form preselection.66 profile/correction browser cases pass; backend source is unchanged. See R01-crm-correction-field-entry."
+        "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
+        "previous_reviewed_sha": "f45de41cecab6e1b59937c8e797778e69560b515",
+        "review": "Separated correction creation permission from queue access and added two dictionary entries. Other CRM mutation/page behavior is unchanged; reuse the66-case field-entry checkpoint for unaffected paths. Focused evidence:R01-crm-correction-only-access."
       }
     }
   ],

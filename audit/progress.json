@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "f45de41cecab6e1b59937c8e797778e69560b515",
+  "source_revision": "05ce7421f8ba787464b441bc03c205f6b74bef15",
   "active_step": "R01",
-  "next_action": "R01: fix T-05.02.05 correction-only staff access: the creation form depends on queue.viewer.canCreate from a verification:read endpoint, despite the create API allowing crm:edit-identity. Use authorized profile capability independently of queue access; verify creation succeeds without granting queue/review reads. Then review remaining identity fields, finish legal nonidentity contact/address editing and archive writer/retention/checklist acceptance. Preserve the unanswered lost-contact recovery policy question.",
+  "next_action": "R01: review legal and representative identity-field coverage for T-05.02.05 against canonical profile requirements; the case API currently supports only five fields while other legal fields are blocked from direct editing. Implement confirmed missing corrections, then finish legal nonidentity contact/address editing and archive writer/retention/checklist acceptance. Correction-only UI access is reviewed. Preserve the unanswered lost-contact recovery policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Staff address editing, correction target/acknowledgement checks and field-specific correction links are reviewed. Fix correction-only UI access; finish legal nonidentity contact/address editing, identity-field coverage, whole-page acceptance and archive/list review."
+        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Staff address editing, correction acknowledgements, field links and correction-only access are reviewed. Finish legal/representative identity-field coverage, legal nonidentity contact/address editing, whole-page acceptance and archive/list review."
       ]
     },
     {
@@ -386,6 +386,10 @@
     {
       "id": "R01-crm-correction-field-entry",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-field-entry"
+    },
+    {
+      "id": "R01-crm-correction-only-access",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-only-access"
     }
   ],
   "deferred_improvements": [
