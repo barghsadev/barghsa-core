@@ -216,20 +216,20 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     );
     const otherId = pending2.rows[0]!.id;
     const before = await fetchWallet();
-    const result = await service.handle(
-      signed(
-        {
-          merchantOrderId: otherId,
-          merchantId: MERCHANT,
-          authority: AUTHORITY,
-          amountIrR: AMOUNT.toString(),
-          status: 'paid',
-        },
-        'evt-int-1'
+    await expect(
+      service.handle(
+        signed(
+          {
+            merchantOrderId: otherId,
+            merchantId: MERCHANT,
+            authority: AUTHORITY,
+            amountIrR: AMOUNT.toString(),
+            status: 'paid',
+          },
+          'evt-int-1'
+        )
       )
-    );
-    expect(result.processed).toBe(false);
-    expect(result.transactionId).toBe(pendingId);
+    ).rejects.toBeInstanceOf(HttpException);
     const after = await fetchWallet();
     expect(after.posted_balance).toBe(before.posted_balance);
 

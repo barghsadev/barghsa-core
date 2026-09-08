@@ -271,11 +271,18 @@ export class OnlineTopUpCallbackService {
             );
           }
           const sameOrder = existing.pendingTransactionId === pending.id;
+          if (!sameOrder || existing.walletId !== pending.walletId) {
+            httpError(
+              ErrorCodes.PROVIDER_CALLBACK_INVALID,
+              'Payment callback event belongs to another merchant order'
+            );
+          }
           const resumeCrash = sameOrder && existing.status === 'processing';
           const resumeUnpaidForPaid =
             sameOrder && existing.status === 'unpaid' && input.status === 'paid';
           if (!resumeCrash && !resumeUnpaidForPaid) {
-            return this.alreadyProcessedResult(client, existing);
+            // Keep the session lock and connection until the duplicate ledger read finishes.
+            return await this.alreadyProcessedResult(client, existing, pending);
           }
           if (resumeUnpaidForPaid) {
             await this.reopenUnpaidEvent(client, input.eventId, input.raw);
@@ -298,7 +305,8 @@ export class OnlineTopUpCallbackService {
         }
 
         if (input.status !== 'paid') {
-          await this.markPendingFailed(client, pending.id, input.status);
+          if (pending.state === 'Pending')
+            await this.markPendingFailed(client, pending.id, input.status);
           await this.finalizeEvent(client, input.eventId, 'unpaid');
           return {
             ok: true,
@@ -326,7 +334,8 @@ export class OnlineTopUpCallbackService {
         }
 
         if (!verified.paid) {
-          await this.markPendingFailed(client, pending.id, 'verify_unpaid');
+          if (pending.state === 'Pending')
+            await this.markPendingFailed(client, pending.id, 'verify_unpaid');
           await this.finalizeEvent(client, input.eventId, 'unpaid');
           return {
             ok: true,
@@ -489,7 +498,8 @@ export class OnlineTopUpCallbackService {
 
   private async alreadyProcessedResult(
     client: QueryClient,
-    existing: CallbackEventRow
+    existing: CallbackEventRow,
+    pending: TransactionRow
   ): Promise<HandleProviderCallbackResult> {
     if (existing.status === 'unpaid' || existing.status === 'processing') {
       return {
@@ -501,12 +511,17 @@ export class OnlineTopUpCallbackService {
       };
     }
     const credit = await this.findExistingCredit(client, existing.pendingTransactionId);
+    if (!credit)
+      httpError(ErrorCodes.INTERNAL_DATABASE, 'Payment callback credit could not be confirmed');
+    if (isOnlineTopUpIntentReleasable(pending.state)) {
+      await this.releasePendingIntent(client, pending.id, credit.id, existing.eventId);
+    }
     return {
       ok: true,
       processed: false,
       credited: true,
       transactionId: existing.pendingTransactionId,
-      creditTransactionId: credit?.id ?? null,
+      creditTransactionId: credit.id,
     };
   }
 
@@ -528,13 +543,14 @@ export class OnlineTopUpCallbackService {
     creditTransactionId: string,
     eventId: string
   ): Promise<void> {
-    await client.query(
+    const result = await client.query(
       `UPDATE wallet_transactions
        SET state = 'Released',
            metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb
        WHERE id = $1
          AND type = 'topup'
-         AND state IN ('Pending', 'Failed', 'Rejected')`,
+         AND state IN ('Pending', 'Failed', 'Rejected')
+       RETURNING state`,
       [
         pendingId,
         JSON.stringify({
@@ -546,6 +562,10 @@ export class OnlineTopUpCallbackService {
         }),
       ]
     );
+    const row = result.rows[0] as Record<string, unknown> | undefined;
+    if (result.rows.length !== 1 || row?.state !== 'Released') {
+      httpError(ErrorCodes.INTERNAL_DATABASE, 'Payment callback state was not persisted');
+    }
   }
 
   private async markPendingFailed(
@@ -553,13 +573,14 @@ export class OnlineTopUpCallbackService {
     pendingId: string,
     reason: string
   ): Promise<void> {
-    await client.query(
+    const result = await client.query(
       `UPDATE wallet_transactions
        SET state = 'Failed',
            metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb
        WHERE id = $1
          AND type = 'topup'
-         AND state = 'Pending'`,
+         AND state = 'Pending'
+       RETURNING state`,
       [
         pendingId,
         JSON.stringify({
@@ -570,6 +591,10 @@ export class OnlineTopUpCallbackService {
         }),
       ]
     );
+    const row = result.rows[0] as Record<string, unknown> | undefined;
+    if (result.rows.length !== 1 || row?.state !== 'Failed') {
+      httpError(ErrorCodes.INTERNAL_DATABASE, 'Payment callback state was not persisted');
+    }
   }
 
   /**
@@ -582,14 +607,19 @@ export class OnlineTopUpCallbackService {
     eventId: string,
     raw: unknown
   ): Promise<void> {
-    await client.query(
+    const result = await client.query(
       `UPDATE wallet_topup_callback_events
           SET status = 'processing',
               raw = $2::jsonb
         WHERE event_id = $1
-          AND status = 'unpaid'`,
+          AND status = 'unpaid'
+        RETURNING status`,
       [eventId, JSON.stringify(raw)]
     );
+    const row = result.rows[0] as Record<string, unknown> | undefined;
+    if (result.rows.length !== 1 || row?.status !== 'processing') {
+      httpError(ErrorCodes.INTERNAL_DATABASE, 'Payment callback state was not persisted');
+    }
   }
 
   private async finalizeEvent(
@@ -597,13 +627,18 @@ export class OnlineTopUpCallbackService {
     eventId: string,
     status: Exclude<CallbackEventStatus, 'processing'>
   ): Promise<void> {
-    await client.query(
+    const result = await client.query(
       `UPDATE wallet_topup_callback_events
           SET status = $2
         WHERE event_id = $1
-          AND status = 'processing'`,
+          AND status = 'processing'
+        RETURNING status`,
       [eventId, status]
     );
+    const row = result.rows[0] as Record<string, unknown> | undefined;
+    if (result.rows.length !== 1 || row?.status !== status) {
+      httpError(ErrorCodes.INTERNAL_DATABASE, 'Payment callback state was not persisted');
+    }
   }
 }
 

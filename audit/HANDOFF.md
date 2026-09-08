@@ -10,7 +10,7 @@ Updated 2026-09-08. Read this file first. The original 23-group fix plan remains
 - Fix confirmed original-plan defects. Review each step and run focused checks. Reuse unchanged evidence, batch full regressions, defer new noncritical improvements and exhaustive historical acceptance. Do not weaken gates or invent passes.
 - Commands start with `rtk`; explicitly stage paths. Prefer codebase-memory project `Users-majid-www-barghsa-barghsa-core`. Avoid API typechecks during Vitest package rebuilds and builds during browser fixtures. Commit clean source before collecting browser coverage; generated Python caches can invalidate its clean-tree binding.
 
-## Current evidence
+## Previous full checkpoint at 9529872
 
 | Check | Result |
 | --- | --- |
@@ -23,6 +23,14 @@ Updated 2026-09-08. Read this file first. The original 23-group fix plan remains
 | Unchanged checks | Prior backlog, 55 loop tests, OpenAPI and migration chain/snapshot through 0120 reused. |
 
 Exact revision bindings, image IDs and logs: `audit/final-repair-checkpoint.json`. Image test procedure/limits: `audit/production-image-review.md`.
+
+## Latest verified step after the full checkpoint
+
+F14 callback recovery: require persisted release/failure/reopen/final statuses; reject event IDs bound to another order or terminal credit claims without ledger credit. Hold the advisory lock until duplicate ledger lookup settles. Historical credited events with Pending/Failed/Rejected intents now release the original intent on replay without another credit.
+
+Ten PostgreSQL regressions reproduced false success before repair. Final wallet suite passes **559 tests in 28 files**, including 15 new database recovery cases and a delayed-read lock case. API types, focused lint and diff checks pass. Existing replay tests now require rejection instead of accepting another order's transaction ID. Logs `/tmp/barghsa-callback-recovery-red.log`, `/tmp/barghsa-wallet-callback-regression.log`, `/tmp/barghsa-callback-types.log`, `/tmp/barghsa-callback-lint.log`.
+
+Source changed after 9529872. Its full coverage/image results remain historical; current callback repair has focused evidence only. No external payment service was called and no remote action occurred.
 
 ## Latest completed repairs
 
