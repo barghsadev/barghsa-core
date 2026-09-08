@@ -565,6 +565,62 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "T-05.02.01 remains partial for legal document access and remaining whole-page theme/accessibility acceptance. Staff address editing and correction/archive reviews follow."
+    },
+    {
+      "id": "R01-crm-legal-documents",
+      "date": "2026-09-08",
+      "source_revision": "f74fd83266d1292c468a6db43d289e2515bf4903",
+      "summary": "Added on-demand CRM legal-document viewing with current CRM and verification permissions, immutable profile-bound copies and five-minute links.",
+      "review": "The endpoint verifies both live permissions before reading the selected legal profile, validates its sealed-key list and requires immutable storage records with matching profile/purpose metadata. Only filenames and signed URLs leave this endpoint; no raw storage metadata is added to ordinary profile detail. Reviewed local S3 signing and downloaded the original sealed fixture bytes. The UI exposes permission limits, loading, retry/refresh and empty states; it rejects mismatched profile acknowledgements and unsafe URLs, clears old links when refreshing and aborts on unmount. No provider, remote state or customer credentials changed.",
+      "checks": [
+        "19 distinct API cases have passing evidence across3 files:18 passed in the first batch; the final2-case document file passes after test-fixture corrections. These overlap by1. Fixed a cache-header assertion to accept the stronger existing middleware policy and preserved staff-role permissions as their actual text representation. API typecheck then caught an overly narrow inferred UUID test parameter; its explicit string annotation passes.",
+        "48 distinct production Chromium desktop/mobile cases have passing evidence. Initial run:44 passed and4 document cases hit an ambiguous global status selector. Scoped it to the profile panel; all8 document cases then pass in fa/en. Product code was unchanged between these runs.",
+        "50 dictionary tests, API/web types, focused lint/format, API/web/i18n builds,41 route budgets and reviewed OpenAPI contract update/check pass."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
+          "sha256": "4b749c877ef9c4375968f63f005894b51ac4111bb623059bb78b9fa9e88921de"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "e940abee038c8a80a1a34341c030e4efc3a9e69bca109f5fc6a399d0a984d919"
+        },
+        {
+          "path": "apps/api/src/crm/crm.module.ts",
+          "sha256": "eb66475e1ba2e2c7f24ea6191f3c6ea5a480602334882b657cf6ecbc988fa06c"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+          "sha256": "ca212d5cd0337d2df4c54e4cdcfa86de65a0ffde042f8a7fa5a6dac4f60fb5f3"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "a16a080d16bb7c48b502d26f30a670f00da80d76294e421e19ad6450745403ef"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "93361659d9a0fb6f546d89bbbbc0fa48b450eceb258b0b5779c90795fc9c102b"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalDocuments.tsx",
+          "sha256": "c1e15fbac8b1f4b8caed1d19ca4723b7435af36c00d757cd5b20c2ba232955ac"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "fce4b8dad18e658bf85ed8bcc83b6507d8ae355884f950efc562ec42eface227"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "32f6d85992c06c4f2b22195f0ea7ebedec9a4c5402570ea717dc1cbfe22b2a07"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "c3ef64c3706aa2f502169fd35cdb3dae4c68853c04e79bfcb2c5b32f1425ea64"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "T-05.02.01 remains partial for remaining whole-page theme/accessibility acceptance. Old documents without valid immutable storage records stay unavailable pending support review. Live provider availability and physical object recovery are not certified. Staff address editing is next."
     }
   ]
 }

@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "91309f8561d57b89200daa69881239e2ce196e2d",
+  "source_revision": "f74fd83266d1292c468a6db43d289e2515bf4903",
   "active_step": "R01",
-  "next_action": "R01: add authorized CRM legal-document viewing for T-05.02.01, then implement T-05.02.02 staff address editing. Legal fields, translated profile/location labels and mobile action wrapping now pass focused checks. Continue correction/archive and critical role/session/finance review; preserve pending lost-contact policy question.",
+  "next_action": "R01: implement T-05.02.02 staff address editing with current crm:edit permission, geography validation, confirmation and before/after audit; then review correction/archive and remaining CRM page acceptance. Full legal fields and authorized document viewing now have focused passing evidence. Continue critical role/session/finance review; preserve pending lost-contact policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Required profile URL, lifecycle, legal fields/localized labels, mobile action wrapping, record tabs and password date are implemented. Finish legal document access, remaining page acceptance, staff address editing and correction/archive/list review."
+        "Verification/account-security tasks02#T-05.02.03/.04 are verified locally. Full-profile data, localized fields/location names, authorized documents, mobile actions, record tabs and required URL are implemented. Finish staff address editing, remaining page acceptance and correction/archive/list review."
       ]
     },
     {
@@ -370,6 +370,10 @@
     {
       "id": "R01-crm-legal-fields",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-legal-fields"
+    },
+    {
+      "id": "R01-crm-legal-documents",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-legal-documents"
     }
   ],
   "deferred_improvements": [],
