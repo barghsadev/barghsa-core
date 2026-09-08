@@ -1,16 +1,16 @@
 # Remaining fix plan
 
-Current through product `adf9020`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `c706820`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 54 | 19 | 190 | 263 |
+| Tasks with merged PR evidence | 63 | 19 | 181 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 57 | 19 | 246 | 322 |
+| All claims | 66 | 19 | 237 | 322 |
 
-**265 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twelve verified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
+**256 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twelve verified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
@@ -20,7 +20,9 @@ First feature batch completed locally at `1bf4680`: agents, invitations and owne
 
 Current evidence:92 API cases,13 worker cases,80 distinct production-browser cases,50 i18n cases, applicable types/lint/format/OpenAPI and all41 unchanged route budgets. Focused reruns overlap these counts. Previous ownership API evidence is reused because its method bodies are unchanged. Deployed operations and the broad V02/coverage checkpoint are separate.
 
-Active R01 batch: registration and OTP, saved PRs #68–#76. UI029905c, atomic registrationadf9020, deduplication3507fc6 and admin OTP settingsf7086b6 are implemented and reviewed. Reuse their evidence in progress.json.active_batch. Remaining confirmed gaps are the strength estimator library, desktop /terms link and device aggregate OTP quota; remaining cookie/session/CSRF acceptance and historical claims still need disposition. Finish this batch and save one consolidated closure. No registration task/PR is closed yet. Preserve completed staff/CRM/agents work, pending lost-contact policy and R01–B01 order. Follow the feature-batch rules below.
+Registration/OTP batch completed locally at `c706820`: **9 tasks verified /9 PR reviews closed**, saved PRs #68–#76. Exact terms, local estimator, transactional registration/dedup/audit, configurable expiry and aggregate device quota are verified. Final affected API checkpoint164 distinct cases passes; terms/strength browser evidence100 distinct cases after overlap removal is reused with earlier unchanged checks. [Consolidated batch review](evidence/step-reviews.json#R01-registration-otp).
+
+Active R01 batch: session lifecycle and account recovery, saved PRs #89–#93, #99 and #100. Read progress.json.active_batch for exact tasks, partial criteria, historical deferrals and reuse evidence. Reconcile session callers first; preserve verified reset and completed staff/CRM/agents/registration work. Keep pending lost-contact policy, broader CSRF alternatives and domain-sensitive checks explicit. Current explicit PR review totals are13 closed /1 open /287 not reviewed. Follow the feature-batch rules below.
 
 ## Execution order
 
@@ -78,13 +80,13 @@ For all 19 partial records, use the exact limitations in [acceptance](acceptance
 
 | Current mapping | PRs |
 | --- | ---: |
-| At least one unresolved mapped task | 242 |
-| Only recorded verified tasks | 55 |
+| At least one unresolved mapped task | 233 |
+| Only recorded verified tasks | 64 |
 | No current task mapping | 4 |
 
 These are mapping counts, not completed PR-review counts. Even a PR mapped only to verified tasks may have an unresolved deferral or stale source evidence.
 
-Review the combined implementation once per qualified task, then associate every contributing PR. The 209 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 71, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review the combined implementation once per qualified task, then associate every contributing PR. The 200 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 62, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
 For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Seven statements in PR129/132/218 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR130 is covered by current role-assignment acceptance.
 
@@ -109,7 +111,7 @@ Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archiv
 
 ## Decisions, checks and stopping rules
 
-Retain Vite SPA under ADR004. No identity provider exists; automatic verification remains unavailable and manual verification supported. A future provider requires its contract, current authorization/step-up, encrypted configuration, audit and atomic version persistence. Dependency license allowlist is waived; coverage and route budgets are unchanged.
+Retain Vite SPA under ADR004. No identity provider exists; automatic verification remains unavailable and manual verification supported. A future provider requires its contract, current authorization/step-up, encrypted configuration, audit and atomic version persistence. Dependency license allowlist is waived; coverage floors and existing route numeric limits are unchanged. Owner approved September9 that auth budgets cover initial load, with the full password estimator measured separately:150KB auth initial limit and900KB interaction gate. Registration149.22KB and estimator837.80KB pass; eager imports still count against initial load. Canonical T-01.03.04 records this interpretation.
 
 Confirmed contacts: `info@barghsa.com`, office `021-26658042`, mobile `09002550292`. The unsupported 24-hour response promise was removed.
 

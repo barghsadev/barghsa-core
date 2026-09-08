@@ -5949,6 +5949,368 @@
         135
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 11,
+      "requirement": "**T-01.01.01 — Register route and shared auth layout**\n\n- Description: Create `/register` page with two-column auth layout: left column shows brand details (logo, title, slogan, value propositions); right column contains the registration form.\n- Technical notes: Shared auth layout component used by all auth pages (login, forgot-password). Responsive stack on mobile (single column). Brand column links to `/` for unauthenticated users.\n- UI/UX: Persian/English brand copy, full RTL/LTR support. Auth pages should not render the default app sidebar or navbar.\n- Dependencies: None\n- Complexity: M",
+      "requirement_sha256": "8937766399c88942355d0f1708aa98fb9b81480f69db630cdeb2e20f8cd95396",
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "97a833687cfd3d5e8f46e6396d50c172a9d0347f23e2f21c126f6716ba8fcd56"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "634fc203a2907102855324b6e7ffa1ea8ff5ff92d894a1d556d27f5a63e05c77"
+        }
+      ],
+      "checks": [
+        "Shared auth layout renders brand/logo/home link and three localized value propositions alongside the form, stacks on mobile and excludes application navigation. Current registration-feature browser evidence verifies fa/en direction and fit; unchanged login/reset consumers reuse their prior evidence.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        68
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 19,
+      "requirement": "**T-01.01.02 — Unified username field (email or mobile)**\n\n- Description: Single text input with placeholder \"Email or Mobile number\". Must infer type from input: if it looks like an Iranian mobile number (starts with `09`, 11 digits), format to E.164 (`+98912...`) before sending to backend. If it's email, validate with standard email regex. Backend only accepts E.164 mobile or valid email.\n- Technical notes: Frontend normalizes: `09121234567` → `+989121234567`. Iranian mobile detection regex: `/^09\\d{9}$/`. On blur, display formatted preview. If user enters international format starting with `+`, accept as-is (must pass E.164 validation). Username max length 255 chars.\n- UI/UX: Validate on blur, inline error messages. Show the formatted number as a hint (e.g. `+98 912 123 4567`). Password field NOT revealed until username is valid.\n- Dependencies: T-01.01.01\n- Complexity: M",
+      "requirement_sha256": "88bdd6de2049ef60c1a6a597f79e2fc433a2c337544e4d446f9f1d239d98d1da",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/dto/register.dto.ts",
+          "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+        },
+        {
+          "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+          "sha256": "1a32cea97203d7f915f89d67eb0e8f6305a44c75b67953caf2043a264454e3ce"
+        },
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "97a833687cfd3d5e8f46e6396d50c172a9d0347f23e2f21c126f6716ba8fcd56"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "634fc203a2907102855324b6e7ffa1ea8ff5ff92d894a1d556d27f5a63e05c77"
+        }
+      ],
+      "checks": [
+        "Username input validates on blur, caps255 characters, previews normalized mobile numbers and hides the password until valid. Canonical registration DTO normalizes email whitespace/case and Iranian mobile numbers; invalid international/email input fails. Browser and dedup/DTO evidence cover the stated examples.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        69
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 27,
+      "requirement": "**T-01.01.03 — Password field with visibility toggle and strength meter**\n\n- Description: Password input with eye toggle (show/hide). Strength meter hidden by default; appears on focus and stays visible until blur or submit. Password minimum 8 chars, must include uppercase, lowercase, digit.\n- Technical notes: Strength meter uses zxcvbn or similar client-side library with Persian/EN feedback. Strength levels: Weak, Fair, Good, Strong. Password is never sent to third-party strength APIs. Field uses `autocomplete=\"new-password\"`.\n- UI/UX: Toggle icon changes between eye/eye-off. Strength bar with color coding: red → yellow → green. On submit, validate server-side with Argon2id hashing.\n- Dependencies: T-01.01.02\n- Complexity: M",
+      "requirement_sha256": "a0439f734b1d578e5f37386e345920701dc2d8b9bce669a6fda45c550583f5b7",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/dto/register.dto.ts",
+          "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+        },
+        {
+          "path": "apps/web/e2e/registration-strength.spec.ts",
+          "sha256": "6b54b7fef51963a4b2dc25ef97c1645dd267bb95665d5fbc7b202468a21331bd"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "66186bb877abb502640b40f2903d070c6a357d591696d3eb558cd0a289f5c1ba"
+        },
+        {
+          "path": "apps/web/src/components/strength.test.ts",
+          "sha256": "b5d1da92f7464f93913f1aa9dfe12f55b62f46ff9ffab838a36dbf661356d414"
+        },
+        {
+          "path": "apps/web/src/lib/password-strength.ts",
+          "sha256": "8c8fd3c370b070137a3f1f96fbe304873d02bb4bcf6eccb6455bdf063cdf2bd7"
+        }
+      ],
+      "checks": [
+        "Password component uses the required local estimator with full common/English dictionaries, localized four-level feedback, eye toggle, new-password autocomplete and focus/blur/submit visibility. Server policy and Argon2id remain authoritative. Dynamic-load race/failure/privacy tests pass. Owner-approved initial-load and separate estimator budgets pass.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        70
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 35,
+      "requirement": "**T-01.01.04 — TOS acceptance checkbox**\n\n- Description: Checkbox with text \"By registering, I accept terms of use and policies\" — \"terms of use\" is a link to `/terms` (TOS page). Checkbox must be checked for submit to work.\n- Technical notes: Store the exact TOS version ID, content hash, and acceptance timestamp on user creation. Checkbox is required, cannot be pre-checked. TOS link opens in new tab (or in-page modal on mobile).\n- UI/UX: Error if not checked on submit. Link styled as inline anchor with underline.\n- Dependencies: E-04 (TOS admin management)\n- Complexity: S",
+      "requirement_sha256": "a8d39e3b16608f2720bd6cf35bd14ce152a9f985b1978f157351c1a73c23c7fa",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "8c19d73d5a4bc77d2ab94237d04c667427f3f507d3810439cde9212bddd5049a"
+        },
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "8b80c77082e470870d5075a019bf2f47656195ee4d1a5b7ae80e070bc905c446"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "cb72b83bc208bd08e05682212117efc8dbcce90b487b53085237477abe4f454d"
+        },
+        {
+          "path": "apps/web/src/components/RegistrationTermsDialog.tsx",
+          "sha256": "62061c68b80134acf6f7f5c91548dc9efe51b89d434225b5ac0f6cb20087ac2b"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "634fc203a2907102855324b6e7ffa1ea8ff5ff92d894a1d556d27f5a63e05c77"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "8502a9eaccb42d1c1957d21f109dc2cee6b081e9ff17648ca27e1655669c5c33"
+        }
+      ],
+      "checks": [
+        "Terms acceptance starts unchecked, blocks submission without a publication and resets on language changes. Desktop native anchor opens the exact published UUID and locale; mobile dialog retains the exact displayed text and restores focus. Draft/malformed/mismatched reads fail. Consent ID/time and both content hashes are recorded atomically during user creation.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        71
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 43,
+      "requirement": "**T-01.01.05 — \"Back to login\" and \"Forgot password?\" links**\n\n- Description: Links below the form navigating to `/login` and `/forgot-password`.\n- Technical notes: Simple `<Link>` components. Track click for analytics (optional).\n- UI/UX: Secondary text styling, not buttons.\n- Dependencies: T-01.01.01\n- Complexity: XS",
+      "requirement_sha256": "e2298cb056b032f14d184b2c7d6e7cc18f9d9b05eea183c0d32cb8b1e8dde93b",
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "97a833687cfd3d5e8f46e6396d50c172a9d0347f23e2f21c126f6716ba8fcd56"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "634fc203a2907102855324b6e7ffa1ea8ff5ff92d894a1d556d27f5a63e05c77"
+        }
+      ],
+      "checks": [
+        "Back-to-login and forgot-password are secondary links with actual /login and /forgot-password targets in the shared-layout footer. Browser assertions and current source confirm them. Analytics was optional.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        72
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.06",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 51,
+      "requirement": "**T-01.01.06 — Registration form submission and error handling**\n\n- Description: Submit button sends POST to `/api/auth/register`. Payload: `{ username, password, tosVersionId }`. Backend validates username availability, password policy, and TOS version. Returns `{ challengeId }` to proceed to OTP step.\n- Technical notes: Idempotency key from client (or dedup by username+request hash). Rate limit: 3 registration attempts per IP per minute, 10 per hour per destination. Error codes: `USERNAME_TAKEN`, `INVALID_USERNAME`, `WEAK_PASSWORD`, `TOS_NOT_ACCEPTED`, `RATE_LIMITED`, `INTERNAL_ERROR`. All errors return localized safe messages and correlation ID. Backend should not reveal whether a username exists in error messages (use generic \"cannot process registration\" for rate-limited cases).\n- UI/UX: Loading spinner on submit, disable form during request. Server errors displayed as toast + form-level alert. Valid input preserved after error.\n- Dependencies: T-01.01.02, T-01.01.03, T-01.01.04\n- Complexity: M",
+      "requirement_sha256": "40e59a2b4276e4f134880c052b3c73fde789bf7357e312a0e240508bf1f4d2fe",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "5c389bc68d63ce9e46acbccd7f07d6592e888715f62db921a934047f9bb0747f"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "8c19d73d5a4bc77d2ab94237d04c667427f3f507d3810439cde9212bddd5049a"
+        },
+        {
+          "path": "apps/api/src/auth/dto/register.dto.ts",
+          "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "294eedd94a379655b8b63081cea1f9b1227b9a586b642fb804263be033de76cf"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "634fc203a2907102855324b6e7ffa1ea8ff5ff92d894a1d556d27f5a63e05c77"
+        }
+      ],
+      "checks": [
+        "Registration submits only username/password/tosVersionId and returns an opaque challengeId. Destination serialization deduplicates identical canonical username/TOS/password requests without storing a fast password fingerprint. Independent3/IP/minute and10/destination/hour start limits persist; new sends retain destination/IP/device quotas. Safe localized errors/correlation and Retry-After use the current filter. UI freezes pending form, retains failed draft and shows toast plus alert.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        73
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.02.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 61,
+      "requirement": "**T-01.02.01 — OTP backend generation and sending**\n\n- Description: On successful registration request, server generates 6-digit secure random OTP, hashes it with SHA-256 (or stores as Argon2id hash if replay risk analysis demands it), stores with expiry (default 5 min admin-configurable), challengeId, and attempt counter. Sends OTP via the user's destination (email or SMS).\n- Technical notes: OTP is a CSPRNG-generated 6-digit numeric code. In DEV, OTP printed to API console (`[DEV] OTP for +989121234567: 483921`). Single-use: consumed after successful verify or after max attempts. Rate limit: 1 OTP per destination per 60s, 5 per hour, 10 per day. Stricter IP/device aggregate limits also apply. OTPs are never logged, never returned in API responses beyond the DEV console.\n- UI/UX: N/A (backend)\n- Dependencies: T-01.01.06\n- Complexity: M",
+      "requirement_sha256": "d528f6142e03962311cccaa761ca1b7955e9dd51e35178bcb324cb51e2847af1",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "b4e190151f5ff48b3f5de445a1181b213428c147d84480e5cf67112cc8cfa214"
+        },
+        {
+          "path": "apps/api/src/auth/otp-config.controller.ts",
+          "sha256": "fbeac35e1e2dbfeced4a708b8af1a327c6c66f77d1c6c664671896d8dccf259f"
+        },
+        {
+          "path": "apps/api/src/auth/otp-config.ts",
+          "sha256": "4a929a88daa2fe0c780f9f0f7bea85a89f67b2991c02b6a5ab32a85c9fd1c237"
+        },
+        {
+          "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+          "sha256": "32fb638baa63ff510077d5fb432946a3cbf9629804970647cd1882c5f4fa0e30"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+        }
+      ],
+      "checks": [
+        "OTP generation uses node crypto randomInt for6 digits and SHA-256 storage; encrypted outbox delivery, default300-second expiry with admin60–900-second configuration, attempt exhaustion and same-ID resend are implemented. Delivery worker tests use actual provider-fixture messages and verify retry, replacement, lease, payload erasure and concurrent claiming. Supplemental hashed device20/hour quota is shared across purposes; destination1/minute,5/hour,10/day and IP20/hour remain.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        74
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.02.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 69,
+      "requirement": "**T-01.02.02 — OTP input UI with resend**\n\n- Description: After successful registration request, show OTP input: 6 individual digit boxes or single masked input. Show destination hint (masked email/phone: `m***@example.com` or `+98***4567`). Resend button with 60s countdown timer. Auto-submit on 6 digits entered.\n- Technical notes: OTP input fields auto-advance. Resend sends same flow as initial send but with same challengeId (increments resend counter). After 5 failed attempts, invalidate the challengeId. On OTP expiry, redirect back to registration form with a message.\n- UI/UX: Digit input boxes with underline style, keyboard navigation between boxes. Countdown timer `0:59` → `0:00`, then button re-enables. Loading state on verify. Success: redirect to `/app`. Error: shake animation on OTP boxes, clear input, show error.\n- Dependencies: T-01.02.01\n- Complexity: M",
+      "requirement_sha256": "4d52c92ea4cb43e32251f9bb5c1f994740c6b101acf62665584236bca41951ab",
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "97a833687cfd3d5e8f46e6396d50c172a9d0347f23e2f21c126f6716ba8fcd56"
+        },
+        {
+          "path": "apps/web/e2e/registration-recovery.spec.ts",
+          "sha256": "e48b30a09b7002749770cf44b1b95c71ff6db2e65307ebb5d9ea96730e4d8e77"
+        },
+        {
+          "path": "apps/web/src/components/OtpInput.tsx",
+          "sha256": "1f305065082c3085b1f3d6ea5b67709d0eef2e04e08d1482641d3a68834ca154"
+        },
+        {
+          "path": "apps/web/src/lib/mask-destination.ts",
+          "sha256": "2ae10fd5ac80c861d3c0122cfc5e9a416709785688a309e88c179586a191603f"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "afe416d6a1d337f451e690609032ec97265008075a0bbaf6537aef7bc087fd1b"
+        }
+      ],
+      "checks": [
+        "OTP UI masks destination, supports six boxes, advance/backspace/arrows/paste/autosubmit, clears/shakes after error and serializes verification with resend. Cooldown uses elapsed time, resend retains challengeId, terminal/expiry paths are handled and leaving cancels delayed redirects. Current browser evidence verifies redirects through /app to onboarding and failure/retry behavior.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        75
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.02.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 77,
+      "requirement": "**T-01.02.03 — OTP verification and user creation**\n\n- Description: POST `/api/auth/register/verify` with `{ challengeId, otp }`. Server verifies OTP hash, checks expiry, checks attempt count. On success: creates user record, creates session, sets a session cookie (HttpOnly, Secure in production, and the centralized SameSite policy from E-06), then rotates the CSRF token. On failure: increment attempts, return error.\n- Technical notes: User creation and OTP consumption are atomic (same transaction). Default session: idle timeout 30 min, absolute timeout 24h. If user has no profile, redirect to `/onboarding` (handled at app-level redirect, T-03.01.01). Session identifier rotated after OTP verification. Audit: user_created event recorded.\n- UI/UX: Redirect to `/app` (which checks for profiles).\n- Dependencies: T-01.02.01, T-01.02.02\n- Complexity: M\n\n---",
+      "requirement_sha256": "a797b8d01f8d92a06e59962d2a0e4da23b31db7c207d49a3a10c5135e19e269e",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "5c389bc68d63ce9e46acbccd7f07d6592e888715f62db921a934047f9bb0747f"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "8c19d73d5a4bc77d2ab94237d04c667427f3f507d3810439cde9212bddd5049a"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "ed342dd8c1aa3b42b5df5e7b3413dd631380e5f3b7ae752ea01e16b696eacba3"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "f527954aad512f8389e9f0918c53a016737df3a379a3378b302794e39f27cf67"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
+        }
+      ],
+      "checks": [
+        "User, exact consent, OTP consumption, session, refresh and user_created audit share one transaction. Fresh session ID and random CSRF are delivered through common cookie helpers after commit; default idle30min/absolute24h are unchanged. Actual HTTP tests prove duplicate/replay/attempt rejection and rollback on session, refresh, audit and lock-wait expiry failures. Current createSession uses the supplied connection and current cookie helper retains production Secure/HttpOnly/narrow paths. Broader no-exemption CSRF wording remains T-02.02.03, not an inferred requirements amendment.",
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+      ],
+      "limitations": [
+        "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
+      ],
+      "merged_prs": [
+        76
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -6050,15 +6412,6 @@
     "01-platform-infrastructure.md#T-07.05.02",
     "01-platform-infrastructure.md#T-07.05.03",
     "01-platform-infrastructure.md#T-07.05.04",
-    "02-auth-users-admin.md#T-01.01.01",
-    "02-auth-users-admin.md#T-01.01.02",
-    "02-auth-users-admin.md#T-01.01.03",
-    "02-auth-users-admin.md#T-01.01.04",
-    "02-auth-users-admin.md#T-01.01.05",
-    "02-auth-users-admin.md#T-01.01.06",
-    "02-auth-users-admin.md#T-01.02.01",
-    "02-auth-users-admin.md#T-01.02.02",
-    "02-auth-users-admin.md#T-01.02.03",
     "02-auth-users-admin.md#T-02.03.01",
     "02-auth-users-admin.md#T-03.01.01",
     "02-auth-users-admin.md#T-03.01.02",

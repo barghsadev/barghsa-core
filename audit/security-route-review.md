@@ -1,8 +1,8 @@
 # CSRF and sensitive-action review
 
-Current through product `f7086b6`, 2026-09-09. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
+Current through product/test `c706820`, 2026-09-09. Requirements: `02-auth-users-admin.md#T-02.02.03` and `T-02.02.04`. Both remain partial. [All registered routes](evidence/r01/route-security.csv) include controller source hashes. This is registration evidence, not a claim that every handler, transaction or screen has passed review.
 
-The inventory reflects compiled Nest module/controller metadata without starting the application. It follows imports and forward references from AppModule, reads global/controller/method guards and route decorators, and expands registered paths. There are 33 modules, 64 controllers and 345 routes. Global guards are RateLimitGuard and CsrfGuard. The September9 refresh adds the OTP settings GET/PUT pair; every previous route, guard, flag and source hash is unchanged. OTP settings PUT has current permission/session/CSRF/step-up checks and atomic audit evidence in progress.json.active_batch.
+The inventory reflects compiled Nest module/controller metadata without starting the application. It follows imports and forward references from AppModule, reads global/controller/method guards and route decorators, and expands registered paths. There are 33 modules, 64 controllers and 345 routes. Global guards are RateLimitGuard and CsrfGuard. The September9 OTP settings refresh added the GET/PUT pair. The registration/OTP checkpoint subsequently reviewed and refreshed22 AuthController/TosController source bindings for optional published-version reads and device-cookie propagation; route paths, guards and flags are unchanged. OTP settings permission/session/CSRF/step-up and atomic audit evidence is retained in the consolidated R01-registration-otp step review.
 
 | State-changing route classification | Count | Current boundary |
 | --- | ---: | --- |
@@ -23,7 +23,7 @@ The inventory reflects compiled Nest module/controller metadata without starting
 | POST `/api/webhooks/email/resend` | No skip annotation. Service verifies Svix signature and replay window before processing. Normal provider requests have no session cookie. Full delivery and replay acceptance remains in R02. |
 | POST `/api/auth/logout` | No skip annotation. Existing session requires CSRF. No-session logout has no authenticated account to mutate. Final session HTTP suite covers rejection and success. |
 | POST `/api/csp-report` | Unauthenticated telemetry. Global CSRF currently rejects it if session context exists without a token. Check actual browser reporting and payload handling before deciding the required exception; no repair or runtime reproduction claimed here. |
-| GET `/api/wallet/top-ups/callback` | Explicit provider return, outside the203 unsafe-method registrations. It reaches payment processing. Review paid/cancelled/failed transitions and provider verification with finance; GET does not by itself prove this route has no effects. |
+| GET `/api/wallet/top-ups/callback` | Explicit provider return, outside the204 unsafe-method registrations. It reaches payment processing. Review paid/cancelled/failed transitions and provider verification with finance; GET does not by itself prove this route has no effects. |
 
 Fourteen unsafe routes have SkipCsrf:11 public-auth, refresh and two payment callbacks. Public JSON and signed callbacks remain alternatives needing explicit task disposition. No requirement amendment or external origin approval is inferred.
 

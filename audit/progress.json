@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "f7086b61013633eeafb3f0e6da98a8bc96b0d4ca",
+  "source_revision": "c706820b1dc2cac0ac00e1defb07196947d72287",
   "active_step": "R01",
-  "next_action": "Finish strength-library, desktop terms-link and device-aggregate gaps within this registration/OTP batch. Review remaining session/cookie/CSRF criteria and PR71/73/74 claims, then run the final affected workflow checkpoint and one consolidated per-task/per-PR closure.",
+  "next_action": "Continue R01-session-recovery feature batch, saved PRs89–93/99/100. Preserve nine completed registration/OTP tasks, thirteen closed PR reviews and valid tests. Review current partial limitations/caller evidence before editing; keep lost-contact policy, CSRF alternatives and cross-domain prerequisites explicit.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -114,7 +114,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Finish registration/reset/contact/staff OTP acceptance. Support contacts, link and intake runbook are implemented. Lost-contact approver/evidence policy and credential recovery method remain; actual external delivery is operational work."
+        "Registration/OTP nine-task batch verified locally atc706820. Finish remaining reset/contact/staff acceptance and explicit PR dispositions using retained evidence. Support contacts and runbook are implemented; lost-contact owner policy/execution remain. Live delivery remains operational work."
       ]
     },
     {
@@ -562,6 +562,10 @@
     {
       "id": "R01-agents-invitations-ownership",
       "review_record": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+    },
+    {
+      "id": "R01-registration-otp",
+      "review_record": "audit/evidence/step-reviews.json#R01-registration-otp"
     }
   ],
   "deferred_improvements": [
@@ -580,9 +584,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 57,
+    "acceptance_verified": 66,
     "partial": 19,
-    "pending": 246,
+    "pending": 237,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -591,8 +595,9 @@
   "user_decisions": [
     "Retain Vite SPA under ADR004.",
     "No automatic identity provider; retain safe unavailable state and supported manual verification.",
-    "Dependency license allowlist waived; coverage and bundle thresholds remain unchanged.",
-    "Confirmed support contacts: info@barghsa.com, office 021-26658042, mobile 09002550292. Unsupported response-time promise removed."
+    "Dependency license allowlist waived. Coverage thresholds and existing route numeric limits remain unchanged; see approved estimator measurement below.",
+    "Confirmed support contacts: info@barghsa.com, office 021-26658042, mobile 09002550292. Unsupported response-time promise removed.",
+    "September9: owner approved \"Initial-load limit; measure estimator separately\". Auth initial-load gate stays150KB gzip; full estimator measured independently against900KB. Initial registration149.22KB, estimator837.80KB. Eager imports remain counted. Canonical T-01.03.04 updated at06a4b44."
   ],
   "pending_questions": [
     {
@@ -694,311 +699,90 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-registration-otp",
-    "name": "Registration and OTP",
+    "id": "R01-session-recovery",
+    "name": "Session lifecycle and account recovery",
     "status": "in_progress",
     "prs": [
-      68,
-      69,
-      70,
-      71,
-      72,
-      73,
-      74,
-      75,
-      76
+      89,
+      90,
+      91,
+      92,
+      93,
+      99,
+      100
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-01.01.01",
-      "02-auth-users-admin.md#T-01.01.02",
-      "02-auth-users-admin.md#T-01.01.03",
-      "02-auth-users-admin.md#T-01.01.04",
-      "02-auth-users-admin.md#T-01.01.05",
-      "02-auth-users-admin.md#T-01.01.06",
-      "02-auth-users-admin.md#T-01.02.01",
-      "02-auth-users-admin.md#T-01.02.02",
-      "02-auth-users-admin.md#T-01.02.03"
+      "02-auth-users-admin.md#T-02.02.01",
+      "02-auth-users-admin.md#T-02.02.02",
+      "02-auth-users-admin.md#T-02.02.03",
+      "02-auth-users-admin.md#T-02.02.04",
+      "02-auth-users-admin.md#T-02.03.01",
+      "02-auth-users-admin.md#T-02.03.02",
+      "02-auth-users-admin.md#T-02.03.03"
     ],
     "remaining_checklist": [
-      "Shared auth layout, username normalization/blur hints and staged password visibility.",
-      "Local password meter/toggle/policy; exact terms version/hash/timestamp consent.",
-      "Registration submit idempotency, limits, safe localized errors/correlation, input preservation.",
-      "Secure OTP generation/configurable expiry/delivery/aggregate limits and same-challenge resend.",
-      "Masked OTP input, navigation/paste/autosubmit, cooldown, retries/expiry and redirects.",
-      "Atomic OTP consumption, user/session/CSRF creation and audit; onboarding handoff."
+      "Reconcile session creation/revocation criteria using unchanged caller evidence and completed agent/invitation/ownership batches.",
+      "Disposition JSON-auth, refresh, callbacks/GET-return and telemetry CSRF boundaries; assign finance/telemetry consumers to their owning batches without marking them passed.",
+      "Link built sensitive actions and UI recovery to owning domain reviews; preserve unbuilt refund/contract prerequisites.",
+      "Review forgot-password intake and support/recovery requirements; reuse verified OTP-first reset, estimator and delivery evidence.",
+      "Keep lost-contact execution blocked on the existing unanswered owner policy; do not ask again or infer a provider."
     ],
     "historical_deferrals": [
       {
-        "pr": 71,
-        "statement": "Hardcoded TOS version until future E-04 implementation.",
-        "disposition": "Compare current published-version/hash consent path."
-      },
-      {
-        "pr": 73,
-        "statement": "Destination-level registration limit tracked for T-02.04.01.",
-        "disposition": "Reuse verified rate-limit implementation and current source."
-      },
-      {
-        "pr": 74,
-        "statement": "Original OTP validation run had a 429 exception-filter mismatch.",
-        "disposition": "Check current error filter and retained validation evidence."
+        "pr": 92,
+        "statements": [
+          "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) — Slice 2 (separate PR)",
+          "- [ ] Frontend step-up modal dialog — Slice 2"
+        ],
+        "disposition": "Review current linked implementations before closing."
       }
     ],
+    "confirmed_defects": [],
     "reused_evidence": [
-      "R01-otp-trust-atomic",
-      "R01-reset-otp-first",
-      "R01-agents-invitations-ownership: real registration-time invitation discovery; cookie and delivery prior evidence by exact source binding"
-    ],
-    "confirmed_defects": [
-      "Password strength is a class/length heuristic rather than the required zxcvbn-or-similar client library; existing unit tests copy the heuristic instead of importing production code.",
-      "Registration terms trigger is a button opening a modal at all widths; desktop /terms link/new-tab requirement remains unmet.",
-      "OTP send quotas cover destination and IP; registration has no device aggregate quota yet."
+      "R01-registration-otp",
+      "R01-agents-invitations-ownership",
+      "audit/session-caller-review.md",
+      "audit/security-route-review.md",
+      "R01-reset-otp-first"
     ],
     "pr_dispositions": [
       {
-        "pr": 68,
+        "pr": 89,
         "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
+        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
       },
       {
-        "pr": 69,
+        "pr": 90,
         "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
+        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
       },
       {
-        "pr": 70,
+        "pr": 91,
         "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
+        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
       },
       {
-        "pr": 71,
+        "pr": 92,
         "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
+        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
       },
       {
-        "pr": 72,
+        "pr": 93,
         "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
+        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
       },
       {
-        "pr": 73,
+        "pr": 99,
         "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
+        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
       },
       {
-        "pr": 74,
+        "pr": 100,
         "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
-      },
-      {
-        "pr": 75,
-        "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
-      },
-      {
-        "pr": 76,
-        "status": "open",
-        "reason": "Current requirement and historical claim review in progress."
+        "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
       }
     ],
-    "next_action": "Finish strength-library, desktop terms-link and device-aggregate gaps within this registration/OTP batch. Review remaining session/cookie/CSRF criteria and PR71/73/74 claims, then run the final affected workflow checkpoint and one consolidated per-task/per-PR closure.",
-    "completed_work": [
-      {
-        "revision": "029905c",
-        "summary": "Registration/OTP UI repair reviewed. Masked destination helper reused unchanged from reset; meter respects focus/blur/submit while reserving layout space; localized error toast and alert; mobile branding stacks; OTP verify/resend serialize and use elapsed cooldown; stale expiry redirect checks current route; registration uses existing /app and onboarding.",
-        "checks": "76 distinct Chromium/mobile Chrome cases pass across focused runs. Final app handoff rechecks overlap eight registration cases and supply four login cases. Web types, focused lint/format and 41 unchanged budgets pass.",
-        "logs": [
-          "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
-          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-app-browser.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-browser-final.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-browser.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-budgets-final.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-budgets.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-build-final.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-build.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-existing-app-build.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-expiry-browser-final.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-expiry-browser.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-expiry-build.log.gz",
-          "audit/evidence/adf9020/r01-registration-ui-shared-browser.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz"
-        ],
-        "review_notes": "Browser checks caught collapsing-meter click loss, delayed-route unmount and an unnecessary alias. All corrected before commit. The existing /_app/app route is preserved; no new route or generated tree change.",
-        "source_evidence": [
-          {
-            "path": "apps/web/src/components/AuthLayout.tsx",
-            "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
-          },
-          {
-            "path": "apps/web/src/components/PasswordField.tsx",
-            "sha256": "a7b3b6100b2230c8c73f15738212b353904e92b764af76f998c517ecb8cf1f8a"
-          },
-          {
-            "path": "apps/web/src/lib/mask-destination.ts",
-            "sha256": "2ae10fd5ac80c861d3c0122cfc5e9a416709785688a309e88c179586a191603f"
-          },
-          {
-            "path": "apps/web/src/routes/forgot-password.tsx",
-            "sha256": "0a0fd571374f7b706d8b37488bafb79c86d4ea194b40d9bdca16cda79694f289"
-          },
-          {
-            "path": "apps/web/src/routes/register/index.tsx",
-            "sha256": "5411a592452c8112e5b6d6bd138ce43b9d4e644ce57b95dbadd32cde76fa402d"
-          },
-          {
-            "path": "apps/web/src/routes/register/verify.tsx",
-            "sha256": "afe416d6a1d337f451e690609032ec97265008075a0bbaf6537aef7bc087fd1b"
-          },
-          {
-            "path": "apps/web/e2e/registration-feature.spec.ts",
-            "sha256": "97a833687cfd3d5e8f46e6396d50c172a9d0347f23e2f21c126f6716ba8fcd56"
-          },
-          {
-            "path": "apps/web/e2e/registration-recovery.spec.ts",
-            "sha256": "e48b30a09b7002749770cf44b1b95c71ff6db2e65307ebb5d9ea96730e4d8e77"
-          }
-        ]
-      },
-      {
-        "revision": "adf9020f93d387a1baacfdd18f281ad9e7d26272",
-        "summary": "Atomic user_created audit stores accepted publication ID, acceptance time and SHA-256 hashes of both published language contents. The same transaction owns user, consent, OTP consumption, session/refresh and audit. A final database wall-clock deadline check rolls every effect back after consent/session/refresh/audit lock waits.",
-        "checks": "21 distinct real-PostgreSQL/API cases pass:15 first-run cases,5 corrected fixture checks and1 delivered-provider-code case. Audit failure permits exactly one concurrent retry. API types, focused lint/format and diff checks pass.",
-        "review_notes": "Initial fixture polls used a one-second default against a two-second deadline; set five-second timeout. Audit metadata is stored text, so the read assertion now casts JSON. Strict types caught array indexing; optional row access preserves missing-publication rejection. No schema, API response, cookie policy, dependency or OTP rate-limit change. Other auth method bodies are unchanged.",
-        "source_evidence": [
-          {
-            "path": "apps/api/src/auth/auth.service.ts",
-            "sha256": "ec783b4b07b7fad641232756497d14e8a3d0ebf740b4e78e7abe9fcd38973fd8"
-          },
-          {
-            "path": "apps/api/src/auth/registration-http.integration.test.ts",
-            "sha256": "f527954aad512f8389e9f0918c53a016737df3a379a3378b302794e39f27cf67"
-          }
-        ],
-        "logs": [
-          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
-          "audit/evidence/adf9020/r01-registration-atomic-api-final.log.gz",
-          "audit/evidence/adf9020/r01-registration-atomic-api.log.gz",
-          "audit/evidence/adf9020/r01-registration-atomic-delivery.log.gz",
-          "audit/evidence/adf9020/r01-registration-atomic-types.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
-        ]
-      },
-      {
-        "revision": "3507fc64cc70cdf51aa060d8335674a4c2eca4b9",
-        "summary": "Canonical username normalization and pending registration deduplication. Destination advisory lock serializes starts; canonical username/TOS and salted-password verification identify identical requests. New challenges, encrypted delivery and send quotas commit on the same connection. Other OTP callers retain their existing quota behavior.",
-        "checks": "51 focused cases pass across eight new HTTP cases and43 existing OTP/DTO cases. Includes4-connection concurrency,1-connection pool, mobile normalization, changed password/TOS, terminal challenges and queue rollback. API types, focused lint/format and diff checks pass.",
-        "logs": [
-          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
-          "audit/evidence/f7086b6/r01-registration-dedup-api.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
-        ],
-        "source_evidence": [
-          {
-            "path": "apps/api/src/auth/auth.service.ts",
-            "sha256": "6ff3b943af932d8a11dd564eac390d37555030afd3c709cc8d3ae33fd796c899"
-          },
-          {
-            "path": "apps/api/src/auth/otp.service.ts",
-            "sha256": "975a5bbe64e6019ac6cd80205d4bbe70f56689c5e847da897c5646bb052f33d9"
-          },
-          {
-            "path": "apps/api/src/auth/dto/register.dto.ts",
-            "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
-          },
-          {
-            "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
-            "sha256": "1a32cea97203d7f915f89d67eb0e8f6305a44c75b67953caf2043a264454e3ce"
-          }
-        ]
-      },
-      {
-        "revision": "f7086b61013633eeafb3f0e6da98a8bc96b0d4ca",
-        "summary": "Admin-configurable OTP expiry uses existing app_config with a 300-second default and 60–900-second bounds. Versioned updates recheck current staff permission, session, CSRF and password confirmation inside the audit transaction. New registration/login/reset/contact sends and resends read the current setting; already-sent deadlines stay unchanged. Localized admin UI validates read/write acknowledgments, freezes pending drafts, confirms password and supports explicit conflict reload.",
-        "checks": "24 distinct API cases pass in final isolated runs:9 real-PostgreSQL HTTP cases and15 existing OTP cases.28 distinct production-browser cases pass across Chromium/mobile Chrome:16 OTP editor cases and12 existing verification-page cases. API/web types, focused lint/format, OpenAPI contract and all41 unchanged route budgets pass. Compiled metadata confirms33 modules/64 controllers/345 routes/204 unsafe methods/122 step-up routes.",
-        "review_notes": "Review fixed account enumeration during malformed OTP configuration by validating settings before the reset-account lookup. HTTP checks cover a one-connection pool, concurrent version conflicts, audit rollback, actor revocation and session/step-up expiry during lock waits. Browser fixture corrections preserve real modal background hiding, changing submit labels and cleared passwords after attempts. An earlier combined API process exited without a summary; both selected suites passed separately afterward. Initial contract output was stale; regenerated from the built app and retained existing JSON order. No schema, provider, session-cookie policy, dependency or budget change.",
-        "logs": [
-          "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
-          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-api-final.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-api-reviewed.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-api-verified.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-api.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-browser-final.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-browser-format.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-browser-reviewed.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-browser.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-budgets.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-commit.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-contract.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-final-format-write.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-format-write.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-openapi-generate.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-unit-verified.log.gz",
-          "audit/evidence/f7086b6/r01-otp-config-web-build.log.gz",
-          "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
-          "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz"
-        ],
-        "source_evidence": [
-          {
-            "path": "apps/api/openapi.json",
-            "sha256": "0bf8600354f1c440734209436fc55c898ae2eb2a49f73e3db8b2a4d71c79fb98"
-          },
-          {
-            "path": "apps/api/src/auth/auth.module.ts",
-            "sha256": "89ebc88d35412bfd9da4b77ce34c2a0eacede9e7f6e2580e632eaf28d12d2f71"
-          },
-          {
-            "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
-            "sha256": "c0436a0733d059987f1e519f517b7924e8fe69afe600775f5d4040b9f4167bc7"
-          },
-          {
-            "path": "apps/api/src/auth/otp-config.controller.ts",
-            "sha256": "fbeac35e1e2dbfeced4a708b8af1a327c6c66f77d1c6c664671896d8dccf259f"
-          },
-          {
-            "path": "apps/api/src/auth/otp-config.ts",
-            "sha256": "4a929a88daa2fe0c780f9f0f7bea85a89f67b2991c02b6a5ab32a85c9fd1c237"
-          },
-          {
-            "path": "apps/api/src/auth/otp.service.spec.ts",
-            "sha256": "7864f55b8eb3aef20d84d20240a0a4c1ba6684533f7a4a1b84e871f825132d9b"
-          },
-          {
-            "path": "apps/api/src/auth/otp.service.ts",
-            "sha256": "a77844de50cee2f170fe59b61ffd55895bf89ceea2bb256806c5e08cab34726e"
-          },
-          {
-            "path": "apps/web/e2e/form-accessibility.spec.ts",
-            "sha256": "c95e7219735bfbde1c7f524c29468dcf7df4cf6952c6db29f9ad055ea87b8551"
-          },
-          {
-            "path": "apps/web/e2e/otp-config.spec.ts",
-            "sha256": "9763b583b0837cc8fc8f5fcc03ea4be1c14df183cd86c2616e9ce5b8c19b3b24"
-          },
-          {
-            "path": "apps/web/src/components/OtpConfigPanel.tsx",
-            "sha256": "2f185436a2ba70ab52522a3df51a0aee9ca1c5a858aafded14e0be473a4ee350"
-          },
-          {
-            "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
-            "sha256": "73e58fd3f63f8eb81600fc46da5da21766d50b6447123680dd2480982bbfece4"
-          },
-          {
-            "path": "packages/i18n/src/verification-config.ts",
-            "sha256": "8eaec56af345142c9b79be711b49dc7c28e0fd33753c5e5bcb9658219cf3c746"
-          }
-        ]
-      }
-    ],
-    "remaining_acceptance_review": [
-      "Finish strength-library, desktop terms-link and device-aggregate gaps within this registration/OTP batch. Review remaining session/cookie/CSRF criteria and PR71/73/74 claims, then run the final affected workflow checkpoint and one consolidated per-task/per-PR closure.",
-      "Reuse completed UI, atomic registration, deduplication and OTP settings evidence. No registration task or PR has closed yet. Preserve previous batch and cross-domain role assignments."
-    ]
+    "next_action": "Read current partial limitations and saved PR bodies; reconcile session caller evidence first. Fix only confirmed remaining defects. Lost-contact policy is already pending."
   },
   "open_domain_reviews": [
     {
