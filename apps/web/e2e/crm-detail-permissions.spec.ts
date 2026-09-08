@@ -22,6 +22,7 @@ function detail(targetAdmin: boolean, allowed: boolean) {
       email: 'signin@example.test',
       mobile: '+989121234568',
       lastLogin: null,
+      lastPasswordChange: '2026-08-02T01:00:00.000Z',
       isAdmin: targetAdmin,
       createdAt: '2026-08-01T01:00:00Z',
     },
@@ -273,6 +274,14 @@ for (const locale of ['fa', 'en'] as const)
       return route.fulfill({ json: { ...current, updated: true } });
     });
     await page.goto(`/admin/crm/profiles/${id}`);
+    await expect(page.getByRole('tabpanel')).toContainText(
+      await formatBrowserDate(
+        page,
+        locale,
+        { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
+        current.user.lastPasswordChange
+      )
+    );
     await page
       .getByRole('tab', {
         name: locale === 'fa' ? 'جزئیات پروفایل' : 'Profile Details',

@@ -158,6 +158,7 @@ export interface CrmProfileDetail {
     email: string | null;
     mobile: string | null;
     lastLogin: string | null;
+    lastPasswordChange: string | null;
     isAdmin: boolean;
     createdAt: string;
   };
@@ -211,6 +212,8 @@ export class CrmV2Service {
     const userResult = await pool.query(
       `SELECT user_id, username, email, mobile,
               last_login_at AT TIME ZONE 'UTC' AS last_login_at,
+              (SELECT MAX(h.created_at) FROM password_history h
+               WHERE h.user_id = users.user_id) AS last_password_change,
               is_admin, created_at AT TIME ZONE 'UTC' AS created_at
        FROM users
        WHERE user_id = $1`,
@@ -356,6 +359,7 @@ export class CrmV2Service {
         email: (userRow.email as string) ?? null,
         mobile: (userRow.mobile as string) ?? null,
         lastLogin: (userRow.last_login_at as string) ?? null,
+        lastPasswordChange: (userRow.last_password_change as string) ?? null,
         isAdmin: (userRow.is_admin as boolean) ?? false,
         createdAt: (userRow.created_at as string) ?? '',
       },

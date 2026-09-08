@@ -1,4 +1,5 @@
 import type { CrmUsersResponse } from './crm.service.js';
+import type { CrmProfileDetail } from './crm-v2.service.js';
 import { beforeAll, afterAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -146,6 +147,37 @@ it('never exposes usable customer session cookies and excludes expired sessions 
     });
     expect(impersonation.status).toBe(401);
   }
+});
+it("reports only the customer's latest recorded password change without disclosing hashes", async () => {
+  const owner = `crm-password-${randomUUID()}`;
+  const profileId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'private-current-password-hash')",
+    [owner, `${owner}@example.test`]
+  );
+  await http.pool.query('INSERT INTO profiles(id,user_id) VALUES ($1,$2)', [profileId, owner]);
+  const read = () =>
+    fetch(`${http.base}/api/crm/profiles/${profileId}`, { headers: { Cookie: cookie } });
+  const initial = await read();
+  expect(initial.status).toBe(200);
+  expect(((await initial.json()) as CrmProfileDetail).user.lastPasswordChange).toBeNull();
+  for (const [userId, version, date] of [
+    [owner, 1, '2026-08-01T01:00:00Z'],
+    [owner, 2, '2026-08-02T01:00:00Z'],
+    ['crm-page-1', 1, '2026-08-03T01:00:00Z'],
+  ] as const) {
+    await http.pool.query(
+      'INSERT INTO password_history(id,user_id,password_hash,version,created_at) VALUES ($1,$2,$3,$4,$5)',
+      [randomUUID(), userId, 'private-old-password-hash', version, date]
+    );
+  }
+  await http.pool.query('UPDATE users SET updated_at=NOW() WHERE user_id=$1', [owner]);
+  const response = await read();
+  expect(response.status).toBe(200);
+  const body = await response.text();
+  expect(JSON.parse(body).user.lastPasswordChange).toBe('2026-08-02T01:00:00.000Z');
+  expect(body).not.toContain('private-current-password-hash');
+  expect(body).not.toContain('private-old-password-hash');
 });
 it('requires recent step-up before every sensitive CRM mutation', async () => {
   const id = (await http.pool.query("SELECT id FROM profiles WHERE user_id='crm-page-3'")).rows[0]

@@ -36,6 +36,7 @@ interface UserInfo {
   email: string | null;
   mobile: string | null;
   lastLogin: string | null;
+  lastPasswordChange: string | null;
   isAdmin: boolean;
   createdAt: string;
 }
@@ -649,6 +650,16 @@ function CrmProfileDetailContent() {
               title={t('crm.profile.summary.lastLogin', locale)}
               value={user.lastLogin ? time.format(user.lastLogin) : '—'}
               icon="🔑"
+              colorClass="text-gray-600"
+            />
+            <SummaryCard
+              title={t('crm.profile.summary.lastPasswordChange', locale)}
+              value={
+                user.lastPasswordChange
+                  ? time.format(user.lastPasswordChange)
+                  : t('crm.profile.passwordChangeUnknown', locale)
+              }
+              icon="🔒"
               colorClass="text-gray-600"
             />
             <SummaryCard
