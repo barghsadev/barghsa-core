@@ -59,7 +59,7 @@ for (const locale of ['fa', 'en'] as const) {
       return route.fulfill({ json: { ...profile(id), addresses: [], legalInfo: null } });
     });
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
-    await page.route('**/api/profiles/switch/second', (route) => {
+    await page.route('**/api/profiles/default/second', (route) => {
       expect(route.request().method()).toBe('POST');
       expect(route.request().headers()['x-csrf-token']).toBe('settings-token');
       attempts++;

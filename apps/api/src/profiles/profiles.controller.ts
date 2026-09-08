@@ -148,11 +148,31 @@ export class ProfilesController {
   }
 
   /**
-   * POST /api/profiles/:id/set-default
+   * POST /api/profiles/default/:profileId
    *
-   * Sets a specific profile as the user's default. Only the profile
-   * owner can set it as default.
+   * Persist the current user's choice among owned and active-agent profiles.
    */
+  @Post('default/:profileId')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'profiles:set-default:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Choose a default from accessible profiles' })
+  @ApiResponse({
+    status: 200,
+    description: 'Default profile saved for the authenticated user.',
+    schema: { type: 'object', properties: { activeProfileId: { type: 'string' } } },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated.' })
+  @ApiResponse({ status: 404, description: 'Profile is unavailable to this user.' })
+  async chooseDefaultProfile(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<{ activeProfileId: string }> {
+    await this.profilesService.setDefaultProfile(req.session.userId, profileId);
+    return { activeProfileId: profileId };
+  }
+
+  /** Legacy owner-only default selection route. */
   @Post(':id/set-default')
   @HttpCode(200)
   @RateLimit({ namespace: 'profiles:set-default:user', limit: 20, windowMs: 60_000 })

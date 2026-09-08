@@ -68,6 +68,76 @@ function request(path: string, method = 'GET', body?: unknown) {
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
+it('saves the required default endpoint for owner and agent profiles across sessions', async () => {
+  for (const id of [owned, finance, legal]) {
+    const response = await request(`profiles/default/${id}`, 'POST');
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ activeProfileId: id });
+    expect(
+      (await http.pool.query("SELECT profile_id FROM user_profile_contexts WHERE user_id='viewer'"))
+        .rows
+    ).toEqual([{ profile_id: id }]);
+  }
+  const session = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,'viewer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+    [session, randomUUID(), randomUUID()]
+  );
+  const response = await fetch(`${http.base}/api/profiles`, {
+    headers: { Cookie: `barghsa_session=${session}` },
+  });
+  expect(await response.json()).toMatchObject({ activeProfileId: legal, hasDefault: true });
+  expect(
+    (await http.pool.query('SELECT is_default FROM profiles WHERE id=$1', [finance])).rows[0]
+      .is_default
+  ).toBe(true);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT COUNT(*)::int AS n FROM audit_log WHERE user_id='viewer' AND event='profile_context_changed'"
+      )
+    ).rows[0].n
+  ).toBe(3);
+});
+
+it('rejects unauthenticated, CSRF-invalid and inaccessible default profile changes', async () => {
+  expect(
+    (await fetch(`${http.base}/api/profiles/default/${owned}`, { method: 'POST' })).status
+  ).toBe(401);
+  expect(
+    (
+      await fetch(`${http.base}/api/profiles/default/${owned}`, {
+        method: 'POST',
+        headers: { Cookie: headers.Cookie! },
+      })
+    ).status
+  ).toBe(403);
+  expect((await request('profiles/default/not-a-uuid', 'POST')).status).toBe(400);
+  expect((await request(`profiles/default/${unrelated}`, 'POST')).status).toBe(404);
+  await http.pool.query("DELETE FROM profile_agents WHERE profile_id=$1 AND user_id='viewer'", [
+    legal,
+  ]);
+  expect((await request(`profiles/default/${legal}`, 'POST')).status).toBe(404);
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [finance]);
+  expect((await request(`profiles/default/${finance}`, 'POST')).status).toBe(404);
+  expect(await (await request('profiles')).json()).toMatchObject({ activeProfileId: owned });
+  expect(
+    (await http.pool.query("SELECT profile_id FROM user_profile_contexts WHERE user_id='viewer'"))
+      .rows
+  ).toEqual([]);
+});
+
+it('rolls back default profile selection when its audit cannot persist', async () => {
+  await http.pool.query('ALTER TABLE audit_log RENAME TO unavailable_default_audit_log');
+  expect((await request(`profiles/default/${legal}`, 'POST')).status).toBe(500);
+  expect(await (await request('profiles')).json()).toMatchObject({ activeProfileId: owned });
+  expect(
+    (await http.pool.query("SELECT profile_id FROM user_profile_contexts WHERE user_id='viewer'"))
+      .rows
+  ).toEqual([]);
+});
+
 it('lists selectable agent profiles and switches without changing another user default', async () => {
   const list = await request('profiles'),
     body = (await list.json()) as { profiles: { id: string }[]; activeProfileId: string };

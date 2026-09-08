@@ -14140,6 +14140,51 @@
           "Auth"
         ]
       }
+    },
+    "/api/profiles/default/{profileId}": {
+      "post": {
+        "operationId": "ProfilesController_chooseDefaultProfile",
+        "parameters": [
+          {
+            "name": "profileId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default profile saved for the authenticated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "activeProfileId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid profile identifier."
+          },
+          "401": {
+            "description": "Not authenticated."
+          },
+          "404": {
+            "description": "Profile is unavailable to this user."
+          }
+        },
+        "summary": "Choose a default from accessible profiles",
+        "tags": [
+          "Profiles"
+        ]
+      }
     }
   },
   "servers": [],

@@ -281,7 +281,7 @@ function SettingsProfilePage() {
     setSettingDefault(true);
     setDefaultError(null);
     try {
-      const response = await fetch(`/api/profiles/switch/${encodeURIComponent(profileId)}`, {
+      const response = await fetch(`/api/profiles/default/${encodeURIComponent(profileId)}`, {
         method: 'POST',
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
