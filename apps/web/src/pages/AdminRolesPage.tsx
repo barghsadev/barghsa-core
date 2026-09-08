@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -17,8 +17,6 @@ interface StaffRole {
   description: string;
   permissions: string[];
   predefined: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 interface EffectivePermissions {
@@ -28,6 +26,46 @@ interface EffectivePermissions {
   roleNames: string[];
   permissions: { permission: string; group: string }[];
   isWildcard: boolean;
+}
+
+function record(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function strings(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+function validRoles(value: unknown): value is StaffRole[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (role) =>
+        record(role) &&
+        typeof role.roleId === 'string' &&
+        role.roleId.trim() !== '' &&
+        typeof role.name === 'string' &&
+        typeof role.description === 'string' &&
+        typeof role.predefined === 'boolean' &&
+        strings(role.permissions)
+    )
+  );
+}
+
+function validEffective(value: unknown, userId: string): value is EffectivePermissions {
+  return (
+    record(value) &&
+    value.userId === userId &&
+    typeof value.isAdmin === 'boolean' &&
+    typeof value.isWildcard === 'boolean' &&
+    strings(value.roleIds) &&
+    strings(value.roleNames) &&
+    Array.isArray(value.permissions) &&
+    value.permissions.every(
+      (item) =>
+        record(item) && typeof item.permission === 'string' && typeof item.group === 'string'
+    )
+  );
 }
 
 /** Permission groups ordered for stable display. */
@@ -81,6 +119,8 @@ export default function AdminRolesPage() {
   const [roles, setRoles] = useState<StaffRole[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [reload, setReload] = useState(0);
+  const lookupRequest = useRef<AbortController | null>(null);
 
   const [staffUserId, setStaffUserId] = useState('');
   const [effective, setEffective] = useState<EffectivePermissions | null>(null);
@@ -88,62 +128,85 @@ export default function AdminRolesPage() {
   const [permError, setPermError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
+    const request = new AbortController();
+    setIsLoading(true);
+    setIsError(false);
+    void (async () => {
       try {
-        const res = await fetch('/api/admin/roles');
-        if (!res.ok) throw new Error('Failed to fetch roles');
-        const json = (await res.json()) as StaffRole[];
-        if (!cancelled) {
-          setRoles(json);
-          setIsLoading(false);
-        }
+        const res = await fetch('/api/admin/roles', { signal: request.signal });
+        if (!res.ok) throw new Error('roles');
+        const json: unknown = await res.json();
+        if (!validRoles(json)) throw new Error('roles');
+        if (!request.signal.aborted) setRoles(json);
       } catch {
-        if (!cancelled) {
-          setIsLoading(false);
-          setIsError(true);
-        }
+        if (!request.signal.aborted) setIsError(true);
+      } finally {
+        if (!request.signal.aborted) setIsLoading(false);
       }
-    };
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    })();
+    return () => request.abort();
+  }, [reload]);
+
+  useEffect(() => () => lookupRequest.current?.abort(), []);
 
   const lookupEffective = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
       const id = staffUserId.trim();
       if (!id) return;
+      lookupRequest.current?.abort();
+      const request = new AbortController();
+      lookupRequest.current = request;
       setPermLoading(true);
       setPermError(null);
       setEffective(null);
+      let failureKey = 'admin.roles.user.lookup.failed';
       try {
-        const res = await fetch(`/api/admin/users/${encodeURIComponent(id)}/effective-permissions`);
-        if (!res.ok) {
-          if (res.status === 404) throw new Error(t('admin.roles.user.notfound', locale));
-          throw new Error(t('admin.roles.user.lookup.failed', locale));
-        }
-        const json = (await res.json()) as EffectivePermissions;
-        setEffective(json);
-      } catch (err) {
-        setPermError(
-          err instanceof Error ? err.message : t('admin.roles.user.lookup.failed', locale)
+        const res = await fetch(
+          `/api/admin/users/${encodeURIComponent(id)}/effective-permissions`,
+          {
+            signal: request.signal,
+          }
         );
+        if (!res.ok) {
+          if (res.status === 404) failureKey = 'admin.roles.user.notfound';
+          throw new Error('permissions');
+        }
+        const json: unknown = await res.json();
+        if (!validEffective(json, id)) throw new Error('permissions');
+        if (!request.signal.aborted) setEffective(json);
+      } catch {
+        if (!request.signal.aborted) setPermError(failureKey);
       } finally {
-        setPermLoading(false);
+        if (!request.signal.aborted) setPermLoading(false);
       }
     },
-    [staffUserId, locale]
+    [staffUserId]
   );
 
   if (isLoading) {
-    return <div className="p-6 text-gray-500">{t('common.loading', locale)}</div>;
+    return (
+      <div role="status" className="p-6 text-gray-500">
+        {t('common.loading', locale)}
+      </div>
+    );
   }
 
   if (isError || !roles) {
-    return <div className="p-6 text-red-600">{t('admin.roles.load.failed', locale)}</div>;
+    return (
+      <div className="p-6 space-y-3">
+        <p role="alert" className="text-red-600">
+          {t('admin.roles.load.failed', locale)}
+        </p>
+        <button
+          type="button"
+          onClick={() => setReload((value) => value + 1)}
+          className="rounded-md border px-3 py-2"
+        >
+          {t('admin.roles.retry', locale)}
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -230,7 +293,13 @@ export default function AdminRolesPage() {
               id="staffUserId"
               type="text"
               value={staffUserId}
-              onChange={(e) => setStaffUserId(e.target.value)}
+              onChange={(e) => {
+                lookupRequest.current?.abort();
+                setStaffUserId(e.target.value);
+                setEffective(null);
+                setPermError(null);
+                setPermLoading(false);
+              }}
               placeholder={t('admin.roles.effective.userId.placeholder', locale)}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -244,7 +313,11 @@ export default function AdminRolesPage() {
           </button>
         </form>
 
-        {permError && <p className="mt-3 text-sm text-red-600">{permError}</p>}
+        {permError && (
+          <p role="alert" className="mt-3 text-sm text-red-600">
+            {t(permError, locale)}
+          </p>
+        )}
 
         {effective && (
           <div className="mt-5 rounded-md border border-gray-200 p-4">

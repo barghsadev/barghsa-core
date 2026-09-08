@@ -737,6 +737,7 @@ export const fa: I18nDictionary = {
   'admin.roles.predefined': 'از پیش‌تعریف‌شده',
   'admin.roles.no.permissions': 'بدون دسترسی',
   'admin.roles.load.failed': 'خطا در بارگذاری نقش‌ها',
+  'admin.roles.retry': 'تلاش مجدد',
   'admin.roles.effective.title': 'دسترسی‌های موثر یک کاربر',
   'admin.roles.effective.subtitle':
     'شناسه کاربر کارکن را وارد کنید تا مجموعه دسترسی‌های مؤثر (اجتماع دسترسی‌های همه نقش‌های او) نمایش داده شود.',
@@ -1590,6 +1591,7 @@ export const en: I18nDictionary = {
   'admin.roles.predefined': 'Predefined',
   'admin.roles.no.permissions': 'No permissions',
   'admin.roles.load.failed': 'Failed to load roles',
+  'admin.roles.retry': 'Retry',
   'admin.roles.effective.title': 'Effective permissions',
   'admin.roles.effective.subtitle':
     'Enter a staff user ID to view the effective permission set (union of their roles).',
