@@ -232,6 +232,41 @@ it('requires recent step-up before every sensitive CRM mutation', async () => {
   });
   expect(identity.status).toBe(400);
 });
+it('returns default and archive details without discarding the retained profile', async () => {
+  const userId = `crm-lifecycle-${randomUUID()}`,
+    profileId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'test-only')",
+    [userId, `${userId}@example.test`]
+  );
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,is_default,status) VALUES ($1,$2,true,'ACTIVE')",
+    [profileId, userId]
+  );
+  const read = () =>
+    fetch(`${http.base}/api/crm/profiles/${profileId}`, { headers: { Cookie: cookie } });
+  const active = await read();
+  expect(active.status).toBe(200);
+  expect(((await active.json()) as CrmProfileDetail).profile).toMatchObject({
+    isDefault: true,
+    archived: false,
+    archivedAt: null,
+    archivedReason: null,
+  });
+  await http.pool.query(
+    "UPDATE profiles SET archived=true,is_default=false,archived_at='2026-08-02T01:00:00Z',archived_reason='Customer closure request' WHERE id=$1",
+    [profileId]
+  );
+  const archived = await read();
+  expect(archived.status).toBe(200);
+  expect(((await archived.json()) as CrmProfileDetail).profile).toMatchObject({
+    id: profileId,
+    isDefault: false,
+    archived: true,
+    archivedAt: '2026-08-02T01:00:00.000Z',
+    archivedReason: 'Customer closure request',
+  });
+});
 it('archives an empty profile once and blocks funds and canonical legal ownership', async () => {
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='crm-admin'");
   const csrf = (await http.pool.query("SELECT csrf_token FROM sessions WHERE user_id='crm-admin'"))

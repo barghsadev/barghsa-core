@@ -19,6 +19,10 @@ import { useLocale } from '../hooks/useLocale.js';
 
 interface Profile {
   id: string;
+  isDefault: boolean;
+  archived: boolean;
+  archivedAt: string | null;
+  archivedReason: string | null;
   profileType: string;
   status: string;
   title: string | null;
@@ -395,9 +399,11 @@ function CrmProfileDetailContent() {
         <h1 className="text-2xl font-bold mt-1 flex items-center gap-3">
           {t('crm.profile.title', locale)}
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.status)}`}
+            className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.archived ? 'ARCHIVED' : profile.status)}`}
           >
-            {t(`crm.list.${profile.status}`, locale)}
+            {profile.archived
+              ? t('crm.profile.archived', locale)
+              : t(`crm.list.${profile.status}`, locale)}
           </span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">
             {getProfileTypeLabel(profile.profileType, locale)}
@@ -405,7 +411,7 @@ function CrmProfileDetailContent() {
           <span className="ml-auto flex gap-2">
             {!isEditing ? (
               <>
-                {data.viewerPermissions?.canEdit && (
+                {data.viewerPermissions?.canEdit && !profile.archived && (
                   <button
                     onClick={handleStartEdit}
                     className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
@@ -460,6 +466,7 @@ function CrmProfileDetailContent() {
       </div>
 
       {data.viewerPermissions?.canVerify &&
+        !profile.archived &&
         ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(profile.status) && (
           <div className="mb-4 space-y-3 rounded border bg-white p-4">
             <Label htmlFor="crm-verify-action">
@@ -525,7 +532,7 @@ function CrmProfileDetailContent() {
             </Button>
           </div>
         )}
-      {data.viewerPermissions?.canManageUser && (
+      {data.viewerPermissions?.canManageUser && !profile.archived && (
         <Button variant="outline" className="mb-4" onClick={() => setShowArchive(true)}>
           {t('crm.profile.archive.title', locale)}
         </Button>
@@ -559,7 +566,7 @@ function CrmProfileDetailContent() {
           }}
         />
       )}
-      {data.viewerPermissions?.canEditIdentity && (
+      {data.viewerPermissions?.canEditIdentity && !profile.archived && (
         <p className="mb-4">
           <a
             className="text-blue-700 underline"
@@ -767,7 +774,33 @@ function CrmProfileDetailContent() {
           <Section title={t('crm.profile.section.profile', locale)}>
             <DetailRow label="Profile ID" value={profile.id} />
             <DetailRow label="Type" value={getProfileTypeLabel(profile.profileType, locale)} />
-            <DetailRow label={t('crm.profile.label.status', locale)} value={profile.status} />
+            <DetailRow
+              label={t('crm.profile.label.status', locale)}
+              value={t(`crm.list.${profile.status}`, locale)}
+            />
+            <DetailRow
+              label={t('crm.profile.label.default', locale)}
+              value={t(
+                profile.isDefault ? 'crm.profile.label.yes' : 'crm.profile.label.no',
+                locale
+              )}
+            />
+            <DetailRow
+              label={t('crm.profile.archived', locale)}
+              value={t(profile.archived ? 'crm.profile.label.yes' : 'crm.profile.label.no', locale)}
+            />
+            {profile.archived && (
+              <>
+                <DetailRow
+                  label={t('crm.profile.archivedAt', locale)}
+                  value={time.format(profile.archivedAt)}
+                />
+                <DetailRow
+                  label={t('crm.profile.archivedReason', locale)}
+                  value={profile.archivedReason ?? '—'}
+                />
+              </>
+            )}
             {isEditing ? (
               <EditRow
                 label="Title"

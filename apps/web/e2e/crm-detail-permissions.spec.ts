@@ -5,6 +5,10 @@ function detail(targetAdmin: boolean, allowed: boolean) {
   return {
     profile: {
       id,
+      isDefault: true,
+      archived: false,
+      archivedAt: null as string | null,
+      archivedReason: null as string | null,
       profileType: 'INDIVIDUAL',
       status: 'ACTIVE',
       title: 'Customer profile',
@@ -61,6 +65,73 @@ for (const allowed of [true, false])
     await expect(page.getByRole('button', { name: 'Expire Sessions', exact: true })).toHaveCount(
       allowed ? 1 : 0
     );
+  });
+
+for (const locale of ['fa', 'en'] as const)
+  test(`CRM required URL opens the retained archived profile (${locale})`, async ({ page }) => {
+    await page.addInitScript((lang) => {
+      if (document.documentElement) document.documentElement.lang = lang;
+      new MutationObserver(() => {
+        document.documentElement.lang = lang;
+      }).observe(document, { childList: true });
+    }, locale);
+    const current = detail(false, true);
+    Object.assign(current.profile, {
+      isDefault: false,
+      archived: true,
+      archivedAt: '2026-08-02T01:00:00.000Z',
+      archivedReason: 'Customer closure request',
+    });
+    let profileChecks = 0;
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/profiles', (route) => {
+      profileChecks++;
+      return route.fulfill({ json: [] });
+    });
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
+    );
+    await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
+    await page.goto(`/app/crm/profiles/${id}`);
+    await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}$`));
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+      locale === 'fa' ? 'بایگانی‌شده' : 'Archived'
+    );
+    await expect(
+      page.getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole('button', {
+        name: locale === 'fa' ? 'بایگانی پروفایل' : 'Archive profile',
+        exact: true,
+      })
+    ).toHaveCount(0);
+    await expect(page.getByRole('combobox')).toHaveCount(0);
+    // Account security remains available: only the selected profile is archived.
+    await expect(
+      page.getByRole('button', {
+        name: locale === 'fa' ? 'پایان تمام نشست‌ها' : 'Expire Sessions',
+        exact: true,
+      })
+    ).toBeVisible();
+    await page
+      .getByRole('tab', {
+        name: locale === 'fa' ? 'جزئیات پروفایل' : 'Profile Details',
+        exact: true,
+      })
+      .click();
+    const panel = page.getByRole('tabpanel');
+    await expect(panel).toContainText('Customer closure request');
+    await expect(panel).toContainText(locale === 'fa' ? 'پروفایل پیش‌فرض' : 'Default profile');
+    await expect(panel).toContainText(
+      await formatBrowserDate(
+        page,
+        locale,
+        { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
+        current.profile.archivedAt!
+      )
+    );
+    expect(profileChecks).toBe(0);
   });
 
 for (const locale of ['fa', 'en'] as const) {

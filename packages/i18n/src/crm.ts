@@ -2,6 +2,11 @@ import { lookup } from './lookup.js';
 import { t as sharedText, type I18nDictionary, type Locale } from './index.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'crm.profile.label.default': 'پروفایل پیش‌فرض',
+  'crm.profile.archived': 'بایگانی‌شده',
+  'crm.profile.archivedAt': 'زمان بایگانی',
+  'crm.profile.archivedReason': 'دلیل بایگانی',
+
   'crm.records.refresh': 'تازه‌سازی',
   'crm.records.loading': 'در حال بارگذاری سوابق…',
   'crm.records.error': 'بارگذاری سوابق انجام نشد. دوباره تلاش کنید.',
@@ -218,6 +223,11 @@ export const fa: I18nDictionary = {
   'crm.list.PENDING_VERIFICATION': 'در انتظار تأیید',
 };
 export const en: I18nDictionary = {
+  'crm.profile.label.default': 'Default profile',
+  'crm.profile.archived': 'Archived',
+  'crm.profile.archivedAt': 'Archived at',
+  'crm.profile.archivedReason': 'Archive reason',
+
   'crm.records.refresh': 'Refresh',
   'crm.records.loading': 'Loading records…',
   'crm.records.error': 'Could not load records. Please try again.',

@@ -148,6 +148,10 @@ export interface CrmSiblingProfile {
 export interface CrmProfileDetail {
   profile: {
     id: string;
+    isDefault: boolean;
+    archived: boolean;
+    archivedAt: string | null;
+    archivedReason: string | null;
     profileType: 'INDIVIDUAL' | 'LEGAL';
     status: string;
     title: string | null;
@@ -206,7 +210,7 @@ export class CrmV2Service {
     // 1. Fetch the profile
     const profileResult = await pool.query(
       `SELECT id, user_id, profile_type, is_default, status, title, contact_email, contact_mobile,
-              first_name, last_name, national_id,
+              first_name, last_name, national_id, archived, archived_at, archived_reason,
               created_at AT TIME ZONE 'UTC' AS created_at,
               updated_at AT TIME ZONE 'UTC' AS updated_at
        FROM profiles
@@ -366,6 +370,10 @@ export class CrmV2Service {
     return {
       profile: {
         id: profileRow.id as string,
+        isDefault: profileRow.is_default === true,
+        archived: profileRow.archived === true,
+        archivedAt: (profileRow.archived_at as string) ?? null,
+        archivedReason: (profileRow.archived_reason as string) ?? null,
         profileType: profileRow.profile_type as 'INDIVIDUAL' | 'LEGAL',
         status: profileRow.status as string,
         title: (profileRow.title as string) ?? null,

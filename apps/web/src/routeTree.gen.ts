@@ -80,6 +80,7 @@ import { Route as AdminCrmCorrectionsRouteImport } from './routes/admin/crm/corr
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
 import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
+import { Route as AppCrmProfilesProfileIdRouteImport } from './routes/app/crm/profiles.$profileId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -439,6 +440,11 @@ const AdminCrmProfilesProfileIdRoute =
     path: '/profiles/$profileId',
     getParentRoute: () => AdminCrmRoute,
   } as any)
+const AppCrmProfilesProfileIdRoute = AppCrmProfilesProfileIdRouteImport.update({
+  id: '/app/crm/profiles/$profileId',
+  path: '/app/crm/profiles/$profileId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -511,6 +517,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -579,6 +586,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AppSettingsIndexRoute
   '/admin/crm': typeof AdminCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -653,6 +661,7 @@ export interface FileRoutesById {
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -727,6 +736,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/admin/crm/'
     | '/admin/crm/profiles/$profileId'
+    | '/app/crm/profiles/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -795,6 +805,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/admin/crm'
     | '/admin/crm/profiles/$profileId'
+    | '/app/crm/profiles/$profileId'
   id:
     | '__root__'
     | '/'
@@ -868,6 +879,7 @@ export interface FileRouteTypes {
     | '/_app/settings/'
     | '/admin/crm/'
     | '/admin/crm/profiles/$profileId'
+    | '/app/crm/profiles/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -881,6 +893,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRouteWithChildren
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
+  AppCrmProfilesProfileIdRoute: typeof AppCrmProfilesProfileIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1382,6 +1395,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCrmProfilesProfileIdRouteImport
       parentRoute: typeof AdminCrmRoute
     }
+    '/app/crm/profiles/$profileId': {
+      id: '/app/crm/profiles/$profileId'
+      path: '/app/crm/profiles/$profileId'
+      fullPath: '/app/crm/profiles/$profileId'
+      preLoaderRoute: typeof AppCrmProfilesProfileIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1564,6 +1584,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRouteWithChildren,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
+  AppCrmProfilesProfileIdRoute: AppCrmProfilesProfileIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
