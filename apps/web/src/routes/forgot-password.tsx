@@ -1,7 +1,7 @@
 import { authResponseRecord, hasPasswordChangeAcknowledgement } from '../lib/auth-responses.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';
 import { toast } from 'sonner';
@@ -94,17 +94,61 @@ function ForgotPasswordPage() {
   const [confirmation, setConfirmation] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [cooldown, setCooldown] = useState(0);
+  const [resendUntil, setResendUntil] = useState(0);
+  const [attemptUntil, setAttemptUntil] = useState(0);
+  const [now, setNow] = useState(Date.now);
+  const cooldown = Math.max(0, Math.ceil((resendUntil - now) / 1000));
+  const attemptCooldown = Math.max(0, Math.ceil((attemptUntil - now) / 1000));
+  function setCooldown(seconds: number) {
+    const current = Date.now();
+    setNow(current);
+    setResendUntil(current + seconds * 1000);
+  }
+  function setAttemptCooldown(seconds: number) {
+    const current = Date.now();
+    setNow(current);
+    setAttemptUntil(current + seconds * 1000);
+  }
+  const [authorization, setAuthorization] = useState<{ token: string; expiresAt: number } | null>(
+    null
+  );
+  const pending = useRef(false);
+  const abort = useRef<AbortController | null>(null);
+  useEffect(() => () => abort.current?.abort(), []);
+  useEffect(() => {
+    if (authorization) document.getElementById('new-password')?.focus();
+  }, [authorization]);
   const normalized = normalizeUsername(username);
 
   useEffect(() => {
-    if (cooldown <= 0) return;
-    const timer = setTimeout(() => setCooldown((value) => Math.max(0, value - 1)), 1000);
+    const until = Math.max(resendUntil, attemptUntil);
+    if (until <= Date.now()) return;
+    const timer = setInterval(() => {
+      const current = Date.now();
+      setNow(current);
+      if (current >= until) clearInterval(timer);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendUntil, attemptUntil]);
+  useEffect(() => {
+    if (!authorization) return;
+    const timer = setTimeout(
+      () => {
+        setAuthorization(null);
+        setOtp('');
+        setPassword('');
+        setConfirmation('');
+        setError(t('auth.otp.error.expired', locale));
+      },
+      Math.max(0, authorization.expiresAt - Date.now())
+    );
     return () => clearTimeout(timer);
-  }, [cooldown]);
+  }, [authorization, locale]);
 
   async function request(path: string, payload: unknown): Promise<Record<string, unknown> | null> {
+    abort.current = new AbortController();
     const response = await fetch(`/api/auth/${path}`, {
+      signal: abort.current.signal,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
       body: JSON.stringify(payload),
@@ -126,7 +170,9 @@ function ForgotPasswordPage() {
       'AUTH:DELIVERY:UNAVAILABLE': 'auth.otp.error.deliveryUnavailable',
     };
     if (response.status === 429) {
-      setCooldown(retryAfterSeconds(response) ?? 60);
+      (path === 'forgot-password' ? setCooldown : setAttemptCooldown)(
+        retryAfterSeconds(response) ?? 60
+      );
       setError(rateLimitMessage(response, locale, numbers.numberStyle));
     } else {
       setError(t(messages[code ?? ''] ?? 'auth.forgotPassword.error.generic', locale));
@@ -136,7 +182,8 @@ function ForgotPasswordPage() {
 
   async function start(event?: FormEvent) {
     event?.preventDefault();
-    if (busy || cooldown > 0 || !normalized.type) return;
+    if (pending.current || cooldown > 0 || !normalized.type) return;
+    pending.current = true;
     setBusy(true);
     setError(null);
     try {
@@ -145,32 +192,76 @@ function ForgotPasswordPage() {
       if (typeof body.challengeId !== 'string' || !body.challengeId.trim())
         throw new Error('Missing challenge');
       setChallengeId(body.challengeId);
+      setAuthorization(null);
+      setPassword('');
+      setConfirmation('');
       setOtp('');
       setCooldown(60);
     } catch {
       setError(t('auth.forgotPassword.error.generic', locale));
     } finally {
+      pending.current = false;
+      setBusy(false);
+    }
+  }
+
+  async function verify(event: FormEvent) {
+    event.preventDefault();
+    if (pending.current || attemptCooldown > 0 || !/^\d{6}$/.test(otp)) return;
+    pending.current = true;
+    setBusy(true);
+    setError(null);
+    try {
+      const body = await request('reset-password/verify', { challengeId, otp });
+      if (!body) return;
+      const expiresAt = typeof body.expiresAt === 'string' ? Date.parse(body.expiresAt) : NaN;
+      if (
+        body.verified !== true ||
+        body.challengeId !== challengeId ||
+        typeof body.resetToken !== 'string' ||
+        !/^[a-f0-9]{64}$/.test(body.resetToken) ||
+        !Number.isFinite(expiresAt) ||
+        expiresAt <= Date.now()
+      ) {
+        throw new Error('Invalid reset authorization');
+      }
+      setOtp('');
+      setAuthorization({ token: body.resetToken, expiresAt });
+    } catch {
+      setError(t('auth.forgotPassword.error.generic', locale));
+    } finally {
+      pending.current = false;
       setBusy(false);
     }
   }
 
   async function reset(event: FormEvent) {
     event.preventDefault();
-    if (busy || !/^\d{6}$/.test(otp)) return;
+    if (pending.current || attemptCooldown > 0 || !authorization) return;
+    if (authorization.expiresAt <= Date.now()) {
+      setError(t('auth.otp.error.expired', locale));
+      return;
+    }
     if (password !== confirmation) {
       setError(t('auth.resetPassword.mismatch', locale));
       return;
     }
+    pending.current = true;
     setBusy(true);
     setError(null);
     try {
-      const body = await request('reset-password', { challengeId, otp, newPassword: password });
+      const body = await request('reset-password', {
+        challengeId,
+        resetToken: authorization.token,
+        newPassword: password,
+      });
       if (!body) return;
       if (!hasPasswordChangeAcknowledgement(body)) throw new Error('Invalid reset acknowledgement');
       setOtp('');
       setPassword('');
       setConfirmation('');
       setChallengeId('');
+      setAuthorization(null);
       toast.success(t('auth.resetPassword.success', locale), {
         description: t('auth.resetPassword.signIn', locale),
       });
@@ -178,6 +269,7 @@ function ForgotPasswordPage() {
     } catch {
       setError(t('auth.forgotPassword.error.generic', locale));
     } finally {
+      pending.current = false;
       setBusy(false);
     }
   }
@@ -207,55 +299,82 @@ function ForgotPasswordPage() {
           </Alert>
         )}
         {challengeId ? (
-          <form onSubmit={reset} className="space-y-4">
+          <form onSubmit={authorization ? reset : verify} className="space-y-4">
             <p className="text-sm text-muted-foreground">{t('auth.forgotPassword.sent', locale)}</p>
             <p className="text-sm" dir="ltr">
               {maskDestination(normalized.normalized)}
             </p>
-            <div className="space-y-2">
-              <Label htmlFor="reset-otp">{t('auth.otp.inputLabel', locale)}</Label>
-              <Input
-                id="reset-otp"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                dir="ltr"
-                maxLength={6}
-                autoFocus
-                value={otp}
-                onChange={(event) =>
-                  setOtp(
-                    event.target.value
-                      .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 1776))
-                      .replace(/\D/g, '')
-                  )
-                }
-                disabled={busy}
-              />
-            </div>
-            <PasswordField
-              id="new-password"
-              label={t('auth.resetPassword.newPassword', locale)}
-              locale={locale}
-              value={password}
-              onChange={setPassword}
-              disabled={busy}
-            />
-            <PasswordField
-              id="confirm-password"
-              label={t('auth.resetPassword.confirmPassword', locale)}
-              locale={locale}
-              value={confirmation}
-              onChange={setConfirmation}
-              showStrength={false}
-              disabled={busy}
-            />
+            {!authorization ? (
+              <div className="space-y-2">
+                <Label htmlFor="reset-otp">{t('auth.otp.inputLabel', locale)}</Label>
+                <Input
+                  id="reset-otp"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  dir="ltr"
+                  maxLength={6}
+                  autoFocus
+                  value={otp}
+                  onChange={(event) =>
+                    setOtp(
+                      event.target.value
+                        .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 1776))
+                        .replace(/[٠-٩]/g, (digit) => String(digit.charCodeAt(0) - 1632))
+                        .replace(/\D/g, '')
+                    )
+                  }
+                  disabled={busy}
+                />
+              </div>
+            ) : (
+              <>
+                <PasswordField
+                  id="new-password"
+                  label={t('auth.resetPassword.newPassword', locale)}
+                  locale={locale}
+                  value={password}
+                  onChange={setPassword}
+                  disabled={busy}
+                />
+                <PasswordField
+                  id="confirm-password"
+                  label={t('auth.resetPassword.confirmPassword', locale)}
+                  locale={locale}
+                  value={confirmation}
+                  onChange={setConfirmation}
+                  showStrength={false}
+                  disabled={busy}
+                />
+              </>
+            )}
             <Button
               type="submit"
               className="w-full"
-              disabled={busy || otp.length !== 6 || !validPassword || !confirmation}
+              disabled={
+                busy ||
+                attemptCooldown > 0 ||
+                (authorization ? !validPassword || !confirmation : otp.length !== 6)
+              }
             >
-              {t(busy ? 'auth.resetPassword.submitting' : 'auth.resetPassword.submit', locale)}
+              {t(
+                authorization
+                  ? busy
+                    ? 'auth.resetPassword.submitting'
+                    : 'auth.resetPassword.submit'
+                  : busy
+                    ? 'auth.otp.verifying'
+                    : 'auth.otp.verifyButton',
+                locale
+              )}
             </Button>
+            {attemptCooldown > 0 && (
+              <p role="status">
+                {t('auth.otp.resendTimer', locale).replace(
+                  '{seconds}',
+                  numbers.number(attemptCooldown, { useGrouping: false })
+                )}
+              </p>
+            )}
             <Button
               type="button"
               variant="ghost"

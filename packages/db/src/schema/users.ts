@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, text, boolean, timestamp, integer } from 'drizzle-orm/pg-core';
+import { pgTable, text, boolean, timestamp, integer, uuid } from 'drizzle-orm/pg-core';
 
 /**
  * Users table (T-01.02.03).
@@ -40,6 +40,9 @@ export const users = pgTable('users', {
 
   /** Changes whenever account credentials or verified destinations change. */
   authVersion: integer('auth_version').notNull().default(0),
+
+  /** Latest reset identity; retained when expired challenges are cleaned up. */
+  passwordResetChallengeId: uuid('password_reset_challenge_id'),
 
   /** Preferred locale: 'fa' or 'en'. Defaults to Persian. */
   locale: text('locale').notNull().default('fa'),

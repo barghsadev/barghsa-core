@@ -167,10 +167,19 @@ export class OtpService {
     const deliveryId = randomUUID();
     const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination });
     const pool = getDbPool();
-    await pool.query(
-      `WITH challenge AS (
+    // Serialize replacement with reset authorization without locking old OTP
+    // rows. Changing this identity does not bump auth_version or revoke sessions.
+    const accountSql =
+      purpose === 'password_reset'
+        ? `UPDATE users SET password_reset_challenge_id=$1,updated_at=clock_timestamp()
+         WHERE user_id=$4 AND disabled_at IS NULL
+           AND ($10::integer IS NULL OR auth_version=$10) RETURNING user_id,auth_version`
+        : `SELECT user_id,auth_version FROM users WHERE user_id=$4 AND disabled_at IS NULL
+           AND ($10::integer IS NULL OR auth_version=$10) FOR SHARE`;
+    const inserted = await pool.query(
+      `WITH account AS (${accountSql}), challenge AS (
          INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose, auth_version)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $10) RETURNING challenge_id
+         SELECT $1,$2,$3,user_id,$5,$6,$7,auth_version FROM account RETURNING challenge_id
        ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
          SELECT $8,challenge_id,$3,$9,$6 FROM challenge`,
       [
@@ -186,6 +195,13 @@ export class OtpService {
         authVersion ?? null,
       ]
     );
+
+    if (inserted.rowCount === 0) {
+      // Forgot-password acknowledgements cannot reveal a disabled account or
+      // a credential change between lookup and issuance. This ID has no grant.
+      if (purpose === 'password_reset') return { challengeId, destination };
+      throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401);
+    }
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
     if (process.env.NODE_ENV === 'development') {

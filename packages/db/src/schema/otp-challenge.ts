@@ -76,11 +76,25 @@ export const otpChallenges = pgTable(
     /** Null until the OTP is successfully verified (single-use enforcement). */
     consumedAt: timestamp('consumed_at', { withTimezone: true, mode: 'date' }),
 
+    /** Password-reset authorization issued after consuming the OTP. Hash only. */
+    resetTokenHash: text('reset_token_hash'),
+    /** The authorization shares expiresAt and can complete only one reset. */
+    resetConsumedAt: timestamp('reset_consumed_at', { withTimezone: true, mode: 'date' }),
+
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => [
+    uniqueIndex('uq_otp_reset_token_hash')
+      .on(table.resetTokenHash)
+      .where(sql`${table.resetTokenHash} IS NOT NULL`),
+    check(
+      'otp_reset_authorization_state',
+      sql`(${table.resetTokenHash} IS NULL AND ${table.resetConsumedAt} IS NULL)
+        OR (${table.resetTokenHash} IS NOT NULL AND ${table.purpose}='password_reset' AND ${table.userId} IS NOT NULL
+            AND ${table.consumedAt} IS NOT NULL AND ${table.resetTokenHash} ~ '^[a-f0-9]{64}$')`
+    ),
     check(
       'otp_username_pair',
       sql`${table.previousChallengeId} IS NULL OR (${table.purpose}='change_username' AND ${table.previousChallengeId}<>${table.challengeId})`

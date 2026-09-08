@@ -80,6 +80,7 @@ describe('complete production schema baseline', () => {
         '0119_brand_history',
         '0120_rolling_rate_limits',
         '0121_device_trust_ip',
+        '0122_password_reset_authorization',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -200,6 +201,9 @@ describe('complete production schema baseline', () => {
       );
       await pool.query(
         'ALTER TABLE users DROP COLUMN auth_version; ALTER TABLE otp_challenges DROP COLUMN auth_version'
+      );
+      await pool.query(
+        'ALTER TABLE otp_challenges DROP COLUMN reset_token_hash, DROP COLUMN reset_consumed_at; ALTER TABLE users DROP COLUMN password_reset_challenge_id'
       );
       await pool.query('ALTER TABLE otp_challenges DROP COLUMN previous_challenge_id CASCADE');
       await pool.query('ALTER TABLE otp_challenges DROP COLUMN purpose CASCADE');

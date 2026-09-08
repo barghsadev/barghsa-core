@@ -32,8 +32,12 @@ import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js';
 import { OtpService } from './otp.service.js';
 import type { ForgotPasswordResponse } from './dto/forgot-password.dto.js';
 import { ForgotPasswordSchema } from './dto/forgot-password.dto.js';
-import type { ResetPasswordResponse } from './dto/reset-password.dto.js';
-import { ResetPasswordSchema } from './dto/reset-password.dto.js';
+import type { ResetPasswordResponse, VerifyResetOtpResponse } from './dto/reset-password.dto.js';
+import {
+  ResetPasswordSchema,
+  ResetPasswordStrengthSchema,
+  VerifyResetOtpSchema,
+} from './dto/reset-password.dto.js';
 import type {
   ChangeUsernameSendOtpResponse,
   ChangeUsernameVerifyResponse,
@@ -398,7 +402,8 @@ export class AuthController {
   @RateLimit({ namespace: 'activate-staff:ip', limit: 10, windowMs: 900_000, security: true })
   @ApiOperation({ summary: 'Consume a staff activation link and set a password' })
   async activateStaff(@Body() body: unknown, @Req() req: Request): Promise<{ activated: true }> {
-    const parsed = ResetPasswordSchema.pick({ newPassword: true })
+    const parsed = z
+      .object({ newPassword: ResetPasswordStrengthSchema })
       .extend({ token: z.string().regex(/^[a-f0-9]{64}$/) })
       .safeParse(body);
     if (!parsed.success)
@@ -451,6 +456,48 @@ export class AuthController {
     return this.authService.forgotPassword(parsed.data, ip);
   }
 
+  @SkipCsrf({ requireJson: true })
+  @ApiZodBody(VerifyResetOtpSchema)
+  @Post('reset-password/verify')
+  @HttpCode(200)
+  @RateLimit({
+    namespace: 'reset-password-verify:ip',
+    limit: 5,
+    windowMs: 3_600_000,
+    security: true,
+  })
+  @ApiOperation({
+    summary: 'Consume reset OTP and issue a single-use password-reset authorization',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['verified', 'challengeId', 'resetToken', 'expiresAt'],
+      properties: {
+        verified: { type: 'boolean', enum: [true] },
+        challengeId: { type: 'string', format: 'uuid' },
+        resetToken: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+        expiresAt: { type: 'string', format: 'date-time' },
+      },
+    },
+  })
+  async verifyResetOtp(
+    @Body() rawBody: unknown,
+    @Req() req: Request
+  ): Promise<VerifyResetOtpResponse> {
+    const parsed = VerifyResetOtpSchema.safeParse(rawBody);
+    if (!parsed.success)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    return this.authService.verifyResetOtp(
+      parsed.data,
+      req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    );
+  }
+
   /**
    * POST /api/auth/reset-password
    *
@@ -494,11 +541,17 @@ export class AuthController {
     const parsed = ResetPasswordSchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0];
-      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code;
-
-      if (message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code) {
-        throw new HttpException({ statusCode: 422, error: message }, 422);
+      const strength = z.object({ newPassword: ResetPasswordStrengthSchema }).safeParse(rawBody);
+      if (
+        !strength.success &&
+        strength.error.issues.some(
+          (issue) => issue.message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code
+        )
+      ) {
+        throw new HttpException(
+          { statusCode: 422, error: ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code },
+          422
+        );
       }
 
       throw new HttpException(

@@ -1,5 +1,6 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common';
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import * as argon2 from 'argon2';
 import { PASSWORD_HASH_OPTIONS } from '@barghsa/shared/password-hash';
@@ -14,7 +15,12 @@ import type {
   ForceChangePasswordResponse,
 } from './dto/force-change-password.dto.js';
 import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js';
-import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js';
+import type {
+  ResetPasswordInput,
+  ResetPasswordResponse,
+  VerifyResetOtpInput,
+  VerifyResetOtpResponse,
+} from './dto/reset-password.dto.js';
 import { OtpService, OtpAttemptRejected } from './otp.service.js';
 import {
   DeviceTrustRequired,
@@ -1017,142 +1023,163 @@ export class AuthService {
     }
   }
 
-  /**
-   * Reset password after OTP verification (T-02.03.02).
-   *
-   * Accepts a verified OTP challenge (from the forgot-password flow) and a
-   * new password. Atomically:
-   * 1. Verifies the OTP challenge (consumed, expired, attempts check).
-   * 2. Checks password history to prevent reuse of the last 5 passwords.
-   * 3. Records the current password in history.
-   * 4. Updates the user's password hash.
-   * 5. Invalidates ALL existing sessions and refresh tokens.
-   * 6. Records a password_reset audit event.
-   *
-   * No session is established — the user must log in again with the new
-   * password.
-   *
-   * Rate limits: 5 reset attempts per hour per destination (enforced by
-   * the controller via @RateLimit).
-   */
-  async resetPassword(input: ResetPasswordInput, ip: string): Promise<ResetPasswordResponse> {
-    const pool = getDbPool();
-    // Increment outside the credential transaction: failed resets still count,
-    // and the limiter must not need a second connection while holding one.
-    const destination = await pool.query(
+  private async enforceResetLimit(challengeId: string, phase: 'verify' | 'complete') {
+    // Quotas survive transaction rollback and need no second checked-out connection.
+    const result = await getDbPool().query(
       "SELECT destination FROM otp_challenges WHERE challenge_id=$1 AND purpose='password_reset'",
-      [input.challengeId]
+      [challengeId]
     );
-    if (destination.rows[0]) {
+    if (result.rows[0]) {
       await this.rateLimitService.enforceSecurityRateLimit(
         rateLimitKey(
-          'password-reset:verify:destination',
-          createHash('sha256').update(destination.rows[0].destination.toLowerCase()).digest('hex')
+          `password-reset:${phase}:destination`,
+          createHash('sha256').update(result.rows[0].destination.toLowerCase()).digest('hex')
         ),
         5,
         3_600_000
       );
     }
-    const client = await pool.connect();
+  }
 
-    try {
-      await client.query('BEGIN');
+  private async assertResetDeadline(client: PoolClient, challengeId: string) {
+    const result = await client.query(
+      'SELECT expires_at>clock_timestamp() AS valid FROM otp_challenges WHERE challenge_id=$1',
+      [challengeId]
+    );
+    if (!result.rows[0]?.valid) {
+      throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
+    }
+  }
 
-      // 1. Lock and fetch the challenge row
-      const challengeResult = await client.query(
-        `SELECT challenge_id, destination, otp_hash, attempts_remaining,
-                expires_at, consumed_at, user_id, auth_version
-         FROM otp_challenges
-         WHERE challenge_id = $1 AND purpose = 'password_reset'
-         FOR UPDATE`,
-        [input.challengeId]
+  /** Caller owns the transaction, including failed-guess persistence. */
+  private async authorizePasswordReset(
+    client: PoolClient,
+    input: VerifyResetOtpInput | ResetPasswordInput
+  ) {
+    const result = await client.query(
+      `SELECT user_id,auth_version,otp_hash,attempts_remaining,expires_at,consumed_at,
+              reset_token_hash,reset_consumed_at FROM otp_challenges
+       WHERE challenge_id=$1 AND purpose='password_reset' FOR UPDATE`,
+      [input.challengeId]
+    );
+    const row = result.rows[0];
+    if (!row)
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    const isGrant = 'resetToken' in input;
+    if (isGrant ? row.reset_consumed_at : row.consumed_at) {
+      throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
+    }
+    await this.assertResetDeadline(client, input.challengeId);
+    if (!isGrant && row.attempts_remaining <= 0) {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
+        401
       );
-
-      if (challengeResult.rows.length === 0) {
+    }
+    if (!row.user_id) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    }
+    const status = await client.query('SELECT disabled_at FROM users WHERE user_id=$1', [
+      row.user_id,
+    ]);
+    if (status.rows[0]?.disabled_at) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
+        403
+      );
+    }
+    await this.otpService.assertCurrentAccount(row.user_id, row.auth_version, client);
+    // The account is now locked. Replacement issuance only locks this account,
+    // so it cannot race finalization or deadlock on an older challenge row.
+    const account = await client.query(
+      'SELECT password_reset_challenge_id FROM users WHERE user_id=$1',
+      [row.user_id]
+    );
+    const currentId = account.rows[0]?.password_reset_challenge_id;
+    // NULL admits pre-migration challenges until a new request replaces them.
+    if (currentId && currentId !== input.challengeId) {
+      throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401);
+    }
+    await this.assertResetDeadline(client, input.challengeId);
+    if ('resetToken' in input) {
+      const submitted = createHash('sha256').update(input.resetToken).digest();
+      const stored = Buffer.from(row.reset_token_hash ?? '', 'hex');
+      if (
+        !row.consumed_at ||
+        stored.length !== submitted.length ||
+        !timingSafeEqual(stored, submitted)
+      ) {
         throw new HttpException(
-          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404
-        );
-      }
-
-      const row = challengeResult.rows[0];
-
-      // Check consumed
-      if (row.consumed_at) {
-        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
-      }
-
-      // Check expiry
-      if (new Date(row.expires_at).getTime() <= Date.now()) {
-        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
-      }
-
-      // Check attempts remaining
-      if (row.attempts_remaining <= 0) {
-        throw new HttpException(
-          { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
+          { statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code },
           401
         );
       }
-
-      // Check user_id is set (forgot-password challenges set user_id)
-      if (!row.user_id) {
-        this.logger.error(`Reset-password challenge ${input.challengeId} missing user_id`);
-        throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-          400
-        );
-      }
-
-      // 1b. Reject disabled accounts (T-10.01.01) — a disabled account must
-      // not be able to reset its password, which would let it log back in.
-      const passwordResetUserStatus = await client.query(
-        `SELECT disabled_at FROM users WHERE user_id = $1`,
-        [row.user_id]
+      await client.query(
+        'UPDATE otp_challenges SET reset_consumed_at=NOW(),updated_at=NOW() WHERE challenge_id=$1',
+        [input.challengeId]
       );
-      if (passwordResetUserStatus.rows.length > 0 && passwordResetUserStatus.rows[0].disabled_at) {
-        await client.query('ROLLBACK').catch(() => {});
-        this.logger.warn(`Password reset blocked for disabled user ${row.user_id} from ${ip}`);
-        throw new HttpException(
-          { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
-          403
-        );
-      }
-
-      await this.otpService.assertCurrentAccount(row.user_id, row.auth_version, client);
-      // Account locking can wait beyond the original OTP deadline.
-      if (new Date(row.expires_at).getTime() <= Date.now()) {
-        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
-      }
-
-      // 2. Verify OTP inside the transaction
-      const submittedHash = this.otpService.hashOtp(input.otp);
-      if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
-        // Decrement attempts and commit the transaction
+    } else {
+      if (!this.otpService.compareOtpHashes(this.otpService.hashOtp(input.otp), row.otp_hash)) {
         await client.query(
-          `UPDATE otp_challenges
-           SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
-           WHERE challenge_id = $1 AND attempts_remaining > 0`,
+          'UPDATE otp_challenges SET attempts_remaining=attempts_remaining-1,updated_at=NOW() WHERE challenge_id=$1',
           [input.challengeId]
         );
-        await client.query('COMMIT');
-
-        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code }, 401);
+        throw new OtpAttemptRejected();
       }
-
-      // 3. Consume OTP
-      const now = new Date();
-      const consumeResult = await client.query(
-        `UPDATE otp_challenges
-         SET consumed_at = $1, attempts_remaining = 0, updated_at = $1
-         WHERE challenge_id = $2 AND consumed_at IS NULL`,
-        [now, input.challengeId]
+      await client.query(
+        'UPDATE otp_challenges SET consumed_at=NOW(),attempts_remaining=0,updated_at=NOW() WHERE challenge_id=$1',
+        [input.challengeId]
       );
+    }
+    return row;
+  }
 
-      if (consumeResult.rowCount === 0) {
-        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
-      }
+  async verifyResetOtp(input: VerifyResetOtpInput, ip: string): Promise<VerifyResetOtpResponse> {
+    await this.enforceResetLimit(input.challengeId, 'verify');
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const row = await this.authorizePasswordReset(client, input);
+      const resetToken = randomBytes(32).toString('hex');
+      await client.query(
+        'UPDATE otp_challenges SET reset_token_hash=$1,updated_at=NOW() WHERE challenge_id=$2',
+        [createHash('sha256').update(resetToken).digest('hex'), input.challengeId]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+         VALUES ($1,$2,'password_reset_verified',NULL,$3,$4)`,
+        [uuidv7(), row.user_id, correlationIdStorage.getStore() ?? uuidv7(), ip]
+      );
+      await this.assertResetDeadline(client, input.challengeId);
+      await client.query('COMMIT');
+      return {
+        verified: true,
+        challengeId: input.challengeId,
+        resetToken,
+        expiresAt: new Date(row.expires_at).toISOString(),
+      };
+    } catch (error) {
+      if (error instanceof OtpAttemptRejected) await client.query('COMMIT');
+      else await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
+    } finally {
+      client.release();
+    }
+  }
 
+  /** Consume OTP or its reset grant; atomically change credentials and revoke every session. */
+  async resetPassword(input: ResetPasswordInput, ip: string): Promise<ResetPasswordResponse> {
+    if ('otp' in input) await this.enforceResetLimit(input.challengeId, 'verify');
+    await this.enforceResetLimit(input.challengeId, 'complete');
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const row = await this.authorizePasswordReset(client, input);
+      const now = new Date();
       const userId = row.user_id;
 
       // 4. Check password history (last 5 passwords)
@@ -1250,13 +1277,7 @@ export class AuthService {
 
       // Credential revocation and audit writes can wait too. Expiry here
       // must roll back the OTP, password/history, sessions and audit together.
-      const currentChallenge = await client.query(
-        'SELECT expires_at>clock_timestamp() AS valid FROM otp_challenges WHERE challenge_id=$1',
-        [input.challengeId]
-      );
-      if (!currentChallenge.rows[0]?.valid) {
-        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
-      }
+      await this.assertResetDeadline(client, input.challengeId);
       await client.query('COMMIT');
 
       this.logger.log(`Password reset for user ${userId} from ${ip}`);
@@ -1265,7 +1286,8 @@ export class AuthService {
         message: 'Your password has been reset. Please log in with your new password.',
       };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof OtpAttemptRejected) await client.query('COMMIT');
+      else await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
 
       this.logger.error(`Password reset failed: ${String(err)}`);

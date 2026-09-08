@@ -8892,68 +8892,112 @@
         "operationId": "AuthController_resetPassword",
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "challengeId": {
-                    "format": "uuid",
-                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
-                    "type": "string"
-                  },
-                  "newPassword": {
-                    "allOf": [
-                      {
-                        "pattern": "[A-Z]",
-                        "type": "string"
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "challengeId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                       },
-                      {
-                        "pattern": "[a-z]",
-                        "type": "string"
+                      "newPassword": {
+                        "type": "string",
+                        "minLength": 8,
+                        "maxLength": 128,
+                        "allOf": [
+                          {
+                            "type": "string",
+                            "pattern": "[A-Z]"
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "[a-z]"
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "[0-9]"
+                          }
+                        ]
                       },
-                      {
-                        "pattern": "[0-9]",
-                        "type": "string"
+                      "otp": {
+                        "type": "string",
+                        "minLength": 6,
+                        "maxLength": 6,
+                        "pattern": "^\\d{6}$"
                       }
+                    },
+                    "required": [
+                      "challengeId",
+                      "newPassword",
+                      "otp"
                     ],
-                    "maxLength": 128,
-                    "minLength": 8,
-                    "type": "string"
+                    "additionalProperties": false
                   },
-                  "otp": {
-                    "maxLength": 6,
-                    "minLength": 6,
-                    "pattern": "^\\d{6}$",
-                    "type": "string"
+                  {
+                    "type": "object",
+                    "properties": {
+                      "challengeId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "newPassword": {
+                        "type": "string",
+                        "minLength": 8,
+                        "maxLength": 128,
+                        "allOf": [
+                          {
+                            "type": "string",
+                            "pattern": "[A-Z]"
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "[a-z]"
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "[0-9]"
+                          }
+                        ]
+                      },
+                      "resetToken": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      }
+                    },
+                    "required": [
+                      "challengeId",
+                      "newPassword",
+                      "resetToken"
+                    ],
+                    "additionalProperties": false
                   }
-                },
-                "required": [
-                  "challengeId",
-                  "otp",
-                  "newPassword"
-                ],
-                "type": "object"
+                ]
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "Password reset successfully.",
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
                   "properties": {
                     "message": {
-                      "description": "Success message for the frontend toast.",
-                      "type": "string"
+                      "type": "string",
+                      "description": "Success message for the frontend toast."
                     }
-                  },
-                  "type": "object"
+                  }
                 }
               }
-            },
-            "description": "Password reset successfully."
+            }
           },
           "400": {
             "description": "Invalid input"
@@ -13813,6 +13857,82 @@
         "summary": "Remove own device trust after step-up; existing sessions remain active",
         "tags": [
           "Sessions"
+        ]
+      }
+    },
+    "/api/auth/reset-password/verify": {
+      "post": {
+        "operationId": "AuthController_verifyResetOtp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "challengeId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "otp": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "pattern": "^\\d{6}$"
+                  }
+                },
+                "required": [
+                  "challengeId",
+                  "otp"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "verified",
+                    "challengeId",
+                    "resetToken",
+                    "expiresAt"
+                  ],
+                  "properties": {
+                    "verified": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "challengeId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "resetToken": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Consume reset OTP and issue a single-use password-reset authorization",
+        "tags": [
+          "Auth"
         ]
       }
     }

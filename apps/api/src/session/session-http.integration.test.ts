@@ -342,6 +342,7 @@ it.each([
   'activate-staff',
   'forgot-password',
   'reset-password',
+  'reset-password/verify',
   'register/verify',
   'register/resend',
 ])('rejects form submissions to public auth /%s before processing credentials', async (path) => {

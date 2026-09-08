@@ -39,7 +39,7 @@ it('preserves existing trust on upgrade with unknown IP, supports IPv4/IPv6 and 
     const before = (await pool.query('SELECT * FROM device_trusts')).rows[0];
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0121_device_trust_ip'],
+      applied: ['0121_device_trust_ip', '0122_password_reset_authorization'],
     });
     expect((await pool.query('SELECT * FROM device_trusts')).rows).toEqual([
       { ...before, ip_address: null },
