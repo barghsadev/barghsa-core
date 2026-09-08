@@ -3219,6 +3219,73 @@
         "/tmp/barghsa-session-location-web-types-final.log",
         "/tmp/barghsa-session-location-web-types.log"
       ]
+    },
+    {
+      "id": "R01-self-revocation",
+      "date": "2026-09-08",
+      "source_revision": "93dfc2760fb62b10b407238d317db09af241f190",
+      "summary": "Single and bulk self-service session revocation revalidate the locked acting session and confirmation, revoke sessions/refresh credentials, and persist audit together.",
+      "review": [
+        "Three real-PostgreSQL regressions first reproduced unsafe successes: single and bulk revocation accepted a caller revoked after guard authorization, and bulk revocation accepted an old password while waiting for the account. Tests represent the request context already authorized by guards, then witness the actual database lock wait before committing the competing change.",
+        "Both controllers now delegate to one actor-bound transaction. It locks account then acting session, checks disabled/revoked/expiry and current CSRF, verifies the current password for bulk or current step-up for single, scopes targets to the owner and preserves the caller during bulk revocation. Deliberately revoking the current session remains supported.",
+        "Session changes, refresh-token consumption, committed active count and sessions_revoked audit share one transaction. Concurrent bulk requests report counts1 and0. Audit includes correlation, IP, scope, counts and confirmation flag; selected session IDs are hashed rather than recorded as credentials.",
+        "Original idle/absolute/step-up deadlines are checked after audit persistence, so write waits cannot outlive authorization. Expiry tests use a nontransactional sequence to prove the audit delay was reached before rollback. Audit insertion failure also leaves sessions and refresh credentials unchanged.",
+        "Legacy service primitives used by staff/internal workflows remain unchanged; their callers still need separate review. The API response format and web sources are unchanged, so existing browser interaction evidence is reused without another build. No new general step-up window is granted by the bulk confirmation.",
+        "One new HTTP assertion initially expected an invalid textual correlation header to be accepted. The middleware correctly generated a UUID. The corrected test supplies a valid UUID and verifies response/audit agreement. A misplaced sequence assertion was caught during test diff review and moved to the expiry case before completion."
+      ],
+      "checks": [
+        "41 distinct cases passed across15 self-revocation PostgreSQL cases,17 session HTTP cases and9 controller cases. The first post-fix run passed38 cases; the expanded run passed31/32 with the correlation assertion failure. The corrected HTTP case passed separately. Runs overlap and are not additive.",
+        "Three expiry cases passed with audit-phase instrumentation; the final step-up case was repeated after its phase assertion was added. That targeted run passed1 and intentionally skipped14 previously passing cases.",
+        "API types, focused ESLint, Prettier and diff checks passed. Regenerated OpenAPI matches the existing contract. No browser sources, dependencies, schemas, bundle limits or broad checkpoint changed."
+      ],
+      "remaining": [
+        "Continue trusted-device final deadline/authorization review, then login/password/privilege/recovery and staff/ownership/compromise callers, CSRF alternatives and the complete sensitive-action matrix. T-02.02.01 through T-02.02.04 remain partial.",
+        "No global coverage, production-image, remote PR, scheduler or deployment evidence renewed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/self-revocation.integration.test.ts",
+          "sha256": "0f55543660dc5dbb16bcb0c21efc930f4ed0be170b192b48030b2e94c2ed1f3d"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "5ebb15420dbee0a4d2b23afdc63e1b3006ecdbb490065f3bd5962aa3df29eb0c"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.test.ts",
+          "sha256": "019cea9ca2b240d82b3502e1f3a4538fc7f3d8228f32320d138a67d79785a25f"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "45f3f76a488b79388956dcb80324ac26db567f1c3611ba44199f136739781f3c"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "c0edf569f566e11867c2af4c0170e0bf73da526650b7c91a55fdda53487c8e8c"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-self-revocation-after.log",
+        "/tmp/barghsa-self-revocation-before.log",
+        "/tmp/barghsa-self-revocation-contract.log",
+        "/tmp/barghsa-self-revocation-expiry-final.log",
+        "/tmp/barghsa-self-revocation-expiry-format.log",
+        "/tmp/barghsa-self-revocation-final.log",
+        "/tmp/barghsa-self-revocation-format-check.log",
+        "/tmp/barghsa-self-revocation-format-final.log",
+        "/tmp/barghsa-self-revocation-format-test.log",
+        "/tmp/barghsa-self-revocation-format.log",
+        "/tmp/barghsa-self-revocation-http-final.log",
+        "/tmp/barghsa-self-revocation-lint-final.log",
+        "/tmp/barghsa-self-revocation-lint.log",
+        "/tmp/barghsa-self-revocation-openapi.log",
+        "/tmp/barghsa-self-revocation-proof-lint.log",
+        "/tmp/barghsa-self-revocation-step-up-proof.log",
+        "/tmp/barghsa-self-revocation-types-complete.log",
+        "/tmp/barghsa-self-revocation-types-final.log",
+        "/tmp/barghsa-self-revocation-types.log"
+      ]
     }
   ]
 }

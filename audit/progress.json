@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
+  "source_revision": "93dfc2760fb62b10b407238d317db09af241f190",
   "active_step": "R01",
-  "next_action": "R01: reconcile the remaining rotation/revocation callers for 02-auth-users-admin.md#T-02.02.01 and T-02.02.02. Start with revoke-all password confirmation and mutation atomicity, then login/password/privilege/recovery and staff/ownership/compromise callers; complete CSRF and sensitive-action matrices. Country location and active-list semantics are verified at c26aad7. Reuse focused checks; no broad checkpoint renewed. Lost-contact policy remains pending.",
+  "next_action": "R01: assess the same final deadline/authorization invariants in trusted-device revocation, then reconcile login/password/privilege/recovery and staff/ownership/compromise callers for T-02.02.01/T-02.02.02. Complete CSRF and sensitive-action matrices afterward. Self-service single/bulk revocation is verified at 93dfc27. Reuse focused evidence; no broad checkpoint renewed. Lost-contact policy remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "OTP-first reset, current-session display, cookie topology and approximate country location are locally verified. Finish remaining rotation/revocation/CSRF/sensitive-action caller requirements."
+        "OTP-first reset, current-session display, cookie topology, country location and actor-bound self-service revocation are locally verified. Finish trusted-device final boundary and remaining rotation/revocation/CSRF/sensitive-action callers."
       ]
     },
     {
@@ -501,6 +501,10 @@
     {
       "id": "R01-session-location",
       "review_record": "audit/evidence/step-reviews.json#R01-session-location"
+    },
+    {
+      "id": "R01-self-revocation",
+      "review_record": "audit/evidence/step-reviews.json#R01-self-revocation"
     }
   ],
   "deferred_improvements": [

@@ -5384,6 +5384,139 @@
       "sha256": "e274e2e9f12d2fb30367e0ce0f395a6053a9c435160d296f205a3208f6095802",
       "encoding": "gzip",
       "stored_sha256": "82232dfaeec0ab49391d03dfac9e1250773c56ee3320fe476f9c353afb6bb9b6"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-after.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-after.log.gz",
+      "sha256": "a50c0f76b84bd62dde1f187d008ca1c8c8e8bfcc0ae5643cdde19765972d405c",
+      "encoding": "gzip",
+      "stored_sha256": "2189e89bc24a77fd1a47a092f5ed5c419b6dd01623aeb916ac937f92d67f7807"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-before.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-before.log.gz",
+      "sha256": "eddfc3231f467086d0622bb032920d85926c3eb6bfe8cb18348d3a441c872c72",
+      "encoding": "gzip",
+      "stored_sha256": "99386ceaca02d13310f7b3fbfc493caa3cfe6c33b089615336c7d8b62e0c32ce"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-contract.log",
+      "path": "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+      "sha256": "135329686d2878faa2e19fe4a091501fbc48ad6c6463fb6530841b5e33657567",
+      "encoding": "gzip",
+      "stored_sha256": "c694a0d88e6bea88c484ed9dba8a4c032dfac224c3193ce3a97d61879e8b9b7a"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-expiry-final.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-expiry-final.log.gz",
+      "sha256": "204ae2345ff64e3009e7b13340d7b988330d9cceea72f46b626a7717fabb149a",
+      "encoding": "gzip",
+      "stored_sha256": "f77fc2bb5113de69d063ce4a60571e0cd2e1b9d85e7908b5e8896e84016fafb6"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-expiry-format.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-expiry-format.log.gz",
+      "sha256": "a96962038e29b06b2f11ee8663b99f474ffb7bc59efe0821806dadbaead81ef6",
+      "encoding": "gzip",
+      "stored_sha256": "11de909bf4ed83c382db084607a7c71a5c003e91c15d25f77059828ae17c4550"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-final.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-final.log.gz",
+      "sha256": "b0bddbdeb8868b78c892fc9acd565b508f31b44b6aba9d993b42205199aad075",
+      "encoding": "gzip",
+      "stored_sha256": "cd1a535db51ca57366411604785e025b7f4d192b77489f51c9c9220f054d6e59"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-format-final.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-format-final.log.gz",
+      "sha256": "e05919a06f54902436e276d3bb22ebe5b38260bafbf4bd4da61a688d2b2a033e",
+      "encoding": "gzip",
+      "stored_sha256": "eccf782ad3e76b2ad7556806ba4a07b624ac09f07957ffec99e9b1061f5dbcf9"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-format-test.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-format-test.log.gz",
+      "sha256": "c1e07248a51eb072d5444f839f27c87d9713375e1755e0d078e83bf84421669c",
+      "encoding": "gzip",
+      "stored_sha256": "a83b254589bad426871bb056767f82919495d133827ac6da2481cf4e845c7898"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-format.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-format.log.gz",
+      "sha256": "a57f2d52eae88a95c64359687ec011f75c6845b919d45ea272c971edf884c31c",
+      "encoding": "gzip",
+      "stored_sha256": "ee3460a9207e994b7d023e06dc4c489c715957a558e885ae8f1454288cf566a5"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-http-final.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-http-final.log.gz",
+      "sha256": "7af9050e91eff1f6701d5d977c69b36549537e407ba8994b905150d10dd7d63f",
+      "encoding": "gzip",
+      "stored_sha256": "f0d3af7c513b122f69d251e3cdddf877066343ea00b3c8906b2e782f55b8515f"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-lint-final.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-openapi.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-openapi.log.gz",
+      "sha256": "c7fe1b71d93b03cdb150c9ed7b170223d2e5de6b05a864575a9a7e5d9d238dc4",
+      "encoding": "gzip",
+      "stored_sha256": "d244240137d859c1ed54f376a443b15f380fd9da96fbc5443fac7e8eaca54edd"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-proof-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-step-up-proof.log",
+      "path": "audit/evidence/r01/barghsa-self-revocation-step-up-proof.log.gz",
+      "sha256": "cc283bbddc2a5ee568dc5f6c1fb04ebbb6702d938ea01ef38d1ce62d78fb1abd",
+      "encoding": "gzip",
+      "stored_sha256": "03338fd0c6573156b4181e1175fd31f4911f98206292efbcff0fcfdf968851b9"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-types-complete.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-self-revocation-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
     }
   ]
 }
