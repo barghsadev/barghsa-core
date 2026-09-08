@@ -35,9 +35,7 @@ async function actor() {
 }
 const operations = ['create', 'roles', 'disable', 'activation'] as const;
 for (const operation of operations)
-  for (const change of operation === 'create'
-    ? (['remove-role', 'disable-actor', 'revoke-session', 'rotate-csrf'] as const)
-    : (['remove-role', 'disable-actor'] as const)) {
+  for (const change of ['remove-role', 'disable-actor', 'revoke-session', 'rotate-csrf'] as const) {
     it(`${operation} rechecks ${change} after the request guard`, async () => {
       const current = await actor(),
         target = `00000000-0000-4000-8000-${randomUUID().slice(-12)}`,

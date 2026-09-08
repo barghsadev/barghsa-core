@@ -446,7 +446,7 @@ describe('AdminService.updateStaffRoles', () => {
     const result = await service.updateStaffRoles(
       'target-user',
       ['role-crm-verification', 'role-operations'],
-      'actor-user',
+      staffActor('actor-user'),
       '127.0.0.1'
     );
 
@@ -476,7 +476,12 @@ describe('AdminService.updateStaffRoles', () => {
     const { AdminService: Svc } = await import('./admin.service.js');
     service = new Svc();
 
-    const result = await service.updateStaffRoles('target-user', [], 'actor', '10.0.0.1');
+    const result = await service.updateStaffRoles(
+      'target-user',
+      [],
+      staffActor('actor'),
+      '10.0.0.1'
+    );
 
     expect(result.roleIds).toEqual([]);
     expect(result.previousRoleIds).toEqual(['role-admin']);
@@ -493,7 +498,12 @@ describe('AdminService.updateStaffRoles', () => {
 
     let caught: unknown;
     try {
-      await service.updateStaffRoles('nonexistent', ['role-admin'], 'actor', '10.0.0.1');
+      await service.updateStaffRoles(
+        'nonexistent',
+        ['role-admin'],
+        staffActor('actor'),
+        '10.0.0.1'
+      );
     } catch (e) {
       caught = e;
     }
@@ -519,7 +529,7 @@ describe('AdminService.updateStaffRoles', () => {
 
     let caught: unknown;
     try {
-      await service.updateStaffRoles('target', ['role-admin'], 'actor', '10.0.0.1');
+      await service.updateStaffRoles('target', ['role-admin'], staffActor('actor'), '10.0.0.1');
     } catch (e) {
       caught = e;
     }
@@ -538,7 +548,12 @@ describe('AdminService.updateStaffRoles', () => {
 
     let caught: unknown;
     try {
-      await service.updateStaffRoles('target', ['nonexistent-role'], 'actor', '10.0.0.1');
+      await service.updateStaffRoles(
+        'target',
+        ['nonexistent-role'],
+        staffActor('actor'),
+        '10.0.0.1'
+      );
     } catch (e) {
       caught = e;
     }
@@ -887,7 +902,7 @@ describe('AdminService.disableStaff', () => {
 
     const result = await service.disableStaff({
       userId: 'u-target',
-      actorUserId: 'u-admin',
+      actor: staffActor('u-admin'),
       ip: '10.0.0.1',
     });
 
@@ -933,7 +948,7 @@ describe('AdminService.disableStaff', () => {
     service = new Svc();
 
     await expect(
-      service.disableStaff({ userId: 'u-admin', actorUserId: 'u-admin', ip: '10.0.0.1' })
+      service.disableStaff({ userId: 'u-admin', actor: staffActor('u-admin'), ip: '10.0.0.1' })
     ).rejects.toMatchObject({ status: 400 });
   });
 
@@ -961,7 +976,7 @@ describe('AdminService.disableStaff', () => {
 
     const result = await service.disableStaff({
       userId: 'u2',
-      actorUserId: 'u-admin',
+      actor: staffActor('u-admin'),
       ip: '10.0.0.1',
     });
 
@@ -987,7 +1002,11 @@ describe('AdminService.disableStaff', () => {
     service = new Svc();
 
     await expect(
-      service.disableStaff({ userId: 'customer-not-staff', actorUserId: 'u-admin', ip: '10.0.0.1' })
+      service.disableStaff({
+        userId: 'customer-not-staff',
+        actor: staffActor('u-admin'),
+        ip: '10.0.0.1',
+      })
     ).rejects.toMatchObject({ status: 404 });
   });
 });

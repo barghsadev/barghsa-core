@@ -187,7 +187,7 @@ export interface StaffListResult {
 /** Input for disabling a staff account. */
 export interface DisableStaffInput {
   userId: string;
-  actorUserId: string;
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
@@ -454,13 +454,15 @@ export class AdminService {
 
   async resendStaffActivation(
     userId: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<{ deliveryStatus: 'queued' }> {
+    const actorUserId = actor.userId;
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:users:create', userId);
+      const stepUpVerifiedAt = await requireStaffStepUp(client, actor);
       const found = await client.query<{ username: string }>(
         `SELECT username FROM users WHERE user_id=$1 AND is_staff=true
         AND disabled_at IS NULL AND activation_token IS NOT NULL AND must_change_password=true FOR UPDATE`,
@@ -498,8 +500,15 @@ export class AdminService {
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
         VALUES ($1,$2,'staff_activation_reissued',$3,$4,$5,NOW())`,
-        [uuidv7(), actorUserId, JSON.stringify({ targetUserId: userId }), uuidv7(), ip]
+        [
+          uuidv7(),
+          actorUserId,
+          JSON.stringify({ targetUserId: userId, stepUpVerified: true, stepUpVerifiedAt }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          ip,
+        ]
       );
+      await requireStaffStepUp(client, actor);
       await client.query('COMMIT');
       return { deliveryStatus: 'queued' };
     } catch (error) {
@@ -762,7 +771,7 @@ export class AdminService {
    *
    * @param targetUserId - The staff user whose roles are being updated
    * @param roleIds - New role IDs to assign
-   * @param actorUserId - The admin performing the action
+   * @param actor - The authenticated session performing the action
    * @param ip - Source IP for audit
    * @param reason - Optional reason for the role change
    * @returns Previous and new role IDs
@@ -770,11 +779,12 @@ export class AdminService {
   async updateStaffRoles(
     targetUserId: string,
     roleIds: string[],
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string,
     reason?: string
   ): Promise<{ userId: string; roleIds: string[]; previousRoleIds: string[] }> {
     const pool = getDbPool();
+    const actorUserId = actor.userId;
     roleIds = [...new Set(roleIds)];
 
     // ── 1. Validate that the target user exists ──────────────────────────
@@ -810,6 +820,7 @@ export class AdminService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:roles:edit', targetUserId);
+      const stepUpVerifiedAt = await requireStaffStepUp(client, actor);
 
       // Serialize replacement and session revocation with other account edits.
       const locked = await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [
@@ -829,6 +840,7 @@ export class AdminService {
         previousRoleIds.length === roleIds.length &&
         previousRoleIds.every((id: string) => roleIds.includes(id))
       ) {
+        await requireStaffStepUp(client, actor);
         await client.query('COMMIT');
         return { userId: targetUserId, roleIds, previousRoleIds };
       }
@@ -859,7 +871,7 @@ export class AdminService {
 
       // ── 5. Record audit event ─────────────────────────────────────────
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -872,6 +884,8 @@ export class AdminService {
             previousRoleIds,
             newRoleIds: roleIds,
             reason: reason ?? null,
+            stepUpVerified: true,
+            stepUpVerifiedAt,
           }),
           correlationId,
           ip,
@@ -879,6 +893,7 @@ export class AdminService {
         ]
       );
 
+      await requireStaffStepUp(client, actor, actorUserId === targetUserId ? now : undefined);
       await client.query('COMMIT');
 
       this.logger.log(
@@ -2940,17 +2955,14 @@ export class AdminService {
    */
   async disableStaff(input: DisableStaffInput): Promise<DisableStaffResult> {
     const pool = getDbPool();
+    const actorUserId = input.actor.userId;
     const client = await pool.connect();
     const now = new Date();
 
     try {
       await client.query('BEGIN');
-      await requireStaffMutationPermission(
-        client,
-        input.actorUserId,
-        'admin:staff:edit',
-        input.userId
-      );
+      await requireStaffMutationPermission(client, actorUserId, 'admin:staff:edit', input.userId);
+      const stepUpVerifiedAt = await requireStaffStepUp(client, input.actor);
 
       // Lock the target row; staff-only so the endpoint cannot probe
       // arbitrary customer accounts.
@@ -2977,7 +2989,7 @@ export class AdminService {
 
       const target = targetResult.rows[0]!;
 
-      if (input.userId === input.actorUserId) {
+      if (input.userId === actorUserId) {
         await client.query('ROLLBACK');
         throw new HttpException(
           {
@@ -2990,9 +3002,10 @@ export class AdminService {
       }
 
       if (target.disabled_at) {
+        await requireStaffStepUp(client, input.actor);
         await client.query('COMMIT');
         this.logger.log(
-          `Staff user ${target.user_id} already disabled (idempotent no-op) by ${input.actorUserId}`
+          `Staff user ${target.user_id} already disabled (idempotent no-op) by ${actorUserId}`
         );
         return {
           userId: target.user_id,
@@ -3028,7 +3041,7 @@ export class AdminService {
 
       // Audit trail: who disabled whom, when, and the correlation id.
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -3037,7 +3050,9 @@ export class AdminService {
           target.user_id,
           'staff_user_disabled',
           JSON.stringify({
-            actorUserId: input.actorUserId,
+            actorUserId,
+            stepUpVerified: true,
+            stepUpVerifiedAt,
             disabledAt: now.toISOString(),
             correlationId,
           }),
@@ -3047,10 +3062,11 @@ export class AdminService {
         ]
       );
 
+      await requireStaffStepUp(client, input.actor);
       await client.query('COMMIT');
 
       this.logger.log(
-        `Staff user ${target.user_id} (${target.username}) disabled by ${input.actorUserId}; ${'all sessions revoked'}`
+        `Staff user ${target.user_id} (${target.username}) disabled by ${actorUserId}; ${'all sessions revoked'}`
       );
 
       return {

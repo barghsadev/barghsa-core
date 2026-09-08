@@ -242,7 +242,7 @@ export class AdminController {
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
     if (!z.string().uuid().safeParse(userId).success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-    return this.adminService.resendStaffActivation(userId, req.session.userId, req.ip ?? 'unknown');
+    return this.adminService.resendStaffActivation(userId, req.session, req.ip ?? 'unknown');
   }
 
   /**
@@ -455,7 +455,7 @@ export class AdminController {
     const result = await this.adminService.updateStaffRoles(
       userId,
       parsed.data.roleIds,
-      req.session.userId,
+      req.session,
       ip,
       parsed.data.reason
     );
@@ -570,7 +570,7 @@ export class AdminController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.disableStaff({
       userId,
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip,
     });
   }
