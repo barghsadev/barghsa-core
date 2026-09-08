@@ -216,13 +216,15 @@ export class SessionService {
 
       if (!transactionClient) await client.query('COMMIT');
 
-      if (!transactionClient) this.logger.log(`Session created: ${sessionId} for user ${userId}`);
+      if (!transactionClient) this.logger.log(`Session created for user ${userId}`);
 
       return { sessionId, csrfToken, refreshToken, expiresAt };
     } catch (err) {
       if (!transactionClient) await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Failed to create session for user ${userId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to create session for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       if (!transactionClient) client.release();
@@ -319,9 +321,11 @@ export class SessionService {
         idleDeadline,
         stepUpVerifiedAt: row.step_up_verified_at ?? null,
       };
-    } catch (err) {
+    } catch {
       await client?.query('ROLLBACK').catch(() => {});
-      this.logger.error(`Failed to validate session ${sessionId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to validate session: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       return null;
     } finally {
       client?.release();
@@ -462,9 +466,7 @@ export class SessionService {
       if (!transactionClient) await client.query('COMMIT');
 
       if (!transactionClient) {
-        this.logger.log(
-          `Session rotated: ${oldSessionId} → ${newSessionId} (reason: ${reason}) for user ${oldRow.user_id}`
-        );
+        this.logger.log(`Session rotated for user ${oldRow.user_id}`);
       }
 
       return {
@@ -476,7 +478,9 @@ export class SessionService {
     } catch (err) {
       if (transactionClient) throw err;
       await client.query('ROLLBACK').catch(() => {});
-      this.logger.error(`Failed to rotate session ${oldSessionId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to rotate session: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       if (!transactionClient) client.release();
@@ -706,7 +710,9 @@ export class SessionService {
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof UnauthorizedException) throw err;
-      this.logger.error(`Failed to redeem refresh token: ${String(err)}`);
+      this.logger.error(
+        `Failed to redeem refresh token: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -800,7 +806,9 @@ export class SessionService {
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Failed to verify step-up: ${String(err)}`);
+      this.logger.error(
+        `Failed to verify step-up: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -858,10 +866,12 @@ export class SessionService {
 
       await client.query('COMMIT');
 
-      this.logger.log(`Session revoked: ${sessionId}`);
-    } catch (err) {
+      this.logger.log(`Session revoked`);
+    } catch {
       await client.query('ROLLBACK').catch(() => {});
-      this.logger.error(`Failed to revoke session ${sessionId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to revoke session: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -966,7 +976,9 @@ export class SessionService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Self-service session revocation failed: ${String(error)}`);
+      this.logger.error(
+        `Self-service session revocation failed: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -1023,9 +1035,11 @@ export class SessionService {
       if (!transaction) await client.query('COMMIT');
 
       if (!transaction) this.logger.log(`All sessions revoked for user ${userId}`);
-    } catch (err) {
+    } catch {
       if (!transaction) await client.query('ROLLBACK').catch(() => {});
-      this.logger.error(`Failed to revoke all sessions for user ${userId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to revoke all sessions for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       if (!transaction) client.release();
@@ -1070,9 +1084,11 @@ export class SessionService {
       await client.query('COMMIT');
 
       this.logger.warn(`Token family revoked: ${familyId}`);
-    } catch (err) {
+    } catch {
       await client.query('ROLLBACK').catch(() => {});
-      this.logger.error(`Failed to revoke token family ${familyId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to revoke token family ${familyId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -1100,8 +1116,10 @@ export class SessionService {
 
       const { verify } = await import('argon2');
       return await verify(userResult.rows[0].password_hash, password).catch(() => false);
-    } catch (err) {
-      this.logger.error(`Password verification failed for user ${userId}: ${String(err)}`);
+    } catch {
+      this.logger.error(
+        `Password verification failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       return false;
     }
   }
@@ -1149,8 +1167,10 @@ export class SessionService {
         deletedSessions: sessionResult.rowCount ?? 0,
         deletedTokens: tokenResult.rowCount ?? 0,
       };
-    } catch (err) {
-      this.logger.error(`Failed to cleanup expired sessions: ${String(err)}`);
+    } catch {
+      this.logger.error(
+        `Failed to cleanup expired sessions: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       return { deletedSessions: 0, deletedTokens: 0 };
     }
   }
@@ -1176,8 +1196,10 @@ export class SessionService {
       );
 
       return result.rows[0] ?? null;
-    } catch (err) {
-      this.logger.error(`Failed to get session ${sessionId}: ${String(err)}`);
+    } catch {
+      this.logger.error(
+        `Failed to get session: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       return null;
     }
   }
@@ -1259,7 +1281,9 @@ export class SessionService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Device trust revocation failed: ${String(error)}`);
+      this.logger.error(
+        `Device trust revocation failed: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -1288,7 +1312,9 @@ export class SessionService {
 
       return result.rows;
     } catch (err) {
-      this.logger.error(`Failed to get sessions for user ${userId}: ${String(err)}`);
+      this.logger.error(
+        `Failed to get sessions for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw err;
     }
   }

@@ -76,7 +76,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.setHeader('X-Correlation-ID', correlationId);
 
     // Log at appropriate severity
-    this.logError(exception, httpStatus, errorCode, correlationId, request);
+    this.logError(httpStatus, errorCode, correlationId, request);
 
     // Send the safe response — never expose stack traces or internals
     const body: Record<string, unknown> = {
@@ -202,22 +202,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   /** Log the error with appropriate severity */
   private logError(
-    exception: unknown,
     httpStatus: number,
     errorCode: string,
     correlationId: string | undefined,
     request: Request
   ): void {
+    // URLs and exception stacks can include passwords, reset tokens or session IDs.
+    const route = typeof request.route?.path === 'string' ? request.route.path : 'unmatched';
     if (httpStatus < 500) {
       // 4xx — debug level (client errors, not actionable)
       this.logger.debug(
-        `Client error: ${errorCode} — ${httpStatus} ${request.method} ${request.url} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`
+        `Client error: ${errorCode} — ${httpStatus} ${request.method} ${route} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`
       );
     } else {
       // 5xx — error level (actionable)
       this.logger.error(
-        `Server error: ${errorCode} — ${httpStatus} ${request.method} ${request.url} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`,
-        exception instanceof Error ? exception.stack : undefined
+        `Server error: ${errorCode} — ${httpStatus} ${request.method} ${route} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`
       );
     }
   }

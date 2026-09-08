@@ -128,6 +128,37 @@ describe('HttpExceptionFilter', () => {
     return { json, status, response, request, host };
   }
 
+  it.each([403, 500])('logs only route templates and correlation for %i failures', (statusCode) => {
+    const { request, host } = createMockHost(statusCode, {});
+    const credential = 'private-session-and-reset-token';
+    request.method = 'DELETE';
+    request.url = `/api/auth/sessions/${credential}?token=${credential}`;
+    request.route = { path: '/api/auth/sessions/:id' };
+    const correlation = '550e8400-e29b-41d4-a716-446655440000';
+    correlationIdStorage.run(correlation, () => {
+      filter.catch(new HttpException(`Database rejected ${credential}`, statusCode), host);
+    });
+    const calls =
+      statusCode < 500
+        ? vi.mocked(Logger.prototype.debug).mock.calls
+        : vi.mocked(Logger.prototype.error).mock.calls;
+    const log = JSON.stringify(calls);
+    expect(log).toContain('/api/auth/sessions/:id');
+    expect(log).toContain(correlation);
+    expect(log).not.toContain(credential);
+    expect(log).not.toContain('Database rejected');
+  });
+
+  it('keeps unmatched URLs and arbitrary error stacks out of logs', () => {
+    const { request, host } = createMockHost(500, {});
+    request.url = '/private-path?password=credential-marker';
+    filter.catch(new Error('driver-error-credential-marker'), host);
+    const log = JSON.stringify(vi.mocked(Logger.prototype.error).mock.calls);
+    expect(log).toContain('unmatched');
+    expect(log).not.toContain('credential-marker');
+    expect(log).not.toContain('private-path');
+  });
+
   it('retains an explicit domain not-found message after a controller route matched', () => {
     const { json, request, host } = createMockHost(404, {});
     request.route = { path: '/profiles/:id' };

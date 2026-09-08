@@ -407,7 +407,7 @@ export class AuthService {
       // Re-throw HttpExceptions as-is (safe structured errors)
       if (err instanceof HttpException) throw err;
 
-      this.logger.error(`Login failed for user ${input.username}: ${String(err)}`);
+      this.logger.error(`Login failed: correlationId=${correlationIdStorage.getStore() ?? 'none'}`);
       throw new HttpException({ statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code }, 500);
     }
   }
@@ -577,7 +577,9 @@ export class AuthService {
 
       if (err instanceof HttpException) throw err;
 
-      this.logger.error(`Force password change failed: ${String(err)}`);
+      this.logger.error(
+        `Force password change failed: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -897,7 +899,7 @@ export class AuthService {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
       this.logger.error(
-        `Login OTP transaction failed for challenge ${challengeId}: ${String(err)}`
+        `Login OTP transaction failed for challenge ${challengeId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code }, 500);
     } finally {
@@ -1108,7 +1110,9 @@ export class AuthService {
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Registration session creation failed for user ${userId}: ${String(err)}`);
+      this.logger.error(
+        `Registration session creation failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException(
         {
           statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
@@ -1388,7 +1392,9 @@ export class AuthService {
       else await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
 
-      this.logger.error(`Password reset failed: ${String(err)}`);
+      this.logger.error(
+        `Password reset failed: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -1710,7 +1716,9 @@ export class AuthService {
       // Verification is the first mutation; retain its failed-attempt counter.
       await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK');
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Username change failed for user ${userId}: ${String(err)}`);
+      this.logger.error(
+        `Username change failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
@@ -1938,7 +1946,9 @@ export class AuthService {
           409
         );
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Add contact failed for user ${userId}: ${String(err)}`);
+      this.logger.error(
+        `Add contact failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();

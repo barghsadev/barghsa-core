@@ -66,7 +66,7 @@ export class SessionAuthGuard implements CanActivate {
     const validated = await this.sessionService.validateSession(sessionId);
 
     if (!validated) {
-      this.logger.debug(`Session ${sessionId} invalid, expired, or revoked`);
+      this.logger.debug(`Session invalid, expired, or revoked`);
       throw new UnauthorizedException({
         statusCode: 401,
         error: ErrorCodes.AUTH_UNAUTHENTICATED.code,

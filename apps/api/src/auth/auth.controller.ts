@@ -658,7 +658,7 @@ export class AuthController {
 
     if (sessionId && typeof sessionId === 'string') {
       await this.sessionService.revokeSession(sessionId);
-      this.logger.log(`Logout: session ${sessionId} revoked`);
+      this.logger.log(`Logout: session revoked`);
     }
 
     clearSessionCookie(res);
@@ -739,7 +739,7 @@ export class AuthController {
       setCsrfCookie(res, session.csrf_token);
     }
 
-    this.logger.log(`Session refreshed: ${sessionId} for user ${session.user_id}`);
+    this.logger.log(`Session refreshed for user ${session.user_id}`);
 
     return {
       sessionId,

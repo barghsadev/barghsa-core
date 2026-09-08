@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { UnauthorizedException } from '@nestjs/common';
+import { Logger, UnauthorizedException } from '@nestjs/common';
 import { createHash } from 'node:crypto';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { SessionService } from './session.service.js';
 
 const mockQuery = vi.fn();
@@ -60,6 +61,7 @@ describe('SessionService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockQuery.mockReset();
     mockConnect.mockResolvedValue(mockClient);
     mockClient.query.mockReset();
     mockClient.query.mockImplementation(async (sql: string) => {
@@ -67,8 +69,29 @@ describe('SessionService', () => {
       return { rows: [] };
     });
     mockClient.release.mockReset();
+    vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
+    vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     service = new SessionService();
   });
+
+  it.each(['validateSession', 'getSessionById', 'revokeSession'] as const)(
+    '%s keeps session IDs and database error values out of correlated logs',
+    async (method) => {
+      const credential = 'private-session-value';
+      const failure = new Error('query failed: password=private-password-value');
+      mockQuery.mockRejectedValueOnce(failure);
+      mockClient.query.mockRejectedValueOnce(failure);
+      const correlation = '550e8400-e29b-41d4-a716-446655440000';
+      await correlationIdStorage.run(correlation, async () => {
+        if (method === 'revokeSession') await expect(service[method](credential)).rejects.toThrow();
+        else expect(await service[method](credential)).toBeNull();
+      });
+      const logs = JSON.stringify(vi.mocked(Logger.prototype.error).mock.calls);
+      expect(logs).toContain(correlation);
+      expect(logs).not.toContain(credential);
+      expect(logs).not.toContain('private-password-value');
+    }
+  );
 
   // ────────────────────────────────────────────────────────────
   // validateSession
@@ -187,6 +210,11 @@ describe('SessionService', () => {
       expect(result.expiresAt).toBeInstanceOf(Date);
       expect(typeof result.csrfToken).toBe('string');
       expect(result.csrfToken.length).toBeGreaterThan(0);
+      const logs = JSON.stringify(vi.mocked(Logger.prototype.log).mock.calls);
+      for (const credential of [result.sessionId, result.csrfToken, result.refreshToken]) {
+        expect(logs).not.toContain(credential);
+      }
+      expect(logs).toContain('Session created');
     });
 
     it('revokes oldest session when limit is reached (50)', async () => {
@@ -480,6 +508,16 @@ describe('SessionService', () => {
       expect(result!.sessionId).not.toBe('session-001');
       expect(result!.csrfToken).toBeDefined();
       expect(result!.refreshToken).toBeDefined();
+      const logs = JSON.stringify(vi.mocked(Logger.prototype.log).mock.calls);
+      for (const credential of [
+        'session-001',
+        result!.sessionId,
+        result!.csrfToken,
+        result!.refreshToken,
+      ]) {
+        expect(logs).not.toContain(credential);
+      }
+      expect(logs).toContain('Session rotated');
     });
 
     it('returns null when old session is not found', async () => {
@@ -496,6 +534,7 @@ describe('SessionService', () => {
 });
 
 it('does not present a failed session query as an empty active-session list', async () => {
+  mockQuery.mockReset();
   const failure = new Error('session read unavailable');
   mockQuery.mockRejectedValueOnce(failure);
   const service = new SessionService();
