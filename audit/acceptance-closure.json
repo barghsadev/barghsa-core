@@ -521,7 +521,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 192,
       "requirement": "- **T-01.04.05:** Wire `test` and `test:coverage` tasks in `turbo.json`\n  - **Notes:** `test` depends on `^build` (upstream packages must compile first). `test:coverage` passes `--coverage` flag. CI runs `turbo test` with `--filter` for affected packages on PR, full suite on main.\n  - **Dependencies:** T-01.04.01, T-01.01.02\n  - **Complexity:** S",
@@ -573,7 +573,7 @@
         },
         {
           "path": "packages/i18n/package.json",
-          "sha256": "f32583dfa437f3b5e52ce0c6aa5cc11e537f1175dad0719b04152a54e1d0b19e"
+          "sha256": "27f1a558e080f84a89bddf16060cff14a1e6215ac88cf37a34aa6d7e78c1488b"
         }
       ],
       "checks": [
@@ -589,18 +589,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
-        "prior_reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
-        "changed_paths_reviewed": [
-          "package.json",
-          ".github/workflows/ci.yml",
-          "apps/web/package.json",
-          "apps/api/package.json",
-          "packages/ui/package.json",
-          "packages/shared/package.json",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
+        "paths": [
           "packages/i18n/package.json"
-        ],
-        "evidence": "audit/evidence/acceptance-refresh.json"
+        ]
       }
     },
     {
@@ -975,7 +970,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1047,
       "requirement": "- **T-06.02.03:** Create timezone-aware date/time display utilities\n  - **Notes:** All timestamps stored as UTC `timestamptz`. When displaying, convert to user's configured timezone (default: `Asia/Tehran`, UTC+3:30). Use `Intl.DateTimeFormat` with `timeZone` option. Functions: `formatInTimezone(utcDate, timezone, locale, format)`, `formatTime(utcDate, timezone)`, `formatDate(utcDate, timezone, locale)`. User can change timezone in profile settings.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M",
@@ -1027,7 +1022,7 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -1050,19 +1045,13 @@
       "merged_prs": [],
       "historically_skipped": true,
       "evidence_refresh": {
-        "date": "2026-09-08",
-        "prior_reviewed_sha": "656e91f29c0c4c2fbcc667a03b40be8490b075f6",
-        "changed_paths_reviewed": [
-          "apps/web/src/hooks/useAccountTime.tsx",
-          "apps/web/src/routes/_app/settings/timezone.tsx",
-          "apps/web/e2e/timezone-settings.spec.ts",
-          "apps/web/e2e/finance-timestamps.spec.ts",
-          "apps/web/e2e/team.spec.ts",
-          "apps/web/e2e/tickets.spec.ts",
-          "apps/web/e2e/form-accessibility.spec.ts",
-          "apps/web/e2e/admin-settings-live.spec.ts"
-        ],
-        "evidence": "audit/evidence/acceptance-refresh.json"
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
+        "paths": [
+          "apps/web/e2e/form-accessibility.spec.ts"
+        ]
       },
       "superseded_assessments": [
         {
@@ -1447,7 +1436,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-09.03.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 668,
       "requirement": "**T-09.03.01 — TOS editor**\n\n- Description: Admin can edit Terms of Service content. Rich text editor. Versioned with publish date and language (Persian/English). Publishing a materially changed version can trigger re-acceptance flag.\n- Technical notes: Permissions: `admin:tos:edit`. Versioned with `major` (material change → re-acceptance) and `minor` (typo/clarification → no re-acceptance). Preview before publish. Draft → Published. Last editor recorded. Audit: tos_updated.\n- UI/UX: Rich text editor (TipTap or similar). Side-by-side with current active version diff. \"Mark as material change\" checkbox. Publish button. Version history list.\n- Dependencies: T-04.01.01, admin config framework\n- Complexity: M",
@@ -1495,7 +1484,7 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
@@ -1517,14 +1506,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
-        "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
-        "changed_paths_reviewed": [
-          "apps/web/e2e/admin-settings-live.spec.ts",
-          "apps/web/e2e/form-accessibility.spec.ts",
-          "apps/api/src/admin/admin.controller.ts"
-        ],
-        "evidence": "audit/evidence/acceptance-refresh.json"
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
+        "paths": [
+          "apps/web/e2e/form-accessibility.spec.ts"
+        ]
       },
       "superseded_assessments": [
         {
@@ -1614,7 +1602,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-09.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 676,
       "requirement": "**T-09.03.02 — TOS version history**\n\n- Description: List of all TOS versions with publish date, material change flag, published by. Admin can view any previous version.\n- Technical notes: GET `/api/admin/tos/versions`. Versions are immutable after publish. Display-only.\n- UI/UX: Table: version #, date, material change badge, author. View link opens read-only version.\n- Dependencies: T-09.03.01\n- Complexity: S",
@@ -1662,7 +1650,7 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
@@ -1683,14 +1671,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
-        "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
-        "changed_paths_reviewed": [
-          "apps/web/e2e/admin-settings-live.spec.ts",
-          "apps/web/e2e/form-accessibility.spec.ts",
-          "apps/api/src/admin/admin.controller.ts"
-        ],
-        "evidence": "audit/evidence/acceptance-refresh.json"
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
+        "paths": [
+          "apps/web/e2e/form-accessibility.spec.ts"
+        ]
       },
       "superseded_assessments": [
         {
@@ -1779,7 +1766,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1057,
       "requirement": "- **T-06.02.05:** Localize number/currency formatting\n  - **Notes:** IRR amounts displayed as `XX,XXX,XXX,XXX ریال` or `IRR XX,XXX`. Admin-configurable: use Persian numerals (۱۲۳٬۴۵۶٬۷۸۹) or Western digits (123,456,789). Use `Intl.NumberFormat` with `currency: 'IRR'` and locale `fa` or `en`. For Persian: set `useGrouping: true`. Percentages and decimals follow locale conventions.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M\n  - **UI/UX:** All monetary values show the currency symbol/tail (ریال or IRR). Date picker switches between Jalali and Gregorian based on locale. Direction flips seamlessly without visual glitches.",
@@ -1879,7 +1866,7 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
         }
       ],
       "checks": [
@@ -1894,12 +1881,12 @@
       "merged_prs": [],
       "historically_skipped": true,
       "evidence_refresh": {
-        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "previous_reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
-        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/web/e2e/number-preferences.spec.ts"
+          "apps/web/e2e/form-accessibility.spec.ts"
         ]
       },
       "superseded_assessments": [
@@ -3057,7 +3044,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.02.01",
       "status": "partial",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 125,
       "requirement": "**T-02.02.01 — Session creation and cookie management**\n\n- Description: On successful authentication, create server-side session. Store session data in PostgreSQL (or encrypted cookie with server-side revocation). Set HttpOnly and production-Secure cookies using the centralized SameSite policy owned by E-06. Rotate session identifier on login, MFA, password change, privilege change, and account recovery.\n- Technical notes: Opaque or signed session identifiers. Production cookies: Secure, narrow Path, and the centralized SameSite policy from E-06. Non-TLS dev may disable Secure through explicit dev setting. Refresh tokens rotate on use; reuse revokes token family and alerts user. Absolute session timeout (24h default), idle timeout (30 min default).\n- UI/UX: N/A (backend)\n- Dependencies: T-02.01.02\n- Complexity: L",
@@ -3065,7 +3052,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3073,7 +3060,7 @@
         },
         {
           "path": "apps/api/src/session/session.module.ts",
-          "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+          "sha256": "d356021b70fc29bb8a9dde6496de41d3282c50cd4e94982f6d6df3d961fb6f70"
         },
         {
           "path": "apps/api/src/session/session-context.middleware.ts",
@@ -3089,7 +3076,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
@@ -3109,11 +3096,11 @@
         },
         {
           "path": "apps/web/src/routes/_app/settings/security.tsx",
-          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+          "sha256": "9db713709ad9ed2da7f51ebf0396440275ecb67f03627c684d8c003357f6b794"
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
         }
       ],
       "checks": [
@@ -3130,19 +3117,23 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/api/src/session/session.service.ts"
+          "apps/api/src/session/session.service.ts",
+          "apps/api/src/session/session.module.ts",
+          "apps/api/src/session/cookie.helper.ts",
+          "apps/web/src/routes/_app/settings/security.tsx",
+          "apps/web/e2e/form-accessibility.spec.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.02",
       "status": "partial",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 133,
       "requirement": "**T-02.02.02 — Session revocation**\n\n- Description: Users can view and revoke their own active sessions/devices from Settings → Security. Staff can revoke any user's sessions. Password reset, staff disablement, ownership transfer, and suspected compromise revoke applicable sessions immediately.\n- Technical notes: Session list shows device name, IP location (approximate), last active time, created time. Revoke is immediate (server removes session from active store). API: GET `/api/auth/sessions`, DELETE `/api/auth/sessions/:id`. Revoke all by POST `/api/auth/sessions/revoke-all` (requires password confirmation or OTP).\n- UI/UX: Card/list view of active sessions with Revoke button per session and \"Revoke all other sessions\" action. Confirm dialog before revoke.\n- Dependencies: T-02.02.01\n- Complexity: M",
@@ -3150,7 +3141,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3158,7 +3149,7 @@
         },
         {
           "path": "apps/api/src/session/session.module.ts",
-          "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+          "sha256": "d356021b70fc29bb8a9dde6496de41d3282c50cd4e94982f6d6df3d961fb6f70"
         },
         {
           "path": "apps/api/src/session/session-context.middleware.ts",
@@ -3174,7 +3165,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
@@ -3194,11 +3185,11 @@
         },
         {
           "path": "apps/web/src/routes/_app/settings/security.tsx",
-          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+          "sha256": "9db713709ad9ed2da7f51ebf0396440275ecb67f03627c684d8c003357f6b794"
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
         }
       ],
       "checks": [
@@ -3294,19 +3285,23 @@
         }
       ],
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/api/src/session/session.service.ts"
+          "apps/api/src/session/session.service.ts",
+          "apps/api/src/session/session.module.ts",
+          "apps/api/src/session/cookie.helper.ts",
+          "apps/web/src/routes/_app/settings/security.tsx",
+          "apps/web/e2e/form-accessibility.spec.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.03",
       "status": "partial",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 141,
       "requirement": "**T-02.02.03 — CSRF protection**\n\n- Description: Every state-changing POST/PUT/PATCH/DELETE requires a server-generated CSRF token bound to the authenticated session, sent in a custom header (e.g. `X-CSRF-Token`). Validate server-side. Rotate token after auth/session rotation.\n- Technical notes: Double-submit cookie pattern or signed token. Frontend reads CSRF token from meta tag or cookie and sends in header. CSRF failures return 403 with safe error + correlation ID, logged as security event. No exception for API endpoints — every state change requires this.\n- UI/UX: N/A (transparent to user; errors caught by frontend interceptor → redirect to login or show error).\n- Dependencies: T-02.02.01\n- Complexity: M",
@@ -3314,7 +3309,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3322,7 +3317,7 @@
         },
         {
           "path": "apps/api/src/session/session.module.ts",
-          "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+          "sha256": "d356021b70fc29bb8a9dde6496de41d3282c50cd4e94982f6d6df3d961fb6f70"
         },
         {
           "path": "apps/api/src/session/session-context.middleware.ts",
@@ -3338,7 +3333,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
@@ -3358,11 +3353,11 @@
         },
         {
           "path": "apps/web/src/routes/_app/settings/security.tsx",
-          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+          "sha256": "9db713709ad9ed2da7f51ebf0396440275ecb67f03627c684d8c003357f6b794"
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
         }
       ],
       "checks": [
@@ -3380,19 +3375,23 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "e478e080315ea6acc7d24cdeb74ef79307325c6c",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/api/src/session/session.service.ts"
+          "apps/api/src/session/session.service.ts",
+          "apps/api/src/session/session.module.ts",
+          "apps/api/src/session/cookie.helper.ts",
+          "apps/web/src/routes/_app/settings/security.tsx",
+          "apps/web/e2e/form-accessibility.spec.ts"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.04",
       "status": "partial",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 149,
       "requirement": "**T-02.02.04 — Step-up authentication for sensitive actions**\n\n- Description: Sensitive actions require recent step-up authentication (re-enter password or OTP). Actions include: role changes, storage/payment credentials change, payment confirmation, refunds, contract cancellation, price changes, session revocation, profile deletion, ownership transfer.\n- Technical notes: Step-up requirement lasts for a short configured period (default 15 min) after verification. Audit flag: `stepUpVerified: true` with timestamp. If session idle exceeds the step-up window, re-prompt. API returns `requiresStepUp` flag; frontend shows step-up dialog.\n- UI/UX: Modal dialog asking for password or OTP before proceeding. Shows which action requires it.\n- Dependencies: T-02.02.01, T-02.01.02\n- Complexity: L",
@@ -3400,7 +3399,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
         },
         {
           "path": "apps/api/src/session/session.controller.ts",
@@ -3408,7 +3407,7 @@
         },
         {
           "path": "apps/api/src/session/session.module.ts",
-          "sha256": "7133f628d74181a1c31eb378d08e2b854e06ea064b320111b23e1f6daef06bd2"
+          "sha256": "d356021b70fc29bb8a9dde6496de41d3282c50cd4e94982f6d6df3d961fb6f70"
         },
         {
           "path": "apps/api/src/session/session-context.middleware.ts",
@@ -3424,7 +3423,7 @@
         },
         {
           "path": "apps/api/src/session/cookie.helper.ts",
-          "sha256": "45f77fd624eb6c89b64812d980f075c21c57784e16cd20e9dc374ca9e996791e"
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
         },
         {
           "path": "apps/api/src/session/step-up.guard.ts",
@@ -3444,11 +3443,11 @@
         },
         {
           "path": "apps/web/src/routes/_app/settings/security.tsx",
-          "sha256": "9d685c0dcd40e511bfb9719971eb7f3f806f8d50a000bd3a97fc013cb4235817"
+          "sha256": "9db713709ad9ed2da7f51ebf0396440275ecb67f03627c684d8c003357f6b794"
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "d755d73d02c172d2d17d06eb2eede11ce0bb5f496bffb3a151105db532e4fe49"
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
         }
       ],
       "checks": [
@@ -3465,12 +3464,16 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "eccf7be13762ef6997fc2d5ea32f65de5256fc73",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/api/src/session/session.service.ts"
+          "apps/api/src/session/session.service.ts",
+          "apps/api/src/session/session.module.ts",
+          "apps/api/src/session/cookie.helper.ts",
+          "apps/web/src/routes/_app/settings/security.tsx",
+          "apps/web/e2e/form-accessibility.spec.ts"
         ]
       }
     },
@@ -3759,7 +3762,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -3787,7 +3790,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
+          "sha256": "be3484d2561b0d0e426336c0db0b29e1ed109275e5b32ddfd94b05b2aec47bb5"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3865,19 +3868,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/api/src/crm/crm-v2.service.ts"
+          "apps/api/openapi.json"
         ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3933,7 +3936,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
+          "sha256": "be3484d2561b0d0e426336c0db0b29e1ed109275e5b32ddfd94b05b2aec47bb5"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3983,12 +3986,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/api/src/crm/crm-v2.service.ts"
+          "apps/api/openapi.json"
         ]
       }
     },
@@ -4069,7 +4072,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 420,
       "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
@@ -4121,7 +4124,7 @@
         },
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "9b7fccd75fb41b89288c88de01120f7a4ec5b421109d32afea79d65eec501335"
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
         }
       ],
       "checks": [
@@ -4140,12 +4143,11 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/api/src/crm/crm-v2.service.ts",
           "apps/api/src/session/session.service.ts"
         ]
       }
@@ -4419,7 +4421,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 378,
       "requirement": "**T-05.01.01 — CRM users list page**\n\n- Description: `/app/crm` — list of all registered users. Columns: Username, profiles (legal/individual indicators), registration date, last login, verification status, profile count. Staff and admin only.\n- Technical notes: Backend: GET `/api/crm/users` with pagination, search, sort, filter. Server-side filtering/sorting. Cursor pagination recommended for large datasets. Permission: staff roles `crm:read` or `admin`. Profile type columns: \"Legal\" icon and \"Individual\" icon shown per user if they have that profile type. Search by username (email/mobile).\n- UI/UX: Table with sortable columns. Filter bar: profile type (all/individual/legal), verification status (verified/unverified/pending), registration date range. Search input. Pagination controls. \"Collapse all\" on row expansion.\n- Dependencies: T-03.01.01, authorization framework\n- Complexity: L",
@@ -4447,7 +4449,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
+          "sha256": "be3484d2561b0d0e426336c0db0b29e1ed109275e5b32ddfd94b05b2aec47bb5"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4490,10 +4492,10 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "previous_reviewed_sha": "4b8ccf8621fc1bf99ba0fef915d274a1b92bbd5d",
-        "review": "Other CRM detail/edit/archive/session methods, dependencies and permission middleware are unchanged. OpenAPI diff adds only the widget enabled flag and its disabled-response description. Existing source-bound task checks are reused for these unchanged methods. Number-preference fixture adds enabled=true; all four corresponding browser cases pass.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
           "apps/api/openapi.json"
         ]
@@ -4563,7 +4565,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.05.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 513,
       "requirement": "**T-05.05.01 — Profiles awaiting verification widget**\n\n- Description: On staff dashboard, widget showing profiles pending verification (if verification is not disabled). Shows count and \"Show all\" link to CRM with verification filter.\n- Technical notes: GET `/api/crm/dashboard/pending-verification` returns count and last 5 entries. Permission: staff with `crm:verify`.\n- UI/UX: Card: icon + count + \"Profiles awaiting verification\" + \"Show all\" link. Click opens CRM with `?verification=PENDING` filter.\n- Dependencies: T-05.01.02, E-07 (verification settings)\n- Complexity: S",
@@ -4583,7 +4585,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5dcb51d4d076c55677f447f5ad9570ad0c06573eb2c92f07f7c841bfc5345117"
+          "sha256": "be3484d2561b0d0e426336c0db0b29e1ed109275e5b32ddfd94b05b2aec47bb5"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4619,12 +4621,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
-        "previous_reviewed_sha": "d87042cc9ccafb3ada4a704fd882c91bb7582e43",
-        "review": "Reviewed session trust serialization and display-only metadata projection. Focused auth/session/race and customer/CRM privacy tests pass. Unchanged task behavior and earlier UI evidence are reused; unresolved acceptance limitations remain. Only source bindings matching the immediate predecessor were refreshed.",
-        "record": "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+        "previous_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "review": "Device management adds separate SessionService methods and controller; existing session methods are unchanged. Read-only cookie extraction preserves validation/names. Security page adds a component and theme background; 20 prior session browser cases pass. Prior task limitations remain, and only source hashes matching the immediate predecessor were refreshed. OpenAPI preserves every existing route contract, and i18n adds one subpath without changing earlier exports or dictionary contents.",
+        "record": "audit/evidence/step-reviews.json#R01-trusted-device-management",
         "paths": [
-          "apps/api/src/crm/crm-v2.service.ts"
+          "apps/api/openapi.json"
         ]
       }
     },

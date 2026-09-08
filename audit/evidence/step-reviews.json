@@ -2063,6 +2063,139 @@
         "audit/evidence/r01/barghsa-device-trust-atomic-privacy-format.log.gz",
         "audit/evidence/r01/barghsa-device-trust-atomic-races.log.gz"
       ]
+    },
+    {
+      "id": "R01-trusted-device-management",
+      "date": "2026-09-08",
+      "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
+      "summary": "Added own trusted-device listing and audited revocation with a localized Security page and verified browser behavior.",
+      "review": [
+        "GET /api/auth/trusted-devices returns only the authenticated user’s unexpired trust records, including null-address legacy records. Response contains opaque record ID, display user-agent/IP, trust time, expiry and current-device flag; no cookie proof or hash. A shared validated cookie reader recognizes the same development/production names as login and does not mint cookies during GET.",
+        "DELETE /api/auth/trusted-devices/:id requires authenticated session, CSRF, recent step-up and row ownership. It locks user, actor session and target trust in the established order, then rechecks account/session/step-up validity after lock waits. Deletion and a device_trust_revoked audit entry commit together. Audit metadata contains the record ID, not possession proof. Audit failure rolls back deletion.",
+        "Concurrent duplicate deletion produces one success, one not-found response and one audit entry. Expiry/revocation/disablement during the account wait and step-up expiry during a target-row wait reject the action. Removing trust requires OTP on the next password login and leaves already-issued sessions active; the UI explains that distinction.",
+        "The Security page lists device/browser hint, recorded IP, trusted time and expiry using account timezone formatting, and marks the current browser. Confirmation supports recent-password step-up, clears password values, blocks duplicate submission/dismissal while pending, retains the target on failed or malformed success and restores focus on cancel or completion.",
+        "List loading errors, unauthenticated/forbidden/server responses, invalid dates and duplicate IDs show localized retry state with no stale rows. Persian/English, both themes, mobile width, IPv4 direction, keyboard focus and scoped accessibility checks pass. Reviewed Persian dark mobile and English light desktop failure-dialog screenshots.",
+        "Initial dark tests exposed inherited light page background under dark text tokens. The Security content container now owns its theme background and foreground. Initial shared dictionary placement exceeded the unchanged ordering budget by 0.29 KB; the 12 new message keys now use a dedicated i18n subpath loaded by this feature. All 41 budgets pass. Broader shell/terms-banner dark styling remains in R03.",
+        "Generated OpenAPI adds only the two new routes with response fields and failure statuses. Existing route content and order are preserved to avoid unrelated generated-file churn. No dependency installation, migration, deployment or remote change."
+      ],
+      "checks": [
+        "17 distinct API/cookie cases pass across focused runs: seven existing cookie-helper cases, nine management cases after correcting the test’s text-versus-JSON audit metadata expectation, plus a new delayed target-row expiry case. Concurrent duplicate revocation and next-login OTP are verified through the compiled API and real PostgreSQL.",
+        "The initial late-expiry test used the one-second polling default for a two-second deadline and failed before expiry; its explicit five-second observation limit passes. Test selection skips in narrow reruns are not acceptance skips. All failed logs are retained.",
+        "40 new production-browser cases pass across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari, covering fa/en and light/dark. Initial run passed eight light cases and failed eight dark cases; final Chromium/mobile run passes 16 and remaining browser run passes 24. Twenty existing session-revocation cases also pass across all five profiles. Total 60 distinct browser cases, not one 60-case invocation.",
+        "Preview index and manifest hashes bind the final built app at explicit http://127.0.0.1:4179; preview was stopped after browser checks. No API typecheck overlapped an API/browser package build and no product build ran during browser fixtures.",
+        "API and web typechecks, focused ESLint/formatting, 50 existing i18n tests, the new dictionary package build, production web build, all 41 complete-route budgets, OpenAPI generation and git diff checks pass. Final OpenAPI ordering-only cleanup is semantically identical to generated output. No global checkpoint is renewed."
+      ],
+      "remaining": [
+        "T-02.01.02 still awaits final login acceptance and Argon2id parameter evidence. New password creation uses library defaults; align with 37 MiB/t3/p1 or establish the required benchmarked equivalent without breaking existing encoded hashes.",
+        "Next review T-02.01.03 OTP and T-02.01.04 forced password change, including trust-creation audit requirements. Reuse prior network, atomic-authorization and current management evidence; do not rebuild these steps.",
+        "Shared shell and terms-banner dark-theme contrast remains in R03; scoped Security content and new dialogs pass here. Lost-contact recovery policy remains pending. Full original repairs, historical PR reviews and skipped-task dispositions remain in the main plan."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "be3484d2561b0d0e426336c0db0b29e1ed109275e5b32ddfd94b05b2aec47bb5"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "f8babe4b224b0421b57b2e47c45ae9e446b1b47fd77663bfadc83f10c9873004"
+        },
+        {
+          "path": "apps/api/src/session/session.module.ts",
+          "sha256": "d356021b70fc29bb8a9dde6496de41d3282c50cd4e94982f6d6df3d961fb6f70"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "90b16c6aeb56d6a6021869c5078a5fc08113959e86a2423bc24c32046503889e"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+          "sha256": "6a8e63532b45afd6a7e6148205a5111282e18ed3849f5053e0a95fa14c962ef3"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices.controller.ts",
+          "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "876e1efbd5dc72c4d63652e185b7ca0271db4858a2470b38d0a763516e619b31"
+        },
+        {
+          "path": "apps/web/e2e/trusted-devices.spec.ts",
+          "sha256": "ac6a5606e2a55d350b0c49dc224f42d45964556e4c2995e34d0c7e2572471d1b"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "84db9bc90bc87098959424038ed26c2b19235ca5adeecb7a41a89bf8308fb3e9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "9db713709ad9ed2da7f51ebf0396440275ecb67f03627c684d8c003357f6b794"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "27f1a558e080f84a89bddf16060cff14a1e6215ac88cf37a34aa6d7e78c1488b"
+        },
+        {
+          "path": "packages/i18n/src/trusted-devices.ts",
+          "sha256": "8bdaeb0c5e9bac437f422267b8e0ff1f1f7138246d283e36b149ea99849fa2c9"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "36b6387ff1c65f327e83b547f39c65551fac81a88a18f2bece4c37c0799810d6"
+        },
+        {
+          "path": "apps/api/src/session/csrf.guard.ts",
+          "sha256": "021a231753cdf7779dd49ea7d98c9f4ac828b95e940a8876ff6a7e9928ceebcb"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "aeee70123f19dbcf3cdb03ebfb0fea513ca99b2884d0679dedac4693d2e3dcef"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "7c5724c925dc97c2d6952f8365150bc3f60602234c2a4e11d410f7c3e3b9813c"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-trusted-devices-api-final.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-api.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-browser.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-budgets.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-build.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-cross-browser.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-existing-sessions.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-expiry-api.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-expiry-format.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-extra-api.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-final-browser.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-final-budgets.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-final-build.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-final-openapi.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-format.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-i18n.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-openapi.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-preview-verified.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-preview.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-races-format.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-tests-format.log.gz",
+        "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+        "audit/evidence/r01/barghsa-trusted-devices-theme-format.log.gz"
+      ],
+      "visual_evidence": [
+        {
+          "path": "audit/evidence/r01/barghsa-trusted-devices-fa-true-mobile-chrome.png",
+          "sha256": "c66276e32de5f3902e1fd70eadca360a3e70446cdac36deb1e6a8336a2239597"
+        },
+        {
+          "path": "audit/evidence/r01/barghsa-trusted-devices-en-false-chromium.png",
+          "sha256": "f056d9a22c55ec43769cafd62baec48656561ed139aa783f571f6f74e974a843"
+        }
+      ]
     }
   ]
 }

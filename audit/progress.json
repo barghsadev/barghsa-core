@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+  "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
   "active_step": "R01",
-  "next_action": "R01: implement own trusted-device list/revoke API and Settings > Security UI for 02-auth-users-admin.md#T-02.01.02. Network trust and atomic session authorization/metadata privacy are repaired at a22de92 and 7b15638 with saved focused evidence. Use user-before-trust locks; verify ownership, CSRF, confirmation/step-up and future-login behavior. Then confirm Argon2id settings and review .03 OTP / .04 forced password change. Reuse unchanged evidence; lost-contact policy question remains pending.",
+  "next_action": "R01: finish 02-auth-users-admin.md#T-02.01.02 login acceptance by aligning Argon2id hashing parameters with 37 MiB/t3/p1 or proving a benchmarked equivalent. Preserve verification of existing encoded hashes. Network trust, atomic authorization/privacy and own-device management are repaired through b18fffd, with 17 API/cookie and 60 browser cases for the latest step. Then review .03 OTP, including trust-creation audit, and .04 forced password change. Reuse valid evidence; lost-contact policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Login UI .01 is verified; .02 network trust, atomic trust authorization and session metadata privacy are repaired. Complete device management and Argon2 parameter evidence, then .03 OTP / .04 forced password change, remaining rotation/revocation callers, CSRF alternatives and approximate session location."
+        "Login UI .01 is verified. Network trust, atomic authorization/privacy and device management for .02 are repaired; finish Argon2 parameter evidence and final login acceptance. Then review .03 OTP / .04 forced password change, remaining rotation/revocation callers, CSRF alternatives and approximate session location."
       ]
     },
     {
@@ -448,6 +448,10 @@
     {
       "id": "R01-device-trust-atomic",
       "review_record": "audit/evidence/step-reviews.json#R01-device-trust-atomic"
+    },
+    {
+      "id": "R01-trusted-device-management",
+      "review_record": "audit/evidence/step-reviews.json#R01-trusted-device-management"
     }
   ],
   "deferred_improvements": [
