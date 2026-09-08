@@ -2995,7 +2995,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-06.03.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "99e3c89658a322137e3986342d5699f839891b5b",
+      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1098,
       "requirement": "- **T-06.03.04:** Create localized DatePicker component\n  - **Notes:** Single and range date selection. When locale is `fa`, uses Jalali calendar; when `en`, uses Gregorian. Keyboard accessible: arrow keys navigate days, Enter selects, Escape closes. Props: `value`, `onChange`, `minDate`, `maxDate`, `locale`, `timezone`. Displays currently selected date in full format. For range/period selection, uses half-open `[start, end)` semantics in UI. Uses `datepicker-*` accessible patterns (dialog role, grid for days).\n  - **Dependencies:** T-06.02.02, T-06.03.02\n  - **Complexity:** L\n  - **UI/UX:** DatePicker switches calendar system when language changes. Displays Hijri month names in Persian, Western month names in English. Shows current Jalali year alongside Gregorian year in Persian mode. Responsive: full calendar on desktop, simplified month selector on mobile.",
@@ -3039,7 +3039,7 @@
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
-          "sha256": "63fb5c7be8664574e515618fedb19f4ee39c5d51a8837f08f1c8d2be277146ee"
+          "sha256": "22b5462aef6476d4b494e0ae911c9ecba932554821cf0728add05ebab26c2bee"
         }
       ],
       "checks": [
@@ -3052,7 +3052,16 @@
         "This certifies the localized shared DatePicker task. It does not certify every shared UI component, every screen-reader/browser/device combination, live deployment or remaining coverage gates."
       ],
       "merged_prs": [],
-      "historically_skipped": true
+      "historically_skipped": true,
+      "evidence_refresh": {
+        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "previous_reviewed_sha": "99e3c89658a322137e3986342d5699f839891b5b",
+        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "paths": [
+          "apps/web/src/pages/CrmProfileList.tsx"
+        ]
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.01",
@@ -3705,7 +3714,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -3733,7 +3742,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "7cc2e8de83786083833ec7912808567a658589ee73bf6313cdd0c23262541a2b"
+          "sha256": "d20d95d44d3eb13440e4fcffc1133ccd1727acc2533c5e45910e40b93292417d"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3749,7 +3758,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
         },
         {
           "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
@@ -3761,7 +3770,7 @@
         },
         {
           "path": "apps/web/src/routeTree.gen.ts",
-          "sha256": "48c664c75295ea8bac32ec35dc16546d92d4ca9fb7f1e1930e3d435179eac500"
+          "sha256": "627ad86810031a69a775b80bf1091a8b84e7a092c3c7fa71f5f4838064cea3f2"
         },
         {
           "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
@@ -3811,16 +3820,21 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "previous_reviewed_sha": "1aad457cf943e1b54dc58dd6121e9fe1a5422420",
-        "review": "Full local profile-detail criteria reviewed and verified. Production browser evidence and source-bound backend evidence are reconciled; operational limits remain explicit.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
+        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "paths": [
+          "apps/api/openapi.json",
+          "packages/i18n/src/crm.ts",
+          "apps/web/src/routeTree.gen.ts"
+        ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3840,7 +3854,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -3876,7 +3890,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "7cc2e8de83786083833ec7912808567a658589ee73bf6313cdd0c23262541a2b"
+          "sha256": "d20d95d44d3eb13440e4fcffc1133ccd1727acc2533c5e45910e40b93292417d"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3926,16 +3940,20 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "previous_reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
-        "review": "Preserved task status: profile changes concern presentation and read retries; mutation bodies, permissions and acknowledgement guards are unchanged. All existing CRM browser cases pass against the built app.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
+        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "paths": [
+          "packages/i18n/src/crm.ts",
+          "apps/api/openapi.json"
+        ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 412,
       "requirement": "**T-05.02.03 — Verification state management**\n\n- Description: Staff can change verification state of a profile. Options: Verify, Unverify, Mark for re-verification.\n- Technical notes: POST `/api/crm/profiles/:profileId/verify` with `{ action: 'verify' | 'unverify' | 'reverify', reason? }`. Permissions: `crm:verify` or admin. Audit: verification_change with before/after state, actor, reason. Notifications sent to profile owner.\n- UI/UX: Current status badge (Verified/Unverified/Pending). Dropdown with actions. Reason required for unverify/reverify. Confirmation dialog.\n- Dependencies: T-05.02.01, E-07 (admin verification settings)\n- Complexity: M",
@@ -3955,7 +3973,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -3997,16 +4015,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "previous_reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
-        "review": "Preserved task status: profile changes concern presentation and read retries; mutation bodies, permissions and acknowledgement guards are unchanged. All existing CRM browser cases pass against the built app.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
+        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "paths": [
+          "packages/i18n/src/crm.ts"
+        ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 420,
       "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
@@ -4026,7 +4047,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -4077,16 +4098,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "previous_reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
-        "review": "Preserved task status: profile changes concern presentation and read retries; mutation bodies, permissions and acknowledgement guards are unchanged. All existing CRM browser cases pass against the built app.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
+        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "paths": [
+          "packages/i18n/src/crm.ts"
+        ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 428,
       "requirement": "**T-05.02.05 — Identity correction through verification case**\n\n- Description: Staff cannot directly edit verified identity fields. Instead, they create a verification case (profile correction request) which creates an audit trail. Changes are applied after case resolution.\n- Technical notes: Verification case is a mini-workflow: Corrector creates case with new values and evidence → Reviewer approves/rejects → On approval, identity field updated with before/after audit. Permissions: `crm:edit-identity`. Cases have states: Open, Under Review, Approved, Rejected.\n- UI/UX: \"Request correction\" button on locked fields → form with new value + upload evidence → submission creates case. Staff with review permission see case queue.\n- Dependencies: T-05.02.02\n- Complexity: L",
@@ -4134,7 +4158,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
         },
         {
           "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -4164,16 +4188,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "previous_reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
-        "review": "Preserved task status: profile changes concern presentation and read retries; mutation bodies, permissions and acknowledgement guards are unchanged. All existing CRM browser cases pass against the built app.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
+        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "paths": [
+          "packages/i18n/src/crm.ts"
+        ]
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -4305,7 +4332,7 @@
         },
         {
           "path": "packages/i18n/src/crm.ts",
-          "sha256": "e366faa56f53fcac422e4f3632190147a27a8807f206abb140533910a72db86e"
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
         },
         {
           "path": "docs/runbooks/profile-archival.md",
@@ -4337,11 +4364,88 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
-        "previous_reviewed_sha": "1da0e6a9948f1b8df8a6488f3c80ddff84c4e6b5",
-        "review": "Preserved task status: profile changes concern presentation and read retries; mutation bodies, permissions and acknowledgement guards are unchanged. All existing CRM browser cases pass against the built app.",
-        "record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
+        "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+        "previous_reviewed_sha": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+        "review": "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps.",
+        "record": "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "paths": [
+          "packages/i18n/src/crm.ts"
+        ]
       }
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 378,
+      "requirement": "**T-05.01.01 — CRM users list page**\n\n- Description: `/app/crm` — list of all registered users. Columns: Username, profiles (legal/individual indicators), registration date, last login, verification status, profile count. Staff and admin only.\n- Technical notes: Backend: GET `/api/crm/users` with pagination, search, sort, filter. Server-side filtering/sorting. Cursor pagination recommended for large datasets. Permission: staff roles `crm:read` or `admin`. Profile type columns: \"Legal\" icon and \"Individual\" icon shown per user if they have that profile type. Search by username (email/mobile).\n- UI/UX: Table with sortable columns. Filter bar: profile type (all/individual/legal), verification status (verified/unverified/pending), registration date range. Search input. Pagination controls. \"Collapse all\" on row expansion.\n- Dependencies: T-03.01.01, authorization framework\n- Complexity: L",
+      "requirement_sha256": "894dd302b852ab3f0af7a6bbdbc9ae293b72dd053787a22fe9de5a2247f1c0d4",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm.service.ts",
+          "sha256": "308ccbb3ebca34c6f16dd7e032cfd44c6d9e825a17e74262d48e9389a56d332e"
+        },
+        {
+          "path": "apps/api/src/crm/crm.controller.ts",
+          "sha256": "8c5458ed839ec829e80ed6a12ede6e8fb7cb6e3b27267f65318c5006feaf1393"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-sort.integration.test.ts",
+          "sha256": "0b0423d2f617fe9421d11680aad379c4762a806f5190d1d3c72eb5e27574f387"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+          "sha256": "5e0b9df263486c8abac4e8c65ec6368db6e34bc7da0b9fb2bee9a1ff41f01a24"
+        },
+        {
+          "path": "apps/api/src/crm/crm.service.test.ts",
+          "sha256": "16810a4ca9afb429a2c19e2ae6f16d62ea6fb82d869c18bb72e87b543770869f"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "d20d95d44d3eb13440e4fcffc1133ccd1727acc2533c5e45910e40b93292417d"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileList.tsx",
+          "sha256": "22b5462aef6476d4b494e0ae911c9ecba932554821cf0728add05ebab26c2bee"
+        },
+        {
+          "path": "apps/web/e2e/crm-list.spec.ts",
+          "sha256": "430f4432719b0af55263ad98cf4922c54f1cebddb0a3e23c338acdc17ec8b2ca"
+        },
+        {
+          "path": "apps/web/src/routes/app/crm/index.tsx",
+          "sha256": "5c99f835cc17a6bede03318a397456d49fb1e5ec580a04c7f46feae33f568780"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "627ad86810031a69a775b80bf1091a8b84e7a092c3c7fa71f5f4838064cea3f2"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
+        }
+      ],
+      "checks": [
+        "Compared every T-05.01.01 criterion to the six-column users table, localized type icons, registration/last-login dates, verification summary, profile count, expandable profiles, collapse-all, filters, search and pagination. The required /app/crm alias preserves the pending-verification query and reaches the staff page without customer onboarding.",
+        "Server-side username, registration, last-login and profile-count sorts use fixed SQL expressions and bound values. Composite cursors retain microsecond timestamps and user-id ties. Null logins remain last in both directions. Aggregate cursors are applied in HAVING so type filters preserve complete profile summaries. New cursors reject reuse with another column, direction or filter; legacy registration cursors remain supported.",
+        "UNVERIFIED now excludes pending profiles, matching the displayed summary. Date/query/cursor validation rejects invalid values. ILIKE wildcard escaping prevents user-supplied percent/underscore from expanding substring matches; PostgreSQL full-text terms still follow token semantics.",
+        "Real HTTP/PostgreSQL cases cover all four sorts in both directions with page size one, ties, null logins, mixed/archived/no-profile rows, status/type/date filters, malformed and rebound cursors, unauthenticated/customer refusal, and current staff crm:read grant/revocation.",
+        "Runtime response validation shows a localized retry state for malformed rows, dates, counts and cursors. Keyboard sorting restores focus if no other control has taken focus. The focusable table region supports horizontal scrolling; expanded links stay visible. Final Persian dark mobile and English light desktop screenshots were inspected.",
+        "Axe reports no violations. Only text proved partly outside the horizontal viewport is revealed and rescanned individually with zero unresolved contrast readings. No blanket Axe suppression or quality threshold change.",
+        "44 distinct API cases pass across focused runs: the 44-case CRM unit/HTTP/sorting batch passes, followed by 14/14 sorting cases after extending the staff grant/revoke scenario. This is not 58 distinct cases.",
+        "20 distinct browser cases pass against an explicit local production preview: all 12 existing cases pass in the first run; final eight fa/en, light/dark, desktop/mobile table cases pass after the sort-icon, focus and scroll refinements. No single final 20-case run is claimed.",
+        "50 i18n tests pass. API and web typechecks, focused lint, final formatting, production web build, all 41 complete-route budgets and OpenAPI drift check pass. Index equality and manifest hashes bind the preview target to its build.",
+        "Initial browser runs retained: first 12 pass/8 fail and next 6 pass/2 fail. Failures identified the Unicode arrow and partly clipped mobile text; proper icon markup and per-node revealed-text scans pass. The initial API typecheck error log is preserved alongside the later passing typecheck; no global checkpoint is renewed."
+      ],
+      "limitations": [
+        "Production-scale search/aggregate performance, deployment and the final global checkpoint remain separate evidence."
+      ],
+      "merged_prs": [
+        120
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -4472,7 +4576,6 @@
     "02-auth-users-admin.md#T-03.03.06",
     "02-auth-users-admin.md#T-03.04.01",
     "02-auth-users-admin.md#T-03.04.02",
-    "02-auth-users-admin.md#T-05.01.01",
     "02-auth-users-admin.md#T-05.01.02",
     "02-auth-users-admin.md#T-05.03.01",
     "02-auth-users-admin.md#T-05.03.02",

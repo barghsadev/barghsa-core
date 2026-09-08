@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "af683161fff0e584d09e9a5db9fc4befa8e23dd0",
+  "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
   "active_step": "R01",
-  "next_action": "R01: review 02-auth-users-admin.md#T-05.01.01 CRM users list against canonical requirements and current evidence. T-05.02.01/.02/.03/.04/.05 are verified locally. T-05.02.06 remains partial for contract integration and approved retention policy. Reuse the 80 passing built-app CRM cases and final eight hover/tab cases; retain all earlier backend evidence. Lost-contact approver/evidence policy question remains pending.",
+  "next_action": "R01: review 02-auth-users-admin.md#T-05.01.02 CRM filters/search. Inspect full-text/trigram name matching, combined filters/staff-only, removable search tags, debounce, Jalali dates and clear-all. Reuse T-05.01.01 evidence: 44 distinct API and 20 distinct built-app browser cases. Then review T-05.05.01 pending widget. T-05.02.06 remains partial for contracts/retention policy. Lost-contact approver/evidence question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "T-05.02.01/.02/.03/.04/.05 are verified locally. Next complete CRM list T-05.01.01 and other remaining list criteria. T-05.02.06 local archive criteria pass; production contract integration and approved retention policy remain."
+        "T-05.01.01 and T-05.02.01/.02/.03/.04/.05 are verified locally. Next review T-05.01.02 filters/search, then T-05.05.01 pending widget. T-05.02.06 local archive criteria pass; future contract integration and approved retention policy remain."
       ]
     },
     {
@@ -285,7 +285,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review 19 partial and 262 pending records; retain 41 verified task assessments. Reconcile 301 PRs, 170 deferrals and 58 historical skips. The 1,033 unrecorded backlog tasks remain separate."
+        "Review 18 partial and 261 pending records; retain 43 verified task assessments. Reconcile 301 PRs, 170 deferrals and 58 historical skips. The 1,033 unrecorded backlog tasks remain separate."
       ]
     },
     {
@@ -423,6 +423,10 @@
     {
       "id": "R01-crm-profile-page-acceptance",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
+    },
+    {
+      "id": "R01-crm-users-list",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-users-list"
     }
   ],
   "deferred_improvements": [
@@ -436,9 +440,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 42,
+    "acceptance_verified": 43,
     "partial": 18,
-    "pending": 262,
+    "pending": 261,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,

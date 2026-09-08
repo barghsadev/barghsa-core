@@ -1516,6 +1516,120 @@
           "sha256": "f4491025da9c65dfa168646ef6a128fb36bdaa93a093c9aae3a9197f45d44887"
         }
       ]
+    },
+    {
+      "id": "R01-crm-users-list",
+      "date": "2026-09-08",
+      "source_revision": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+      "summary": "Verified the CRM users list with required table, server-side sorting, stable cursors and readable failure states.",
+      "review": [
+        "Compared every T-05.01.01 criterion to the six-column users table, localized type icons, registration/last-login dates, verification summary, profile count, expandable profiles, collapse-all, filters, search and pagination. The required /app/crm alias preserves the pending-verification query and reaches the staff page without customer onboarding.",
+        "Server-side username, registration, last-login and profile-count sorts use fixed SQL expressions and bound values. Composite cursors retain microsecond timestamps and user-id ties. Null logins remain last in both directions. Aggregate cursors are applied in HAVING so type filters preserve complete profile summaries. New cursors reject reuse with another column, direction or filter; legacy registration cursors remain supported.",
+        "UNVERIFIED now excludes pending profiles, matching the displayed summary. Date/query/cursor validation rejects invalid values. ILIKE wildcard escaping prevents user-supplied percent/underscore from expanding substring matches; PostgreSQL full-text terms still follow token semantics.",
+        "Real HTTP/PostgreSQL cases cover all four sorts in both directions with page size one, ties, null logins, mixed/archived/no-profile rows, status/type/date filters, malformed and rebound cursors, unauthenticated/customer refusal, and current staff crm:read grant/revocation.",
+        "Runtime response validation shows a localized retry state for malformed rows, dates, counts and cursors. Keyboard sorting restores focus if no other control has taken focus. The focusable table region supports horizontal scrolling; expanded links stay visible. Final Persian dark mobile and English light desktop screenshots were inspected.",
+        "Axe reports no violations. Only text proved partly outside the horizontal viewport is revealed and rescanned individually with zero unresolved contrast readings. No blanket Axe suppression or quality threshold change.",
+        "Existing profile-detail/edit/action source behavior is unchanged: OpenAPI adds only CRM-list fields, generated routes add only the alias, dictionaries add only three list labels per locale. DatePicker props/timezone logic are unchanged; existing browser date tests pass. Refresh only matching prior source hashes for these reviewed overlaps."
+      ],
+      "checks": [
+        "44 distinct API cases pass across focused runs: the 44-case CRM unit/HTTP/sorting batch passes, followed by 14/14 sorting cases after extending the staff grant/revoke scenario. This is not 58 distinct cases.",
+        "20 distinct browser cases pass against an explicit local production preview: all 12 existing cases pass in the first run; final eight fa/en, light/dark, desktop/mobile table cases pass after the sort-icon, focus and scroll refinements. No single final 20-case run is claimed.",
+        "50 i18n tests pass. API and web typechecks, focused lint, final formatting, production web build, all 41 complete-route budgets and OpenAPI drift check pass. Index equality and manifest hashes bind the preview target to its build.",
+        "Initial browser runs retained: first 12 pass/8 fail and next 6 pass/2 fail. Failures identified the Unicode arrow and partly clipped mobile text; proper icon markup and per-node revealed-text scans pass. The initial API typecheck error log is preserved alongside the later passing typecheck; no global checkpoint is renewed."
+      ],
+      "remaining": [
+        "T-05.01.02 remains next: inspect full-text/trigram name search, combined filters and staff-only behavior, search tags, debounce, Jalali range and clear-all. This list-page closure does not certify that separate task.",
+        "T-05.05.01 pending-verification widget remains unreviewed. T-05.02.06 remains partial for future contracts and approved retention policy.",
+        "Production-scale search/aggregate performance, deployment and the final global checkpoint remain separate evidence."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm.service.ts",
+          "sha256": "308ccbb3ebca34c6f16dd7e032cfd44c6d9e825a17e74262d48e9389a56d332e"
+        },
+        {
+          "path": "apps/api/src/crm/crm.controller.ts",
+          "sha256": "8c5458ed839ec829e80ed6a12ede6e8fb7cb6e3b27267f65318c5006feaf1393"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-sort.integration.test.ts",
+          "sha256": "0b0423d2f617fe9421d11680aad379c4762a806f5190d1d3c72eb5e27574f387"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+          "sha256": "5e0b9df263486c8abac4e8c65ec6368db6e34bc7da0b9fb2bee9a1ff41f01a24"
+        },
+        {
+          "path": "apps/api/src/crm/crm.service.test.ts",
+          "sha256": "16810a4ca9afb429a2c19e2ae6f16d62ea6fb82d869c18bb72e87b543770869f"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "d20d95d44d3eb13440e4fcffc1133ccd1727acc2533c5e45910e40b93292417d"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileList.tsx",
+          "sha256": "22b5462aef6476d4b494e0ae911c9ecba932554821cf0728add05ebab26c2bee"
+        },
+        {
+          "path": "apps/web/e2e/crm-list.spec.ts",
+          "sha256": "430f4432719b0af55263ad98cf4922c54f1cebddb0a3e23c338acdc17ec8b2ca"
+        },
+        {
+          "path": "apps/web/src/routes/app/crm/index.tsx",
+          "sha256": "5c99f835cc17a6bede03318a397456d49fb1e5ec580a04c7f46feae33f568780"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "627ad86810031a69a775b80bf1091a8b84e7a092c3c7fa71f5f4838064cea3f2"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "audit/evidence/r01/barghsa-crm-list-browser-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-browser-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-browser.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-budgets-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-budgets.log.gz",
+        "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-i18n-tests.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-openapi-generate.log.gz",
+        "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-production-target.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-query-api.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-query-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-query-format-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-query-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-types.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-ui-format-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-ui-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-viewport-browser.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-viewport-budgets.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-viewport-build.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-viewport-format.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-viewport-target.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-web-build-final.log.gz",
+        "audit/evidence/r01/barghsa-crm-list-web-build.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
+      ],
+      "visual_evidence": [
+        {
+          "path": "audit/evidence/r01/barghsa-crm-list-fa-true-mobile-chrome.png",
+          "sha256": "dc756a06ae63491a12d8406df50bbf13827114d6904d053a9ea7325bf1c9d795"
+        },
+        {
+          "path": "audit/evidence/r01/barghsa-crm-list-en-false-chromium.png",
+          "sha256": "2838f6f5b90158dd92bd89e8cf7e6030e67e2e34900b78db807ec61663d76598"
+        }
+      ]
     }
   ]
 }
