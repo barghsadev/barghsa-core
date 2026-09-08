@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "date": "2026-09-08",
-  "runtime_revision": "eb19ed5b3ce959429ba5dd90339118417c37f534",
+  "runtime_revision": "1e53352f0d2a361ae85978e8b65e1048c24cc238",
   "branch": "codex/audit-fixes",
-  "scope": "Bounded confirmed runtime and build repairs, targeted critical-path tests and final regression. Two coverage gates and historical acceptance remain open.",
+  "scope": "Bounded confirmed runtime and build repairs with focused review. Three coverage gates, eager purchase loading, strict dependency declarations and historical/external acceptance remain open.",
   "remote_actions_performed": false,
   "repairs": [
     {
@@ -102,56 +102,95 @@
         "eb19ed5"
       ],
       "summary": "Localized, keyboard-managed geography dialogs and recovery; preserve filter name; correct fallback primary contrast."
+    },
+    {
+      "group": "F03/F05",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "d45df2a"
+      ],
+      "summary": "Validate recovery/reset results; honor body-independent rate limits."
+    },
+    {
+      "group": "F04/F17",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "e160d84",
+        "78bdf70",
+        "bab2cb6"
+      ],
+      "summary": "82 new template, privileged-read and branding authority/input boundary tests."
+    },
+    {
+      "group": "F09/F17",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "1e5adb0",
+        "2604ceb"
+      ],
+      "summary": "Validate email-provider outcomes; implement password step-up recovery for every mutation."
+    },
+    {
+      "group": "F19",
+      "status": "implemented_and_reviewed",
+      "commits": [
+        "1e53352"
+      ],
+      "summary": "Enforce critical coverage for PascalCase/camelCase frontend files; previously missed 41 critical files."
     }
   ],
   "regression": {
-    "status": "passed",
-    "tests": 5815,
-    "files": 461,
+    "status": "passed_with_affected_refreshes",
+    "tests": 5923,
+    "files": 465,
     "full_run": {
       "revision": "0494ad4",
       "log": "/tmp/barghsa-resumed-full-coverage.log",
       "turbo_tasks": 12
     },
     "packages": {
-      "api": 3502,
+      "api": 3584,
       "db": 660,
       "worker": 367,
       "shared": 934,
       "ui": 49,
       "i18n": 50,
-      "web": 250,
+      "web": 276,
       "tsconfig": 3
     },
     "affected_refreshes": [
       {
-        "revision": "eb19ed5b3ce959429ba5dd90339118417c37f534",
+        "revision": "1e53352f0d2a361ae85978e8b65e1048c24cc238",
         "packages": [
+          "api",
           "web",
           "i18n"
         ],
         "logs": [
-          "/tmp/barghsa-resumed-web-refresh.log",
-          "/tmp/barghsa-resumed-i18n-refresh.log"
-        ]
+          "/tmp/barghsa-resumed-api-next-coverage.log",
+          "/tmp/barghsa-current-web-coverage.log",
+          "/tmp/barghsa-current-i18n-coverage.log"
+        ],
+        "reuse_note": "Other package sources unchanged from full 5815-test run. 5923 is the combined current count, not a single full run."
       }
     ]
   },
   "browser": {
     "status": "passed",
-    "revision": "eb19ed5b3ce959429ba5dd90339118417c37f534",
+    "revision": "1e53352f0d2a361ae85978e8b65e1048c24cc238",
     "project": "production Chromium",
-    "passed": 378,
+    "passed": 399,
     "skipped": 0,
     "flaky": 0,
     "failed": 0,
-    "coverage_records": 378,
-    "mapped_source_files": 222,
-    "log": "/tmp/barghsa-resumed-browser-final.log",
-    "build_log": "/tmp/barghsa-resumed-browser-build.log",
-    "collector_log": "/tmp/barghsa-resumed-browser-collect.log",
-    "merge_log": "/tmp/barghsa-resumed-browser-merge.log",
-    "reuse_limit": "Exact committed production revision. Full Chromium run; other browser profiles were checked only for focused repairs."
+    "coverage_records": 399,
+    "mapped_source_files": 223,
+    "log": "/tmp/barghsa-current-browser-clean.log",
+    "build_log": "/tmp/barghsa-current-browser-build.log",
+    "collector_log": "/tmp/barghsa-current-browser-clean-collect.log",
+    "merge_log": "/tmp/barghsa-current-browser-merge.log",
+    "reuse_limit": "Exact committed production revision. Full Chromium run; other browser profiles were checked only for focused repairs.",
+    "rejected_evidence": "Initial 399-pass run had generated Python cache dirtiness and was not merged. Removed generated cache and repeated all 399 checks successfully on clean source."
   },
   "checks": {
     "root_lint": "passed",
@@ -168,26 +207,25 @@
     "route_budgets": {
       "status": "passed",
       "routes": 41,
-      "ordering_kb": 249.62,
       "ordering_limit_kb": 250,
-      "log": "/tmp/barghsa-budget-repair.log"
+      "log": "/tmp/barghsa-email-stepup-budgets.log"
     },
     "migration_clean_upgrade_repeat": "passed through 0120",
     "migration_snapshot": "passed",
     "logs": {
-      "lint": "/tmp/barghsa-resumed-lint.log",
-      "types": "/tmp/barghsa-resumed-types.log",
+      "lint": "/tmp/barghsa-current-root-lint.log",
+      "types": "/tmp/barghsa-current-workspace-types.log",
       "latest_test_types": "/tmp/barghsa-invoice-final-types.log",
       "backlog": "/tmp/barghsa-repair-final-backlog.log",
       "loop": "/tmp/barghsa-repair-final-loop.log",
       "snapshot": "/tmp/barghsa-repair-final-snapshot.log",
       "contract": "/tmp/barghsa-repair-final-contract.log"
     },
-    "reuse_note": "Root lint/types refreshed at 0494ad4; subsequent filter label passed focused lint/types. Unchanged loop, contract and migration tooling evidence reused."
+    "reuse_note": "Workspace lint/types refreshed at current revision. Unchanged loop, OpenAPI and migrations reuse preceding evidence."
   },
   "coverage": {
     "status": "failed",
-    "passed_groups": 11,
+    "passed_groups": 10,
     "total_groups": 13,
     "errors": [],
     "report": "audit/combined-coverage-checkpoint.json",
@@ -197,21 +235,29 @@
       {
         "package": "apps/api",
         "critical": true,
-        "lines_percent": 92.13,
-        "branches_percent": 80.48,
+        "lines_percent": 92.34,
+        "branches_percent": 81.07,
         "required_lines": 90,
         "required_branches": 85
       },
       {
         "package": "apps/web",
         "critical": false,
-        "lines_percent": 66.34,
-        "branches_percent": 63.44,
+        "lines_percent": 66.76,
+        "branches_percent": 63.0,
         "required_lines": 80,
         "required_branches": 75
+      },
+      {
+        "package": "apps/web",
+        "critical": true,
+        "lines_percent": 71.51,
+        "branches_percent": 69.83,
+        "required_lines": 90,
+        "required_branches": 85
       }
     ],
-    "log": "/tmp/barghsa-resumed-coverage-gate.log"
+    "log": "/tmp/barghsa-current-coverage-gate.log"
   },
   "historical_acceptance": {
     "verified": 35,
@@ -220,7 +266,7 @@
     "changed": false
   },
   "external_and_deferred_details": "audit/HANDOFF.md",
-  "checkpoint_revision": "eb19ed5b3ce959429ba5dd90339118417c37f534",
+  "checkpoint_revision": "1e53352f0d2a361ae85978e8b65e1048c24cc238",
   "production_images": {
     "status": "historical_build_and_smoke_passed_locally",
     "network": "none during smoke",

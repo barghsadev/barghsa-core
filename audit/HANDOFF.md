@@ -83,10 +83,10 @@ Live PgBouncer/proxy behavior remains unverified. Session SET requires session-a
 
 Machine-readable revision bindings and log paths: `audit/final-repair-checkpoint.json`.
 
-- **5,815 unit/integration tests across 461 files pass** at `0494ad4`, with affected web/i18n coverage refreshed at `eb19ed5`. All 11 workspace typechecks and root lint pass, with subsequent label changes checked separately.
-- **378/378 production Chromium cases pass at `eb19ed5`**, no skips/flakes/failures. Collector mapped 378 records to 222 source files and merged them at that exact revision. Logs `/tmp/barghsa-resumed-browser-final.log`, `/tmp/barghsa-resumed-browser-collect.log`, `/tmp/barghsa-resumed-browser-merge.log`. This is not a full five-browser run.
-- **11/13 coverage groups pass**, no report errors. API critical: 92.13% lines / 80.48% branches, needs 90/85. Web general: 66.34% / 63.44%, needs 80/75. Thresholds unchanged; no exception. Current report `audit/combined-coverage-checkpoint.json`.
-- Unchanged backlog, 55 loop tests, OpenAPI and migration chain/snapshot evidence through 0120 is reused from the preceding checkpoint. Production images are historical and predate resumed runtime changes; no current image rebuild, push or deployment occurred.
+- Current checkpoint `1e53352`: **5,923 unit/integration tests in 465 files** using the full 5,815-test run plus affected API/web/i18n refreshes. All 11 workspace typechecks and root lint pass.
+- **399/399 production Chromium cases pass**, no skips/flakes/failures. Clean-run collector mapped 399 records to 223 source files; exact-revision merge succeeded. The first passing run was rejected for generated Python cache dirtiness and was not merged. Logs and revision bindings are in `final-repair-checkpoint.json`. Other browser profiles have focused checks only.
+- **10/13 coverage groups pass**, no report errors. API critical 92.34% lines / 81.07% branches; web critical 71.51% / 69.83%; web general 66.76% / 63.00%. Critical thresholds remain 90/85, general 80/75. The corrected classifier adds previously missed critical frontend files, so older 11/13 results are superseded.
+- Unchanged backlog, 55 loop tests, OpenAPI and migration chain/snapshot through 0120 reuse prior evidence. All 41 route budgets pass. Production images predate resumed repairs; no current image rebuild, push or deployment.
 
 ## External blockers
 
@@ -94,7 +94,7 @@ Provider delivery and real identity-provider availability; real TLS/DNS/backups 
 
 ## Deferred local work and dependencies
 
-- API critical branch and general web coverage remain below policy; broader test expansion remains open. Do not equate test counts with acceptance.
+- API critical branch, critical web and general web coverage remain below policy; broader test expansion remains open. Do not equate test counts with acceptance.
 - Strict DB dependency declarations still fail: 146 errors, comprising 144 upstream Drizzle cross-dialect declarations and two Vite test-tool declarations. DB `skipLibCheck` remains; UI strict consumer declarations pass. Log `/tmp/barghsa-drizzle-current.log`.
 - Eager purchase-route loading needs further architecture work within existing budgets.
 - Remaining historical role, session/rotation, notification, finance, localization/accessibility and operations acceptance; exhaustive 322-task/55-skip review explicitly deferred.
@@ -103,7 +103,7 @@ Provider delivery and real identity-provider availability; real TLS/DNS/backups 
 ## Evidence map
 
 - `audit/final-repair-checkpoint.json`: current tests, checks, image identities and revision bindings.
-- `audit/combined-coverage-checkpoint.json`: current failed gate details; 11/13 pass.
+- `audit/combined-coverage-checkpoint.json`: current failed gate details; 10/13 pass.
 - `audit/authentication-window-review.md`, `audit/database-foundation-review.md`: targeted original constraints and operational limits.
 - `audit/fix-plan.md`: original 23 groups; read only the relevant section.
 - `audit/current-task-requirements.json`: canonical requirements overlay; historical extracts are provenance only.
