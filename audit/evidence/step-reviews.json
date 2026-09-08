@@ -4333,6 +4333,67 @@
         "/tmp/r01-ownership-authority-source-review.log",
         "/tmp/r01-ownership-authority-types.log"
       ]
+    },
+    {
+      "id": "R01-ownership-recipient-notice",
+      "date": "2026-09-08",
+      "source_revision": "a80c80768f715d2e235eef713d61cc992176b900",
+      "summary": "Show the selected ownership recipient and required acceptance after successful creation.",
+      "review": [
+        "Read TeamPage, Member, TeamActionDialog, OwnershipBanner and T-05.04.05. Creation used a generic Saved notice, omitting the named recipient and need for acceptance. The selected action now owns a localized success message; it appears only after its mutation succeeds. Other action messages are unchanged. Confirmation and success use the same displayed name, with username/user ID fallback. React escapes recipient text.",
+        "The shared action dialog still requests step-up when required and preserves the exact transfer target across retry. New fa/en browser cases force step-up, reject a conflict without success, then accept a retry and show the named recipient. The existing exact-target test verifies username fallback; other team/ownership/member tests retain their behavior.",
+        "The initial frontend-only build consumed stale compiled translations and six browser cases correctly failed on team.transferSent. Built i18n before rebuilding the frontend; final36 production-browser cases pass. Both sets of asset hashes and failed logs are preserved. Future translation changes require the same dependency-first build order.",
+        "Existing translation keys/values are byte-identical; only two locale values were added. Backend, common dialog, ownership banner and API contract are unchanged. Reuse b4a0c83 ownership API evidence. This notice fix does not satisfy the literal prompt-before-selection ordering or close whole-task/theme/accessibility acceptance."
+      ],
+      "checks": [
+        "36 production-browser team cases pass across Chromium desktop/mobile, including fa/en recipient success and failure/retry paths.",
+        "i18n TypeScript build, frontend production build, web typecheck, focused ESLint/Prettier,41 complete-route budgets, unchanged-source comparison and git diff check pass. No new backend, broad regression or coverage checkpoint claimed."
+      ],
+      "remaining": [
+        "R01: finish ownership presentation T-05.04.05. API authority/expiry/audit is verified at b4a0c83; named success and selected-name consistency at a80c807. Confirmed remaining requirement: TeamPage selects the member before step-up, while the written sequence requires step-up first, then agent selection and confirmation. Repair that sequence using existing dialog behavior; verify cancel/retry/fresh-CSRF/exact recipient, incoming banner and relevant fa/en/RTL/theme/error states. Then finish invitation list/details/preview/confirmation and current role/domain consumers. Reuse unchanged backend and browser evidence. Lost-contact policy remains pending; do not ask again.",
+        "Historical task counts remain53 verified /18 partial /251 pending. Presentation acceptance is still open."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "c4d1e6f1af56968181178dba2e348dd8c548ca7c8c4b42fb306fc62723cdebc1"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "e70615cd60d401534f9c90318c174ad297f87545e80a9739ac94b230283b50e7"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "878726ce9f91e97a7756d6deb5a09006f613874b3605c62bc95bdbfb1536baa1"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+        },
+        {
+          "path": "apps/web/src/components/OwnershipBanner.tsx",
+          "sha256": "ff331961bd0a0617eeea23254ed7ade394a765b96351d426f7e36d4a3888359f"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/r01-ownership-presentation-assets-final.log",
+        "/tmp/r01-ownership-presentation-assets.log",
+        "/tmp/r01-ownership-presentation-browser-final.log",
+        "/tmp/r01-ownership-presentation-browser.log",
+        "/tmp/r01-ownership-presentation-budgets-final.log",
+        "/tmp/r01-ownership-presentation-budgets.log",
+        "/tmp/r01-ownership-presentation-build-final.log",
+        "/tmp/r01-ownership-presentation-build.log",
+        "/tmp/r01-ownership-presentation-commit.log",
+        "/tmp/r01-ownership-presentation-format-final.log",
+        "/tmp/r01-ownership-presentation-format.log",
+        "/tmp/r01-ownership-presentation-i18n-build.log",
+        "/tmp/r01-ownership-presentation-lint-final.log",
+        "/tmp/r01-ownership-presentation-lint.log",
+        "/tmp/r01-ownership-presentation-source-review.log",
+        "/tmp/r01-ownership-presentation-types.log"
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product `b4a0c83`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product `a80c807`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,9 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-R01: finish agent/invitation/ownership presentation and current domain-role acceptance. Ownership API authority/step-up/audit/expiry repair is reviewed atb4a0c83. TeamPage was read: transfer initiation still emits generic Saved rather than the required named recipient/acceptance notice. Review the specified step-up, agent selection, confirmation, incoming banner and fa/en/RTL/theme/error states against T-05.04.05; reuse unchanged backend and prior browser evidence. Then invitation list/details/preview/confirmation and role/domain consumers. Lost-contact policy remains pending; do not ask again.
+R01: finish ownership presentation T-05.04.05. API authority/expiry/audit is verified at b4a0c83; named success and selected-name consistency at a80c807. Confirmed remaining requirement: TeamPage selects the member before step-up, while the written sequence requires step-up first, then agent selection and confirmation. Repair that sequence using existing dialog behavior; verify cancel/retry/fresh-CSRF/exact recipient, incoming banner and relevant fa/en/RTL/theme/error states. Then finish invitation list/details/preview/confirmation and current role/domain consumers. Reuse unchanged backend and browser evidence. Lost-contact policy remains pending; do not ask again.
+
+Named transfer success and selected-name consistency repaired at `a80c807`.36 team browser cases, types/lint/format/build and41 route budgets pass. [Scoped evidence](evidence/step-reviews.json#R01-ownership-recipient-notice).
 
 Ownership initiation/acceptance/decline/cancel repaired at `b4a0c83`: current actor account/session/CSRF/step-up checks hold through commit; audit records verified time/correlation. Mid-write transfer expiry restores ownership and credentials and persists only Expired.70 distinct selected API/unit cases and quality/contract checks pass. [Scoped evidence](evidence/step-reviews.json#R01-ownership-authority).
 

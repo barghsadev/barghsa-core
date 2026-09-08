@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "b4a0c83416fdfbb8ecd0cb1dc51637253b386890",
+  "source_revision": "a80c80768f715d2e235eef713d61cc992176b900",
   "active_step": "R01",
-  "next_action": "R01: finish agent/invitation/ownership presentation and current domain-role acceptance. Ownership API authority/step-up/audit/expiry repair is reviewed atb4a0c83. TeamPage was read: transfer initiation still emits generic Saved rather than the required named recipient/acceptance notice. Review the specified step-up, agent selection, confirmation, incoming banner and fa/en/RTL/theme/error states against T-05.04.05; reuse unchanged backend and prior browser evidence. Then invitation list/details/preview/confirmation and role/domain consumers. Lost-contact policy remains pending; do not ask again.",
+  "next_action": "R01: finish ownership presentation T-05.04.05. API authority/expiry/audit is verified at b4a0c83; named success and selected-name consistency at a80c807. Confirmed remaining requirement: TeamPage selects the member before step-up, while the written sequence requires step-up first, then agent selection and confirmation. Repair that sequence using existing dialog behavior; verify cancel/retry/fresh-CSRF/exact recipient, incoming banner and relevant fa/en/RTL/theme/error states. Then finish invitation list/details/preview/confirmation and current role/domain consumers. Reuse unchanged backend and browser evidence. Lost-contact policy remains pending; do not ask again.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -134,7 +134,8 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Ownership API current authority/step-up/expiry/audit repair verified atb4a0c83 with70 selected cases. Invitation boundary retains e48bf58 and agent mutations417ab33. Finish named transfer confirmation, required step-up/selection/acceptance/banner presentation; full invitation/list/details/confirmation, role/domain, profile-selection and onboarding acceptance remains. Future contract/order/document consumers stay separate."
+        "R01: finish ownership presentation T-05.04.05. API authority/expiry/audit is verified at b4a0c83; named success and selected-name consistency at a80c807. Confirmed remaining requirement: TeamPage selects the member before step-up, while the written sequence requires step-up first, then agent selection and confirmation. Repair that sequence using existing dialog behavior; verify cancel/retry/fresh-CSRF/exact recipient, incoming banner and relevant fa/en/RTL/theme/error states. Then finish invitation list/details/preview/confirmation and current role/domain consumers. Reuse unchanged backend and browser evidence. Lost-contact policy remains pending; do not ask again.",
+        "Full role/domain, profile-selection and onboarding acceptance remains. Future contract/order/document consumers stay separate."
       ]
     },
     {
@@ -553,6 +554,10 @@
     {
       "id": "R01-ownership-authority",
       "review_record": "audit/evidence/step-reviews.json#R01-ownership-authority"
+    },
+    {
+      "id": "R01-ownership-recipient-notice",
+      "review_record": "audit/evidence/step-reviews.json#R01-ownership-recipient-notice"
     }
   ],
   "deferred_improvements": [
