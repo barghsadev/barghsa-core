@@ -22,6 +22,7 @@ beforeAll(async () => {
       `${user}@example.test`,
       'test-only',
     ]);
+  await db.pool.query("UPDATE users SET is_admin=true WHERE user_id='verify-staff'");
 }, 40000);
 afterAll(async () => {
   await fixture?.close();

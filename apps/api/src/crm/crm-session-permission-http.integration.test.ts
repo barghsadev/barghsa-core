@@ -10,6 +10,88 @@ afterAll(async () => {
   await http?.close();
 });
 
+for (const action of ['edit', 'verify', 'archive'] as const) {
+  it(`rejects profile ${action} when staff permission is revoked during its lock wait`, async () => {
+    const actor = `crm-profile-${randomUUID()}`;
+    const profileId = randomUUID();
+    const session = randomUUID();
+    const csrf = randomUUID();
+    await http.pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_admin) VALUES ($1,$1||'@example.test','fixture-only',true)",
+      [actor]
+    );
+    await http.pool.query(
+      "INSERT INTO profiles(id,user_id,profile_type,status,title) VALUES ($1,$2,'INDIVIDUAL','ACTIVE','Original')",
+      [profileId, actor]
+    );
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+      [session, actor, csrf, randomUUID()]
+    );
+    const blocker = await http.pool.connect();
+    let request: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [profileId]);
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      request = fetch(
+        `${http.base}/api/crm/profiles/${profileId}${action === 'verify' ? '/verify' : ''}`,
+        {
+          method: action === 'edit' ? 'PUT' : action === 'verify' ? 'POST' : 'DELETE',
+          headers: {
+            Cookie: `barghsa_session=${session}`,
+            'X-CSRF-Token': csrf,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            action === 'edit'
+              ? { title: 'Changed' }
+              : action === 'verify'
+                ? { action: 'verify' }
+                : { reason: 'Closure request' }
+          ),
+          signal: AbortSignal.timeout(10000),
+        }
+      );
+      await expect
+        .poll(
+          async () =>
+            (
+              await http.pool.query(
+                'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid))) AS waiting',
+                [pid]
+              )
+            ).rows[0].waiting
+        )
+        .toBe(true);
+      await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [actor]);
+      await blocker.query('ROLLBACK');
+      const response = await request;
+      expect(response.status).toBe(403);
+      expect(
+        (
+          await http.pool.query('SELECT title,status,archived FROM profiles WHERE id=$1', [
+            profileId,
+          ])
+        ).rows[0]
+      ).toEqual({ title: 'Original', status: 'ACTIVE', archived: false });
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM audit_log WHERE user_id=$1 AND event IN ('profile_updated','verification_change','profile_deleted')",
+            [actor]
+          )
+        ).rows
+      ).toHaveLength(0);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await request?.catch(() => undefined);
+    }
+  });
+}
+
 for (const action of ['force-password-change', 'expire-sessions'] as const) {
   for (const scenario of ['revoked', 'retained', 'deleted-target'] as const) {
     it(`${action} checks current permission and target after a lock wait (${scenario})`, async () => {

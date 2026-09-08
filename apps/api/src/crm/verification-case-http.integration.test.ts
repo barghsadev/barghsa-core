@@ -102,6 +102,70 @@ async function review(id: string, decision: string, user = 'reviewer') {
     body: JSON.stringify({ decision, reviewerNotes: 'Evidence checked' }),
   });
 }
+
+for (const action of ['create', 'approve'] as const) {
+  it(`rejects identity ${action} after the actor loses permission during a profile lock wait`, async () => {
+    const target = await profile();
+    const actor = action === 'create' ? 'creator' : 'reviewer';
+    let caseId: string | undefined;
+    if (action === 'approve') {
+      const created = await create(target);
+      expect(created.status).toBe(201);
+      caseId = ((await created.json()) as { id: string }).id;
+      expect((await review(caseId, 'Under Review')).status).toBe(200);
+    }
+    const before = (
+      await http.pool.query(
+        "SELECT COUNT(*)::int AS count FROM audit_log WHERE metadata::jsonb->>'profileId'=$1",
+        [target]
+      )
+    ).rows[0].count;
+    const blocker = await http.pool.connect();
+    let request: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [target]);
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      request = action === 'create' ? create(target) : review(caseId!, 'Approved');
+      await expect
+        .poll(
+          async () =>
+            (
+              await http.pool.query(
+                'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid))) AS waiting',
+                [pid]
+              )
+            ).rows[0].waiting
+        )
+        .toBe(true);
+      await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [actor]);
+      await blocker.query('ROLLBACK');
+      expect((await request).status).toBe(403);
+      expect(
+        (await http.pool.query('SELECT first_name FROM profiles WHERE id=$1', [target])).rows[0]
+          .first_name
+      ).toBe('Original');
+      const cases = await http.pool.query(
+        'SELECT status FROM verification_cases WHERE profile_id=$1',
+        [target]
+      );
+      expect(cases.rows).toEqual(action === 'create' ? [] : [{ status: 'Under Review' }]);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT COUNT(*)::int AS count FROM audit_log WHERE metadata::jsonb->>'profileId'=$1",
+            [target]
+          )
+        ).rows[0].count
+      ).toBe(before);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await request?.catch(() => undefined);
+      await http.pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [actor]);
+    }
+  });
+}
 it('serializes creation, records the actual original value and prevents creator review', async () => {
   const target = await profile();
   const results = await Promise.all(Array.from({ length: 5 }, () => create(target)));

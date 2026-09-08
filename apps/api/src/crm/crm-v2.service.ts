@@ -405,6 +405,7 @@ export class CrmV2Service {
         await client.query('ROLLBACK');
         return null;
       }
+      await requireStaffMutationPermission(client, actorUserId, 'crm:edit');
       if (profile.archived)
         throw new HttpException(
           {
@@ -520,6 +521,7 @@ export class CrmV2Service {
         await client.query('COMMIT');
         return null;
       }
+      await requireStaffMutationPermission(client, actorUserId, 'crm:verify');
       const currentStatus = profile.status as string,
         targetStatus = transition.targetStatus;
       const result = {
@@ -795,6 +797,7 @@ export class CrmV2Service {
         return null;
       }
       const profileRow = profileResult.rows[0] as Record<string, unknown>;
+      await requireStaffMutationPermission(client, actorUserId, 'admin:users:edit');
       if (profileRow.archived === true) {
         await client.query('ROLLBACK');
         return { errorCode: 'CRM:PROFILE:ALREADY_ARCHIVED', error: 'Profile is already archived' };

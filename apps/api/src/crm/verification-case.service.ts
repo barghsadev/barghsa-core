@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 
 // ── Result types ─────────────────────────────────────────────────────
 
@@ -120,6 +121,7 @@ export class VerificationCaseService {
         await client.query('ROLLBACK');
         return null;
       }
+      await requireStaffMutationPermission(client, actorUserId, 'crm:edit-identity');
       const allowed =
         profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL;
       if (!allowed.includes(dto.fieldName))
@@ -378,6 +380,7 @@ export class VerificationCaseService {
         await client.query('ROLLBACK');
         return null;
       }
+      await requireStaffMutationPermission(client, reviewerUserId, 'crm:verify');
       const row = (
         await client.query('SELECT * FROM verification_cases WHERE id=$1 FOR UPDATE', [caseId])
       ).rows[0];
