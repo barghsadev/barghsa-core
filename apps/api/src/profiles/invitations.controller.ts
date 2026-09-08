@@ -1,9 +1,21 @@
-import { Controller, Get, HttpCode, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import type { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AgentsService } from './agents.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { setSessionCookie, setRefreshCookie, setCsrfCookie } from '../session/cookie.helper.js';
 
 @ApiTags('Invitations')
 @Controller('api/invitations')
@@ -47,9 +59,16 @@ export class InvitationsController {
   @ApiResponse({ status: 400, description: 'Invitation not in Pending status or expired.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
   @ApiResponse({ status: 409, description: 'Already an agent of this profile.' })
-  async acceptInvitation(@Param('inviteId') inviteId: string, @Req() req: AuthenticatedRequest) {
+  async acceptInvitation(
+    @Param('inviteId') inviteId: string,
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
+  ) {
     const userId = req.session.userId;
-    await this.agentsService.acceptInvitation(inviteId, userId);
+    const rotated = await this.agentsService.acceptInvitation(inviteId, req.session);
+    setSessionCookie(res, rotated.sessionId, rotated.expiresAt);
+    setRefreshCookie(res, rotated.refreshToken, rotated.expiresAt);
+    setCsrfCookie(res, rotated.csrfToken);
     this.logger.log(`Invitation ${inviteId} accepted by user ${userId}`);
     return { message: 'Invitation accepted successfully.' };
   }

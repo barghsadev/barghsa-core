@@ -27,6 +27,114 @@ async function openProfileMenu(page: Page) {
   }
 }
 for (const locale of ['fa', 'en'] as const) {
+  test(`accepting an invitation refreshes profiles and uses rotated CSRF (${locale})`, async ({
+    page,
+    baseURL,
+  }) => {
+    await shell(page);
+    await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page
+      .context()
+      .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'before-accept' }]);
+    let accepted = false,
+      attempts = 0,
+      active = 'existing';
+    await page.route('**/api/invitations/pending', (route) =>
+      route.fulfill({
+        json: {
+          invitations: accepted
+            ? []
+            : [
+                {
+                  id: 'invite-cookie',
+                  profileId: 'invited',
+                  profileName: 'Inviting company',
+                  role: 'Finance',
+                  invitedBy: 'owner',
+                  inviterName: 'Owner',
+                  createdAt: '2026-09-01T01:00:00Z',
+                  expiresAt: null,
+                },
+              ],
+        },
+      })
+    );
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          profiles: [profile('existing'), ...(accepted ? [profile('invited')] : [])],
+          activeProfileId: active,
+          hasDefault: true,
+        },
+      })
+    );
+    await page.route('**/api/dashboard', (route) =>
+      route.fulfill({
+        json: {
+          wallet: { balance: 0, currency: 'IRR', lowBalanceWarning: false },
+          activeOrders: 0,
+          pendingInvoices: 0,
+          openTickets: 0,
+          contracts: { active: 0, total: 0 },
+        },
+      })
+    );
+    await page.route('**/api/invitations/invite-cookie/accept', (route) => {
+      expect(route.request().headers()['x-csrf-token']).toBe('before-accept');
+      attempts++;
+      if (attempts === 1)
+        return route.fulfill({ status: 409, json: { error: { code: 'CONFLICT:STATE' } } });
+      accepted = true;
+      return route.fulfill({
+        headers: { 'Set-Cookie': 'barghsa_csrf=after-accept; Path=/; SameSite=Strict' },
+        json: { message: 'Invitation accepted successfully.' },
+      });
+    });
+    await page.route('**/api/profiles/switch/invited', (route) => {
+      expect(route.request().headers()['x-csrf-token']).toBe('after-accept');
+      active = 'invited';
+      return route.fulfill({ json: { activeProfileId: active } });
+    });
+    await page.goto('/dashboard');
+    const accept = page.getByRole('button', {
+      name: locale === 'fa' ? 'پذیرفتن' : 'Accept',
+      exact: true,
+    });
+    await accept.click();
+    await expect(
+      page.getByText(locale === 'fa' ? 'خطا در پردازش دعوتنامه' : 'Error processing invitation', {
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(accept).toBeEnabled();
+    expect(
+      (await page.context().cookies()).find((cookie) => cookie.name === 'barghsa_csrf')?.value
+    ).toBe('before-accept');
+    await accept.click();
+    await expect(
+      page.getByText(
+        locale === 'fa' ? 'دعوتنامه با موفقیت پذیرفته شد' : 'Invitation accepted successfully',
+        { exact: true }
+      )
+    ).toBeVisible();
+    await openProfileMenu(page);
+    const selector = page.getByRole('combobox', {
+      name: locale === 'fa' ? 'تغییر پروفایل فعال' : 'Switch active profile',
+    });
+    await expect(selector.locator('option[value="invited"]')).toHaveCount(1);
+    await selector.selectOption('invited');
+    const menu = page.locator('button[aria-controls="dashboard-navigation"]');
+    if (await menu.isVisible()) await expect(menu).toHaveAttribute('aria-expanded', 'false');
+    await openProfileMenu(page);
+    await expect(selector).toHaveValue('invited');
+    await expect(page).toHaveURL(/\/dashboard$/);
+    expect(attempts).toBe(2);
+  });
   test(`selecting the only remaining profile clears old page data (${locale})`, async ({
     page,
   }) => {

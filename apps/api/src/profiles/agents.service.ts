@@ -6,6 +6,12 @@ import { normalizeUsername } from '@barghsa/shared/validation';
 import type { AgentRole } from '@barghsa/shared/agent-permissions';
 import { v7 as uuidv7 } from 'uuid';
 import { RateLimitService } from '../rate-limit/rate-limit.service.js';
+import {
+  SessionService,
+  type CreatedSession,
+  type ValidatedSession,
+} from '../session/session.service.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 export interface AgentDto {
   id: string;
@@ -30,7 +36,9 @@ export class AgentsService {
 
   constructor(
     @Inject(RateLimitService)
-    private readonly rateLimitService: RateLimitService
+    private readonly rateLimitService: RateLimitService,
+    @Inject(SessionService)
+    private readonly sessions: SessionService
   ) {}
 
   /** Valid agent roles for invitations. */
@@ -490,162 +498,140 @@ export class AgentsService {
    *
    * On success: creates a profile_agents record and marks the invitation as Accepted.
    */
-  async acceptInvitation(inviteId: string, userId: string): Promise<void> {
+  async acceptInvitation(
+    inviteId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<CreatedSession> {
     const pool = getDbPool();
-
-    // Look up the user's username
-    const userResult = await pool.query(`SELECT username FROM users WHERE user_id = $1`, [userId]);
-    if (userResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'User not found' },
-        404
-      );
-    }
-    const username = userResult.rows[0].username as string;
-
-    // Verify the invitation exists, is Pending, belongs to this user, and is not expired
-    const inviteResult = await pool.query(
-      `SELECT id, profile_id, username, role, status, expires_at
-       FROM profile_invitations
-       WHERE id = $1`,
-      [inviteId]
-    );
-
-    if (inviteResult.rows.length === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Invitation not found',
-        },
-        404
-      );
-    }
-
-    const invite = inviteResult.rows[0];
-
-    // Check the invitation belongs to this user (by username match)
-    if ((invite.username as string) !== username) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Invitation not found',
-        },
-        404
-      );
-    }
-
-    if (invite.status !== 'Pending') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Cannot accept invitation in '${invite.status as string}' status`,
-        },
-        400
-      );
-    }
-
-    // Check expiry
-    if (invite.expires_at && new Date(invite.expires_at as Date) < new Date()) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'This invitation has expired',
-        },
-        400
-      );
-    }
-
-    const profileId = invite.profile_id as string;
-    const role = invite.role as string;
-
-    // Wrap state change, profile_agents insert, and audit log in a transaction
+    // This unlocked lookup selects only the lock scope. Recheck the full invitation below.
+    const hint = await pool.query('SELECT profile_id FROM profile_invitations WHERE id=$1', [
+      inviteId,
+    ]);
+    if (!hint.rows[0])
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    const profileId = hint.rows[0].profile_id as string;
     const client = await pool.connect();
-    let transactionStarted = false;
     try {
       await client.query('BEGIN');
-      transactionStarted = true;
-
-      const claimed = await client.query(
-        `UPDATE profile_invitations SET status='Accepted',updated_at=NOW()
-         WHERE id=$1 AND status='Pending' AND (expires_at IS NULL OR expires_at>clock_timestamp())
-           AND username=(SELECT username FROM users WHERE user_id=$2 AND disabled_at IS NULL FOR SHARE)
-           AND profile_id=$3 AND role=$4
-           AND EXISTS (SELECT 1 FROM profiles WHERE id=$3 AND profile_type='LEGAL' AND NOT archived AND user_id<>$2)
-         RETURNING id`,
-        [inviteId, userId, profileId, role]
-      );
-      if (claimed.rowCount !== 1) {
+      // Match ownership and role changes: profile, account, then session/membership rows.
+      const profile = (
+        await client.query(
+          'SELECT user_id,profile_type,archived FROM profiles WHERE id=$1 FOR UPDATE',
+          [profileId]
+        )
+      ).rows[0];
+      const user = (
+        await client.query('SELECT username,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+          actor.userId,
+        ])
+      ).rows[0];
+      const session = (
+        await client.query(
+          'SELECT csrf_token,revoked_at,expires_at,idle_deadline FROM sessions WHERE session_id=$1 AND user_id=$2 FOR UPDATE',
+          [actor.sessionId, actor.userId]
+        )
+      ).rows[0];
+      if (!user || user.disabled_at || !session || session.revoked_at)
         throw new HttpException(
-          {
-            statusCode: 409,
-            error: ErrorCodes.CONFLICT_STATE.code,
-            message: 'Invitation changed or expired',
-          },
-          409
+          { statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code },
+          401
         );
-      }
-
-      // Check the user isn't already an agent of this profile (inside transaction to prevent TOCTOU race)
-      const existingAgent = await client.query(
-        `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2 FOR UPDATE`,
-        [profileId, userId]
-      );
-      if (existingAgent.rows.length > 0) {
-        await client.query('ROLLBACK');
-        transactionStarted = false;
+      if (session.csrf_token !== actor.csrfToken)
         throw new HttpException(
-          {
-            statusCode: 409,
-            error: ErrorCodes.CONFLICT_STATE.code,
-            message: 'You are already an agent of this profile',
-          },
-          409
+          { statusCode: 403, error: ErrorCodes.AUTHZ_CSRF_INVALID.code },
+          403
         );
-      }
-
-      // Insert into profile_agents
-      await client.query(
-        `INSERT INTO profile_agents (id, profile_id, user_id, role, joined_at, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, NOW(), NOW(), NOW())`,
-        [uuidv7(), profileId, userId, role]
+      const invite = (
+        await client.query(
+          'SELECT profile_id,username,role,status,expires_at FROM profile_invitations WHERE id=$1 FOR UPDATE',
+          [inviteId]
+        )
+      ).rows[0];
+      if (!invite || invite.profile_id !== profileId || invite.username !== user.username)
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404
+        );
+      if (
+        !profile ||
+        profile.archived ||
+        profile.profile_type !== 'LEGAL' ||
+        profile.user_id === actor.userId
+      )
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code }, 409);
+      if (invite.status !== 'Pending' || !AgentsService.VALID_INVITE_ROLES.has(invite.role))
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+          400
+        );
+      const checkDeadlines = async () => {
+        const deadlines = (
+          await client.query(
+            `SELECT $1::timestamptz>clock_timestamp() AND $2::timestamptz>clock_timestamp() AS active,
+                  ($3::timestamptz IS NULL OR $3::timestamptz>clock_timestamp()) AS invited`,
+            [session.expires_at, session.idle_deadline, invite.expires_at]
+          )
+        ).rows[0];
+        if (!deadlines?.active)
+          throw new HttpException(
+            { statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code },
+            401
+          );
+        if (!deadlines.invited)
+          throw new HttpException(
+            { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+            400
+          );
+      };
+      await checkDeadlines();
+      const existing = await client.query(
+        'SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 FOR UPDATE',
+        [profileId, actor.userId]
       );
-
-      // Audit log
-      const correlationId = uuidv7();
+      if (existing.rows.length)
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code }, 409);
       await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, NOW())`,
+        "UPDATE profile_invitations SET status='Accepted',updated_at=clock_timestamp() WHERE id=$1",
+        [inviteId]
+      );
+      await client.query(
+        `INSERT INTO profile_agents(id,profile_id,user_id,role,joined_at,created_at,updated_at)
+         VALUES ($1,$2,$3,$4,clock_timestamp(),clock_timestamp(),clock_timestamp())`,
+        [uuidv7(), profileId, actor.userId, invite.role]
+      );
+      const rotated = await this.sessions.rotateSession(
+        actor.sessionId,
+        'profile_privilege_change',
+        client
+      );
+      if (!rotated)
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code },
+          401
+        );
+      await this.sessions.revokeAllUserSessions(actor.userId, rotated.sessionId, client);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES ($1,$2,'invitation_accepted',$3::jsonb,$4,clock_timestamp())`,
         [
           uuidv7(),
-          userId,
-          'invitation_accepted',
-          JSON.stringify({ profileId, inviteId, role }),
-          correlationId,
+          actor.userId,
+          JSON.stringify({ profileId, inviteId, role: invite.role }),
+          correlationIdStorage.getStore() ?? uuidv7(),
         ]
       );
-
+      // Keep original deadlines: intentional rotation must not extend acceptance authority.
+      await checkDeadlines();
       await client.query('COMMIT');
-      transactionStarted = false;
+      return rotated;
     } catch (error) {
-      if (transactionStarted) {
-        try {
-          await client.query('ROLLBACK');
-        } catch {
-          /* ignore rollback failure */
-        }
-      }
-      throw error;
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
+      this.logger.error(`Invitation acceptance failed: ${String(error)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();
     }
-
-    this.logger.log(
-      `Invitation ${inviteId} accepted by user ${userId} for profile ${profileId} as ${role}`
-    );
   }
 
   /**

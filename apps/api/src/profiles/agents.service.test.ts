@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AgentsService } from './agents.service.js';
+import { SessionService } from '../session/session.service.js';
 
 const mockClient = {
   query: vi.fn(),
@@ -29,9 +30,12 @@ describe('AgentsService', () => {
   let service: AgentsService;
 
   beforeEach(() => {
-    service = new AgentsService({
-      checkRateLimit: vi.fn().mockResolvedValue({ allowed: true }),
-    } as any);
+    service = new AgentsService(
+      {
+        checkRateLimit: vi.fn().mockResolvedValue({ allowed: true }),
+      } as any,
+      new SessionService()
+    );
     mockPool.query.mockReset();
     mockClient.query.mockReset();
     mockClient.release.mockReset();
@@ -343,9 +347,12 @@ describe('AgentsService', () => {
       // Profile exists and is LEGAL
       mockPool.query.mockResolvedValueOnce({ rows: [{ id: profileId, profile_type: 'LEGAL' }] });
       // Rate limit check: rateLimitService returns not allowed
-      service = new AgentsService({
-        checkRateLimit: vi.fn().mockResolvedValue({ allowed: false, resetMs: 60000 }),
-      } as any);
+      service = new AgentsService(
+        {
+          checkRateLimit: vi.fn().mockResolvedValue({ allowed: false, resetMs: 60000 }),
+        } as any,
+        new SessionService()
+      );
 
       await expect(
         service.createInvitation(profileId, 'user@example.com', 'Legal', userId)
@@ -433,170 +440,7 @@ describe('AgentsService', () => {
     });
   });
 
-  describe('acceptInvitation', () => {
-    const userId = 'user-1';
-    const inviteId = 'inv-1';
-    const username = 'test@example.com';
-    const profileId = 'prof-1';
-
-    beforeEach(() => {
-      mockPool.query.mockReset();
-      mockClient.query.mockReset();
-      mockClient.release.mockReset();
-      mockUuidV7.mockReset();
-      mockUuidV7.mockReturnValue('uuid-1');
-    });
-
-    it('accepts a pending invitation and creates profile_agents record', async () => {
-      // Lookup username
-      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] });
-      // Fetch invitation
-      mockPool.query.mockResolvedValueOnce({
-        rows: [
-          {
-            id: inviteId,
-            profile_id: profileId,
-            username,
-            role: 'Manager',
-            status: 'Pending',
-            expires_at: new Date('2026-09-20T00:00:00Z'),
-          },
-        ],
-      });
-      // Transaction: BEGIN
-      mockClient.query.mockResolvedValueOnce(undefined);
-      // Claim pending invitation
-      mockClient.query.mockResolvedValueOnce({ rows: [{ id: inviteId }], rowCount: 1 });
-      // Duplicate agent check (inside transaction)
-      mockClient.query.mockResolvedValueOnce({ rows: [] });
-      // INSERT profile_agents
-      mockClient.query.mockResolvedValueOnce(undefined);
-      // INSERT audit log
-      mockClient.query.mockResolvedValueOnce(undefined);
-      // COMMIT
-      mockClient.query.mockResolvedValueOnce(undefined);
-
-      await expect(service.acceptInvitation(inviteId, userId)).resolves.toBeUndefined();
-
-      expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
-      expect(mockClient.query).toHaveBeenCalledWith(
-        expect.stringContaining('SELECT id FROM profile_agents'),
-        [profileId, userId]
-      );
-      expect(mockClient.query).toHaveBeenCalledWith(
-        expect.stringContaining('INSERT INTO profile_agents'),
-        expect.any(Array)
-      );
-      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
-      expect(mockClient.release).toHaveBeenCalled();
-    });
-
-    it('throws 404 when user not found', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] });
-
-      await expect(service.acceptInvitation(inviteId, userId)).rejects.toMatchObject({
-        response: { statusCode: 404 },
-      });
-    });
-
-    it('throws 404 when invitation not found', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] });
-      mockPool.query.mockResolvedValueOnce({ rows: [] });
-
-      await expect(service.acceptInvitation('nonexistent-invite', userId)).rejects.toMatchObject({
-        response: { statusCode: 404 },
-      });
-    });
-
-    it('throws 400 when invitation is not in Pending status', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] });
-      mockPool.query.mockResolvedValueOnce({
-        rows: [
-          {
-            id: inviteId,
-            profile_id: profileId,
-            username,
-            role: 'Manager',
-            status: 'Accepted',
-            expires_at: null,
-          },
-        ],
-      });
-
-      await expect(service.acceptInvitation(inviteId, userId)).rejects.toMatchObject({
-        response: { statusCode: 400 },
-      });
-    });
-
-    it('throws 404 when invitation belongs to a different user (username mismatch)', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] });
-      mockPool.query.mockResolvedValueOnce({
-        rows: [
-          {
-            id: inviteId,
-            profile_id: profileId,
-            username: 'other@example.com',
-            role: 'Manager',
-            status: 'Pending',
-            expires_at: null,
-          },
-        ],
-      });
-
-      await expect(service.acceptInvitation(inviteId, userId)).rejects.toMatchObject({
-        response: { statusCode: 404 },
-      });
-    });
-
-    it('throws 400 when invitation has expired', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] });
-      mockPool.query.mockResolvedValueOnce({
-        rows: [
-          {
-            id: inviteId,
-            profile_id: profileId,
-            username,
-            role: 'Manager',
-            status: 'Pending',
-            expires_at: new Date('2020-01-01T00:00:00Z'),
-          },
-        ],
-      });
-
-      await expect(service.acceptInvitation(inviteId, userId)).rejects.toMatchObject({
-        response: { statusCode: 400 },
-      });
-    });
-
-    it('throws 409 when user is already an agent of the profile', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] });
-      mockPool.query.mockResolvedValueOnce({
-        rows: [
-          {
-            id: inviteId,
-            profile_id: profileId,
-            username,
-            role: 'Manager',
-            status: 'Pending',
-            expires_at: new Date('2026-09-20T00:00:00Z'),
-          },
-        ],
-      });
-      // Transaction: BEGIN
-      mockClient.query.mockResolvedValueOnce(undefined);
-      // Claim pending invitation
-      mockClient.query.mockResolvedValueOnce({ rows: [{ id: inviteId }], rowCount: 1 });
-      // Duplicate agent check (inside transaction): already exists
-      mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'existing-agent' }] });
-      // ROLLBACK from conflict handler
-      mockClient.query.mockResolvedValueOnce(undefined);
-
-      await expect(service.acceptInvitation(inviteId, userId)).rejects.toMatchObject({
-        response: { statusCode: 409 },
-      });
-      expect(mockClient.release).toHaveBeenCalled();
-    });
-  });
+  // Acceptance transaction behavior is covered by invitation-acceptance-http.integration.test.ts.
 
   describe('declineInvitation', () => {
     const userId = 'user-1';
