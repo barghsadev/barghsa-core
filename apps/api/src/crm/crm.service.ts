@@ -207,7 +207,11 @@ export class CrmService {
     }
     if (aggregateCursor) havingClause += `${havingClause ? ' AND' : ' HAVING'} ${aggregateCursor}`;
 
-    if (filters?.staffOnly) whereClauses.push('u.is_staff = true');
+    // Same staff population used by the administration users list, including legacy roles.
+    if (filters?.staffOnly)
+      whereClauses.push(
+        '(u.is_staff = true OR u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id = u.user_id))'
+      );
 
     // Date range filter
     if (filters?.dateFrom) {
@@ -221,29 +225,22 @@ export class CrmService {
       paramIndex++;
     }
 
-    // Search — full-text search across username, individual name, legal name
-
-    if (filters?.search) {
-      // Join legal_profiles for legal_name search
-
-      // Use PostgreSQL full-text search for structured fields
-      // Combined with ILIKE for fallback/partial matching
-      const searchTerm = filters.search.trim();
+    // Keep name tokens together so first + last and reordered company names match.
+    const searchTerm = filters?.search?.trim();
+    if (searchTerm) {
       whereClauses.push(`(
         to_tsvector('simple', u.username) @@ plainto_tsquery('simple', $${paramIndex})
         OR u.username ILIKE $${paramIndex + 1}
         OR EXISTS (SELECT 1 FROM profiles sp LEFT JOIN legal_profiles lp ON lp.id=sp.id
-          WHERE sp.user_id=u.user_id AND sp.archived=false AND (to_tsvector('simple', COALESCE(sp.first_name, '')) @@ plainto_tsquery('simple', $${paramIndex + 2})
-        OR sp.first_name ILIKE $${paramIndex + 3}
-        OR to_tsvector('simple', COALESCE(sp.last_name, '')) @@ plainto_tsquery('simple', $${paramIndex + 4})
-        OR sp.last_name ILIKE $${paramIndex + 5}
-        OR COALESCE(lp.legal_name, '') ILIKE $${paramIndex + 6}))
+          WHERE sp.user_id=u.user_id AND sp.archived=false AND (
+            to_tsvector('simple', COALESCE(sp.first_name, '') || ' ' || COALESCE(sp.last_name, '')) @@ plainto_tsquery('simple', $${paramIndex})
+            OR (COALESCE(sp.first_name, '') || ' ' || COALESCE(sp.last_name, '')) ILIKE $${paramIndex + 1}
+            OR to_tsvector('simple', COALESCE(lp.legal_name, '')) @@ plainto_tsquery('simple', $${paramIndex})
+            OR lp.legal_name ILIKE $${paramIndex + 1}))
       )`);
       const ilikePattern = `%${searchTerm.replace(/[\\%_]/g, '\\$&')}%`;
-      for (let i = 0; i < 7; i++) {
-        params.push(i < 6 && i % 2 === 0 ? searchTerm : ilikePattern);
-      }
-      paramIndex += 7;
+      params.push(searchTerm, ilikePattern);
+      paramIndex += 2;
     }
 
     const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';

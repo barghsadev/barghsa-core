@@ -169,7 +169,12 @@ export default function CrmProfileList() {
       <div className="grid gap-4 rounded-lg border bg-card text-card-foreground p-4 sm:grid-cols-2 xl:grid-cols-3">
         <div>
           <Label htmlFor="crm-search">{t('crm.list.search', locale)}</Label>
-          <Input id="crm-search" value={text} onChange={(event) => setText(event.target.value)} />
+          <Input
+            id="crm-search"
+            maxLength={256}
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+          />
         </div>
         {(
           [
@@ -270,6 +275,23 @@ export default function CrmProfileList() {
         </Button>
       </div>
       <div className="flex flex-wrap gap-2">
+        {term && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-auto max-w-full whitespace-normal text-start"
+            onClick={() => {
+              setText('');
+              setTerm('');
+              setCursors(['']);
+              document.getElementById('crm-search')?.focus();
+            }}
+          >
+            <span className="break-all">
+              {t('crm.list.search', locale)}: <bdi>{term}</bdi> ×
+            </span>
+          </Button>
+        )}
         {Object.entries(filters)
           .filter(([key, value]) => value && key !== 'order' && key !== 'sort')
           .map(([key, value]) => (

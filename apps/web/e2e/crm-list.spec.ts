@@ -69,8 +69,32 @@ for (const locale of ['en', 'fa'])
     await page.locator('#crm-type').selectOption('LEGAL');
     await expect(page.getByRole('rowheader', { name: user.username })).toBeVisible();
     expect(requests.at(-1)!.searchParams.has('cursor')).toBe(false);
+    await page
+      .getByRole('checkbox', { name: locale === 'fa' ? 'فقط کارکنان' : 'Staff only' })
+      .check();
+    await expect.poll(() => requests.at(-1)!.searchParams.get('staffOnly')).toBe('true');
+    await page.clock.install();
+    await page.clock.pauseAt(new Date());
+    const beforeSearch = requests.length;
+    await page.locator('#crm-search').fill('Ex');
+    await page.clock.runFor(150);
     await page.locator('#crm-search').fill('Example');
+    await page.clock.runFor(299);
+    expect(requests).toHaveLength(beforeSearch);
+    await page.clock.runFor(1);
     await expect.poll(() => requests.at(-1)!.searchParams.get('search')).toBe('Example');
+    const searchTag = page.getByRole('button', { name: /: Example ×$/ });
+    await searchTag.focus();
+    await searchTag.press('Enter');
+    await expect(page.locator('#crm-search')).toHaveValue('');
+    await expect(page.locator('#crm-search')).toBeFocused();
+    await expect.poll(() => requests.at(-1)!.searchParams.has('search')).toBe(false);
+    expect(requests.at(-1)!.searchParams.get('type')).toBe('LEGAL');
+    expect(requests.at(-1)!.searchParams.get('staffOnly')).toBe('true');
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'حقوقی ×' : 'Legal ×', exact: true })
+      .click();
+    await expect.poll(() => requests.at(-1)!.searchParams.has('type')).toBe(false);
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'پاک کردن فیلترها' : 'Clear filters',
@@ -78,6 +102,10 @@ for (const locale of ['en', 'fa'])
       })
       .click();
     await expect.poll(() => requests.at(-1)!.searchParams.has('verification')).toBe(false);
+    expect(requests.at(-1)!.searchParams.has('staffOnly')).toBe(false);
+    expect(requests.at(-1)!.searchParams.has('cursor')).toBe(false);
+    await page.clock.runFor(500);
+    expect(requests.at(-1)!.searchParams.has('search')).toBe(false);
   });
 test('CRM access errors remain errors and can be retried', async ({ page }) => {
   await page.addInitScript(() => {
@@ -135,6 +163,11 @@ test('Persian picker uses Jalali month boundaries and sends Gregorian API dates'
     .toBe('2026-03-20T20:30:00.000Z');
   await expect(page.getByRole('combobox', { name: 'ثبت‌نام از', exact: true })).toContainText(
     '۱ فروردین ۱۴۰۵'
+  );
+  await page.getByRole('button', { name: /^ثبت‌نام از: .*×$/ }).click();
+  await expect.poll(() => requests.at(-1)?.searchParams.has('dateFrom')).toBe(false);
+  await expect(page.getByRole('combobox', { name: 'ثبت‌نام از', exact: true })).toHaveText(
+    'ثبت‌نام از'
   );
 });
 test('Jalali leap-day selection and keyboard dismissal preserve the date', async ({ page }) => {
