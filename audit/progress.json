@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "05300800be029c391ee223bee3ac37f386711803",
+  "source_revision": "337b965ca79375bfd83f72b49d279814e794ef24",
   "active_step": "R01",
-  "next_action": "R01: implement missing user notices for CRM forced-password-change/session-expiry task02#T-05.02.04, then complete verification-state UI acceptance. All seven CRM/correction mutations now recheck current permissions inside transactions;156 CRM tests pass. Preserve pending lost-contact identity-policy question.",
+  "next_action": "R01: review and exercise CRM verification/account-action confirmations in fa/en; then record exact task dispositions. CRM account notices and all seven mutation permission checks are repaired. Preserve pending lost-contact identity-policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -346,6 +346,10 @@
     {
       "id": "R01-crm-profile-permission",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-permission"
+    },
+    {
+      "id": "R01-crm-account-notices",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-account-notices"
     }
   ],
   "deferred_improvements": [],

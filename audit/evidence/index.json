@@ -701,6 +701,48 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-account-notice-red.log",
+      "path": "audit/evidence/r01/barghsa-crm-account-notice-red.log.gz",
+      "sha256": "60b27e47890a576ad3a3a0842baeaa00ad4c499e20203525217b505f8d9b4aaa",
+      "encoding": "gzip",
+      "stored_sha256": "c76d85c9c452cf91b967dac8bf42c58ad86484c27ffd58839173d8d301cc2786"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-account-notice-green.log",
+      "path": "audit/evidence/r01/barghsa-crm-account-notice-green.log.gz",
+      "sha256": "0cf5ef582862c51599763b9ae7573a6c474a487f541d342b1a6b656dc27cf8c5",
+      "encoding": "gzip",
+      "stored_sha256": "aa03278ae7343ba33c4fb4030cabd1a387ee5dc4f54d1f5d979e3ef1c81c405b"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-account-notice-verified.log",
+      "path": "audit/evidence/r01/barghsa-crm-account-notice-verified.log.gz",
+      "sha256": "f23ede6dd79c3c8e253358c312c923ed56f962a8885322a57bc9946b8edd1700",
+      "encoding": "gzip",
+      "stored_sha256": "7c57b247acce40312db1e6d13135ee7549957f8f0e4cfc9abaa3ebf50ed3b98b"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-account-notice-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-account-notice-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-crm-account-notice-format-final.log",
+      "path": "audit/evidence/r01/barghsa-crm-account-notice-format-final.log.gz",
+      "sha256": "81399c365d33541a49cbdeeb4d1b4abc27549ea4072e00ced43c06ad80accd38",
+      "encoding": "gzip",
+      "stored_sha256": "c15c4a7137d9c18e65f55f98f428066480edf517d3fdb4f42d603e0386edbd59"
     }
   ]
 }

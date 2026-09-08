@@ -300,6 +300,33 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "Finish CRM task acceptance. T-05.02.04 still requires user notices for forced password change/session expiry; verification UI review remains."
+    },
+    {
+      "id": "R01-crm-account-notices",
+      "date": "2026-09-08",
+      "source_revision": "337b965ca79375bfd83f72b49d279814e794ef24",
+      "summary": "Forced password changes and staff session expiry now create private localized user notices in the action transaction.",
+      "review": "Both missing notices and missing rollback behavior were reproduced: four failures before the fix. Verified recipient, account-only scope, security link, fa/en content, no internal reason disclosure, and rollback of password/session/refresh/audit changes on notice insertion failure.",
+      "checks": [
+        "35 tests in3 CRM files pass; verified invocation exit0 after the initial green invocation lost its tool exit during compaction.",
+        "API typecheck and focused ESLint exit0; formatting and diff review pass."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "f4ec4923901a544da77bbebafad20ec3e52ccd3aa362e147bbd70918a5ebbaa4"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Review CRM verification/account-action confirmations in fa/en before task acceptance. In-app notices are implemented; no email or SMS delivery claim."
     }
   ]
 }
