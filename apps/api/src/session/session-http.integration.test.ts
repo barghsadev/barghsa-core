@@ -20,7 +20,7 @@ beforeAll(async () => {
     await argon2.hash(password),
   ]);
   await pool.query(
-    "INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at) VALUES ($1,$2,$3,NOW()+INTERVAL '1 day')",
+    "INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at,ip_address) VALUES ($1,$2,$3,NOW()+INTERVAL '1 day','127.0.0.1')",
     [randomUUID(), 'http-user', createHash('sha256').update(fingerprint).digest('hex')]
   );
 }, 40000);

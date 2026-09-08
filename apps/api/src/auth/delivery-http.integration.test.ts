@@ -126,7 +126,9 @@ it('retries provider failure and cancels replaced or expired codes without sendi
   failProvider = false;
   expect(await deliver()).toBe('sent');
   // Advance only the test fixture's send quota; do not sleep through the one-minute window.
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
+  await fixture.pool.query(
+    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+  );
   const resend = await post('auth/register/resend', { challengeId });
   expect(resend.status, await resend.text()).toBe(200);
   await fixture.pool.query(
@@ -156,7 +158,9 @@ it('allows only one worker to claim a message while the provider is in flight', 
 
 it('cancels an unsent replaced code and recovers an expired worker lease', async () => {
   const challengeId = await register();
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
+  await fixture.pool.query(
+    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+  );
   const resend = await post('auth/register/resend', { challengeId });
   expect(resend.status, await resend.text()).toBe(200);
   expect(await deliver()).toBe('cancelled');
@@ -283,7 +287,9 @@ it('allows only one password reset across two previously issued codes', async ()
   const credentials: Array<{ challengeId: string; otp: string | undefined; newPassword: string }> =
     [];
   for (let attempt = 0; attempt < 2; attempt++) {
-    await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
+    await fixture.pool.query(
+      'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+    );
     const response = await post('auth/forgot-password', { username: 'provider@example.test' });
     const body = (await response.json()) as { challengeId: string };
     expect(response.status).toBe(200);
@@ -312,8 +318,8 @@ it('requires staff OTP even on a trusted device', async () => {
   );
   const fingerprint = 'b'.repeat(64);
   await fixture.pool.query(
-    `INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at)
-    VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day')`,
+    `INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at,ip_address)
+    VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day','127.0.0.1')`,
     [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')]
   );
   const response = await post(
@@ -339,8 +345,8 @@ it('rechecks credentials while creating a trusted-device session', async () => {
   ]);
   const fingerprint = 'c'.repeat(64);
   await fixture.pool.query(
-    `INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at)
-    VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day')`,
+    `INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at,ip_address)
+    VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day','127.0.0.1')`,
     [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')]
   );
   const client = await fixture.pool.connect();
@@ -664,8 +670,35 @@ it('trusts only the opaque browser cookie after OTP and rejects public fingerpri
   });
   expect(returning.status).toBe(200);
   expect(await returning.json()).toMatchObject({ requiresOtp: false });
+  const sessionCount = async () =>
+    (await fixture.pool.query('SELECT count(*)::int AS count FROM sessions')).rows[0].count;
+  const beforeRiskChecks = await sessionCount();
+  for (const address of ['192.0.2.44', '2001:db8::4', null]) {
+    await fixture.pool.query('UPDATE device_trusts SET ip_address=$1 WHERE device_fingerprint=$2', [
+      address,
+      trustedHash,
+    ]);
+    await fixture.pool.query(
+      'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+    );
+    const changedNetwork = await post('auth/login', credentials, {
+      Cookie: cookie,
+      // Untrusted forwarded headers cannot supply the address recorded after OTP.
+      'X-Forwarded-For': address ?? '127.0.0.1',
+    });
+    expect(changedNetwork.status, await changedNetwork.clone().text()).toBe(200);
+    expect(await changedNetwork.json()).toMatchObject({ requiresOtp: true });
+    expect(changedNetwork.headers.getSetCookie()).toEqual([]);
+    expect(await sessionCount()).toBe(beforeRiskChecks);
+  }
+  await fixture.pool.query(
+    "UPDATE device_trusts SET ip_address='127.0.0.1' WHERE device_fingerprint=$1",
+    [trustedHash]
+  );
   // Reset only isolated send quotas between independent new-device/expiry checks.
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
+  await fixture.pool.query(
+    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+  );
   const imitation = await post(
     'auth/login',
     { ...credentials, deviceInfo: { fingerprint: token } },
@@ -678,11 +711,68 @@ it('trusts only the opaque browser cookie after OTP and rejects public fingerpri
     "UPDATE device_trusts SET expires_at=NOW()-INTERVAL '1 second' WHERE device_fingerprint=$1",
     [trustedHash]
   );
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
+  await fixture.pool.query(
+    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+  );
   const expired = await post('auth/login', credentials, { Cookie: cookie });
   expect(await expired.json()).toMatchObject({ requiresOtp: true });
   await fixture.pool.query('DELETE FROM device_trusts WHERE device_fingerprint=$1', [trustedHash]);
-  await fixture.pool.query('DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security');
+  await fixture.pool.query(
+    'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+  );
   const revoked = await post('auth/login', credentials, { Cookie: cookie });
   expect(await revoked.json()).toMatchObject({ requiresOtp: true });
 }, 20000);
+
+it.each([true, false])(
+  'refreshes existing device context only when OTP trust opt-in is %s',
+  async (trustDevice) => {
+    await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [
+      await argon2.hash(password),
+    ]);
+    const token = 'e'.repeat(64);
+    const hash = createHash('sha256').update(token).digest('hex');
+    const id = randomUUID();
+    await fixture.pool.query(
+      `INSERT INTO device_trusts(id,user_id,device_fingerprint,user_agent_hint,ip_address,expires_at)
+     VALUES ($1,'provider-admin',$2,'Old browser','192.0.2.1',NOW()+INTERVAL '1 day')`,
+      [id, hash]
+    );
+    const headers = { Cookie: `barghsa_device=${token}`, 'User-Agent': 'Updated browser' };
+    const credentials = { username: 'provider@example.test', password };
+    const login = await post('auth/login', credentials, headers);
+    expect(login.status).toBe(200);
+    const challenge = (await login.json()) as { requiresOtp: boolean; challengeId: string };
+    expect(challenge.requiresOtp).toBe(true);
+    const unchanged = await fixture.pool.query('SELECT * FROM device_trusts WHERE id=$1', [id]);
+    expect(unchanged.rows[0].ip_address).toBe('192.0.2.1');
+    expect(await deliver()).toBe('sent');
+    const otp = received.at(-1)!.text.match(/\d{6}/)![0];
+    const verified = await post(
+      'auth/login/verify',
+      { challengeId: challenge.challengeId, otp, trustDevice },
+      headers
+    );
+    expect(verified.status, await verified.clone().text()).toBe(200);
+    const trust = await fixture.pool.query(
+      'SELECT id,ip_address,user_agent_hint,EXTRACT(EPOCH FROM expires_at-trusted_at)::int AS seconds FROM device_trusts WHERE device_fingerprint=$1',
+      [hash]
+    );
+    if (trustDevice) {
+      expect(trust.rows).toEqual([
+        { id, ip_address: '127.0.0.1', user_agent_hint: 'Updated browser', seconds: 30 * 86400 },
+      ]);
+    } else {
+      expect(
+        (await fixture.pool.query('SELECT * FROM device_trusts WHERE id=$1', [id])).rows
+      ).toEqual(unchanged.rows);
+    }
+    await fixture.pool.query(
+      'DELETE FROM security_rate_limit_counters; DELETE FROM rate_limit_windows WHERE security'
+    );
+    const returning = await post('auth/login', credentials, headers);
+    expect(returning.status).toBe(200);
+    expect(await returning.json()).toMatchObject({ requiresOtp: !trustDevice });
+  },
+  20000
+);

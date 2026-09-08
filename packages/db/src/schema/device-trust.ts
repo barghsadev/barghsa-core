@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { inet, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 /**
  * Device trust table (T-02.01.03).
@@ -10,7 +10,8 @@ import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
  *
  * - `id` — UUIDv7 primary key, opaque.
  * - `user_id` — FK to users.user_id.
- * - `device_fingerprint` — hashed device fingerprint (user agent, IP hint, etc).
+ * - `device_fingerprint` — hash of the opaque HttpOnly browser cookie.
+ * - `ip_address` — server-observed address at OTP verification; null legacy rows require OTP.
  * - `trusted_at` — when the device was trusted.
  * - `expires_at` — when trust expires (default 30 days).
  * - `created_at` / `updated_at` — audit columns.
@@ -27,6 +28,9 @@ export const deviceTrusts = pgTable('device_trusts', {
 
   /** User-agent hint for display in device management. */
   userAgentHint: text('user_agent_hint'),
+
+  /** Address verified with OTP. A changed or unavailable address requires OTP again. */
+  ipAddress: inet('ip_address'),
 
   /** When the device was trusted. */
   trustedAt: timestamp('trusted_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
@@ -50,6 +54,7 @@ export const createDeviceTrustsTable = sql`
     user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     device_fingerprint TEXT NOT NULL,
     user_agent_hint TEXT,
+    ip_address INET,
     trusted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     expires_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

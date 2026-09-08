@@ -79,6 +79,7 @@ describe('complete production schema baseline', () => {
         '0118_reconcile_schema_snapshot',
         '0119_brand_history',
         '0120_rolling_rate_limits',
+        '0121_device_trust_ip',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -218,6 +219,7 @@ describe('complete production schema baseline', () => {
       );
       await pool.query('DROP INDEX uq_notification_templates_version');
       await pool.query('ALTER TABLE notification_templates DROP COLUMN supersedes_version');
+      await pool.query('ALTER TABLE device_trusts DROP COLUMN ip_address');
       await pool.query(
         'DROP FUNCTION rate_limit_rolling(boolean,text,integer,integer,boolean); DROP FUNCTION rate_limit_rolling_reset(boolean,text); DROP TABLE rate_limit_windows'
       );

@@ -18,6 +18,7 @@ import { OtpService, OtpAttemptRejected } from './otp.service.js';
 import { SessionService } from '../session/session.service.js';
 import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 import { TosService } from '../tos/tos.service.js';
+import { deviceTrustIp } from './device-trust-ip.js';
 
 /**
  * Service handling registration and login business logic.
@@ -129,14 +130,14 @@ export class AuthService {
   /**
    * Authenticate a user with username + password credentials.
    *
-   * Uses Argon2id for password verification (mem=37MiB, t=3, p=1).
+   * Uses Argon2id to verify the parameters encoded in the stored hash.
    *
    * Steps:
    * 1. Look up user by normalized username
    * 2. Verify password hash with Argon2id
-   * 3. Check whether risk-based OTP enforcement is needed (stub: always false for now)
+   * 3. Require OTP for staff, unknown devices, changed addresses or expired trust
    * 4. If no OTP needed → create session atomically
-   * 5. If OTP needed → create OTP challenge (future: T-02.01.03)
+   * 5. If OTP needed → create a login OTP challenge
    *
    * Error is always a generic "invalid credentials" — never distinguishes
    * between "user not found" and "wrong password" to prevent enumeration.
@@ -284,31 +285,32 @@ export class AuthService {
       const deviceFingerprint = input.deviceInfo?.fingerprint
         ? createHash('sha256').update(input.deviceInfo.fingerprint).digest('hex')
         : null;
+      const trustedIp = deviceTrustIp(ip);
 
       let requiresOtp = false;
 
       // Check device trust for all users
-      if (deviceFingerprint) {
+      if (deviceFingerprint && trustedIp) {
         const trustResult = await pool.query(
           `SELECT 1 FROM device_trusts
            WHERE user_id = $1 AND device_fingerprint = $2
-             AND expires_at > NOW()
+             AND expires_at > NOW() AND ip_address = $3::inet
            LIMIT 1`,
-          [userId, deviceFingerprint]
+          [userId, deviceFingerprint, trustedIp]
         );
 
         if (trustResult.rows.length > 0 && !isStaff) {
           // Trusted device found — skip OTP for customers
           requiresOtp = false;
         } else if (isStaff) {
-          // Staff on an untrusted device: mandatory MFA
+          // Staff always require MFA, including on trusted devices.
           requiresOtp = true;
         } else {
           // Customer on an untrusted device: risk-based MFA
           requiresOtp = true;
         }
       } else {
-        // No device info provided — always require OTP (conservative)
+        // Missing device identity or usable server address requires OTP.
         requiresOtp = true;
       }
 
@@ -742,17 +744,27 @@ export class AuthService {
       await client.query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId]);
 
       // 5. Optionally mark device as trusted
-      if (trustDevice && deviceFingerprint) {
+      const trustedIp = deviceTrustIp(ip);
+      if (trustDevice && deviceFingerprint && trustedIp) {
         const trustNow = new Date();
         const trustExpiresAt = new Date(trustNow.getTime() + 30 * 24 * 60 * 60 * 1000);
         const trustId = uuidv7();
 
         await client.query(
-          `INSERT INTO device_trusts (id, user_id, device_fingerprint, user_agent_hint, trusted_at, expires_at)
-           VALUES ($1, $2, $3, $4, $5, $6)
+          `INSERT INTO device_trusts (id, user_id, device_fingerprint, user_agent_hint, trusted_at, expires_at, ip_address)
+           VALUES ($1, $2, $3, $4, $5, $6, $7::inet)
            ON CONFLICT (user_id, device_fingerprint) DO UPDATE
-             SET trusted_at = $5, expires_at = $6, updated_at = NOW()`,
-          [trustId, userId, deviceFingerprint, userAgent ?? null, trustNow, trustExpiresAt]
+             SET user_agent_hint = $4, trusted_at = $5, expires_at = $6,
+                 ip_address = $7::inet, updated_at = NOW()`,
+          [
+            trustId,
+            userId,
+            deviceFingerprint,
+            userAgent ?? null,
+            trustNow,
+            trustExpiresAt,
+            trustedIp,
+          ]
         );
       }
 

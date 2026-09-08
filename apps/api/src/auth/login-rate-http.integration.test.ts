@@ -22,8 +22,8 @@ beforeEach(async () => {
     [username, await argon2.hash(password)]
   );
   await http.pool.query(
-    `INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at)
-    VALUES (gen_random_uuid(),'login-limit-user',$1,NOW()+INTERVAL '1 day')`,
+    `INSERT INTO device_trusts(id,user_id,device_fingerprint,expires_at,ip_address)
+    VALUES (gen_random_uuid(),'login-limit-user',$1,NOW()+INTERVAL '1 day','127.0.0.1')`,
     [createHash('sha256').update(deviceToken).digest('hex')]
   );
 }, 40000);

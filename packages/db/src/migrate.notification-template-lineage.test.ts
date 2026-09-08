@@ -75,6 +75,7 @@ it('upgrades valid history without rewriting publication identity and enforces l
         '0118_reconcile_schema_snapshot',
         '0119_brand_history',
         '0120_rolling_rate_limits',
+        '0121_device_trust_ip',
       ],
     });
     const after = (await db.pool.query('SELECT * FROM notification_templates ORDER BY version'))
