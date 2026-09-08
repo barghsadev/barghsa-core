@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `c706820`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `1695680`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -22,7 +22,7 @@ Current evidence:92 API cases,13 worker cases,80 distinct production-browser cas
 
 Registration/OTP batch completed locally at `c706820`: **9 tasks verified /9 PR reviews closed**, saved PRs #68–#76. Exact terms, local estimator, transactional registration/dedup/audit, configurable expiry and aggregate device quota are verified. Final affected API checkpoint164 distinct cases passes; terms/strength browser evidence100 distinct cases after overlap removal is reused with earlier unchanged checks. [Consolidated batch review](evidence/step-reviews.json#R01-registration-otp).
 
-Active R01 batch: session lifecycle and account recovery, saved PRs #89–#93, #99 and #100. Read progress.json.active_batch for exact tasks, partial criteria, historical deferrals and reuse evidence. Reconcile session callers first; preserve verified reset and completed staff/CRM/agents/registration work. Keep pending lost-contact policy, broader CSRF alternatives and domain-sensitive checks explicit. Current explicit PR review totals are13 closed /1 open /287 not reviewed. Follow the feature-batch rules below.
+Active R01 batch: session lifecycle and account recovery, saved PRs #89–#93, #99 and #100. Read progress.json.active_batch for exact tasks, partial criteria, historical deferrals and reuse evidence. Reconcile session callers first; preserve verified reset and completed staff/CRM/agents/registration work. Keep pending lost-contact policy, callback/telemetry CSRF and domain-sensitive checks explicit. Local logging and pre-login CSRF repairs are verified at f1b879b; the shared recovery OTP input is verified at 1695680. Next consolidate individual acceptance/PR reviews. Exact evidence is in progress.json.active_batch. Current explicit PR review totals are13 closed /1 open /287 not reviewed. Follow the feature-batch rules below.
 
 ## Execution order
 
@@ -67,7 +67,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 ## R01 remaining acceptance
 
 - Sessions and permissions: finish profile selection, activation, OTP/reset/contact changes, manual verification and address boundaries; link the remaining cross-domain agent-role checks. Local agent/invitation/ownership acceptance is recorded above. Reuse [session caller evidence](session-caller-review.md) and [route/CSRF review](security-route-review.md). Guard registration alone does not prove handler, transaction or UI behavior.
-- CSRF alternatives: explicitly disposition public JSON authentication, refresh, signed callbacks and CSP telemetry. Review the state-changing payment return GET with finance. Current inventory has 345 routes, 204 unsafe-method registrations and 122 guarded step-up routes.
+- CSRF boundaries: pre-login tokens for public JSON authentication are implemented and verified at f1b879b. Explicitly disposition refresh, signed callbacks and CSP telemetry. Review the state-changing payment return GET with finance. Current inventory has 346 routes, 204 unsafe-method registrations and 122 guarded step-up routes.
 - Finance and tickets: receipt thresholds and independent current approval; callback/replay safety; invoice arithmetic, snapshots and ledger integrity; customer/staff privacy, attachments, assignment and transitions. Preserve corrective PRs. Refund, order and contract features remain separate where requirements define them separately.
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "c706820b1dc2cac0ac00e1defb07196947d72287",
+  "source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
   "active_step": "R01",
-  "next_action": "Continue R01-session-recovery feature batch, saved PRs89–93/99/100. Preserve nine completed registration/OTP tasks, thirteen closed PR reviews and valid tests. Review current partial limitations/caller evidence before editing; keep lost-contact policy, CSRF alternatives and cross-domain prerequisites explicit.",
+  "next_action": "Consolidate session/recovery acceptance per task and saved PR using the current repaired workflow and preserved caller evidence. Reconcile session lifecycle/revocation, refresh CSRF, sensitive-domain assignments and forgot-password intake. Keep lost-contact owner policy and finance/telemetry/future dependencies explicit. Do not rebuild the three completed repairs or repeat unchanged checks.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -597,7 +597,8 @@
     "No automatic identity provider; retain safe unavailable state and supported manual verification.",
     "Dependency license allowlist waived. Coverage thresholds and existing route numeric limits remain unchanged; see approved estimator measurement below.",
     "Confirmed support contacts: info@barghsa.com, office 021-26658042, mobile 09002550292. Unsupported response-time promise removed.",
-    "September9: owner approved \"Initial-load limit; measure estimator separately\". Auth initial-load gate stays150KB gzip; full estimator measured independently against900KB. Initial registration149.22KB, estimator837.80KB. Eager imports remain counted. Canonical T-01.03.04 updated at06a4b44."
+    "September9: owner approved \"Initial-load limit; measure estimator separately\". Auth initial-load gate stays150KB gzip; full estimator measured independently against900KB. Initial registration149.22KB, estimator837.80KB. Eager imports remain counted. Canonical T-01.03.04 updated at06a4b44.",
+    "September9: implement a pre-login CSRF-token flow. Do not amend public login/registration to accept JSON-only protection as final CSRF acceptance."
   ],
   "pending_questions": [
     {
@@ -731,8 +732,8 @@
       {
         "pr": 92,
         "statements": [
-          "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) — Slice 2 (separate PR)",
-          "- [ ] Frontend step-up modal dialog — Slice 2"
+          "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) \u2014 Slice 2 (separate PR)",
+          "- [ ] Frontend step-up modal dialog \u2014 Slice 2"
         ],
         "disposition": "Review current linked implementations before closing."
       }
@@ -782,7 +783,44 @@
         "reason": "Combined requirement/historical review pending; preserve already-verified T-02.03.02."
       }
     ],
-    "next_action": "Read current partial limitations and saved PR bodies; reconcile session caller evidence first. Fix only confirmed remaining defects. Lost-contact policy is already pending."
+    "next_action": "Consolidate session/recovery acceptance per task and saved PR using the current repaired workflow and preserved caller evidence. Reconcile session lifecycle/revocation, refresh CSRF, sensitive-domain assignments and forgot-password intake. Keep lost-contact owner policy and finance/telemetry/future dependencies explicit. Do not rebuild the three completed repairs or repeat unchanged checks.",
+    "local_repairs": [
+      {
+        "commit": "b68f408",
+        "summary": "Remove session bearer IDs and raw exception text/URLs from auth/session and HTTP error logs. Keep operation and correlation IDs.",
+        "checks": "53 API cases; types/lint/format pass. AST comparison confirms all35 auth/session method bodies unchanged except logging and now-unused catch bindings."
+      },
+      {
+        "commit": "f1b879b8e0ef27a264eae021469cbbf5d639c5d7",
+        "summary": "Browser-bound PostgreSQL pre-login CSRF challenges replace11 public-auth exemptions. Anonymous challenges expire after30min, consume atomically before auth, and never become user sessions. All browser callers bootstrap; retry once only on CSRF-guard rejection.",
+        "checks": "217 distinct API cases across17 files,98 distinct Chromium cases across10 files,11 helper units,40 migration checks across4 files,API/web/DB types,lint/format,OpenAPI,snapshot and42 payload gates pass. Focused reruns excluded from counts.",
+        "migration": "0123_preauth_sessions must precede API rollout. Generated snapshot adds only preauth_sessions;94 existing tables unchanged. No external rollout performed."
+      },
+      {
+        "commit": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+        "summary": "Recovery now uses the shared six-digit OTP input with Persian/Arabic normalization, keyboard/paste/autosubmit, pending serialization, clear-on-error and existing grant/cooldown behavior.",
+        "checks": "31 distinct affected Chromium cases:29 recovery/rate-limit +2 new mobile fa/en cases. Web types/lint/production build and42 unchanged payload gates pass. No API changes; reuse217 current API cases and earlier transaction evidence."
+      }
+    ],
+    "checkpoint": {
+      "revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+      "scope": "Three local repairs verified: credential-safe logging, pre-login CSRF, shared recovery OTP. Combined feature acceptance/PR closure remains pending.",
+      "evidence_prefix": "/tmp/r01-session-recovery-",
+      "method_reuse_log": "/tmp/r01-session-recovery-log-method-review.log",
+      "latest_api_logs": [
+        "/tmp/r01-session-recovery-preauth-api-checkpoint.log",
+        "/tmp/r01-session-recovery-preauth-api-followup.log"
+      ],
+      "latest_browser_logs": [
+        "/tmp/r01-session-recovery-preauth-browser.log",
+        "/tmp/r01-session-recovery-preauth-browser-followup.log"
+      ],
+      "note": "Failed intermediate logs retained. Final passing follow-ups replace failures only in their affected files.",
+      "recovery_browser_logs": [
+        "/tmp/r01-recovery-otp-browser.log",
+        "/tmp/r01-recovery-otp-mobile-browser.log"
+      ]
+    }
   },
   "open_domain_reviews": [
     {
