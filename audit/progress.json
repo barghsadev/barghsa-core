@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "337b965ca79375bfd83f72b49d279814e794ef24",
+  "source_revision": "0db2c01a68affbb57777ff3ae2dd74c3cdb5db6d",
   "active_step": "R01",
-  "next_action": "R01: review and exercise CRM verification/account-action confirmations in fa/en; then record exact task dispositions. CRM account notices and all seven mutation permission checks are repaired. Preserve pending lost-contact identity-policy question.",
+  "next_action": "R01: complete missing CRM profile details (agent relationships, verification history, last password change), then required address editing. Verification and account-security actions are verified locally. Continue correction/archive and critical role/session/finance task review; preserve pending lost-contact policy question.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -214,7 +214,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "All seven CRM/correction mutations now recheck current permissions. Finish required account-action notices, verification UI review and remaining list/detail/correction/archive task acceptance."
+        "Verification and account-security tasks02#T-05.02.03/.04 are verified locally. Full profile view and editing are partial: relationships/history/password timestamp and address editing remain. Review correction/archive/list task criteria."
       ]
     },
     {
@@ -350,6 +350,10 @@
     {
       "id": "R01-crm-account-notices",
       "review_record": "audit/evidence/step-reviews.json#R01-crm-account-notices"
+    },
+    {
+      "id": "R01-crm-action-acceptance",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-action-acceptance"
     }
   ],
   "deferred_improvements": [],
@@ -357,9 +361,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 37,
-    "partial": 17,
-    "pending": 268,
+    "acceptance_verified": 39,
+    "partial": 19,
+    "pending": 264,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,

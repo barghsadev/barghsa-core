@@ -3706,6 +3706,271 @@
           "historically_skipped": false
         }
       ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.01",
+      "status": "partial",
+      "reviewed_sha": "0db2c01a68affbb57777ff3ae2dd74c3cdb5db6d",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 396,
+      "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
+      "requirement_sha256": "92e93034415e38f448fbe4e13853e7c99f5f15a3c93c6061f95e210a913529f5",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "3d419b4bdea3a7508be14a884b4c8b88de8f4b0bbe57c95cb7c4eee386eec567"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d5cad93ab4ef898a3718d4940e395869ed3cb86cec57e7aa482ada6f6b304194"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "ecafc7b0731fddfc38f13361070ff885325330cb18b87f388ba68d68c0bb4358"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "f412887d2fd4885f17eca31aeeb2832ab6b5ce520720c3d334c08d493be3090b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "fd6f5e167051aab78fc0e4b854e358fc463ad946c77ef40b6066f5db881b9a41"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "f4ec4923901a544da77bbebafad20ec3e52ccd3aa362e147bbd70918a5ebbaa4"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "2ac5e9b74e0c04c0cb32eed234967715114bf188f45741f6bce106dd79135400"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        }
+      ],
+      "checks": [
+        "Reviewed current detail DTO, source tabs and viewer permissions. Account/profile contacts remain separate; existing browser checks cover staff action visibility."
+      ],
+      "limitations": [
+        "Agent Invites and Verification History are placeholders; detail DTO does not return these records. Last-password-change data is absent.",
+        "Finish the required profile data and exercise the written /app/crm/profiles route or record its approved replacement; current page is /admin/crm/profiles.",
+        "Tab focus/keyboard and labelled-panel accessibility still need the R03 review."
+      ],
+      "merged_prs": [
+        123
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.02",
+      "status": "partial",
+      "reviewed_sha": "0db2c01a68affbb57777ff3ae2dd74c3cdb5db6d",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 404,
+      "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
+      "requirement_sha256": "5e756b92d5a9babfb0e8b16c332b8a5d44e4379ac21744d7cfb82d53c9f76e98",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "3d419b4bdea3a7508be14a884b4c8b88de8f4b0bbe57c95cb7c4eee386eec567"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d5cad93ab4ef898a3718d4940e395869ed3cb86cec57e7aa482ada6f6b304194"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "ecafc7b0731fddfc38f13361070ff885325330cb18b87f388ba68d68c0bb4358"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "f412887d2fd4885f17eca31aeeb2832ab6b5ce520720c3d334c08d493be3090b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "fd6f5e167051aab78fc0e4b854e358fc463ad946c77ef40b6066f5db881b9a41"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "f4ec4923901a544da77bbebafad20ec3e52ccd3aa362e147bbd70918a5ebbaa4"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "2ac5e9b74e0c04c0cb32eed234967715114bf188f45741f6bce106dd79135400"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        }
+      ],
+      "checks": [
+        "Profile title/email/mobile editing validates input, retains account sign-in contacts, rejects direct identity edits and writes before/after audit.",
+        "Real HTTP permission-loss and contact mutation checks pass in the156 CRM batch; fa/en desktop/mobile browser save/error/retry and confirmation cases pass."
+      ],
+      "limitations": [
+        "The required address editing path is missing: PUT input and inline editing only expose title/email/mobile. Review required legal non-identity fields alongside addresses.",
+        "Identity correction workflow has its own task; this narrow contact repair does not certify that workflow."
+      ],
+      "merged_prs": [
+        124
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "0db2c01a68affbb57777ff3ae2dd74c3cdb5db6d",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 412,
+      "requirement": "**T-05.02.03 — Verification state management**\n\n- Description: Staff can change verification state of a profile. Options: Verify, Unverify, Mark for re-verification.\n- Technical notes: POST `/api/crm/profiles/:profileId/verify` with `{ action: 'verify' | 'unverify' | 'reverify', reason? }`. Permissions: `crm:verify` or admin. Audit: verification_change with before/after state, actor, reason. Notifications sent to profile owner.\n- UI/UX: Current status badge (Verified/Unverified/Pending). Dropdown with actions. Reason required for unverify/reverify. Confirmation dialog.\n- Dependencies: T-05.02.01, E-07 (admin verification settings)\n- Complexity: M",
+      "requirement_sha256": "7d118102ad48047b72286af664181682a73c0a73a7c49c9c62494107d0fbe8ca",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "3d419b4bdea3a7508be14a884b4c8b88de8f4b0bbe57c95cb7c4eee386eec567"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d5cad93ab4ef898a3718d4940e395869ed3cb86cec57e7aa482ada6f6b304194"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "ecafc7b0731fddfc38f13361070ff885325330cb18b87f388ba68d68c0bb4358"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "f412887d2fd4885f17eca31aeeb2832ab6b5ce520720c3d334c08d493be3090b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "fd6f5e167051aab78fc0e4b854e358fc463ad946c77ef40b6066f5db881b9a41"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "f4ec4923901a544da77bbebafad20ec3e52ccd3aa362e147bbd70918a5ebbaa4"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "2ac5e9b74e0c04c0cb32eed234967715114bf188f45741f6bce106dd79135400"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        }
+      ],
+      "checks": [
+        "Read the exact task and PR125 against current implementation: reverify now means PENDING_VERIFICATION, not the historical PR body's DRAFT.",
+        "Current crm:verify/admin permission is checked inside the transaction after the profile lock. State/audit/owner notice commit together; concurrency, owner change and notice rollback checks are in the reused156 CRM suite at0530080. The later backend diff only added account-action notices.",
+        "All three actions pass fa/en desktop/mobile browser checks with required unverify/reverify reasons, confirmation, invalid-response rejection, current status display and retry.",
+        "50 dictionary tests, web types/lint/build and41 route budgets pass at this revision."
+      ],
+      "limitations": [
+        "Manual staff verification is covered. No automatic identity provider or external notification delivery is claimed.",
+        "Full Verification History tab belongs to T-05.02.01 and remains partial."
+      ],
+      "merged_prs": [
+        125
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "0db2c01a68affbb57777ff3ae2dd74c3cdb5db6d",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 420,
+      "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
+      "requirement_sha256": "17c210342853ff767254015633b80d13c88f4a8c75bc867e09932ee54cfe8723",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "3d419b4bdea3a7508be14a884b4c8b88de8f4b0bbe57c95cb7c4eee386eec567"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d5cad93ab4ef898a3718d4940e395869ed3cb86cec57e7aa482ada6f6b304194"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "ecafc7b0731fddfc38f13361070ff885325330cb18b87f388ba68d68c0bb4358"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "f412887d2fd4885f17eca31aeeb2832ab6b5ce520720c3d334c08d493be3090b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "fd6f5e167051aab78fc0e4b854e358fc463ad946c77ef40b6066f5db881b9a41"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "f4ec4923901a544da77bbebafad20ec3e52ccd3aa362e147bbd70918a5ebbaa4"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "2ac5e9b74e0c04c0cb32eed234967715114bf188f45741f6bce106dd79135400"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "3208798f2c3c4eabb3b0899a1fef7bf2738d283202a6b09da27ad6799f0ae980"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "29bf14c4e364d3b76627ddd8175f7c58f2e03d1314d53075c8ce54e00f54bac0"
+        }
+      ],
+      "checks": [
+        "Read the exact task and PR126 against current implementation. Both endpoints require current admin:users:edit plus recent step-up and validate a nonblank reason.",
+        "35 focused CRM cases at337b965 cover current permission after lock waits, absent targets, session/refresh revocation, must-change flag, actor/reason audit, private user notices and rollback on notice failure.",
+        "Source review confirms AuthService.login gates must-change-password accounts before issuing a normal session; downstream auth/session acceptance remains separately tracked.",
+        "Both separate action buttons pass fa/en desktop/mobile confirmation/reason/step-up/error/retry checks. Successful acknowledgement must identify the selected customer.",
+        "API/web types, focused lint, production build and41 route budgets pass."
+      ],
+      "limitations": [
+        "User notices are durable private in-app notices. Email/SMS delivery is not claimed.",
+        "Broader session-list/location/trusted-device requirements remain with their own partial tasks."
+      ],
+      "merged_prs": [
+        126
+      ],
+      "historically_skipped": false
     }
   ],
   "pending_task_keys": [
@@ -3838,10 +4103,6 @@
     "02-auth-users-admin.md#T-03.04.02",
     "02-auth-users-admin.md#T-05.01.01",
     "02-auth-users-admin.md#T-05.01.02",
-    "02-auth-users-admin.md#T-05.02.01",
-    "02-auth-users-admin.md#T-05.02.02",
-    "02-auth-users-admin.md#T-05.02.03",
-    "02-auth-users-admin.md#T-05.02.04",
     "02-auth-users-admin.md#T-05.02.05",
     "02-auth-users-admin.md#T-05.02.06",
     "02-auth-users-admin.md#T-05.03.01",

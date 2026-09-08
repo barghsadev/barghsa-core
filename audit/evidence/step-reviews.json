@@ -327,6 +327,63 @@
       ],
       "evidence": "audit/evidence/index.json",
       "remaining": "Review CRM verification/account-action confirmations in fa/en before task acceptance. In-app notices are implemented; no email or SMS delivery claim."
+    },
+    {
+      "id": "R01-crm-action-acceptance",
+      "date": "2026-09-08",
+      "source_revision": "0db2c01a68affbb57777ff3ae2dd74c3cdb5db6d",
+      "summary": "Verified CRM verification and account-security tasks; confirmations require the selected target and expected verification state. Localized pending/unverified overview states.",
+      "review": "Reproduced two false-success cases in the production browser. Reviewed all three verification transitions, both account actions, reason preservation, step-up retry, viewer permission controls, archive blocker/retry and profile contact save/retry. Reused unaffected backend verification evidence after inspecting the notice-only backend diff. The wider detail and editing requirements remain partial.",
+      "checks": [
+        "Confirmation red-final:2 failed for absent error dialogs on empty/mismatched200 responses. Initial red also contained a corrected fixture expectation.",
+        "28 production browser cases pass on desktop/mobile Chromium in fa/en at028766a. After summary localization,16 unaffected cases pass and12 verification cases pass on focused rerun. The first localization run failed those12 because an exact-text test ignored the existing icon; the test locator was corrected, not the rendered output.",
+        "50 dictionary tests, i18n build, web typecheck/build, focused ESLint/format and41 complete-route budgets pass.",
+        "Reused156 CRM checks at0530080 for unchanged verification/profile/correction behavior and35 account-action checks at337b965; totals overlap and must not be added."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "3d419b4bdea3a7508be14a884b4c8b88de8f4b0bbe57c95cb7c4eee386eec567"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "d5cad93ab4ef898a3718d4940e395869ed3cb86cec57e7aa482ada6f6b304194"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "ecafc7b0731fddfc38f13361070ff885325330cb18b87f388ba68d68c0bb4358"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "f412887d2fd4885f17eca31aeeb2832ab6b5ce520720c3d334c08d493be3090b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "fd6f5e167051aab78fc0e4b854e358fc463ad946c77ef40b6066f5db881b9a41"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "f4ec4923901a544da77bbebafad20ec3e52ccd3aa362e147bbd70918a5ebbaa4"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "726e3cb821c8dd6692957f6d546239d607c934eb9b3eab0fdc8414e54b85b83d"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "2ac5e9b74e0c04c0cb32eed234967715114bf188f45741f6bce106dd79135400"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Full CRM detail lacks agent relationships, verification history and last-password-change display; address editing remains unimplemented. Review remaining correction/archive requirements and role/session matrices."
     }
   ]
 }

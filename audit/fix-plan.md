@@ -1,16 +1,16 @@
 # Remaining repair and review plan
 
-Reconciled on 2026-09-08 through product commit `86bff51`. Start here, then read [progress.json](progress.json) for the next action. All original F01–F23 groups remain there. Detailed completed work now lives in [step evidence](evidence/step-reviews.json).
+Reconciled on 2026-09-08 through product commit `0db2c01`. Start here, then read [progress.json](progress.json) for the next action. All original F01–F23 groups remain there. Detailed completed work now lives in [step evidence](evidence/step-reviews.json).
 
 ## Current position
 
 | Historical task population | Verified | Partial | Not yet reviewed | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 34 | 17 | 212 | 263 |
+| Tasks with merged PR evidence | 36 | 19 | 208 | 263 |
 | Other historical completion claims | 3 | 0 | 56 | 59 |
-| Combined | 37 | 17 | 268 | 322 |
+| Combined | 39 | 19 | 264 | 322 |
 
-These are task-acceptance counts, not percentages of implementation effort. A01 cleanup and A02 evidence reconciliation are complete. R01 is in progress; eight later steps remain. The recent session revocation, refresh-reuse alert, atomic step-up, public-auth CSRF, localized support navigation and confirmed contact repairs have focused passing evidence. Auth rate-limit task `02-auth-users-admin.md#T-02.04.01` is now verified locally. Do not rebuild those repairs.
+These are task-acceptance counts, not percentages of implementation effort. A01 cleanup and A02 evidence reconciliation are complete. R01 is in progress; eight later steps remain. The recent session revocation, refresh-reuse alert, atomic step-up, public-auth CSRF, localized support navigation and confirmed contact repairs have focused passing evidence. Auth rate-limit task `02-auth-users-admin.md#T-02.04.01` is now verified locally. Do not rebuild those repairs. CRM verification and account-security tasks 02-auth-users-admin.md#T-05.02.03 and T-05.02.04 are now verified locally; their notices, permission races and confirmation fixes have passing evidence.
 
 The saved inventory contains 301 merged PRs and was checked against GitHub on September 8. This refresh uses that inventory; it makes no new remote request. There are 58 historical skips within the 322 claims, with 3 verified and 55 awaiting review. Separately, 737 earlier queue gaps and 296 later tasks have no recorded completion. Those 1,033 gaps are not automatically missing implementations or additions to this repair scope.
 
@@ -20,6 +20,7 @@ The saved inventory contains 301 merged PRs and was checked against GitHub on Se
 | --- | --- | --- |
 | R01 / F03 | Session list lacks required approximate location. Trace all rotation, revocation and sensitive-action callers before closing the four partial session tasks. | Exact current requirements, required caller matrix, meaningful HTTP/browser checks and privacy-safe location behavior. |
 | R01 / F05 | Intake and escalation runbook is implemented; lost-contact recovery still needs owner-defined approvers/evidence policy and a reviewed credential-change method. Unsupported24-hour promise was removed. | Runbook grounded in supported staff actions, evidence/audit requirements and an exercised recovery or explicit escalation path. No invented provider or credential bypass. |
+| R01 / F15 | Full CRM profile view still lacks agent relationships, verification history and last-password-change data; staff address editing is absent. | Complete partial tasks 02-auth-users-admin.md#T-05.02.01 and T-05.02.02 with authorized data, localized controls and focused HTTP/browser checks. Action tasks T-05.02.03/T-05.02.04 are already verified. |
 | R02 / F09, F17 | Email and notification renderers do not consume active branding. | Versioned branding reaches the required rendered output; missing assets/configuration and localized behavior are exercised. |
 | R02 / F17 | `02-auth-users-admin.md#T-09.11.02` has document selection but lacks integrated new-document upload. | Authorized upload, validation, persisted KB association, failure/retry and localized controls. Chunking/embedding stays an explicit separate dependency. |
 | R02 / F17 | `02-auth-users-admin.md#T-09.11.04` lacks its actual-agent backend and test-chat panel. | Admin-authenticated chat reaches the selected agent with its required model/KB/policy configuration. A provider connection test does not satisfy this task. |
@@ -48,12 +49,12 @@ Confirmed support contacts are now installed: `info@barghsa.com`, office `021-26
 
 [The full PR checklist](merged-pr-review.md) lists every merged PR, its qualified task mapping, current task acceptance, deferral count and all 23 repeated-task groups.
 
-- 262 PRs have mapped tasks with partial or pending acceptance.
-- 35 PRs map only to verified tasks. Reuse their task evidence; any separate deferral still needs reconciliation.
+- 260 PRs have mapped tasks with partial or pending acceptance.
+- 37 PRs map only to verified tasks. Reuse their task evidence; any separate deferral still needs reconciliation.
 - 4 PRs lack current task mappings: #47 for strict dependencies; #234, #235 and #242 for loop protocol.
 - 170 historical deferral statements across 101 PRs require comparison with later implementation.
 
-Review the final implementation once per qualified task and associate every contributing PR. The remaining PR-backed task counts are infrastructure 50, auth/admin 91, core business 4, finance 52, notifications 29 and UI foundations 3, totaling 229. Also review 56 unresolved legacy claims. These figures overlap the partial/pending task counts above.
+Review the final implementation once per qualified task and associate every contributing PR. The remaining PR-backed task counts are infrastructure 50, auth/admin 89, core business 4, finance 52, notifications 29 and UI foundations 3, totaling 227. Also review 56 unresolved legacy claims. These figures overlap the partial/pending task counts above.
 
 Repeated PRs alone do not justify deleting code. Preserve useful wallet/receipt follow-ups and test their combined behavior. Review PR #298's incidental overpayment-credit path before scheduling `04-invoices-wallet-contracts.md#T-04.3.01.06` as unbuilt. Preserve both obsolete task identities in the historical register instead of transferring their completion silently.
 
