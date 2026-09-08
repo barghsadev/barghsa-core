@@ -1001,7 +1001,9 @@ export class CrmV2Service {
       );
       if ((invoicesTableExists.rows[0] as Record<string, unknown>).exists) {
         const unpaidInvoices = await client.query(
-          `SELECT COUNT(*)::int AS cnt FROM invoices WHERE profile_id = $1 AND state NOT IN ('Paid','Cancelled','Refunded','PartiallyRefunded')`,
+          `SELECT COUNT(*)::int AS cnt FROM invoices WHERE profile_id = $1
+           AND adjustment_kind IS DISTINCT FROM 'credit'
+           AND state NOT IN ('Paid','Cancelled','Refunded','PartiallyRefunded')`,
           [profileId]
         );
         const unpaidInvoiceCount = (unpaidInvoices.rows[0] as Record<string, unknown>)

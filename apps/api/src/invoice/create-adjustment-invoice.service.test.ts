@@ -51,7 +51,9 @@ vi.mock('uuid', () => ({
 
 function mockQuery(handler: (sql: string, params?: unknown[]) => unknown) {
   mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) =>
-    handler(sql, params)
+    sql.startsWith('SELECT id, archived FROM profiles')
+      ? { rows: [{ id: 'profile-001', archived: false }] }
+      : handler(sql, params)
   );
 }
 

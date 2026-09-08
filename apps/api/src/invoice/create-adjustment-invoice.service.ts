@@ -1,3 +1,4 @@
+import { lockInvoiceProfile } from './invoice-profile-lock.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 /**
  * CreateAdjustmentInvoiceService — post-payment adjustment (T-04.1.05.03).
@@ -265,6 +266,7 @@ export class CreateAdjustmentInvoiceService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      const profileId = await lockInvoiceProfile(client, 'invoice', cmd.originalInvoiceId);
       await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
 
       const locked = (await client.query(
@@ -280,6 +282,8 @@ export class CreateAdjustmentInvoiceService {
         throw new NotFoundException(`Invoice not found: ${cmd.originalInvoiceId}`);
       }
 
+      if (original.profile_id !== profileId)
+        throw new ConflictException('Invoice profile changed; retry');
       const paidAmount = BigInt(original.paid_amount);
       if (paidAmount <= 0n) {
         throw new ConflictException(CREATE_ADJUSTMENT_ERRORS.NO_PAYMENT(cmd.originalInvoiceId));

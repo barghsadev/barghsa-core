@@ -1,3 +1,4 @@
+import { lockInvoiceProfile } from './invoice-profile-lock.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 /**
  * ManualInvoiceService — staff-created custom invoices (T-04.1.02.02).
@@ -174,15 +175,8 @@ export class ManualInvoiceService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await lockInvoiceProfile(client, 'profile', cmd.profileId);
       await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
-
-      // --- 2. Profile must exist (clean 404 + FK pre-check) ---
-      const profileResult = (await client.query(`SELECT id FROM profiles WHERE id = $1`, [
-        cmd.profileId,
-      ])) as { rows: Array<{ id: string }> };
-      if (profileResult.rows.length === 0) {
-        throw new NotFoundException(`Profile not found: ${cmd.profileId}`);
-      }
 
       // --- 3. Idempotency replay (same key + same payload → same invoice) ---
       if (cmd.idempotencyKey) {

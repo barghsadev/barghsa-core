@@ -136,6 +136,8 @@ function resetDb() {
 function installDbHandler() {
   mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
     const s = sql.trim();
+    if (s.startsWith('SELECT id, archived FROM profiles'))
+      return { rows: [{ id: PROFILE_ID, archived: false }] };
     // Order lookup
     if (s.startsWith('SELECT id, profile_id, product_id')) {
       return db.order ? { rows: [db.order] } : { rows: [] };
@@ -421,6 +423,8 @@ describe('AutoInvoiceService', () => {
       // The idempotency guard SELECT returns an existing invoice.
       mockClient.query.mockImplementation(async (sql: string) => {
         const s = sql.trim();
+        if (s.startsWith('SELECT id, archived FROM profiles'))
+          return { rows: [{ id: PROFILE_ID, archived: false }] };
         if (s.startsWith('SELECT id FROM invoices') && s.includes('order_id')) {
           return { rows: [{ id: 'existing-invoice' }] };
         }
@@ -442,6 +446,8 @@ describe('AutoInvoiceService', () => {
       // Break the state-machine UPDATE
       mockClient.query.mockImplementation(async (sql: string) => {
         const s = sql.trim();
+        if (s.startsWith('SELECT id, archived FROM profiles'))
+          return { rows: [{ id: PROFILE_ID, archived: false }] };
         if (s.startsWith('UPDATE invoices')) throw new Error('DB down');
         if (s.startsWith('SELECT id, profile_id, product_id')) return { rows: [db.order] };
         if (s.startsWith('SELECT id FROM invoices') && s.includes('order_id')) return { rows: [] };
@@ -473,6 +479,8 @@ describe('AutoInvoiceService', () => {
       mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
         calls.push(sql.trim().split(/\s+/)[0]!.toUpperCase());
         const s = sql.trim();
+        if (s.startsWith('SELECT id, archived FROM profiles'))
+          return { rows: [{ id: PROFILE_ID, archived: false }] };
         if (s.startsWith('SELECT id, profile_id, product_id')) return { rows: [db.order] };
         if (s.startsWith('SELECT id FROM invoices') && s.includes('order_id')) return { rows: [] };
         if (s.startsWith('SELECT id, type, system_key')) return { rows: [db.product] };

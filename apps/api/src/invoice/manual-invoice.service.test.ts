@@ -85,7 +85,8 @@ describe('ManualInvoiceService', () => {
       const calls: string[] = [];
       mockQuery((sql) => {
         calls.push(sql.trim().split(/\s+/)[0]!.toUpperCase());
-        if (sql.startsWith('SELECT id FROM profiles')) return { rows: [{ id: 'profile-001' }] };
+        if (sql.startsWith('SELECT id, archived FROM profiles'))
+          return { rows: [{ id: 'profile-001', archived: false }] };
         if (sql.startsWith('SELECT id, metadata FROM invoices')) return { rows: [] };
         if (sql.startsWith('INSERT INTO invoices')) return { rows: [] };
         if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] };
@@ -185,7 +186,7 @@ describe('ManualInvoiceService', () => {
 
     it('throws NotFoundException for a missing profile and rolls back', async () => {
       mockQuery((sql) => {
-        if (sql.startsWith('SELECT id FROM profiles')) return { rows: [] };
+        if (sql.startsWith('SELECT id, archived FROM profiles')) return { rows: [] };
         return { rows: [] };
       });
 
@@ -200,7 +201,8 @@ describe('ManualInvoiceService', () => {
 
     it('replays the existing invoice when the idempotency key is reused', async () => {
       mockQuery((sql) => {
-        if (sql.startsWith('SELECT id FROM profiles')) return { rows: [{ id: 'profile-001' }] };
+        if (sql.startsWith('SELECT id, archived FROM profiles'))
+          return { rows: [{ id: 'profile-001', archived: false }] };
         if (sql.startsWith('SELECT id, metadata FROM invoices'))
           return {
             rows: [
@@ -253,7 +255,8 @@ describe('ManualInvoiceService', () => {
 
     it('rejects an idempotency key reused with a different payload', async () => {
       mockQuery((sql) => {
-        if (sql.startsWith('SELECT id FROM profiles')) return { rows: [{ id: 'profile-001' }] };
+        if (sql.startsWith('SELECT id, archived FROM profiles'))
+          return { rows: [{ id: 'profile-001', archived: false }] };
         if (sql.startsWith('SELECT id, metadata FROM invoices'))
           return {
             rows: [
@@ -278,7 +281,8 @@ describe('ManualInvoiceService', () => {
 
     it('rolls back when the Issue transition fails', async () => {
       mockQuery((sql) => {
-        if (sql.startsWith('SELECT id FROM profiles')) return { rows: [{ id: 'profile-001' }] };
+        if (sql.startsWith('SELECT id, archived FROM profiles'))
+          return { rows: [{ id: 'profile-001', archived: false }] };
         if (sql.startsWith('SELECT id, metadata FROM invoices')) return { rows: [] };
         if (sql.startsWith('INSERT INTO invoices')) return { rows: [] };
         if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] };

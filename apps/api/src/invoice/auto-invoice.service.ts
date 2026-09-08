@@ -1,3 +1,4 @@
+import { lockInvoiceProfile } from './invoice-profile-lock.js';
 /**
  * AutoInvoiceService — system-generated invoices from orders (T-04.1.02.03).
  *
@@ -177,6 +178,7 @@ export class AutoInvoiceService {
       : await pool!.connect();
     try {
       if (ownsClient) await client.query('BEGIN');
+      const profileId = await lockInvoiceProfile(client, 'order', cmd.orderId);
 
       // --- 1. Load the order (snapshot fields only) ---
       const orderResult = (await client.query(
@@ -189,6 +191,8 @@ export class AutoInvoiceService {
       if (!order) {
         throw new NotFoundException(`Order not found: ${cmd.orderId}`);
       }
+      if (order.profile_id !== profileId)
+        throw new ConflictException('Order profile changed; retry');
       if (order.status === 'CANCELLED') {
         throw new BadRequestException(
           `Cannot auto-generate an invoice for cancelled order ${cmd.orderId}`
