@@ -6,6 +6,7 @@ import type { CreateStaffUserInput } from './admin.service.js';
 // Permission races are exercised through the real HTTP integration suite.
 vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn(async () => {}),
+  requireStaffStepUp: vi.fn(async () => new Date('2026-09-08T12:00:00Z')),
 }));
 
 // ─── Helpers ──────────────────────────────────────────────────────────
@@ -73,6 +74,10 @@ afterEach(() => vi.unstubAllEnvs());
 
 // ─── Test data ────────────────────────────────────────────────────────
 
+function staffActor(userId: string) {
+  return { userId, sessionId: 'actor-session', csrfToken: 'actor-csrf' };
+}
+
 function validTempPasswordInput(
   overrides: Partial<CreateStaffUserInput> = {}
 ): CreateStaffUserInput {
@@ -122,7 +127,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
 
     const result = await service.createStaffUser(
       validTempPasswordInput(),
-      'actor-user-id',
+      staffActor('actor-user-id'),
       '127.0.0.1'
     );
 
@@ -153,7 +158,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
 
     const result = await service.createStaffUser(
       validTempPasswordInput({ username: 'test@example.com' }),
-      'actor',
+      staffActor('actor'),
       '10.0.0.1'
     );
 
@@ -184,7 +189,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
 
     await service.createStaffUser(
       validTempPasswordInput({ username: 'user@example.com' }),
-      'actor',
+      staffActor('actor'),
       '10.0.0.1'
     );
 
@@ -217,7 +222,7 @@ describe('AdminService.createStaffUser (link)', () => {
     const { AdminService: Svc } = await import('./admin.service.js');
     service = new Svc();
 
-    const result = await service.createStaffUser(validLinkInput(), 'actor', '10.0.0.1');
+    const result = await service.createStaffUser(validLinkInput(), staffActor('actor'), '10.0.0.1');
 
     expect(result.userId).toBeTruthy();
     expect(result.username).toBe('newstaff2@example.com');
@@ -247,7 +252,7 @@ describe('AdminService.createStaffUser (link)', () => {
 
     await service.createStaffUser(
       validLinkInput({ username: 'test@example.com', firstName: 'Ali', lastName: 'Rezaei' }),
-      'actor',
+      staffActor('actor'),
       '10.0.0.1'
     );
 
@@ -275,7 +280,7 @@ describe('AdminService.createStaffUser (errors)', () => {
 
     let caught: unknown;
     try {
-      await service.createStaffUser(validTempPasswordInput(), 'actor', '10.0.0.1');
+      await service.createStaffUser(validTempPasswordInput(), staffActor('actor'), '10.0.0.1');
     } catch (e) {
       caught = e;
     }
@@ -301,7 +306,7 @@ describe('AdminService.createStaffUser (errors)', () => {
 
     let caught: unknown;
     try {
-      await service.createStaffUser(validTempPasswordInput(), 'actor', '10.0.0.1');
+      await service.createStaffUser(validTempPasswordInput(), staffActor('actor'), '10.0.0.1');
     } catch (e) {
       caught = e;
     }
@@ -327,7 +332,7 @@ describe('AdminService.createStaffUser (errors)', () => {
 
     let caught: unknown;
     try {
-      await service.createStaffUser(validTempPasswordInput(), 'actor', '10.0.0.1');
+      await service.createStaffUser(validTempPasswordInput(), staffActor('actor'), '10.0.0.1');
     } catch (e) {
       caught = e;
     }
@@ -348,7 +353,7 @@ describe('AdminService.createStaffUser (errors)', () => {
     try {
       await service.createStaffUser(
         validTempPasswordInput({ roleIds: ['nonexistent-role'] }),
-        'actor',
+        staffActor('actor'),
         '10.0.0.1'
       );
     } catch (e) {
@@ -380,7 +385,7 @@ describe('AdminService.createStaffUser (rollback)', () => {
     service = new Svc();
 
     try {
-      await service.createStaffUser(validTempPasswordInput(), 'actor', '10.0.0.1');
+      await service.createStaffUser(validTempPasswordInput(), staffActor('actor'), '10.0.0.1');
     } catch {
       // Expected
     }
@@ -400,7 +405,7 @@ describe('AdminService.createStaffUser (rollback)', () => {
     try {
       await service.createStaffUser(
         validTempPasswordInput({ roleIds: ['nonexistent-role'] }),
-        'actor',
+        staffActor('actor'),
         '10.0.0.1'
       );
     } catch (e) {

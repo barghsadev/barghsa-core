@@ -260,6 +260,8 @@ export class AdminController {
    * - 10 creations per IP per hour
    */
   @Post('users/create-staff')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(201)
   @ApiOperation({ summary: 'Create a new staff user (admin)' })
   @ApiBody({
@@ -347,7 +349,7 @@ export class AdminController {
 
     // ── Delegate to service ──────────────────────────────────────
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    const result = await this.adminService.createStaffUser(parsed.data, req.session.userId, ip);
+    const result = await this.adminService.createStaffUser(parsed.data, req.session, ip);
 
     this.logger.log(
       `Staff user created: userId=${result.userId}, username=${result.username}, ` +

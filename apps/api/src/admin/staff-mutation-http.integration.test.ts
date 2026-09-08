@@ -9,7 +9,7 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 async function actor() {
-  const userId = randomUUID(),
+  const userId = `f0000000-0000-4000-8000-${randomUUID().slice(-12)}`,
     session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
@@ -29,15 +29,18 @@ async function actor() {
       Cookie: `barghsa_session=${session}`,
       'X-CSRF-Token': csrf,
       'Content-Type': 'application/json',
+      'X-Correlation-ID': randomUUID(),
     },
   };
 }
 const operations = ['create', 'roles', 'disable', 'activation'] as const;
 for (const operation of operations)
-  for (const change of ['remove-role', 'disable-actor'] as const) {
-    it(`${operation} rejects ${change} winning the account lock after the request guard`, async () => {
+  for (const change of operation === 'create'
+    ? (['remove-role', 'disable-actor', 'revoke-session', 'rotate-csrf'] as const)
+    : (['remove-role', 'disable-actor'] as const)) {
+    it(`${operation} rechecks ${change} after the request guard`, async () => {
       const current = await actor(),
-        target = randomUUID(),
+        target = `00000000-0000-4000-8000-${randomUUID().slice(-12)}`,
         username = `${target}@example.test`;
       await http.pool.query(
         "INSERT INTO users(user_id,username,password_hash,is_staff,must_change_password,activation_token,activation_token_expires_at) VALUES ($1,$2,'test-only',true,true,'unchanged-fixture-token',NOW()+INTERVAL '1 day')",
@@ -66,7 +69,14 @@ for (const operation of operations)
       let pending: Promise<Response> | undefined;
       try {
         await lock.query('BEGIN');
-        await lock.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [current.userId]);
+        const blockerPid = (await lock.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+        if (operation === 'create') {
+          // The uniqueness lookup runs after request authentication, before mutation authorization.
+          await lock.query('LOCK TABLE account_login_identifiers IN ACCESS EXCLUSIVE MODE');
+        } else {
+          // Target sorts before actor, so permission validation waits before locking the actor.
+          await lock.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [target]);
+        }
         pending = fetch(`${http.base}${path}`, {
           method: operation === 'roles' ? 'PUT' : 'POST',
           headers: current.headers,
@@ -78,7 +88,14 @@ for (const operation of operations)
           waiting =
             (
               await http.pool.query(
-                "SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+                `SELECT 1 FROM pg_stat_activity WHERE datname=current_database()
+                 AND $1=ANY(pg_blocking_pids(pid)) AND query LIKE $2`,
+                [
+                  blockerPid,
+                  operation === 'create'
+                    ? '%SELECT user_id FROM account_login_identifiers WHERE destination%'
+                    : '%activation_pending%ORDER BY user_id FOR UPDATE%',
+                ]
               )
             ).rows.length > 0;
           if (waiting) break;
@@ -87,11 +104,35 @@ for (const operation of operations)
         expect(waiting, http.logs()).toBe(true);
         if (change === 'remove-role')
           await lock.query('DELETE FROM user_roles WHERE user_id=$1', [current.userId]);
-        else
+        else if (change === 'disable-actor')
           await lock.query('UPDATE users SET disabled_at=NOW() WHERE user_id=$1', [current.userId]);
+        else if (change === 'revoke-session')
+          await lock.query('UPDATE sessions SET revoked_at=clock_timestamp() WHERE user_id=$1', [
+            current.userId,
+          ]);
+        else
+          await lock.query(
+            "UPDATE sessions SET csrf_token='replacement-fixture-csrf' WHERE user_id=$1",
+            [current.userId]
+          );
         await lock.query('COMMIT');
         const response = await pending;
-        expect(response.status, (await response.text()) + http.logs()).toBe(403);
+        expect(response.status, (await response.text()) + http.logs()).toBe(
+          change === 'revoke-session' ? 401 : 403
+        );
+        if (change === 'rotate-csrf') {
+          const log = http
+            .logs()
+            .split('\n')
+            .find((line) =>
+              line.includes(
+                `CSRF check failed: staff session token changed | correlationId=${current.headers['X-Correlation-ID']}`
+              )
+            );
+          expect(log).toBeDefined();
+          expect(log).not.toContain(current.headers['X-CSRF-Token']);
+          expect(log).not.toContain('replacement-fixture-csrf');
+        }
         expect(
           (
             await http.pool.query(

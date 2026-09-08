@@ -1,5 +1,7 @@
 import type { PoolClient } from 'pg';
-import { requireStaffMutationPermission } from './staff-mutation-permission.js';
+import { requireStaffMutationPermission, requireStaffStepUp } from './staff-mutation-permission.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { Injectable, Logger, HttpException, Optional, BadRequestException } from '@nestjs/common';
@@ -527,10 +529,11 @@ export class AdminService {
    */
   async createStaffUser(
     input: CreateStaffUserInput,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<CreateStaffUserResult> {
     const pool = getDbPool();
+    const actorUserId = actor.userId;
 
     // ── 1. Optimistic uniqueness pre-check (fast-fail) ────────────────
     const existing = await pool.query(
@@ -596,6 +599,7 @@ export class AdminService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:users:create');
+      const stepUpVerifiedAt = await requireStaffStepUp(client, actor);
 
       // ── 3. Create user record ──────────────────────────────────────
       const userResult = await client.query(
@@ -660,7 +664,7 @@ export class AdminService {
 
       // ── 5. Record audit event ──────────────────────────────────────
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -672,8 +676,10 @@ export class AdminService {
             targetUserId: userId,
             username: input.username,
             activationMethod: input.activationMethod,
-            roleIds: input.roleIds ?? [],
+            roleIds: assignedRoleIds,
             profileId,
+            stepUpVerified: true,
+            stepUpVerifiedAt,
           }),
           correlationId,
           ip,
@@ -681,6 +687,7 @@ export class AdminService {
         ]
       );
 
+      await requireStaffStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(
