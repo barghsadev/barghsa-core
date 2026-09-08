@@ -19,7 +19,7 @@ The saved inventory contains 301 merged PRs and was checked against GitHub on Se
 | Step / group | Remaining requirement | Completion evidence |
 | --- | --- | --- |
 | R01 / F03 | Session list lacks required approximate location. Trace all rotation, revocation and sensitive-action callers before closing the four partial session tasks. | Exact current requirements, required caller matrix, meaningful HTTP/browser checks and privacy-safe location behavior. |
-| R01 / F05 | Account recovery support lacks its documented manual identity-verification and audit procedure. Reconcile the existing 24-hour response promise. | Runbook grounded in supported staff actions, evidence/audit requirements and an exercised recovery or explicit escalation path. No invented provider or credential bypass. |
+| R01 / F05 | Intake and escalation runbook is implemented; lost-contact recovery still needs owner-defined approvers/evidence policy and a reviewed credential-change method. Unsupported24-hour promise was removed. | Runbook grounded in supported staff actions, evidence/audit requirements and an exercised recovery or explicit escalation path. No invented provider or credential bypass. |
 | R02 / F09, F17 | Email and notification renderers do not consume active branding. | Versioned branding reaches the required rendered output; missing assets/configuration and localized behavior are exercised. |
 | R02 / F17 | `02-auth-users-admin.md#T-09.11.02` has document selection but lacks integrated new-document upload. | Authorized upload, validation, persisted KB association, failure/retry and localized controls. Chunking/embedding stays an explicit separate dependency. |
 | R02 / F17 | `02-auth-users-admin.md#T-09.11.04` lacks its actual-agent backend and test-chat panel. | Admin-authenticated chat reaches the selected agent with its required model/KB/policy configuration. A provider connection test does not satisfy this task. |
@@ -30,11 +30,11 @@ The saved inventory contains 301 merged PRs and was checked against GitHub on Se
 
 This table identifies known unmet work. Remaining domain reviews may reproduce further defects within the original scope; record new noncritical improvements separately.
 
-Confirmed support contacts are now installed: `info@barghsa.com`, office `021-26658042`, mobile `09002550292`. The owner confirmed these contacts, not a response-time agreement.
+Confirmed support contacts are now installed: `info@barghsa.com`, office `021-26658042`, mobile `09002550292`. The owner confirmed these contacts. Unsupported24-hour response-time copy was removed in6640012.
 
 ## Execution order
 
-1. **R01 Critical acceptance.** Start with support recovery task `02-auth-users-admin.md#T-02.03.03`. Then close required session/CSRF/step-up caller matrices and review staff roles/activation, OTP/contact changes, manual verification, profile/agent/ownership/address boundaries, CRM/tickets, receipts, callbacks, invoice arithmetic and ledger integrity. F03–F08, F12–F16, F23. Preserve unavailable automatic verification without a provider.
+1. **R01 Critical acceptance.** Support recovery task `02-auth-users-admin.md#T-02.03.03` awaits owner policy. Continue required session/CSRF/step-up caller matrices and review staff roles/activation, OTP/contact changes, manual verification, profile/agent/ownership/address boundaries, CRM/tickets, receipts, callbacks, invoice arithmetic and ledger integrity. F03–F08, F12–F16, F23. Preserve unavailable automatic verification without a provider.
 2. **R02 Required administration consumers.** Complete branding, KB upload and actual-agent test chat. Review the policy integration against its exact task requirements. Reuse current provider/template authorization and acknowledgement evidence. F09–F11, F17.
 3. **R03 Errors and UI review.** Finish required localization/correlation and keyboard, focus, RTL, themes, loading/error and retry behavior. Review scanner findings against actual behavior; do not turn every warning into work. F19/F20.
 4. **R04 Purchase loading.** Solve the eager-route requirement within current budgets; keep the approved Vite SPA architecture. F19.

@@ -217,6 +217,21 @@
         "Diff whitespace and explicit contact-change review pass"
       ],
       "remaining": "Continue the fresh R01 next action; no new feature dispatch or remote operation."
+    },
+    {
+      "id": "R01-recovery-runbook",
+      "date": "2026-09-08",
+      "source_revision": "66400126602cf78938a133b2a528f8410ee15fa9",
+      "summary": "Documented supported account-recovery intake, ordinary reset and staff containment, plus exact limits of lost-contact recovery. Removed unsupported24-hour promise in fa/en.",
+      "review": "Traced current auth/CRM/correction code and the database authentication-version trigger. CRM edits preserve login contacts; correction approval does not grant account recovery. Owner approver/evidence policy requested; no lost-contact bypass or production mutation performed.",
+      "checks": [
+        "50 dictionary tests pass",
+        "i18n compilation and production web build pass",
+        "41 complete-route budgets pass",
+        "Focused ESLint, formatting, diff review and all runbook source links pass"
+      ],
+      "evidence": "audit/evidence/index.json",
+      "remaining": "Support task remains partial for policy, restricted evidence handling and a reviewed credential-recovery method. Session/capability review proceeds independently."
     }
   ]
 }

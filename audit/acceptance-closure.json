@@ -3367,7 +3367,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "reviewed_sha": "66400126602cf78938a133b2a528f8410ee15fa9",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 185,
       "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
@@ -3431,7 +3431,7 @@
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "f1e54f077430f488aa83f90ecf6cd1f34e7c58de9dec7ae77680e7f59d64e180"
+          "sha256": "f727cbc4dbd3ecf887544b4c3ba14c05305162e475a7a6a0816ab0985d77f2fa"
         }
       ],
       "checks": [
@@ -3440,7 +3440,8 @@
         "Committed NGINX pilot configuration passed isolated TLS/proxy and edge rate-limit exercise; rate-edge log. No deployment was performed.",
         "Reused unchanged API enforcement evidence from234 auth/session checks at e478e08, including real login/proxy/destination HTTP cases. Later23 checks overlap and are not added to that total.",
         "20 production browser checks on desktop/mobile Chromium pass in fa/en, covering429 input preservation, retry timing, resend cooldowns and keyboard navigation to localized support. Rerun after owner-confirmed contact update at this revision also passes20.",
-        "2 auth-error unit tests pass;50 dictionary tests, web build/types/lint and41 complete-route budgets pass. Logs saved through audit/evidence/index.json."
+        "2 auth-error unit tests pass;50 dictionary tests, web build/types/lint and41 complete-route budgets pass. Logs saved through audit/evidence/index.json.",
+        "At6640012 only unsupported support response-time copy changed; rate-limit behavior and prior browser evidence unchanged. Dictionary checks/build and41 route budgets pass."
       ],
       "limitations": [
         "Local application and supplied edge configuration verified. Actual production proxy deployment, trusted forwarding topology and live provider delivery remain operational prerequisites.",
@@ -3449,12 +3450,101 @@
       "merged_prs": [
         101
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "superseded_assessments": [
+        {
+          "task_key": "02-auth-users-admin.md#T-02.04.01",
+          "status": "acceptance_verified",
+          "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+          "requirement_file": "kanban/epics/02-auth-users-admin.md",
+          "requirement_line": 185,
+          "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
+          "requirement_sha256": "6ed8e2d214273cba852f52775d287b19be763f5d4b8c4e25de130bf13ecbdf61",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "722e2debe19e302fddf07d97ce8328e8bb8281b49d6ee68aef11ab035a37ee04"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "3208798f2c3c4eabb3b0899a1fef7bf2738d283202a6b09da27ad6799f0ae980"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "64672f9f68261b6d1ea56168b49c6396b75606d32fba8284cc03443ad4ebc55d"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "4101afdfe4c67dd09616fbbad234fd76d3e64c0a147fa62634ed10e5aa883093"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+              "sha256": "61591ffc483f5632d4676e4ad46194153003aebd430f5785b9fdef97e547cbd6"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "bbdbc65f479e10c1d5ec3c0ee708093557dcce87f13e1edb0a6a7000979927d6"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "431adbe62ed8ec8b44d4d3150f3a41ed67644c5d2694bd10f28a1e67e0db758a"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+              "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+            },
+            {
+              "path": "packages/db/src/rolling-rate-limits.test.ts",
+              "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+            },
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "5c30f43b9626cc39a3143e2d5fed1ee22f8bb19e22357d80f516ca47eb431f24"
+            },
+            {
+              "path": "apps/web/src/lib/auth-errors.ts",
+              "sha256": "8c37a2e06fa691c1240496ff791b35fb8bd01de117c3d5582fe1447726582b5d"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5dca16f6953314afb118b3994ecc4bd0f4ce5bebfc29bad51a8db631ba6f61d1"
+            },
+            {
+              "path": "apps/web/src/routes/support.tsx",
+              "sha256": "872e1b510a4cf1593c42dccf78a36bd1bca27b71b1e39374bb00804e689a25c8"
+            },
+            {
+              "path": "apps/web/e2e/auth-rate-limit.spec.ts",
+              "sha256": "ce6e907d5d21d3803462d11ec08c2f6480f5e8113bc931121b1fac7033f96a04"
+            },
+            {
+              "path": "packages/i18n/src/auth.ts",
+              "sha256": "f1e54f077430f488aa83f90ecf6cd1f34e7c58de9dec7ae77680e7f59d64e180"
+            }
+          ],
+          "checks": [
+            "Source review covers OTP destination minute/hour/day admissions, five failed attempts per challenge, normalized account-plus-IP login failure windows, registration IP/destination limits and reset destination limits.",
+            "8 real PostgreSQL rolling-window tests and83 shared rate-limit tests pass, including concurrency, expiry and Redis loss/recovery; saved rate-db/rate-shared logs.",
+            "Committed NGINX pilot configuration passed isolated TLS/proxy and edge rate-limit exercise; rate-edge log. No deployment was performed.",
+            "Reused unchanged API enforcement evidence from234 auth/session checks at e478e08, including real login/proxy/destination HTTP cases. Later23 checks overlap and are not added to that total.",
+            "20 production browser checks on desktop/mobile Chromium pass in fa/en, covering429 input preservation, retry timing, resend cooldowns and keyboard navigation to localized support. Rerun after owner-confirmed contact update at this revision also passes20.",
+            "2 auth-error unit tests pass;50 dictionary tests, web build/types/lint and41 complete-route budgets pass. Logs saved through audit/evidence/index.json."
+          ],
+          "limitations": [
+            "Local application and supplied edge configuration verified. Actual production proxy deployment, trusted forwarding topology and live provider delivery remain operational prerequisites.",
+            "Broader manual support identity-verification procedure belongs to T-02.03.03 and remains partial."
+          ],
+          "merged_prs": [
+            101
+          ],
+          "historically_skipped": false
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.03.03",
       "status": "partial",
-      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "reviewed_sha": "66400126602cf78938a133b2a528f8410ee15fa9",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 175,
       "requirement": "**T-02.03.03 — Account recovery support path**\n\n- Description: On forgot-password page, include \"Having trouble? Contact support\" link for users who no longer control their registered email/phone. Support recovery requires identity verification, full audit history.\n- Technical notes: Link opens ticket creation or directs to support contact. Support path documented in runbook. Staff have verified identity procedure.\n- UI/UX: Styled as secondary link below the form.\n- Dependencies: T-02.03.01\n- Complexity: S",
@@ -3470,26 +3560,73 @@
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "f1e54f077430f488aa83f90ecf6cd1f34e7c58de9dec7ae77680e7f59d64e180"
+          "sha256": "f727cbc4dbd3ecf887544b4c3ba14c05305162e475a7a6a0816ab0985d77f2fa"
         },
         {
           "path": "apps/web/e2e/auth-rate-limit.spec.ts",
           "sha256": "ce6e907d5d21d3803462d11ec08c2f6480f5e8113bc931121b1fac7033f96a04"
+        },
+        {
+          "path": "docs/runbooks/account-recovery.md",
+          "sha256": "a870d377282fe75761985a61a986a17db75c193d00516664b3fbb7c6b17d10ff"
         }
       ],
       "checks": [
         "Shared auth form footer provides the required secondary support link; support page follows fa/en locale and RTL/LTR.",
         "Owner supplied office021-26658042, mobile09002550292 and info@barghsa.com on2026-09-08. Display values and mailto/tel targets were reviewed against those values; no message or call was sent.",
-        "20 existing production browser recovery/rate-limit checks and50 dictionary tests pass; web build/types/lint and41 budgets pass."
+        "20 existing production browser recovery/rate-limit checks and50 dictionary tests pass; web build/types/lint and41 budgets pass.",
+        "Source-grounded intake/escalation runbook added. Reviewed reset OTP/version bindings, profile-contact versus credential separation, identity correction permissions and staff session containment. Removed unconfirmed24-hour promise. 50 dictionary checks, i18n compilation, web build,41 route budgets, lint/format and source-link validation pass."
       ],
       "limitations": [
-        "No account-recovery runbook or verified manual staff recovery procedure was found in docs. Trace supported staff actions and document required identity evidence, audit history and escalation before closing. No automatic identity provider exists.",
-        "The existing page promises response within24 hours. The owner confirmed contact details only; reconcile this service promise with the actual support process."
+        "Owner policy for lost-contact recovery approvers, accepted identity evidence and restricted collection/retention remains pending an explicit question. No automatic identity provider exists.",
+        "Existing CRM edits cannot replace login credentials; current username change requires old and new OTPs. A reviewed execution method and full case audit are needed for lost-contact recovery. The runbook documents this limit and does not certify recovery as implemented."
       ],
       "merged_prs": [
         100
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "superseded_assessments": [
+        {
+          "task_key": "02-auth-users-admin.md#T-02.03.03",
+          "status": "partial",
+          "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+          "requirement_file": "kanban/epics/02-auth-users-admin.md",
+          "requirement_line": 175,
+          "requirement": "**T-02.03.03 — Account recovery support path**\n\n- Description: On forgot-password page, include \"Having trouble? Contact support\" link for users who no longer control their registered email/phone. Support recovery requires identity verification, full audit history.\n- Technical notes: Link opens ticket creation or directs to support contact. Support path documented in runbook. Staff have verified identity procedure.\n- UI/UX: Styled as secondary link below the form.\n- Dependencies: T-02.03.01\n- Complexity: S",
+          "requirement_sha256": "a8e5748fc62d699dd5cdaabb835a95bb85aaa36da934e10d60414e712d63977d",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5dca16f6953314afb118b3994ecc4bd0f4ce5bebfc29bad51a8db631ba6f61d1"
+            },
+            {
+              "path": "apps/web/src/routes/support.tsx",
+              "sha256": "872e1b510a4cf1593c42dccf78a36bd1bca27b71b1e39374bb00804e689a25c8"
+            },
+            {
+              "path": "packages/i18n/src/auth.ts",
+              "sha256": "f1e54f077430f488aa83f90ecf6cd1f34e7c58de9dec7ae77680e7f59d64e180"
+            },
+            {
+              "path": "apps/web/e2e/auth-rate-limit.spec.ts",
+              "sha256": "ce6e907d5d21d3803462d11ec08c2f6480f5e8113bc931121b1fac7033f96a04"
+            }
+          ],
+          "checks": [
+            "Shared auth form footer provides the required secondary support link; support page follows fa/en locale and RTL/LTR.",
+            "Owner supplied office021-26658042, mobile09002550292 and info@barghsa.com on2026-09-08. Display values and mailto/tel targets were reviewed against those values; no message or call was sent.",
+            "20 existing production browser recovery/rate-limit checks and50 dictionary tests pass; web build/types/lint and41 budgets pass."
+          ],
+          "limitations": [
+            "No account-recovery runbook or verified manual staff recovery procedure was found in docs. Trace supported staff actions and document required identity evidence, audit history and escalation before closing. No automatic identity provider exists.",
+            "The existing page promises response within24 hours. The owner confirmed contact details only; reconcile this service promise with the actual support process."
+          ],
+          "merged_prs": [
+            100
+          ],
+          "historically_skipped": false
+        }
+      ]
     }
   ],
   "pending_task_keys": [

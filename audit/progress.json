@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+  "source_revision": "66400126602cf78938a133b2a528f8410ee15fa9",
   "active_step": "R01",
-  "next_action": "R01: review and document 02-auth-users-admin.md#T-02.03.03 manual recovery procedure using supported staff actions; reconcile the24-hour response promise. Contacts are confirmed and installed. Then close session caller/security matrices before remaining staff/profile/finance domain reviews. Rate-limit task T-02.04.01 is verified; reuse its saved evidence.",
+  "next_action": "Continue R01 session rotation/revocation and current-capability caller review. Recovery intake runbook and truthful response-time copy are committed; lost-contact approver/evidence policy is awaiting owner input, and credential-recovery execution remains unmet. Continue independent work without redoing completed auth/rate tests.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -114,7 +114,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Finish registration/reset/contact/staff OTP acceptance. Support contacts and rate-limit recovery link are fixed; manual recovery runbook and24-hour response promise remain. Actual external delivery is operational work."
+        "Finish registration/reset/contact/staff OTP acceptance. Support contacts, link and intake runbook are implemented. Lost-contact approver/evidence policy and credential recovery method remain; actual external delivery is operational work."
       ]
     },
     {
@@ -334,6 +334,10 @@
     {
       "id": "A01-plan-refresh",
       "review_record": "audit/evidence/step-reviews.json#A01-plan-refresh"
+    },
+    {
+      "id": "R01-recovery-runbook",
+      "review_record": "audit/evidence/step-reviews.json#R01-recovery-runbook"
     }
   ],
   "deferred_improvements": [],
@@ -353,6 +357,14 @@
     "Retain Vite SPA under ADR004.",
     "No automatic identity provider; retain safe unavailable state and supported manual verification.",
     "Dependency license allowlist waived; coverage and bundle thresholds remain unchanged.",
-    "Confirmed support contacts: info@barghsa.com, office021-26658042, mobile09002550292. No response-time agreement supplied."
+    "Confirmed support contacts: info@barghsa.com, office021-26658042, mobile09002550292. Unsupported response-time promise removed."
+  ],
+  "pending_questions": [
+    {
+      "task_key": "02-auth-users-admin.md#T-02.03.03",
+      "question": "Who may approve lost-contact account recovery, and which identity checks does support use?",
+      "status": "awaiting_owner",
+      "independent_work": "R01 session/capability callers"
+    }
   ]
 }

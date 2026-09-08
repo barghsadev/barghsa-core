@@ -575,6 +575,48 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/barghsa-recovery-runbook-budgets.log",
+      "path": "audit/evidence/r01/barghsa-recovery-runbook-budgets.log.gz",
+      "sha256": "f8ff7a8356d3957c5506f6ccf6533e0f10a1045448e188f90d7c50654474a930",
+      "encoding": "gzip",
+      "stored_sha256": "b263716b2f6392c2ffe3432c61d3041bab507e16a4a89dd9dfe9b35185b2131a"
+    },
+    {
+      "original_path": "/tmp/barghsa-recovery-runbook-dictionaries.log",
+      "path": "audit/evidence/r01/barghsa-recovery-runbook-dictionaries.log.gz",
+      "sha256": "0ca581fb02baf51ad2a86a24a8def47737b32a8ecc4a27d434f19a7eb67fb755",
+      "encoding": "gzip",
+      "stored_sha256": "df7fca69681f0ec4a5757050b532c8fea18b36a7e538356c3d7d15cf690f296b"
+    },
+    {
+      "original_path": "/tmp/barghsa-recovery-runbook-format.log",
+      "path": "audit/evidence/r01/barghsa-recovery-runbook-format.log.gz",
+      "sha256": "33ff076286ed3474c79a925cb028a4a0101cdd3425f22adee542377f4e0c2b78",
+      "encoding": "gzip",
+      "stored_sha256": "d75fae39d0c93d31841b16e5e2ba6cee3c4ea0b9a4b5e4e68ebb4369c7b1d7c7"
+    },
+    {
+      "original_path": "/tmp/barghsa-recovery-runbook-i18n-build.log",
+      "path": "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+      "sha256": "e96c18cf633b90ecae7f4d8c8fadef8b222995210eddf31da455e2a436493ae6",
+      "encoding": "gzip",
+      "stored_sha256": "efa98b77f7947a1708258290f0d1f9cd008002c7e204044a1c2f8fcc4fb48bd3"
+    },
+    {
+      "original_path": "/tmp/barghsa-recovery-runbook-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-recovery-runbook-web-build.log",
+      "path": "audit/evidence/r01/barghsa-recovery-runbook-web-build.log.gz",
+      "sha256": "5740c653f962108760c006da45ec398b44a398453db18886f497cef3458ad413",
+      "encoding": "gzip",
+      "stored_sha256": "6bcf25cef8aa436042454a33a9925bf39c44770ceb7bf07a23e11b3c937cdd19"
     }
   ]
 }
