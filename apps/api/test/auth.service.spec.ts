@@ -42,7 +42,7 @@ const KNOWN_OTP = '123456';
 const KNOWN_OTP_HASH = createHash('sha256').update(KNOWN_OTP).digest('hex');
 
 const mockOtpService = {
-  createChallenge: mockCreateChallenge,
+  createRegistrationChallenge: mockCreateChallenge,
   hashOtp: vi.fn((otp: string) => createHash('sha256').update(otp).digest('hex')),
   compareOtpHashes: vi.fn((hashedInput: string, storedHash: string) => {
     return hashedInput === storedHash;
@@ -81,11 +81,12 @@ describe('AuthService', () => {
     }));
     mockConnect.mockResolvedValue(mockClient);
     mockClient.query.mockReset();
-    mockClient.query.mockImplementation(async (sql: string) => {
-      // Default: COMMIT and ROLLBACK return empty result
-      if (sql === 'COMMIT' || sql.startsWith('ROLLBACK')) return { rows: [] };
-      return { rows: [] };
-    });
+    mockClient.query.mockImplementation(async (sql: string, params: unknown[] = []) => ({
+      rows:
+        sql.includes('FROM tos_versions') && params[0] === '00000000-0000-4000-8000-000000000001'
+          ? [{ id: params[0], content_fa: 'قوانین', content_en: 'Terms' }]
+          : [],
+    }));
     mockClient.release.mockReset();
     service = new AuthService(
       mockOtpService,
@@ -114,12 +115,16 @@ describe('AuthService', () => {
         'user@example.com',
         '127.0.0.1',
         expect.stringContaining('$argon2id'),
-        '00000000-0000-4000-8000-000000000001'
+        '00000000-0000-4000-8000-000000000001',
+        mockClient,
+        undefined
       );
     });
 
     it('rejects an existing username without creating a challenge', async () => {
-      mockQuery.mockResolvedValueOnce({ rows: [{ user_id: 'existing' }] });
+      mockClient.query.mockImplementation(async (sql: string) => ({
+        rows: sql.includes('FROM account_login_identifiers') ? [{ user_id: 'existing' }] : [],
+      }));
       const error = await service
         .register(
           {
@@ -169,8 +174,13 @@ describe('AuthService', () => {
 
     it('creates user, session, and returns credentials on success', async () => {
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('clock_timestamp() AS valid')) return { rows: [{ valid: true }] };
         if (sql.includes('FROM tos_versions'))
-          return { rows: [{ id: makeChallengeRow().tos_version_id }] };
+          return {
+            rows: [
+              { id: makeChallengeRow().tos_version_id, content_fa: 'قوانین', content_en: 'Terms' },
+            ],
+          };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
@@ -207,6 +217,20 @@ describe('AuthService', () => {
 
       // Verify SessionService was called
       expect(mockCreateSession).toHaveBeenCalledTimes(1);
+      expect(mockCreateSession).toHaveBeenCalledWith(
+        result.userId,
+        false,
+        { ip: '127.0.0.1' },
+        undefined,
+        mockClient
+      );
+      const auditCall = mockClient.query.mock.calls.find(([sql]) =>
+        String(sql).includes('INSERT INTO audit_log')
+      );
+      expect(JSON.parse(auditCall![1][2]).terms.contentHashes).toEqual({
+        fa: createHash('sha256').update('قوانین').digest('hex'),
+        en: createHash('sha256').update('Terms').digest('hex'),
+      });
     });
 
     it('throws 404 when challenge is not found', async () => {
@@ -312,7 +336,11 @@ describe('AuthService', () => {
       let decrementCalled = false;
       mockClient.query.mockImplementation(async (sql: string) => {
         if (sql.includes('FROM tos_versions'))
-          return { rows: [{ id: makeChallengeRow().tos_version_id }] };
+          return {
+            rows: [
+              { id: makeChallengeRow().tos_version_id, content_fa: 'قوانین', content_en: 'Terms' },
+            ],
+          };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
@@ -343,7 +371,11 @@ describe('AuthService', () => {
       let rolledBack = false;
       mockClient.query.mockImplementation(async (sql: string) => {
         if (sql.includes('FROM tos_versions'))
-          return { rows: [{ id: makeChallengeRow().tos_version_id }] };
+          return {
+            rows: [
+              { id: makeChallengeRow().tos_version_id, content_fa: 'قوانین', content_en: 'Terms' },
+            ],
+          };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
