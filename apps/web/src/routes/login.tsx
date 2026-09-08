@@ -12,7 +12,7 @@ import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';
-import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import { Button, Input, Label, Alert, AlertDescription } from '@barghsa/ui';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField, evaluateStrength } from '../components/PasswordField.js';
 import { OtpInput } from '../components/OtpInput.js';
@@ -99,7 +99,6 @@ function LoginPage() {
   // ── Login form state ──────────────────────────────────
   const [username, setUsername] = useState('');
   const [usernameError, setUsernameError] = useState<string | null>(null);
-  const [usernameType, setUsernameType] = useState<UsernameType>(null);
   const [formattedHint, setFormattedHint] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
 
@@ -140,7 +139,7 @@ function LoginPage() {
     return () => clearInterval(interval);
   }, [otpStep, canResend]);
 
-  const isUsernameValid = touched && usernameError === null && usernameType !== null;
+  const isUsernameValid = normalizeUsername(username).type !== null;
 
   const handleBlur = useCallback(() => {
     setTouched(true);
@@ -148,28 +147,24 @@ function LoginPage() {
 
     if (!username.trim()) {
       setUsernameError(t('error.validation.input.missing', locale));
-      setUsernameType(null);
       setFormattedHint(null);
       return;
     }
 
     if (result.type === null) {
       setUsernameError(t('auth.register.invalidUsername', locale));
-      setUsernameType(null);
       setFormattedHint(null);
       return;
     }
 
     if (result.type === 'email' && !EMAIL_RE.test(result.normalized)) {
       setUsernameError(t('auth.register.invalidEmail', locale));
-      setUsernameType(null);
       setFormattedHint(null);
       return;
     }
 
     // Valid
     setUsernameError(null);
-    setUsernameType(result.type);
     setFormattedHint(result.formatted);
   }, [username, locale]);
 
@@ -183,15 +178,12 @@ function LoginPage() {
         const result = normalizeUsername(val);
         if (!val.trim()) {
           setUsernameError(t('error.validation.input.missing', locale));
-          setUsernameType(null);
           setFormattedHint(null);
         } else if (result.type === null) {
           setUsernameError(t('auth.register.invalidUsername', locale));
-          setUsernameType(null);
           setFormattedHint(null);
         } else {
           setUsernameError(null);
-          setUsernameType(result.type);
           setFormattedHint(result.formatted);
         }
       }
@@ -487,7 +479,7 @@ function LoginPage() {
               <button
                 type="button"
                 onClick={handleBackToLogin}
-                className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
                 aria-label={t('auth.login.otpBackToLogin', locale)}
               >
                 {t('auth.login.otpBackToLogin', locale)}
@@ -500,7 +492,7 @@ function LoginPage() {
               <button
                 type="button"
                 onClick={handleBackToLoginFromChange}
-                className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
                 aria-label={t('auth.login.backToLogin', locale)}
               >
                 {t('auth.login.backToLogin', locale)}
@@ -513,7 +505,7 @@ function LoginPage() {
               {t('auth.login.registerLink', locale)}{' '}
               <Link
                 to="/register"
-                className="font-medium text-primary underline-offset-4 hover:underline"
+                className="font-medium text-primary dark:text-foreground underline-offset-4 hover:underline"
                 aria-label={t('auth.login.registerLinkLabel', locale)}
               >
                 {t('auth.login.registerLinkLabel', locale)}
@@ -522,7 +514,7 @@ function LoginPage() {
             <p className="text-center text-sm">
               <Link
                 to="/forgot-password"
-                className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
                 aria-label={t('auth.register.forgotPasswordLabel', locale)}
               >
                 {t('auth.register.forgotPasswordLink', locale)}
@@ -573,7 +565,7 @@ function LoginPage() {
             {/* Verify button */}
             <Button
               type="button"
-              className="w-full"
+              className="w-full hover:bg-primary"
               disabled={!otpCode || verifying}
               onClick={() => otpCode && handleOtpComplete(otpCode)}
             >
@@ -632,8 +624,11 @@ function LoginPage() {
           <form onSubmit={handleForceChange} className="space-y-4" noValidate>
             {/* Form-level alert for server errors */}
             {changeError && (
-              <Alert variant="destructive" role="alert">
-                <AlertTitle className="sr-only">Error</AlertTitle>
+              <Alert
+                variant="destructive"
+                role="alert"
+                className="dark:[&_[data-slot=alert-description]]:text-red-300"
+              >
                 <AlertDescription>{changeError}</AlertDescription>
               </Alert>
             )}
@@ -671,7 +666,11 @@ function LoginPage() {
                 }
               />
               {confirmPassword.length > 0 && newPassword !== confirmPassword && (
-                <p id="confirm-password-error" className="text-sm text-destructive" role="alert">
+                <p
+                  id="confirm-password-error"
+                  className="text-sm text-red-700 dark:text-red-300"
+                  role="alert"
+                >
                   {t('auth.register.error.passwordsDoNotMatch', locale)}
                 </p>
               )}
@@ -679,7 +678,7 @@ function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full hover:bg-primary"
               disabled={
                 !newPassword ||
                 !confirmPassword ||
@@ -710,8 +709,11 @@ function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {/* Form-level alert for server errors */}
             {formError && (
-              <Alert variant="destructive" role="alert">
-                <AlertTitle className="sr-only">Error</AlertTitle>
+              <Alert
+                variant="destructive"
+                role="alert"
+                className="dark:[&_[data-slot=alert-description]]:text-red-300"
+              >
                 <AlertDescription>{formError}</AlertDescription>
               </Alert>
             )}
@@ -722,6 +724,7 @@ function LoginPage() {
               <Input
                 id="username"
                 type="text"
+                dir="ltr"
                 placeholder={t('auth.register.usernamePlaceholder', locale)}
                 autoComplete="username"
                 autoFocus
@@ -737,34 +740,36 @@ function LoginPage() {
               />
               {/* Error message */}
               {touched && usernameError && (
-                <p id="username-error" className="text-sm text-destructive" role="alert">
+                <p
+                  id="username-error"
+                  className="text-sm text-red-700 dark:text-red-300"
+                  role="alert"
+                >
                   {usernameError}
                 </p>
               )}
               {/* Formatted mobile hint */}
               {touched && !usernameError && formattedHint && (
-                <p id="username-hint" className="text-sm text-muted-foreground">
+                <p id="username-hint" dir="ltr" className="text-sm text-muted-foreground">
                   {formattedHint}
                 </p>
               )}
             </div>
 
             {/* Password field with visibility toggle (no strength meter) */}
-            {isUsernameValid && (
-              <PasswordField
-                id="password"
-                label={t('auth.register.passwordLabel', locale)}
-                locale={locale}
-                autoFocus={false}
-                value={password}
-                onChange={setPassword}
-                disabled={submitting}
-                showStrength={false}
-                autoComplete="current-password"
-              />
-            )}
+            <PasswordField
+              id="password"
+              label={t('auth.register.passwordLabel', locale)}
+              locale={locale}
+              autoFocus={false}
+              value={password}
+              onChange={setPassword}
+              disabled={submitting}
+              showStrength={false}
+              autoComplete="current-password"
+            />
 
-            <Button type="submit" className="w-full" disabled={!isFormReady}>
+            <Button type="submit" className="w-full hover:bg-primary" disabled={!isFormReady}>
               {submitting ? (
                 <>
                   <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />

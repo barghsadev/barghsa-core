@@ -65,12 +65,12 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
           </Link>
 
           {/* Slogan */}
-          <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-md">{slogan}</p>
+          <p className="mt-6 text-lg text-foreground leading-relaxed max-w-md">{slogan}</p>
 
           {/* Value propositions */}
           <ul className="mt-8 space-y-4">
             {(['value1', 'value2', 'value3'] as const).map((key) => (
-              <li key={key} className="flex items-start gap-3 text-sm text-muted-foreground">
+              <li key={key} className="flex items-start gap-3 text-sm text-foreground">
                 <svg
                   width="18"
                   height="18"
@@ -92,7 +92,7 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
         </div>
 
         {/* Bottom brand area */}
-        <div className="text-xs text-muted-foreground/60">
+        <div className="text-xs text-foreground">
           &copy; {new Date().getFullYear()} {appTitle}
         </div>
       </aside>
@@ -133,7 +133,10 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
           <CardContent className="pt-6">{children}</CardContent>
           {footer && <div className="px-(--card-spacing) pb-(--card-spacing)">{footer}</div>}
           <div className="px-(--card-spacing) pb-(--card-spacing) text-center">
-            <Link to="/support" className="text-sm text-primary underline underline-offset-4">
+            <Link
+              to="/support"
+              className="text-sm text-primary dark:text-foreground underline underline-offset-4"
+            >
               {t('auth.forgotPassword.helpLink', locale)}
             </Link>
           </div>
