@@ -60,21 +60,34 @@ it.each(['accept', 'decline', 'withdraw'])(
     let attempts: Promise<Response>[] = [];
     try {
       await client.query('BEGIN');
+      const blockerPid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      await client.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [profileId]);
       await client.query('SELECT id FROM profile_invitations WHERE id=$1 FOR UPDATE', [inviteId]);
       attempts = [decide('accept'), decide(opponent)];
       await expect
         .poll(
           async () =>
             (
-              await http.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
-      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'UPDATE profile_invitations%'`)
+              await http.pool.query(
+                `WITH RECURSIVE blocked AS (
+        SELECT pid,query FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))
+        UNION
+        SELECT a.pid,a.query FROM pg_stat_activity a JOIN blocked b ON b.pid=ANY(pg_blocking_pids(a.pid)) WHERE a.datname=current_database()
+      ) SELECT count(*)::int AS count FROM blocked
+        WHERE query LIKE 'SELECT user_id%FROM profiles%FOR UPDATE' OR query LIKE 'UPDATE profile_invitations%'`,
+                [blockerPid]
+              )
             ).rows[0].count
         )
         .toBe(2);
       await client.query('COMMIT');
       const statuses = (await Promise.all(attempts)).map((r) => r.status);
       expect(statuses.filter((s) => s === 200 || s === 204)).toHaveLength(1);
-      expect(statuses.filter((s) => s === 409)).toHaveLength(1);
+      // A losing acceptance can see the changed decision or its intentionally rotated session.
+      expect(
+        statuses.filter((s) => [400, 401, 409].includes(s)),
+        JSON.stringify(statuses) + http.logs()
+      ).toHaveLength(1);
       const status = (
         await http.pool.query('SELECT status FROM profile_invitations WHERE id=$1', [inviteId])
       ).rows[0].status;
@@ -125,7 +138,7 @@ it('rejects acceptance when expiry changes while the decision waits', async () =
         async () =>
           (
             await http.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
-      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'UPDATE profile_invitations%'`)
+      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT profile_id,username,role,status,expires_at FROM profile_invitations%FOR UPDATE'`)
           ).rows[0].count
       )
       .toBe(1);
@@ -134,7 +147,7 @@ it('rejects acceptance when expiry changes while the decision waits', async () =
       [inviteId]
     );
     await client.query('COMMIT');
-    expect((await attempt).status).toBe(409);
+    expect((await attempt).status).toBe(400);
     expect(
       (await http.pool.query('SELECT * FROM profile_agents WHERE profile_id=$1', [profileId])).rows
     ).toEqual([]);

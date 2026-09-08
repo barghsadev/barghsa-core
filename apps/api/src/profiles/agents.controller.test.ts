@@ -59,14 +59,20 @@ describe('AgentsController', () => {
     it('withdraws invitation and returns success message', async () => {
       mockAgentsService.withdrawInvitation.mockResolvedValue(undefined);
 
-      const req = { session: { userId: 'user-1' } } as any;
-      const result = await controller.withdrawInvitation('prof-1', 'inv-1', req);
+      const req = {
+        session: { userId: 'user-1', sessionId: 'session-1', csrfToken: 'csrf-1' },
+      } as any;
+      const result = await controller.withdrawInvitation(
+        '00000000-0000-4000-8000-000000000001',
+        '00000000-0000-4000-8000-000000000002',
+        req
+      );
 
       expect(result).toEqual({ message: 'Invitation withdrawn successfully.' });
       expect(mockAgentsService.withdrawInvitation).toHaveBeenCalledWith(
-        'prof-1',
-        'inv-1',
-        'user-1'
+        '00000000-0000-4000-8000-000000000001',
+        '00000000-0000-4000-8000-000000000002',
+        req.session
       );
     });
   });

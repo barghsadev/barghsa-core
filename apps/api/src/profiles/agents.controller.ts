@@ -92,15 +92,23 @@ export class AgentsController {
   @ApiResponse({ status: 429, description: 'Rate limit exceeded.' })
   async createInvitation(
     @Param('profileId') profileId: string,
-    @Body() body: { username: string; role: string },
+    @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
+    const parsed = z
+      .object({
+        username: z.string().min(1).max(254),
+        role: z.enum(['Manager', 'Finance', 'Legal']),
+      })
+      .safeParse(body);
+    if (!parsed.success || !z.uuid().safeParse(profileId).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     const userId = req.session.userId;
     const result = await this.agentsService.createInvitation(
       profileId,
-      body.username,
-      body.role,
-      userId
+      parsed.data.username,
+      parsed.data.role,
+      req.session
     );
     this.logger.log(`Invitation ${result.id} created for profile ${profileId} by user ${userId}`);
     return result;
@@ -109,15 +117,15 @@ export class AgentsController {
   /**
    * DELETE /api/profiles/:profileId/invitations/:inviteId
    *
-   * Withdraws a pending invitation. Only the profile owner/manager
-   * or the original inviter may withdraw a pending invite.
+   * Withdraws a pending invitation. Only a current profile owner/manager may withdraw.
    */
   @Delete('invitations/:inviteId')
   @HttpCode(200)
   @RateLimit({ namespace: 'agents:withdraw:invite', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Withdraw a pending invitation' })
   @ApiResponse({ status: 200, description: 'Invitation withdrawn.' })
-  @ApiResponse({ status: 400, description: 'Invitation is not in Pending status.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile or invitation ID.' })
+  @ApiResponse({ status: 409, description: 'Invitation changed or expired.' })
   @ApiResponse({ status: 403, description: 'Not authorized to withdraw this invitation.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
   async withdrawInvitation(
@@ -127,7 +135,9 @@ export class AgentsController {
   ) {
     const userId = req.session.userId;
 
-    await this.agentsService.withdrawInvitation(profileId, inviteId, userId);
+    if (!z.uuid().safeParse(profileId).success || !z.uuid().safeParse(inviteId).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    await this.agentsService.withdrawInvitation(profileId, inviteId, req.session);
 
     this.logger.log(`Invitation ${inviteId} withdrawn from profile ${profileId} by user ${userId}`);
     return { message: 'Invitation withdrawn successfully.' };

@@ -11,7 +11,7 @@ import {
   type CreatedSession,
   type ValidatedSession,
 } from '../session/session.service.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 export interface AgentDto {
@@ -141,105 +141,96 @@ export class AgentsService {
   /**
    * Withdraw (cancel) a pending invitation.
    *
-   * Only the profile owner or the user who sent the invitation may
-   * withdraw it. The invitation must be in 'Pending' status.
+   * Only a current profile owner or manager may withdraw it. The invitation must be in 'Pending' status.
    */
-  async withdrawInvitation(profileId: string, inviteId: string, userId: string): Promise<void> {
-    const pool = getDbPool();
-
-    // Verify the invitation exists and belongs to this profile
-    const inviteResult = await pool.query(
-      `SELECT id, status, invited_by
-       FROM profile_invitations
-       WHERE id = $1 AND profile_id = $2`,
-      [inviteId, profileId]
-    );
-
-    if (inviteResult.rows.length === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Invitation not found',
-        },
-        404
-      );
-    }
-
-    const invite = inviteResult.rows[0];
-
-    if (invite.status !== 'Pending') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Cannot withdraw invitation in '${invite.status as string}' status`,
-        },
-        400
-      );
-    }
-
-    // Check permission: must be owner OR the original inviter
-    const isOwner = await this.isOwnerOrManager(userId, profileId);
-    const isInviter = (invite.invited_by as string) === userId;
-
-    if (!isOwner && !isInviter) {
-      throw new HttpException(
-        {
-          statusCode: 403,
-          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
-          message: 'Not authorized to withdraw this invitation',
-        },
-        403
-      );
-    }
-
-    // Wrap state change and audit log in a transaction for atomicity
-    const client = await pool.connect();
+  async withdrawInvitation(
+    profileId: string,
+    inviteId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<void> {
+    const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-
+      await this.lockInvitationActor(client, profileId, actor);
       const changed = await client.query(
         `UPDATE profile_invitations
-         SET status = 'Withdrawn', updated_at = NOW()
-         WHERE id = $1 AND status='Pending'
-           AND (expires_at IS NULL OR expires_at>clock_timestamp())
-         RETURNING id`,
-        [inviteId]
+         SET status='Withdrawn',updated_at=clock_timestamp()
+         WHERE id=$1 AND profile_id=$2 AND status='Pending'
+           AND (expires_at IS NULL OR expires_at>clock_timestamp()) RETURNING id`,
+        [inviteId, profileId]
       );
       if (changed.rowCount !== 1) {
+        const existing = await client.query(
+          'SELECT id FROM profile_invitations WHERE id=$1 AND profile_id=$2',
+          [inviteId, profileId]
+        );
         throw new HttpException(
           {
-            statusCode: 409,
-            error: ErrorCodes.CONFLICT_STATE.code,
-            message: 'Invitation changed or expired',
+            error: existing.rows.length
+              ? ErrorCodes.CONFLICT_STATE.code
+              : ErrorCodes.NOT_FOUND_RESOURCE.code,
           },
-          409
+          existing.rows.length ? 409 : 404
         );
       }
-
-      const correlationId = uuidv7();
       await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, NOW())`,
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES ($1,$2,'invitation_withdrawn',$3::jsonb,$4,clock_timestamp())`,
         [
           uuidv7(),
-          userId,
-          'invitation_withdrawn',
+          actor.userId,
           JSON.stringify({ profileId, inviteId }),
-          correlationId,
+          correlationIdStorage.getStore() ?? uuidv7(),
         ]
       );
-
+      // A row-lock or audit wait must not extend the invitation's decision deadline.
+      const live = await client.query(
+        'SELECT id FROM profile_invitations WHERE id=$1 AND (expires_at IS NULL OR expires_at>clock_timestamp())',
+        [inviteId]
+      );
+      if (!live.rows.length)
+        throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
     } catch (error) {
-      await client.query('ROLLBACK');
+      await client.query('ROLLBACK').catch(() => {});
       throw error;
     } finally {
       client.release();
     }
+  }
 
-    this.logger.log(`Invitation ${inviteId} withdrawn from profile ${profileId} by user ${userId}`);
+  /** Profile-first locking matches acceptance, ownership and membership mutations. */
+  private async lockInvitationActor(
+    client: {
+      query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }>;
+    },
+    profileId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<void> {
+    const profile = (
+      await client.query(
+        "SELECT user_id FROM profiles WHERE id=$1 AND profile_type='LEGAL' AND NOT archived FOR UPDATE",
+        [profileId]
+      )
+    ).rows[0];
+    if (!profile) throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    const user = (
+      await client.query(
+        'SELECT disabled_at,activation_token IS NOT NULL AS activation_pending FROM users WHERE user_id=$1 FOR UPDATE',
+        [actor.userId]
+      )
+    ).rows[0];
+    if (!user || user.disabled_at || user.activation_pending)
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    await requireCurrentSession(client, actor);
+    if (profile.user_id === actor.userId) return;
+    const manager = await client.query(
+      "SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE",
+      [profileId, actor.userId]
+    );
+    if (!manager.rows.length)
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
   }
 
   /**
@@ -258,9 +249,10 @@ export class AgentsService {
     profileId: string,
     username: string,
     role: string,
-    userId: string
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
   ): Promise<{ id: string }> {
     const pool = getDbPool();
+    const userId = actor.userId;
 
     // ── Permission check first: owner or manager ────────────
     // Run before any input validation or profile lookup so that
@@ -350,53 +342,54 @@ export class AgentsService {
       );
     }
 
-    // ── Check: invitee must not already be a pending invite ──
-    // Check runs for both registered and unregistered users
-    const pendingInvite = await pool.query(
-      `SELECT id FROM profile_invitations
+    // ── Wrap creation and audit log in a transaction ────────
+    const invitationId = uuidv7();
+    const correlationId = correlationIdStorage.getStore() ?? uuidv7();
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await this.lockInvitationActor(client, profileId, actor);
+
+      // ── Check: invitee must not already be a pending invite ──
+      // Check runs for both registered and unregistered users
+      const pendingInvite = await client.query(
+        `SELECT id FROM profile_invitations
        WHERE profile_id = $1 AND username = $2 AND status = 'Pending'`,
-      [profileId, normalised]
-    );
-    if (pendingInvite.rows.length > 0) {
-      throw new HttpException(
-        {
-          statusCode: 409,
-          error: ErrorCodes.CONFLICT_STATE.code,
-          message: 'A pending invitation already exists for this user',
-        },
-        409
+        [profileId, normalised]
       );
-    }
-
-    // ── Check: invitee must not already be an agent (only if registered) ──
-    const userResult = await pool.query(`SELECT user_id FROM users WHERE username = $1`, [
-      normalised,
-    ]);
-    if (userResult.rows.length > 0) {
-      const inviteeUserId = userResult.rows[0].user_id as string;
-
-      const existingAgent = await pool.query(
-        `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
-        [profileId, inviteeUserId]
-      );
-      if (existingAgent.rows.length > 0) {
+      if (pendingInvite.rows.length > 0) {
         throw new HttpException(
           {
             statusCode: 409,
             error: ErrorCodes.CONFLICT_STATE.code,
-            message: 'This user is already an agent of this profile',
+            message: 'A pending invitation already exists for this user',
           },
           409
         );
       }
-    }
 
-    // ── Wrap creation and audit log in a transaction ────────
-    const invitationId = uuidv7();
-    const correlationId = uuidv7();
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
+      // ── Check: invitee must not already be an agent (only if registered) ──
+      const userResult = await client.query(`SELECT user_id FROM users WHERE username = $1`, [
+        normalised,
+      ]);
+      if (userResult.rows.length > 0) {
+        const inviteeUserId = userResult.rows[0].user_id as string;
+
+        const existingAgent = await client.query(
+          `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
+          [profileId, inviteeUserId]
+        );
+        if (existingAgent.rows.length > 0) {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: ErrorCodes.CONFLICT_STATE.code,
+              message: 'This user is already an agent of this profile',
+            },
+            409
+          );
+        }
+      }
 
       await client.query(
         `INSERT INTO profile_invitations (id, profile_id, username, role, invited_by, status, expires_at, created_at, updated_at)
@@ -416,9 +409,10 @@ export class AgentsService {
         ]
       );
 
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
     } catch (error) {
-      await client.query('ROLLBACK');
+      await client.query('ROLLBACK').catch(() => {});
       throw error;
     } finally {
       client.release();
@@ -643,112 +637,77 @@ export class AgentsService {
    * - Belong to the current user (by username match)
    * - Not be expired
    */
-  async declineInvitation(inviteId: string, userId: string): Promise<void> {
+  async declineInvitation(
+    inviteId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<void> {
     const pool = getDbPool();
-
-    // Look up the user's username
-    const userResult = await pool.query(`SELECT username FROM users WHERE user_id = $1`, [userId]);
-    if (userResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'User not found' },
-        404
-      );
-    }
-    const username = userResult.rows[0].username as string;
-
-    // Verify the invitation exists, is Pending, and belongs to this user
-    const inviteResult = await pool.query(
-      `SELECT id, username, status, expires_at
-       FROM profile_invitations
-       WHERE id = $1`,
-      [inviteId]
-    );
-
-    if (inviteResult.rows.length === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Invitation not found',
-        },
-        404
-      );
-    }
-
-    const invite = inviteResult.rows[0];
-
-    // Check the invitation belongs to this user (by username match)
-    if ((invite.username as string) !== username) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Invitation not found',
-        },
-        404
-      );
-    }
-
-    if (invite.status !== 'Pending') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Cannot decline invitation in '${invite.status as string}' status`,
-        },
-        400
-      );
-    }
-
-    // Wrap state change and audit log in a transaction
+    // Locate only the lock scope; ownership and state are checked under locks below.
+    const scope = (
+      await pool.query('SELECT profile_id FROM profile_invitations WHERE id=$1', [inviteId])
+    ).rows[0];
+    if (!scope) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    const profileId = scope.profile_id as string;
     const client = await pool.connect();
-    let transactionStarted = false;
     try {
       await client.query('BEGIN');
-      transactionStarted = true;
-
+      const profile = (
+        await client.query(
+          'SELECT user_id,profile_type,archived FROM profiles WHERE id=$1 FOR UPDATE',
+          [profileId]
+        )
+      ).rows[0];
+      const user = (
+        await client.query(
+          'SELECT username,disabled_at,activation_token IS NOT NULL AS activation_pending FROM users WHERE user_id=$1 FOR UPDATE',
+          [actor.userId]
+        )
+      ).rows[0];
+      if (!user || user.disabled_at || user.activation_pending)
+        throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+      await requireCurrentSession(client, actor);
+      const invitation = (
+        await client.query(
+          'SELECT username FROM profile_invitations WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+          [inviteId, profileId]
+        )
+      ).rows[0];
+      if (!invitation || invitation.username !== user.username)
+        throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      if (!profile || profile.profile_type !== 'LEGAL' || profile.archived)
+        throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
       const changed = await client.query(
-        `UPDATE profile_invitations
-         SET status = 'Declined', updated_at = NOW()
-         WHERE id = $1 AND status='Pending'
-           AND (expires_at IS NULL OR expires_at>clock_timestamp())
-         RETURNING id`,
+        `UPDATE profile_invitations SET status='Declined',updated_at=clock_timestamp()
+         WHERE id=$1 AND profile_id=$2 AND username=$3 AND status='Pending'
+           AND (expires_at IS NULL OR expires_at>clock_timestamp()) RETURNING id`,
+        [inviteId, profileId, user.username]
+      );
+      if (changed.rowCount !== 1)
+        throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES ($1,$2,'invitation_declined',$3::jsonb,$4,clock_timestamp())`,
+        [
+          uuidv7(),
+          actor.userId,
+          JSON.stringify({ profileId, inviteId }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+        ]
+      );
+      const live = await client.query(
+        'SELECT id FROM profile_invitations WHERE id=$1 AND (expires_at IS NULL OR expires_at>clock_timestamp())',
         [inviteId]
       );
-      if (changed.rowCount !== 1) {
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: ErrorCodes.CONFLICT_STATE.code,
-            message: 'Invitation changed or expired',
-          },
-          409
-        );
-      }
-
-      const correlationId = uuidv7();
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, NOW())`,
-        [uuidv7(), userId, 'invitation_declined', JSON.stringify({ inviteId }), correlationId]
-      );
-
+      if (!live.rows.length)
+        throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      transactionStarted = false;
     } catch (error) {
-      if (transactionStarted) {
-        try {
-          await client.query('ROLLBACK');
-        } catch {
-          /* ignore rollback failure */
-        }
-      }
+      await client.query('ROLLBACK').catch(() => {});
       throw error;
     } finally {
       client.release();
     }
-
-    this.logger.log(`Invitation ${inviteId} declined by user ${userId}`);
   }
 
   /**

@@ -10,11 +10,11 @@ const logger = new Logger('SessionStepUp');
  * An expected revocation time is allowed only on the final check of a mutation
  * that intentionally revoked its own already-authorized, locked session.
  */
-export async function requireSessionStepUp(
+export async function requireCurrentSession(
   client: { query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }> },
   actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
   expectedRevokedAt?: Date
-): Promise<Date> {
+): Promise<{ stepUpVerifiedAt: Date | null; stepUpFresh: boolean }> {
   await client.query(
     'SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2 FOR UPDATE',
     [actor.sessionId, actor.userId]
@@ -39,7 +39,20 @@ export async function requireSessionStepUp(
     );
     throw new HttpException({ error: ErrorCodes.AUTHZ_CSRF_INVALID.code }, 403);
   }
-  if (!session.fresh)
+  return {
+    stepUpVerifiedAt: session.step_up_verified_at as Date | null,
+    stepUpFresh: session.fresh === true,
+  };
+}
+
+/** Require recent step-up in addition to the same current-session boundary. */
+export async function requireSessionStepUp(
+  client: { query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }> },
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+  expectedRevokedAt?: Date
+): Promise<Date> {
+  const session = await requireCurrentSession(client, actor, expectedRevokedAt);
+  if (!session.stepUpFresh || !session.stepUpVerifiedAt)
     throw new HttpException({ error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code }, 403);
-  return session.step_up_verified_at as Date;
+  return session.stepUpVerifiedAt;
 }

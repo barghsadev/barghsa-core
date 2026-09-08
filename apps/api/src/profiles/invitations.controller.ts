@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
   Logger,
   Param,
   Post,
@@ -9,6 +10,8 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import type { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AgentsService } from './agents.service.js';
@@ -84,11 +87,14 @@ export class InvitationsController {
   @RateLimit({ namespace: 'invitations:decline', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Decline a pending invitation' })
   @ApiResponse({ status: 200, description: 'Invitation declined.' })
-  @ApiResponse({ status: 400, description: 'Invitation not in Pending status.' })
+  @ApiResponse({ status: 400, description: 'Invalid invitation ID.' })
+  @ApiResponse({ status: 409, description: 'Invitation changed or expired.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
   async declineInvitation(@Param('inviteId') inviteId: string, @Req() req: AuthenticatedRequest) {
     const userId = req.session.userId;
-    await this.agentsService.declineInvitation(inviteId, userId);
+    if (!z.uuid().safeParse(inviteId).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    await this.agentsService.declineInvitation(inviteId, req.session);
     this.logger.log(`Invitation ${inviteId} declined by user ${userId}`);
     return { message: 'Invitation declined successfully.' };
   }

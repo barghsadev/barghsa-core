@@ -10708,10 +10708,13 @@
             "description": "Invitation declined."
           },
           "400": {
-            "description": "Invitation not in Pending status."
+            "description": "Invalid invitation ID."
           },
           "404": {
             "description": "Invitation not found."
+          },
+          "409": {
+            "description": "Invitation changed or expired."
           }
         },
         "summary": "Decline a pending invitation",
@@ -12243,13 +12246,16 @@
             "description": "Invitation withdrawn."
           },
           "400": {
-            "description": "Invitation is not in Pending status."
+            "description": "Invalid profile or invitation ID."
           },
           "403": {
             "description": "Not authorized to withdraw this invitation."
           },
           "404": {
             "description": "Invitation not found."
+          },
+          "409": {
+            "description": "Invitation changed or expired."
           }
         },
         "summary": "Withdraw a pending invitation",
