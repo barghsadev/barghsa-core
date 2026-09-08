@@ -1,44 +1,28 @@
 import { providerText } from '@barghsa/i18n/providers';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { FormEvent, ReactNode } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
-import { withCsrf } from '../lib/csrf.js';
+import {
+  activateProvider,
+  createProvider,
+  disableProvider,
+  listProviders,
+  ProviderRequestError,
+  rollbackProvider,
+  testConnection,
+  updateProvider,
+  type EmailProvider,
+  type Status,
+  type TestStatus,
+  type Transport,
+  type TestConnectionOutcome,
+} from '../lib/email-providers-api.js';
 
 // ---------------------------------------------------------------------------
 // Types (mirror apps/api EmailProviderConfigResult + schemas)
 // ---------------------------------------------------------------------------
-
-type Transport = 'smtp' | 'resend';
-type Status = 'draft' | 'active' | 'superseded' | 'disabled';
-type TestStatus = 'pending' | 'passed' | 'failed';
-
-interface EmailProvider {
-  id: string;
-  transport: Transport;
-  label: string;
-  status: Status;
-  createdBy: string;
-  activatedAt: string | null;
-  activatedBy: string | null;
-  lastTestAt: string | null;
-  lastTestStatus: TestStatus;
-  lastTestError: string | null;
-  supersedesId: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-/** Row returned by `POST :id/test-connection`. */
-interface TestConnectionResponse extends EmailProvider {
-  test: { ok: boolean; error: string | null };
-}
-
-interface TestConnectionOutcome {
-  ok: boolean;
-  error: string | null;
-}
 
 const STATUS_COLORS: Record<Status, string> = {
   draft: 'bg-yellow-100 text-yellow-800',
@@ -56,86 +40,6 @@ const TEST_COLORS: Record<TestStatus, string> = {
 // ---------------------------------------------------------------------------
 // API helpers
 // ---------------------------------------------------------------------------
-
-function apiUrl(path: string): string {
-  return `/api/admin/email-providers${path}`;
-}
-
-async function parseError(res: Response): Promise<string> {
-  try {
-    const data = await res.json();
-    if (typeof data?.message === 'string' && data.message) return data.message;
-    if (typeof data?.error === 'string' && data.error) return data.error;
-  } catch {
-    /* fall through */
-  }
-  return `HTTP ${res.status}`;
-}
-
-async function listProviders(): Promise<EmailProvider[]> {
-  const res = await fetch(apiUrl(''));
-  if (!res.ok) throw new Error(await parseError(res));
-  return res.json();
-}
-
-async function createProvider(
-  transport: Transport,
-  label: string,
-  config: Record<string, unknown>
-): Promise<EmailProvider> {
-  const res = await fetch(apiUrl(''), {
-    method: 'POST',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ transport, label, config }),
-  });
-  if (!res.ok) throw new Error(await parseError(res));
-  return res.json();
-}
-
-async function updateProvider(
-  id: string,
-  body: { label?: string; config?: Record<string, unknown> }
-): Promise<EmailProvider> {
-  const res = await fetch(apiUrl(`/${id}`), {
-    method: 'PUT',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(await parseError(res));
-  return res.json();
-}
-
-async function testConnection(id: string, recipient?: string): Promise<TestConnectionOutcome> {
-  const res = await fetch(apiUrl(`/${id}/test-connection`), {
-    method: 'POST',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify(recipient ? { recipient } : {}),
-  });
-  if (!res.ok) {
-    const message = await parseError(res);
-    throw new Error(message);
-  }
-  const data = (await res.json()) as TestConnectionResponse;
-  return { ok: data.test.ok, error: data.test.error };
-}
-
-async function activateProvider(id: string): Promise<EmailProvider> {
-  const res = await fetch(apiUrl(`/${id}/activate`), { method: 'POST', headers: withCsrf({}) });
-  if (!res.ok) throw new Error(await parseError(res));
-  return res.json();
-}
-
-async function disableProvider(id: string): Promise<EmailProvider> {
-  const res = await fetch(apiUrl(`/${id}/disable`), { method: 'POST', headers: withCsrf({}) });
-  if (!res.ok) throw new Error(await parseError(res));
-  return res.json();
-}
-
-async function rollbackProvider(id: string): Promise<EmailProvider> {
-  const res = await fetch(apiUrl(`/${id}/rollback`), { method: 'POST', headers: withCsrf({}) });
-  if (!res.ok) throw new Error(await parseError(res));
-  return res.json();
-}
 
 // ---------------------------------------------------------------------------
 // Transport-specific form state
@@ -224,6 +128,8 @@ export default function AdminEmailProvidersPage() {
   const uiLocale = useLocale();
   const [providers, setProviders] = useState<EmailProvider[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const readRequest = useRef<AbortController | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -240,21 +146,28 @@ export default function AdminEmailProvidersPage() {
   const [testOutcome, setTestOutcome] = useState<Record<string, TestConnectionOutcome>>({});
 
   const fetchAll = useCallback(async () => {
+    readRequest.current?.abort();
+    const controller = new AbortController();
+    readRequest.current = controller;
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      const data = await listProviders();
+      const data = await listProviders(controller.signal);
+      if (controller.signal.aborted) return;
       setProviders(data);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : providerText('admin.providers.error.load', uiLocale)
-      );
+      setLoadFailed(false);
+    } catch {
+      if (controller.signal.aborted) return;
+      setLoadFailed(true);
+      setError(providerText('admin.providers.error.load', uiLocale));
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) setLoading(false);
     }
   }, [uiLocale]);
 
   useEffect(() => {
-    fetchAll();
+    void fetchAll();
+    return () => readRequest.current?.abort();
   }, [fetchAll]);
 
   function openCreate() {
@@ -286,6 +199,8 @@ export default function AdminEmailProvidersPage() {
 
   function closeEditor() {
     setShowEditor(false);
+    setForm(transport === 'smtp' ? { ...EMPTY_SMTP } : { ...EMPTY_RESEND });
+    setLabel('');
     setEditId(null);
     setEditStatus(null);
   }
@@ -302,6 +217,7 @@ export default function AdminEmailProvidersPage() {
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
+    if (busy || loading || loadFailed) return;
     setBusy(true);
     setError(null);
     setNotice(null);
@@ -336,7 +252,9 @@ export default function AdminEmailProvidersPage() {
       await fetchAll();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : providerText('admin.providers.error.save', uiLocale)
+        err instanceof Error && !(err instanceof ProviderRequestError)
+          ? err.message
+          : providerText('admin.providers.error.save', uiLocale)
       );
     } finally {
       setBusy(false);
@@ -351,11 +269,11 @@ export default function AdminEmailProvidersPage() {
       const outcome = await testConnection(p.id, recipient);
       setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
       await fetchAll();
-    } catch (err) {
+    } catch {
       // Connection errors surfaced inline on the row, not as a page error.
       setTestOutcome((prev) => ({
         ...prev,
-        [p.id]: { ok: false, error: err instanceof Error ? err.message : 'unknown' },
+        [p.id]: { ok: false, error: providerText('admin.providers.error.test', uiLocale) },
       }));
     } finally {
       setBusy(false);
@@ -369,12 +287,8 @@ export default function AdminEmailProvidersPage() {
     try {
       await activateProvider(p.id);
       await fetchAll();
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : providerText('admin.providers.error.activate', uiLocale)
-      );
+    } catch {
+      setError(providerText('admin.providers.error.activate', uiLocale));
     } finally {
       setBusy(false);
     }
@@ -388,10 +302,8 @@ export default function AdminEmailProvidersPage() {
     try {
       await disableProvider(p.id);
       await fetchAll();
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : providerText('admin.providers.error.disable', uiLocale)
-      );
+    } catch {
+      setError(providerText('admin.providers.error.disable', uiLocale));
     } finally {
       setBusy(false);
     }
@@ -406,12 +318,8 @@ export default function AdminEmailProvidersPage() {
       await rollbackProvider(p.id);
       await fetchAll();
       setNotice(providerText('admin.providers.rollback', uiLocale));
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : providerText('admin.providers.error.rollback', uiLocale)
-      );
+    } catch {
+      setError(providerText('admin.providers.error.rollback', uiLocale));
     } finally {
       setBusy(false);
     }
@@ -443,6 +351,7 @@ export default function AdminEmailProvidersPage() {
         {!showEditor && (
           <button
             onClick={openCreate}
+            disabled={busy || loading || loadFailed}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             {providerText('admin.providers.new', uiLocale)}
@@ -451,15 +360,30 @@ export default function AdminEmailProvidersPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+        <div
+          role="alert"
+          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+        >
           {error}
-          <button
-            onClick={() => setError(null)}
-            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-            aria-label={t('admin.notifications.dismissError', uiLocale)}
-          >
-            ✕
-          </button>
+          {loadFailed && (
+            <button
+              type="button"
+              onClick={() => void fetchAll()}
+              disabled={loading}
+              className="ms-3 underline"
+            >
+              {providerText('admin.providers.retry', uiLocale)}
+            </button>
+          )}
+          {!loadFailed && (
+            <button
+              onClick={() => setError(null)}
+              className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+              aria-label={t('admin.notifications.dismissError', uiLocale)}
+            >
+              ✕
+            </button>
+          )}
         </div>
       )}
 
@@ -469,7 +393,7 @@ export default function AdminEmailProvidersPage() {
           <button
             onClick={() => setNotice(null)}
             className="absolute top-2 right-2 text-green-500 hover:text-green-700"
-            aria-label="dismiss notice"
+            aria-label={providerText('admin.providers.dismissNotice', uiLocale)}
           >
             ✕
           </button>
@@ -482,77 +406,83 @@ export default function AdminEmailProvidersPage() {
           onSubmit={handleSave}
           className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
         >
-          <h2 className="text-lg font-semibold">
-            {editId
-              ? providerText('admin.providers.update.title', uiLocale)
-              : providerText('admin.providers.create.title', uiLocale)}
-          </h2>
+          <fieldset disabled={busy} className="space-y-4">
+            <h2 className="text-lg font-semibold">
+              {editId
+                ? providerText('admin.providers.update.title', uiLocale)
+                : providerText('admin.providers.create.title', uiLocale)}
+            </h2>
 
-          <div>
-            <label
-              htmlFor="email-provider-label"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              {providerText('admin.providers.label', uiLocale)}{' '}
-              <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="email-provider-label"
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-              required
-            />
-          </div>
+            <div>
+              <label
+                htmlFor="email-provider-label"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {providerText('admin.providers.label', uiLocale)}{' '}
+                <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="email-provider-label"
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                required
+              />
+            </div>
 
-          <div>
-            <label
-              htmlFor="email-provider-transport"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              {providerText('admin.providers.transport', uiLocale)}{' '}
-              <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="email-provider-transport"
-              value={transport}
-              onChange={(e) => handleTransportChange(e.target.value as Transport)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-              disabled={editId !== null}
-            >
-              <option value="smtp">SMTP</option>
-              <option value="resend">Resend</option>
-            </select>
-          </div>
+            <div>
+              <label
+                htmlFor="email-provider-transport"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {providerText('admin.providers.transport', uiLocale)}{' '}
+                <span className="text-red-500">*</span>
+              </label>
+              <select
+                id="email-provider-transport"
+                value={transport}
+                onChange={(e) => handleTransportChange(e.target.value as Transport)}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                disabled={editId !== null}
+              >
+                <option value="smtp">SMTP</option>
+                <option value="resend">Resend</option>
+              </select>
+            </div>
 
-          {transport === 'smtp' ? (
-            <SmtpFields form={form as SmtpForm} setField={setField} editing={editId !== null} />
-          ) : (
-            <ResendFields form={form as ResendForm} setField={setField} editing={editId !== null} />
-          )}
+            {transport === 'smtp' ? (
+              <SmtpFields form={form as SmtpForm} setField={setField} editing={editId !== null} />
+            ) : (
+              <ResendFields
+                form={form as ResendForm}
+                setField={setField}
+                editing={editId !== null}
+              />
+            )}
 
-          <div className="flex gap-3 pt-2">
-            <button
-              type="submit"
-              disabled={busy}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-            >
-              {busy
-                ? providerText('admin.providers.saving', uiLocale)
-                : editId
-                  ? providerText('admin.providers.update', uiLocale)
-                  : providerText('admin.providers.create', uiLocale)}
-            </button>
-            <button
-              type="button"
-              onClick={closeEditor}
-              disabled={busy}
-              className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 disabled:opacity-50"
-            >
-              {providerText('admin.providers.cancel', uiLocale)}
-            </button>
-          </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                type="submit"
+                disabled={busy || loading || loadFailed}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                {busy
+                  ? providerText('admin.providers.saving', uiLocale)
+                  : editId
+                    ? providerText('admin.providers.update', uiLocale)
+                    : providerText('admin.providers.create', uiLocale)}
+              </button>
+              <button
+                type="button"
+                onClick={closeEditor}
+                disabled={busy}
+                className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 disabled:opacity-50"
+              >
+                {providerText('admin.providers.cancel', uiLocale)}
+              </button>
+            </div>
+          </fieldset>
         </form>
       )}
 
@@ -587,7 +517,7 @@ export default function AdminEmailProvidersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {providers.length === 0 ? (
+            {providers.length === 0 && !loading && !loadFailed ? (
               <tr>
                 <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
                   {providerText('admin.providers.empty', uiLocale)}
@@ -662,7 +592,7 @@ export default function AdminEmailProvidersPage() {
                         <>
                           <button
                             onClick={() => openEdit(p)}
-                            disabled={busy}
+                            disabled={busy || loading || loadFailed}
                             className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
                           >
                             {providerText('admin.providers.update', uiLocale)}
@@ -672,7 +602,7 @@ export default function AdminEmailProvidersPage() {
                           ) : (
                             <button
                               onClick={() => handleTest(p, '')}
-                              disabled={busy}
+                              disabled={busy || loading || loadFailed}
                               className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
                             >
                               {busy
@@ -682,7 +612,9 @@ export default function AdminEmailProvidersPage() {
                           )}
                           <button
                             onClick={() => handleActivate(p)}
-                            disabled={busy || p.lastTestStatus !== 'passed'}
+                            disabled={
+                              busy || loading || loadFailed || p.lastTestStatus !== 'passed'
+                            }
                             title={
                               p.lastTestStatus !== 'passed'
                                 ? providerText('admin.providers.activateHint', uiLocale)
@@ -704,7 +636,7 @@ export default function AdminEmailProvidersPage() {
                           )}
                           <button
                             onClick={() => handleDisable(p)}
-                            disabled={busy}
+                            disabled={busy || loading || loadFailed}
                             className="px-3 py-1 border border-red-300 text-red-600 rounded text-xs hover:bg-red-50 disabled:opacity-50 w-full text-left"
                           >
                             {providerText('admin.providers.disable', uiLocale)}
@@ -715,7 +647,7 @@ export default function AdminEmailProvidersPage() {
                       {(p.status === 'superseded' || p.status === 'disabled') && (
                         <button
                           onClick={() => handleRollback(p)}
-                          disabled={busy}
+                          disabled={busy || loading || loadFailed}
                           className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
                         >
                           {providerText('admin.providers.rollback', uiLocale)}
