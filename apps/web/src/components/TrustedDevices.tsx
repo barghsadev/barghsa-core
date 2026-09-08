@@ -47,10 +47,12 @@ export function TrustedDevices({
   locale,
   formatTimestamp,
   deviceName,
+  onSessionRotated,
 }: {
   locale: Locale;
   formatTimestamp: (value: string) => string;
   deviceName: (userAgent: string | undefined, locale: Locale) => string;
+  onSessionRotated: () => Promise<void>;
 }) {
   const [devices, setDevices] = useState<TrustedDevice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -107,6 +109,7 @@ export function TrustedDevices({
     busy.current = true;
     setPending(true);
     setError(null);
+    let sessionRotated = false;
     try {
       if (needsPassword) {
         const verification = await fetch('/api/auth/step-up', {
@@ -119,6 +122,7 @@ export function TrustedDevices({
           setError(t('team.passwordError', locale));
           return;
         }
+        sessionRotated = true;
       }
       const response = await fetch('/api/auth/trusted-devices/' + encodeURIComponent(selected.id), {
         method: 'DELETE',
@@ -144,6 +148,7 @@ export function TrustedDevices({
       setPassword('');
       setError(text('revokeError'));
     } finally {
+      if (sessionRotated) await onSessionRotated();
       busy.current = false;
       setPending(false);
     }

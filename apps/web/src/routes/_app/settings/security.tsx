@@ -207,6 +207,7 @@ function SettingsSecurityPage() {
 
     setRevokingId(revokeConfirmId);
     setRevokeError(null);
+    let sessionRotated = false;
 
     try {
       if (revokeNeedsPassword) {
@@ -220,6 +221,7 @@ function SettingsSecurityPage() {
           setRevokeError(t('team.passwordError', locale));
           return;
         }
+        sessionRotated = true;
       }
       const response = await fetch(`/api/auth/sessions/${revokeConfirmId}`, {
         method: 'DELETE',
@@ -243,10 +245,11 @@ function SettingsSecurityPage() {
     } catch {
       setRevokeError(t('settings.security.error.revoke', locale));
     } finally {
+      if (sessionRotated) await fetchSessions();
       revokingRef.current = false;
       setRevokingId(null);
     }
-  }, [revokeConfirmId, revokeNeedsPassword, revokePassword, locale]);
+  }, [revokeConfirmId, revokeNeedsPassword, revokePassword, locale, fetchSessions]);
 
   const handleCancelRevokeConfirm = useCallback(() => {
     if (revokingRef.current) return;
@@ -368,7 +371,7 @@ function SettingsSecurityPage() {
         )}
 
         {/* Current session card */}
-        {!loading && currentSession && (
+        {!loading && !error && currentSession && (
           <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -390,7 +393,7 @@ function SettingsSecurityPage() {
         )}
 
         {/* Other sessions */}
-        {!loading && otherSessions.length > 0 && (
+        {!loading && !error && otherSessions.length > 0 && (
           <div className="space-y-3">
             {otherSessions.map((session) => (
               <div key={session.sessionId} className="rounded-lg border p-4 space-y-2">
@@ -455,7 +458,12 @@ function SettingsSecurityPage() {
         )}
       </div>
 
-      <TrustedDevices locale={locale} formatTimestamp={time.format} deviceName={getDeviceName} />
+      <TrustedDevices
+        locale={locale}
+        formatTimestamp={time.format}
+        deviceName={getDeviceName}
+        onSessionRotated={fetchSessions}
+      />
 
       {/* ── Revoke Single Session Confirmation Dialog ──────────────── */}
       {revokeConfirmId && revokeConfirmSession && (

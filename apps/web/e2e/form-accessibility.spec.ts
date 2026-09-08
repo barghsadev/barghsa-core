@@ -1191,7 +1191,11 @@ for (const locale of ['en', 'fa']) {
       idleDeadline: '2030-01-01T00:00:00Z',
       isCurrentSession,
     }));
-    await page.route('**/api/auth/sessions', (route) => route.fulfill({ json: sessions }));
+    let sessionReads = 0;
+    await page.route('**/api/auth/sessions', (route) => {
+      sessionReads++;
+      return route.fulfill({ json: sessions });
+    });
     await page.route('**/api/auth/sessions/revoke-all', (route) =>
       route.fulfill({
         status: 422,
@@ -1205,6 +1209,11 @@ for (const locale of ['en', 'fa']) {
       verifications.push(password);
       if (password !== 'right-password') return route.fulfill({ status: 422, json: {} });
       currentCsrf = `rotated-${verifications.length}`;
+      sessions[0] = {
+        ...sessions[0]!,
+        sessionId: currentCsrf,
+        createdAt: `2026-09-0${verifications.length}T12:00:00.000Z`,
+      };
       return route.fulfill({
         headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
         json: {},
@@ -1215,6 +1224,7 @@ for (const locale of ['en', 'fa']) {
       expect(route.request().method()).toBe('DELETE');
       expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
       attempts++;
+      if (attempts >= 3) sessions.splice(1);
       return route.fulfill(
         attempts === 1
           ? { status: 403, json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } } }
@@ -1248,6 +1258,7 @@ for (const locale of ['en', 'fa']) {
     await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(password).toHaveValue('');
     expect(attempts).toBe(1);
+    expect(sessionReads).toBe(1);
     await password.fill('right-password');
     await submit.click();
     await expect(dialog.getByRole('alert')).toContainText(
@@ -1255,11 +1266,16 @@ for (const locale of ['en', 'fa']) {
     );
     await expect(password).toHaveValue('');
     expect(attempts).toBe(2);
+    await expect(page.locator('time[datetime="2026-09-02T12:00:00.000Z"]')).toBeVisible();
+    expect(sessionReads).toBe(2);
     await password.fill('right-password');
     await submit.click();
     await expect(dialog).toHaveCount(0);
     await expect(page.getByRole('button', { name, exact: true })).toHaveCount(0);
     expect(attempts).toBe(3);
+    await expect(page.locator('time[datetime="2026-09-03T12:00:00.000Z"]')).toBeVisible();
+    await expect(page.locator('time[datetime="2026-09-02T12:00:00.000Z"]')).toHaveCount(0);
+    expect(sessionReads).toBe(3);
     expect(verifications).toEqual(['wrong-password', 'right-password', 'right-password']);
   });
 }

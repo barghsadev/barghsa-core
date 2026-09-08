@@ -77,6 +77,26 @@ for (const locale of ['fa', 'en'])
         .context()
         .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'trusted-ui-csrf' }]);
       await page.route('**/api/auth/trusted-devices', (route) => route.fulfill({ json: records }));
+      let sessionReads = 0;
+      let sessionStatus = 200;
+      let createdAt = '2026-09-01T12:00:00.000Z';
+      await page.route('**/api/auth/sessions', (route) => {
+        sessionReads++;
+        return route.fulfill({
+          status: sessionStatus,
+          json: [
+            {
+              sessionId: `current-${createdAt}`,
+              deviceInfo: { userAgent: 'Windows', ip: '192.0.2.2' },
+              createdAt,
+              updatedAt: '2026-09-01T12:00:00.000Z',
+              expiresAt: '2030-01-01T00:00:00Z',
+              idleDeadline: '2030-01-01T00:00:00Z',
+              isCurrentSession: true,
+            },
+          ],
+        });
+      });
       const verifications: string[] = [];
       let currentCsrf = 'trusted-ui-csrf';
       await page.route('**/api/auth/step-up', (route) => {
@@ -85,6 +105,7 @@ for (const locale of ['fa', 'en'])
         verifications.push(password);
         if (password !== 'right-password') return route.fulfill({ status: 422, json: {} });
         currentCsrf = `rotated-${verifications.length}`;
+        createdAt = `2026-09-0${verifications.length}T12:00:00.000Z`;
         return route.fulfill({
           headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
           json: {
@@ -110,6 +131,7 @@ for (const locale of ['fa', 'en'])
           });
           return route.fulfill({ status: 503, json: {} });
         }
+        sessionStatus = writes === 3 ? 503 : 200;
         return route.fulfill({ json: { revoked: writes >= 4 } });
       });
       await page.goto('/settings/security');
@@ -161,6 +183,7 @@ for (const locale of ['fa', 'en'])
       await expect(dialog.getByRole('alert')).toBeVisible();
       await expect(password).toHaveValue('');
       expect(writes).toBe(1);
+      expect(sessionReads).toBe(1);
       await password.fill('right-password');
       try {
         await submit.evaluate((button: HTMLButtonElement) => {
@@ -177,6 +200,8 @@ for (const locale of ['fa', 'en'])
         release?.();
       }
       await expect(password).toBeEnabled();
+      await expect(page.locator('time[datetime="2026-09-02T12:00:00.000Z"]')).toBeVisible();
+      expect(sessionReads).toBe(2);
       await expect(dialog.getByRole('alert')).toContainText(
         locale === 'fa' ? 'حذف اعتماد تأیید نشد' : 'Trust removal was not confirmed'
       );
@@ -186,6 +211,13 @@ for (const locale of ['fa', 'en'])
       await expect(password).toBeEnabled();
       await expect(dialog).toBeVisible();
       await expect(password).toHaveValue('');
+      await expect(page.locator('time[datetime="2026-09-02T12:00:00.000Z"]')).toHaveCount(0);
+      await expect(
+        page.getByText(locale === 'fa' ? 'خطا در بارگذاری نشست‌ها' : 'Failed to load sessions', {
+          exact: true,
+        })
+      ).toBeVisible();
+      expect(sessionReads).toBe(3);
       expect(
         (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
       ).toEqual([]);
@@ -201,6 +233,8 @@ for (const locale of ['fa', 'en'])
       await expect(region.getByRole('status')).toHaveText(
         locale === 'fa' ? 'اعتماد به دستگاه حذف شد.' : 'Device trust removed.'
       );
+      await expect(page.locator('time[datetime="2026-09-04T12:00:00.000Z"]')).toBeVisible();
+      expect(sessionReads).toBe(4);
       expect(verifications).toEqual([
         'wrong-password',
         'right-password',
