@@ -67,6 +67,15 @@ export class CsrfGuard implements CanActivate {
     const handler = context.getHandler();
     const skipCsrf = Reflect.getMetadata('skipCsrf', handler);
     if (skipCsrf) {
+      // Public auth has no session token yet. JSON is not a CORS-safelisted
+      // content type, so cross-origin browsers need a preflight that this
+      // same-origin API does not authorize. Reject form/text submissions.
+      if (
+        Reflect.getMetadata('csrfRequireJson', handler) &&
+        !/^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? '')
+      ) {
+        throw new ForbiddenException({ error: ErrorCodes.AUTHZ_CSRF_INVALID.code });
+      }
       return true;
     }
 
@@ -119,19 +128,21 @@ export class CsrfGuard implements CanActivate {
 /**
  * Decorator to skip CSRF validation on a specific route handler.
  *
- * Use only when the route establishes authentication or has independent
- * request authentication, such as a signed provider callback.
+ * Public auth must require JSON and retain the API's same-origin CORS policy.
+ * Other callers must have independent request authentication (signed provider
+ * callbacks or the refresh-token-bound CSRF guard).
  *
  * ```ts
- * @SkipCsrf()
+ * @SkipCsrf({ requireJson: true })
  * @Post('login')
  * async login(@Body() body: LoginDto) { ... }
  * ```
  */
 
-export function SkipCsrf(): MethodDecorator {
+export function SkipCsrf(options: { requireJson?: boolean } = {}): MethodDecorator {
   return (_target, _propertyKey, descriptor) => {
     Reflect.defineMetadata('skipCsrf', true, descriptor.value!);
+    Reflect.defineMetadata('csrfRequireJson', options.requireJson === true, descriptor.value!);
     return descriptor;
   };
 }

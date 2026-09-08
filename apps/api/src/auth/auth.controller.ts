@@ -81,7 +81,7 @@ export class AuthController {
    * - 3 attempts per IP per 60s
    * - 10 starts per normalized destination per hour in the service
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(RegisterSchema)
   @Post('register')
   @HttpCode(200)
@@ -146,7 +146,7 @@ export class AuthController {
    * Error response is always generic ("Invalid username or password")
    * to avoid revealing whether the username exists.
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(LoginSchema)
   @Post('login')
   @HttpCode(200)
@@ -241,7 +241,7 @@ export class AuthController {
    * Rate limits:
    * - 5 verification attempts per IP per 60s
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(LoginVerifySchema)
   @Post('login/verify')
   @HttpCode(200)
@@ -304,7 +304,7 @@ export class AuthController {
    * Rate limits:
    * - 3 resend attempts per IP per 120s
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(LoginResendSchema)
   @Post('login/resend')
   @HttpCode(200)
@@ -344,7 +344,7 @@ export class AuthController {
    * Rate limits:
    * - 5 attempts per IP per 300s
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(ForceChangePasswordSchema)
   @Post('force-change-password')
   @HttpCode(200)
@@ -392,7 +392,7 @@ export class AuthController {
    * - 5 attempts per destination per hour
    * - 5 attempts per IP per hour
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @Post('activate-staff')
   @HttpCode(200)
   @RateLimit({ namespace: 'activate-staff:ip', limit: 10, windowMs: 900_000, security: true })
@@ -413,7 +413,7 @@ export class AuthController {
     );
   }
 
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(ForgotPasswordSchema)
   @Post('forgot-password')
   @HttpCode(200)
@@ -466,7 +466,7 @@ export class AuthController {
    * - 5 reset attempts per destination per hour
    * - 5 reset attempts per IP per hour
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(ResetPasswordSchema)
   @Post('reset-password')
   @HttpCode(200)
@@ -520,7 +520,7 @@ export class AuthController {
    * Rate limits:
    * - 5 verification attempts per IP per 60s
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(VerifyOtpSchema)
   @Post('register/verify')
   @HttpCode(200)
@@ -692,7 +692,7 @@ export class AuthController {
    * Rate limits:
    * - 3 resend attempts per IP per 120s
    */
-  @SkipCsrf()
+  @SkipCsrf({ requireJson: true })
   @ApiZodBody(ResendOtpSchema)
   @Post('register/resend')
   @HttpCode(200)

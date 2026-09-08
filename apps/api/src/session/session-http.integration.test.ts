@@ -267,6 +267,58 @@ it('requires recent step-up to revoke a session and retains the ownership bounda
   ).toBe(200);
 }, 15000);
 
+it('rejects form-encoded public authentication before creating a session', async () => {
+  const before = Number(
+    (await pool.query("SELECT count(*) FROM sessions WHERE user_id='http-user'")).rows[0].count
+  );
+  const response = await fetch(`${base}/api/auth/login`, {
+    method: 'POST',
+    headers: { Cookie: `barghsa_device=${fingerprint}`, Origin: 'https://untrusted.example' },
+    body: new URLSearchParams({ username: 'http@example.test', password }),
+  });
+  expect(response.status).toBe(403);
+  expect(await response.json()).toMatchObject({ error: { code: 'AUTHZ:CSRF_TOKEN_INVALID' } });
+  expect(response.headers.getSetCookie()).toHaveLength(0);
+  expect(
+    Number(
+      (await pool.query("SELECT count(*) FROM sessions WHERE user_id='http-user'")).rows[0].count
+    )
+  ).toBe(before);
+});
+
+it.each([
+  'register',
+  'login/verify',
+  'login/resend',
+  'force-change-password',
+  'activate-staff',
+  'forgot-password',
+  'reset-password',
+  'register/verify',
+  'register/resend',
+])('rejects form submissions to public auth /%s before processing credentials', async (path) => {
+  const response = await fetch(`${base}/api/auth/${path}`, {
+    method: 'POST',
+    body: new URLSearchParams({}),
+  });
+  expect(response.status).toBe(403);
+  expect(await response.json()).toMatchObject({ error: { code: 'AUTHZ:CSRF_TOKEN_INVALID' } });
+  expect(response.headers.getSetCookie()).toHaveLength(0);
+});
+
+it('does not authorize cross-origin browser JSON authentication requests', async () => {
+  const response = await fetch(`${base}/api/auth/login`, {
+    method: 'OPTIONS',
+    headers: {
+      Origin: 'https://untrusted.example',
+      'Access-Control-Request-Method': 'POST',
+      'Access-Control-Request-Headers': 'content-type',
+    },
+  });
+  expect(response.headers.get('access-control-allow-origin')).toBeNull();
+  expect(response.headers.get('access-control-allow-credentials')).toBeNull();
+});
+
 it('invalidates old sessions and refresh tokens atomically on a forced password change', async () => {
   const auth = await login();
   const passwordChangeToken = randomUUID();

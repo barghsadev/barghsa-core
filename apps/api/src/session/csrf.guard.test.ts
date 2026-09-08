@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ForbiddenException } from '@nestjs/common';
-import { CsrfGuard } from './csrf.guard.js';
+import { CsrfGuard, SkipCsrf } from './csrf.guard.js';
 import '../common/correlation-id.middleware.js';
 
 /**
@@ -16,12 +16,15 @@ function createMockContext(options: {
   session?: { sessionId: string; csrfToken: string; userId: string; isAdmin: boolean };
   csrfHeader?: string;
   skipCsrf?: boolean;
+  requireJson?: boolean;
+  contentType?: string;
 }) {
   const { method = 'POST', session, csrfHeader, skipCsrf = false } = options;
 
   const handler = () => {};
   if (skipCsrf) {
-    Reflect.defineMetadata('skipCsrf', true, handler);
+    const descriptor = { value: handler, configurable: true };
+    SkipCsrf({ requireJson: options.requireJson })({}, 'handler', descriptor);
   }
 
   return {
@@ -30,6 +33,7 @@ function createMockContext(options: {
         method,
         headers: {
           'x-csrf-token': csrfHeader,
+          'content-type': options.contentType,
           ...(session ? {} : {}),
         },
         ...(session ? { session } : {}),
@@ -212,6 +216,25 @@ describe('CsrfGuard', () => {
   });
 
   describe('SkipCsrf decorator', () => {
+    it.each([
+      undefined,
+      'application/x-www-form-urlencoded',
+      'multipart/form-data; boundary=x',
+      'text/plain',
+      'application/jsonp',
+    ])('rejects public auth with content type %s', (contentType) => {
+      expect(() =>
+        guard.canActivate(createMockContext({ skipCsrf: true, requireJson: true, contentType }))
+      ).toThrow(ForbiddenException);
+    });
+    it.each(['application/json', 'application/json; charset=UTF-8'])(
+      'allows public auth JSON requests (%s)',
+      (contentType) => {
+        expect(
+          guard.canActivate(createMockContext({ skipCsrf: true, requireJson: true, contentType }))
+        ).toBe(true);
+      }
+    );
     it('bypasses CSRF check when @SkipCsrf() is present', () => {
       const context = createMockContext({
         method: 'POST',
