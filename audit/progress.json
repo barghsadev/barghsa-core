@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "8904b03606351e1f5907dfa2c139de180f6dd34f",
+  "source_revision": "5543cc267fd27b1cf445e2b0bb62c32b9f2a8105",
   "active_step": "R01",
-  "next_action": "R01: review/fix AgentsService.acceptInvitation under T-02.02.01 and T-05.04.03. It grants a role without rotating/revoking credentials and needs transaction-bound profile/account/expiry checks. Agent role change/removal is verified at 8904b03. Then finish CSRF/sensitive-action matrices. Reuse audit/session-caller-review.md; lost-contact policy pending, no broad checkpoint renewed.",
+  "next_action": "R01: complete CSRF route/alternative and sensitive-action caller matrices for T-02.02.03/T-02.02.04, then reconcile task-wide session acceptance. Reuse audit/session-caller-review.md and source-bound checks; invitation acceptance is verified at 5543cc2. F07 retains full invitation/decline/details and agent/ownership acceptance. Lost-contact policy remains pending; no broad checkpoint renewed.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -94,7 +94,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "OTP-first reset, session display, cookies, location, self-service revocation and trusted-device final checks are locally verified. Finish remaining rotation/revocation/CSRF/sensitive-action callers."
+        "Reviewed session triggers include login/MFA/reset, staff/ownership/self-service revocation, profile role changes and invitation acceptance. Finish CSRF/sensitive-action matrices and task-wide session evidence reconciliation."
       ]
     },
     {
@@ -134,7 +134,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Finish task-level agent, invitation, ownership, profile-selection and onboarding acceptance; separate future contract/order/document consumers."
+        "Invitation acceptance credential/transaction boundary is verified at 5543cc2. Finish full invitation/decline/details, agent/ownership, profile-selection and onboarding acceptance; future contract/order/document consumers remain separate."
       ]
     },
     {
@@ -521,6 +521,10 @@
     {
       "id": "R01-agent-role-credentials",
       "review_record": "audit/evidence/step-reviews.json#R01-agent-role-credentials"
+    },
+    {
+      "id": "R01-invitation-credentials",
+      "review_record": "audit/evidence/step-reviews.json#R01-invitation-credentials"
     }
   ],
   "deferred_improvements": [

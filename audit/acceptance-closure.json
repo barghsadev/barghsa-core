@@ -798,14 +798,15 @@
         },
         {
           "path": "apps/web/e2e/profile-switch.spec.ts",
-          "sha256": "01dfade25db60888c315373cc95519e2b3d4897d7f3bc3db8655d5513baed63b"
+          "sha256": "221caf47f5bbcc37fd4470ace69303d4872b37d88d35c899a8562eb8fdaab006"
         }
       ],
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
-        "At 7af0a76, reviewed wallet archival changes. getWallet remains identical to 9635e76; every other recorded source hash still matches. Preserve existing balance-card browser evidence; this step does not claim a new browser run."
+        "At 7af0a76, reviewed wallet archival changes. getWallet remains identical to 9635e76; every other recorded source hash still matches. Preserve existing balance-card browser evidence; this step does not claim a new browser run.",
+        "At 5543cc2, reviewed atomic invitation credential rotation and focused evidence; see audit/evidence/step-reviews.json#R01-invitation-credentials. Other methods/criteria and older drift remain unchanged."
       ],
       "limitations": [
         "Dashboard reads are informational snapshots, not payment authorization. External wallet HTTP consumers must accept decimal-string money."
@@ -3128,10 +3129,11 @@
         "At 3ff2920, reviewed centralized cookie scope/migration and focused checks; see audit/evidence/step-reviews.json#R01-cookie-policy. Other criteria retain prior evidence and limitations.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
-        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged."
+        "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
+        "At 5543cc2, invitation acceptance rotates current credentials and revokes others with the membership/audit transaction. See audit/session-caller-review.md and the14-case HTTP suite."
       ],
       "limitations": [
-        "Caller matrix is in audit/session-caller-review.md. Profile role changes/removal now invalidate credentials. Invitation acceptance and any remaining privilege-grant writers need reconciliation; other reviewed callers retain cited evidence.",
+        "Reviewed session callers now include profile role change/removal and invitation acceptance. Finish task-wide evidence/requirement reconciliation after the CSRF/sensitive-action matrices; full invitation/decline/details acceptance remains in F07.",
         "Local cookie topology is documented and verified at 3ff2920. Production TLS/proxy execution remains external evidence; no cross-origin topology is claimed."
       ],
       "merged_prs": [
@@ -3243,10 +3245,11 @@
         "Approximate country location and active-list semantics are locally verified at c26aad7. No city-level accuracy or production proxy evidence claimed.",
         "At 93dfc27, reviewed actor-bound self-service revocation and its focused evidence; see audit/evidence/step-reviews.json#R01-self-revocation. Other caller and dependency/image limitations remain.",
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
-        "At ee5beb2, reviewed staff disablement, both ownership-transfer parties and unchanged CRM revocation primitives; see audit/session-caller-review.md. Other authorization criteria remain separate."
+        "At ee5beb2, reviewed staff disablement, both ownership-transfer parties and unchanged CRM revocation primitives; see audit/session-caller-review.md. Other authorization criteria remain separate.",
+        "At 5543cc2, invitation acceptance rotates current credentials and revokes others with the membership/audit transaction. See audit/session-caller-review.md and the14-case HTTP suite."
       ],
       "limitations": [
-        "Invitation acceptance and final task-wide caller/evidence reconciliation remain. Built staff-disable/ownership/self-service/trusted-device/role-change/refresh-reuse revocation effects are checked; sensitive-action authorization stays in its own matrix."
+        "Reviewed session callers now include profile role change/removal and invitation acceptance. Finish task-wide evidence/requirement reconciliation after the CSRF/sensitive-action matrices; full invitation/decline/details acceptance remains in F07."
       ],
       "merged_prs": [
         90

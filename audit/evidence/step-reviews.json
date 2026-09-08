@@ -3454,6 +3454,69 @@
         "/tmp/barghsa-agent-credentials-lint.log",
         "/tmp/barghsa-agent-credentials-types.log"
       ]
+    },
+    {
+      "id": "R01-invitation-credentials",
+      "date": "2026-09-08",
+      "source_revision": "5543cc267fd27b1cf445e2b0bb62c32b9f2a8105",
+      "summary": "Invitation acceptance grants membership, rotates the accepting session and revokes other credentials in one authorized transaction.",
+      "review": [
+        "Initial five-case HTTP run reproduced four failures: no replacement credentials, accepting after profile archival won a row lock, and successful acceptance after invitation/session expiry during an audit write. The revoked-actor case already passed. All five pass after repair.",
+        "The preliminary invitation lookup selects only the profile lock scope. The transaction locks profile, current account, acting session and invitation, then checks current identity, CSRF, profile state, membership, role/status and database-clock deadlines. Membership, invitation status, credential rotation, other-session invalidation and correlation-bound audit commit together. Original session/invitation deadlines are checked again after all writes.",
+        "The controller uses existing cookie helpers only after commit. The accepting user retains usable access with fresh session/refresh/CSRF credentials and the original absolute lifetime. Other existing sessions and refresh credentials are invalidated. Failure emits no replacement cookies and rolls back all effects.",
+        "Seven old query-sequence mock tests were replaced by14 actual PostgreSQL HTTP cases covering their observable outcomes plus races, replay and rollback. Four registration HTTP cases and46 retained service/controller/guard cases pass. New database cases also prove fresh credentials can use the granted Finance permission.",
+        "Four production-browser cases cover fa/en on desktop/mobile: failed acceptance remains retryable, success refreshes profiles, and selecting the new profile sends the CSRF cookie supplied by the response. Browser API responses are controlled fixtures; real session/refresh cookie delivery and authorization are covered by the HTTP tests and existing cookie-helper browser evidence. Initial mobile failures were assertions against the menu after it intentionally closed; the corrected check waits for closure and reopens it. No product UI change was needed."
+      ],
+      "checks": [
+        "64 distinct API cases pass:14 invitation HTTP +4 registration HTTP +46 retained unit/controller/guard cases. Four distinct production-browser cases pass across the desktop initial run and corrected mobile rerun; overlapping initial five HTTP cases are not added. API/web types, focused ESLint/Prettier, regenerated OpenAPI comparison and diff review pass.",
+        "No schema, dependency, cookie policy or JSON response-shape change. No broad checkpoint, coverage, route-budget or production-image evidence renewed."
+      ],
+      "remaining": [
+        "Complete the CSRF route/alternative and sensitive-action matrices, then task-wide session acceptance reconciliation. F07 retains full invitation/decline/details and agent/ownership task acceptance; this step closes the acceptance credential boundary only. Lost-contact policy remains pending."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "74c8fa772702996f7c6e783ca9c7a5b7b3438c490ab879f594ff2610a8e2f9e8"
+        },
+        {
+          "path": "apps/api/src/profiles/invitations.controller.ts",
+          "sha256": "300361285a1cdd59b3e9258cf6814d7485bb3468f5fe31feab2164f829083222"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.test.ts",
+          "sha256": "1e8364f27ec8f7495f893fb229542b7c005e5a50b4d0912a8e61b0bcf0e4215e"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+          "sha256": "ef1133893104ed49810d3198f9fdefc2dae3ed850b674db94a2520fc21f8fd63"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "221caf47f5bbcc37fd4470ace69303d4872b37d88d35c899a8562eb8fdaab006"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/barghsa-invitation-atomic-after.log",
+        "/tmp/barghsa-invitation-atomic-api-types.log",
+        "/tmp/barghsa-invitation-atomic-before.log",
+        "/tmp/barghsa-invitation-atomic-browser-lint.log",
+        "/tmp/barghsa-invitation-atomic-browser-mobile-final.log",
+        "/tmp/barghsa-invitation-atomic-browser.log",
+        "/tmp/barghsa-invitation-atomic-contract.log",
+        "/tmp/barghsa-invitation-atomic-format-api.log",
+        "/tmp/barghsa-invitation-atomic-format-browser.log",
+        "/tmp/barghsa-invitation-atomic-format-final.log",
+        "/tmp/barghsa-invitation-atomic-format-tests.log",
+        "/tmp/barghsa-invitation-atomic-format-unit.log",
+        "/tmp/barghsa-invitation-atomic-format.log",
+        "/tmp/barghsa-invitation-atomic-full-http.log",
+        "/tmp/barghsa-invitation-atomic-lint.log",
+        "/tmp/barghsa-invitation-atomic-openapi.log",
+        "/tmp/barghsa-invitation-atomic-unit.log",
+        "/tmp/barghsa-invitation-atomic-web-types.log"
+      ]
     }
   ]
 }
