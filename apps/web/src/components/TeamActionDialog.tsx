@@ -41,6 +41,7 @@ export function TeamActionDialog({
   action,
   verification,
   selection,
+  focusConfirmation = false,
   onClose,
   onSuccess,
   finalFocus,
@@ -55,6 +56,7 @@ export function TeamActionDialog({
   onClose: () => void;
   onSuccess: (result: unknown) => Promise<void>;
   finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
+  focusConfirmation?: boolean;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -207,7 +209,7 @@ export function TeamActionDialog({
               </Button>
               <Button
                 type="submit"
-                autoFocus={!needsPassword}
+                autoFocus={focusConfirmation && !needsPassword}
                 disabled={busy || remaining > 0 || (needsPassword && !password)}
               >
                 {t(busy ? 'team.working' : 'team.confirm', locale)}

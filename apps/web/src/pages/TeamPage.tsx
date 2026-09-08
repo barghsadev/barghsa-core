@@ -484,6 +484,7 @@ export function TeamPage() {
       )}
       {ownershipStep && (
         <TeamActionDialog
+          focusConfirmation
           {...(ownershipStep === 'confirm' && action
             ? { action }
             : {
