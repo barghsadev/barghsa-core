@@ -7,8 +7,15 @@ from pathlib import Path
 import re
 import subprocess
 
-CRITICAL = re.compile(r"(?:^|[/_.-])(auth(?:entication|orization)?|authz|admin|staff|role[s]?|verification|rate-limit|finance|financial|order[s]?|session|csrf|otp|permission[s]?|payment[s]?|wallet|refund[s]?|pricing|price[s]?|contract[s]?|state-machine|invoice[s]?|dual-approval)(?:[/_.-]|$)")
+CRITICAL = re.compile(r"(?:^|[/_.-])(auth(?:entication|enticated|orization)?|authz|admin|staff|role[s]?|verification|rate-limit|finance|financial|order[s]?|session|csrf|otp|permission[s]?|payment[s]?|wallet|refund[s]?|pricing|price[s]?|contract[s]?|state-machine|invoice[s]?|dual-approval)(?:[/_.-]|$)")
 SOURCE = re.compile(r"^(apps|packages)/[^/]+/src/.+\.(?:[cm]?[jt]s|[jt]sx)$")
+
+
+def is_critical(path):
+    # Match domain words regardless of file naming convention, including acronym prefixes.
+    words = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1-\2", path)
+    words = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", words)
+    return bool(CRITICAL.search(words.lower()))
 
 
 def eligible(path):
@@ -94,7 +101,7 @@ def evaluate(root, changed):
     reports = {}
     for path, changed_lines in sorted(changed.items()):
         package = "/".join(path.split("/")[:2])
-        critical = bool(CRITICAL.search(path))
+        critical = is_critical(path)
         group = groups.setdefault((package, critical), {"package": package, "critical": critical, "files": [], "lines": 0, "covered_lines": 0, "branches": 0, "covered_branches": 0})
         group["files"].append(path)
         try:

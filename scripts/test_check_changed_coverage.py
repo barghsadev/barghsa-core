@@ -66,10 +66,39 @@ class CoverageTests(unittest.TestCase):
         for path in ("apps/api/src/auth/login.ts", "apps/web/src/routes/_auth/login.tsx", "packages/db/src/schema/wallet-payments.ts", "apps/api/src/invoice/invoice-state-machine.ts", "apps/api/src/admin/admin.service.ts"):
             with self.subTest(path=path):
                 self.assertTrue(module.eligible(path))
-                self.assertTrue(module.CRITICAL.search(path))
+                self.assertTrue(module.is_critical(path))
         for path in ("apps/web/e2e/login.spec.ts", "apps/api/src/auth/auth.test.ts", "packages/db/src/test/setup.ts", "apps/api/src/generated/client.ts", "apps/web/src/env.d.ts", "scripts/check.mjs"):
             with self.subTest(path=path):
                 self.assertFalse(module.eligible(path))
+
+    def test_camel_case_sensitive_files_use_whole_file_critical_thresholds(self):
+        paths = (
+            "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+            "apps/web/src/components/AuthLayout.tsx",
+            "apps/web/src/components/AuthenticatedAppLayout.tsx",
+            "apps/web/src/hooks/useFinancialLimit.ts",
+            "apps/web/src/components/OTPInput.tsx",
+        )
+        for path in paths:
+            with self.subTest(path=path), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                report = root / "apps/web/coverage/coverage-final.json"
+                report.parent.mkdir(parents=True)
+                report.write_text(json.dumps({str(root / path): coverage([1] * 8 + [0] * 2, [1] * 17 + [0] * 3)}))
+                result = module.evaluate(root, {path: {1}})
+                self.assertEqual(result["status"], "failed")
+                self.assertTrue(result["groups"][0]["critical"])
+                self.assertEqual(result["groups"][0]["lines"], 10)
+                self.assertEqual(result["groups"][0]["required_lines"], 90)
+                self.assertEqual(result["groups"][0]["required_branches"], 85)
+
+    def test_critical_words_do_not_match_unrelated_substrings(self):
+        for path in ("apps/web/src/components/AuthorCard.tsx", "apps/web/src/components/AdministrativeNotes.tsx", "apps/web/src/components/BorderBox.tsx", "apps/web/src/hooks/useProfile.ts"):
+            with self.subTest(path=path):
+                self.assertFalse(module.is_critical(path))
+        for path in ("apps/web/src/components/HTTPAuthGuard.tsx", "apps/web/src/components/AdminKBPage.tsx", "apps/web/src/hooks/useCurrentSession.ts", "packages/shared/src/CSRF.ts"):
+            with self.subTest(path=path):
+                self.assertTrue(module.is_critical(path))
 
     def test_missing_reports_and_files_cannot_pass(self):
         with tempfile.TemporaryDirectory() as temporary:
