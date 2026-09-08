@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product `e48bf58`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product `b4a0c83`, 2026-09-08. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,9 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Next: ownership initiation/acceptance/decline/cancel still accept only actor userId and do not recheck the acting session after guards. Their audit lacks verified step-up time/correlation, and resolution checks transfer expiry only before writes. Repair these boundaries while preserving the durable Expired transition and existing credential effects. Then finish agent/invitation presentation and current domain-role acceptance.
+R01: finish agent/invitation/ownership presentation and current domain-role acceptance. Ownership API authority/step-up/audit/expiry repair is reviewed atb4a0c83. TeamPage was read: transfer initiation still emits generic Saved rather than the required named recipient/acceptance notice. Review the specified step-up, agent selection, confirmation, incoming banner and fa/en/RTL/theme/error states against T-05.04.05; reuse unchanged backend and prior browser evidence. Then invitation list/details/preview/confirmation and role/domain consumers. Lost-contact policy remains pending; do not ask again.
+
+Ownership initiation/acceptance/decline/cancel repaired at `b4a0c83`: current actor account/session/CSRF/step-up checks hold through commit; audit records verified time/correlation. Mid-write transfer expiry restores ownership and credentials and persists only Expired.70 distinct selected API/unit cases and quality/contract checks pass. [Scoped evidence](evidence/step-reviews.json#R01-ownership-authority).
 
 Invitation creation/withdrawal/decline repaired at `e48bf58`: current profile/account/session/grants hold through commit; former inviters cannot withdraw; current username controls decline; state/audit roll back on expiry/failure. Acceptance/decline lock-order deadlock is fixed.120 selected API/unit cases and API quality/contract checks pass. [Scoped evidence](evidence/step-reviews.json#R01-invitation-authority). Existing frontend evidence is reused.
 

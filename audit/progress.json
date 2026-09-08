@@ -3,9 +3,9 @@
   "updated": "2026-09-08",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "e48bf58d729c692b9f844e5bd1de97b5049baa59",
+  "source_revision": "b4a0c83416fdfbb8ecd0cb1dc51637253b386890",
   "active_step": "R01",
-  "next_action": "R01: repair ownership initiation/acceptance/decline/cancel current-session and step-up boundaries, verified-time/correlated audit and expiry during writes. Methods were read: they still accept actor userId only, never revalidate the acting session after guards, and resolve checks transfer expiry only before writes. Reuse417ab33 ownership credential evidence and preserve the durable Expired transition. Then finish agent/invitation presentation and current domain-role acceptance. Lost-contact policy remains pending; do not ask again.",
+  "next_action": "R01: finish agent/invitation/ownership presentation and current domain-role acceptance. Ownership API authority/step-up/audit/expiry repair is reviewed atb4a0c83. TeamPage was read: transfer initiation still emits generic Saved rather than the required named recipient/acceptance notice. Review the specified step-up, agent selection, confirmation, incoming banner and fa/en/RTL/theme/error states against T-05.04.05; reuse unchanged backend and prior browser evidence. Then invitation list/details/preview/confirmation and role/domain consumers. Lost-contact policy remains pending; do not ask again.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -134,7 +134,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Invitation creation/withdrawal/decline current authorization, expiry/audit rollback and decision races verified ate48bf58 with120 selected API/unit cases. Agent role/removal boundary retains417ab33. Next repair ownership current-session/step-up/audit/final expiry. Then full invitation/list/details/confirmation, role/domain, profile-selection and onboarding acceptance; future contract/order/document consumers remain separate."
+        "Ownership API current authority/step-up/expiry/audit repair verified atb4a0c83 with70 selected cases. Invitation boundary retains e48bf58 and agent mutations417ab33. Finish named transfer confirmation, required step-up/selection/acceptance/banner presentation; full invitation/list/details/confirmation, role/domain, profile-selection and onboarding acceptance remains. Future contract/order/document consumers stay separate."
       ]
     },
     {
@@ -549,6 +549,10 @@
     {
       "id": "R01-invitation-authority",
       "review_record": "audit/evidence/step-reviews.json#R01-invitation-authority"
+    },
+    {
+      "id": "R01-ownership-authority",
+      "review_record": "audit/evidence/step-reviews.json#R01-ownership-authority"
     }
   ],
   "deferred_improvements": [

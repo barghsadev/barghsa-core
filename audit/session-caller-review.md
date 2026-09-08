@@ -1,6 +1,6 @@
 # Session caller review
 
-Reviewed through product `e48bf58`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
+Reviewed through product `b4a0c83`. Scope: session creation/rotation/revocation requirements in `02-auth-users-admin.md#T-02.02.01` and `T-02.02.02`. Other authorization criteria retain their own remaining reviews.
 
 | Caller / event | Current credential behavior | Evidence / disposition |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ Reviewed through product `e48bf58`. Scope: session creation/rotation/revocation 
 | Staff disablement | Disable flag, all target sessions, refresh consumption and audit commit together. | `a4cd929`: current authentication/audit and rollback cases pass; reuses `ee5beb2` target credential, administrator isolation and idempotence coverage, rerun in the selected staff suite. |
 | Staff activation resend | Requires current creator authority and step-up through commit; activation replacement, outbox and audit are atomic. | `a4cd929`: audit attribution, expiry/failure rollback and post-guard authority/credential races pass; target sessions are unchanged. |
 | CRM expire sessions / force password change | Account-locked session/refresh invalidation and private user notice. | Both methods unchanged from `337b965`; reuse35 focused checks plus earlier permission races. |
-| Ownership transfer | Successful transfer invalidates both owners' sessions and refresh credentials; unrelated accounts remain untouched. | `ee5beb2`: nine ownership HTTP cases pass; strengthened success/rollback tests include actual refresh rows. |
+| Ownership transfer | Successful transfer invalidates both owners' sessions and refresh credentials; unrelated accounts remain untouched. | `b4a0c83`:70 selected API/unit cases verify current actor authorization through commit, dual-owner invalidation on success, restored credentials on expired decisions and full rollback on lost authentication/audit failure. Whole task UI acceptance remains open. |
 | Self-service single/bulk revocation | Locked actor/confirmation and owner-scoped credentials are checked through commit. | `93dfc27`:41 distinct focused cases; browser evidence reused. |
 | Trusted-device removal | Removes the future-login trust record, retains sessions and checks actor/step-up deadlines through writes. | `89e7c53`:12 HTTP cases; next login requires OTP. |
 | Suspected compromise via refresh reuse | Revokes the affected family and persists a private, deduplicated security notice. | `redeemRefreshToken` unchanged from `f39132f`; reuse deadline and refresh-reuse alert checks. |

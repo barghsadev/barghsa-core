@@ -4256,6 +4256,83 @@
         "/tmp/r01-invitation-authority-types-final.log",
         "/tmp/r01-invitation-authority-types.log"
       ]
+    },
+    {
+      "id": "R01-ownership-authority",
+      "date": "2026-09-08",
+      "source_revision": "b4a0c83416fdfbb8ecd0cb1dc51637253b386890",
+      "summary": "Bind ownership actions to current authorization and roll back decisions that expire during writes.",
+      "review": [
+        "Read canonical T-05.04.05 and both ownership service/controller paths. All four actions now receive the exact actor session/CSRF, lock current profile and sorted party accounts, reject disabled/unactivated actors, and require fresh step-up under the session lock. Target must have a real Manager/Finance/Legal grant and an active account; a stale Owner row alone is insufficient. Legacy user identifiers remain supported.",
+        "Initiation, acceptance, decline and cancel recheck session/CSRF/absolute/idle deadlines and fresh step-up after writes, before commit. Audits carry the verified session timestamp and request correlation. Successful acceptance retains dual-owner session/refresh invalidation and uses the exact intentional revocation timestamp for the final actor check. Other actions preserve credentials.",
+        "Resolution holds profile/transfer/accounts/session/target locks before a savepoint. If a transfer expires during the decision writes or audit, it rolls back ownership, member and credential changes plus tentative audit/timestamps, then persists only Expired and returns409 after commit. Expired-audit failure or lost actor authentication rolls back the entire transaction. Existing pre-expiry, removal/acceptance races and one-owner invariants remain covered.",
+        "39 new HTTP/PostgreSQL cases cover four positive audits,20 post-guard actor/session/CSRF/step-up races,8 authorization expiries during audit,3 transfer expiries during audit,expiry-audit failure,2 stale-Owner eligibility denials and expired-request reconciliation. Audit-delay sequences prove each delayed path was reached even when the transaction rolled back.",
+        "The original removal/acceptance regression expected no401. Both possible winners revoke the losing actor credentials, so the new test accepts401 only alongside exactly one success and verifies that actor session is revoked; member/owner invariants remain asserted. The first new-fixture run exhausted the shared IP initiation quota. Independent cases now reset only that isolated fixture quota, with production behavior unchanged. Failed logs are retained.",
+        "All earlier agent/invitation service methods, ownership list, common session helper and frontend sources are byte-identical to the predecessor. OpenAPI values and source are unchanged. Reuse417ab33 frontend evidence without renewing broad/browser/build/coverage claims. TeamPage source review confirmed a remaining named-success requirement; that presentation step is next."
+      ],
+      "checks": [
+        "70 distinct cases pass across final/reused runs:39 new ownership authority cases plus13 existing ownership/agent integration and18 service unit cases.",
+        "API typecheck, focused ESLint/Prettier, freshly generated OpenAPI comparison, source-scope comparison and git diff check pass."
+      ],
+      "remaining": [
+        "R01: finish agent/invitation/ownership presentation and current domain-role acceptance. Ownership API authority/step-up/audit/expiry repair is reviewed atb4a0c83. TeamPage was read: transfer initiation still emits generic Saved rather than the required named recipient/acceptance notice. Review the specified step-up, agent selection, confirmation, incoming banner and fa/en/RTL/theme/error states against T-05.04.05; reuse unchanged backend and prior browser evidence. Then invitation list/details/preview/confirmation and role/domain consumers. Lost-contact policy remains pending; do not ask again.",
+        "Whole T-05.04.05 acceptance remains pending until its complete presentation and requirement evidence are reconciled. Counts remain53 verified /18 partial /251 pending."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "c741a3de50883b571237c372ecb7a56dafcc5e1faa66860b9d90e36388792030"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.test.ts",
+          "sha256": "dd656e3ea06851b795e0a4f0c4676f28a63dcd7c3e8d645dd5c76d9dd51ae24b"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "85ad42cfe2d0221c3e1c3a3112040d52e4d0a2c3187e30741162a14eb674dad7"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
+          "sha256": "06b98b37271eac465b1317c4d654ccb722b31fe5bf8df4e724a6781b9a9fa82f"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "sha256": "58a9c92042c790bf36bcdf4b57944e35360551011e1fc2051aadb9fbaa987987"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "82a348ce87b1752e74604cf359796c239b0b3d23045bc8c1bc442a37552c293d"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/web/src/components/OwnershipBanner.tsx",
+          "sha256": "ff331961bd0a0617eeea23254ed7ade394a765b96351d426f7e36d4a3888359f"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "560e29c98d21f934bf2c5dc7dd2a7d435f4829d14c4cb9937ee1458ad6048ee3"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "756abf9c6fcf37566e9a61f383c8c8b84b434427b6beaa42595f573e2fea3615"
+        }
+      ],
+      "evidence": "audit/evidence/index.json",
+      "logs": [
+        "/tmp/r01-ownership-authority-commit.log",
+        "/tmp/r01-ownership-authority-contract.log",
+        "/tmp/r01-ownership-authority-format.log",
+        "/tmp/r01-ownership-authority-http-final.log",
+        "/tmp/r01-ownership-authority-http.log",
+        "/tmp/r01-ownership-authority-lint.log",
+        "/tmp/r01-ownership-authority-openapi-generate.log",
+        "/tmp/r01-ownership-authority-regression.log",
+        "/tmp/r01-ownership-authority-source-review.log",
+        "/tmp/r01-ownership-authority-types.log"
+      ]
     }
   ]
 }

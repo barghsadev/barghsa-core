@@ -6616,6 +6616,76 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-commit.log",
+      "path": "audit/evidence/r01/r01-ownership-authority-commit.log.gz",
+      "sha256": "79a372642fbca520247fdf363f24a238b32362320fa98538bb1118aa9b5153f3",
+      "encoding": "gzip",
+      "stored_sha256": "491e421a62e99fb9f54dec4b78a04418d11614a2dc7e53df850cd78ded595ebf"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-contract.log",
+      "path": "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+      "sha256": "135329686d2878faa2e19fe4a091501fbc48ad6c6463fb6530841b5e33657567",
+      "encoding": "gzip",
+      "stored_sha256": "c694a0d88e6bea88c484ed9dba8a4c032dfac224c3193ce3a97d61879e8b9b7a"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-http-final.log",
+      "path": "audit/evidence/r01/r01-ownership-authority-http-final.log.gz",
+      "sha256": "3cb31aac7380912a01977452590eb75adaae90462c3192e8a9d1a5aa94e2c087",
+      "encoding": "gzip",
+      "stored_sha256": "039321d586d4309de3c944e427d46bf403a8fcf7ca029ccce500f54b787ac69b"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-http.log",
+      "path": "audit/evidence/r01/r01-ownership-authority-http.log.gz",
+      "sha256": "4bbf360b1d488b4997dcd2990a5c3951be21fd51dccc0b5dbd0eb141dc19eb8c",
+      "encoding": "gzip",
+      "stored_sha256": "537c9019734f80838abb3ceec0a476e7d233552e45ac01580f9d1f8d264a008b"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-openapi-generate.log",
+      "path": "audit/evidence/r01/r01-ownership-authority-openapi-generate.log.gz",
+      "sha256": "f48c1e1de79a33f3f3836e95a7f74ffa2beeddc195d3fb12ba3079ea17f5d8c0",
+      "encoding": "gzip",
+      "stored_sha256": "d3335b716b1352c22b143a55e89602a35f44af37ee8afc425306729b67cb6448"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-regression.log",
+      "path": "audit/evidence/r01/r01-ownership-authority-regression.log.gz",
+      "sha256": "95bd60b9e95af0407f9824d804f8eeef6f199f9ec0fb107b0b8716336a2fb76f",
+      "encoding": "gzip",
+      "stored_sha256": "916ac7f13b576eb2c5ffc28f0e9ecdb497193d1b11e9409059d13817fd92e92f"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-source-review.log",
+      "path": "audit/evidence/r01/r01-ownership-authority-source-review.log.gz",
+      "sha256": "1c1a203a452b4ce7390c563d9894aed4df77b48e7f3e8634c2271db1e1909f42",
+      "encoding": "gzip",
+      "stored_sha256": "946cb34f6617d0b6759a330dad2c4b0ecc37fb54070a837276b0daea8ff5b65c"
+    },
+    {
+      "original_path": "/tmp/r01-ownership-authority-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
     }
   ]
 }
