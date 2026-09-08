@@ -1,24 +1,29 @@
 # Remaining repairs, reviews and skipped work
 
-Refreshed 2026-09-08 through product commit `e869362`. This replaces the previous active plan. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
+Refreshed 2026-09-08 from audit HEAD `9a114cf`, product `e869362`, and the unfinished reset worktree. This is the single active plan. This refresh reconciles saved evidence; it does not certify new implementation or tests. Read [progress.json](progress.json) for the next action and original F01–F23 group records. [Task acceptance](acceptance-closure.json) remains the only task-status authority.
 
 ## Current numbers
 
-| Population | Verified | Partial | Pending review | Total |
+| Population | Recorded verified | Partial | Pending review | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Tasks with merged PR evidence | 46 | 19 | 198 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
 | Combined | 49 | 19 | 254 | 322 |
 
-There are **273 unresolved task reviews**, including the 19 partial reviews. Unresolved review does not establish that a task is unbuilt. The records do not support a reliable percentage of implementation effort remaining.
+There are **273 unresolved task reviews**, including the 19 partial reviews. Unresolved review does not establish that a task is unbuilt. These counts measure acceptance records, not coding effort or percentage of the repair plan completed. Eight verified records reference files changed by later commits; reconcile the relevant changes and later reviews before reusing their evidence. Exact keys and paths are in `progress.json.evidence_refresh_queue`. Unfinished OTP changes also affect three verified records.
 
-The saved inventory contains **301 merged PRs**, last recorded as checked against GitHub on September 8. A new query during this refresh failed because `gh` is unavailable; no newer inventory is claimed. The **58 historical skips** overlap the task population: 3 verified and 55 pending review. Another **1,033 queue gaps** are separate historical backlog evidence: 737 earlier gaps and 296 later tasks. None is automatically a missing implementation.
+The saved inventory contains **301 merged PRs**, last recorded as checked against GitHub on September 8. All saved PR bodies were read; their latest merge is September 3. GitHub could not be refreshed because `gh` remains unavailable; no newer inventory is claimed. The **58 historical skips** overlap the task population: 3 verified and 55 pending review. Another **1,033 queue gaps** are separate historical backlog evidence: 737 earlier gaps and 296 later tasks. None is automatically a missing implementation.
 
 ## Next bounded step
 
-Reset repair `e869362` fixes expiry during lock/write waits, unverifiable history, destination attempt limits, audit correlation and acknowledged return to login. It passes 54 distinct API cases, 10 browser cases, types/lint/format and all 41 route budgets. T-02.03.02 is now reviewed as partial: OTP must be verified before password entry, while the current UI submits both together. Finish that sequence with short-lived single-use authorization and preserved limits, then return to remaining rotation/cookie policy review. Lost-contact approver/evidence policy remains pending.
+Resume **R01, `02-auth-users-admin.md#T-02.03.02`**, before another repair. Six unfinished files already change the reset DTO, OTP issuance and database schema, including migration 0122 and its metadata. Their paths and hashes are in `progress.json.unfinished_worktree`. Service, controller and browser integration are still incomplete; no completed runtime verification is recorded for these changes.
 
-All nine F15 CRM records are reviewed: eight verified locally; T-05.02.06 remains partial for future contracts and approved retention policy. Latest widget step d87042c passed 31 API cases and 12 distinct built-app browser cases across focused runs. Earlier list/search step passed 47 API and 20 built-app browser cases. See [step evidence](evidence/step-reviews.json). No global checkpoint is renewed.
+1. Verify OTP before showing password fields. Successful verification must consume the OTP and issue a short-lived, single-use reset authorization. Store only its hash and retain the original challenge deadline and account-version binding.
+2. Finish service/controller/browser integration. Preserve the original combined request if retaining rollout compatibility. Check validation errors, acknowledgement shape, cooldowns, pending submissions, retry and expiry. Keep authorization out of URLs and persistent browser storage.
+3. Review replacement-challenge invalidation and lock ordering. Preserve five-attempt destination limits, password strength/history, atomic audit, all-session revocation and acknowledged return to login. Invalid, expired, replayed or stale-account authorization must fail without credential changes.
+4. Review the whole step and its callers. Run focused migrated-PostgreSQL/HTTP cases, fa/en browser checks, applicable types/lint/OpenAPI, clean/upgrade/repeat migrations, schema snapshots and affected route budgets before committing the completed step.
+
+Product `e869362` has saved evidence for 54 distinct API cases, 10 browser cases and associated quality checks. Reuse it only for unchanged behavior. Then resume rotation/cookie policy, current-session refresh after step-up, approximate session location and caller matrices. Lost-contact policy remains pending; continue independent work without repeating that question.
 
 ## Ordered work
 
@@ -31,21 +36,47 @@ Each row is a phase. Select one exact requirement or reproduced defect inside it
 | 3 | R03 / F19, F20 | Application-specific localized errors, correlation through required outbox/worker consumers, remaining screen/shared-control accessibility, RTL, themes and failure states. Validate required behavior; review the observed dark-theme terms-status error banner and remaining shared button/link/alert contrast consumers. Scanner warnings become work only when they establish a relevant defect. |
 | 4 | R04 / F19 | Required eager customer purchase routes within unchanged complete-route budgets. Previous over-budget attempts were reverted. Production build, required loading and affected payload checks must pass. Retain Vite SPA. |
 | 5 | R05 / F19 | Strict dependency checks in API/web/worker/DB. Last strict DB run recorded 146 declaration errors, 144 Drizzle and 2 Vite. Verify compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation without broad suppressions or weaker requirements. |
-| 6 | V01 / F01, F02, F18, F21, F22 | Remaining task/PR dispositions, loop durability, migrations, production packaging and repeated-task comparisons. Include every domain not closed above. All 322 claims need evidence-backed dispositions; all PR deferrals need reconciliation. |
+| 6 | V01 / F01, F02, F18, F21, F22 | Remaining task/PR dispositions, the eight verified-record evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. Include every domain not closed above. All 322 claims need evidence-backed dispositions; all PR deferrals need reconciliation. |
 | 7 | R06 / F19 | Close three recorded coverage gaps through meaningful missing-behavior tests. Preserve critical floors of 90% lines / 85% branches and general floors of 80% / 75%. |
 | 8 | V02 / affected groups | One final regression checkpoint: unit/integration, required production-browser profiles, coverage, types, lint/format, OpenAPI, clean/upgrade/repeat migrations, snapshots, route budgets, loop safety and affected production images. Save exact revisions and exits. |
 | 9 | B01 / F22 | Dependency-ordered handoff of only unmet skipped work, with exact identities, criteria and prerequisites. Preserve verified/incidental implementation. New feature builds follow repair closure. |
 
-A01 cleanup and A02 reconciliation are complete. R01 is active; eight later phases remain open. All 23 original groups remain in progress.json. Historical implementation labels do not certify whole-group acceptance.
+A01 cleanup and A02 reconciliation are complete. Nine phases remain: R01 active and eight queued. Their sizes differ; phase counts are not an effort estimate. All 23 original groups remain in progress.json. Historical implementation labels do not certify whole-group acceptance.
 
 ## R01 checklist
 
-- Sessions/access: required approximate session location is missing. Complete rotation/revocation, trusted-device, CSRF alternatives and sensitive-action caller matrices. Review staff roles, activation, OTP/reset/contact changes, manual verification, profile selection, membership, ownership and address boundaries.
+- Sessions/access: required approximate session location is missing, and the current-session display needs refresh after step-up rotation. Complete rotation/revocation, trusted-device, CSRF alternatives and sensitive-action caller matrices. Review staff roles, activation, OTP/reset/contact changes, manual verification, profile selection, membership, ownership and address boundaries.
 - CRM: eight of nine F15 task records are verified locally, including list, search/filter and pending widget. T-05.02.06 local archival passes; future contract integration and approved retention policy remain explicit prerequisites.
 - Tickets/finance: customer/staff privacy, attachments, assignment and transitions; receipt thresholds/independent approval, callbacks/replays, invoice arithmetic/snapshots and ledger integrity. Preserve useful corrective PRs. Future refund, ordering and contract consumers remain separate where the original task requires them separately.
 - Recovery: confirmed contacts and intake/escalation runbook are implemented. Owner policy for lost-contact approvers/identity checks remains pending. A reviewed credential-change method and full case audit remain needed. Continue independent work while awaiting that answer.
 
 The last full checkpoint at `9529872` recorded API-critical coverage 92.34% lines / 81.07% branches, web-critical 73.07% / 70.42%, and web-general 66.38% / 62.02%. Later focused checks do not renew that measurement or image evidence. See [checkpoint](final-repair-checkpoint.json) and [later step reviews](evidence/step-reviews.json).
+
+## Every currently partial task
+
+All 19 partial records are routed below. Read exact requirements and limitations in [acceptance](acceptance-closure.json) and [current requirements](current-task-requirements.json). Future features and operational evidence remain explicit dependencies.
+
+| Qualified task | Remaining disposition / phase |
+| --- | --- |
+| 01-platform-infrastructure.md#T-01.02.02 | Strict declarations, R05. |
+| 01-platform-infrastructure.md#T-01.03.03 | Eager purchase routes and lazy-boundary behavior, R04; future consumers separately. |
+| 01-platform-infrastructure.md#T-01.04.02 | Three measured coverage gaps, R06/V02. |
+| 01-platform-infrastructure.md#T-01.04.03 | Refund-worker/commercial-order concurrency depends on future features, V01/B01. |
+| 01-platform-infrastructure.md#T-01.04.04 | Future critical flows and actual remote nightly execution, V01/B01. |
+| 01-platform-infrastructure.md#T-01.04.06 | Production promotion depends on T-05.04.01 and executed release evidence, V01/B01. |
+| 01-platform-infrastructure.md#T-01.05.01 | Domain errors and downstream correlation, R03. |
+| 01-platform-infrastructure.md#T-04.01.04 | Production sizing, load, replica visibility and actual alerts, V01/external. |
+| 02-auth-users-admin.md#T-02.02.01 | Rotation callers and final cookie topology, R01. |
+| 02-auth-users-admin.md#T-02.02.02 | Approximate session location and remaining revocation callers, R01. |
+| 02-auth-users-admin.md#T-02.02.03 | Complete route/caller matrix and explicit CSRF alternatives, R01. |
+| 02-auth-users-admin.md#T-02.02.04 | Built sensitive-action recovery matrix; future refund/contract consumers separate, R01. |
+| 02-auth-users-admin.md#T-02.03.02 | OTP-first reset, current unfinished step, R01. |
+| 02-auth-users-admin.md#T-02.03.03 | Approved recovery policy, credential-change method and complete case audit, R01/external. |
+| 02-auth-users-admin.md#T-05.02.06 | Future contract writer and approved retention policy, V01/B01/external. |
+| 02-auth-users-admin.md#T-08.01.01 | Real contract summaries and future order/contract lists, V01/B01. |
+| 02-auth-users-admin.md#T-08.01.03 | Real contract counts and filtered-list consumers, V01/B01. |
+| 02-auth-users-admin.md#T-09.01.01 | Deployed asset/CDN caching and theme consumers, R02/R03/external. |
+| 02-auth-users-admin.md#T-09.01.02 | Active branding in message rendering and complete theme acceptance, R02/R03. |
 
 ## Merged PR review
 
@@ -58,11 +89,11 @@ The last full checkpoint at `9529872` recorded API-critical coverage 92.34% line
 | PRs with no current task mapping | 4 |
 | Historical deferral statements | 170 across 101 PRs |
 
-Review current combined implementation once per qualified task and associate all contributing PRs. Verified mappings do not automatically resolve separate PR deferrals. The 217 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 79, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review current combined implementation once per qualified task and associate all contributing PRs. The 47 PRs mapping only to verified tasks are not automatically 47 completed PR reviews. Their deferrals and changed-source evidence still need reconciliation. The 217 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 79, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
-Handle #47 in R05 and #234/#235/#242 in V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before calling that queue gap unbuilt. Repeated PRs alone do not justify code deletion. Preserve obsolete `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users-admin.md#T-05.06.01` as provenance outside the 322 current claims.
+Handle #47 in R05 and #234/#235/#242 in V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before calling that queue gap unbuilt. Five Docker groups were rebuilt after completion loss; fifteen wallet groups contain useful follow-up fixes. The other three repeated groups concern legal-profile slices, bookkeeping and replaced invoice snapshots. Repeated PRs alone do not justify code deletion. Preserve obsolete `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users-admin.md#T-05.06.01` as provenance outside the 322 current claims.
 
-Each deferral needs a disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. Checked PR-body boxes are historical author claims.
+Each deferral needs a disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. Checked PR-body boxes are historical author claims. Refresh GitHub read-only when access is available, then reconcile additions explicitly. Do not silently change the frozen inventory or infer the other machine's state from this checkout.
 
 ## Skipped tasks
 
@@ -74,7 +105,7 @@ Each deferral needs a disposition: satisfied by later implementation, confirmed 
 | Development, configuration and documentation | 21 | T-07.* |
 | Deployment, operations and CI | 20 | T-05.* |
 
-These are review batches. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 273 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
+These are review batches; task dependencies override their order. Build only the unmet remainder after checking dependencies. The 55 pending skips overlap the 273 unresolved reviews; do not count twice. [Earlier gaps](archive/queue-gaps.json) and [unrecorded backlog](archive/unstarted-backlog.csv) remain historical inputs, not a dispatch queue.
 
 ## External prerequisites and decisions
 
@@ -84,6 +115,6 @@ Real provider delivery, production sizing/TLS/DNS/proxies, monitoring/alerts, lo
 
 ## Rules against repeated work
 
-Keep one active plan and compact progress record. After this full refresh, read only the selected task's requirements and relevant evidence. Freeze scope to original defects and exact claimed-task requirements; defer new noncritical improvements separately. Reuse evidence while relevant source, requirements and dependencies match. Keep tool output small; inspect saved log failures. Use focused checks per fix and broad checks at V02 unless a shared change warrants them sooner. Use lower effort for straightforward edits and higher effort for critical review.
+Keep one active plan and compact progress record. This directory-wide reread was requested once; do not repeat it routinely. Keep exhaustive historical dispositions in V01, after confirmed critical repairs. Pending paperwork does not justify rebuilding a task. After this full refresh, read only the selected task's requirements and relevant evidence. Freeze scope to original defects and exact claimed-task requirements; defer new noncritical improvements separately. Reuse evidence while relevant source, requirements and dependencies match. Keep tool output small; inspect saved log failures. Use focused checks per fix and broad checks at V02 unless a shared change warrants them sooner. Use lower effort for straightforward edits and higher effort for critical review.
 
 Finish means confirmed local repairs pass, all 322 historical claims have truthful dispositions, every original group retains closure or exact remaining requirements, and external prerequisites/skipped work have an explicit handoff. Partial, blocked and deferred criteria never count as acceptance passes.

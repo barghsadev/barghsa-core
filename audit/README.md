@@ -1,10 +1,10 @@
 # Audit
 
-Start with [fix-plan.md](fix-plan.md) and [progress.json](progress.json). [HANDOFF.md](HANDOFF.md) gives continuation instructions, including unfinished worktree changes.
+Start with [fix-plan.md](fix-plan.md). [progress.json](progress.json) owns execution state, unfinished files and evidence-refresh work; [HANDOFF.md](HANDOFF.md) gives brief continuation instructions. There is one active plan. Archived plans are provenance only.
 
 | Record | Purpose |
 | --- | --- |
-| [Acceptance](acceptance-closure.json) | Sole status authority for 322 historical claims |
+| [Acceptance](acceptance-closure.json) | Sole historical status authority for 322 claims; evidence is revision-bound |
 | [Requirements](current-task-requirements.json) | Current canonical requirements for every key |
 | [PR checklist](merged-pr-review.md) | 301 saved PRs, deferrals and repeated tasks |
 | [Skipped tasks](current-skipped-tasks.md) | All 58 historical skips and current dispositions |

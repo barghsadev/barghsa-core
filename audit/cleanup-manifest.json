@@ -601,12 +601,12 @@
   ],
   "refresh": {
     "date": "2026-09-08",
-    "source_revision": "0e45382570d96a375be648a731b786436d834101",
-    "input_files_read": 328,
-    "input_bytes_read": 8289539,
-    "decoded_bytes_read": 10248041,
-    "input_inventory_sha256": "16a5e27582e64f9ca9f79f7e81ae81fcecebed4f7b9e1798d06dcdf46f40bee7",
-    "method": "Read every file; decode all gzip logs; parse every JSON and CSV inventory. Reconcile original findings, current task limitations, later step evidence and active plans. This is audit-content reconciliation, not fresh acceptance review of every implementation or PR.",
+    "source_revision": "9a114cfc3daf4397f0ec7bcd4101d7cf33d34060",
+    "input_files_read": 601,
+    "input_bytes_read": 10174522,
+    "decoded_bytes_read": 13825574,
+    "input_inventory_sha256": "de5ac9ae8a8834a9c55b74565d7315f7fdf1346a8031b656396b1346fef0623a",
+    "method": "Read every file byte; decode all 481 gzip logs and UTF-8 text; parse all 53 JSON and 5 CSV files; inspect binary headers and hashes for 12 PNGs. Reconcile original findings, current limitations, all saved PR bodies, skip dispositions and later step evidence. Images were inventoried, not re-certified visually. This is audit-content reconciliation, not a fresh implementation or PR acceptance review.",
     "completed_step_detail": "audit/evidence/step-reviews.json",
     "duplicate_logs": [
       {
@@ -714,10 +714,20 @@
     ],
     "current_duplicate_groups": 0,
     "cleanup": [
-      "Replaced the active plan in place; shortened README and handoff instead of adding another competing plan.",
-      "Kept all unique historical evidence and99 original path mappings; no additional evidence files qualified for deletion.",
-      "Reconciled interrupted18-pass test report without changing task acceptance.",
-      "Recorded GitHub refresh unavailability and corrected stale next action."
+      "Updated the existing active plan, README and handoff; retained one plan and removed repeated/stale status instructions.",
+      "Corrected F22 from stale 46 verified / 18 partial / 258 pending to the ledger counts 49 / 19 / 254 without changing acceptance.",
+      "Routed all 19 partial records and all remaining phases; preserved the complete generated PR and skip lists.",
+      "Recorded six incomplete reset files with hashes and eight verified records whose referenced source changed in later commits.",
+      "Preserved all unique evidence, 99 original path mappings and 695 saved log invocation entries. No byte-identical files qualified for removal.",
+      "Confirmed existing support contacts against the user answer and source; recorded unavailable GitHub refresh without claiming a new query."
+    ],
+    "counts_unchanged": true,
+    "product_changes_made": false,
+    "validation": [
+      "python3 audit/check_audit.py: passed; 322 tasks, 301 PRs, 58 skips, 23 groups, 99 original mappings and 695 saved log entries.",
+      "python3 audit/current_requirements.py: passed; 322 current requirement bindings.",
+      "python3 audit/current_skipped_tasks.py: passed; generated dispositions match acceptance.",
+      "python3 audit/current_pr_reviews.py: passed; generated PR checklist matches acceptance."
     ]
   }
 }

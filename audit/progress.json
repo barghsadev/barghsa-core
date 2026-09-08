@@ -5,7 +5,7 @@
   "plan": "audit/fix-plan.md",
   "source_revision": "e86936264cd1bd699658b5118a148cef9a5d9b16",
   "active_step": "R01",
-  "next_action": "R01: finish OTP-first password reset for 02-auth-users-admin.md#T-02.03.02. Verify OTP before showing password entry while preserving short-lived single-use authorization, five-attempt destination limits, history, atomic audit and all-session revocation. Backend reset repairs and acknowledged login redirect e869362 pass 54 distinct API and 10 browser cases, types/lint/format and 41 route budgets. Task is partial because current UI still submits OTP and password together. Then resume remaining rotation/cookie review; current-session refresh, location and caller matrices remain. Lost-contact policy question is pending.",
+  "next_action": "R01: resume the six unfinished OTP-first reset files for 02-auth-users-admin.md#T-02.03.02. Complete consuming OTP verification, short-lived single-use hashed authorization, service/controller/browser integration and migration review; preserve original expiry, account binding, destination limits, history, atomic audit and all-session revocation. Review focused HTTP/database/browser and applicable quality checks before committing. See unfinished_worktree. Then resume session rotation/cookies, current-session refresh, location and caller matrices. Lost-contact policy question remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -286,7 +286,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review 18 partial and 258 pending records; retain 46 verified task assessments. Reconcile 301 PRs, 170 deferrals and 58 historical skips. The 1,033 unrecorded backlog tasks remain separate."
+        "Review the 19 partial and 254 pending records; retain 49 revision-bound verified assessments and reconcile the eight changed-source records in evidence_refresh_queue. Reconcile 301 PRs, 170 deferrals and 58 historical skips without duplicate builds. The 1,033 historical queue gaps remain separate."
       ]
     },
     {
@@ -480,6 +480,10 @@
     {
       "id": "R01-reset-transaction",
       "review_record": "audit/evidence/step-reviews.json#R01-reset-transaction"
+    },
+    {
+      "id": "A01-audit-reconciliation-3",
+      "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
     }
   ],
   "deferred_improvements": [
@@ -510,7 +514,7 @@
     "Retain Vite SPA under ADR004.",
     "No automatic identity provider; retain safe unavailable state and supported manual verification.",
     "Dependency license allowlist waived; coverage and bundle thresholds remain unchanged.",
-    "Confirmed support contacts: info@barghsa.com, office021-26658042, mobile09002550292. Unsupported response-time promise removed."
+    "Confirmed support contacts: info@barghsa.com, office 021-26658042, mobile 09002550292. Unsupported response-time promise removed."
   ],
   "pending_questions": [
     {
@@ -523,7 +527,111 @@
   "inventory_freshness": {
     "saved_merged_prs": 301,
     "last_recorded_github_check": "2026-09-08",
+    "latest_saved_merge": "2026-09-03T15:47:41Z",
     "refresh_attempt": "unavailable",
-    "reason": "gh executable not found; no new remote inventory or remote state change claimed."
+    "reason": "gh executable remains unavailable at this audit refresh; all saved PR bodies were read. No new remote inventory or remote state change claimed."
+  },
+  "evidence_refresh_queue": [
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.02",
+      "changed_paths": [
+        "apps/api/src/auth/auth.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.03",
+      "changed_paths": [
+        "apps/web/src/pages/AdminLayout.tsx"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "changed_paths": [
+        "apps/api/src/invoice/auto-invoice.service.ts"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
+      "changed_paths": [
+        "apps/api/src/invoice/manual-invoice.service.ts",
+        "apps/api/src/invoice/auto-invoice.service.ts",
+        "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+        "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.01",
+      "changed_paths": [
+        "apps/api/src/crm/crm-list-http.integration.test.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.04",
+      "changed_paths": [
+        "apps/api/src/auth/auth.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.01.01",
+      "changed_paths": [
+        "apps/api/src/crm/crm-list-http.integration.test.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.01.02",
+      "changed_paths": [
+        "apps/api/src/crm/crm-list-http.integration.test.ts"
+      ]
+    }
+  ],
+  "unfinished_worktree": {
+    "recorded_at_head": "9a114cfc3daf4397f0ec7bcd4101d7cf33d34060",
+    "task_key": "02-auth-users-admin.md#T-02.03.02",
+    "status": "incomplete_unverified",
+    "files": [
+      {
+        "path": "apps/api/src/auth/dto/reset-password.dto.ts",
+        "sha256": "cc9e26c352d78ef315c81c983aac826011fd9f84c5dbe9f4ffdc59680ad3a092"
+      },
+      {
+        "path": "apps/api/src/auth/otp.service.ts",
+        "sha256": "317ffe877d680c0d10c6e55891dede03f1f76dcf486906b2e058d24e2248b720"
+      },
+      {
+        "path": "packages/db/drizzle/production/meta/_journal.json",
+        "sha256": "83738556380d9c0be3fe9ef6e6eddf01267ff997eff8281b1086ed9751947078"
+      },
+      {
+        "path": "packages/db/src/schema/otp-challenge.ts",
+        "sha256": "060dff1853f976a07d106d10d2b4843738dce505fe83b1f0722a6fa9bb49a15e"
+      },
+      {
+        "path": "packages/db/drizzle/production/0122_password_reset_authorization.sql",
+        "sha256": "f6a973c06bb4704754f378e73520f6a96338dd075a8a77a8c0cb0f7c8a870fe4"
+      },
+      {
+        "path": "packages/db/drizzle/production/meta/0122_snapshot.json",
+        "sha256": "fc92480d461c039500a3d090ddb77b51e2920023b1cdb20e3b95b0bd954ef6d4"
+      }
+    ],
+    "remaining": [
+      "Adapt the reset service and controller to the draft OTP/token union; preserve weak-password error semantics and strict acknowledgement validation.",
+      "Complete consuming OTP exchange and final grant consumption atomically; preserve deadlines, account binding, destination quotas, history, revocation and audit.",
+      "Review replacement issuance, stale grants and account/challenge lock ordering.",
+      "Implement browser stages and failure/cooldown/pending behavior; update OpenAPI and verify migration 0122 clean/upgrade/repeat/snapshot consistency."
+    ],
+    "affected_verified_tasks": [
+      "02-auth-users-admin.md#T-04.01.02",
+      "02-auth-users-admin.md#T-02.04.01",
+      "02-auth-users-admin.md#T-02.01.03"
+    ],
+    "validation": "No completed runtime verification of these worktree changes. Earlier e869362 evidence remains revision-bound."
+  },
+  "audit_refresh": {
+    "date": "2026-09-08",
+    "source_revision": "9a114cfc3daf4397f0ec7bcd4101d7cf33d34060",
+    "record": "audit/cleanup-manifest.json#refresh",
+    "scope": "Directory reconciliation and plan cleanup only; product files and acceptance statuses unchanged.",
+    "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   }
 }

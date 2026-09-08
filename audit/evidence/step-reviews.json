@@ -2839,6 +2839,31 @@
         "audit/evidence/r01/barghsa-reset-transaction-web-build.log.gz",
         "audit/evidence/612434d/barghsa-invoice-final-types.log.gz"
       ]
+    },
+    {
+      "id": "A01-audit-reconciliation-3",
+      "date": "2026-09-08",
+      "source_revision": "9a114cfc3daf4397f0ec7bcd4101d7cf33d34060",
+      "summary": "Reconciled all 601 audit files; refreshed the remaining fix/PR/skip plan, corrected F22 counts and recorded six unfinished reset files plus eight changed-source evidence reviews. Product files and acceptance statuses were not changed.",
+      "review": [
+        "Decoded every saved gzip and parsed all JSON/CSV inventories. Retained all unique evidence and 99 original path mappings; no byte-identical files qualified for deletion.",
+        "All 19 partial tasks have explicit plan routing. The complete 301-PR and 58-skip reports remain derived from the unchanged ledger.",
+        "The 49 verified / 19 partial / 254 pending counts describe historical acceptance, not implementation effort. Eight verified records need relevant-diff and later-evidence reconciliation; this does not establish regressions.",
+        "The unfinished reset DTO/service/schema migration draft has no completed runtime validation. Resume service/controller/browser integration and focused review before another product step.",
+        "All three support contacts already match the user answer. The saved GitHub inventory was not remotely refreshed because gh is unavailable.",
+        "Retained token-saving rules: fixed scope, one active plan, focused checks, valid evidence reuse, separate historical dispositions and a final broad checkpoint."
+      ],
+      "checks": [
+        "python3 audit/check_audit.py: passed; 322 tasks, 301 PRs, 58 skips, 23 groups, 99 original mappings and 695 saved log entries.",
+        "python3 audit/current_requirements.py: passed; 322 current requirement bindings.",
+        "python3 audit/current_skipped_tasks.py: passed; generated dispositions match acceptance.",
+        "python3 audit/current_pr_reviews.py: passed; generated PR checklist matches acceptance."
+      ],
+      "remaining": [
+        "Resume progress.next_action; do not treat this audit-document refresh as a product acceptance or regression checkpoint."
+      ],
+      "evidence": "audit/cleanup-manifest.json#refresh",
+      "logs": []
     }
   ]
 }
