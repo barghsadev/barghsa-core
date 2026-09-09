@@ -26,11 +26,15 @@ import {
   DeviceTrustRequired,
   SessionService,
   type CreatedSession,
+  type ValidatedSession,
 } from '../session/session.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
 import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 import { TosService } from '../tos/tos.service.js';
 import { deviceTrustIp } from './device-trust-ip.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+
+type ContactActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /**
  * Service handling registration and login business logic.
@@ -1449,6 +1453,17 @@ export class AuthService {
     };
   }
 
+  /** Account, session, then OTP locks match the credential mutation order. */
+  private async lockContactSession(client: PoolClient, actor: ContactActor): Promise<void> {
+    const account = await client.query(
+      'SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+      [actor.userId]
+    );
+    if (!account.rows[0] || account.rows[0].disabled_at)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    await requireCurrentSession(client, actor);
+  }
+
   /**
    * Queue a linked OTP pair to the current and proposed usernames.
    *
@@ -1458,50 +1473,55 @@ export class AuthService {
    * Rate limits are enforced via the controller's @RateLimit decorator.
    */
   async sendChangeUsernameOtp(
-    userId: string,
+    actor: ContactActor,
     newUsername: string,
     ip: string,
     deviceToken?: string
   ): Promise<{ challengeId: string; destination: string; previousDestination: string }> {
+    const { userId } = actor;
     const pool = getDbPool();
-
-    // 1. Fetch current user
-    const userResult = await pool.query(
-      `SELECT username, auth_version FROM users WHERE user_id = $1`,
-      [userId]
-    );
-
-    if (userResult.rows.length === 0) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    const currentUsername = userResult.rows[0].username;
-
-    // 2. Check it's not the same
-    if (currentUsername === newUsername) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_SAME.code },
-        400
-      );
-    }
-
-    // 3. Check uniqueness
-    const takenResult = await pool.query(
-      `SELECT 1 FROM account_login_identifiers WHERE destination=$1 AND user_id<>$2 LIMIT 1`,
-      [newUsername, userId]
-    );
-
-    if (takenResult.rows.length > 0) {
-      throw new HttpException(
-        { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
-        409
-      );
-    }
-
-    // Both codes and delivery rows are one issuance transaction.
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await this.lockContactSession(client, actor);
+
+      // 1. Fetch current user
+      const userResult = await client.query(
+        `SELECT username, auth_version FROM users WHERE user_id = $1`,
+        [userId]
+      );
+
+      if (userResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404
+        );
+      }
+
+      const currentUsername = userResult.rows[0].username;
+
+      // 2. Check it's not the same
+      if (currentUsername === newUsername) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_SAME.code },
+          400
+        );
+      }
+
+      // 3. Check uniqueness
+      const takenResult = await client.query(
+        `SELECT 1 FROM account_login_identifiers WHERE destination=$1 AND user_id<>$2 LIMIT 1`,
+        [newUsername, userId]
+      );
+
+      if (takenResult.rows.length > 0) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+          409
+        );
+      }
+
+      // Both codes and delivery rows are one issuance transaction.
       const binding = {
         purpose: 'change_username' as const,
         userId,
@@ -1525,6 +1545,7 @@ export class AuthService {
         client,
         deviceToken
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { ...next, previousDestination: currentUsername };
     } catch (error) {
@@ -1542,19 +1563,20 @@ export class AuthService {
    * sessions (keeping the current one). Records an audit event.
    */
   async completeChangeUsername(
-    userId: string,
+    actor: ContactActor,
     newUsername: string,
     challengeId: string,
     otp: string,
     ip: string,
-    currentSessionId: string,
     previousOtp: string
   ): Promise<{ message: string }> {
+    const { userId } = actor;
     const pool = getDbPool();
     const client = await pool.connect();
 
     try {
       await client.query('BEGIN');
+      await this.lockContactSession(client, actor);
 
       // 1. Verify the challenge was created for this destination
       const challengeResult = await client.query(
@@ -1689,12 +1711,12 @@ export class AuthService {
         `UPDATE sessions
          SET revoked_at = $1, updated_at = $1
          WHERE user_id = $2 AND session_id != $3 AND revoked_at IS NULL`,
-        [now, userId, currentSessionId]
+        [now, userId, actor.sessionId]
       );
 
       // 5. Record audit event
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1709,6 +1731,7 @@ export class AuthService {
         ]
       );
 
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(
@@ -1717,8 +1740,14 @@ export class AuthService {
 
       return { message: 'Username changed successfully.' };
     } catch (err) {
-      // Verification is the first mutation; retain its failed-attempt counter.
-      await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK');
+      // Only a still-authorized failed attempt may persist its counter.
+      try {
+        if (err instanceof OtpAttemptRejected) await requireCurrentSession(client, actor);
+        await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK');
+      } catch (authorityError) {
+        await client.query('ROLLBACK').catch(() => {});
+        throw authorityError;
+      }
       if (err instanceof HttpException) throw err;
       this.logger.error(
         `Username change failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
@@ -1736,88 +1765,105 @@ export class AuthService {
    * If the user was registered with email, they can add a mobile and vice versa.
    */
   async sendAddContactOtp(
-    userId: string,
+    actor: ContactActor,
     contactType: 'email' | 'mobile',
     contactValue: string,
     ip: string,
     deviceToken?: string
   ): Promise<{ challengeId: string; destination: string }> {
+    const { userId } = actor;
     const pool = getDbPool();
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await this.lockContactSession(client, actor);
 
-    // 1. Check current user's contact fields
-    const userResult = await pool.query(
-      `SELECT email,mobile,auth_version,
+      // 1. Check current user's contact fields
+      const userResult = await client.query(
+        `SELECT email,mobile,auth_version,
        EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=lower(u.email)) AS email_verified,
        EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=u.mobile) AS mobile_verified
        FROM users u WHERE user_id=$1`,
-      [userId]
-    );
-
-    if (userResult.rows.length === 0) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    const user = userResult.rows[0];
-
-    // 2. Validate the user doesn't already have this contact type
-    if (contactType === 'email' && user.email_verified) {
-      throw new HttpException(
-        { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL.code },
-        409
+        [userId]
       );
-    }
 
-    if (contactType === 'mobile' && user.mobile_verified) {
-      throw new HttpException(
-        { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE.code },
-        409
-      );
-    }
-
-    // 3. Validate the contact value is appropriate
-    if (contactType === 'email') {
-      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRe.test(contactValue)) {
+      if (userResult.rows.length === 0) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
-          400
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404
         );
       }
-    } else {
-      // mobile — must be E.164
-      const e164Re = /^\+[1-9]\d{6,14}$/;
-      if (!e164Re.test(contactValue)) {
+
+      const user = userResult.rows[0];
+
+      // 2. Validate the user doesn't already have this contact type
+      if (contactType === 'email' && user.email_verified) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
-          400
+          { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL.code },
+          409
         );
       }
-    }
 
-    const taken = await pool.query(
-      'SELECT 1 FROM account_login_identifiers WHERE destination=$1 AND user_id<>$2',
-      [contactValue, userId]
-    );
-    if (taken.rows.length)
-      throw new HttpException(
-        { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
-        409
+      if (contactType === 'mobile' && user.mobile_verified) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE.code },
+          409
+        );
+      }
+
+      // 3. Validate the contact value is appropriate
+      if (contactType === 'email') {
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(contactValue)) {
+          throw new HttpException(
+            { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+            400
+          );
+        }
+      } else {
+        // mobile — must be E.164
+        const e164Re = /^\+[1-9]\d{6,14}$/;
+        if (!e164Re.test(contactValue)) {
+          throw new HttpException(
+            { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+            400
+          );
+        }
+      }
+
+      const taken = await client.query(
+        'SELECT 1 FROM account_login_identifiers WHERE destination=$1 AND user_id<>$2',
+        [contactValue, userId]
       );
+      if (taken.rows.length)
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+          409
+        );
 
-    // 4. Create OTP challenge
-    return this.otpService.createChallenge(
-      contactValue,
-      ip,
-      undefined,
-      undefined,
-      {
-        purpose: contactType === 'email' ? 'add_email' : 'add_mobile',
-        userId,
-        authVersion: user.auth_version,
-      },
-      undefined,
-      deviceToken
-    );
+      // 4. Create OTP challenge
+      const challenge = await this.otpService.createChallenge(
+        contactValue,
+        ip,
+        undefined,
+        undefined,
+        {
+          purpose: contactType === 'email' ? 'add_email' : 'add_mobile',
+          userId,
+          authVersion: user.auth_version,
+        },
+        client,
+        deviceToken
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return challenge;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -1826,18 +1872,20 @@ export class AuthService {
    * Atomically: verifies OTP → updates the contact column.
    */
   async completeAddContact(
-    userId: string,
+    actor: ContactActor,
     contactType: 'email' | 'mobile',
     contactValue: string,
     challengeId: string,
     otp: string,
     ip: string
   ): Promise<{ message: string }> {
+    const { userId } = actor;
     const pool = getDbPool();
     const client = await pool.connect();
 
     try {
       await client.query('BEGIN');
+      await this.lockContactSession(client, actor);
 
       // 1. Verify the challenge was created for this destination
       const challengeResult = await client.query(
@@ -1921,7 +1969,7 @@ export class AuthService {
 
       // 4. Record audit event
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1936,14 +1984,21 @@ export class AuthService {
         ]
       );
 
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(`Contact added: user ${userId} ${contactType}=${contactValue} from ${ip}`);
 
       return { message: 'Contact added successfully.' };
     } catch (err) {
-      // Verification is the first mutation; retain its failed-attempt counter.
-      await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK');
+      // Only a still-authorized failed attempt may persist its counter.
+      try {
+        if (err instanceof OtpAttemptRejected) await requireCurrentSession(client, actor);
+        await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK');
+      } catch (authorityError) {
+        await client.query('ROLLBACK').catch(() => {});
+        throw authorityError;
+      }
       if (typeof err === 'object' && err !== null && 'code' in err && err.code === '23505')
         throw new HttpException(
           { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },

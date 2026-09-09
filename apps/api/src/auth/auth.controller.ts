@@ -931,7 +931,7 @@ export class AuthController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.authService.sendChangeUsernameOtp(
-      req.session.userId,
+      req.session,
       parsed.data.newUsername,
       ip,
       getOrCreateDeviceCookie(req, res)
@@ -976,12 +976,11 @@ export class AuthController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.authService.completeChangeUsername(
-      req.session.userId,
+      req.session,
       parsed.data.newUsername,
       parsed.data.otpChallengeId,
       parsed.data.otp,
       ip,
-      req.session.sessionId,
       parsed.data.previousOtp
     );
   }
@@ -1032,7 +1031,7 @@ export class AuthController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.authService.sendAddContactOtp(
-      req.session.userId,
+      req.session,
       parsed.data.contactType,
       parsed.data.contactValue,
       ip,
@@ -1076,7 +1075,7 @@ export class AuthController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.authService.completeAddContact(
-      req.session.userId,
+      req.session,
       parsed.data.contactType,
       parsed.data.contactValue,
       parsed.data.otpChallengeId,
