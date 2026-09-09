@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "948a216b9800a9e29f8c86d529884f25eb55b069",
+  "source_revision": "0ad07601407c4249db92b7e65496c6f548c33a81",
   "active_step": "R01",
-  "next_action": "Continue the bounded ticket batch. Review the remaining shared assignment lock/role risks with focused regression, then implement missing ticket UI criteria using existing fields/routes and disposition dependencies. Reuse current70 API/service cases,10 browser cases and42 budget results while relevant source remains unchanged. Consolidate acceptance once; no ticket task or PR closed at this checkpoint.",
+  "next_action": "Finish ticket list related links and staff customer information using current authorized fields/routes. Categories and assignment repairs are verified; reuse their evidence. Record unbuilt order/contract dependencies without inventing routes. Consolidate individual task/PR acceptance once the remaining criteria have supported dispositions.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -655,7 +655,8 @@
     "Dependency license allowlist waived. Coverage thresholds and existing route numeric limits remain unchanged; see approved estimator measurement below.",
     "Confirmed support contacts: info@barghsa.com, office 021-26658042, mobile 09002550292. Unsupported response-time promise removed.",
     "September9: owner approved \"Initial-load limit; measure estimator separately\". Auth initial-load gate stays150KB gzip; full estimator measured independently against900KB. Initial registration149.22KB, estimator837.80KB. Eager imports remain counted. Canonical T-01.03.04 updated at06a4b44.",
-    "September9: implement a pre-login CSRF-token flow. Do not amend public login/registration to accept JSON-only protection as final CSRF acceptance."
+    "September9: implement a pre-login CSRF-token flow. Do not amend public login/registration to accept JSON-only protection as final CSRF acceptance.",
+    "September9: ticket categories are General, Billing, Orders. Canonical T-06.01.01 now records these values, defaults and display requirements. Implemented at0ad0760."
   ],
   "pending_questions": [
     {
@@ -739,6 +740,19 @@
       "changed_paths": [
         "apps/api/src/crm/crm-list-http.integration.test.ts"
       ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.03",
+      "changed_paths": [
+        "apps/web/e2e/tickets.spec.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.03.02",
+      "changed_paths": [
+        "packages/db/drizzle/production/meta/_journal.json",
+        "packages/db/src/migrate.baseline.test.ts"
+      ]
     }
   ],
   "audit_refresh": {
@@ -763,12 +777,12 @@
       "02-auth-users-admin.md#T-06.01.03"
     ],
     "remaining_checklist": [
-      "Exact requirements and saved PR138/139/140 bodies are read. Do not repeat discovery or close all three tasks yet.",
-      "UI missing category/type selector, related entity link in list and staff customer-information panel. Full component reviewed once. Confirm available fields/routes before implementation; category taxonomy is unspecified.",
-      "Contract linking explicitly unavailable409 because contract table/workflow is unbuilt. Preserve V01/B01 dependency; no invented target route.",
-      "Automatic ticket/manual assignment race repaired948a216. The other choose caller, VerificationCaseService.createCase, still acquires actor before teams; review with a focused regression for cross-workflow deadlock and current assignee-role authority before changing it.",
-      "Attachment sealing and download implementation reviewed: verified ownership/profile/purpose, fixed bytes and provisional cleanup. Existing41 HTTP cases cover ticket integration; preserve generic storage evidence. Resolve PR138 historical deferral against this implementation.",
-      "Resolve PR140 team/assignment historical deferral and consolidate individual task/PR acceptance after remaining defects are handled."
+      "Requirements, PR138/139/140 bodies, ticket component, attachment service and assignment consumers already reviewed. Do not repeat their full discovery.",
+      "Remaining UI gaps: related-record link in the ticket list and staff customer-information panel. Current staff detail has userId/profileId and profile quick-link, but no customer display metadata.",
+      "Only customer invoice detail is available as a true existing record route. AdminInvoicesPage is a collection of manual/correction/deadline forms, not an invoice queue. Its deadline lookup starts with a blank invoiceId and supports no search/deep-link input. Add a real supported link path if needed; do not label the current /admin/invoices link a specific record link.",
+      "No order detail route exists in the current route inventory; /electricity/order is order creation. Contract linking deliberately returns409 because its table/workflow is unbuilt. Preserve V01/B01 dependencies and disposition unavailable related-record targets explicitly.",
+      "Shared assignment lock and current-role defects now verified atb5c4e87; ticket categories now verified at0ad0760. Both create callers use the additional ordered actor lock set. Creation remains atomic on later validation/evidence/auth failures.",
+      "Complete remaining ticket UI review, resolve PR138 attachment and PR140 assignment deferrals using existing implementation evidence, then consolidate individual task/PR dispositions once. No task/PR closed at this checkpoint."
     ],
     "confirmed_defects": [
       {
@@ -803,6 +817,32 @@
           "/tmp/r01-tickets-assignment-race-baseline.log",
           "/tmp/r01-tickets-assignment-check.log"
         ]
+      },
+      {
+        "summary": "Identity correction creation inverted account/team locks against manual ticket assignment.",
+        "status": "repaired_and_verified_at_b5c4e87",
+        "evidence": [
+          "/tmp/r01-tickets-shared-assignment-baseline.log",
+          "/tmp/r01-tickets-assignment-authority-check.log"
+        ]
+      },
+      {
+        "summary": "Automatic and manual assignment could choose staff using a role being revoked concurrently.",
+        "status": "repaired_and_verified_at_b5c4e87",
+        "evidence": [
+          "/tmp/r01-tickets-candidate-role-baseline.log",
+          "/tmp/r01-tickets-manual-role-baseline.log",
+          "/tmp/r01-tickets-assignment-authority-routing-final.log"
+        ]
+      },
+      {
+        "summary": "Ticket category selector and category persistence were missing. User approved General, Billing, Orders.",
+        "status": "implemented_and_verified_at_0ad0760",
+        "evidence": [
+          "/tmp/r01-tickets-category-http-final.log",
+          "/tmp/r01-tickets-category-browser.log",
+          "/tmp/r01-tickets-category-baseline-verified.log"
+        ]
       }
     ],
     "reused_evidence": [
@@ -814,10 +854,14 @@
       "fa60a45: 41 HTTP cases pass, including revoked/downgraded roles and expiry on customer reads. API types/lint/format/OpenAPI pass. Superseded by the overlapping70-case run at948a216; do not add the counts.",
       "368c080: 10 production Chromium cases pass, including mixed full-read/assigned-only-write scope and FA/EN light/dark axe checks. Web build/types/lint/format and42 unchanged route/interaction budgets pass.",
       "948a216: Concurrent staff ticket creation/manual assignment previously returned500; the regression now passes.70 cases pass across tickets HTTP41, service22 and assignment HTTP7. API types/lint/format/OpenAPI pass; HTTP setup rebuilt API. Test-only non-null annotations followed the runtime run and passed typecheck.",
-      "34 newly archived read/UI/assignment logs, including baseline failures and intermediate type/contrast failures. 2078 total indexed logs."
+      "34 newly archived read/UI/assignment logs, including baseline failures and intermediate type/contrast failures. 2078 total indexed logs.",
+      "b5c4e87:91 distinct API/service cases pass across focused runs; source review keeps profile-first, team-before-users ordering and locks candidate role membership/permissions through commit. No schema, UI or provider changes in this repair.",
+      "0ad0760:57 HTTP +22 service +10 browser cases pass. Migration0125 adds only a constrained defaulted category field; generated snapshot differs only in public.tickets. Generated timestamp was corrected to follow the existing future-dated journal. Three migration cases pass; initial timestamp and legacy-fixture failures are retained.",
+      "30 new ended logs archived; 2108 logs indexed. Numeric budgets and coverage floors unchanged; full regression remainsV02.",
+      "24 previously current task source bindings refreshed with scoped evidence. 12 retained/identified refresh records remain; no acceptance counts changed."
     ],
     "pr_dispositions": [],
-    "next_action": "Continue the bounded ticket batch. Review the remaining shared assignment lock/role risks with focused regression, then implement missing ticket UI criteria using existing fields/routes and disposition dependencies. Reuse current70 API/service cases,10 browser cases and42 budget results while relevant source remains unchanged. Consolidate acceptance once; no ticket task or PR closed at this checkpoint.",
+    "next_action": "Finish ticket list related links and staff customer information using current authorized fields/routes. Categories and assignment repairs are verified; reuse their evidence. Record unbuilt order/contract dependencies without inventing routes. Consolidate individual task/PR acceptance once the remaining criteria have supported dispositions.",
     "product_commits": [
       {
         "revision": "5b637a8",
@@ -838,6 +882,16 @@
         "revision": "948a216",
         "change": "Consistent account/team lock order for automatic ticket assignment",
         "verification": "Concurrent staff ticket creation/manual assignment previously returned500; the regression now passes.70 cases pass across tickets HTTP41, service22 and assignment HTTP7. API types/lint/format/OpenAPI pass; HTTP setup rebuilt API. Test-only non-null annotations followed the runtime run and passed typecheck."
+      },
+      {
+        "revision": "b5c4e87",
+        "change": "Shared creation lock order and current automatic/manual assignment grants",
+        "verification": "Identity-correction creation/manual ticket assignment race reproduced and repaired. Both automatic/manual assignment role-revocation races reproduced and repaired.91 distinct cases pass:82 unchanged after the combined run plus9 routing cases after correcting duplicate test team names. API types/lint/format/OpenAPI pass."
+      },
+      {
+        "revision": "0ad0760",
+        "change": "Approved ticket categories across migration, API, audit and UI",
+        "verification": "57 HTTP cases,22 unchanged service cases,10 production Chromium cases and42 unchanged budgets pass. Three migration cases pass across focused runs, covering old populated data, legacy recovery, fresh schema/seed and preauth preservation. API/web/DB types, lint, format, web build, OpenAPI and backlog/requirements checks pass."
       }
     ]
   },

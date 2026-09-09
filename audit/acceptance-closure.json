@@ -3745,7 +3745,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3815,7 +3815,8 @@
         "The legal read moved to readCrmLegalInfo in the already-reviewed legal-edit step. Its SQL column whitelist, references and module/test hashes remain unchanged. Other changed API lines concern edit/archive mutations, not the detail permission boundary. Reuse earlier backend evidence instead of repeating the CRM suite.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Large production history-volume performance and legacy immutable-document recovery remain operational prerequisites. The detail session list contains the latest 20 records; active count is computed separately. The written task does not specify session pagination.",
@@ -3827,12 +3828,11 @@
       "historically_skipped": false,
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -3898,7 +3898,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3930,7 +3930,7 @@
         },
         {
           "path": "kanban/epics/02-auth-users-admin.md",
-          "sha256": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8"
+          "sha256": "e532618b099625d9b0c8cae5fc03804183236ae80174ce47b4168180a78a8a55"
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
@@ -3950,7 +3950,8 @@
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [],
       "merged_prs": [
@@ -3959,12 +3960,12 @@
       "historically_skipped": false,
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/openapi.json"
+          "apps/api/openapi.json",
+          "kanban/epics/02-auth-users-admin.md"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -4156,7 +4157,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/verification-case.service.ts",
-          "sha256": "19c73a12e5a9121aab29f60bafe5177b066c77badf7675d358d5a1392dc15053"
+          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
         },
         {
           "path": "apps/api/src/crm/verification-case.controller.ts",
@@ -4164,7 +4165,7 @@
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "b17e6eca9b6133ee36c3f878cf6d8100165c1b4aa4e6c660f3163ff9c1bcf0c8"
+          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
         },
         {
           "path": "apps/api/src/crm/verification-evidence.service.ts",
@@ -4204,7 +4205,7 @@
         },
         {
           "path": "kanban/epics/02-auth-users-admin.md",
-          "sha256": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8"
+          "sha256": "e532618b099625d9b0c8cae5fc03804183236ae80174ce47b4168180a78a8a55"
         }
       ],
       "checks": [
@@ -4217,7 +4218,8 @@
         "All24 distinct correction production-browser cases pass across the final focused runs. Eight reviewer cases cover fa/en, light/dark, desktop/mobile, status filtering, immutable evidence links, keyboard navigation, Escape cancellation, focus restoration, approval and legacy rejection. Queue/detail axe checks report no violations or incomplete contrast results.",
         "API/web typechecks, explicit changed-file lint, formatting, production build and all41 complete-route budgets pass. Backend product sources remain unchanged; prior transaction/evidence/permission regressions remain applicable.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "This verifies the local correction workflow and its five canonical protected identity fields. Legacy unsealed evidence requires resubmission; no live storage-provider recovery or production reconciliation is certified.",
@@ -4228,12 +4230,14 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/crm/verification-case.service.ts",
+          "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "kanban/epics/02-auth-users-admin.md"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -4259,7 +4263,7 @@
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "b17e6eca9b6133ee36c3f878cf6d8100165c1b4aa4e6c660f3163ff9c1bcf0c8"
+          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -4400,7 +4404,8 @@
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
@@ -4412,16 +4417,11 @@
       "historically_skipped": false,
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
-          "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-          "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-          "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-          "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+          "apps/api/src/crm/verification-case-http.integration.test.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -4459,7 +4459,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4495,7 +4495,8 @@
         "Initial browser runs retained: first 12 pass/8 fail and next 6 pass/2 fail. Failures identified the Unicode arrow and partly clipped mobile text; proper icon markup and per-node revealed-text scans pass. The initial API typecheck error log is preserved alongside the later passing typecheck; no global checkpoint is renewed.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Production-scale search/aggregate performance, deployment and the final global checkpoint remain separate evidence."
@@ -4506,12 +4507,11 @@
       "historically_skipped": false,
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -4602,7 +4602,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4632,7 +4632,8 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Chargeback-only additions and neighbouring CRM behavior reviewed atab17007; prior valid behavior evidence preserved. audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+        "Chargeback-only additions and neighbouring CRM behavior reviewed atab17007; prior valid behavior evidence preserved. audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Visibility and local reads are verified. Provider approval, deployed settings and final global regression remain separate evidence."
@@ -4643,12 +4644,11 @@
       "historically_skipped": false,
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -5047,7 +5047,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5146,7 +5146,8 @@
         "At a60cce6, reviewed isolated staff-activation expiry repair and11 selected HTTP checks, types and lint. Other auth methods are unchanged; see audit/evidence/step-reviews.json#R01-staff-activation-deadlines. Earlier drift and task limitations remain.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "audit/evidence/step-reviews.json#R01-session-recovery: Preserve verified OTP-first reset: limited one-use verification grant, server password strength/history, atomic password/OTP/audit/session/refresh invalidation and return-to-login acknowledgement. New preauth transport and shared recovery OTP are verified by current217 API and31 recovery/rate-limit browser cases. Existing reset transaction/migration evidence remains valid; no reset service logic changed beyond safe logging."
+        "audit/evidence/step-reviews.json#R01-session-recovery: Preserve verified OTP-first reset: limited one-use verification grant, server password strength/history, atomic password/OTP/audit/session/refresh invalidation and return-to-login acknowledgement. New preauth transport and shared recovery OTP are verified by current217 API and31 recovery/rate-limit browser cases. Existing reset transaction/migration evidence remains valid; no reset service logic changed beyond safe logging.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Preserved reset transaction and migration evidence is supplemented by current preauth and recovery UI checks. Local fixtures do not prove provider operation or deployment."
@@ -5157,12 +5158,11 @@
       "historically_skipped": false,
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       },
       "previous_batch_assessment": {
         "status": "acceptance_verified",
@@ -5525,7 +5525,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
         },
         {
           "path": "packages/i18n/src/team.ts",
@@ -5543,7 +5543,8 @@
       "checks": [
         "Current owner/Manager list authorization, legal-profile scope and invited-account privacy pass actual HTTP checks. Expired Pending rows are excluded without exposing registration status.",
         "Native table contains username/name, role badges, Active/Pending, joined date and Remove/Withdraw. Empty state and active-legal/permission branches were reviewed. Browser cases cover table, localized dates, invitations, withdrawal/removal and owner-only transfer controls. Existing e48bf58/417ab33 transaction evidence is retained.",
-        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
@@ -5551,7 +5552,15 @@
       "merged_prs": [
         131
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "changed_paths_reviewed": [
+          "packages/i18n/src/app.ts"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.02",
@@ -5564,7 +5573,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -5612,7 +5621,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
         },
         {
           "path": "packages/i18n/src/team.ts",
@@ -5641,7 +5650,8 @@
         "Real registration and OTP verification with a pre-existing normalized invitation exposes that pending invitation through returned credentials. Registration grants no membership; acceptance provides consent. Transport was replaced with a fixture OTP, and transport delivery is outside this check.",
         "HTTP checks prove ten successful invitations per profile/hour, rejection of the eleventh without writes, exact seven-day default, duplicate rejection and current authorization. Existing ownership/removal evidence preserves the single owner.",
         "The compiled worker polls invitation expiry, records failure/recovery and drains on shutdown. Real migrated PostgreSQL proves bounded expiry, concurrent SKIP LOCKED decisions, idempotent correlated audit and rollback/retry. All three PR132 deferrals have explicit supported dispositions.",
-        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
@@ -5653,12 +5663,12 @@
       "historically_skipped": false,
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/openapi.json"
+          "apps/api/openapi.json",
+          "packages/i18n/src/app.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -5696,7 +5706,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
         },
         {
           "path": "apps/api/src/profiles/invitations.controller.ts",
@@ -5719,7 +5729,8 @@
         "Only the invited current username sees pending, unexpired invitations. Entity national identifier/registration number and inviter identity are returned only in that private response.",
         "Dashboard banner exposes View details, Accept and Decline. Native details disclosure shows entity identifiers, inviter, localized role description, account-local dates and expiry. Keyboard expansion/collapse, fa/en/RTL, mobile fit and stable light/dark contrast pass.",
         "The existing acceptance transaction alone grants the selected role and rotates credentials atomically. Failed accept/decline remains retryable; successful decisions refresh profiles and subsequent selection uses rotated CSRF. Direct banner decisions satisfy the canonical requirement; it does not require an extra confirmation dialog.",
-        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
@@ -5727,7 +5738,15 @@
       "merged_prs": [
         133
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "changed_paths_reviewed": [
+          "packages/i18n/src/app.ts"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
@@ -5756,7 +5775,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
         },
         {
           "path": "packages/i18n/src/team.ts",
@@ -5778,7 +5797,8 @@
       "checks": [
         "Local owner/Manager controls and additive agent grants are reviewed. Existing 417ab33 mutation evidence proves current authorization, owner protection, immediate credential/access revocation and preserved history. The batch preserves unchanged domain implementations.",
         "Wallet/receipt/payment/refund, invoice, contract/document and order/address role criteria remain assigned to their owning feature batches. This task and PR134 remain open until linked domain evidence is complete.",
-        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
@@ -5787,7 +5807,15 @@
       "merged_prs": [
         134
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "changed_paths_reviewed": [
+          "packages/i18n/src/app.ts"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.05",
@@ -5816,7 +5844,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "b67492c60fad098bab0e90cb23ac3d7079f1562f620d7637dbc8df8581cdc758"
+          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
         },
         {
           "path": "packages/i18n/src/team.ts",
@@ -5847,7 +5875,8 @@
         "Ownership UI now follows password verification, blank eligible-agent selector, target-specific confirmation and named acceptance-needed success. One dialog retains focus across stages; cancellation, reauthentication, current CSRF and immutable target retries pass.",
         "No ownership API method body changed from the immediate batch base. Reuse b4a0c83 authority/expiry/audit and earlier credential evidence: current owner retains control until acceptance, recipient must be an existing agent, decline/expiry cancel, audit is atomic and successful acceptance invalidates both owners credentials.",
         "Incoming banner, exact transfer decisions, expired/conflicting response without false success, localized recipient-name fallback, fa/en/RTL, light/dark and keyboard/focus checks pass. Final review restricted automatic confirmation focus to the ownership flow, preserving existing shared-dialog behavior.",
-        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
@@ -5855,7 +5884,15 @@
       "merged_prs": [
         135
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "changed_paths_reviewed": [
+          "packages/i18n/src/app.ts"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-01.01.01",
@@ -6940,7 +6977,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "438e14bb18424aa9b3b151a4eb9956ac99f3e9c0c245c467c46de5dc0994694a"
+          "sha256": "4e46c8443c4271ff716d58e30777770f8eb7c6b4850cb0ce85f6817383542c56"
         },
         {
           "path": "packages/db/drizzle/production/0124_address_soft_delete.sql",
@@ -6952,7 +6989,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "dd5dc33eafd2350f650b515c09c97523162dc4a5a51dcb4e3416fd6dbb1a8c63"
+          "sha256": "067e0542cac83d46149612bf73a41d809605f6ea5293f69b9cb32c68f01ff2df"
         },
         {
           "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -6968,7 +7005,8 @@
         }
       ],
       "checks": [
-        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses"
+        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         115
@@ -6983,7 +7021,16 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-profile-addresses",
         "audit/evidence/step-reviews.json#R01-profiles-onboarding"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+        "changed_paths_reviewed": [
+          "packages/db/src/migrate.baseline.test.ts",
+          "packages/db/drizzle/production/meta/_journal.json"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-03.04.02",
@@ -11087,7 +11134,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11128,7 +11175,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         236
@@ -11145,14 +11193,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11246,7 +11291,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11287,7 +11332,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         237
@@ -11304,14 +11350,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11405,7 +11448,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11446,7 +11489,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         238
@@ -11463,14 +11507,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11564,7 +11605,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11605,7 +11646,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         239
@@ -11622,14 +11664,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11723,7 +11762,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11764,7 +11803,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         240
@@ -11781,14 +11821,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11882,7 +11919,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11923,7 +11960,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         241
@@ -11940,14 +11978,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12041,7 +12076,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12082,7 +12117,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         243
@@ -12101,14 +12137,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12202,7 +12235,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12243,7 +12276,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         244
@@ -12260,14 +12294,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12361,7 +12392,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12402,7 +12433,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         245
@@ -12421,14 +12453,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12522,7 +12551,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12563,7 +12592,8 @@
       ],
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-        "Focused checks and reused evidence recorded in the consolidated batch."
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "merged_prs": [
         246
@@ -12580,14 +12610,11 @@
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
-        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "apps/api/openapi.json",
-          "apps/web/src/pages/AdminInvoicesPage.tsx"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
-        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12874,7 +12901,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -12923,7 +12950,8 @@
       ],
       "checks": [
         "Exact requirements and all contributing saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
-        "Current focused checks and unchanged reversal evidence are recorded once in the batch review."
+        "Current focused checks and unchanged reversal evidence are recorded once in the batch review.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
       ],
       "limitations": [],
       "merged_prs": [
@@ -12931,7 +12959,15 @@
         290
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+        "changed_paths_reviewed": [
+          "apps/api/openapi.json"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.02",
@@ -16056,6 +16092,38 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
       "note": "Prior full assessments retained in this Git revision. Only previously current bindings changed by the reviewed wallet batch are refreshed; unrelated stale evidence and limitations remain."
+    },
+    {
+      "source_revision": "9a1a18b",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.05",
+        "02-auth-users-admin.md#T-05.02.06",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.04.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.04.03",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-05.04.05",
+        "02-auth-users-admin.md#T-03.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01"
+      ],
+      "review_record": "audit/progress.json#active_batch",
+      "note": "Prior full assessments retained in Git. Refresh only previously current bindings for the reviewed assignment/category repairs. Unrelated stale evidence remains pending."
     }
   ]
 }
