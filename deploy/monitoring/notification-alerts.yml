@@ -1,0 +1,19 @@
+groups:
+  - name: barghsa-notification-delivery
+    rules:
+      - alert: NotificationDeadLettersPending
+        expr: max without (instance, pod) (notifications_dead_letter_count) > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Notification failures need triage
+          description: '{{ $value }} notification deliveries remain open in the dead-letter queue. Inspect attempt history at /admin/failed-notifications before retrying.'
+      - alert: NotificationDeadLettersAccumulating
+        expr: max without (instance, pod) (notifications_dead_letter_count) >= 20
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Notification failures are accumulating
+          description: '{{ $value }} notification deliveries remain open in the dead-letter queue. Check provider health, worker errors and delivery history. Do not bulk retry before the cause is fixed.'
