@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+  "source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
   "active_step": "R01",
-  "next_action": "Read saved payment/reversal PR bodies and current callers; preserve valid money/concurrency checks and useful duplicate-PR fixes.",
+  "next_action": "Resume R01-wallet-invoice-payments-reversals. All13 saved PR bodies read;68 payment/cache baseline cases pass. Complete remaining service/reversal and customer/system authority integration review, then repair confirmed gaps.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -615,6 +615,10 @@
     {
       "id": "R01-invoice-corrections",
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+    },
+    {
+      "id": "R01-invoice-adjustment-approval",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
     }
   ],
   "deferred_improvements": [
@@ -767,7 +771,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.04.01"
     ],
     "remaining_checklist": [
-      "Exact story/task criteria read. Read13 saved PR bodies and compare repeated implementations/deferrals.",
+      "Exact story/task criteria and all13 saved PR bodies read; /tmp/r01-wallet-payments-reversals-pr-history.log retains full history.",
       "Reuse prior wallet and chargeback authority/money evidence. Check actual payment/reversal callers, current session/agent permissions, exact remaining amounts, idempotency and transaction/audit behavior.",
       "Fix confirmed gaps, review focused checks, then consolidate this bounded batch."
     ],
@@ -868,11 +872,26 @@
     "reused_evidence": [
       "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
-      "audit/evidence/step-reviews.json#R01-invoice-corrections"
+      "audit/evidence/step-reviews.json#R01-invoice-corrections",
+      "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "summary": "Wallet invoice payment has no production caller (graph plus source search); service options do not bind session/agent authority.",
+        "status": "confirmed_missing_workflow"
+      }
+    ],
     "pr_dispositions": [],
-    "next_action": "Read saved payment/reversal PR bodies and current callers; preserve valid money/concurrency checks and useful duplicate-PR fixes."
+    "next_action": "Resume R01-wallet-invoice-payments-reversals. All13 saved PR bodies read;68 payment/cache baseline cases pass. Complete remaining service/reversal and customer/system authority integration review, then repair confirmed gaps.",
+    "new_evidence": [
+      "68 current payment/cache cases pass across5 suites; /tmp/r01-wallet-payments-reversals-baseline.log. No payment math repair indicated by baseline."
+    ],
+    "cross_feature_check": {
+      "status": "repaired_and_verified",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+      "source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
+      "verification": "146 backend,23 distinct production browser and42 budget checks pass; prior acceptance counts preserved."
+    }
   },
   "open_domain_reviews": [
     {

@@ -224,8 +224,8 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#192](https://github.com/barghsadev/barghsa-core/pull/192) | 02-auth-users-admin.md#T-09.06.01 (pending) | Task review remains | Not reviewed | 1 |
 | [#193](https://github.com/barghsadev/barghsa-core/pull/193) | 02-auth-users-admin.md#T-09.06.02 (pending) | Task review remains | Not reviewed | 2 |
 | [#194](https://github.com/barghsadev/barghsa-core/pull/194) | 02-auth-users-admin.md#T-09.06.03 (pending) | Task review remains | Not reviewed | 2 |
-| [#195](https://github.com/barghsadev/barghsa-core/pull/195) | 02-auth-users-admin.md#T-09.07.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 3 |
-| [#196](https://github.com/barghsadev/barghsa-core/pull/196) | 02-auth-users-admin.md#T-09.07.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 4 |
+| [#195](https://github.com/barghsadev/barghsa-core/pull/195) | 02-auth-users-admin.md#T-09.07.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-adjustment-approval) | 3 |
+| [#196](https://github.com/barghsadev/barghsa-core/pull/196) | 02-auth-users-admin.md#T-09.07.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-adjustment-approval) | 4 |
 | [#197](https://github.com/barghsadev/barghsa-core/pull/197) | 02-auth-users-admin.md#T-09.08.01 (pending) | Task review remains | Not reviewed | 2 |
 | [#198](https://github.com/barghsadev/barghsa-core/pull/198) | 02-auth-users-admin.md#T-09.08.02 (pending) | Task review remains | Not reviewed | 3 |
 | [#199](https://github.com/barghsadev/barghsa-core/pull/199) | 02-auth-users-admin.md#T-09.08.03 (pending) | Task review remains | Not reviewed | 0 |
@@ -277,7 +277,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#246](https://github.com/barghsadev/barghsa-core/pull/246) | 04-invoices-wallet-contracts.md#T-04.1.04.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-deadlines-reminders) | 0 |
 | [#247](https://github.com/barghsadev/barghsa-core/pull/247) | 04-invoices-wallet-contracts.md#T-04.1.05.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-corrections) | 0 |
 | [#248](https://github.com/barghsadev/barghsa-core/pull/248) | 04-invoices-wallet-contracts.md#T-04.1.05.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-corrections) | 1 |
-| [#249](https://github.com/barghsadev/barghsa-core/pull/249) | 04-invoices-wallet-contracts.md#T-04.1.05.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-corrections) | 4 |
+| [#249](https://github.com/barghsadev/barghsa-core/pull/249) | 04-invoices-wallet-contracts.md#T-04.1.05.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-adjustment-approval) | 4 |
 | [#250](https://github.com/barghsadev/barghsa-core/pull/250) | 04-invoices-wallet-contracts.md#T-04.1.05.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-corrections) | 0 |
 | [#251](https://github.com/barghsadev/barghsa-core/pull/251) | 04-invoices-wallet-contracts.md#T-04.2.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#252](https://github.com/barghsadev/barghsa-core/pull/252) | 04-invoices-wallet-contracts.md#T-04.2.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 1 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `a3f59cc89c23db72b12415eacb85c1856675b57ee19e92b8f6472a19a597ef3a`
-- `pr-deferrals.json`: `b6cc9266945350d8d8ee0d62ed9bd6bea4f9f199a8aa223c0eafc7f40a586d5b`
-- `evidence/step-reviews.json`: `952ca3ee8931aca0fe73648f5f12a60614a68f68ac286c8ef56a7ebc3778a524`
+- `acceptance-closure.json`: `fe40ef655c41c6bf24850a78078a89974ee7bdc3897b876c58ac654ffac4c308`
+- `pr-deferrals.json`: `b85ddedf834ef42b276b6fcd457f6b346a8199353c72d4a990fc6028a0d1de50`
+- `evidence/step-reviews.json`: `5bd9964b3f681ac758543f675f3fbf573456677d0d5d956e004b75b89930334f`

@@ -457,7 +457,9 @@
         "disposition": "external_evidence_required",
         "evidence": "Contract-phase CHECK validation remains V01 after old writers retire. audit/evidence/step-reviews.json#R01-invoice-corrections"
       }
-    ]
+    ],
+    "follow_up_review": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+    "follow_up_source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa"
   },
   {
     "pr": 248,
@@ -976,7 +978,9 @@
         "disposition": "satisfied_by_later_implementation",
         "evidence": "Current bank-receipt consumers use the positive >= threshold contract. Future refund/manual-adjustment consumers belong to separate service tasks. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       }
-    ]
+    ],
+    "follow_up_review": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+    "follow_up_source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa"
   },
   {
     "pr": 195,
@@ -1008,7 +1012,9 @@
         "disposition": "satisfied_by_later_implementation",
         "evidence": "Current receipt workflow consumes >= positive threshold; historical > wording was incorrect. Refund/manual-adjustment consumers remain their separate future module work. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       }
-    ]
+    ],
+    "follow_up_review": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+    "follow_up_source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa"
   },
   {
     "pr": 194,

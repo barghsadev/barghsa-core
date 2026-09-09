@@ -11281,6 +11281,194 @@
         "/tmp/r01-invoice-corrections-backlog-check.log",
         "/tmp/r01-invoice-corrections-requirements-check.log"
       ]
+    },
+    {
+      "id": "R01-invoice-adjustment-approval",
+      "date": "2026-09-09",
+      "source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
+      "base_revision": "141a8d9c48a36518cbcde9f004888b31e3b2db37",
+      "product_commits": [
+        "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa"
+      ],
+      "summary": "Repair the newly exposed manual-adjustment consumer of the existing financial approval policy. Prior invoice and approval acceptances are revalidated; no additional task or PR is counted closed.",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02"
+      ],
+      "review": [
+        "Two real HTTP regressions proved that both charge and credit adjustments bypassed a positive threshold. Existing calculation, immutable lines and signed accounting remain unchanged.",
+        "The staff submission wrapper holds the threshold policy, profile, current staff grants/session and original invoice locks. It compares absolute bigint IRR, rejects corrupt configuration and binds the exact key/fingerprint to a server-created approval request in original invoice metadata. Pending/rejected requests cannot be bypassed by reducing the threshold or replaying a changed payload.",
+        "Generic approval details alone cannot issue an invoice. The resolver revalidates the server-owned request binding and current initiator/reviewer permissions. Different-user resolution, adjustment issuance, notifications and both audits share one caller-owned transaction; session/step-up checks run through completion. Generic receipt resolution retains its existing behavior and locking.",
+        "Concurrent retries serialize without duplicate invoices. Rejection remains available after profile archival; approval cannot write to archived profiles. Original invoice amounts/state/lines are preserved. Credit notes do not pay funds into the wallet.",
+        "UI validates the exact202 request before showing pending status and the queue link. The queue and confirmation show the signed amount and original invoice, and explain that approval issues the adjustment. Captured step-up/retry behavior and issued-replacement/manual flows remain intact."
+      ],
+      "verification": {
+        "backend": "146 current correction HTTP and approval service/HTTP cases pass, including25 correction cases. Earlier successful adjustment service/integration and invoice receipt dual-approval suites are reused from the first six-suite run; its six mock failures were corrected and are not counted passed there.",
+        "browser": "23 distinct production Chromium cases pass:12 correction and4 existing manual cases from the first browser run;7 queue cases from the final run. The two initial queue failures expected plain numbers instead of the actual signed IRR currency strings; failed evidence is retained.",
+        "quality": "API/web types, scoped lint, formatting, API/OpenAPI and web/i18n builds pass. All42 unchanged route/interaction budgets pass. The only OpenAPI change is correction POST202 documentation.",
+        "fixture_corrections": "Preserved failed logs: two threshold baseline failures; six outdated sequential mocks; fresh-session fixtures on the cross-clock boundary; strict response-array typing; two currency-assertion mismatches. Fixtures now place fresh verification one second in the past. Production expiry/authority guards were not weakened.",
+        "audit": "Audit population, generated reports,322 requirement bindings and1355 backlog tasks/116 traceability entries pass. Full regression and coverage remain V02."
+      },
+      "remaining": [
+        "Actual credit wallet refund/payout remains S-04.4.01. Future refund consumers require their own integration review.",
+        "Existing per-receipt emergency override evidence is retained. This adjustment path requires two reviewers and introduces no emergency bypass.",
+        "V01 retains old-writer retirement and legacy CHECK validation; R02 retains external notification delivery; no external execution claimed."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 249,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.05.03"
+          ],
+          "reason": "Prior mapped acceptance and historical dispositions preserved, with the new manual-adjustment approval consumer verified here. Future refund and operational requirements retain their own assignments.",
+          "source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+            "audit/evidence/step-reviews.json#R01-invoice-corrections",
+            "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+          ]
+        },
+        {
+          "pr": 195,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.07.01"
+          ],
+          "reason": "Prior mapped acceptance and historical dispositions preserved, with the new manual-adjustment approval consumer verified here. Future refund and operational requirements retain their own assignments.",
+          "source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+            "audit/evidence/step-reviews.json#R01-invoice-corrections",
+            "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+          ]
+        },
+        {
+          "pr": 196,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.07.02"
+          ],
+          "reason": "Prior mapped acceptance and historical dispositions preserved, with the new manual-adjustment approval consumer verified here. Future refund and operational requirements retain their own assignments.",
+          "source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+            "audit/evidence/step-reviews.json#R01-invoice-corrections",
+            "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+          ]
+        }
+      ],
+      "pr_counts": {
+        "closed": 3,
+        "open": 0,
+        "blocked": 0,
+        "newly_closed": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "sha256": "2ba0c1554528976cba72f9067cbd10152f314d927209ffc2d9cb5a524ee25cdd"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.test.ts",
+          "sha256": "ce91967760c6319d1e296055e3f5df711db7d59fa8236df59434118772dddd72"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+          "sha256": "a548f6524c8f3cb6d5faa5de21927de8c667ded1599130e491364d29d6124f2c"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "5a4a0f74fe600dfa3dc7c85bcbd9c2ad4589151d145d51baa9b65280f7fb6706"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "d49dc10bfac48ceae61422bed976f16392fba9da388a0b7810d85748552dffed"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+          "sha256": "1ae7bdf89e2eb7ea660dc96393cfbc25e60f0fcb041e520ad59e13e8dc953060"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice.module.ts",
+          "sha256": "1210830813043578a93594d17831b586a11e26b264181424d81524686daa310d"
+        },
+        {
+          "path": "apps/web/e2e/approval-queue.spec.ts",
+          "sha256": "a4f805cfa2169ab2ce3707622c057421288d988229355457ceda5a3eece0a978"
+        },
+        {
+          "path": "apps/web/e2e/invoice-corrections.spec.ts",
+          "sha256": "a17ff66c58e4f286c88c9dfce7b9b79d26eff8e09d5582cd2267830f43e66135"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "b186bd49e133d425cddae6f67b3396812ea2b88c063b495a4832be4c318b4e47"
+        },
+        {
+          "path": "packages/i18n/src/invoice-corrections.ts",
+          "sha256": "9c6df91c0659ddc32e0b7ee67c01b2feb8ff0e37fadc8a2f7fb815e0ea026e2e"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-adjustment-approval-api-build.log",
+        "/tmp/r01-adjustment-approval-api-types-final.log",
+        "/tmp/r01-adjustment-approval-api-types-verified.log",
+        "/tmp/r01-adjustment-approval-api-types.log",
+        "/tmp/r01-adjustment-approval-backend-1.log",
+        "/tmp/r01-adjustment-approval-backend-2.log",
+        "/tmp/r01-adjustment-approval-backend-3.log",
+        "/tmp/r01-adjustment-approval-browser.log",
+        "/tmp/r01-adjustment-approval-budgets-final.log",
+        "/tmp/r01-adjustment-approval-budgets.log",
+        "/tmp/r01-adjustment-approval-clock-diagnostic.log",
+        "/tmp/r01-adjustment-approval-format-2.log",
+        "/tmp/r01-adjustment-approval-format-3.log",
+        "/tmp/r01-adjustment-approval-format-4.log",
+        "/tmp/r01-adjustment-approval-format-5.log",
+        "/tmp/r01-adjustment-approval-format-6.log",
+        "/tmp/r01-adjustment-approval-format-check.log",
+        "/tmp/r01-adjustment-approval-i18n-build-2.log",
+        "/tmp/r01-adjustment-approval-i18n-build.log",
+        "/tmp/r01-adjustment-approval-lint-final.log",
+        "/tmp/r01-adjustment-approval-lint.log",
+        "/tmp/r01-adjustment-approval-openapi-check.log",
+        "/tmp/r01-adjustment-approval-openapi-write.log",
+        "/tmp/r01-adjustment-approval-queue-browser-final.log",
+        "/tmp/r01-adjustment-approval-test-format.log",
+        "/tmp/r01-adjustment-approval-web-build-2.log",
+        "/tmp/r01-adjustment-approval-web-build.log",
+        "/tmp/r01-adjustment-approval-web-types-final.log",
+        "/tmp/r01-adjustment-approval-web-types.log",
+        "/tmp/r01-invoice-adjustment-approval-format.log",
+        "/tmp/r01-invoice-adjustment-approval-baseline.log",
+        "/tmp/r01-wallet-payments-reversals-pr-history.log",
+        "/tmp/r01-wallet-payments-reversals-baseline.log",
+        "/tmp/r01-adjustment-approval-audit-check.log",
+        "/tmp/r01-adjustment-approval-requirements-check.log",
+        "/tmp/r01-adjustment-approval-backlog-check.log"
+      ]
     }
   ]
 }

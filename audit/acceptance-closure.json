@@ -3733,7 +3733,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3821,7 +3821,10 @@
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
-      }
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
@@ -3882,7 +3885,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3949,7 +3952,10 @@
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
-      }
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.03",
@@ -4279,7 +4285,7 @@
         },
         {
           "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-          "sha256": "0376a325a35c96b8e7ccbaabc3471d21cde944434e9b016335cda79668a590fb"
+          "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
         },
         {
           "path": "apps/api/src/invoice/invoice-profile-lock.ts",
@@ -4402,7 +4408,10 @@
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
-      }
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.01.01",
@@ -4435,7 +4444,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4488,7 +4497,10 @@
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
-      }
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.01.02",
@@ -4574,7 +4586,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4621,7 +4633,10 @@
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
-      }
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.01.01",
@@ -5015,7 +5030,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5139,7 +5154,10 @@
         "note": "Original source bindings and assessment remain available in this committed ledger revision; older nested assessments are preserved."
       },
       "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
-      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
+      "evidence_reuse": [
+        "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.03.01",
@@ -5528,7 +5546,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -5623,7 +5641,10 @@
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
-      }
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.03",
@@ -7563,7 +7584,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-09.07.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "aeb2d1bf1e7d9630532e89f813002da91302f81a",
+      "reviewed_sha": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 732,
       "requirement": "**T-09.07.01 — Dual-approval threshold configuration**\n\n- Description: Admin configures the IRR threshold at or above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.\n- Technical notes: Value stored, requires step-up auth to change. Versioned config. Emergency override available (requires reason + elevated permission + immediate alert + audit).\n- UI/UX: Number input with large IRR display. Description of which actions are affected. \"Changes require step-up authentication.\"\n- Dependencies: admin config framework, finance module\n- Complexity: M",
@@ -7603,7 +7624,7 @@
         },
         {
           "path": "apps/api/src/admin/dual-approval.service.ts",
-          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
         },
         {
           "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -7620,6 +7641,22 @@
         {
           "path": "packages/shared/src/finance/dual-approval-config.ts",
           "sha256": "0dfb04655f65d8eaa5995900bd564c92750164966e7a048174db60a9af7ef3a7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+          "sha256": "a548f6524c8f3cb6d5faa5de21927de8c667ded1599130e491364d29d6124f2c"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "d49dc10bfac48ceae61422bed976f16392fba9da388a0b7810d85748552dffed"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "b186bd49e133d425cddae6f67b3396812ea2b88c063b495a4832be4c318b4e47"
+        },
+        {
+          "path": "apps/web/e2e/approval-queue.spec.ts",
+          "sha256": "a4f805cfa2169ab2ce3707622c057421288d988229355457ceda5a3eece0a978"
         }
       ],
       "checks": [
@@ -7632,17 +7669,18 @@
       ],
       "historically_skipped": false,
       "limitations": [
-        "Verified stored configuration, current receipt consumers and per-receipt emergency exception. Refund/manual-adjustment module integration belongs to its separate future service tasks; those consumers are not claimed implemented."
+        "Stored configuration, receipt consumers/per-receipt emergency exception and manual invoice-adjustment approval verified. Refund consumers retain their separate future integration requirement. This adjustment path has no emergency bypass."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.07.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "reviewed_sha": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 740,
       "requirement": "**T-09.07.02 — Dual-approval workflow**\n\n- Description: When a financial action meets or exceeds the positive threshold, it enters Pending Approval state. Second authorized user (different from initiator) must approve or reject. Audit trail of both actions.\n- Technical notes: Initiation creates approval request with transaction details. Notification to approval-eligible staff. Second user reviews and approves/rejects. Cannot approve own requests. Queue view for pending approvals.\n- UI/UX: \"Pending approvals\" section in finance dashboard. Each: amount, initiator, reason, details. Approve/Reject buttons with reason (reason required for reject).\n- Dependencies: T-09.07.01\n- Complexity: L",
@@ -7658,7 +7696,7 @@
         },
         {
           "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
-          "sha256": "52b54228fbbb9ff3342d7669f2f90282b412a939a9ac7a70878bf03a412f09c8"
+          "sha256": "2ba0c1554528976cba72f9067cbd10152f314d927209ffc2d9cb5a524ee25cdd"
         },
         {
           "path": "apps/api/src/admin/dual-approval-resolution.ts",
@@ -7674,7 +7712,7 @@
         },
         {
           "path": "apps/api/src/admin/dual-approval.service.ts",
-          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
         },
         {
           "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -7682,11 +7720,11 @@
         },
         {
           "path": "apps/web/e2e/approval-queue.spec.ts",
-          "sha256": "9963d9f860a27b51bcf7ee0b78cf6c93be485522a1bb3581c14381042bfa16ef"
+          "sha256": "a4f805cfa2169ab2ce3707622c057421288d988229355457ceda5a3eece0a978"
         },
         {
           "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-          "sha256": "ea696cdd58457868954328d1aba3f2b671ef6edd6345fbe530bdab509948c1dc"
+          "sha256": "b186bd49e133d425cddae6f67b3396812ea2b88c063b495a4832be4c318b4e47"
         },
         {
           "path": "packages/db/src/schema/approval-requests.ts",
@@ -7695,6 +7733,14 @@
         {
           "path": "packages/shared/src/finance/approval-request.ts",
           "sha256": "a0557fbe4c9dca79487d40c0b602fba8eaa578689fa9cf1915bfbf7585ec189e"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+          "sha256": "a548f6524c8f3cb6d5faa5de21927de8c667ded1599130e491364d29d6124f2c"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "d49dc10bfac48ceae61422bed976f16392fba9da388a0b7810d85748552dffed"
         }
       ],
       "checks": [
@@ -7706,11 +7752,12 @@
       ],
       "historically_skipped": false,
       "limitations": [
-        "Current receipt workflow and generic queue verified. Future refund/manual-adjustment consumers require their own integration acceptance. Immediate eligible-staff alerts are in-app; no email/SMS delivery claim."
+        "Receipt workflow, generic queue and atomic manual invoice-adjustment approval verified. Future refund consumers retain their own integration requirement. Immediate eligible-staff alerts are in-app; no email/SMS delivery claim."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ]
     },
     {
@@ -7824,7 +7871,7 @@
         },
         {
           "path": "apps/api/src/admin/dual-approval.service.ts",
-          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
         },
         {
           "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -7883,7 +7930,8 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ]
     },
     {
@@ -7917,7 +7965,7 @@
         },
         {
           "path": "apps/api/src/admin/dual-approval.service.ts",
-          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
         },
         {
           "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -7958,7 +8006,8 @@
       "limitations": [],
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ]
     },
     {
@@ -8120,7 +8169,7 @@
         },
         {
           "path": "apps/api/src/admin/dual-approval.service.ts",
-          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
         },
         {
           "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -8140,7 +8189,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
-          "sha256": "1dbc127d1794c0edcfdf0e02f30d66efa91300b2105591c0962df5019c9f18eb"
+          "sha256": "5a4a0f74fe600dfa3dc7c85bcbd9c2ad4589151d145d51baa9b65280f7fb6706"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
@@ -8176,7 +8225,8 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ]
     },
     {
@@ -8206,7 +8256,7 @@
         },
         {
           "path": "apps/api/src/admin/dual-approval.service.ts",
-          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
         },
         {
           "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -8226,7 +8276,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
-          "sha256": "1dbc127d1794c0edcfdf0e02f30d66efa91300b2105591c0962df5019c9f18eb"
+          "sha256": "5a4a0f74fe600dfa3dc7c85bcbd9c2ad4589151d145d51baa9b65280f7fb6706"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
@@ -8258,7 +8308,8 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ]
     },
     {
@@ -8288,7 +8339,7 @@
         },
         {
           "path": "apps/api/src/admin/dual-approval.service.ts",
-          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
         },
         {
           "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -8308,7 +8359,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
-          "sha256": "1dbc127d1794c0edcfdf0e02f30d66efa91300b2105591c0962df5019c9f18eb"
+          "sha256": "5a4a0f74fe600dfa3dc7c85bcbd9c2ad4589151d145d51baa9b65280f7fb6706"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
@@ -8338,7 +8389,8 @@
       "limitations": [],
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ]
     },
     {
@@ -9395,7 +9447,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -9433,7 +9485,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -9577,7 +9630,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -9615,7 +9668,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -9759,7 +9813,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -9797,7 +9851,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -9941,7 +9996,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -9979,7 +10034,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -10123,7 +10179,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10161,7 +10217,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -10305,7 +10362,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10343,7 +10400,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -10487,7 +10545,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10525,7 +10583,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -10669,7 +10728,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10697,7 +10756,7 @@
         },
         {
           "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-          "sha256": "0376a325a35c96b8e7ccbaabc3471d21cde944434e9b016335cda79668a590fb"
+          "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
         }
       ],
       "checks": [
@@ -10716,7 +10775,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -10862,7 +10922,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10900,7 +10960,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11004,7 +11065,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11056,7 +11117,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11161,7 +11223,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11213,7 +11275,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11318,7 +11381,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11370,7 +11433,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11475,7 +11539,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11527,7 +11591,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11632,7 +11697,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11684,7 +11749,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11789,7 +11855,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11841,7 +11907,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11946,7 +12013,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12000,7 +12067,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12105,7 +12173,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12157,7 +12225,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12262,7 +12331,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12316,7 +12385,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12421,7 +12491,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
+          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12473,7 +12543,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12551,11 +12622,11 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
-          "sha256": "3eb522b85e703efb9be25e436ed6c18ee940d8b135be1b53a6dde228b49dc299"
+          "sha256": "1ae7bdf89e2eb7ea660dc96393cfbc25e60f0fcb041e520ad59e13e8dc953060"
         },
         {
           "path": "apps/api/src/invoice/invoice.module.ts",
-          "sha256": "591ea78572a381a96077cd94a9f442304eb00daf1e14b830f6e5827960776d9c"
+          "sha256": "1210830813043578a93594d17831b586a11e26b264181424d81524686daa310d"
         },
         {
           "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
@@ -12563,11 +12634,11 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-          "sha256": "5c57837e454b14397b2e12417505e01eae93be6ee7bc76c2196326a1392d598f"
+          "sha256": "d49dc10bfac48ceae61422bed976f16392fba9da388a0b7810d85748552dffed"
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
@@ -12579,11 +12650,11 @@
         },
         {
           "path": "apps/web/e2e/invoice-corrections.spec.ts",
-          "sha256": "e20910edabc97ad0c2e2b94e2c901e4ddeb96cca02486db1a167d9f8d6e6419f"
+          "sha256": "a17ff66c58e4f286c88c9dfce7b9b79d26eff8e09d5582cd2267830f43e66135"
         },
         {
           "path": "packages/i18n/src/invoice-corrections.ts",
-          "sha256": "edce8a71d65da5e7a141bfab3a9eab545b7ee00dd583d732f52ff445d95c48fb"
+          "sha256": "9c6df91c0659ddc32e0b7ee67c01b2feb8ff0e37fadc8a2f7fb815e0ea026e2e"
         }
       ],
       "checks": [
@@ -12595,12 +12666,15 @@
         248
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 198,
       "requirement": "| T-04.1.05.03 | Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit | M |",
@@ -12608,7 +12682,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-          "sha256": "0376a325a35c96b8e7ccbaabc3471d21cde944434e9b016335cda79668a590fb"
+          "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
         },
         {
           "path": "apps/api/src/invoice/invoice-correction-request.ts",
@@ -12616,11 +12690,11 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
-          "sha256": "3eb522b85e703efb9be25e436ed6c18ee940d8b135be1b53a6dde228b49dc299"
+          "sha256": "1ae7bdf89e2eb7ea660dc96393cfbc25e60f0fcb041e520ad59e13e8dc953060"
         },
         {
           "path": "apps/api/src/invoice/invoice.module.ts",
-          "sha256": "591ea78572a381a96077cd94a9f442304eb00daf1e14b830f6e5827960776d9c"
+          "sha256": "1210830813043578a93594d17831b586a11e26b264181424d81524686daa310d"
         },
         {
           "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
@@ -12628,7 +12702,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-          "sha256": "5c57837e454b14397b2e12417505e01eae93be6ee7bc76c2196326a1392d598f"
+          "sha256": "d49dc10bfac48ceae61422bed976f16392fba9da388a0b7810d85748552dffed"
         },
         {
           "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -12636,7 +12710,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+          "sha256": "dba75658ab92e5bc24e535ad8732a4fa6fd599e8a322ad0d673602dff7da6a37"
         },
         {
           "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
@@ -12648,11 +12722,27 @@
         },
         {
           "path": "apps/web/e2e/invoice-corrections.spec.ts",
-          "sha256": "e20910edabc97ad0c2e2b94e2c901e4ddeb96cca02486db1a167d9f8d6e6419f"
+          "sha256": "a17ff66c58e4f286c88c9dfce7b9b79d26eff8e09d5582cd2267830f43e66135"
         },
         {
           "path": "packages/i18n/src/invoice-corrections.ts",
-          "sha256": "edce8a71d65da5e7a141bfab3a9eab545b7ee00dd583d732f52ff445d95c48fb"
+          "sha256": "9c6df91c0659ddc32e0b7ee67c01b2feb8ff0e37fadc8a2f7fb815e0ea026e2e"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+          "sha256": "a548f6524c8f3cb6d5faa5de21927de8c667ded1599130e491364d29d6124f2c"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "b186bd49e133d425cddae6f67b3396812ea2b88c063b495a4832be4c318b4e47"
+        },
+        {
+          "path": "apps/web/e2e/approval-queue.spec.ts",
+          "sha256": "a4f805cfa2169ab2ce3707622c057421288d988229355457ceda5a3eece0a978"
         }
       ],
       "checks": [
@@ -12664,7 +12754,10 @@
         249
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
@@ -15548,6 +15641,49 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections",
       "note": "Prior full assessments retained in this immutable Git revision; current status and limitations preserved. Avoid copying28 unchanged assessment bodies."
+    },
+    {
+      "source_revision": "141a8d9c48a36518cbcde9f004888b31e3b2db37",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.06",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+      "note": "Prior full assessments remain in this immutable Git revision. Refresh only bindings current at that revision and affected by this reviewed change; preserve all statuses and other stale/future limitations."
     }
   ]
 }

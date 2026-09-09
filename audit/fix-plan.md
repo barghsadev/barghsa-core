@@ -48,7 +48,7 @@ Invoice deadlines/reminders consolidated at `6b9831c`: **8 tasks verified /2 par
 
 PR243/245 remain open for R02: actual versioned FA/EN delivery and current invoice/deadline/channel/window/offset policy for already planned or queued reminders. The historical new-plans-only toggle behavior is unfinished acceptance, not an approved exception. Historical overrides without dirty markers require operational reconciliation; updated worker must precede or accompany API rollout. No deployment occurred.
 
-Active **R01-wallet-invoice-payments-reversals**:5 tasks T-04.2.03.01–.04 and T-04.2.04.01, saved PRs271–275,282–285,290–293. Exact story/task criteria read. Next read13 saved PR bodies; reuse wallet/chargeback money and authority evidence, compare useful repeated implementations, then review actual payment/reversal callers and repair confirmed gaps.
+Active **R01-wallet-invoice-payments-reversals**:5 tasks T-04.2.03.01–.04 and T-04.2.04.01, saved PRs271–275,282–285,290–293. Exact story/task criteria read. All13 saved PR bodies are read and68 payment/cache cases pass; reuse wallet/chargeback money and authority evidence, compare useful repeated implementations, then review actual payment/reversal callers and repair confirmed gaps.
 
 ## Execution order
 
@@ -69,6 +69,8 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 Audit cleanup and inventory reconciliation are complete. R01 is active; eight phases are queued. Their sizes differ, so phase counts are not an effort estimate. The original 23 groups and their remaining requirements remain in progress.json.
 
 Invoice corrections consolidated at `0aae9d5`: **4 tasks verified /4 PR reviews closed**, saved PRs247–250. Paid Overdue correction, missing staff API/UI, safe retries and customer read authority are repaired.54 correction service/HTTP,30 customer read/assembly,5 deadline compatibility and40 DB cases support the batch; counts overlap earlier runs.12 current production Chromium cases,3 host cases and42 unchanged budgets pass. [Consolidated review](evidence/step-reviews.json#R01-invoice-corrections) preserves failed logs and valid evidence reuse; one snapshot refresh closes,10 remain. Credit wallet payout belongs to S-04.4.01; old-writer retirement and legacy CHECK validation remain V01 operational work. No external execution claimed. Active next batch: wallet invoice payments and reversals,13 saved PRs for5 tasks.
+
+Invoice-adjustment approval follow-up is verified at `8a9ea42`. The new manual-adjustment route now consumes the configured threshold through the existing queue, with atomic approval/issuance and safe retries.146 backend,23 distinct browser and42 budget checks pass. Existing task/PR counts are preserved. See [review](evidence/step-reviews.json#R01-invoice-adjustment-approval). Resume wallet payment/reversal batch; all13 saved PR bodies and68 baseline cases are already reviewed.
 
 ## Feature-batch rules
 

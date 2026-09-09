@@ -4,13 +4,17 @@ Read [fix-plan.md](fix-plan.md) and active batch in [progress.json](progress.jso
 
 ## Current checkpoint
 
-Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **0aae9d5**. Invoice corrections consolidated: **4 tasks verified /4 saved PR reviews closed**, PRs247–250. Paid Overdue adjustments, staff commands/form with safe retries, and customer session/profile read authority are repaired. Original issued lines stay unchanged. Credit notes are signed accounting documents; wallet payout belongs to S-04.4.01. Retiring old adjustment writers and validating legacy CHECK rows remain V01 operational evidence.
+Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **8a9ea42**. Original invoice-correction consolidation at0aae9d5: **4 tasks verified /4 saved PR reviews closed**, PRs247–250. Paid Overdue adjustments, staff commands/form with safe retries, and customer session/profile read authority are repaired. Original issued lines stay unchanged. Credit notes are signed accounting documents; wallet payout belongs to S-04.4.01. Retiring old adjustment writers and validating legacy CHECK rows remain V01 operational evidence.
 
 54 correction service/HTTP cases,30 customer read/assembly cases,5 deadline HTTP compatibility cases and40 DB cases pass. Earlier65 fixture cases overlap.12 production Chromium cases cover new correction and existing manual forms in FA/EN/light/dark;3 page host cases and42 budgets pass. Current types/lint/build/OpenAPI pass.46 new logs saved;1957 indexed.28 prior source bindings refreshed with preserved statuses and limitations; snapshot consumer refresh closed. Full V02 regression/coverage remains pending.
 
+## Adjustment approval follow-up
+
+Completed at **8a9ea42**. Threshold-level charges and credits now wait for a different financial reviewer; approval, invoice issuance, notifications and audit commit together. Forged details, duplicate/rejected requests, changed permissions and expiry cannot bypass it.146 backend cases,23 distinct production Chromium cases and42 budgets pass. API/web types, lint, builds and OpenAPI pass. [Review](evidence/step-reviews.json#R01-invoice-adjustment-approval). Counts remain122 verified/27 partial/173 pending and91 closed/18 open/192 unreviewed PRs; these are preserved acceptances, not three new closures. 1993 logs indexed.
+
 ## Next action
 
-Active **R01-wallet-invoice-payments-reversals**: saved PRs271–275,282–285,290–293; tasks `04-invoices-wallet-contracts.md#T-04.2.03.01` through `.04` and `T-04.2.04.01`. Exact story/task criteria read. Read13 saved PR bodies before changes, compare repeated implementations and deferrals, then review production payment/reversal callers, current session/agent authority, exact remaining invoice amount, idempotency, wallet/invoice locks and audit rollback. Reuse wallet/ledger and chargeback evidence. These tasks already have implementations: verify before rebuilding. Fix confirmed gaps, review each meaningful change, consolidate once.
+Active **R01-wallet-invoice-payments-reversals**: saved PRs271–275,282–285,290–293; tasks `04-invoices-wallet-contracts.md#T-04.2.03.01` through `.04` and `T-04.2.04.01`. Exact story/task criteria read. All13 saved PR bodies have been read and68 current payment/cache cases pass. Compare repeated implementations and deferrals, then finish reviewing production payment/reversal callers, current session/agent authority, exact remaining invoice amount, idempotency, wallet/invoice locks and audit rollback. Reuse wallet/ledger and chargeback evidence. These tasks already have implementations: verify before rebuilding. Fix confirmed gaps, review each meaningful change, consolidate once.
 
 ## Counts and preserved work
 
