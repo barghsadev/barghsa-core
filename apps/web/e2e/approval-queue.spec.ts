@@ -21,6 +21,9 @@ async function shell(page: Page, locale = 'en') {
     }).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/admin/config/dual-approval-threshold', (route) =>
+    route.fulfill({ json: { thresholdIrR: 100000 } })
+  );
 }
 for (const locale of ['fa', 'en']) {
   test(`approval retains exact amount and request across step-up (${locale})`, async ({ page }) => {

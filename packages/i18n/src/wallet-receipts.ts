@@ -1,5 +1,18 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
+  'admin.receiptThreshold.title': 'آستانه تأیید دو نفره',
+  'admin.receiptThreshold.description':
+    'پرداخت\u200cهای بانکی، بازپرداخت\u200cها و اصلاحات مالی دستی با مبلغ مساوی یا بیشتر از این آستانه ریالی به تأیید کارشناس مجاز دوم نیاز دارند.',
+  'admin.receiptThreshold.stepUp':
+    'تغییرات به تأیید رمز عبور نیاز دارند و در سابقه حسابرسی ثبت می\u200cشوند.',
+  'admin.receiptThreshold.label': 'آستانه (ریال)',
+  'admin.receiptThreshold.save': 'ذخیره آستانه',
+  'admin.receiptThreshold.saved': 'آستانه ذخیره شد.',
+  'admin.receiptThreshold.disabled':
+    'صفر آستانه را برای عملیات جدید غیرفعال می\u200cکند. درخواست\u200cهای تأیید موجود همچنان به تصمیم نیاز دارند.',
+  'admin.receiptThreshold.unavailable': 'آستانه در دسترس نیست. هیچ تنظیمی فرض نشده است.',
+  'admin.receiptThreshold.retry': 'تلاش دوباره برای بارگذاری آستانه',
+  'admin.receiptThreshold.invalid': 'یک مبلغ صحیح ریالی از ۰ تا ۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۱ وارد کنید.',
   'admin.walletReceipts.emergencyTitle': 'تأیید اضطراری',
   'admin.walletReceipts.emergencyHint':
     'فقط همین رسید بدون تأیید کارشناس دوم تسویه می\u200cشود. دلیل ثبت می\u200cشود و کارشناسان مالی فوراً در برنامه مطلع می\u200cشوند.',
@@ -64,6 +77,19 @@ const fa: Record<string, string> = {
   'admin.walletReceipts.error.allocationPending': 'صبر کنید تا پیش‌نمایش مانده فاکتور آماده شود',
 };
 const en: Record<string, string> = {
+  'admin.receiptThreshold.title': 'Dual-approval threshold',
+  'admin.receiptThreshold.description':
+    'Bank payments, refunds and manual adjustments at or above this IRR amount require a second authorized reviewer.',
+  'admin.receiptThreshold.stepUp':
+    'Changes require password verification and are recorded in audit history.',
+  'admin.receiptThreshold.label': 'Threshold (IRR)',
+  'admin.receiptThreshold.save': 'Save threshold',
+  'admin.receiptThreshold.saved': 'Threshold saved.',
+  'admin.receiptThreshold.disabled':
+    'Zero disables the threshold for new actions. Existing pending approvals still require a decision.',
+  'admin.receiptThreshold.unavailable': 'Threshold unavailable. No setting has been assumed.',
+  'admin.receiptThreshold.retry': 'Retry loading threshold',
+  'admin.receiptThreshold.invalid': 'Enter a whole IRR amount from 0 to 9,007,199,254,740,991.',
   'admin.walletReceipts.emergencyTitle': 'Emergency override',
   'admin.walletReceipts.emergencyHint':
     'Settle only this receipt without a second reviewer. The reason is recorded and finance staff are alerted immediately in the app.',

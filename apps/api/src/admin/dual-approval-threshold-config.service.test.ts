@@ -85,15 +85,14 @@ describe('AdminService.getDualApprovalThresholdConfig (T-09.07.01)', () => {
     expect(result).toEqual({ thresholdIrR: 750_000_000 });
   });
 
-  it('serves the disabled default and warns on a corrupt persisted value', async () => {
+  it('refuses to report disabled approval for a corrupt persisted value', async () => {
     const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ value: { threshold_irr: 'corrupted' } }],
     });
 
     const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
-    const result = await service.getDualApprovalThresholdConfig();
-    expect(result).toEqual(DEFAULT_DUAL_APPROVAL_CONFIG);
+    await expect(service.getDualApprovalThresholdConfig()).rejects.toMatchObject({ status: 503 });
     expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -5,6 +5,7 @@ import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
 import { Button, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import DualApprovalThresholdPanel from '../components/DualApprovalThresholdPanel.js';
 
 type Status = 'pending' | 'approved' | 'rejected';
 interface Request {
@@ -83,6 +84,7 @@ export default function AdminApprovalRequestsPage() {
         <h1 className="text-2xl font-semibold">{t('admin.approvals.title', locale)}</h1>
         <p className="text-sm text-gray-600">{t('admin.approvals.description', locale)}</p>
       </header>
+      <DualApprovalThresholdPanel />
       <div className="flex flex-wrap items-center gap-3">
         <Label htmlFor="approval-status">{t('admin.approvals.status', locale)}</Label>
         <select

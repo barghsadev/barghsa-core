@@ -1237,14 +1237,17 @@ export class AdminService {
     ]);
     if (result.rows.length === 0) return { ...DEFAULT_DUAL_APPROVAL_CONFIG };
     const config = toDualApprovalConfig(result.rows[0]!.value);
-    // A persisted row that does not normalize to a *valid* config means the
-    // stored value is corrupt; fail open to the disabled default but make the
-    // corruption observable so it cannot silently disable dual approval.
     const persisted = result.rows[0]!.value as Record<string, unknown> | null;
     const persistedValue = persisted?.threshold_irr ?? persisted?.thresholdIrR;
     if (!isValidDualApprovalThreshold(persistedValue)) {
-      this.logger.warn(
-        `Dual-approval threshold config row for key ${DUAL_APPROVAL_THRESHOLD_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving disabled default`
+      this.logger.warn('Dual-approval threshold configuration is invalid');
+      throw new HttpException(
+        {
+          statusCode: 503,
+          error: ErrorCodes.CONFLICT_STATE.code,
+          message: 'Dual-approval threshold configuration is unavailable',
+        },
+        503
       );
     }
     return config;
