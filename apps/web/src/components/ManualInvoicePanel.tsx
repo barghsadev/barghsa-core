@@ -23,6 +23,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import { authErrorCode } from '../lib/auth-errors.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
 
 interface DraftLine {
@@ -216,7 +217,7 @@ function ManualInvoiceForm() {
         totalAmount?: string;
         state?: string;
       };
-      if (response.status === 403 && data.error === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code)
+      if (response.status === 403 && authErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code)
         return 'step-up';
       if (!response.ok) {
         if (response.status >= 500) uncertain.current = true;

@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ManualInvoiceController } from './manual-invoice.controller.js';
 
@@ -161,7 +162,11 @@ it('requires session, CSRF, current Finance permission and recent step-up', asyn
     await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
       sessionId,
     ]);
-    expect((await create(body)).status).toBe(403);
+    const stepUpResponse = await create(body);
+    expect(stepUpResponse.status).toBe(403);
+    expect(await stepUpResponse.json()).toMatchObject({
+      error: { code: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code },
+    });
     await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
       sessionId,
     ]);

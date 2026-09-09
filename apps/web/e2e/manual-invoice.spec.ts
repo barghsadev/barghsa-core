@@ -51,7 +51,12 @@ for (const locale of ['fa', 'en'] as const)
         if (requests.length === 1)
           return route.fulfill({
             status: 403,
-            json: { error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code },
+            json: {
+              error: {
+                code: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code,
+                message: 'Re-verify your identity to continue',
+              },
+            },
           });
         if (requests.length === 2)
           return darkMode
