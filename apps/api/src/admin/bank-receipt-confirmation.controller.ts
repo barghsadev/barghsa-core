@@ -1,3 +1,7 @@
+import {
+  readReceiptEmergencyOverrideReason,
+  RECEIPT_EMERGENCY_OVERRIDE_PERMISSION,
+} from './receipt-emergency-override.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -26,6 +30,7 @@ import {
   BANK_RECEIPT_CONFIRM_PERMISSION,
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  APPROVAL_REVIEW_REASON_MAX_LENGTH,
   parseOptionalInvoiceId,
 } from '@barghsa/shared/finance';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -143,7 +148,10 @@ export class BankReceiptConfirmationController {
   ): Promise<BankReceiptReviewDto> {
     this.assertConfirmPermission(req);
     assertUuid(transactionId);
-    return this.service.get(transactionId);
+    return {
+      ...(await this.service.get(transactionId)),
+      canEmergencyOverride: hasStaffPermission(req, RECEIPT_EMERGENCY_OVERRIDE_PERMISSION),
+    };
   }
 
   @Post(':transactionId/confirm')
@@ -160,6 +168,13 @@ export class BankReceiptConfirmationController {
     schema: {
       type: 'object',
       properties: {
+        emergencyOverrideReason: {
+          type: 'string',
+          minLength: 1,
+          maxLength: APPROVAL_REVIEW_REASON_MAX_LENGTH,
+          description:
+            'Confirm one pending receipt approval without a second reviewer. Requires admin:financial:emergency-override and recent step-up. Reason, audit and immediate finance alerts commit atomically with settlement.',
+        },
         invoiceId: {
           type: 'string',
           format: 'uuid',
@@ -187,10 +202,12 @@ export class BankReceiptConfirmationController {
     if (!parsed.ok) {
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);
     }
+    const emergencyOverrideReason = readReceiptEmergencyOverrideReason(body);
     const correlationId = this.correlationId.getCorrelationId();
     return this.service.confirm({
       transactionId,
       actorUserId: req.session.userId,
+      ...(emergencyOverrideReason !== undefined ? { emergencyOverrideReason } : {}),
       sessionId: req.session.sessionId,
       csrfToken: req.session.csrfToken,
       ip: requestIp(req),

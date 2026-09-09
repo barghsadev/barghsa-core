@@ -1,3 +1,4 @@
+import { readReceiptEmergencyOverrideReason } from './receipt-emergency-override.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -23,6 +24,7 @@ import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  APPROVAL_REVIEW_REASON_MAX_LENGTH,
   INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION,
 } from '@barghsa/shared/finance';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -148,6 +150,21 @@ export class InvoiceBankReceiptConfirmationController {
       'If the receipt amount is below the dual-approval threshold (or dual approval is disabled), settles min(receipt, remaining) on the linked invoice and credits only the excess to the profile wallet. Amounts at or above the admin-configured threshold park the receipt until a second, different finance staff member confirms.',
   })
   @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiBody({
+    required: false,
+    schema: {
+      type: 'object',
+      properties: {
+        emergencyOverrideReason: {
+          type: 'string',
+          minLength: 1,
+          maxLength: APPROVAL_REVIEW_REASON_MAX_LENGTH,
+          description:
+            'Confirm one pending receipt approval without a second reviewer. Requires admin:financial:emergency-override and recent step-up. Reason, audit and immediate finance alerts commit atomically with settlement.',
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description:
@@ -158,14 +175,17 @@ export class InvoiceBankReceiptConfirmationController {
   @ApiResponse({ status: 409, description: 'Receipt is not awaiting confirmation' })
   async confirm(
     @Req() req: AuthenticatedRequest,
-    @Param('receiptId') receiptId: string
+    @Param('receiptId') receiptId: string,
+    @Body() body?: unknown
   ): Promise<InvoiceBankReceiptConfirmDto> {
     this.assertConfirmPermission(req);
     assertUuid(receiptId);
+    const emergencyOverrideReason = readReceiptEmergencyOverrideReason(body);
     const correlationId = this.correlationId.getCorrelationId();
     return this.service.confirm({
       receiptId,
       actorUserId: req.session.userId,
+      ...(emergencyOverrideReason !== undefined ? { emergencyOverrideReason } : {}),
       sessionId: req.session.sessionId,
       csrfToken: req.session.csrfToken,
       ip: requestIp(req),

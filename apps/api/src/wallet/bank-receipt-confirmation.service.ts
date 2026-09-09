@@ -91,6 +91,7 @@ interface InvoiceRow {
 
 /** Public DTO for the staff review UI. */
 export interface BankReceiptReviewDto {
+  canEmergencyOverride?: boolean;
   transactionId: string;
   walletId: string;
   amount: string;
@@ -123,6 +124,7 @@ export interface BankReceiptAllocationPreviewDto {
 }
 
 export interface ConfirmBankReceiptInput {
+  emergencyOverrideReason?: string;
   transactionId: string;
   actorUserId: string;
   sessionId: string;
@@ -361,6 +363,9 @@ export class BankReceiptConfirmationService {
           invoiceId,
           actorUserId: input.actorUserId,
           sessionId: input.sessionId,
+          ...(input.emergencyOverrideReason !== undefined
+            ? { emergencyOverrideReason: input.emergencyOverrideReason }
+            : {}),
           ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
           ip: input.ip,
           now,

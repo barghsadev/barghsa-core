@@ -1,3 +1,4 @@
+import { applyReceiptEmergencyOverride } from '../admin/receipt-emergency-override.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { createHash, randomUUID } from 'node:crypto';
 import { HttpException } from '@nestjs/common';
@@ -47,6 +48,7 @@ export async function gateWalletReceiptApproval(
     invoiceId: string | null;
     actorUserId: string;
     sessionId: string;
+    emergencyOverrideReason?: string;
     correlationId?: string;
     ip: string;
     now: Date;
@@ -60,6 +62,8 @@ export async function gateWalletReceiptApproval(
   const threshold = readInvoiceBankReceiptDualApprovalThreshold(value?.value);
   if (threshold.status === 'corrupt') conflict('Dual-approval threshold configuration is invalid');
   const saved = walletReceiptApproval(input.metadata);
+  if (input.emergencyOverrideReason !== undefined && !saved)
+    conflict('Start receipt confirmation before requesting an emergency override');
   if (!saved && !invoiceBankReceiptRequiresDualApproval(threshold, input.amount)) return null;
   const metadata = (input.metadata ?? {}) as Record<string, unknown>;
   const fingerprint = createHash('sha256')
@@ -142,6 +146,18 @@ export async function gateWalletReceiptApproval(
     details.fingerprint !== fingerprint
   )
     conflict('Receipt approval does not match its saved binding');
+  if (input.emergencyOverrideReason !== undefined) {
+    await applyReceiptEmergencyOverride(client, {
+      requestId: saved.requestId,
+      actorUserId: input.actorUserId,
+      sessionId: input.sessionId,
+      reason: input.emergencyOverrideReason,
+      ip: input.ip,
+      now: input.now,
+      ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
+    });
+    return null;
+  }
   if (request.status === 'rejected') conflict('Receipt approval was rejected');
   await requireCurrentFinancePermission(client, saved.initiatorId);
   if (request.status === 'pending') {

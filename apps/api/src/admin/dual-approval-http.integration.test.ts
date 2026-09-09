@@ -564,6 +564,239 @@ for (const kind of ['wallet', 'invoice'] as const) {
   }
 }
 
+async function pendingEmergencyReceipt(kind: 'wallet' | 'invoice') {
+  await resetReceiptReviewer();
+  await http.pool.query(
+    "UPDATE sessions SET revoked_at=NULL,expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes',step_up_verified_at=NOW() WHERE user_id='initiator'"
+  );
+  await http.pool.query(
+    `UPDATE app_config SET value='{"threshold_irr":100000}' WHERE key='finance.dual_approval_threshold'`
+  );
+  const receipt = kind === 'wallet' ? await walletReceipt() : await invoiceReceipt();
+  const first = await (kind === 'wallet' ? confirmWallet : confirmInvoice)('initiator', receipt.id);
+  expect(first.status, await first.clone().text()).toBe(200);
+  return receipt;
+}
+function emergencyReceipt(
+  kind: 'wallet' | 'invoice',
+  id: string,
+  reason: unknown = 'Second reviewer unavailable; settlement deadline',
+  correlation = randomUUID()
+) {
+  return fetch(
+    `${http.base}/api/admin/${kind === 'wallet' ? 'wallet/bank-receipt-top-ups' : 'invoices/bank-receipts'}/${id}/confirm`,
+    {
+      method: 'POST',
+      headers: { ...headers.initiator!, 'X-Correlation-ID': correlation },
+      body: JSON.stringify({ emergencyOverrideReason: reason }),
+    }
+  );
+}
+for (const kind of ['wallet', 'invoice'] as const) {
+  it.each(['', '  ', null, 42, 'x'.repeat(10001)])(
+    `${kind} emergency override rejects invalid reason %j`,
+    async (reason) => {
+      const receipt = await pendingEmergencyReceipt(kind);
+      const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+      expect((await emergencyReceipt(kind, receipt.id, reason)).status).toBe(400);
+      expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+    }
+  );
+  it(`${kind} ordinary finance cannot use the emergency override`, async () => {
+    const receipt = await pendingEmergencyReceipt(kind);
+    const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+    expect((await emergencyReceipt(kind, receipt.id)).status).toBe(403);
+    expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+  });
+  it(`${kind} emergency override settles only its pending receipt with an immediate private alert and audit`, async () => {
+    const receipt = await pendingEmergencyReceipt(kind);
+    const other = await pendingEmergencyReceipt(kind);
+    const untouched = await receiptWriteSnapshot(kind, other.id, other.profile);
+    const correlation = randomUUID(),
+      reason = 'Second reviewer unavailable; bank closing';
+    await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='initiator'");
+    try {
+      const response = await emergencyReceipt(kind, receipt.id, reason, correlation);
+      expect(response.status, await response.clone().text()).toBe(200);
+      expect(await response.json()).toMatchObject({
+        state: kind === 'wallet' ? 'Released' : 'Confirmed',
+      });
+      const approval = (
+        await http.pool.query("SELECT * FROM approval_requests WHERE details->>'receiptId'=$1", [
+          receipt.id,
+        ])
+      ).rows[0];
+      expect(approval).toMatchObject({
+        status: 'approved',
+        initiator_id: 'initiator',
+        reviewer_id: 'initiator',
+        review_reason: reason,
+        details: { emergencyOverride: { actorUserId: 'initiator', reason } },
+      });
+      expect(approval.details.emergencyOverride.sessionId).toBeUndefined();
+      const audit = (
+        await http.pool.query(
+          'SELECT user_id,event,metadata::jsonb AS metadata,correlation_id FROM audit_log WHERE id=$1',
+          [approval.details.emergencyOverride.auditId]
+        )
+      ).rows[0];
+      expect(audit).toMatchObject({
+        user_id: 'initiator',
+        event: 'financial.receipt.emergency_override',
+        correlation_id: correlation,
+        metadata: {
+          requestId: approval.id,
+          receiptId: receipt.id,
+          reason,
+          sessionId: headers.initiator!.Cookie!.split('=')[1],
+        },
+      });
+      const notices = (
+        await http.pool.query(
+          "SELECT recipient_user_id,profile_id,localized_content FROM in_app_notifications WHERE localized_content->'en'->>'title'='Emergency bank receipt confirmation' AND localized_content->'en'->>'body' LIKE $1 ORDER BY recipient_user_id",
+          ['%' + approval.id + '%']
+        )
+      ).rows;
+      expect(notices.map((row) => row.recipient_user_id)).toEqual(['initiator', 'reviewer']);
+      for (const notice of notices) {
+        expect(notice.profile_id).toBeNull();
+        expect(notice.localized_content.en.body).toContain(reason);
+        expect(notice.localized_content.fa.body).toContain(reason);
+      }
+      const after = await receiptWriteSnapshot(kind, other.id, other.profile);
+      expect({ ...after, counts: untouched.counts }).toEqual(untouched);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT value FROM app_config WHERE key='finance.dual_approval_threshold'"
+          )
+        ).rows[0].value
+      ).toEqual({ threshold_irr: 100000 });
+      const settled = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+      expect((await emergencyReceipt(kind, receipt.id, reason)).status).toBe(200);
+      expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(settled);
+    } finally {
+      await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='initiator'");
+    }
+  });
+  for (const failure of ['audit', 'alert'] as const) {
+    it(`${kind} emergency override rolls back settlement and approval if its ${failure} fails`, async () => {
+      const receipt = await pendingEmergencyReceipt(kind);
+      const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+      await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='initiator'");
+      const table = failure === 'audit' ? 'audit_log' : 'in_app_notifications';
+      const condition =
+        failure === 'audit'
+          ? "NEW.event='financial.receipt.emergency_override'"
+          : "NEW.localized_content->'en'->>'title'='Emergency bank receipt confirmation'";
+      await http.pool.query(
+        `CREATE FUNCTION fail_emergency() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF ${condition} THEN RAISE EXCEPTION 'test emergency failure'; END IF; RETURN NEW; END $$; CREATE TRIGGER fail_emergency BEFORE INSERT ON ${table} FOR EACH ROW EXECUTE FUNCTION fail_emergency()`
+      );
+      try {
+        expect((await emergencyReceipt(kind, receipt.id)).status).toBe(500);
+        expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+      } finally {
+        await http.pool.query(
+          `DROP TRIGGER fail_emergency ON ${table}; DROP FUNCTION fail_emergency()`
+        );
+        await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='initiator'");
+      }
+    });
+  }
+  it(`${kind} emergency override cannot replace rejected approval or changed evidence`, async () => {
+    for (const invalid of ['rejected', 'evidence']) {
+      const receipt = await pendingEmergencyReceipt(kind);
+      if (invalid === 'rejected') {
+        const request = (
+          await http.pool.query("SELECT id FROM approval_requests WHERE details->>'receiptId'=$1", [
+            receipt.id,
+          ])
+        ).rows[0];
+        expect((await decide('reviewer', request.id, 'reject')).status).toBe(200);
+      } else
+        await http.pool.query(
+          `UPDATE ${kind === 'wallet' ? 'wallet_transactions' : 'bank_receipts'} SET amount=amount+1 WHERE id=$1`,
+          [receipt.id]
+        );
+      const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+      await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='initiator'");
+      try {
+        expect((await emergencyReceipt(kind, receipt.id)).status).toBe(409);
+        expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+      } finally {
+        await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='initiator'");
+      }
+    }
+  });
+}
+
+for (const kind of ['wallet', 'invoice'] as const) {
+  for (const expiry of ['session', 'step-up'] as const) {
+    it(`${kind} emergency override rolls back when ${expiry} expires during its audit`, async () => {
+      const receipt = await pendingEmergencyReceipt(kind);
+      const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+      await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='initiator'");
+      await http.pool.query(
+        `CREATE FUNCTION delay_emergency() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='financial.receipt.emergency_override' THEN PERFORM pg_sleep(1.2); END IF; RETURN NEW; END $$; CREATE TRIGGER delay_emergency BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_emergency()`
+      );
+      try {
+        await http.pool.query(
+          expiry === 'session'
+            ? "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '800 milliseconds' WHERE user_id='initiator'"
+            : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='initiator'"
+        );
+        expect((await emergencyReceipt(kind, receipt.id)).status).toBe(
+          expiry === 'session' ? 401 : 403
+        );
+        expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+      } finally {
+        await http.pool.query(
+          'DROP TRIGGER delay_emergency ON audit_log; DROP FUNCTION delay_emergency()'
+        );
+        await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='initiator'");
+        await http.pool.query(
+          "UPDATE sessions SET revoked_at=NULL,expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes',step_up_verified_at=NOW() WHERE user_id='initiator'"
+        );
+      }
+    });
+  }
+  it(`${kind} emergency override returns a retryable conflict if an alert recipient is busy`, async () => {
+    const receipt = await pendingEmergencyReceipt(kind);
+    const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+    await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='initiator'");
+    const client = await http.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='reviewer' FOR UPDATE");
+      expect((await emergencyReceipt(kind, receipt.id)).status).toBe(409);
+      expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+      await client.query('ROLLBACK');
+      expect((await emergencyReceipt(kind, receipt.id)).status).toBe(200);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='initiator'");
+    }
+  });
+}
+
+for (const kind of ['wallet', 'invoice'] as const) {
+  it(`${kind} emergency override accepts an explicit current grant without platform admin`, async () => {
+    const receipt = await pendingEmergencyReceipt(kind);
+    await http.pool.query(
+      `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('receipt-emergency','Receipt emergency','Test explicit override grant','["admin:financial:emergency-override"]') ON CONFLICT DO NOTHING`
+    );
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES ('initiator','receipt-emergency')"
+    );
+    try {
+      expect((await emergencyReceipt(kind, receipt.id)).status).toBe(200);
+    } finally {
+      await http.pool.query("DELETE FROM user_roles WHERE role_id='receipt-emergency'");
+    }
+  });
+}
+
 it('applies below-threshold, disabled and corrupt configuration without bypassing saved requests', async () => {
   const below = await walletReceipt(99999n);
   expect((await confirmWallet('initiator', below.id)).status).toBe(200);

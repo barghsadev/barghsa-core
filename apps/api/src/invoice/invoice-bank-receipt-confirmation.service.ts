@@ -1,3 +1,4 @@
+import { applyReceiptEmergencyOverride } from '../admin/receipt-emergency-override.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 import {
   lockWalletProfile,
@@ -141,6 +142,7 @@ export interface InvoiceBankReceiptAllocationPreviewDto {
 }
 
 export interface ConfirmInvoiceBankReceiptInput {
+  emergencyOverrideReason?: string;
   receiptId: string;
   actorUserId: string;
   sessionId: string;
@@ -385,9 +387,16 @@ export class InvoiceBankReceiptConfirmationService {
         }
 
         const latestRequest = await this.lockLatestDualApprovalRequest(client, receipt.id);
+        if (input.emergencyOverrideReason !== undefined && latestRequest?.status !== 'pending') {
+          httpError(
+            ErrorCodes.CONFLICT_STATE.code,
+            'Emergency override requires a pending receipt approval',
+            409
+          );
+        }
         if (latestRequest) {
           await this.assertApprovalBinding(client, receipt, latestRequest);
-          if (latestRequest.status !== 'rejected') {
+          if (latestRequest.status !== 'rejected' && input.emergencyOverrideReason === undefined) {
             await requireCurrentFinancePermission(client, latestRequest.initiatorId);
             if (latestRequest.status === 'approved') {
               if (
@@ -407,29 +416,42 @@ export class InvoiceBankReceiptConfirmationService {
         const requiresDual = invoiceBankReceiptRequiresDualApproval(thresholdRead, receipt.amount);
 
         if (latestRequest?.status === 'pending') {
-          if (latestRequest.initiatorId === input.actorUserId) {
-            const parked = await this.ensureUnderReview(client, receipt.id);
-            await requireSessionStepUp(client, actor);
-            await client.query('COMMIT');
-            return this.toDto(parked, {
-              ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
+          if (input.emergencyOverrideReason !== undefined) {
+            await applyReceiptEmergencyOverride(client, {
+              requestId: latestRequest.id,
+              actorUserId: input.actorUserId,
+              sessionId: input.sessionId,
+              reason: input.emergencyOverrideReason,
+              ip: input.ip,
+              now,
+              ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
+            });
+          } else {
+            if (latestRequest.initiatorId === input.actorUserId) {
+              const parked = await this.ensureUnderReview(client, receipt.id);
+              await requireSessionStepUp(client, actor);
+              await client.query('COMMIT');
+              return this.toDto(parked, {
+                ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
+              });
+            }
+            await requireCurrentFinancePermission(client, input.actorUserId);
+            await applyApprovalRequestResolutionOnClient(client, {
+              requestId: latestRequest.id,
+              reviewerUserId: input.actorUserId,
+              sessionId: input.sessionId,
+              ip: input.ip,
+              decision: 'approve',
+              reviewReason: null,
+              now,
+              initiatorId: latestRequest.initiatorId,
+              status: latestRequest.status,
+              actionType:
+                latestRequest.actionType ?? INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+              amountIrR: latestRequest.amountIrR ?? receipt.amount,
+              ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
             });
           }
-          await requireCurrentFinancePermission(client, input.actorUserId);
-          await applyApprovalRequestResolutionOnClient(client, {
-            requestId: latestRequest.id,
-            reviewerUserId: input.actorUserId,
-            sessionId: input.sessionId,
-            ip: input.ip,
-            decision: 'approve',
-            reviewReason: null,
-            now,
-            initiatorId: latestRequest.initiatorId,
-            status: latestRequest.status,
-            actionType: latestRequest.actionType ?? INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
-            amountIrR: latestRequest.amountIrR ?? receipt.amount,
-            ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
-          });
         } else if (latestRequest?.status === 'rejected') {
           await this.synchronizeReceiptWithRejectedDualApproval(client, {
             receipt,
@@ -564,7 +586,13 @@ export class InvoiceBankReceiptConfirmationService {
             overpaymentCreditTransactionId: overpayment.overpaymentCreditTransactionId,
             dualApprovalRequestId: dualSettled.dualApprovalRequestId,
             dualApprovalInitiatedBy: dualSettled.dualApprovalInitiatedBy,
-            secondConfirmedBy: dualSettled.dualApprovalInitiatedBy ? input.actorUserId : null,
+            secondConfirmedBy:
+              dualSettled.dualApprovalInitiatedBy && input.emergencyOverrideReason === undefined
+                ? input.actorUserId
+                : null,
+            ...(input.emergencyOverrideReason !== undefined
+              ? { emergencyOverrideBy: input.actorUserId }
+              : {}),
           },
           occurredAt: now,
         });
