@@ -48,6 +48,11 @@ vi.mock('@barghsa/db', async (importOriginal) => {
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 const ADMIN_ACTOR = 'topup-limit-admin';
+const limitActor = {
+  userId: ADMIN_ACTOR,
+  sessionId: '55555555-5555-4555-8555-555555555555',
+  csrfToken: 'limit-integration-csrf',
+};
 
 describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
   let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
@@ -97,6 +102,11 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       [PROFILE_A, PROFILE_B, ADMIN_ACTOR]
     );
     await ctx.pool.query(`INSERT INTO wallets(profile_id) VALUES ($1)`, [PROFILE_A]);
+    await ctx.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+       VALUES ($1,$2,$3,$1,clock_timestamp()+INTERVAL '1 day',clock_timestamp()+INTERVAL '30 minutes',clock_timestamp())`,
+      [limitActor.sessionId, limitActor.userId, limitActor.csrfToken]
+    );
   }, 60_000);
 
   afterAll(async () => {
@@ -706,7 +716,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
 
     let adminSettled = false;
     const adminPromise = adminService
-      .setWalletTopUpLimitConfig({ limit_irr: 50_000 }, ADMIN_ACTOR, '127.0.0.1')
+      .setWalletTopUpLimitConfig({ limit_irr: 50_000 }, limitActor, '127.0.0.1')
       .finally(() => {
         adminSettled = true;
       });

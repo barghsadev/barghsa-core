@@ -8,7 +8,12 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: {
+    isAdmin: true,
+    userId: 'admin-1',
+    sessionId: 'limit-session',
+    csrfToken: 'limit-csrf',
+  },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -90,7 +95,7 @@ describe('wallet-top-up-limit config permission gate (T-09.10.01)', () => {
     expect(result).toEqual({ limitIrR: 1_000_000_000 });
     expect(adminService.setWalletTopUpLimitConfig).toHaveBeenCalledWith(
       body,
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });

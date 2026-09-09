@@ -5,6 +5,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 import {
   DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
 } from '@barghsa/shared/finance';
 
 import {
@@ -148,6 +149,128 @@ function write(item: (typeof cases)[number], user = 'operator') {
     body: JSON.stringify(item.body),
   });
 }
+
+const walletLimit = cases.find((item) => item.path === 'wallet-top-up-limit')!;
+async function resetWalletLimitActor() {
+  await http.pool.query(
+    "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,expires_at=clock_timestamp()+INTERVAL '1 day',idle_deadline=clock_timestamp()+INTERVAL '30 minutes',step_up_verified_at=clock_timestamp() WHERE user_id='operator'",
+    [headers.operator!['X-CSRF-Token']]
+  );
+}
+
+for (const change of ['revoke', 'csrf', 'step-up'] as const) {
+  it(`wallet limit rejects ${change} changed after the HTTP guard while waiting on policy`, async () => {
+    const before = await snapshot();
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))', [
+        WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+        WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+      ]);
+      pending = write(walletLimit);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%pg_advisory_xact_lock(hashtext%'"
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await blocker.query(
+        change === 'revoke'
+          ? "UPDATE sessions SET revoked_at=clock_timestamp() WHERE user_id='operator'"
+          : change === 'csrf'
+            ? "UPDATE sessions SET csrf_token='rotated' WHERE user_id='operator'"
+            : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '16 minutes' WHERE user_id='operator'"
+      );
+      await blocker.query('COMMIT');
+      expect((await pending).status).toBe(change === 'revoke' ? 401 : 403);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending;
+      await resetWalletLimitActor();
+    }
+  });
+}
+
+for (const expiry of ['session', 'step-up'] as const) {
+  it(`wallet limit rolls back config/version/audit when ${expiry} expires during audit`, async () => {
+    const before = await snapshot();
+    await http.pool.query(
+      'CREATE FUNCTION delay_wallet_limit_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM pg_sleep(1.2); RETURN NEW; END $$'
+    );
+    await http.pool.query(
+      'CREATE TRIGGER delay_wallet_limit_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_wallet_limit_audit()'
+    );
+    let pending: Promise<Response> | undefined;
+    try {
+      await http.pool.query(
+        expiry === 'session'
+          ? "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '800 milliseconds' WHERE user_id='operator'"
+          : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='operator'"
+      );
+      pending = write(walletLimit);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event='PgSleep'"
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      expect((await pending).status).toBe(expiry === 'session' ? 401 : 403);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await pending;
+      await http.pool.query('DROP TRIGGER delay_wallet_limit_audit ON audit_log');
+      await http.pool.query('DROP FUNCTION delay_wallet_limit_audit()');
+      await resetWalletLimitActor();
+    }
+  });
+}
+
+it('wallet limit reports a corrupt stored value as unavailable, never as the default', async () => {
+  await http.pool.query(
+    'INSERT INTO app_config(key,value,version) VALUES ($1,\'{"limit_irr":"corrupt"}\',3)',
+    [WALLET_TOP_UP_LIMIT_CONFIG_KEY]
+  );
+  const before = await snapshot();
+  const response = await fetch(`${http.base}/api/admin/config/wallet-top-up-limit`, {
+    headers: headers.operator!,
+  });
+  expect(response.status).toBe(503);
+  expect(await snapshot()).toEqual(before);
+});
+
+it('wallet limit audit binds the current session and request correlation', async () => {
+  const correlation = randomUUID();
+  const response = await fetch(`${http.base}/api/admin/config/wallet-top-up-limit`, {
+    method: 'PUT',
+    headers: { ...headers.operator, 'X-Correlation-ID': correlation },
+    body: JSON.stringify(walletLimit.body),
+  });
+  expect(response.status).toBe(200);
+  const audit = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata,correlation_id FROM audit_log WHERE event='config_change'"
+    )
+  ).rows;
+  expect(audit).toHaveLength(1);
+  expect(audit[0]).toMatchObject({
+    correlation_id: correlation,
+    metadata: { sessionId: headers.operator!.Cookie!.split('=')[1] },
+  });
+});
 async function snapshot() {
   return {
     config: (
@@ -197,7 +320,7 @@ for (const item of cases) {
       await http.pool.query('DROP TRIGGER reject_config_audit ON audit_log');
     }
   });
-  it(`${item.path}: rejects a grant revoked while the request waits on its actor lock`, async () => {
+  it(`${item.path}: rejects a grant revoked while authentication waits on its actor lock`, async () => {
     const before = await snapshot();
     const client = await http.pool.connect();
     let pending: Promise<Response> | undefined;
@@ -210,7 +333,7 @@ for (const item of cases) {
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%'"
               )
             ).rows[0].count
           )

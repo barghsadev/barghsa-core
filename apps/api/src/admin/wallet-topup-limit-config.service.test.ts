@@ -1,3 +1,7 @@
+const limitActor = { userId: 'admin-1', sessionId: 'limit-session', csrfToken: 'limit-csrf' };
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import type { AdminService as AdminServiceType } from './admin.service.js';
@@ -77,15 +81,14 @@ describe('AdminService.getWalletTopUpLimitConfig (T-09.10.01)', () => {
     expect(result).toEqual({ limitIrR: 1_500_000_000, version: 2 });
   });
 
-  it('serves the default and warns on a corrupt persisted value', async () => {
+  it('reports a corrupt persisted value as unavailable', async () => {
     const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ value: { limit_irr: 'corrupted' } }],
     });
 
     const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
-    const result = await service.getWalletTopUpLimitConfig();
-    expect(result).toEqual({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG, version: 0 });
+    await expect(service.getWalletTopUpLimitConfig()).rejects.toMatchObject({ status: 503 });
     expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 });
@@ -96,7 +99,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
   it('rejects a negative limit with a 400', async () => {
     const { pool } = await loadService();
     await expect(
-      service.setWalletTopUpLimitConfig({ limit_irr: -1 }, 'admin-1', '127.0.0.1')
+      service.setWalletTopUpLimitConfig({ limit_irr: -1 }, limitActor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
     expect(pool.connect).not.toHaveBeenCalled();
   });
@@ -104,21 +107,21 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
   it('rejects a fractional limit with a 400', async () => {
     await loadService();
     await expect(
-      service.setWalletTopUpLimitConfig({ limit_irr: 1.5 }, 'admin-1', '127.0.0.1')
+      service.setWalletTopUpLimitConfig({ limit_irr: 1.5 }, limitActor, '127.0.0.1')
     ).rejects.toThrowError(HttpException);
   });
 
   it('rejects a missing limit with a 400', async () => {
     await loadService();
     await expect(
-      service.setWalletTopUpLimitConfig({}, 'admin-1', '127.0.0.1')
+      service.setWalletTopUpLimitConfig({}, limitActor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
   });
 
   it('rejects a coercible string limit with a 400 (no silent coercion)', async () => {
     await loadService();
     await expect(
-      service.setWalletTopUpLimitConfig({ limit_irr: '2000000000' }, 'admin-1', '127.0.0.1')
+      service.setWalletTopUpLimitConfig({ limit_irr: '2000000000' }, limitActor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
   });
 
@@ -137,7 +140,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
       .mockResolvedValueOnce({ rows: [] }) // audit_log
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    await service.setWalletTopUpLimitConfig({ limit_irr: 1_000_000_000 }, 'admin-1', '127.0.0.1');
+    await service.setWalletTopUpLimitConfig({ limit_irr: 1_000_000_000 }, limitActor, '127.0.0.1');
 
     // BEGIN, advisory lock, SELECT ... FOR UPDATE, INSERT app_config,
     // UPDATE config_version, INSERT audit_log, COMMIT
@@ -165,6 +168,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     const auditQuery = client.query.mock.calls[5]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata).toEqual({
+      sessionId: limitActor.sessionId,
       key: WALLET_TOP_UP_LIMIT_CONFIG_KEY,
       previousValue: null,
       previousVersion: 0,
@@ -191,11 +195,12 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
       .mockResolvedValueOnce({ rows: [] }) // audit_log
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    await service.setWalletTopUpLimitConfig({ limit_irr: 2_000_000_000 }, 'admin-1', '127.0.0.1');
+    await service.setWalletTopUpLimitConfig({ limit_irr: 2_000_000_000 }, limitActor, '127.0.0.1');
 
     const auditQuery = client.query.mock.calls[5]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata).toEqual({
+      sessionId: limitActor.sessionId,
       key: WALLET_TOP_UP_LIMIT_CONFIG_KEY,
       previousValue: { limit_irr: 5_000_000_000 },
       previousVersion: 3,
@@ -219,7 +224,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
 
     const result = await service.setWalletTopUpLimitConfig(
       { limit_irr: 2_000_000_000 },
-      'admin-1',
+      limitActor,
       '127.0.0.1'
     );
     expect(result).toEqual({ limitIrR: 2_000_000_000, version: 1 });
@@ -242,7 +247,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
       invalidate,
     };
 
-    await service.setWalletTopUpLimitConfig({ limit_irr: 750_000 }, 'admin-1', '127.0.0.1');
+    await service.setWalletTopUpLimitConfig({ limit_irr: 750_000 }, limitActor, '127.0.0.1');
 
     expect(invalidate).toHaveBeenCalledWith(WALLET_TOP_UP_LIMIT_CONFIG_KEY);
     expect(pool.connect).toHaveBeenCalledTimes(1);
@@ -261,7 +266,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     await expect(
       service.setWalletTopUpLimitConfig(
         { limit_irr: 10_000, expected_version: 3 },
-        'admin-1',
+        limitActor,
         '127.0.0.1'
       )
     ).rejects.toMatchObject({ status: 409 });
@@ -287,7 +292,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     await expect(
       service.setWalletTopUpLimitConfig(
         { limit_irr: 80_000, expected_version: 0 },
-        'admin-1',
+        limitActor,
         '127.0.0.1'
       )
     ).resolves.toEqual({ limitIrR: 80_000, version: 1 });
@@ -298,7 +303,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     await expect(
       service.setWalletTopUpLimitConfig(
         { limit_irr: 80_000, expected_version: 1.5 },
-        'admin-1',
+        limitActor,
         '127.0.0.1'
       )
     ).rejects.toMatchObject({ status: 400 });

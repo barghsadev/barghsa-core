@@ -2075,7 +2075,7 @@ export class AdminController {
   async setWalletTopUpLimit(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertFinancialThresholdPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.setWalletTopUpLimitConfig(rawBody, req.session.userId, ip);
+    return this.adminService.setWalletTopUpLimitConfig(rawBody, req.session, ip);
   }
 
   /**

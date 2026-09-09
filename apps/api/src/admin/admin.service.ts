@@ -1402,12 +1402,9 @@ export class AdminService {
     const version = Number(result.rows[0]!.version);
     if (!isValidWalletTopUpLimit(persistedValue)) {
       this.logger.warn(
-        `Online wallet top-up limit config row for key ${WALLET_TOP_UP_LIMIT_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving default limit`
+        `Online wallet top-up limit config row for key ${WALLET_TOP_UP_LIMIT_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); configuration unavailable`
       );
-      return {
-        ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
-        version: Number.isFinite(version) ? version : 0,
-      };
+      throw new HttpException('Online wallet top-up limit configuration is unavailable', 503);
     }
     return {
       ...config,
@@ -1434,9 +1431,10 @@ export class AdminService {
    */
   async setWalletTopUpLimitConfig(
     input: unknown,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<{ limitIrR: number; version: number }> {
+    const actorUserId = actor.userId;
     const validation = validateWalletTopUpLimitConfig(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -1474,7 +1472,6 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:financial:edit');
 
       // SELECT ... FOR UPDATE locks nothing when the config row does not
       // yet exist. Take the same transaction-scoped advisory lock the
@@ -1485,6 +1482,8 @@ export class AdminService {
         WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
         WALLET_TOP_UP_LIMIT_CONFIG_KEY,
       ]);
+      await requireStaffMutationPermission(client, actorUserId, 'admin:financial:edit');
+      await requireSessionStepUp(client, actor);
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value that is being replaced — read it before
@@ -1538,7 +1537,7 @@ export class AdminService {
       // The audit trail captures the previous value and both version numbers
       // so a limit change can be reconstructed end-to-end later.
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1547,6 +1546,7 @@ export class AdminService {
           actorUserId,
           'config_change',
           JSON.stringify({
+            sessionId: actor.sessionId,
             key: WALLET_TOP_UP_LIMIT_CONFIG_KEY,
             previousValue,
             previousVersion,
@@ -1559,6 +1559,7 @@ export class AdminService {
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       await this.configCache?.invalidate(WALLET_TOP_UP_LIMIT_CONFIG_KEY);
