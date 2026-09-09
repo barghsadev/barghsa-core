@@ -3745,7 +3745,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3816,7 +3816,8 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [
         "Large production history-volume performance and legacy immutable-document recovery remain operational prerequisites. The detail session list contains the latest 20 records; active count is computed separately. The written task does not specify session pagination.",
@@ -3832,7 +3833,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -3898,7 +3899,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3951,7 +3952,8 @@
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [],
       "merged_prs": [
@@ -3962,10 +3964,9 @@
         "date": "2026-09-09",
         "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/openapi.json",
-          "kanban/epics/02-auth-users-admin.md"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -4459,7 +4460,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4496,7 +4497,8 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [
         "Production-scale search/aggregate performance, deployment and the final global checkpoint remain separate evidence."
@@ -4511,7 +4513,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -4602,7 +4604,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4633,7 +4635,8 @@
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "Chargeback-only additions and neighbouring CRM behavior reviewed atab17007; prior valid behavior evidence preserved. audit/evidence/step-reviews.json#R01-chargebacks-alerts",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [
         "Visibility and local reads are verified. Provider approval, deployed settings and final global regression remain separate evidence."
@@ -4648,7 +4651,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -5047,7 +5050,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5147,7 +5150,8 @@
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "audit/evidence/step-reviews.json#R01-session-recovery: Preserve verified OTP-first reset: limited one-use verification grant, server password strength/history, atomic password/OTP/audit/session/refresh invalidation and return-to-login acknowledgement. New preauth transport and shared recovery OTP are verified by current217 API and31 recovery/rate-limit browser cases. Existing reset transaction/migration evidence remains valid; no reset service logic changed beyond safe logging.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [
         "Preserved reset transaction and migration evidence is supplemented by current preauth and recovery UI checks. Local fixtures do not prove provider operation or deployment."
@@ -5162,7 +5166,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       },
       "previous_batch_assessment": {
         "status": "acceptance_verified",
@@ -5208,7 +5212,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.test.ts",
-          "sha256": "fb86f431b8509ff7c8ecfa1f1f04092f60bbf64311264d4c49924d28ec4b2d35"
+          "sha256": "1d335cd2f15bbfb71a5f625d1654617d566703303cc17e4a4f778e20e9517485"
         },
         {
           "path": "apps/api/src/session/staff-permissions.ts",
@@ -5275,7 +5279,8 @@
         "A creator without view/edit-role/disable grants can now select initial roles through the restricted role-options response. Existing role-management and later role edits still return403. The fa/en form provides normalized name/username fields, a keyboard-operated multi-select with descriptions and activation radios. Two selected roles survive step-up; fresh CSRF is used on retry; temporary password clears on dismissal/reload. Light/dark axe checks pass on desktop/mobile.",
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5286,12 +5291,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/admin/admin.service.test.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -5325,7 +5330,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.test.ts",
-          "sha256": "fb86f431b8509ff7c8ecfa1f1f04092f60bbf64311264d4c49924d28ec4b2d35"
+          "sha256": "1d335cd2f15bbfb71a5f625d1654617d566703303cc17e4a4f778e20e9517485"
         },
         {
           "path": "apps/api/src/session/staff-permissions.ts",
@@ -5367,7 +5372,8 @@
         "The UI shows current role badges and an expandable checkbox multi-select with translated names/descriptions. It preserves the selected target, roles and reason through confirmation, failed password, failed save and retry. Staff creation/role editor light/dark axe scans and fa/en desktop/mobile cases pass.",
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5378,12 +5384,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/admin/admin.service.test.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -5417,7 +5423,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.test.ts",
-          "sha256": "fb86f431b8509ff7c8ecfa1f1f04092f60bbf64311264d4c49924d28ec4b2d35"
+          "sha256": "1d335cd2f15bbfb71a5f625d1654617d566703303cc17e4a4f778e20e9517485"
         },
         {
           "path": "apps/api/src/session/staff-permissions.ts",
@@ -5471,7 +5477,8 @@
         "Reviewed the localized table, name fallback, role/status/last-login cells, pagination, retry and permission-loss behavior. Staff list and role editor axe scans pass in light/dark for fa/en on desktop/mobile. Replaced fixed white/gray page colors after reproducing dark text contrast failures.",
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -5482,12 +5489,12 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/admin/admin.service.test.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -5574,7 +5581,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -5653,7 +5660,8 @@
         "The compiled worker polls invitation expiry, records failure/recovery and drains on shutdown. Real migrated PostgreSQL proves bounded expiry, concurrent SKIP LOCKED decisions, idempotent correlated audit and rollback/retry. All three PR132 deferrals have explicit supported dispositions.",
         "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
-        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets"
+        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
@@ -5667,9 +5675,9 @@
         "date": "2026-09-09",
         "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "packages/i18n/src/app.ts"
+          "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -6417,7 +6425,7 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "c3f244681f482fcf615a697c50f1d06ca2b509e6e9dc7a220d41d6ea68286e48"
+          "sha256": "c1c398c7415ae23a8a4ef89944770f8fc9dcdb130654cc156754847de960b298"
         },
         {
           "path": "apps/web/src/components/VerificationBanner.tsx",
@@ -6429,7 +6437,8 @@
         }
       ],
       "checks": [
-        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses"
+        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         103
@@ -6445,7 +6454,15 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-profile-addresses",
         "audit/evidence/step-reviews.json#R01-profiles-onboarding"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+        "changed_paths_reviewed": [
+          "apps/web/e2e/form-accessibility.spec.ts"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-03.02.01",
@@ -7005,12 +7022,13 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "c3f244681f482fcf615a697c50f1d06ca2b509e6e9dc7a220d41d6ea68286e48"
+          "sha256": "c1c398c7415ae23a8a4ef89944770f8fc9dcdb130654cc156754847de960b298"
         }
       ],
       "checks": [
         "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         115
@@ -7030,10 +7048,9 @@
         "date": "2026-09-09",
         "prior_reviewed_sha": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
         "changed_paths_reviewed": [
-          "packages/db/src/migrate.baseline.test.ts",
-          "packages/db/drizzle/production/meta/_journal.json"
+          "apps/web/e2e/form-accessibility.spec.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -7089,11 +7106,12 @@
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "c3f244681f482fcf615a697c50f1d06ca2b509e6e9dc7a220d41d6ea68286e48"
+          "sha256": "c1c398c7415ae23a8a4ef89944770f8fc9dcdb130654cc156754847de960b298"
         }
       ],
       "checks": [
-        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses"
+        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         116
@@ -7109,7 +7127,15 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-profile-addresses",
         "audit/evidence/step-reviews.json#R01-profiles-onboarding"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+        "changed_paths_reviewed": [
+          "apps/web/e2e/form-accessibility.spec.ts"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.01",
@@ -7662,11 +7688,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "ff9f3829bb6f76a2020b7f85eed8e3789bfb4b73026c4cb7540ff1c3ed11fffc"
+          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "64b13d9aa83966b558f2f993bc2877e5456856e2aa697a2fc1929a56cb7dce8b"
+          "sha256": "5fcf4799e88da331a11abc5a7a477832c0b48d740af7bb61bd1ad89651f3840c"
         },
         {
           "path": "apps/api/src/admin/approval-notifications.ts",
@@ -7732,7 +7758,8 @@
       "checks": [
         "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added.",
-        "At aeb2d1b, reviewed the complete subsequent admin service/controller diff: only online-limit getter/setter/caller changed. Receipt threshold/configuration methods and their verified behavior are unchanged; retain their API/browser evidence. Fresh receipt request-body OpenAPI comparison is recorded under audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "At aeb2d1b, reviewed the complete subsequent admin service/controller diff: only online-limit getter/setter/caller changed. Receipt threshold/configuration methods and their verified behavior are unchanged; retain their API/browser evidence. Fresh receipt request-body OpenAPI comparison is recorded under audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         195
@@ -7745,7 +7772,16 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
+        "changed_paths_reviewed": [
+          "apps/api/src/admin/admin.controller.ts",
+          "apps/api/src/admin/admin.service.ts"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.07.02",
@@ -8617,11 +8653,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "64b13d9aa83966b558f2f993bc2877e5456856e2aa697a2fc1929a56cb7dce8b"
+          "sha256": "5fcf4799e88da331a11abc5a7a477832c0b48d740af7bb61bd1ad89651f3840c"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "ff9f3829bb6f76a2020b7f85eed8e3789bfb4b73026c4cb7540ff1c3ed11fffc"
+          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
@@ -8650,7 +8686,8 @@
       ],
       "checks": [
         "Exact story/task criteria and current implementations reviewed together in audit/evidence/step-reviews.json#R01-online-topups-callbacks",
-        "Six repairs and focused current/reused checks recorded once in the consolidated review; overlapping counts are not added."
+        "Six repairs and focused current/reused checks recorded once in the consolidated review; overlapping counts are not added.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         269,
@@ -8667,7 +8704,16 @@
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger",
         "audit/final-repair-checkpoint.json"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "a1d995953e6303d7697664de615dfb8a71cc1130",
+        "changed_paths_reviewed": [
+          "apps/api/src/admin/admin.service.ts",
+          "apps/api/src/admin/admin.controller.ts"
+        ],
+        "evidence": "audit/progress.json#active_batch"
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.07",
@@ -11138,7 +11184,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11180,7 +11226,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         236
@@ -11201,7 +11248,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11295,7 +11342,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11337,7 +11384,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         237
@@ -11358,7 +11406,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11452,7 +11500,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11494,7 +11542,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         238
@@ -11515,7 +11564,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11609,7 +11658,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11651,7 +11700,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         239
@@ -11672,7 +11722,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11766,7 +11816,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11808,7 +11858,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         240
@@ -11829,7 +11880,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -11923,7 +11974,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11965,7 +12016,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         241
@@ -11986,7 +12038,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12080,7 +12132,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12122,7 +12174,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         243
@@ -12145,7 +12198,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12239,7 +12292,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12281,7 +12334,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         244
@@ -12302,7 +12356,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12396,7 +12450,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12438,7 +12492,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         245
@@ -12461,7 +12516,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12555,7 +12610,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12597,7 +12652,8 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "merged_prs": [
         246
@@ -12618,7 +12674,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -12905,7 +12961,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "643ceaa9925b6a5b18f529ada49011c887b8dc68139871abb07fad840bb24034"
+          "sha256": "e9bebb12e20aae880c8027e3cbab958d282f1086f3aa5a65c1da286b00c7bbd9"
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -12955,7 +13011,8 @@
       "checks": [
         "Exact requirements and all contributing saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
         "Current focused checks and unchanged reversal evidence are recorded once in the batch review.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/progress.json active R01-verification-policy."
       ],
       "limitations": [],
       "merged_prs": [
@@ -12970,7 +13027,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
+        "evidence": "audit/progress.json#active_batch"
       }
     },
     {
@@ -16438,6 +16495,39 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-tickets",
       "note": "Prior full assessments remain in Git; only current additive dictionary bindings refreshed. Unrelated stale evidence remains pending."
+    },
+    {
+      "source_revision": "3e79cca",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-10.01.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-03.01.02",
+        "02-auth-users-admin.md#T-03.04.01",
+        "02-auth-users-admin.md#T-03.04.02",
+        "02-auth-users-admin.md#T-09.07.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01"
+      ],
+      "review_record": "audit/progress.json#active_batch",
+      "note": "Prior full assessments retained in Git. Refresh only previously current bindings after reviewing verification-only diffs and compatibility evidence. Stale evidence remains pending."
     }
   ]
 }

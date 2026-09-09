@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `d776019`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `1858caf`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -10,13 +10,15 @@ Current through product/test `d776019`, 2026-09-09. This is the only active plan
 | Other historical claims | 3 | 0 | 56 | 59 |
 | All claims | 128 | 29 | 165 | 322 |
 
-**194 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twelve retained/identified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
+**194 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twenty-four retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Active R01 batch: verification mode, unavailable provider and user notification. Saved PRs141,142,146; tasks `02-auth-users-admin.md#T-07.01.01` through `.03`. Read these exact requirements and PR bodies, then compare current configuration/API/worker/UI behavior before editing. No identity provider exists; do not ask again or simulate success. Preserve completed ticket/CRM/assignment work.
+Active R01 batch: verification mode, unavailable provider and user notification. Saved PRs141,142,146; tasks `02-auth-users-admin.md#T-07.01.01` through `.03`. Exact requirements and PR bodies already read. Mode Draft→Active is verified at1858caf:90 distinct backend cases,18 production-browser cases and42 unchanged budgets pass. Draft saves preserve active policy; exact activation checks current authority and fresh password confirmation. FA/EN UI and OpenAPI updated.2133 logs indexed;25 current source bindings refreshed. No task/PR counts change before batch consolidation.
+
+Next: finish absent-provider disposition and notification acceptance. Existing CRM notifications are atomic/localized but lack the required profile name and corrective next steps. Compare notification tests/inbox/dashboard once; preserve reviewed CRM/identity/assignment behavior. Actual email/SMS delivery remainsR02. No identity provider exists; do not ask again or simulate success. Retain V02 reconciliation of unrelated wallet-controller mock failures from the interrupted, accidentally unfiltered API run; it is not broad-regression evidence.
 
 Ticket batch consolidated at `d776019`: **1 task verified /2 partial;1 saved PR review closed /2 open**. PR140 staff management and both historical team/assignment deferrals are verified. PR138 attachments are complete; contract linking remains an unbuilt dependency. PR139 customer invoice links are complete; order/contract detail destinations remain dependencies. Current authority, sealed attachments, assignment, categories, customer context and FA/EN UI are reviewed.74 final ticket API/service cases and14 distinct browser cases pass;9 assignment and19 correction cases are reused.3 migration cases and42 unchanged budgets pass. [Batch review](evidence/step-reviews.json#R01-tickets).2117 logs indexed. Saved PR totals:105 closed/20 open/176 unreviewed.
 
@@ -65,7 +67,7 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 | R03 / F19, F20 | Localized application errors; correlation through required outbox/worker consumers; remaining accessibility, RTL, themes and failure states. Check the recorded dark-theme terms error banner and shared button/link/alert contrast consumers. | Required screens and consumers pass relevant checks. Scanner warnings require a confirmed defect before becoming work. |
 | R04 / F19 | Eager customer purchase routes within unchanged complete-route budgets. Earlier over-budget attempts were reverted. | Production build, required loading and affected payload budgets pass. Retain Vite SPA. |
 | R05 / F19 | Strict dependency checks in API/web/worker/DB; geoip-country maintenance/data-update disposition. Last strict DB run found 146 declaration errors, 144 Drizzle and 2 Vite. | Compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation pass. No broad suppression or weaker requirement. |
-| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 12 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
+| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 24 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
 | R06 / F19 | Three measured coverage gaps. | Meaningful missing-behavior tests meet unchanged critical floors of 90% lines / 85% branches and general floors of 80% / 75%. |
 | V02 / affected groups | One final regression checkpoint after local repairs. | Required unit/integration/browser/coverage/types/lint/OpenAPI/migrations/snapshots/budgets/loop/image checks pass at recorded revisions. |
 | B01 / F22 | Dependency-ordered handoff of unmet skipped work. | Exact keys, criteria and prerequisites; preserve verified and incidental implementation. Build new features after repair closure. |
