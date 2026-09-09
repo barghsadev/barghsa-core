@@ -1,24 +1,26 @@
 # Remaining fix plan
 
-Current through product/test `1858caf`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `709d28b`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 125 | 29 | 109 | 263 |
+| Tasks with merged PR evidence | 125 | 32 | 106 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 128 | 29 | 165 | 322 |
+| All claims | 128 | 32 | 162 | 322 |
 
-**194 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twenty-four retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**194 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Active R01 batch: verification mode, unavailable provider and user notification. Saved PRs141,142,146; tasks `02-auth-users-admin.md#T-07.01.01` through `.03`. Exact requirements and PR bodies already read. Mode Draft→Active is verified at1858caf:90 distinct backend cases,18 production-browser cases and42 unchanged budgets pass. Draft saves preserve active policy; exact activation checks current authority and fresh password confirmation. FA/EN UI and OpenAPI updated.2133 logs indexed;25 current source bindings refreshed. No task/PR counts change before batch consolidation.
+Active R01 batch: customer dashboard invitation widget, saved PR137, `02-auth-users-admin.md#T-05.05.02`. Exact requirement already read: prominent dashboard invitation details and accept/decline actions, no dismissal before decision. Read PR137 body and compare current InvitationBanner/dashboard integration once. Reuse the completed agents/invitations/ownership workflow and evidence. Staff permission audit T-10.01.02/PR219 follows separately.
 
-Next: finish absent-provider disposition and notification acceptance. Existing CRM notifications are atomic/localized but lack the required profile name and corrective next steps. Compare notification tests/inbox/dashboard once; preserve reviewed CRM/identity/assignment behavior. Actual email/SMS delivery remainsR02. No identity provider exists; do not ask again or simulate success. Retain V02 reconciliation of unrelated wallet-controller mock failures from the interrupted, accidentally unfiltered API run; it is not broad-regression evidence.
+Verification batch consolidated at709d28b:3 task acceptances partial/3 saved PR reviews open. Mode Draft→Active at1858caf passes90 backend/18 browser cases. Named actionable notices/current-owner dashboard/inbox atd74c8f8 pass68 backend/6 browser cases. Circuit recovery at709d28b passes29 distinct provider cases across focused runs. API/web types, lint/format, build, OpenAPI and42 unchanged budgets pass.2154 logs indexed;22 further current bindings refreshed. [Review](evidence/step-reviews.json#R01-verification-policy). Saved PR totals105 closed/23 open/173 unreviewed.
+
+Real-provider API activation/integration remains an external prerequisite; never simulate approval or ask again. Actual email/SMS notification delivery per preferences remainsR02. No partial criterion counts as passed. Retain V02 reconciliation of unrelated wallet-controller mock failures from the interrupted, accidentally unfiltered API run; it is not broad-regression evidence.
 
 Ticket batch consolidated at `d776019`: **1 task verified /2 partial;1 saved PR review closed /2 open**. PR140 staff management and both historical team/assignment deferrals are verified. PR138 attachments are complete; contract linking remains an unbuilt dependency. PR139 customer invoice links are complete; order/contract detail destinations remain dependencies. Current authority, sealed attachments, assignment, categories, customer context and FA/EN UI are reviewed.74 final ticket API/service cases and14 distinct browser cases pass;9 assignment and19 correction cases are reused.3 migration cases and42 unchanged budgets pass. [Batch review](evidence/step-reviews.json#R01-tickets).2117 logs indexed. Saved PR totals:105 closed/20 open/176 unreviewed.
 
@@ -67,7 +69,7 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 | R03 / F19, F20 | Localized application errors; correlation through required outbox/worker consumers; remaining accessibility, RTL, themes and failure states. Check the recorded dark-theme terms error banner and shared button/link/alert contrast consumers. | Required screens and consumers pass relevant checks. Scanner warnings require a confirmed defect before becoming work. |
 | R04 / F19 | Eager customer purchase routes within unchanged complete-route budgets. Earlier over-budget attempts were reverted. | Production build, required loading and affected payload budgets pass. Retain Vite SPA. |
 | R05 / F19 | Strict dependency checks in API/web/worker/DB; geoip-country maintenance/data-update disposition. Last strict DB run found 146 declaration errors, 144 Drizzle and 2 Vite. | Compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation pass. No broad suppression or weaker requirement. |
-| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 24 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
+| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 38 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
 | R06 / F19 | Three measured coverage gaps. | Meaningful missing-behavior tests meet unchanged critical floors of 90% lines / 85% branches and general floors of 80% / 75%. |
 | V02 / affected groups | One final regression checkpoint after local repairs. | Required unit/integration/browser/coverage/types/lint/OpenAPI/migrations/snapshots/budgets/loop/image checks pass at recorded revisions. |
 | B01 / F22 | Dependency-ordered handoff of unmet skipped work. | Exact keys, criteria and prerequisites; preserve verified and incidental implementation. Build new features after repair closure. |
@@ -110,7 +112,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all 29 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all32 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 
@@ -143,7 +145,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Deployment, operations and CI, T-05.* | 20 |
 | Total | 55 |
 
-Task dependencies override batch order. These 55 overlap the 195 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
+Task dependencies override batch order. These55 overlap the194 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 

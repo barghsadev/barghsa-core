@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "1858caf513769770f447e611d09089dfbcde2c67",
+  "source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
   "active_step": "R01",
-  "next_action": "Finish existing provider/no-provider disposition and the verification-notification workflow. Mode Draft→Active is verified at1858caf. Requirements and saved PR141/142/146 bodies already read. Compare notification tests/inbox/dashboard once, repair required profile-name/correction guidance, and keep actual external delivery inR02.",
+  "next_action": "Read saved PR137 body and compare the current dashboard InvitationBanner with T-05.05.02. Preserve the reviewed invitation decision/permission workflow; use focused widget checks and consolidate its acceptance.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -627,6 +627,10 @@
     {
       "id": "R01-tickets",
       "review_record": "audit/evidence/step-reviews.json#R01-tickets"
+    },
+    {
+      "id": "R01-verification-policy",
+      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy"
     }
   ],
   "deferred_improvements": [
@@ -646,8 +650,8 @@
   "counts": {
     "historical_tasks": 322,
     "acceptance_verified": 128,
-    "partial": 29,
-    "pending": 165,
+    "partial": 32,
+    "pending": 162,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -724,13 +728,15 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "changed_paths": [
-        "apps/api/src/crm/crm-list-http.integration.test.ts"
+        "apps/api/src/crm/crm-list-http.integration.test.ts",
+        "apps/api/src/crm/crm-v2.service.ts"
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.04",
       "changed_paths": [
-        "apps/api/src/auth/auth.service.ts"
+        "apps/api/src/auth/auth.service.ts",
+        "apps/api/src/crm/crm-v2.service.ts"
       ]
     },
     {
@@ -828,13 +834,101 @@
     {
       "task_key": "02-auth-users-admin.md#T-03.02.02",
       "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts"
+        "apps/web/e2e/form-accessibility.spec.ts",
+        "apps/api/src/profiles/profiles.service.ts"
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-03.02.03",
       "changed_paths": [
         "apps/web/e2e/form-accessibility.spec.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.02",
+      "changed_paths": [
+        "apps/api/src/crm/crm-v2.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.03",
+      "changed_paths": [
+        "apps/api/src/crm/crm-v2.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.06",
+      "changed_paths": [
+        "apps/api/src/crm/crm-v2.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.05.01",
+      "changed_paths": [
+        "apps/api/src/crm/crm-v2.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.04",
+      "changed_paths": [
+        "apps/api/src/crm/crm-v2.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.02",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.controller.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.controller.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.05",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.controller.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.01.01",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.01",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.04",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.service.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.01",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.service.ts",
+        "apps/api/src/profiles/profiles.controller.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.02",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.service.ts",
+        "apps/api/src/profiles/profiles.controller.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.03",
+      "changed_paths": [
+        "apps/api/src/profiles/profiles.service.ts",
+        "apps/api/src/profiles/profiles.controller.ts"
       ]
     }
   ],
@@ -846,62 +940,27 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-verification-policy",
-    "name": "Verification mode, unavailable provider and user notification",
+    "id": "R01-invitation-dashboard",
+    "name": "Customer dashboard agent invitation widget",
     "status": "in_progress",
     "prs": [
-      141,
-      142,
-      146
+      137
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-07.01.01",
-      "02-auth-users-admin.md#T-07.01.02",
-      "02-auth-users-admin.md#T-07.01.03"
+      "02-auth-users-admin.md#T-05.05.02"
     ],
     "remaining_checklist": [
-      "Verification mode implementation/review is complete at1858caf. Reuse its90 backend/18 browser cases and unchanged budgets; do not rebuild it.",
-      "Finish T07.01.02 disposition using existing provider safety/framework evidence. No provider contract exists. Keep real credentials, asynchronous verification and staff retry prerequisites explicit; never simulate successful verification.",
-      "Complete T07.01.03 notification review: required profile name, reason, corrective next steps, current in-app/dashboard entry and delivery preferences. Actual email/SMS delivery stays R02. Repair confirmed gaps with focused checks.",
-      "Consolidate the three individual task and PR dispositions once remaining criteria are reviewed. Preserve completed ticket, CRM, identity correction and assignment evidence."
+      "Exact widget requirement was read while selecting this batch. Read saved PR137 body, then compare InvitationBanner and its dashboard integration to that requirement.",
+      "Reuse the consolidated agents/invitations/ownership implementation and valid tests. Review the widget once; repair only confirmed remaining gaps.",
+      "Record the single task/PR disposition with evidence. Then review staff permission audit presentation T-10.01.02/PR219 separately."
     ],
-    "confirmed_defects": [
-      {
-        "summary": "Mode changes took effect immediately without the required Draft→Active workflow, revision conflict checks or global-impact confirmation.",
-        "status": "repaired_and_verified_at_1858caf"
-      },
-      {
-        "summary": "The API could enable unavailable automatic verification despite its disabled UI, and mode writes relied on earlier session/CSRF checks.",
-        "status": "repaired_and_verified_at_1858caf"
-      }
-    ],
+    "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-tickets:19 current correction HTTP and9 assignment cases cover the shared assignment repair. No identity provider exists."
+      "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
     ],
-    "new_evidence": [
-      "1858caf:19 verification HTTP/Postgres tests cover draft isolation, exact activation, overwritten/replayed proposals, parallel writers, legacy active changes, unavailable provider, audit rollback, current role/session/CSRF/expiry/step-up after a policy lock wait, and final session expiry before commit.71 other admin cases pass unchanged;90 distinct backend cases total.",
-      "18 distinct Chromium cases pass:6 existing verification configuration cases,2 ordering compatibility cases,8 OTP settings cases and2 new draft/activation/conflict cases. The final2 rerun only corrected selectors matching an unrelated terms status banner. Prior successful16 cases are reused.",
-      "API/web types, scoped ESLint/Prettier, web production build, OpenAPI contract and42 numeric route/interaction budgets pass. New API body requires mode/action/expectedVersion; old one-step clients fail validation. Deploy API/web together and retire old writers before enabling this workflow. No database migration or remote execution.",
-      "Preserved failed evidence: initial fixture omitted required role description; next run sorted random audit IDs instead of chronology; first browser run had2 ambiguous status selectors; lint required const. All corrected. An accidentally unfiltered API invocation was interrupted with exit130. It is not full-regression evidence; its unrelated wallet-controller mock failures remain for V02 reconciliation.",
-      "16 ended logs archived;2133 logs indexed. No task/PR acceptance counts change before batch consolidation.",
-      "25 previously current task bindings refreshed;24 retained/identified refresh records remain. Full regression and unresolved interrupted-run mock evidence stayV02."
-    ],
+    "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Finish existing provider/no-provider disposition and the verification-notification workflow. Mode Draft→Active is verified at1858caf. Requirements and saved PR141/142/146 bodies already read. Compare notification tests/inbox/dashboard once, repair required profile-name/correction guidance, and keep actual external delivery inR02.",
-    "product_commits": [
-      {
-        "revision": "1858caf",
-        "change": "Verification mode Draft→Active lifecycle with current transaction authority and FA/EN confirmation",
-        "verification": "19 new HTTP/Postgres cases plus71 unchanged admin cases pass.18 distinct production Chromium cases pass across two runs. API/web types, scoped lint/format, production web build, OpenAPI and42 unchanged budgets pass."
-      }
-    ],
-    "review_notes": [
-      "All three exact task requirements and saved PR141/142/146 bodies have been read. PR142 explicitly delivered an adapter slice. PR146 defers external delivery to E05. No identity provider exists; never ask again or simulate approval.",
-      "Profile automatic verify currently returns503, preserving status; runtime mode readers fail closed and honor legacy verification.required/verification.method. New admin mode reads match that fallback.",
-      "Provider service registers only the explicit development/test stub. Provider credentials/configuration encryption, atomic version/audit persistence and async integration must be dispositioned against the absent real-provider prerequisite, not marked verified.",
-      "Initial notification source review: CRM verification inserts localized in-app notifications in the same transaction. Wording is generic and lacks the required profile name and correction/resubmission guidance. Compare the existing inbox/dashboard and notification tests next, preserving prior CRM/assignment repairs.",
-      "Graph snippets use indexed line ranges. After editing a file, reindex or read bounded live source before further edits; a stale range briefly displaced a neighboring comment during this change. Formatting caught it, the method was repaired and the full diff reviewed before all successful checks."
-    ]
+    "next_action": "Read saved PR137 body and compare the current dashboard InvitationBanner with T-05.05.02. Preserve the reviewed invitation decision/permission workflow; use focused widget checks and consolidate its acceptance."
   },
   "open_domain_reviews": [
     {
@@ -1090,6 +1149,40 @@
         "03-core-business.md#T-03.07.04.02",
         "03-core-business.md#T-03.09.04.04",
         "04-invoices-wallet-contracts.md#T-04.5.03.03"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.01",
+      "prs": [
+        141
+      ],
+      "owner_batch": "V01/B01 external provider prerequisite",
+      "remaining": "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+      "prerequisite_task_keys": [
+        "02-auth-users-admin.md#T-07.01.02"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.02",
+      "prs": [
+        142
+      ],
+      "owner_batch": "V01/B01 external provider prerequisite",
+      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+      "prerequisite_task_keys": []
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.03",
+      "prs": [
+        146
+      ],
+      "owner_batch": "R02 delivery plus external provider prerequisite",
+      "remaining": "Manual in-app verification notices, profile name, reason/corrective guidance, dashboard banner and inbox entry are verified. Actual email/SMS delivery per current preferences and versioned delivery templates remainR02. Automatic result notifications depend on T-07.01.02 and a real provider.",
+      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+      "prerequisite_task_keys": [
+        "02-auth-users-admin.md#T-07.01.02"
       ]
     }
   ]

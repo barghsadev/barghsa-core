@@ -1355,7 +1355,16 @@
     "historical_deferrals": [
       "- [ ] Full notification infrastructure (email/SMS transport, outbox, worker) belongs to E-05"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "In-app implementation verified; required email/SMS/outbox/worker delivery remainsR02.",
+    "reviewed_source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
+    "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "confirmed_repair_remaining",
+        "evidence": "Manual in-app verification notices, profile name, reason/corrective guidance, dashboard banner and inbox entry are verified. Actual email/SMS delivery per current preferences and versioned delivery templates remainR02. Automatic result notifications depend on T-07.01.02 and a real provider. audit/evidence/step-reviews.json#R01-verification-policy"
+      }
+    ]
   },
   {
     "pr": 140,

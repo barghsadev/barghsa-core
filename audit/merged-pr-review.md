@@ -6,7 +6,7 @@ A PR body checkbox is historical author evidence, not independent acceptance. Re
 301 merged PRs: 145 have unresolved mapped tasks; 4 have no current task mapping; 152 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **105 closed / 20 open / 0 blocked**; 176 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **105 closed / 23 open / 0 blocked**; 173 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -170,12 +170,12 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#138](https://github.com/barghsadev/barghsa-core/pull/138) | 02-auth-users-admin.md#T-06.01.01 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-tickets) | 2 |
 | [#139](https://github.com/barghsadev/barghsa-core/pull/139) | 02-auth-users-admin.md#T-06.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-tickets) | 0 |
 | [#140](https://github.com/barghsadev/barghsa-core/pull/140) | 02-auth-users-admin.md#T-06.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-tickets) | 2 |
-| [#141](https://github.com/barghsadev/barghsa-core/pull/141) | 02-auth-users-admin.md#T-07.01.01 (pending) | Task review remains | Not reviewed | 0 |
-| [#142](https://github.com/barghsadev/barghsa-core/pull/142) | 02-auth-users-admin.md#T-07.01.02 (pending) | Task review remains | Not reviewed | 0 |
+| [#141](https://github.com/barghsadev/barghsa-core/pull/141) | 02-auth-users-admin.md#T-07.01.01 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-verification-policy) | 0 |
+| [#142](https://github.com/barghsadev/barghsa-core/pull/142) | 02-auth-users-admin.md#T-07.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-verification-policy) | 0 |
 | [#143](https://github.com/barghsadev/barghsa-core/pull/143) | 02-auth-users-admin.md#T-08.01.01 (partial) | Task review remains | Not reviewed | 0 |
 | [#144](https://github.com/barghsadev/barghsa-core/pull/144) | 03-core-business.md#T-03.01.01.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#145](https://github.com/barghsadev/barghsa-core/pull/145) | 03-core-business.md#T-03.01.01.02 (pending) | Task review remains | Not reviewed | 0 |
-| [#146](https://github.com/barghsadev/barghsa-core/pull/146) | 02-auth-users-admin.md#T-07.01.03 (pending) | Task review remains | Not reviewed | 1 |
+| [#146](https://github.com/barghsadev/barghsa-core/pull/146) | 02-auth-users-admin.md#T-07.01.03 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-verification-policy) | 1 |
 | [#147](https://github.com/barghsadev/barghsa-core/pull/147) | 03-core-business.md#T-03.01.01.03 (pending) | Task review remains | Not reviewed | 0 |
 | [#148](https://github.com/barghsadev/barghsa-core/pull/148) | 03-core-business.md#T-03.01.01.04 (pending) | Task review remains | Not reviewed | 0 |
 | [#149](https://github.com/barghsadev/barghsa-core/pull/149) | 04-invoices-wallet-contracts.md#T-04.2.01.01 (acceptance_verified)<br>04-invoices-wallet-contracts.md#T-04.2.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `65db8e10afdd06a15bd86117389e26ab0c65bbada1a6dcf0a710a38d017cdb73`
-- `pr-deferrals.json`: `d4325a2f81b2aaf044aabec90633b93be9958111e0a78ed37640b1b848245c2b`
-- `evidence/step-reviews.json`: `3d93fda26f79dc11d1f4a07ae85d427507e355befb5b80d76594f645ef63f695`
+- `acceptance-closure.json`: `5b24fec9a009ec51614dde2d44dadf370cb4ccddfc81d653e00432a043afc6c1`
+- `pr-deferrals.json`: `5c8c58ddab9a6e321de23bd8abfd0350617cb4ba9ed45446dc95775d36415a06`
+- `evidence/step-reviews.json`: `3e596948b8e56b228401d6a74ffaa03107116784b3deb374bdad5edbe2b6d0c3`

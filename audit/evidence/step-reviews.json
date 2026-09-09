@@ -12085,6 +12085,267 @@
         "/tmp/r01-tickets-context-types.log",
         "/tmp/r01-tickets-context-web-build.log"
       ]
+    },
+    {
+      "id": "R01-verification-policy",
+      "date": "2026-09-09",
+      "source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
+      "base_revision": "3e79cca",
+      "product_commits": [
+        {
+          "revision": "1858caf",
+          "change": "Versioned mode draft/activation, current authority and FA/EN review UI"
+        },
+        {
+          "revision": "d74c8f8",
+          "change": "Named actionable atomic verification notices and current-profile dashboard/inbox presentation"
+        },
+        {
+          "revision": "709d28b",
+          "change": "Allow circuit recovery probes and distinguish circuit rejection from provider failure"
+        }
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-07.01.02",
+        "02-auth-users-admin.md#T-07.01.03"
+      ],
+      "summary": "Local verification-policy repair batch complete with3 partial task acceptances and3 open saved PR reviews. Available manual configuration/notification behavior and provider safety/recovery are verified. Real-provider and external-delivery dependencies remain explicit.",
+      "review": [
+        "PR141 wrote live mode immediately and allowed unavailable API mode.1858caf adds Draft→Active, exact revision checks, global-impact/password confirmation, current role/session/CSRF/expiry through commit and atomic audit/global version. Draft saves never change active policy. Old direct-write clients now fail validation; retire old writers and deploy matching API/web together.",
+        "PR142 was explicitly an adapter slice. No production provider registers; the test/development stub needs explicit opt-in. Profile auto-verify always returns503 and never changes status. Real provider credentials currently have no encrypted production configuration path; do not register a provider until the remaining integration contract is implemented.",
+        "Existing registry rejected OPEN state before the breaker could enter HALF_OPEN. Two new regressions failed at baseline.709d28b delegates admission to the breaker and returns typed circuit rejection without retrying or counting it as a provider failure. Automatic recovery and bounded simultaneous probes now pass. No real-provider operation is claimed.",
+        "PR146 direct in-app creation is now atomic with CRM verification and audit. d74c8f8 snapshots title/legal name/individual name with the profile lock, includes reason and actual correction/support steps, and exposes only the latest unread state-matching notice to the current recipient/owner/selected profile. Reading the latest notice cannot revive an older unread transition. Existing notification-center rendering shows the same localized content.",
+        "Dashboard banner shows manual success and rejection, preserves literal user text, provides profile/support/inbox links, and clears old content on failed route refresh. Existing profile-context remount handles profile switches. FA/EN, RTL/mobile, light/dark accessibility, dismissal and read navigation pass.",
+        "The three saved PRs are complementary configuration, framework and notification slices. No duplicate implementation needs deletion. No task or PR is marked complete while its required provider/delivery criterion remains unavailable."
+      ],
+      "verification": {
+        "mode": "90 distinct focused backend cases at1858caf and18 production Chromium cases; unchanged mode implementation reused.",
+        "notices": "68 backend cases across CRM verification, profile unit/HTTP and context HTTP suites;6 production Chromium cases. Type-only fixture annotations changed after runtime checks; final types pass.",
+        "provider": "29 distinct cases current:16 registry cases after correcting the string-valued config fixture plus8 circuit and5 registration cases reused unchanged. Initial27 review checks overlap; do not add them.",
+        "quality": "API/web types, relevant lint/format, production web build/OpenAPI and42 unchanged route/interaction budgets pass. No broad regression, coverage or deployment claimed.",
+        "failed_evidence": "All failed logs retained: notice fixture JSON type annotations; provider recovery baseline2 failures; numeric retry fixture failed the string-valued settings type and was corrected. Previous mode failures/interrupted broad invocation remain archived."
+      },
+      "remaining": [
+        "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+        "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+        "Manual in-app verification notices, profile name, reason/corrective guidance, dashboard banner and inbox entry are verified. Actual email/SMS delivery per current preferences and versioned delivery templates remainR02. Automatic result notifications depend on T-07.01.02 and a real provider."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 141,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-07.01.01"
+          ],
+          "reason": "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+          "source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-verification-policy"
+          ]
+        },
+        {
+          "pr": 142,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-07.01.02"
+          ],
+          "reason": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+          "source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-verification-policy"
+          ]
+        },
+        {
+          "pr": 146,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-07.01.03"
+          ],
+          "reason": "Manual in-app verification notices, profile name, reason/corrective guidance, dashboard banner and inbox entry are verified. Actual email/SMS delivery per current preferences and versioned delivery templates remainR02. Automatic result notifications depend on T-07.01.02 and a real provider.",
+          "source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-verification-policy"
+          ]
+        }
+      ],
+      "pr_counts": {
+        "closed": 0,
+        "open": 3,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-tickets:19 current correction HTTP and9 assignment cases cover the shared assignment repair. No identity provider exists.",
+        "1858caf:19 verification HTTP/Postgres tests cover draft isolation, exact activation, overwritten/replayed proposals, parallel writers, legacy active changes, unavailable provider, audit rollback, current role/session/CSRF/expiry/step-up after a policy lock wait, and final session expiry before commit.71 other admin cases pass unchanged;90 distinct backend cases total.",
+        "18 distinct Chromium cases pass:6 existing verification configuration cases,2 ordering compatibility cases,8 OTP settings cases and2 new draft/activation/conflict cases. The final2 rerun only corrected selectors matching an unrelated terms status banner. Prior successful16 cases are reused.",
+        "API/web types, scoped ESLint/Prettier, web production build, OpenAPI contract and42 numeric route/interaction budgets pass. New API body requires mode/action/expectedVersion; old one-step clients fail validation. Deploy API/web together and retire old writers before enabling this workflow. No database migration or remote execution.",
+        "Preserved failed evidence: initial fixture omitted required role description; next run sorted random audit IDs instead of chronology; first browser run had2 ambiguous status selectors; lint required const. All corrected. An accidentally unfiltered API invocation was interrupted with exit130. It is not full-regression evidence; its unrelated wallet-controller mock failures remain for V02 reconciliation.",
+        "16 ended logs archived;2133 logs indexed. No task/PR acceptance counts change before batch consolidation.",
+        "25 previously current task bindings refreshed;24 retained/identified refresh records remain. Full regression and unresolved interrupted-run mock evidence stayV02.",
+        "Mode implementation1858caf and valid mode/OTP/browser evidence are unchanged by the later notice/provider fixes. Existing CRM correction/assignment methods are unchanged.",
+        "22 further current bindings refreshed;38 retained/identified stale evidence records remain."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/verification-mode-config.ts",
+          "sha256": "f055b173066df86e7643d27b87bc8a7128c13f9f21c3648267c640daf97a576c"
+        },
+        {
+          "path": "apps/api/src/admin/verification-mode-http.integration.test.ts",
+          "sha256": "bc102b848c948b9af1ff5e4a2d93c8f19631e28ec1fef2012bc9181662402187"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "5fcf4799e88da331a11abc5a7a477832c0b48d740af7bb61bd1ad89651f3840c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
+          "sha256": "a288afb86ae6dede2c9446b4a626baef5d19be5426400db5075cfd8b2d3007fa"
+        },
+        {
+          "path": "apps/web/e2e/verification-mode.spec.ts",
+          "sha256": "9d81c8072c8cff6053bd8496841b48faea45c23671a24fe03f7adb95b14067a8"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "c1c398c7415ae23a8a4ef89944770f8fc9dcdb130654cc156754847de960b298"
+        },
+        {
+          "path": "apps/web/e2e/otp-config.spec.ts",
+          "sha256": "9a6f63641f777455a1566294dbe43f9a136ea99a6b9056962522848f1f261a25"
+        },
+        {
+          "path": "packages/i18n/src/verification-config.ts",
+          "sha256": "315ccc34fb7c43e12a70a20c9d5f97a0d02623c1f5b1fc2098122a975e0fc7c9"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.service.ts",
+          "sha256": "c986149e2de2f8885867665d426da1d5e8ee95b8b0af6450b28d3de7f17a402a"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.controller.ts",
+          "sha256": "4c5c8805e9f501da37f5e0785110b921574df68a5c10e683f7f705b68ef0a3e7"
+        },
+        {
+          "path": "apps/api/src/verification/provider.interface.ts",
+          "sha256": "cff73966f458e5109391b7b41073e033b6343feb3864b1fc8650d25c4922ce48"
+        },
+        {
+          "path": "apps/api/src/verification/provider-registry.ts",
+          "sha256": "84caacc77fa4da5ce8af9b49684e85da2804cb4473aa394a237eff9aa39a7cff"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.ts",
+          "sha256": "c2e816696c11e4fbe7a1c1a6d2403b6b982fb682a4e519976e97be01d81216cf"
+        },
+        {
+          "path": "apps/api/src/verification/providers/stub.provider.ts",
+          "sha256": "fb1616d5f24953e78859494d977316a6bbe1da1242c863ecca9365cc324dce52"
+        },
+        {
+          "path": "apps/api/src/verification/provider-registration.test.ts",
+          "sha256": "d6e0412044a23c7ba4b82ac592057371c5e7337e830da4843b85418ac375a03b"
+        },
+        {
+          "path": "apps/api/src/verification/provider-registry.test.ts",
+          "sha256": "5395f07cf8b87cd673b1a8c03a9cbe95da7389b4ebaae351f6e9641938ab4891"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.test.ts",
+          "sha256": "28e4794a3219b86a15aadd8aa5527bbf8cf7a95e4e9edfca7f37aa1a7491bb0a"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "f55a9ccb18725336287466a230397046003607f03c25344d1ac7c5b70393ea93"
+        },
+        {
+          "path": "apps/api/src/profiles/verification-http.integration.test.ts",
+          "sha256": "32baac0d151eec8df6d6cc5aa2bff6d15d98a636e8115685a92dd780addfa704"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "925ab9d54b15fc267a10feac60667512cabbf24c1f1c6c321eaad6824d5f7f54"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "a9e70069d85b358fe00fc6f75cb8c5017711702483b0c5bc0a6cb1488e958a23"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "d7dd48dfdd26466348def0f86f32efe78893da628612f36f82e33e65bf8cf318"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "268c4e7850bbc1a142b5ca306110202a2ea2f240ad1e7ee25900ca05e65ae2be"
+        },
+        {
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "6a49e970c763bc8772d12e19acacc9793739dcaf0c049073a543b4c789ebc744"
+        },
+        {
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "691455f44202e43cf16562ff9451f10f291a0dccade37025206599ed8f8318a1"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "525614ff075cdaf9297fd93e34039807e66955fdcaa2f4b8ec537e6f5744fc60"
+        },
+        {
+          "path": "apps/web/src/lib/notifications.ts",
+          "sha256": "ffc52c7b87d97b52bd6c15376a3b4fd59ccd4219e9d2f73a9e90f0c6a7996602"
+        },
+        {
+          "path": "apps/web/e2e/verification-notices.spec.ts",
+          "sha256": "37e06d0efefbcf86271085101a90a586db18b4239e292dcb900c115cabba5204"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-verification-mode-api-final.log",
+        "/tmp/r01-verification-mode-api-focused.log",
+        "/tmp/r01-verification-mode-api-retry.log",
+        "/tmp/r01-verification-mode-api-types.log",
+        "/tmp/r01-verification-mode-api.log",
+        "/tmp/r01-verification-mode-browser-final.log",
+        "/tmp/r01-verification-mode-browser.log",
+        "/tmp/r01-verification-mode-budgets.log",
+        "/tmp/r01-verification-mode-format.log",
+        "/tmp/r01-verification-mode-lint-final.log",
+        "/tmp/r01-verification-mode-lint.log",
+        "/tmp/r01-verification-mode-openapi-check.log",
+        "/tmp/r01-verification-mode-openapi-generate.log",
+        "/tmp/r01-verification-mode-openapi-update.log",
+        "/tmp/r01-verification-mode-web-build.log",
+        "/tmp/r01-verification-mode-web-types.log",
+        "/tmp/r01-verification-circuit-baseline.log",
+        "/tmp/r01-verification-circuit-config-final.log",
+        "/tmp/r01-verification-circuit-final.log",
+        "/tmp/r01-verification-circuit-format.log",
+        "/tmp/r01-verification-circuit-lint.log",
+        "/tmp/r01-verification-circuit-types-final.log",
+        "/tmp/r01-verification-circuit-types.log",
+        "/tmp/r01-verification-notices-api-types-final.log",
+        "/tmp/r01-verification-notices-api-types.log",
+        "/tmp/r01-verification-notices-api.log",
+        "/tmp/r01-verification-notices-browser.log",
+        "/tmp/r01-verification-notices-budgets.log",
+        "/tmp/r01-verification-notices-build.log",
+        "/tmp/r01-verification-notices-format.log",
+        "/tmp/r01-verification-notices-lint-final.log",
+        "/tmp/r01-verification-notices-lint.log",
+        "/tmp/r01-verification-notices-openapi-check.log",
+        "/tmp/r01-verification-notices-openapi-generate.log",
+        "/tmp/r01-verification-notices-openapi-update.log",
+        "/tmp/r01-verification-notices-web-types.log",
+        "/tmp/r01-verification-provider-review.log"
+      ]
     }
   ]
 }
