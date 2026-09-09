@@ -8541,7 +8541,23 @@
         "/tmp/r01-customer-receipts-unit.log",
         "/tmp/r01-receipt-batch-source-review.log",
         "/tmp/r01-receipt-pr-repeat-review.log"
-      ]
+      ],
+      "contract_followup": {
+        "source_revision": "57d6582e2789dc5c0234b992f6ba54fdc4d5e42c",
+        "summary": "Fresh API build showed missing optional emergencyOverrideReason fields in both receipt confirmation request schemas. Committed contract now matches the verified controllers. Earlier passing comparison logs did not establish fresh generated-schema evidence; superseded by this check.",
+        "checks": [
+          "/tmp/r01-online-limit-build.log",
+          "/tmp/r01-online-limit-contract-preserved-order.log"
+        ],
+        "limitations": "No new API behavior, broad regression or consumer-generation claim."
+      },
+      "subsequent_source_review": {
+        "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a",
+        "refreshed_task_keys": [
+          "02-auth-users-admin.md#T-09.07.01"
+        ],
+        "summary": "Only unrelated online-limit methods changed in shared admin source files; preserved receipt threshold implementation and tests."
+      }
     }
   ]
 }

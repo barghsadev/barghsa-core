@@ -7738,7 +7738,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-09.07.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "reviewed_sha": "aeb2d1bf1e7d9630532e89f813002da91302f81a",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 732,
       "requirement": "**T-09.07.01 — Dual-approval threshold configuration**\n\n- Description: Admin configures the IRR threshold at or above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.\n- Technical notes: Value stored, requires step-up auth to change. Versioned config. Emergency override available (requires reason + elevated permission + immediate alert + audit).\n- UI/UX: Number input with large IRR display. Description of which actions are affected. \"Changes require step-up authentication.\"\n- Dependencies: admin config framework, finance module\n- Complexity: M",
@@ -7746,11 +7746,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "f2776f33750cc09e84a69546a0eb823dc3be8bafae58ff8ec570254711bcb6ab"
+          "sha256": "ff9f3829bb6f76a2020b7f85eed8e3789bfb4b73026c4cb7540ff1c3ed11fffc"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "4990c7501440a9486d0a402754f3359a4372ac4dac2b371b1c53600797fe4a85"
+          "sha256": "64b13d9aa83966b558f2f993bc2877e5456856e2aa697a2fc1929a56cb7dce8b"
         },
         {
           "path": "apps/api/src/admin/approval-notifications.ts",
@@ -7799,7 +7799,8 @@
       ],
       "checks": [
         "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added.",
+        "At aeb2d1b, reviewed the complete subsequent admin service/controller diff: only online-limit getter/setter/caller changed. Receipt threshold/configuration methods and their verified behavior are unchanged; retain their API/browser evidence. Fresh receipt request-body OpenAPI comparison is recorded under audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         195
@@ -11050,6 +11051,84 @@
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.07.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 732,
+      "requirement": "**T-09.07.01 — Dual-approval threshold configuration**\n\n- Description: Admin configures the IRR threshold at or above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.\n- Technical notes: Value stored, requires step-up auth to change. Versioned config. Emergency override available (requires reason + elevated permission + immediate alert + audit).\n- UI/UX: Number input with large IRR display. Description of which actions are affected. \"Changes require step-up authentication.\"\n- Dependencies: admin config framework, finance module\n- Complexity: M",
+      "requirement_sha256": "9cc3475379fdebddc5c870029de1b6dd3c5e4a879f968b6bb4d78185ed9e1d7b",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "f2776f33750cc09e84a69546a0eb823dc3be8bafae58ff8ec570254711bcb6ab"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "4990c7501440a9486d0a402754f3359a4372ac4dac2b371b1c53600797fe4a85"
+        },
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-config.controller.test.ts",
+          "sha256": "d93b8d6bec2a89b7fced0b9f8db97ab6005f8fe201b03b45c31280159ecc1c2f"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-config.service.test.ts",
+          "sha256": "0daa6509546fde364379a09069ae7b2747893a6843c6b7e05591fc19af55f708"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/web/e2e/approval-threshold.spec.ts",
+          "sha256": "9ca79471c6bfb3250041bb925714dfb4652bb68f5100a3e04fdf10ec1247d9ca"
+        },
+        {
+          "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
+          "sha256": "a3875484bdd9d4f0c99d9acfc3e5331ee9bf197a17846a874ff206ad3b7bcf4d"
+        },
+        {
+          "path": "packages/shared/src/finance/dual-approval-config.ts",
+          "sha256": "0dfb04655f65d8eaa5995900bd564c92750164966e7a048174db60a9af7ef3a7"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        195
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verified stored configuration, current receipt consumers and per-receipt emergency exception. Refund/manual-adjustment module integration belongs to its separate future service tasks; those consumers are not claimed implemented."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     }
   ],

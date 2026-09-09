@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+  "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a",
   "active_step": "R01",
-  "next_action": "Read current initiation/callback/expiry owners and exact requirements; do not rebuild verified receipt or approval paths.",
+  "next_action": "Repair online initiation authority across advisory/DB/provider waits, preserving durable provider claims and recovery. Limit setting and receipt work are complete; do not rebuild them.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -776,14 +776,50 @@
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "id": "online-limit-session",
+        "status": "fixed",
+        "tasks": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.06"
+        ],
+        "summary": "Limit mutation passes userId only, does not recheck session/step-up at commit, and omits request session/correlation in audit. Corrupt admin reads report a false default.",
+        "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a"
+      },
+      {
+        "id": "online-initiation-authority",
+        "status": "pending_repair",
+        "tasks": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.01"
+        ],
+        "summary": "Initiation service receives no actor/session; controller access check precedes advisory/DB/provider waits and empty-wallet creation happens separately. Need preserve current authority while retaining durable provider recovery semantics."
+      }
+    ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Read current initiation/callback/expiry owners and exact requirements; do not rebuild verified receipt or approval paths."
+    "next_action": "Repair online initiation authority across advisory/DB/provider waits, preserving durable provider claims and recovery. Limit setting and receipt work are complete; do not rebuild them.",
+    "product_commits": [
+      "aeb2d1bf1e7d9630532e89f813002da91302f81a"
+    ],
+    "verification": {
+      "online_limit": {
+        "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a",
+        "distinct_api_cases": 70,
+        "logs_prefix": "/tmp/r01-online-limit-",
+        "limits": "Seven valid baseline failures: revoke/CSRF/step-up changed after the HTTP guard while waiting on policy, session/step-up expiry during audit, misleading corrupt read and missing session/correlation audit. Four-file70-case run passed61; two unit audit expectations needed sessionId, and seven old actor-lock fixtures incorrectly waited for a service query while authentication held the request. Those fixtures now explicitly test the authentication boundary, not post-guard service authority. Two-file51-case rerun passes; combined70 distinct cases. Initial type error was a missing non-null fixture header assertion, corrected before final passing types. Lint, formatting, API build and freshly generated OpenAPI comparison pass. No UI change; prior limit-screen browser evidence is retained."
+      }
+    },
+    "historical_review_notes": [
+      "Current initiation/insert, signed callback/merchant validation, browser return/processing and expiry/reject methods read. Initiation receives no actor/session; its transaction only checks active profile and creates an empty wallet before the Pending transaction. This confirmed authority gap remains next.",
+      "Signed POST checks HMAC/time window/event/merchant and verifyPayment before credit. Browser GET Status=NOK currently changes intent/event state without provider verification; payment-return GET/CSRF disposition remains required. Do not remove durable callback/recovery semantics without reviewing their tests.",
+      "PR259/265/269/288/289 descriptions and selected280/281 risks read; remaining bounded repeated history still needs disposition. PR281 says expiry customer notification belongs to notification tasks; preserve that separate R02 requirement even though the historical deferral parser omitted this risk note.",
+      "Receipt schema follow-up57d6582: a fresh API build exposed two missing emergencyOverrideReason request-body fields in the committed OpenAPI. These now match verified controller decorators, with no other semantic contract change. Previous receipt OpenAPI-pass notes do not establish fresh generated-contract coverage; this passing build/comparison supersedes them.",
+      "Limit policy lock now precedes staff/session locks. Future initiation authority repair must use compatible policy/account/session/profile/wallet ordering and preserve provider idempotency/recovery."
+    ]
   },
   "open_domain_reviews": [
     {
