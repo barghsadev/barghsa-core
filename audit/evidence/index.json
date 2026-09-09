@@ -11670,6 +11670,202 @@
       "sha256": "51acdefd2039211ada6e357e22b62eeb48d8371597a051f0df7e1b3cd35e345a",
       "encoding": "gzip",
       "stored_sha256": "673fc3e122de6d59d2c873ff15610b96c291ba2e7aeff2c776bf0cbce2e4156b"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-api-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-api.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-account-api.log.gz",
+      "sha256": "d263766fa32f7361fbcdb316e8ae4d4806b1cd85efabbc63ead53a5bf4df2379",
+      "encoding": "gzip",
+      "stored_sha256": "fb217d2d4cedd98f7a77e759b39e539e5ea3797b3f02929014b4e2a9f46bf5a0"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-baseline-fixed.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-account-baseline-fixed.log.gz",
+      "sha256": "0a8a64f3528d548d5d73ab44dd9b115b79ffdd59a388d40d08e1de4b0659c81d",
+      "encoding": "gzip",
+      "stored_sha256": "7ebe9644e2bc26fb34101d6a60c365373b639e1b905add5cc6ca96ed222c9ac7"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-baseline.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-account-baseline.log.gz",
+      "sha256": "d62e7c2437d9be7788dbe9693240b95542e87a23d0cfd1c2dfde0d59ca19e6ef",
+      "encoding": "gzip",
+      "stored_sha256": "a522b5de47c141aa65bf8a1773f8e2716841e787137c7a5027dee605d3764dc2"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-format.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-account-format.log.gz",
+      "sha256": "d00f4bf8f593c913b9930c784da7794c97f6e90a86157a616be7f11c76b11a2f",
+      "encoding": "gzip",
+      "stored_sha256": "ffa905f8476ba11d94b0996b371a041c0d9a8ac32b146bcf29045dff93fe9576"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-legacy-format.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-account-legacy-format.log.gz",
+      "sha256": "50020de0f76cff40a3929470c3bd05ecd8795e68c31052b16fdf3e896162d64a",
+      "encoding": "gzip",
+      "stored_sha256": "fdbdc2c5067fd2e04ee01cd98b4ccf8a3bd7c832c5d58cd4685bcf15face0a0f"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-legacy.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-account-legacy.log.gz",
+      "sha256": "8fca2edf4ef4a74018ae9585e78e88e72a15c1a9bdd7bda401fcb14b0e35b632",
+      "encoding": "gzip",
+      "stored_sha256": "3f0473aa3104e4687e344da198e2e2d760222f3fa3b4e3994e96b7823540916d"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-shared-types.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-shared-types.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-account-shared.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-account-shared.log.gz",
+      "sha256": "64cd5e7a6f2b46750c6bf0565424d443f60af868abb2c69b4826523ef49e4d66",
+      "encoding": "gzip",
+      "stored_sha256": "e395e05c084da29d1dacf2d7c4f7345166d006c71d3e6b98f93dea387ac3efc2"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-channel-api-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-channel-api.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-channel-api.log.gz",
+      "sha256": "05daf7d7073e91e27ba58a897f1ba5fa96d9a8a6aad5fc6639f23be0e2840a11",
+      "encoding": "gzip",
+      "stored_sha256": "6ea521b381625a8dac9acfe9afe05ae4988f04cd8a8b780d67c7320aa35726a1"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-channel-baseline.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-channel-baseline.log.gz",
+      "sha256": "5370177682853274966f9b7e4a0002b71c59dcc09d41f7d969100305656fbc80",
+      "encoding": "gzip",
+      "stored_sha256": "1f2839b9ae363ea0bc83e9d72802c9c2e8d6e38f8bc7250e9fb6e9d71e71a051"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-channel-format.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-channel-format.log.gz",
+      "sha256": "314ee95c16fa56c19fa09d7aa580fac7183801b18b659b37a5652714255246ff",
+      "encoding": "gzip",
+      "stored_sha256": "2225f94397f50e92ac68ad99840c91098e50a58e23e9dcfc6c7e2b86c1c8dedb"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-channel-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-channel-shared-types.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-shared-types.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-channel-shared.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-channel-shared.log.gz",
+      "sha256": "5a685e139979445921549636c825df9070daa07bbecd52e5ea2dc0eba175fe70",
+      "encoding": "gzip",
+      "stored_sha256": "1bc1669d915b118308d839dc82a903c66e21f31ec079117257efe62bc0faf013"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-baseline.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-baseline.log.gz",
+      "sha256": "1aed2bcf6f35d6517587e56346eccaa92b5ae52e170f5825a10194e51d6b7149",
+      "encoding": "gzip",
+      "stored_sha256": "d10a1a0037992c240f9e56818382a82400082fdf8bc183e79deb2ae662063b77"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-browser.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-browser.log.gz",
+      "sha256": "8de6c91868b6c83a92b61a86c12f55933a4cf975c6d1547931e69a20c804df7a",
+      "encoding": "gzip",
+      "stored_sha256": "511afc9fc2ebb7ac2a99b4b8f9258833f7e4495d5bdaa9bcb34eb4f08275a27c"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-budgets.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-budgets.log.gz",
+      "sha256": "f44c6eccc8a90eb4daca5090ffd1fedc7f4d701a292a0c0ecbd353183ca45228",
+      "encoding": "gzip",
+      "stored_sha256": "ec6e1fe4c8646a05356249866764eafcb0d32c697b1826fa0f3a93491c618b4c"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-build.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-build.log.gz",
+      "sha256": "2f1703b8644e582c6f5c83b44429eef836220917e3163b9e50f22d83cc89bf29",
+      "encoding": "gzip",
+      "stored_sha256": "6a915b28ca711882c4a809676776fe84f2327beebca4585f741617e90c362ba8"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-crm-format.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-crm-format.log.gz",
+      "sha256": "fdf4fbbac8a61481670451086ac1eb6e84b0ed358fd8fc71bea985d515dce4ba",
+      "encoding": "gzip",
+      "stored_sha256": "a17f0d31014a31386b877eabd905a3dae0f4d7c639ccf30651a4652986fa7982"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-crm.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-crm.log.gz",
+      "sha256": "afe65d4710245c3badfc9844663aff5b7f8fb526d9aa2572e629c7dfa9fe10eb",
+      "encoding": "gzip",
+      "stored_sha256": "37533172f22ff468677bc6195c12bd3414d837cd5be5f4c500599a74cdfea351"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-format-check.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-format-check.log.gz",
+      "sha256": "375814fb952e20c9aa16575eaac56963a25fe510fd1802f9981dfd8515dc1266",
+      "encoding": "gzip",
+      "stored_sha256": "5d41f2c048842c55c7b616ce6ff892f08bc76c192bf5b54c672421fd4d018a77"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-format.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-format.log.gz",
+      "sha256": "1e161a5e1d44ba2f538e8df086d70dbb9e2f5376fa4901ac54889f73ad35557b",
+      "encoding": "gzip",
+      "stored_sha256": "e683044e2fbed728826db373e3df3d246d8f0734d998116a6c23576cc05b28f6"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-unit.log",
+      "path": "audit/evidence/a08d5d4/r01-chargeback-dashboard-unit.log.gz",
+      "sha256": "d4b83d1dcf9c30a534a7d77018cbbc14c9783173111045046de3dbf35f0fff24",
+      "encoding": "gzip",
+      "stored_sha256": "6966d37621fa05afe554ca6d806e8cd3bdd1fac10a88577bc4612a7416015386"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-dashboard-web-types.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
     }
   ]
 }

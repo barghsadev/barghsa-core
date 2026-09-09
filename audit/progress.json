@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+  "source_revision": "a08d5d46014976fb2c3374f575609ef4a95c5998",
   "active_step": "R01",
-  "next_action": "Trace current chargeback detection, reversal and finance alert delivery/access. Keep the existing verified reversal implementation and payment evidence.",
+  "next_action": "Verify real warning API permissions and complete reversal recovery/alert coverage; retain current valid checks.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -738,7 +738,7 @@
   "active_batch": {
     "id": "R01-chargebacks-alerts",
     "name": "Provider chargebacks, compensating reversals and finance alerts",
-    "status": "reviewing",
+    "status": "building_and_reviewing",
     "prs": [
       276,
       277,
@@ -750,10 +750,10 @@
       "04-invoices-wallet-contracts.md#T-04.2.04.03"
     ],
     "remaining_checklist": [
-      "Requirements and all four saved PR descriptions read. Review current signature/merchant/locator precedence, immutable event replay, same-client reversal and unmatched exception behavior.",
-      "Verify actual immediate Finance in-app notification and dashboard access, recipient authority, retries and fa/en. Outbox enqueue alone is not push delivery. Preserve R02 email delivery ownership.",
-      "Compare repeated276/294 and277/295 only as needed; retain verified WalletService.reverseTransaction and PR275/285 evidence.",
-      "Use the pending signed-provider-webhook CSRF decision when answered; do not ask again. Review each confirmed repair and consolidate this batch individually."
+      "Finish actual HTTP Finance permission/revocation evidence. Current controller uses the capability; original PR277/295 admin-only deferral is implemented but needs this consumer proof.",
+      "Finish detection/reversal recovery review and signature/locator/event binding. Preserve75a4282 and existing reversal implementation; investigate only confirmed failures.",
+      "Reconcile story-wide immediate alert wording with current unresolved-only alerts before marking acceptance. Actual unresolved in-app delivery is now proved; email remains R02.",
+      "Consolidate once with individual task/PR/deferral dispositions after remaining checks. Signed-webhook CSRF wording awaits the already-asked owner decision."
     ],
     "historical_deferrals": [
       {
@@ -802,7 +802,54 @@
     ],
     "confirmed_defects": [],
     "pr_dispositions": [],
-    "next_action": "Trace current chargeback detection, reversal and finance alert delivery/access. Keep the existing verified reversal implementation and payment evidence."
+    "next_action": "Verify real warning API permissions and complete reversal recovery/alert coverage; retain current valid checks.",
+    "repairs": [
+      {
+        "revision": "75a4282",
+        "summary": "Require online-channel credits before any provider chargeback locator can reverse funds. Bank receipts remain unmatched and balances/history remain unchanged.",
+        "verification": "3 real-DB baseline failures;48 API and12 shared checks pass; API/shared types,lint,format pass."
+      },
+      {
+        "revision": "a93933b",
+        "summary": "Select active recipients by current Finance permission; send private account alerts without requiring a default customer profile. Preserve legacy profile-scoped event deliveries on retry.",
+        "verification": "Baseline fixture description corrected, then reproduced2 recipients instead of5.12 distinct API and5 shared cases pass, including real worker/in-app/inbox delivery to5 recipients, private fa/en content and legacy reuse. API/shared types,lint,format pass. Email delivery not claimed."
+      },
+      {
+        "revision": "a08d5d4",
+        "summary": "Preserve unresolved warnings on failed/malformed refresh; serialize polls; clear warnings on401/403. Validate response before rendering. Correct neighbouring CRM response fixture.",
+        "verification": "Production baseline reproduces hidden warning after503.3 unit,4 chargeback Chromium and4 neighbouring CRM Chromium cases pass;42 unchanged payload budgets,web types/lint/build pass. Formatter corrected the CRM fixture after its check flagged wrapping; no semantic retest needed."
+      }
+    ],
+    "logs": [
+      "/tmp/r01-chargeback-account-api-types.log",
+      "/tmp/r01-chargeback-account-api.log",
+      "/tmp/r01-chargeback-account-baseline-fixed.log",
+      "/tmp/r01-chargeback-account-baseline.log",
+      "/tmp/r01-chargeback-account-format.log",
+      "/tmp/r01-chargeback-account-legacy-format.log",
+      "/tmp/r01-chargeback-account-legacy.log",
+      "/tmp/r01-chargeback-account-lint.log",
+      "/tmp/r01-chargeback-account-shared-types.log",
+      "/tmp/r01-chargeback-account-shared.log",
+      "/tmp/r01-chargeback-channel-api-types.log",
+      "/tmp/r01-chargeback-channel-api.log",
+      "/tmp/r01-chargeback-channel-baseline.log",
+      "/tmp/r01-chargeback-channel-format.log",
+      "/tmp/r01-chargeback-channel-lint.log",
+      "/tmp/r01-chargeback-channel-shared-types.log",
+      "/tmp/r01-chargeback-channel-shared.log",
+      "/tmp/r01-chargeback-dashboard-baseline.log",
+      "/tmp/r01-chargeback-dashboard-browser.log",
+      "/tmp/r01-chargeback-dashboard-budgets.log",
+      "/tmp/r01-chargeback-dashboard-build.log",
+      "/tmp/r01-chargeback-dashboard-crm-format.log",
+      "/tmp/r01-chargeback-dashboard-crm.log",
+      "/tmp/r01-chargeback-dashboard-format-check.log",
+      "/tmp/r01-chargeback-dashboard-format.log",
+      "/tmp/r01-chargeback-dashboard-lint.log",
+      "/tmp/r01-chargeback-dashboard-unit.log",
+      "/tmp/r01-chargeback-dashboard-web-types.log"
+    ]
   },
   "open_domain_reviews": [
     {

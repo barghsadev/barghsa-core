@@ -4,7 +4,7 @@ Read [fix-plan.md](fix-plan.md) and [progress.json](progress.json), then selecte
 
 ## Current checkpoint
 
-Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **a1d9959**. Online batch **R01-online-topups-callbacks** consolidated: **3 tasks verified /1 partial;7 saved PR reviews closed /2 open**. Exact repairs, revisions, failures and source bindings are recorded once in [the batch review](evidence/step-reviews.json#R01-online-topups-callbacks).
+Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **a08d5d4**. Online batch **R01-online-topups-callbacks** consolidated: **3 tasks verified /1 partial;7 saved PR reviews closed /2 open**. Exact repairs, revisions, failures and source bindings are recorded once in [the batch review](evidence/step-reviews.json#R01-online-topups-callbacks).
 
 Six repairs are complete: limit writes retain session/CSRF/step-up through commit; initiation preserves current authority and atomic wallet/intent/audit; provider references and recovery survive TTL expiry; browser GET is read-only with explicit session/CSRF-protected confirmation; callbacks reject bank-receipt entries; recovered credits must be Completed and match wallet, amount, channel, original intent and provider authority. Do not rebuild them.
 
@@ -18,9 +18,11 @@ Active **R01-chargebacks-alerts**:4 saved PRs276,277,294,295; tasks `04-invoices
 
 Retain verified WalletService.reverseTransaction and PR275/285 from the wallet batch. Do not repeat the completed online, receipt or pre-login CSRF work. Review each confirmed repair with focused checks, then record one consolidated batch review. The signed-webhook policy answer can be applied when it arrives; other work continues.
 
+Three chargeback repairs are saved:75a4282 restricts provider reversals to online credits; a93933b delivers private account alerts to currently authorized Finance staff, including profileless staff, and reuses legacy deliveries; a08d5d4 preserves warnings across failed/malformed refreshes and serializes polls. Exact current checks and archived failures are in progress.json.active_batch. Remaining:real HTTP permission proof, reversal recovery and story-wide immediate-alert wording. Keep task/PR counts unchanged until consolidated acceptance.
+
 ## Counts and preserved work
 
-**100 verified /22 partial /200 pending =322 historical claims.222 unresolved reviews are not a coding-effort estimate.** Saved PR reviews: **63 closed /12 open /226 not reviewed** of301.58 historical skips:3 verified/55 pending. GitHub inventory still ends September3; no live refresh claimed.12 older source-evidence refreshes remain separately queued.1667 logs indexed.
+**100 verified /22 partial /200 pending =322 historical claims.222 unresolved reviews are not a coding-effort estimate.** Saved PR reviews: **63 closed /12 open /226 not reviewed** of301.58 historical skips:3 verified/55 pending. GitHub inventory still ends September3; no live refresh claimed.12 older source-evidence refreshes remain separately queued.1695 logs indexed.
 
 Preserve registration/OTP, agents/invitations/ownership, session/recovery, profiles/onboarding, settings, addresses/current commercial-order, CRM, wallet and receipt closures. Receipt batch has9 verified/1 partial and14 closed/2 open PRs. Actual customer delivery keeps PR299/301 open in R02. T-04.3.01.06 separate overpayment wallet credit is already implemented and reviewed; retain it in B01. PR115/116 savings/solar prerequisites remain V01/B01. Pre-login CSRFf1b879b and shared CSRF race71f5e49 are complete.
 
