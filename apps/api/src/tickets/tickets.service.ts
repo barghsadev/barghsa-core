@@ -27,6 +27,7 @@ export interface TicketRow {
   userId: string;
   subject: string;
   body: string;
+  category: 'general' | 'billing' | 'orders';
   profileId: string | null;
   relatedEntityType: string | null;
   relatedEntityId: string | null;
@@ -43,6 +44,7 @@ export interface TicketRow {
 export interface CreateTicketDto {
   subject: string;
   body: string;
+  category?: TicketRow['category'];
   profileId?: string | null;
   relatedEntityType?: 'order' | 'contract' | 'invoice' | null;
   relatedEntityId?: string | null;
@@ -84,6 +86,7 @@ function mapRow(row: Record<string, unknown>): TicketRow {
     userId: row.user_id as string,
     subject: row.subject as string,
     body: row.body as string,
+    category: (row.category as TicketRow['category']) ?? 'general',
     profileId: (row.profile_id as string) ?? null,
     relatedEntityType: (row.related_entity_type as string) ?? null,
     relatedEntityId: (row.related_entity_id as string) ?? null,
@@ -294,6 +297,7 @@ export class TicketsService {
       .object({
         subject: z.string().trim().min(1).max(200),
         body: z.string().trim().min(1).max(10000),
+        category: z.enum(['general', 'billing', 'orders']).default('general'),
         profileId: z.uuid().nullable().optional(),
         relatedEntityType: z.enum(['order', 'contract', 'invoice']).nullable().optional(),
         relatedEntityId: z.string().trim().min(1).max(512).nullable().optional(),
@@ -353,8 +357,8 @@ export class TicketsService {
           )
         : [];
       const result = await client.query(
-        `INSERT INTO tickets(user_id,subject,body,profile_id,related_entity_type,related_entity_id,priority,status,attachments,id,assigned_to,assigned_team_id)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,CASE WHEN $10::text IS NULL THEN 'open' ELSE 'in_progress' END,$8::jsonb,$9,$10,$11) RETURNING *`,
+        `INSERT INTO tickets(user_id,subject,body,profile_id,related_entity_type,related_entity_id,priority,status,attachments,id,assigned_to,assigned_team_id,category)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,CASE WHEN $10::text IS NULL THEN 'open' ELSE 'in_progress' END,$8::jsonb,$9,$10,$11,$12) RETURNING *`,
         [
           userId,
           data.subject,
@@ -367,6 +371,7 @@ export class TicketsService {
           id,
           assignment?.userId ?? null,
           assignment?.teamId ?? null,
+          data.category,
         ]
       );
       const ticket = mapRow(result.rows[0]);
@@ -379,6 +384,7 @@ export class TicketsService {
             ticketId: ticket.id,
             profileId: ticket.profileId,
             attachmentCount: attachments.length,
+            category: ticket.category,
           }),
         ]
       );

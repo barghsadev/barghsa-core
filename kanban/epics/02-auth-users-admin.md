@@ -535,8 +535,8 @@
 **T-06.01.01 — Ticket creation**
 
 - Description: User can create a support ticket. Subject, body (rich text optional), related profile, related entity type/ID (order, contract, invoice), priority, optional file attachments. All users can access.
-- Technical notes: POST `/api/tickets` with `{ subject, body, profileId, relatedEntityType, relatedEntityId, priority, attachments[] }`. Permissions: authenticated user, scoped to own profiles. Files uploaded then linked (document storage integration).
-- UI/UX: "Contact Support" / "Create Ticket" button. Form with: subject, category/type selector, priority (normal/high), body textarea, attachment upload, related entity selector (optional). Persian/EN labels.
+- Technical notes: POST `/api/tickets` with `{ subject, body, category, profileId, relatedEntityType, relatedEntityId, priority, attachments[] }`. Categories are `general`, `billing`, and `orders`; omitted category and existing tickets default to `general`. Permissions: authenticated user, scoped to own profiles. Files uploaded then linked (document storage integration).
+- UI/UX: "Contact Support" / "Create Ticket" button. Form with: subject, category selector (General, Billing, Orders; approved September 9), priority (normal/high), body textarea, attachment upload, related entity selector (optional). Show the saved category in list and detail. Persian/EN labels.
 - Dependencies: documents module
 - Complexity: M
 

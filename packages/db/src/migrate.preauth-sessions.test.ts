@@ -40,7 +40,7 @@ it('adds anonymous CSRF storage without changing existing accounts or sessions a
     const sessions = (await pool.query('SELECT * FROM sessions')).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0123_preauth_sessions'],
+      applied: ['0123_preauth_sessions', '0124_address_soft_delete', '0125_ticket_category'],
     });
     expect((await pool.query('SELECT * FROM users')).rows).toEqual(users);
     expect((await pool.query('SELECT * FROM sessions')).rows).toEqual(sessions);

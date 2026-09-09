@@ -48,11 +48,12 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     await shell(page, locale);
+    const category = locale === 'en' ? 'billing' : 'orders';
     let created = false,
       submits = 0,
       uploads = 0;
     await page.route('**/api/tickets?*', (route) =>
-      route.fulfill({ json: { data: created ? [item] : [], totalPages: 1 } })
+      route.fulfill({ json: { data: created ? [{ ...item, category }] : [], totalPages: 1 } })
     );
     await page.route('**/api/tickets/options**', (route) =>
       route.fulfill({
@@ -81,18 +82,20 @@ for (const locale of ['en', 'fa'])
         subject: 'Delivery question',
         body: 'Please explain delivery',
         priority: 'normal',
+        category,
         profileId,
         attachments: [key],
       });
       submits++;
       if (submits === 1) return route.fulfill({ status: 500, json: {} });
       created = true;
-      return route.fulfill({ status: 201, json: item });
+      return route.fulfill({ status: 201, json: { ...item, category } });
     });
     await page.route(`**/api/tickets/${ticketId}`, (route) =>
       route.fulfill({
         json: {
           ...item,
+          category,
           attachments: ['ticket-attachments/fixed'],
           attachmentDownloadUrls: ['https://storage.example.test/fixed'],
         },
@@ -105,6 +108,8 @@ for (const locale of ['en', 'fa'])
       .click();
     await page.locator('#ticket-subject').fill(item.subject);
     await page.locator('#ticket-body').fill(item.body);
+    await expect(page.locator('#ticket-category')).toHaveValue('general');
+    await page.locator('#ticket-category').selectOption(category);
     await page.locator('#ticket-profile').selectOption(profileId);
     await page.locator('#ticket-files').setInputFiles({
       name: 'help.pdf',
@@ -115,11 +120,15 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: locale === 'en' ? 'Submit ticket' : 'ثبت تیکت', exact: true })
       .click();
     await expect(page.locator('#ticket-subject')).toHaveValue(item.subject);
+    await expect(page.locator('#ticket-category')).toHaveValue(category);
     await expect(page.getByRole('alert')).toBeVisible();
     await page
       .getByRole('button', { name: locale === 'en' ? 'Submit ticket' : 'ثبت تیکت', exact: true })
       .click();
     await expect(page.getByRole('heading', { name: item.subject, level: 2 })).toBeFocused();
+    await expect(
+      page.getByRole('cell', { name: locale === 'en' ? 'Billing' : 'سفارش‌ها', exact: true })
+    ).toBeVisible();
     await expect(
       page.getByRole('link', { name: locale === 'en' ? 'Open attachment 1' : 'مشاهده پیوست 1' })
     ).toHaveAttribute('href', 'https://storage.example.test/fixed');

@@ -41,6 +41,10 @@ export const tickets = pgTable(
     /** Full ticket description body. */
     body: text('body').notNull(),
 
+    category: text('category', { enum: ['general', 'billing', 'orders'] })
+      .notNull()
+      .default('general'),
+
     /** Optional FK to the profile this ticket relates to. */
     profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'set null' }),
 
@@ -83,6 +87,7 @@ export const tickets = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => [
+    check('tickets_category_valid', sql`${table.category} IN ('general','billing','orders')`),
     check(
       'tickets_attachments_array',
       sql`jsonb_typeof(${table.attachments})='array' AND jsonb_array_length(${table.attachments})<=5`
@@ -105,6 +110,7 @@ export const createTicketsTable = sql`
     user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     subject TEXT NOT NULL,
     body TEXT NOT NULL,
+    category TEXT NOT NULL DEFAULT 'general' CONSTRAINT tickets_category_valid CHECK (category IN ('general','billing','orders')),
     profile_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
     related_entity_type TEXT CHECK (related_entity_type IN ('order', 'contract', 'invoice')),
     related_entity_id TEXT,

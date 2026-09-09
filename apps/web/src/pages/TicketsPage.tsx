@@ -15,6 +15,7 @@ interface Ticket {
   id: string;
   subject: string;
   body: string;
+  category?: 'general' | 'billing' | 'orders';
   status: Status;
   priority: string;
   profileId: string | null;
@@ -101,6 +102,7 @@ function Tickets({ staff }: { staff: boolean }) {
   const [creating, setCreating] = useState(false),
     [subject, setSubject] = useState(''),
     [body, setBody] = useState(''),
+    [category, setCategory] = useState('general'),
     [priority, setPriority] = useState('normal');
   const [recordPage, setRecordPage] = useState(1);
   const [profileId, setProfileId] = useState(''),
@@ -292,6 +294,7 @@ function Tickets({ staff }: { staff: boolean }) {
         body: JSON.stringify({
           subject: subject.trim(),
           body: body.trim(),
+          category,
           priority,
           profileId: profileId || null,
           attachments: keys,
@@ -307,6 +310,7 @@ function Tickets({ staff }: { staff: boolean }) {
       setCreating(false);
       setSubject('');
       setBody('');
+      setCategory('general');
       setFiles([]);
       uploads.current.clear();
       setFileVersion((value) => value + 1);
@@ -375,6 +379,21 @@ function Tickets({ staff }: { staff: boolean }) {
                 value={body}
                 onChange={(event) => setBody(event.target.value)}
               />
+            </div>
+            <div>
+              <Label htmlFor="ticket-category">{text('category')}</Label>
+              <select
+                id="ticket-category"
+                className="block rounded border border-input bg-background text-foreground p-2"
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+              >
+                {['general', 'billing', 'orders'].map((value) => (
+                  <option key={value} value={value}>
+                    {text(`category.${value}`)}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <Label htmlFor="ticket-priority">{text('priority')}</Label>
@@ -564,6 +583,7 @@ function Tickets({ staff }: { staff: boolean }) {
               <tr>
                 {[
                   'subject',
+                  'category',
                   'status',
                   'priority',
                   'updated',
@@ -590,6 +610,7 @@ function Tickets({ staff }: { staff: boolean }) {
                       {item.subject}
                     </button>
                   </td>
+                  <td className="p-2">{text(`category.${item.category ?? 'general'}`)}</td>
                   <td className="p-2">
                     <span className="rounded-full bg-muted px-2 py-1 text-sm font-medium">
                       {text(item.status)}
@@ -656,6 +677,9 @@ function Tickets({ staff }: { staff: boolean }) {
             {text(detail.status)} · {text(detail.priority)}
           </p>
           <p className="whitespace-pre-wrap">{detail.body}</p>
+          <p>
+            {text('category')}: {text(`category.${detail.category ?? 'general'}`)}
+          </p>
           <p>
             {text('assignee')}:{' '}
             {assignees.find((person) => person.id === detail.assignedTo)?.name ??

@@ -23,7 +23,7 @@ afterEach(async () => {
 });
 
 describe('complete production schema baseline', () => {
-  it('adds address removal history to a populated 0123 database without changing saved addresses', async () => {
+  it('adds address removal history and ticket categories to populated 0123 data without changing existing fields', async () => {
     if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
     const name = `test_address_upgrade_${randomUUID().replaceAll('-', '')}`;
     const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
@@ -75,13 +75,30 @@ describe('complete production schema baseline', () => {
         [profile, province, city]
       );
       const before = (await pool.query('SELECT * FROM addresses ORDER BY id')).rows;
+      await pool.query(
+        "INSERT INTO tickets(user_id,subject,body,profile_id) VALUES ('address-upgrade','Existing support request','Retain this history',$1)",
+        [profile]
+      );
+      const oldTickets = (await pool.query('SELECT * FROM tickets ORDER BY id')).rows;
       expect(await runMigrations(options)).toEqual({
         ok: true,
-        applied: ['0124_address_soft_delete'],
+        applied: ['0124_address_soft_delete', '0125_ticket_category'],
       });
       expect((await pool.query('SELECT * FROM addresses ORDER BY id')).rows).toEqual(
         before.map((row) => ({ ...row, deleted_at: null }))
       );
+      expect((await pool.query('SELECT * FROM tickets ORDER BY id')).rows).toEqual(
+        oldTickets.map((row) => ({ ...row, category: 'general' }))
+      );
+      await expect(pool.query("UPDATE tickets SET category='technical'")).rejects.toMatchObject({
+        code: '23514',
+        constraint: 'tickets_category_valid',
+      });
+      await expect(pool.query('UPDATE tickets SET category=NULL')).rejects.toMatchObject({
+        code: '23502',
+      });
+      await pool.query("UPDATE tickets SET category='billing'");
+      await pool.query("UPDATE tickets SET category='orders'");
       await expect(
         pool.query('UPDATE addresses SET deleted_at=NOW() WHERE main_address')
       ).rejects.toMatchObject({ code: '23514', constraint: 'addresses_deleted_not_main' });
@@ -159,6 +176,7 @@ describe('complete production schema baseline', () => {
         '0122_password_reset_authorization',
         '0123_preauth_sessions',
         '0124_address_soft_delete',
+        '0125_ticket_category',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -240,7 +258,7 @@ describe('complete production schema baseline', () => {
       // Representative deployed state: populated current product/finance
       // tables with the old migration journal and missing unjournaled schema.
       await pool.query(
-        'ALTER TABLE addresses DROP COLUMN deleted_at CASCADE; DROP TABLE preauth_sessions'
+        'ALTER TABLE addresses DROP COLUMN deleted_at CASCADE; DROP TABLE preauth_sessions; ALTER TABLE tickets DROP COLUMN category CASCADE'
       );
       await pool.query(
         "UPDATE users SET email='profile-contact@example.test',mobile='+989121234567' WHERE user_id='baseline-user'"
@@ -337,11 +355,16 @@ describe('complete production schema baseline', () => {
       ).toEqual({ contact_email: 'profile-contact@example.test', contact_mobile: '+989121234567' });
       expect(
         (
-          await pool.query('SELECT subject,body,attachments FROM tickets WHERE id=$1', [
+          await pool.query('SELECT subject,body,attachments,category FROM tickets WHERE id=$1', [
             legacyTicket,
           ])
         ).rows[0]
-      ).toEqual({ subject: 'Legacy question', body: 'Existing conversation', attachments: [] });
+      ).toEqual({
+        subject: 'Legacy question',
+        body: 'Existing conversation',
+        attachments: [],
+        category: 'general',
+      });
       expect(
         (
           await pool.query(

@@ -14,7 +14,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -38,6 +38,32 @@ export class TicketsController {
   @HttpCode(201)
   @RateLimit({ namespace: 'tickets:create:user', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Create a support ticket' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['subject', 'body'],
+      additionalProperties: false,
+      properties: {
+        subject: { type: 'string', minLength: 1, maxLength: 200 },
+        body: { type: 'string', minLength: 1, maxLength: 10000 },
+        category: { type: 'string', enum: ['general', 'billing', 'orders'], default: 'general' },
+        priority: { type: 'string', enum: ['normal', 'high'], default: 'normal' },
+        profileId: { type: 'string', format: 'uuid', nullable: true },
+        relatedEntityType: {
+          type: 'string',
+          enum: ['order', 'contract', 'invoice'],
+          nullable: true,
+        },
+        relatedEntityId: { type: 'string', minLength: 1, maxLength: 512, nullable: true },
+        attachments: {
+          type: 'array',
+          maxItems: 5,
+          nullable: true,
+          items: { type: 'string', minLength: 1, maxLength: 512 },
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 201, description: 'Ticket created.' })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
@@ -47,6 +73,7 @@ export class TicketsController {
     body: {
       subject: string;
       body: string;
+      category?: 'general' | 'billing' | 'orders';
       profileId?: string;
       relatedEntityType?: 'order' | 'contract' | 'invoice';
       relatedEntityId?: string;

@@ -147,6 +147,55 @@ async function blockedOrFinished(blockerPid: number, finished: () => boolean) {
     .toBe(true);
 }
 
+it.each(['general', 'billing', 'orders', undefined])(
+  'persists and returns the selected ticket category (%s)',
+  async (category) => {
+    const subject = `Category ${randomUUID()}`;
+    const response = await fetch(`${http.base}/api/tickets`, {
+      method: 'POST',
+      headers: headers.customer!,
+      body: JSON.stringify({
+        subject,
+        body: 'A categorized question',
+        ...(category ? { category } : {}),
+      }),
+    });
+    expect(response.status).toBe(201);
+    const created = (await response.json()) as { id: string; category: string };
+    expect(created.category).toBe(category ?? 'general');
+    for (const prefix of ['/api/tickets', '/api/staff/tickets']) {
+      const actorHeaders = prefix.includes('/staff/') ? headers.staff! : headers.customer!;
+      const detail = await fetch(`${http.base}${prefix}/${created.id}`, { headers: actorHeaders });
+      expect(detail.status).toBe(200);
+      expect(await detail.json()).toMatchObject({ category: category ?? 'general' });
+      const list = await fetch(`${http.base}${prefix}?search=${encodeURIComponent(subject)}`, {
+        headers: actorHeaders,
+      });
+      expect(list.status).toBe(200);
+      expect(await list.json()).toMatchObject({
+        data: [{ id: created.id, category: category ?? 'general' }],
+      });
+    }
+    expect(
+      (
+        await http.pool.query(
+          "SELECT metadata::jsonb->>'category' AS category FROM audit_log WHERE event='ticket_created' AND metadata::jsonb->>'ticketId'=$1",
+          [created.id]
+        )
+      ).rows[0]
+    ).toEqual({ category: category ?? 'general' });
+  }
+);
+
+it.each(['technical', '', null])('rejects unsupported ticket categories (%s)', async (category) => {
+  const response = await fetch(`${http.base}/api/tickets`, {
+    method: 'POST',
+    headers: headers.customer!,
+    body: JSON.stringify({ subject: 'Invalid category', body: 'Details', category }),
+  });
+  expect(response.status).toBe(400);
+});
+
 it.each(['', '/detail', '/comments'] as const)(
   'denies a staff ticket read after its grant is revoked while waiting (%s)',
   async (view) => {

@@ -13792,6 +13792,80 @@
       "post": {
         "operationId": "TicketsController_createTicket",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "attachments": {
+                    "items": {
+                      "maxLength": 512,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "nullable": true,
+                    "type": "array"
+                  },
+                  "body": {
+                    "maxLength": 10000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "category": {
+                    "default": "general",
+                    "enum": [
+                      "general",
+                      "billing",
+                      "orders"
+                    ],
+                    "type": "string"
+                  },
+                  "priority": {
+                    "default": "normal",
+                    "enum": [
+                      "normal",
+                      "high"
+                    ],
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "relatedEntityId": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "relatedEntityType": {
+                    "enum": [
+                      "order",
+                      "contract",
+                      "invoice"
+                    ],
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "subject": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "subject",
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Ticket created."

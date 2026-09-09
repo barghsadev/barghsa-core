@@ -5,7 +5,7 @@
   "baseline_register_sha256": "8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060",
   "source_sha256": {
     "kanban/epics/01-platform-infrastructure.md": "cf25ecaad4e9a6484a8a69a6e3528efabbc8af7b5f580df4ca527b2dcf9a0dda",
-    "kanban/epics/02-auth-users-admin.md": "649029da399679032cea155f4c43d52717be4575a86c989c43d9eb1c1763c2e8",
+    "kanban/epics/02-auth-users-admin.md": "e532618b099625d9b0c8cae5fc03804183236ae80174ce47b4168180a78a8a55",
     "kanban/epics/05-notifications-documents-ai.md": "7b2275c3c598e25714d530b5ba410bd98d903e752172a7f8b09b709dd02620be",
     "kanban/epics/04-invoices-wallet-contracts.md": "5d72db3278123cdcf42dd5e14c87ae6cab1a089363755537a4c4083cfa313bf7",
     "kanban/epics/03-core-business.md": "ab7d2420c453a2dfb0a52344ac01b7acc0f5d946a6b2c650a27d8a760bdfae68",
@@ -1505,8 +1505,8 @@
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 535,
       "story_context": "### S-06.01 Ticketing — Customer side",
-      "requirement_extract": "**T-06.01.01 — Ticket creation**\n\n- Description: User can create a support ticket. Subject, body (rich text optional), related profile, related entity type/ID (order, contract, invoice), priority, optional file attachments. All users can access.\n- Technical notes: POST `/api/tickets` with `{ subject, body, profileId, relatedEntityType, relatedEntityId, priority, attachments[] }`. Permissions: authenticated user, scoped to own profiles. Files uploaded then linked (document storage integration).\n- UI/UX: \"Contact Support\" / \"Create Ticket\" button. Form with: subject, category/type selector, priority (normal/high), body textarea, attachment upload, related entity selector (optional). Persian/EN labels.\n- Dependencies: documents module\n- Complexity: M",
-      "context_sha256": "ebe4fc004765414d976250455691286f4fc09db43f0d1b24a342a0341ce36914"
+      "requirement_extract": "**T-06.01.01 — Ticket creation**\n\n- Description: User can create a support ticket. Subject, body (rich text optional), related profile, related entity type/ID (order, contract, invoice), priority, optional file attachments. All users can access.\n- Technical notes: POST `/api/tickets` with `{ subject, body, category, profileId, relatedEntityType, relatedEntityId, priority, attachments[] }`. Categories are `general`, `billing`, and `orders`; omitted category and existing tickets default to `general`. Permissions: authenticated user, scoped to own profiles. Files uploaded then linked (document storage integration).\n- UI/UX: \"Contact Support\" / \"Create Ticket\" button. Form with: subject, category selector (General, Billing, Orders; approved September 9), priority (normal/high), body textarea, attachment upload, related entity selector (optional). Show the saved category in list and detail. Persian/EN labels.\n- Dependencies: documents module\n- Complexity: M",
+      "context_sha256": "d0b5d264763ed4face50cb411bdf0e5f5b72fe567f004030a9c1cfc2371c3654"
     },
     {
       "task_key": "02-auth-users-admin.md#T-06.01.02",
