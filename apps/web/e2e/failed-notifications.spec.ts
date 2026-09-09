@@ -14,6 +14,8 @@ for (const locale of ['en', 'fa'])
     }, locale);
     const rows = Array.from({ length: 26 }, (_, index) => ({
       id: `10000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
+      outboxId: `20000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
+      jobId: `30000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
       eventKey: `test.event.${index}`,
       channel: 'email',
       severity: 'error',
@@ -25,6 +27,8 @@ for (const locale of ['en', 'fa'])
       recipientKey: 'ab...yz',
       data: { token: '***' },
       resolvedById: null,
+      resolvedAt: null,
+      errorCategory: 'transient',
     }));
     let canView = true,
       canRetry = false,

@@ -38,6 +38,39 @@ interface DeadLetterRow {
   createdAt: string;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+function isDeadLetterRow(value: unknown): value is DeadLetterRow {
+  if (!isRecord(value)) return false;
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const nullableText = (item: unknown) => item === null || typeof item === 'string';
+  const date = (item: unknown) => typeof item === 'string' && Number.isFinite(Date.parse(item));
+  return (
+    ['id', 'outboxId', 'jobId'].every(
+      (key) => typeof value[key] === 'string' && uuid.test(value[key])
+    ) &&
+    typeof value.eventKey === 'string' &&
+    value.eventKey.length > 0 &&
+    typeof value.channel === 'string' &&
+    ['in_app', 'email', 'sms'].includes(value.channel) &&
+    typeof value.severity === 'string' &&
+    ['error', 'critical'].includes(value.severity) &&
+    typeof value.status === 'string' &&
+    ['open', 'retried', 'resolved', 'dismissed'].includes(value.status) &&
+    [value.recipientKey, value.cause, value.errorCategory, value.resolvedById].every(
+      nullableText
+    ) &&
+    (value.data === null || isRecord(value.data)) &&
+    Number.isSafeInteger(value.attempts) &&
+    Number(value.attempts) >= 0 &&
+    Number.isSafeInteger(value.maxAttempts) &&
+    Number(value.maxAttempts) > 0 &&
+    date(value.createdAt) &&
+    (value.resolvedAt === null || date(value.resolvedAt))
+  );
+}
+
 function channelLabel(channel: DeadLetterRow['channel'], uiLocale: Locale): string {
   const key = `admin.notifications.deadLetter.channel${
     channel === 'email' ? 'Email' : channel === 'sms' ? 'Sms' : 'InApp'
@@ -73,24 +106,34 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
   const [revision, setRevision] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [access, setAccess] = useState<{ canView: boolean; canRetry: boolean } | null>(null);
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<
+    | (TeamAction & {
+        row: DeadLetterRow;
+        kind: 'retry' | 'resolve' | 'dismiss';
+      })
+    | null
+  >(null);
   const [notice, setNotice] = useState<'retry' | 'resolve' | 'dismiss' | null>(null);
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
     setError(false);
+    setAccess(null);
     void (async () => {
       try {
         const accessResponse = await fetch('/api/admin/failed-notifications/access', {
           signal: controller.signal,
         });
         if (!accessResponse.ok) throw new Error('Unavailable');
-        const permissions = (await accessResponse.json()) as {
-          canView: boolean;
-          canRetry: boolean;
-        };
+        const permissions: unknown = await accessResponse.json();
+        if (
+          !isRecord(permissions) ||
+          typeof permissions.canView !== 'boolean' ||
+          typeof permissions.canRetry !== 'boolean'
+        )
+          throw new Error('Invalid access response');
         if (controller.signal.aborted) return;
-        setAccess(permissions);
+        setAccess({ canView: permissions.canView, canRetry: permissions.canRetry });
         if (!permissions.canView) {
           setRows([]);
           setHasMore(false);
@@ -107,8 +150,14 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error('Unavailable');
-        const result = (await response.json()) as DeadLetterRow[];
-        if (!Array.isArray(result)) throw new Error('Invalid response');
+        const result: unknown = await response.json();
+        if (
+          !Array.isArray(result) ||
+          result.length > 26 ||
+          !result.every(isDeadLetterRow) ||
+          new Set(result.map((row) => row.id)).size !== result.length
+        )
+          throw new Error('Invalid response');
         if (!controller.signal.aborted) {
           setRows(result.slice(0, 25));
           setHasMore(result.length > 25);
@@ -124,6 +173,8 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
   function act(row: DeadLetterRow, kind: 'retry' | 'resolve' | 'dismiss') {
     setNotice(null);
     setAction({
+      row,
+      kind,
       title: label(kind),
       description: `${label(`${kind}Confirm`)} ${row.eventKey} · ${channelLabel(row.channel, uiLocale)} · ${row.recipientKey ?? ''}`,
       path: `/api/admin/failed-notifications/${row.id}/${kind}`,
@@ -362,14 +413,20 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
-          onSuccess={async () => {
-            setNotice(
-              action.path.endsWith('/retry')
-                ? 'retry'
-                : action.path.endsWith('/resolve')
-                  ? 'resolve'
-                  : 'dismiss'
-            );
+          onSuccess={async (result) => {
+            const expectedStatus = { retry: 'retried', resolve: 'resolved', dismiss: 'dismissed' }[
+              action.kind
+            ];
+            if (
+              !isDeadLetterRow(result) ||
+              result.id !== action.row.id ||
+              result.outboxId !== action.row.outboxId ||
+              result.jobId !== action.row.jobId ||
+              result.channel !== action.row.channel ||
+              result.status !== expectedStatus
+            )
+              throw new Error('Invalid action acknowledgment');
+            setNotice(action.kind);
             setRevision((v) => v + 1);
           }}
         />
