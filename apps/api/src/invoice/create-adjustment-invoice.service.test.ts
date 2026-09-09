@@ -50,11 +50,33 @@ vi.mock('uuid', () => ({
 }));
 
 function mockQuery(handler: (sql: string, params?: unknown[]) => unknown) {
-  mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) =>
-    sql.startsWith('SELECT id, archived FROM profiles')
+  let inserted: unknown[] | undefined;
+  mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
+    if (sql.startsWith('INSERT INTO invoices')) inserted = params;
+    // The state machine now reads the locked stored amounts. Its issue read
+    // must return the new draft, not the unrelated original invoice.
+    if (
+      sql.startsWith('SELECT id, state, adjustment_kind') &&
+      inserted &&
+      params?.[0] === inserted[0]
+    ) {
+      return {
+        rows: [
+          {
+            id: inserted[0],
+            state: 'Draft',
+            adjustment_kind: inserted[9],
+            total_amount: String(inserted[5]),
+            paid_amount: '0',
+            refunded_amount: '0',
+          },
+        ],
+      };
+    }
+    return sql.startsWith('SELECT id, archived FROM profiles')
       ? { rows: [{ id: 'profile-001', archived: false }] }
-      : handler(sql, params)
-  );
+      : handler(sql, params);
+  });
 }
 
 function originalRow(overrides: Record<string, unknown> = {}) {

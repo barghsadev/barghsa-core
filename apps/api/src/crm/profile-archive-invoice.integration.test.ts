@@ -28,14 +28,14 @@ beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   holder.pool = http.pool;
   await http.pool.query(
-    "INSERT INTO users(user_id,username,password_hash,is_admin) VALUES ($1,$1,'fixture',true),('archive-invoice-owner','owner@example.test','fixture',false)",
+    "INSERT INTO users(user_id,username,password_hash,is_admin) VALUES ($1,$1,'fixture',true),('archive-invoice-operator','archive-operator@example.test','fixture',true),('archive-invoice-owner','owner@example.test','fixture',false)",
     [actor]
   );
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
     "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
-    [session, actor, csrf, randomUUID()]
+    [session, 'archive-invoice-operator', csrf, randomUUID()]
   );
   headers = {
     Cookie: 'barghsa_session=' + session,
