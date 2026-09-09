@@ -53,7 +53,7 @@ for (const action of ['create', 'approve', 'reject'] as const) {
   for (const change of ['revoke', 'csrf', 'step-up', 'role'] as const) {
     it(`approval ${action} holds ${change} authority while its write waits`, async () => {
       await http.pool.query(
-        "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,step_up_verified_at=NOW(),expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes' WHERE user_id='reviewer'",
+        "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,step_up_verified_at=NOW()-INTERVAL '1 second',expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes' WHERE user_id='reviewer'",
         [headers.reviewer!['X-CSRF-Token']]
       );
       await http.pool.query(
@@ -1391,7 +1391,7 @@ it('holds current authority through staff due-date overrides', async () => {
 
 async function resetReceiptReviewer() {
   await http.pool.query(
-    "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,step_up_verified_at=NOW(),expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes' WHERE user_id='reviewer'",
+    "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,step_up_verified_at=NOW()-INTERVAL '1 second',expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes' WHERE user_id='reviewer'",
     [headers.reviewer!['X-CSRF-Token']]
   );
   await http.pool.query(

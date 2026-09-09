@@ -56,7 +56,13 @@ async function loadService() {
   vi.doMock('@barghsa/db', () => mockDbModule(pool));
   const { DualApprovalService: Svc } = await import('./dual-approval.service.js');
   notificationsService = { create: vi.fn().mockResolvedValue({ id: 'n-1' }) };
-  service = new Svc(notificationsService as never);
+  service = new Svc(
+    notificationsService as never,
+    {
+      lockRequestProfile: vi.fn().mockResolvedValue(undefined),
+      executeApproved: vi.fn().mockResolvedValue(undefined),
+    } as never
+  );
   return { pool, mockQuery, mockConnect };
 }
 
@@ -337,6 +343,7 @@ describe('DualApprovalService.approveApprovalRequest', () => {
     mockConnect.mockResolvedValue(client);
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // Read immutable request context before user locks
       .mockResolvedValueOnce({ rows: [] }); // SELECT FOR UPDATE → no row
 
     const rejection = await service
@@ -352,6 +359,7 @@ describe('DualApprovalService.approveApprovalRequest', () => {
     mockConnect.mockResolvedValue(client);
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // Read immutable request context before user locks
       .mockResolvedValueOnce({ rows: [{ ...PENDING_ROW, status: 'approved' }] }); // FOR UPDATE
 
     const rejection = await service
@@ -367,6 +375,7 @@ describe('DualApprovalService.approveApprovalRequest', () => {
     mockConnect.mockResolvedValue(client);
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // Read immutable request context before user locks
       .mockResolvedValueOnce({ rows: [PENDING_ROW] }); // FOR UPDATE
 
     const rejection = await service
@@ -382,6 +391,7 @@ describe('DualApprovalService.approveApprovalRequest', () => {
     mockConnect.mockResolvedValue(client);
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // Read immutable request context before user locks
       .mockResolvedValueOnce({ rows: [PENDING_ROW] }) // SELECT ... FOR UPDATE OF ar
       .mockResolvedValueOnce({ rows: [] }) // UPDATE
       .mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
@@ -410,14 +420,20 @@ describe('DualApprovalService.approveApprovalRequest', () => {
 
     // The row lock must be scoped to the base table: an unqualified
     // FOR UPDATE on a LEFT JOIN query is rejected by PostgreSQL.
-    const selectCall = mockClientQuery.mock.calls[1]!;
+    const selectCall = mockClientQuery.mock.calls.find(([sql]) =>
+      String(sql).includes('FOR UPDATE OF ar')
+    )!;
     expect(String(selectCall[0])).toContain('FOR UPDATE OF ar');
 
-    const updateCall = mockClientQuery.mock.calls[2]!;
+    const updateCall = mockClientQuery.mock.calls.find(([sql]) =>
+      String(sql).includes('UPDATE approval_requests')
+    )!;
     expect(String(updateCall[0])).toContain('UPDATE approval_requests');
     expect(updateCall[1]).toEqual(['approved', 'user-2', null, expect.any(Date), 'req-1']);
 
-    const auditCall = mockClientQuery.mock.calls[3]!;
+    const auditCall = mockClientQuery.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log')
+    )!;
     expect(String(auditCall[0])).toContain('INSERT INTO audit_log');
     expect(auditCall[1]).toContain('approval_request_approved');
     expect(String(auditCall[1]![3])).toContain('"requestId":"req-1"');
@@ -474,6 +490,7 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
     mockConnect.mockResolvedValue(client);
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // Read immutable request context before user locks
       .mockResolvedValueOnce({ rows: [PENDING_ROW] }) // SELECT ... FOR UPDATE OF ar
       .mockResolvedValueOnce({ rows: [] }) // UPDATE
       .mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
@@ -503,7 +520,9 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
     expect(result.reviewReason).toBe('Duplicate of an earlier refund');
     expect(result.reviewerUsername).toBe('staff2');
 
-    const updateCall = mockClientQuery.mock.calls[2]!;
+    const updateCall = mockClientQuery.mock.calls.find(([sql]) =>
+      String(sql).includes('UPDATE approval_requests')
+    )!;
     expect(updateCall[1]).toEqual([
       'rejected',
       'user-2',
@@ -512,7 +531,9 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
       'req-1',
     ]);
 
-    const auditCall = mockClientQuery.mock.calls[3]!;
+    const auditCall = mockClientQuery.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log')
+    )!;
     expect(auditCall[1]).toContain('approval_request_rejected');
     expect(String(auditCall[1]![3])).toContain('"reviewReason":"Duplicate of an earlier refund"');
     // BIGINT audit amounts are normalized to JSON numbers.
@@ -534,6 +555,7 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
     mockConnect.mockResolvedValue(client);
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] }) // Read request context
       .mockResolvedValueOnce({ rows: [PENDING_ROW] }); // initiator === reviewer
     const selfRejection = await service
       .rejectApprovalRequest('req-1', actor('user-1'), '1.1.1.1', 'nope')

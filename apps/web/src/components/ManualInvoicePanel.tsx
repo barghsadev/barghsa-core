@@ -192,6 +192,7 @@ export function ManualInvoiceForm({
   const [password, setPassword] = useState(''),
     [stepError, setStepError] = useState<string | null>(null);
   const [result, setResult] = useState<{ invoiceId: string; totalAmount: string } | null>(null);
+  const [approval, setApproval] = useState<{ id: string; amount: string } | null>(null);
   const submitButton = useRef<HTMLButtonElement>(null);
   const signed = /^-?\d{1,19}$/.test(digits(amount)) ? BigInt(digits(amount)) : 0n;
   const validAdjustment =
@@ -291,6 +292,8 @@ export function ManualInvoiceForm({
         amount?: string;
         idempotencyKey?: string;
         reason?: string;
+        status?: string;
+        approvalRequestId?: string;
       };
       if (response.status === 403 && authErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code)
         return 'step-up';
@@ -307,6 +310,24 @@ export function ManualInvoiceForm({
         );
         if (!uncertain.current) unlock();
         return 'error';
+      }
+      if (response.status === 202) {
+        if (
+          submitted.correction?.kind !== 'adjustment' ||
+          data.status !== 'pending_approval' ||
+          typeof data.approvalRequestId !== 'string' ||
+          !isInvoiceUuid(data.approvalRequestId) ||
+          data.originalInvoiceId !== submitted.correction.invoiceId ||
+          data.kind !== 'adjustment' ||
+          data.idempotencyKey !== submitted.idempotencyKey ||
+          data.reason !== submitted.correction.reason ||
+          data.amount !== submitted.correction.amount
+        )
+          throw new Error('Invalid pending approval response');
+        setApproval({ id: data.approvalRequestId, amount: submitted.correction.amount });
+        setError(null);
+        unlock();
+        return 'done';
       }
       if (
         typeof data.invoiceId !== 'string' ||
@@ -344,7 +365,7 @@ export function ManualInvoiceForm({
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (busy.current || result) return;
+    if (busy.current || result || approval) return;
     if (!request.current) {
       if (!profileId || !calculation || !ready || (correction && !reason.trim())) {
         setError('invalid');
@@ -431,6 +452,21 @@ export function ManualInvoiceForm({
     );
     setError(null);
   }
+
+  if (approval)
+    return (
+      <div className="mt-6 flex flex-col gap-4" role="status">
+        <p>
+          {text('pendingApproval')} <strong>{numbers.money(approval.amount)}</strong>
+        </p>
+        <p>
+          {text('approvalReference')} <bdi>{approval.id}</bdi>
+        </p>
+        <a href="/admin/approval-requests" className="text-foreground underline underline-offset-4">
+          {text('openApprovals')}
+        </a>
+      </div>
+    );
 
   if (result)
     return (

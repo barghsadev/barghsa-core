@@ -1,4 +1,5 @@
 import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
+import { InvoiceAdjustmentApprovalService } from '../invoice/invoice-adjustment-approval.service.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -97,7 +98,10 @@ const MAX_LIST_LIMIT = 200;
 export class DualApprovalService {
   private readonly logger = new Logger(DualApprovalService.name);
 
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    private readonly notificationsService: NotificationsService,
+    private readonly invoiceAdjustments: InvoiceAdjustmentApprovalService
+  ) {}
 
   /**
    * Initiate a dual-approval request.
@@ -326,11 +330,24 @@ export class DualApprovalService {
     const reviewerUserId = actor.userId;
     const pool = getDbPool();
     const now = new Date();
+    const correlationId = correlationIdStorage.getStore() ?? uuidv7();
 
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      const initial = (
+        await client.query('SELECT details, initiator_id FROM approval_requests WHERE id=$1', [
+          requestId,
+        ])
+      ).rows[0];
+      if (decision === 'approve')
+        await this.invoiceAdjustments.lockRequestProfile(client, initial?.details ?? null);
+      await requireStaffMutationPermission(
+        client,
+        actor.userId,
+        'admin:financial:edit',
+        initial?.details?.invoiceAdjustment ? initial.initiator_id : undefined
+      );
       await requireSessionStepUp(client, actor);
 
       const result = await client.query(
@@ -364,7 +381,7 @@ export class DualApprovalService {
           requestId,
           reviewerUserId,
           sessionId: actor.sessionId,
-          correlationId: correlationIdStorage.getStore() ?? uuidv7(),
+          correlationId,
           ip,
           decision,
           reviewReason,
@@ -376,6 +393,10 @@ export class DualApprovalService {
         },
         this.notificationsService
       );
+
+      if (decision === 'approve') {
+        await this.invoiceAdjustments.executeApproved(client, row, actor, ip, correlationId);
+      }
 
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');

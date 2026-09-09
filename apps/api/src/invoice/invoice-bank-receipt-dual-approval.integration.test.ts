@@ -46,6 +46,10 @@ import { WalletService } from '../wallet/wallet.service.js';
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
+import { InvoiceAdjustmentApprovalService } from './invoice-adjustment-approval.service.js';
+import { CreateAdjustmentInvoiceService } from './create-adjustment-invoice.service.js';
+import { DueAtCalculationService } from './due-at.service.js';
+import { DueAtCalculationRepository } from './due-at.repository.js';
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }));
 
@@ -555,7 +559,15 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     expect(pending).toHaveLength(1);
     expect(pending[0]!.status).toBe('pending');
 
-    const dualApproval = new DualApprovalService(new NotificationsService());
+    const dualApproval = new DualApprovalService(
+      new NotificationsService(),
+      new InvoiceAdjustmentApprovalService(
+        new CreateAdjustmentInvoiceService(
+          new InvoiceStateMachineService(new InvoiceAuditRepository()),
+          new DueAtCalculationService(new DueAtCalculationRepository())
+        )
+      )
+    );
     const sessionId = uuidv7(),
       csrfToken = uuidv7();
     await ctx.pool.query(

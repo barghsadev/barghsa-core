@@ -20,6 +20,12 @@ const en = {
     'Positive adds a charge; negative creates a credit note. A credit note does not transfer money to the wallet.',
   total: 'Correction total',
   created: 'Correction issued.',
+  decisionSaved:
+    'Decision saved. Approved adjustments are issued; rejected adjustments create no invoice.',
+  approvalEffect: 'Approving this request issues the invoice adjustment.',
+  pendingApproval: 'Awaiting a second financial reviewer. No correction invoice has been issued.',
+  approvalReference: 'Approval request',
+  openApprovals: 'Open financial approvals',
   retry: 'Retry this correction',
   uncertain:
     'The result is unknown. Retry this correction with the same details before starting another.',
@@ -50,6 +56,12 @@ const fa: Record<keyof typeof en, string> = {
     'مبلغ مثبت بدهی اضافه می‌کند؛ مبلغ منفی سند بستانکار ایجاد می‌کند. سند بستانکار به کیف پول وجه منتقل نمی‌کند.',
   total: 'جمع اصلاح',
   created: 'فاکتور اصلاحی صادر شد.',
+  decisionSaved:
+    'نتیجه بررسی ثبت شد. اصلاح تأییدشده صادر می‌شود؛ درخواست ردشده فاکتوری ایجاد نمی‌کند.',
+  approvalEffect: 'با تأیید این درخواست، فاکتور اصلاحی صادر می‌شود.',
+  pendingApproval: 'در انتظار بررسی کارشناس مالی دوم است. هنوز فاکتور اصلاحی صادر نشده است.',
+  approvalReference: 'درخواست تأیید',
+  openApprovals: 'مشاهده تأییدهای مالی',
   retry: 'تلاش مجدد برای همین اصلاح',
   uncertain:
     'نتیجه اصلاح مشخص نیست. پیش از شروع اصلاح دیگری، همین درخواست را با همان اطلاعات دوباره ارسال کنید.',

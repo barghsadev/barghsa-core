@@ -4621,6 +4621,9 @@
           "201": {
             "description": "Linked correction; amounts are decimal strings. Same request key and payload replay the existing correction."
           },
+          "202": {
+            "description": "Adjustment awaits a different financial reviewer. No correction invoice exists yet. Returns approvalRequestId and the exact submitted request."
+          },
           "400": {
             "description": "Invalid request or unsupported int8 total."
           },

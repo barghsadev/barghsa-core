@@ -142,3 +142,55 @@ test('an obsolete pending response cannot replace selected history', async ({ pa
   release();
   await expect(page.getByRole('button', { name: 'Approve', exact: true })).toHaveCount(0);
 });
+
+for (const locale of ['fa', 'en'])
+  test(`invoice adjustment approval shows exact signed credit and source (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const invoiceId = '22222222-2222-4222-8222-222222222222';
+    const adjustment = {
+      ...request,
+      actionType: 'manual_adjustment',
+      details: {
+        invoiceId,
+        adjustmentAmount: '-10000000000000001',
+        invoiceAdjustment: { originalInvoiceId: invoiceId },
+      },
+    };
+    await page.route('**/api/admin/approval-requests?*', (route) =>
+      route.fulfill({ json: [adjustment] })
+    );
+    await page.route(`**/api/admin/approval-requests/${id}/approve`, (route) =>
+      route.fulfill({
+        json: {
+          ...adjustment,
+          status: 'approved',
+          details: { ...adjustment.details, adjustmentInvoiceId: id },
+        },
+      })
+    );
+    await page.goto('/admin/approval-requests');
+    const signed = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: 'IRR',
+      currencyDisplay: locale === 'fa' ? 'symbol' : 'code',
+      maximumFractionDigits: 0,
+    }).format(-10000000000000001n);
+    await expect(page.locator('dd').filter({ hasText: signed })).toHaveCount(1);
+    await expect(page.locator('dd').filter({ hasText: invoiceId })).toHaveCount(1);
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Approve', exact: true })
+      .click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(signed);
+    await expect(dialog).toContainText(
+      locale === 'fa' ? 'فاکتور اصلاحی صادر می‌شود' : 'issues the invoice adjustment'
+    );
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
+      locale === 'fa' ? 'اصلاح تأییدشده صادر می‌شود' : 'Approved adjustments are issued'
+    );
+  });

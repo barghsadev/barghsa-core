@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { InvoiceAdjustmentApprovalService } from './invoice-adjustment-approval.service.js';
 import { InvoiceCorrectionsController } from './invoice-corrections.controller.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
@@ -22,6 +23,7 @@ import { SessionModule } from '../session/session.module.js';
   imports: [SessionModule],
   controllers: [CustomerInvoiceController, ManualInvoiceController, InvoiceCorrectionsController],
   providers: [
+    InvoiceAdjustmentApprovalService,
     InvoiceStateMachineService,
     InvoiceAuditRepository,
     ManualInvoiceService,
@@ -38,6 +40,7 @@ import { SessionModule } from '../session/session.module.js';
     InvoiceBankReceiptUploadService,
   ],
   exports: [
+    InvoiceAdjustmentApprovalService,
     InvoiceStateMachineService,
     InvoiceAuditRepository,
     ManualInvoiceService,

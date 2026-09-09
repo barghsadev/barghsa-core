@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpException, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import type { Response } from 'express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -14,7 +25,7 @@ import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { CancelAndReplaceInvoiceService } from './cancel-and-replace-invoice.service.js';
-import { CreateAdjustmentInvoiceService } from './create-adjustment-invoice.service.js';
+import { InvoiceAdjustmentApprovalService } from './invoice-adjustment-approval.service.js';
 import { invoiceCorrectionContext } from './invoice-correction-request.js';
 
 const maxIrr = 9_223_372_036_854_775_807n;
@@ -63,7 +74,7 @@ const input = z.discriminatedUnion('kind', [
 export class InvoiceCorrectionsController {
   constructor(
     private readonly replacements: CancelAndReplaceInvoiceService,
-    private readonly adjustments: CreateAdjustmentInvoiceService
+    private readonly adjustments: InvoiceAdjustmentApprovalService
   ) {}
 
   private invoiceId(req: AuthenticatedRequest, value: string) {
@@ -151,6 +162,11 @@ export class InvoiceCorrectionsController {
   })
   @ApiResponse({ status: 400, description: 'Invalid request or unsupported int8 total.' })
   @ApiResponse({
+    status: 202,
+    description:
+      'Adjustment awaits a different financial reviewer. No correction invoice exists yet. Returns approvalRequestId and the exact submitted request.',
+  })
+  @ApiResponse({
     status: 403,
     description: 'Current Finance permission, CSRF and fresh step-up required through commit.',
   })
@@ -161,7 +177,8 @@ export class InvoiceCorrectionsController {
   async create(
     @Req() req: AuthenticatedRequest,
     @Param('invoiceId') value: string,
-    @Body() body: unknown
+    @Body() body: unknown,
+    @Res({ passthrough: true }) response: Response
   ) {
     const invoiceId = this.invoiceId(req, value);
     const parsed = input.safeParse(body);
@@ -184,11 +201,15 @@ export class InvoiceCorrectionsController {
             invoiceId,
             newLines: data.lines.map((l) => ({ ...l, unitPrice: BigInt(l.unitPrice) })),
           })
-        : await this.adjustments.createAdjustmentInvoice({
+        : await this.adjustments.submit({
             ...common,
             originalInvoiceId: invoiceId,
             amount: BigInt(data.amount),
           });
+    if ('status' in result) {
+      response.status(202);
+      return result;
+    }
     return {
       originalInvoiceId: invoiceId,
       invoiceId:

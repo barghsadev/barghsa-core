@@ -65,6 +65,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { duePeriodTypeForManual, type AdjustmentKind } from '@barghsa/shared/finance';
 import { v7 as uuidv7 } from 'uuid';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
@@ -259,7 +260,8 @@ export class CreateAdjustmentInvoiceService {
    *   or is not in an adjustable post-payment state.
    */
   async createAdjustmentInvoice(
-    cmd: CreateAdjustmentInvoiceCommand
+    cmd: CreateAdjustmentInvoiceCommand,
+    transaction?: PoolClient
   ): Promise<CreateAdjustmentInvoiceResult> {
     const reason = requireReason(cmd.reason);
     const amount = requireNonZeroAmount(cmd.amount);
@@ -276,9 +278,9 @@ export class CreateAdjustmentInvoiceService {
     }
 
     const pool = getDbPool();
-    const client = await pool.connect();
+    const client = transaction ?? (await pool.connect());
     try {
-      await client.query('BEGIN');
+      if (!transaction) await client.query('BEGIN');
       const profileId = await lockInvoiceProfile(client, 'invoice', cmd.originalInvoiceId);
       await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
       if (cmd.actorSession) {
@@ -318,7 +320,7 @@ export class CreateAdjustmentInvoiceService {
         const excerpt = await this.loadAdjustmentExcerpt(client, replay.id);
         const issueTransition = await correctionTransition(client, replay.id, 'Issue');
         if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
-        await client.query('COMMIT');
+        if (!transaction) await client.query('COMMIT');
         return {
           ...excerpt,
           originalInvoiceId: cmd.originalInvoiceId,
@@ -476,7 +478,7 @@ export class CreateAdjustmentInvoiceService {
       }
 
       if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
-      await client.query('COMMIT');
+      if (!transaction) await client.query('COMMIT');
       return {
         originalInvoiceId: cmd.originalInvoiceId,
         originalState: original.state as InvoiceState,
@@ -499,7 +501,7 @@ export class CreateAdjustmentInvoiceService {
         issueTransition,
       };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
+      if (!transaction) await client.query('ROLLBACK').catch(() => {});
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException ||
@@ -510,7 +512,7 @@ export class CreateAdjustmentInvoiceService {
       this.logger.error(`Create adjustment invoice failed: ${String(error)}`);
       throw error;
     } finally {
-      client.release();
+      if (!transaction) client.release();
     }
   }
 

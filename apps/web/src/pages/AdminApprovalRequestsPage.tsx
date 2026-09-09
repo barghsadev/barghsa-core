@@ -1,3 +1,4 @@
+import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -21,6 +22,17 @@ interface Request {
   reviewReason: string | null;
   details: Record<string, unknown> | null;
 }
+function approvalAmount(request: Request) {
+  const amount = request.details?.adjustmentAmount;
+  if (
+    request.actionType === 'manual_adjustment' &&
+    typeof amount === 'string' &&
+    /^-?\d{1,19}$/.test(amount) &&
+    (BigInt(amount) < 0n ? -BigInt(amount) : BigInt(amount)) === BigInt(request.amountIrR)
+  )
+    return amount;
+  return request.amountIrR;
+}
 const PAGE_SIZE = 25;
 
 export default function AdminApprovalRequestsPage() {
@@ -32,6 +44,7 @@ export default function AdminApprovalRequestsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [adjustmentDecision, setAdjustmentDecision] = useState(false);
   const [reasons, setReasons] = useState<Record<string, string>>({});
   const [action, setAction] = useState<TeamAction | null>(null);
   const generation = useRef(0);
@@ -67,9 +80,12 @@ export default function AdminApprovalRequestsPage() {
     const reason = (reasons[request.id] ?? '').trim();
     if (decision === 'reject' && !reason) return;
     setSaved(false);
+    setAdjustmentDecision(
+      request.actionType === 'manual_adjustment' && Boolean(request.details?.invoiceAdjustment)
+    );
     setAction({
       title: t(`admin.approvals.${decision}`, locale),
-      description: `${t('admin.approvals.confirm', locale)} ${request.id} · ${numbers.money(request.amountIrR)} ${decision === 'reject' ? `· ${reason}` : ''}`,
+      description: `${t('admin.approvals.confirm', locale)} ${request.id} · ${numbers.money(approvalAmount(request))} ${decision === 'reject' ? `· ${reason}` : request.details?.invoiceAdjustment ? tInvoiceCorrections('approvalEffect', locale) : ''}`,
       path: `/api/admin/approval-requests/${encodeURIComponent(request.id)}/${decision}`,
       method: 'POST',
       ...(decision === 'reject' ? { body: { reason } } : {}),
@@ -108,7 +124,13 @@ export default function AdminApprovalRequestsPage() {
           {t('admin.approvals.refresh', locale)}
         </Button>
       </div>
-      {saved && <p role="status">{t('admin.approvals.saved', locale)}</p>}
+      {saved && (
+        <p role="status">
+          {adjustmentDecision
+            ? tInvoiceCorrections('decisionSaved', locale)
+            : t('admin.approvals.saved', locale)}
+        </p>
+      )}
       {loading ? (
         <p role="status">{t('admin.approvals.loading', locale)}</p>
       ) : error ? (
@@ -125,7 +147,7 @@ export default function AdminApprovalRequestsPage() {
               <dl className="grid gap-2 text-sm sm:grid-cols-2">
                 {[
                   [t('admin.approvals.requestId', locale), request.id],
-                  [t('admin.approvals.amount', locale), numbers.money(request.amountIrR)],
+                  [t('admin.approvals.amount', locale), numbers.money(approvalAmount(request))],
                   [
                     t('admin.approvals.initiator', locale),
                     request.initiatorUsername ?? request.initiatorId,
