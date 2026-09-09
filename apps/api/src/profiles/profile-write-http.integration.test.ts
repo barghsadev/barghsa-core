@@ -57,6 +57,41 @@ const update = (body: unknown) =>
   });
 const snapshot = async () =>
   (await http.pool.query('SELECT * FROM profiles WHERE id=$1', [profileId])).rows[0];
+
+it('rolls back profile and address history when the session expires during audit persistence', async () => {
+  await http.pool.query(
+    "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES ($1,$2,$3,'Original Street','1234567890',true)",
+    [profileId, provinceId, cityId]
+  );
+  await http.pool.query(
+    "CREATE SEQUENCE profile_edit_audit_reached; CREATE FUNCTION delay_profile_edit_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='profile_self_updated' THEN PERFORM nextval('profile_edit_audit_reached'); PERFORM pg_sleep(2.2); END IF; RETURN NEW; END $$; CREATE TRIGGER delay_profile_edit_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_profile_edit_audit()"
+  );
+  await http.pool.query(
+    "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE user_id='profile-owner'"
+  );
+  const response = await update({
+    firstName: 'Changed',
+    provinceId,
+    cityId,
+    fullAddress: 'New Street',
+    postalCode: '1234567890',
+  });
+  expect(
+    (await http.pool.query('SELECT is_called FROM profile_edit_audit_reached')).rows[0].is_called
+  ).toBe(true);
+  expect(response.status, await response.clone().text()).toBe(401);
+  expect((await snapshot()).first_name).toBe('Original');
+  expect(
+    (
+      await http.pool.query('SELECT full_address,main_address FROM addresses WHERE profile_id=$1', [
+        profileId,
+      ])
+    ).rows
+  ).toEqual([{ full_address: 'Original Street', main_address: true }]);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_self_updated'")).rows
+  ).toEqual([]);
+});
 const waitForWrite = () =>
   expect
     .poll(async () =>
@@ -347,7 +382,7 @@ it('does not finalize a legacy legal draft missing its required company type', a
 });
 
 for (const includeCompletion of [false, true]) {
-  it(`serializes default selection across concurrent ${includeCompletion ? 'creation and completion' : 'creations'}`, async () => {
+  it(`keeps one default after concurrent ${includeCompletion ? 'creation and completion' : 'creations'} wait for account authentication`, async () => {
     if (includeCompletion) {
       await http.pool.query("UPDATE profiles SET national_id='1234567891' WHERE id=$1", [
         profileId,
@@ -362,6 +397,7 @@ for (const includeCompletion of [false, true]) {
     try {
       await client.query('BEGIN');
       await client.query("SELECT user_id FROM users WHERE user_id='profile-owner' FOR UPDATE");
+      const blockerPid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
       const create = () =>
         fetch(`${http.base}/api/onboarding/start`, {
           method: 'POST',
@@ -376,15 +412,24 @@ for (const includeCompletion of [false, true]) {
       ]);
       await expect
         .poll(async () =>
-          Number(
-            (
-              await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query='SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE'"
-              )
-            ).rows[0].count
-          )
+          // A tuple-lock waiter can queue behind the first waiting request.
+          (
+            await http.pool.query(
+              `WITH RECURSIVE activity AS (
+            SELECT pid,query,pg_blocking_pids(pid) AS blockers FROM pg_stat_activity
+            WHERE datname=current_database()
+          ), waiting AS (
+            SELECT pid,query FROM activity WHERE $1=ANY(blockers)
+            UNION SELECT a.pid,a.query FROM activity a JOIN waiting w ON w.pid=ANY(a.blockers)
+          ) SELECT query FROM waiting ORDER BY pid`,
+              [blockerPid]
+            )
+          ).rows.map((row) => row.query)
         )
-        .toBe(2);
+        .toEqual([
+          expect.stringContaining('WHERE s.session_id=$1 FOR UPDATE OF u'),
+          expect.stringContaining('WHERE s.session_id=$1 FOR UPDATE OF u'),
+        ]);
       await client.query('COMMIT');
       expect((await requests).map((response) => response.status).sort()).toEqual(
         includeCompletion ? [200, 201] : [201, 201]

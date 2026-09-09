@@ -237,46 +237,49 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 400, description: 'Invalid timezone' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  async updateTimezone(@Body() body: { timezone: string }, @Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId;
-
-    if (!body.timezone || typeof body.timezone !== 'string') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Timezone must be a non-empty string',
-        },
-        400
+  async updateTimezone(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = z
+      .object({ timezone: z.string().min(1) })
+      .strict()
+      .safeParse(body);
+    if (!parsed.success || !this.isValidTimezone(parsed.data.timezone))
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const { timezone } = parsed.data;
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const account = (
+        await client.query('SELECT timezone,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+          req.session.userId,
+        ])
+      ).rows[0];
+      if (!account || account.disabled_at)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      await requireCurrentSession(client, req.session);
+      await client.query('UPDATE users SET timezone=$1,updated_at=NOW() WHERE user_id=$2', [
+        timezone,
+        req.session.userId,
+      ]);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'timezone_changed',$3::jsonb,$4,$5,NOW())`,
+        [
+          uuidv7(),
+          req.session.userId,
+          JSON.stringify({ before: account.timezone, after: timezone }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          req.ip ?? null,
+        ]
       );
+      await requireCurrentSession(client, req.session);
+      await client.query('COMMIT');
+      return { timezone };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
     }
-
-    // Validate against IANA timezone database
-    if (!this.isValidTimezone(body.timezone)) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Invalid timezone: "${body.timezone}". Must be a valid IANA timezone string (e.g. "Asia/Tehran", "UTC").`,
-        },
-        400
-      );
-    }
-
-    const pool = getDbPool();
-    const result = await pool.query(
-      `UPDATE users SET timezone = $1, updated_at = NOW() WHERE user_id = $2 RETURNING timezone`,
-      [body.timezone, userId]
-    );
-
-    if (result.rows.length === 0) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    const timezone = result.rows[0].timezone as string;
-    this.logger.log(`User ${userId}: timezone updated to ${timezone}`);
-
-    return { timezone };
   }
 
   // ── Marketing Consent (T-05.05.03) ──────────────────────────────

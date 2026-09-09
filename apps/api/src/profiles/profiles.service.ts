@@ -15,6 +15,9 @@ import {
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 export interface ProfileRow {
   id: string;
@@ -1058,7 +1061,7 @@ export class ProfilesService {
    * addresses retained). Identity fields are protected after verification.
    */
   async updateProfile(
-    userId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     profileId: string,
     data: {
       title?: string | undefined;
@@ -1073,11 +1076,21 @@ export class ProfilesService {
       postalCode?: string | undefined;
     }
   ): Promise<ProfileRow> {
+    const { userId } = actor;
     const pool = getDbPool();
     const client = await pool.connect();
 
     try {
       await client.query('BEGIN');
+      const account = (
+        await client.query(
+          'SELECT is_staff,is_admin,disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+          [userId]
+        )
+      ).rows[0];
+      if (!account || account.disabled_at)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      await requireCurrentSession(client, actor);
       // Recheck ownership and verification while holding the profile lock.
       // Controller prechecks cannot authorize a write after a concurrent change.
       const current = (
@@ -1107,11 +1120,6 @@ export class ProfilesService {
         );
       const identityChanged = individualIdentityChanged || legalIdentityChanged;
       if (identityChanged && current.status === 'VERIFIED') {
-        const account = (
-          await client.query('SELECT is_staff,is_admin,disabled_at FROM users WHERE user_id=$1', [
-            userId,
-          ])
-        ).rows[0];
         const ownStaffIndividual =
           current.profile_type === 'INDIVIDUAL' &&
           account &&
@@ -1220,7 +1228,7 @@ export class ProfilesService {
 
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-         VALUES (uuid_generate_v7(),$1,'profile_self_updated',$2::jsonb,uuid_generate_v7(),NOW())`,
+         VALUES (uuid_generate_v7(),$1,'profile_self_updated',$2::jsonb,COALESCE($3::uuid,uuid_generate_v7()),NOW())`,
         [
           userId,
           JSON.stringify({
@@ -1229,9 +1237,11 @@ export class ProfilesService {
               .filter(([, value]) => value !== undefined)
               .map(([key]) => key),
           }),
+          correlationIdStorage.getStore() ?? null,
         ]
       );
       const updated = await this.getProfileById(profileId, client);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return (
         updated ??

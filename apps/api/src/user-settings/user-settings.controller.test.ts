@@ -30,11 +30,14 @@ describe('UserSettingsController — timezone endpoints', () => {
   let controller: UserSettingsController;
 
   const fakeReq = {
-    session: { userId: 'user-001', sessionId: 'session-001' },
+    session: { userId: 'user-001', sessionId: 'session-001', csrfToken: 'csrf' },
   } as any;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockClient.query.mockResolvedValue({
+      rows: [{ timezone: 'Asia/Tehran', disabled_at: null, active: true, csrf_token: 'csrf' }],
+    });
     controller = new UserSettingsController();
   });
 
@@ -88,8 +91,8 @@ describe('UserSettingsController — timezone endpoints', () => {
 
       const result = await controller.updateTimezone({ timezone: 'Europe/London' }, fakeReq);
 
-      expect(mockPool.query).toHaveBeenCalledWith(
-        `UPDATE users SET timezone = $1, updated_at = NOW() WHERE user_id = $2 RETURNING timezone`,
+      expect(mockClient.query).toHaveBeenCalledWith(
+        'UPDATE users SET timezone=$1,updated_at=NOW() WHERE user_id=$2',
         ['Europe/London', 'user-001']
       );
       expect(result).toEqual({ timezone: 'Europe/London' });
@@ -135,12 +138,12 @@ describe('UserSettingsController — timezone endpoints', () => {
       expect(result).toEqual({ timezone: 'UTC' });
     });
 
-    it('throws 404 when the user is not found on update', async () => {
-      mockPool.query.mockResolvedValue({ rows: [] });
+    it('rejects a session whose account no longer exists on update', async () => {
+      mockClient.query.mockResolvedValue({ rows: [] });
 
       await expect(
         controller.updateTimezone({ timezone: 'Asia/Tehran' }, fakeReq)
-      ).rejects.toMatchObject({ status: 404 });
+      ).rejects.toMatchObject({ status: 401 });
     });
   });
 

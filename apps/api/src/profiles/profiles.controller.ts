@@ -429,7 +429,7 @@ export class ProfilesController {
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    const updated = await this.profilesService.updateProfile(userId, profileId, parsed.data);
+    const updated = await this.profilesService.updateProfile(req.session, profileId, parsed.data);
 
     this.logger.log(`Profile ${profileId} updated for user ${userId}`);
 
