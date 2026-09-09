@@ -6985,7 +6985,7 @@
     },
     "/api/admin/sms-providers/{id}/test-connection": {
       "post": {
-        "description": "Validates draft SMS.ir credentials and credit, then sends through the mapped template to the current staff member’s verified mobile. An omitted recipient uses that contact; an explicit recipient must match it. Persists the server-produced test outcome.",
+        "description": "Validates draft SMS.ir credentials and credit, then sends through every configured mapping to the current staff member’s verified mobile. An omitted recipient uses that contact; an explicit recipient must match it. An eventKey runs that mapping first. Activation requires successful delivery through all mappings for the saved configuration.",
         "operationId": "SmsProviderConfigController_testConnection",
         "parameters": [
           {

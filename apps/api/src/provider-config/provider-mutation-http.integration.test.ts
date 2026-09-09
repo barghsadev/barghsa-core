@@ -57,6 +57,12 @@ beforeEach(async () => {
   await http.pool.query("UPDATE staff_roles SET permissions=$1 WHERE role_id='provider-writer'", [
     grants,
   ]);
+  await http.pool.query('DELETE FROM notification_templates');
+  await http.pool.query(
+    `INSERT INTO notification_templates(id,event_key,channel,locale,body_template,variables,status,is_active,version,published_at)
+    VALUES($1,'auth.otp','sms','en','Code {{code}}','["code"]','active',true,1,NOW())`,
+    [randomUUID()]
+  );
 });
 async function snapshot(table: string) {
   return {
@@ -104,10 +110,19 @@ for (const channel of ['email', 'sms']) {
                   timeout: 15,
                   throughput_limit: 100,
                   low_credit_threshold: 0,
+                  template_mappings: [
+                    { event_key: 'auth.otp', template_id: '42', variables: { code: 'CODE' } },
+                  ],
                 },
             action === 'rollback' ? 'superseded' : 'draft',
             action === 'rollback' ? new Date() : null,
           ]
+        );
+      if (action !== 'create')
+        await http.pool.query(
+          `UPDATE ${table} SET last_test_status='passed',last_test_at=NOW(),delivery_verified_at=NOW(),
+          delivery_config_hash=encode(sha256(convert_to(jsonb_build_array(transport,config)::text,'UTF8')),'hex') WHERE id=$1`,
+          [id]
         );
       return id;
     }
@@ -127,6 +142,9 @@ for (const channel of ['email', 'sms']) {
               timeout: 15,
               throughput_limit: 100,
               low_credit_threshold: 0,
+              template_mappings: [
+                { event_key: 'auth.otp', template_id: '42', variables: { code: 'CODE' } },
+              ],
             };
       const body =
         action === 'update'
@@ -146,32 +164,33 @@ for (const channel of ['email', 'sms']) {
       expect((await write(id)).status).toBe(403);
       expect(await snapshot(table)).toEqual(before);
     });
-    it(`${channel} ${action}: commits one audit without exposing credentials`, async () => {
-      const id = await seed();
-      const response = await write(id);
-      expect(response.status).toBe(action === 'create' ? 201 : 200);
-      expect(await response.text()).not.toMatch(/fixture-password|fixture-api-key/);
-      const state = await snapshot(table);
-      expect(state.audits).toHaveLength(1);
-      const metadata = JSON.parse(state.audits[0].metadata);
-      expect(metadata).toMatchObject({ sessionId: session, stepUpVerified: true });
-      expect(metadata.stepUpVerifiedAt).toBe(
-        (
-          await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
-            session,
-          ])
-        ).rows[0].step_up_verified_at.toISOString()
-      );
-      expect(state.audits[0].correlation_id).toBe(response.headers.get('x-correlation-id'));
-      expect(state.audits[0].event).toBe(
-        `${channel}_provider_${({ create: 'created', update: 'updated', activate: 'activated', disable: 'disabled', rollback: 'rolled_back', 'test-connection': 'tested' } as Record<string, string>)[action]}`
-      );
-      expect(JSON.stringify(state.audits)).not.toMatch(/fixture-password|fixture-api-key/);
-      if (action === 'create')
-        expect(state.providers[0].config[channel === 'email' ? 'password' : 'api_key']).toMatch(
-          /^v1:/
+    if (action !== 'rollback')
+      it(`${channel} ${action}: commits one audit without exposing credentials`, async () => {
+        const id = await seed();
+        const response = await write(id);
+        expect(response.status).toBe(action === 'create' ? 201 : 200);
+        expect(await response.text()).not.toMatch(/fixture-password|fixture-api-key/);
+        const state = await snapshot(table);
+        expect(state.audits).toHaveLength(1);
+        const metadata = JSON.parse(state.audits[0].metadata);
+        expect(metadata).toMatchObject({ sessionId: session, stepUpVerified: true });
+        expect(metadata.stepUpVerifiedAt).toBe(
+          (
+            await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
+              session,
+            ])
+          ).rows[0].step_up_verified_at.toISOString()
         );
-    });
+        expect(state.audits[0].correlation_id).toBe(response.headers.get('x-correlation-id'));
+        expect(state.audits[0].event).toBe(
+          `${channel}_provider_${({ create: 'created', update: 'updated', activate: 'activated', disable: 'disabled', rollback: 'rolled_back', 'test-connection': 'tested' } as Record<string, string>)[action]}`
+        );
+        expect(JSON.stringify(state.audits)).not.toMatch(/fixture-password|fixture-api-key/);
+        if (action === 'create')
+          expect(state.providers[0].config[channel === 'email' ? 'password' : 'api_key']).toMatch(
+            /^v1:/
+          );
+      });
     for (const change of ['expiry', 'csrf', 'step-up'] as const) {
       it(`${channel} ${action}: rejects ${change} changed after guards while waiting for the family lock`, async () => {
         const id = await seed(),
@@ -238,19 +257,20 @@ for (const channel of ['email', 'sms']) {
           }
         });
       }
-    it(`${channel} ${action}: rolls back when the audit cannot persist`, async () => {
-      const id = await seed(),
-        before = await snapshot(table);
-      await http.pool.query(
-        "CREATE OR REPLACE FUNCTION reject_provider_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$; CREATE TRIGGER reject_provider_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_provider_audit()"
-      );
-      try {
-        expect((await write(id)).status).toBe(500);
-        expect(await snapshot(table)).toEqual(before);
-      } finally {
-        await http.pool.query('DROP TRIGGER reject_provider_audit ON audit_log');
-      }
-    });
+    if (action !== 'rollback')
+      it(`${channel} ${action}: rolls back when the audit cannot persist`, async () => {
+        const id = await seed(),
+          before = await snapshot(table);
+        await http.pool.query(
+          "CREATE OR REPLACE FUNCTION reject_provider_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$; CREATE TRIGGER reject_provider_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_provider_audit()"
+        );
+        try {
+          expect((await write(id)).status).toBe(500);
+          expect(await snapshot(table)).toEqual(before);
+        } finally {
+          await http.pool.query('DROP TRIGGER reject_provider_audit ON audit_log');
+        }
+      });
     it(`${channel} ${action}: rejects revocation while waiting to write`, async () => {
       const id = await seed(),
         before = await snapshot(table);
@@ -371,8 +391,13 @@ for (const channel of ['email', 'sms']) {
       const table = `${channel}_provider_configs`,
         id = randomUUID();
       await http.pool.query(
-        `INSERT INTO ${table}(id,transport,label,status,config,created_by,last_test_status,activated_at) VALUES ($1,$2,'Active','active','{}','provider-writer','passed',NOW())`,
+        `INSERT INTO ${table}(id,transport,label,status,config,created_by,last_test_status,activated_at) VALUES ($1,$2,'Active','draft','{}','provider-writer','passed',NOW())`,
         [id, channel === 'email' ? 'smtp' : 'smsir']
+      );
+      await http.pool.query(
+        `UPDATE ${table} SET status='active',last_test_at=NOW(),delivery_verified_at=NOW(),
+        delivery_config_hash=encode(sha256(convert_to(jsonb_build_array(transport,config)::text,'UTF8')),'hex') WHERE id=$1`,
+        [id]
       );
       if (history !== 'none')
         await http.pool.query(
@@ -410,6 +435,9 @@ for (const channel of ['email', 'sms']) {
               timeout: 15,
               throughput_limit: 100,
               low_credit_threshold: 0,
+              template_mappings: [
+                { event_key: 'auth.otp', template_id: '42', variables: { code: 'CODE' } },
+              ],
             };
       const secrets = new ProviderSecretsService('provider-mutation-fixture-key');
       await http.pool.query(

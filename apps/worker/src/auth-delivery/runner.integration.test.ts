@@ -266,8 +266,8 @@ const smsConfig = {
 };
 async function smsProvider(config: unknown = smsConfig) {
   await pool.query(
-    `INSERT INTO sms_provider_configs(transport,label,status,config,created_by,last_test_status)
- VALUES ('smsir','Fixture','active',$1,'delivery-user','passed')`,
+    `INSERT INTO sms_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+ VALUES ('smsir','Fixture','active',$1,'delivery-user','passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('smsir'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
     [config]
   );
 }
@@ -347,8 +347,8 @@ it('normalizes Iranian mobile numbers, sends the exact OTP mapping and enforces 
 });
 it('sends OTP and activation email through the real shared adapter with stable idempotency', async () => {
   await pool.query(
-    `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status)
- VALUES ('resend','Fixture','active',$1,'delivery-user','passed')`,
+    `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+ VALUES ('resend','Fixture','active',$1,'delivery-user','passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
     [{ api_key: 'fixture-mail-key', from_email: 'sender@example.test' }]
   );
   const request = vi.fn<typeof fetch>(

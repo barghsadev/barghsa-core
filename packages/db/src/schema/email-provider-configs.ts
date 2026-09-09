@@ -74,6 +74,10 @@ export const emailProviderConfigs = pgTable(
     /** When the most recent test message was sent. */
     lastTestAt: timestamptz('last_test_at'),
 
+    /** Successful verified-contact delivery, bound to the exact saved config and test. */
+    deliveryVerifiedAt: timestamptz('delivery_verified_at'),
+    deliveryConfigHash: text('delivery_config_hash'),
+
     /** Outcome of the most recent test-send attempt. */
     lastTestStatus: text('last_test_status', {
       enum: ['pending', 'passed', 'failed'],

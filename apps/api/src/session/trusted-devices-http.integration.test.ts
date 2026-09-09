@@ -155,8 +155,8 @@ it('revokes durably, audits once without secrets and requires OTP on the next lo
   expect(JSON.stringify(audit)).not.toContain(fingerprint);
   expect(JSON.stringify(audit)).not.toContain(token);
   await http.pool.query(
-    `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status)
-    VALUES ('resend','Fixture mailbox','active',$1,'trust-owner','passed')`,
+    `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+    VALUES ('resend','Fixture mailbox','active',$1,'trust-owner','passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
     [JSON.stringify({ api_key: 'fixture-only-key', from_email: 'auth@example.test' })]
   );
   const login = await fetchWithPreauth(`${http.base}/api/auth/login`, {

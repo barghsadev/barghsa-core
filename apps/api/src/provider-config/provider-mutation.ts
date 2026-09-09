@@ -55,6 +55,20 @@ export async function mutateProvider<T extends { id: string; status: string }>(
     await client.query('ROLLBACK').catch(() => {});
     if (
       error instanceof Error &&
+      (error as { code?: string }).code === '23514' &&
+      (error as { constraint?: string }).constraint === 'provider_delivery_proof_required'
+    ) {
+      throw new HttpException(
+        {
+          statusCode: 409,
+          error: ErrorCodes.CONFLICT_STATE.code,
+          message: 'Provider activation requires a new successful delivery test',
+        },
+        409
+      );
+    }
+    if (
+      error instanceof Error &&
       (error as { code?: string; constraint?: string }).code === '23505' &&
       (error as { constraint?: string }).constraint === `uq_${channel}_provider_active`
     ) {

@@ -31,6 +31,8 @@ function buildHarness() {
   const exec = async (text: string, params?: unknown[]): Promise<any> => {
     queries.push(text);
     const lower = text.toLowerCase();
+    if (lower.includes('from users'))
+      return { rows: [{ username: 'admin@example.test', mobile: '+989121234567' }] };
     if (lower.includes('from sessions'))
       return {
         rows: [
@@ -50,8 +52,14 @@ function buildHarness() {
     const idParam = (): string => String(params![0]);
 
     // SELECT DISTINCT event_key ... from notification_templates
-    if (lower.includes('from notification_templates') && lower.includes('distinct')) {
-      return { rows: [...activeTemplateEvents].map((event_key) => ({ event_key })) };
+    if (lower.includes('from notification_templates')) {
+      return {
+        rows: [...activeTemplateEvents].map((event_key) => ({
+          event_key,
+          locale: 'en',
+          variables: ['code', 'amount'],
+        })),
+      };
     }
 
     // INSERT (new draft): params = [id, transport, label, config, createdBy, supersedesId]
@@ -103,7 +111,8 @@ function buildHarness() {
     if (lower.includes('set last_test_status')) {
       const r = rows.get(String(params![2] as string));
       if (r) {
-        r.last_test_status = params![0];
+        r.last_test_status =
+          params![0] === 'passed' && params![3] !== true ? 'pending' : params![0];
         r.last_test_error = params![1] ?? null;
         r.last_test_at = new Date('2026-01-01T00:00:00Z');
       }
@@ -181,7 +190,7 @@ function buildHarness() {
 function makeService(h: ReturnType<typeof buildHarness>) {
   return new SmsProviderConfigService(
     h.pool as any,
-    undefined,
+    { test: vi.fn(async () => ({ ok: true })) } as any,
     new ProviderSecretsService('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
   );
 }
@@ -192,6 +201,7 @@ const VALID_CONFIG = {
   timeout: 15,
   throughput_limit: 100,
   low_credit_threshold: 0,
+  template_mappings: [{ event_key: 'otp:login', template_id: '2001', variables: { code: 'CODE' } }],
 };
 
 describe('SmsProviderConfigService (T-09.06.02)', () => {
@@ -238,7 +248,7 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
       { label: 'x', config: VALID_CONFIG, createdBy: 'a1' },
       sessionFor('a1')
     );
-    await svc.recordTest(created.id, { passed: true });
+    await svc.recordTest(created.id, { passed: true, deliveryVerified: true });
     const activated = await svc.activate(created.id, 'admin-1', sessionFor('admin-1'));
     expect(activated.status).toBe('active');
     expect(activated.activatedBy).toBe('admin-1');
@@ -249,14 +259,14 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
       { label: 'one', config: VALID_CONFIG, createdBy: 'a1' },
       sessionFor('a1')
     );
-    await svc.recordTest(c1.id, { passed: true });
+    await svc.recordTest(c1.id, { passed: true, deliveryVerified: true });
     await svc.activate(c1.id, 'a1', sessionFor('a1'));
 
     const c2 = await svc.create(
       { label: 'two', config: VALID_CONFIG, createdBy: 'a1' },
       sessionFor('a1')
     );
-    await svc.recordTest(c2.id, { passed: true });
+    await svc.recordTest(c2.id, { passed: true, deliveryVerified: true });
     const activated = await svc.activate(c2.id, 'a1', sessionFor('a1'));
 
     expect(activated.status).toBe('active');
@@ -275,7 +285,7 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
       { label: 'x', config: cfg, createdBy: 'a1' },
       sessionFor('a1')
     );
-    await svc.recordTest(created.id, { passed: true });
+    await svc.recordTest(created.id, { passed: true, deliveryVerified: true });
     const activated = await svc.activate(created.id, 'admin-1', sessionFor('admin-1'));
     expect(activated.status).toBe('active');
   });
@@ -291,7 +301,7 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
       { label: 'x', config: cfg, createdBy: 'a1' },
       sessionFor('a1')
     );
-    await svc.recordTest(created.id, { passed: true });
+    await svc.recordTest(created.id, { passed: true, deliveryVerified: true });
     const err = await svc.activate(created.id, 'admin-1', sessionFor('admin-1')).catch((e) => e);
     expect(err).toBeInstanceOf(HttpException);
     expect(err.getResponse().message).toContain('unknown:event');
@@ -302,13 +312,15 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
     // (simulated by removing it from the live-template set).
     const sourceCfg = {
       ...VALID_CONFIG,
-      template_mappings: [{ event_key: 'otp:login', template_id: '2001' }],
+      template_mappings: [
+        { event_key: 'otp:login', template_id: '2001', variables: { code: 'CODE' } },
+      ],
     };
     const source = await svc.create(
       { label: 'old', config: sourceCfg, createdBy: 'a1' },
       sessionFor('a1')
     );
-    await svc.recordTest(source.id, { passed: true });
+    await svc.recordTest(source.id, { passed: true, deliveryVerified: true });
     await svc.activate(source.id, 'a1', sessionFor('a1'));
     const replacement = await svc.create(
       {
@@ -318,7 +330,7 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
       },
       sessionFor('a1')
     );
-    await svc.recordTest(replacement.id, { passed: true });
+    await svc.recordTest(replacement.id, { passed: true, deliveryVerified: true });
     await svc.activate(replacement.id, 'a1', sessionFor('a1'));
     h.activeTemplateEvents.delete('otp:login');
 
@@ -332,13 +344,15 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
   it('rollback succeeds when the source template mappings still have live events', async () => {
     const sourceCfg = {
       ...VALID_CONFIG,
-      template_mappings: [{ event_key: 'otp:login', template_id: '2001' }],
+      template_mappings: [
+        { event_key: 'otp:login', template_id: '2001', variables: { code: 'CODE' } },
+      ],
     };
     const source = await svc.create(
       { label: 'old', config: sourceCfg, createdBy: 'a1' },
       sessionFor('a1')
     );
-    await svc.recordTest(source.id, { passed: true });
+    await svc.recordTest(source.id, { passed: true, deliveryVerified: true });
     const activated = await svc.activate(source.id, 'a1', sessionFor('a1'));
     expect(activated.status).toBe('active');
 
@@ -351,7 +365,7 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
       },
       sessionFor('a1')
     );
-    await svc.recordTest(replacement.id, { passed: true });
+    await svc.recordTest(replacement.id, { passed: true, deliveryVerified: true });
     await svc.activate(replacement.id, 'a1', sessionFor('a1'));
     const rolledBack = await svc.rollback(source.id, 'admin-1', sessionFor('admin-1'));
     expect(rolledBack.status).toBe('active');

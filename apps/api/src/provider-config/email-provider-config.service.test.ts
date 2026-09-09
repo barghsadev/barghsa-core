@@ -226,7 +226,7 @@ function buildHarness() {
   );
   const service = new EmailProviderConfigService(
     pool as never,
-    undefined,
+    { test: vi.fn(async () => ({ ok: true })) } as never,
     undefined,
     secretsService
   );
@@ -283,7 +283,7 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       },
       sessionFor('admin-1')
     );
-    const tested = await service.recordTest(created.id, { passed: true });
+    const tested = await service.recordTest(created.id, { passed: true, deliveryVerified: true });
     expect(tested.lastTestStatus).toBe('passed');
 
     const active = await service.activate(created.id, 'admin-1', sessionFor('admin-1'));
@@ -434,14 +434,14 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       { transport: 'resend', label: 'A', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(a.id, { passed: true });
+    await service.recordTest(a.id, { passed: true, deliveryVerified: true });
     await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
 
     const b = await service.create(
       { transport: 'resend', label: 'B', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(b.id, { passed: true });
+    await service.recordTest(b.id, { passed: true, deliveryVerified: true });
     const active = await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
 
     expect(active.status).toBe('active');
@@ -455,14 +455,14 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       { transport: 'resend', label: 'A', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(a.id, { passed: true });
+    await service.recordTest(a.id, { passed: true, deliveryVerified: true });
     await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
 
     const b = await service.create(
       { transport: 'resend', label: 'B', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(b.id, { passed: true });
+    await service.recordTest(b.id, { passed: true, deliveryVerified: true });
     const active = await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
 
     expect(active.supersedesId).toBe(a.id);
@@ -475,14 +475,14 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       { transport: 'resend', label: 'A', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(a.id, { passed: true });
+    await service.recordTest(a.id, { passed: true, deliveryVerified: true });
     await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
 
     const b = await service.create(
       { transport: 'smtp', label: 'B', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(b.id, { passed: true });
+    await service.recordTest(b.id, { passed: true, deliveryVerified: true });
     await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
     // a is superseded now
     await expect(service.activate(a.id, 'admin-1', sessionFor('admin-1'))).rejects.toMatchObject({
@@ -496,7 +496,7 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       { transport: 'smtp', label: 'A', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(a.id, { passed: true });
+    await service.recordTest(a.id, { passed: true, deliveryVerified: true });
     await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
     await expect(service.disable(a.id, 'admin-1', sessionFor('admin-1'))).rejects.toMatchObject({
       status: 409,
@@ -510,13 +510,13 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       { transport: 'smtp', label: 'A', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(a.id, { passed: true });
+    await service.recordTest(a.id, { passed: true, deliveryVerified: true });
     await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
     const b = await service.create(
       { transport: 'resend', label: 'B', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(b.id, { passed: true });
+    await service.recordTest(b.id, { passed: true, deliveryVerified: true });
     const activeB = await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
     // A superseded row cannot deliver an OTP.
     await expect(
@@ -530,12 +530,12 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       {
         transport: 'smtp',
         label: 'Old SMTP',
-        config: { host: 'old' },
+        config: { host: 'old', from_email: 'sender@example.test' },
         createdBy: 'a',
       },
       sessionFor('a')
     );
-    await service.recordTest(a.id, { passed: true });
+    await service.recordTest(a.id, { passed: true, deliveryVerified: true });
     await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
 
     const b = await service.create(
@@ -547,7 +547,7 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       },
       sessionFor('a')
     );
-    await service.recordTest(b.id, { passed: true });
+    await service.recordTest(b.id, { passed: true, deliveryVerified: true });
     await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
     // a is superseded
     const rolled = await service.rollback(a.id, 'admin-1', sessionFor('admin-1'));
@@ -563,7 +563,7 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
       { transport: 'smtp', label: 'A', config: {}, createdBy: 'a' },
       sessionFor('a')
     );
-    await service.recordTest(a.id, { passed: true });
+    await service.recordTest(a.id, { passed: true, deliveryVerified: true });
     await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
     expect(queries).toContain('BEGIN');
     expect(queries).toContain('COMMIT');

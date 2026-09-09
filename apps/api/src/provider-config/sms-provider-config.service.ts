@@ -85,6 +85,8 @@ export interface UpdateSmsProviderInput {
 export interface RecordSmsTestInput {
   /** True only after a real test-send succeeded (see SmsirConnectionTesterService). */
   passed: boolean;
+  /** Internal sender evidence; never accepted from a client-supplied result. */
+  deliveryVerified?: boolean;
   /** Safe, non-secret error text when `passed` is false. */
   error?: string;
 }
@@ -157,7 +159,10 @@ const SELECT_COLUMNS = `id,
   activated_at AS "activatedAt",
   activated_by AS "activatedBy",
   last_test_at AS "lastTestAt",
-  last_test_status AS "lastTestStatus",
+  CASE WHEN status = 'draft' AND last_test_status = 'passed' AND NOT COALESCE(
+    delivery_verified_at = last_test_at AND
+    delivery_config_hash = encode(sha256(convert_to(jsonb_build_array(transport, config)::text, 'UTF8')), 'hex'), false)
+    THEN 'pending' ELSE last_test_status END AS "lastTestStatus",
   last_test_error AS "lastTestError",
   supersedes_id AS "supersedesId",
   created_at AS "createdAt",
@@ -301,7 +306,9 @@ export class SmsProviderConfigService {
         const encryptedPatch = this.secrets.encryptConfig(SMS_PROVIDER_TRANSPORT, input.config);
         params.push(encryptedPatch);
         sets.push(`config = COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb`);
-        sets.push("last_test_status = 'pending', last_test_at = NULL, last_test_error = NULL");
+        sets.push(
+          "last_test_status = 'pending', last_test_at = NULL, last_test_error = NULL, delivery_verified_at = NULL, delivery_config_hash = NULL"
+        );
       }
       if (sets.length > 0) {
         params.push(id);
@@ -317,7 +324,7 @@ export class SmsProviderConfigService {
     });
   }
 
-  /** Record the outcome of a connection test. Only drafts may be tested. */
+  /** Record a server outcome; proof requires verified-contact delivery through all mappings. */
   async recordTest(
     id: string,
     input: RecordSmsTestInput,
@@ -331,10 +338,19 @@ export class SmsProviderConfigService {
 
     const testStatus = input.passed ? 'passed' : 'failed';
     await query.query(
-      `UPDATE sms_provider_configs
-          SET last_test_status = $1, last_test_error = $2, last_test_at = NOW()
-        WHERE id = $3`,
-      [testStatus, input.passed ? null : (input.error ?? null), id]
+      `WITH tested AS (SELECT clock_timestamp() AS at)
+       UPDATE sms_provider_configs
+          SET last_test_status = $1, last_test_error = $2, last_test_at = tested.at,
+              delivery_verified_at = CASE WHEN $4 THEN tested.at ELSE NULL END,
+              delivery_config_hash = CASE WHEN $4
+                THEN encode(sha256(convert_to(jsonb_build_array(transport, config)::text, 'UTF8')), 'hex') ELSE NULL END
+         FROM tested WHERE id = $3`,
+      [
+        testStatus,
+        input.passed ? null : (input.error ?? null),
+        id,
+        input.passed && input.deliveryVerified === true,
+      ]
     );
     const row = await this.findById(id, query);
     if (!row) throw new Error('Failed to read updated SMS provider config');
@@ -405,11 +421,24 @@ export class SmsProviderConfigService {
       );
     }
     const mappings = parsed.config.template_mappings ?? [];
-    if (mappings.length === 0) return;
-
-    const available = await this.availableTemplateEventKeys(query);
+    if (mappings.length === 0) {
+      throw new HttpException(
+        SmsProviderErrors.templateMappingInvalid('No SMS mappings configured'),
+        409
+      );
+    }
+    const templates = (
+      await query.query(
+        `SELECT event_key, locale, variables FROM notification_templates
+       WHERE is_active = true AND channel = 'sms' ORDER BY id FOR SHARE`
+      )
+    ).rows as { event_key: string; locale: string; variables: (string | { name: string })[] }[];
+    const available = new Set(templates.map((template) => template.event_key));
     const problems: string[] = [];
+    const events = new Set<string>();
     for (const m of mappings) {
+      if (events.has(m.event_key)) problems.push(`event "${m.event_key}" is mapped more than once`);
+      events.add(m.event_key);
       if (!m.template_id || m.template_id.trim().length === 0) {
         problems.push(`event "${m.event_key}" has no SMS.ir TemplateId`);
       }
@@ -417,6 +446,22 @@ export class SmsProviderConfigService {
         problems.push(
           `event "${m.event_key}" has no active notification template (${[...available].join(', ') || 'none'})`
         );
+      }
+      const variables = Object.entries(m.variables ?? {});
+      if (variables.length === 0) problems.push(`event "${m.event_key}" has no variable mappings`);
+      if (new Set(variables.map(([, name]) => name)).size !== variables.length) {
+        problems.push(`event "${m.event_key}" has duplicate SMS.ir parameters`);
+      }
+      for (const template of templates.filter((item) => item.event_key === m.event_key)) {
+        const allowed = new Set(
+          template.variables.map((v) => (typeof v === 'string' ? v : v.name))
+        );
+        for (const [name] of variables) {
+          if (!allowed.has(name))
+            problems.push(
+              `event "${m.event_key}" variable "${name}" is unavailable in ${template.locale}`
+            );
+        }
       }
     }
     if (problems.length > 0) {
@@ -475,6 +520,8 @@ export class SmsProviderConfigService {
          VALUES ($1, $2, $3, 'draft', $4, $5, $6)`,
         [id, SMS_PROVIDER_TRANSPORT, `${source.label} (rollback)`, config, createdBy, null]
       );
+      const tested = await this.testOnClient(id, undefined, undefined, client, session);
+      if (!tested.ok) throw new HttpException(SmsProviderErrors.testRequired(), 409);
       const before = await client.query(
         `UPDATE sms_provider_configs SET status = 'superseded'
           WHERE status = 'active' RETURNING id`
@@ -516,58 +563,83 @@ export class SmsProviderConfigService {
     error: string | null;
     result: SmsProviderConfigResult;
   }> {
-    return testProvider(this.db, actorUserId, session, 'sms', async (client) => {
-      const existing = await this.findById(id, client, true);
-      if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
-      if (existing.status !== 'draft') {
-        throw new HttpException(SmsProviderErrors.notEditable(), 409);
-      }
+    return testProvider(this.db, actorUserId, session, 'sms', (client) =>
+      this.testOnClient(id, recipient, eventKey, client, session)
+    );
+  }
 
-      if (!this.smsirTester) {
-        const recorded = await this.recordTest(
-          id,
-          {
-            passed: false,
-            error: 'SMS connection tester is not available',
-          },
-          client
-        );
-        return { ok: false, error: 'SMS connection tester is not available', result: recorded };
-      }
+  private async testOnClient(
+    id: string,
+    recipient: string | undefined,
+    eventKey: string | undefined,
+    client: Pick<ProviderPool, 'query'>,
+    session: ProviderMutationSession
+  ): Promise<{ ok: boolean; error: string | null; result: SmsProviderConfigResult }> {
+    const existing = await this.findById(id, client, true);
+    if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
+    if (existing.status !== 'draft') {
+      throw new HttpException(SmsProviderErrors.notEditable(), 409);
+    }
 
-      const saved = await this.readConfig(id, client);
-      const parsed = parseSmsirConfig(saved);
-      if (!parsed.ok) {
-        const recorded = await this.recordTest(
-          id,
-          {
-            passed: false,
-            error: `Invalid SMS.ir configuration: ${parsed.error}`,
-          },
-          client
-        );
-        return {
-          ok: false,
-          error: `Invalid SMS.ir configuration: ${parsed.error}`,
-          result: recorded,
-        };
-      }
-
-      const target = await resolveProviderTestRecipient(client, session, 'sms', recipient);
-      await requireSessionStepUp(client, session);
-      const outcome = await this.smsirTester.test(parsed.config, target, eventKey, async () => {
-        await requireSessionStepUp(client, session);
-      });
+    if (!this.smsirTester) {
       const recorded = await this.recordTest(
         id,
         {
-          passed: outcome.ok,
-          ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+          passed: false,
+          error: 'SMS connection tester is not available',
         },
         client
       );
-      return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
-    });
+      return { ok: false, error: 'SMS connection tester is not available', result: recorded };
+    }
+
+    const saved = await this.readConfig(id, client);
+    const parsed = parseSmsirConfig(saved);
+    if (!parsed.ok) {
+      const recorded = await this.recordTest(
+        id,
+        {
+          passed: false,
+          error: `Invalid SMS.ir configuration: ${parsed.error}`,
+        },
+        client
+      );
+      return {
+        ok: false,
+        error: `Invalid SMS.ir configuration: ${parsed.error}`,
+        result: recorded,
+      };
+    }
+
+    const target = await resolveProviderTestRecipient(client, session, 'sms', recipient);
+    await this.validateTemplateMappings(id, client);
+    const mappings = [...(parsed.config.template_mappings ?? [])];
+    if (eventKey && !mappings.some((mapping) => mapping.event_key === eventKey)) {
+      throw new HttpException(
+        SmsProviderErrors.templateMappingInvalid('Selected event is not mapped'),
+        409
+      );
+    }
+    // A selected event controls order only; activation requires every mapping.
+    mappings.sort((a, b) => Number(b.event_key === eventKey) - Number(a.event_key === eventKey));
+    await requireSessionStepUp(client, session);
+    let outcome: { ok: boolean; error?: string } = { ok: true };
+    for (const mapping of mappings) {
+      outcome = await this.smsirTester.test(parsed.config, target, mapping.event_key, async () => {
+        await requireSessionStepUp(client, session);
+      });
+      if (!outcome.ok) break;
+    }
+    const recorded = await this.recordTest(
+      id,
+      {
+        passed: outcome.ok,
+        deliveryVerified: outcome.ok,
+        ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+      },
+      client
+    );
+    return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
   }
 
   /* ------------------------- Transaction + helpers ----------------------- */

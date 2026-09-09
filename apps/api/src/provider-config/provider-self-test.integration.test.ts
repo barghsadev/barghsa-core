@@ -41,6 +41,13 @@ beforeEach(async () => {
   await http.pool.query('DELETE FROM email_provider_configs');
   await http.pool.query('DELETE FROM sms_provider_configs');
   await http.pool.query('DELETE FROM audit_log WHERE user_id=$1', [actor.userId]);
+  await http.pool.query('DELETE FROM notification_templates');
+  for (const event of ['auth.otp', 'invoice.created'])
+    await http.pool.query(
+      `INSERT INTO notification_templates(id,event_key,channel,locale,body_template,variables,status,is_active,version,published_at)
+       VALUES($1,$2,'sms','en','Code {{code}}','["code"]','active',true,1,NOW())`,
+      [randomUUID(), event]
+    );
   await http.pool.query('UPDATE users SET username=$2,email=$2,mobile=$3 WHERE user_id=$1', [
     actor.userId,
     email,
@@ -120,7 +127,203 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
         ])
       ).rows,
     });
-    return { test, send, snapshot, probe, dispatch };
+    return { test, send, snapshot, probe, dispatch, service, row, config };
+  }
+  it(`${transport}: legacy passed results cannot activate; a current self-test supplies proof`, async () => {
+    const { service, row, test } = await fixture();
+    await http.pool.query(
+      `UPDATE ${channel}_provider_configs SET last_test_status='passed',last_test_at=NOW() WHERE id=$1`,
+      [row.id]
+    );
+    expect((await service.get(row.id)).lastTestStatus).toBe('pending');
+    await expect(service.activate(row.id, actor.userId, actor)).rejects.toMatchObject({
+      status: 409,
+    });
+    expect((await test()).ok).toBe(true);
+    const proof = (
+      await http.pool.query(
+        `SELECT delivery_verified_at=last_test_at AS same_time,
+      delivery_config_hash=encode(sha256(convert_to(jsonb_build_array(transport,config)::text,'UTF8')),'hex') AS same_config
+      FROM ${channel}_provider_configs WHERE id=$1`,
+        [row.id]
+      )
+    ).rows[0];
+    expect(proof).toEqual({ same_time: true, same_config: true });
+    expect((await service.activate(row.id, actor.userId, actor)).status).toBe('active');
+  });
+  it(`${transport}: an old writer changing the test time invalidates proof at database precision`, async () => {
+    const { service, row, test } = await fixture();
+    await test();
+    await http.pool.query(
+      `UPDATE ${channel}_provider_configs SET last_test_at=last_test_at+INTERVAL '1 microsecond' WHERE id=$1`,
+      [row.id]
+    );
+    expect((await service.get(row.id)).lastTestStatus).toBe('pending');
+    await expect(service.activate(row.id, actor.userId, actor)).rejects.toMatchObject({
+      status: 409,
+    });
+    await expect(
+      http.pool.query(`UPDATE ${channel}_provider_configs SET status='active' WHERE id=$1`, [
+        row.id,
+      ])
+    ).rejects.toMatchObject({ code: '23514', constraint: 'provider_delivery_proof_required' });
+  });
+  it(`${transport}: old-writer configuration changes cannot reuse successful delivery`, async () => {
+    const { service, row, test } = await fixture();
+    await test();
+    await http.pool.query(
+      `UPDATE ${channel}_provider_configs SET config=config || '{"changed":true}'::jsonb WHERE id=$1`,
+      [row.id]
+    );
+    expect((await service.get(row.id)).lastTestStatus).toBe('pending');
+    await expect(service.activate(row.id, actor.userId, actor)).rejects.toMatchObject({
+      status: 409,
+    });
+  });
+  it(`${transport}: a failed retest clears earlier activation proof`, async () => {
+    const { service, row, test, send } = await fixture();
+    await test();
+    send.mockResolvedValue({ ok: false });
+    expect((await test()).ok).toBe(false);
+    const proof = (
+      await http.pool.query(
+        `SELECT delivery_verified_at,delivery_config_hash FROM ${channel}_provider_configs WHERE id=$1`,
+        [row.id]
+      )
+    ).rows[0];
+    expect(proof).toEqual({ delivery_verified_at: null, delivery_config_hash: null });
+    await expect(service.activate(row.id, actor.userId, actor)).rejects.toMatchObject({
+      status: 409,
+    });
+  });
+  for (const outcome of ['passed', 'failed', 'audit-failed'] as const) {
+    it(`${transport}: rollback ${outcome} retests legacy settings and preserves atomic recovery`, async () => {
+      const { service, row, test, send } = await fixture();
+      await test();
+      await service.activate(row.id, actor.userId, actor);
+      await http.pool.query(
+        `UPDATE ${channel}_provider_configs SET status='superseded',delivery_verified_at=NULL,delivery_config_hash=NULL WHERE id=$1`,
+        [row.id]
+      );
+      const replacement = await fixture();
+      await replacement.test();
+      await replacement.service.activate(replacement.row.id, actor.userId, actor);
+      const state = async () => ({
+        providers: (await http.pool.query(`SELECT * FROM ${channel}_provider_configs ORDER BY id`))
+          .rows,
+        audit: (
+          await http.pool.query('SELECT * FROM audit_log WHERE user_id=$1 ORDER BY id', [
+            actor.userId,
+          ])
+        ).rows,
+      });
+      const before = await state();
+      send.mockClear();
+      if (outcome === 'failed') send.mockResolvedValue({ ok: false });
+      if (outcome === 'audit-failed')
+        await http.pool
+          .query(`CREATE FUNCTION reject_proof_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$;
+        CREATE TRIGGER reject_proof_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_proof_audit()`);
+      try {
+        if (outcome === 'passed') {
+          const restored = await service.rollback(row.id, actor.userId, actor);
+          expect(restored).toMatchObject({
+            status: 'active',
+            lastTestStatus: 'passed',
+            supersedesId: replacement.row.id,
+          });
+          expect(restored.id).not.toBe(row.id);
+          expect((await service.get(replacement.row.id)).status).toBe('superseded');
+          const after = await state();
+          expect(after.audit).toHaveLength(before.audit.length + 1);
+          expect(after.providers).toHaveLength(before.providers.length + 1);
+          expect(after.providers.find((p) => p.id === row.id)).toEqual(
+            before.providers.find((p) => p.id === row.id)
+          );
+        } else {
+          await expect(service.rollback(row.id, actor.userId, actor)).rejects.toBeDefined();
+          expect(await state()).toEqual(before);
+        }
+        expect(send).toHaveBeenCalledOnce();
+        expect(send.mock.calls[0]?.[1]).toBe(channel === 'email' ? email : mobile);
+      } finally {
+        if (outcome === 'audit-failed')
+          await http.pool.query(
+            'DROP TRIGGER reject_proof_audit ON audit_log; DROP FUNCTION reject_proof_audit()'
+          );
+      }
+    });
+  }
+  if (transport === 'smsir') {
+    for (const failSecond of [false, true]) {
+      it(`SMS tests every mapping even with an explicit event; second failure=${failSecond}`, async () => {
+        const { service, row, config, send } = await fixture();
+        if (!(service instanceof SmsProviderConfigService)) throw new Error('Wrong fixture');
+        await service.update(
+          row.id,
+          {
+            config: {
+              ...config,
+              template_mappings: [
+                { event_key: 'auth.otp', template_id: '42', variables: { code: 'CODE' } },
+                { event_key: 'invoice.created', template_id: '43', variables: { code: 'CODE' } },
+              ],
+            },
+          },
+          actor.userId,
+          actor
+        );
+        if (failSecond)
+          send.mockResolvedValueOnce({ ok: true }).mockResolvedValueOnce({ ok: false });
+        const result = await service.testConnection(
+          row.id,
+          undefined,
+          'invoice.created',
+          actor.userId,
+          actor
+        );
+        expect(send.mock.calls.map((call) => call[2])).toEqual(['invoice.created', 'auth.otp']);
+        expect(result.ok).toBe(!failSecond);
+        if (failSecond)
+          await expect(service.activate(row.id, actor.userId, actor)).rejects.toMatchObject({
+            status: 409,
+          });
+        else expect((await service.activate(row.id, actor.userId, actor)).status).toBe('active');
+      });
+    }
+    it('SMS activation rechecks variable availability after a successful delivery', async () => {
+      const { service, row, test } = await fixture();
+      await test();
+      await http.pool.query(
+        "UPDATE notification_templates SET variables='[]' WHERE event_key='auth.otp'"
+      );
+      await expect(service.activate(row.id, actor.userId, actor)).rejects.toMatchObject({
+        status: 409,
+      });
+      expect((await service.get(row.id)).status).toBe('draft');
+    });
+    for (const mappings of [
+      [],
+      [{ event_key: 'auth.otp', template_id: '42' }],
+      [{ event_key: 'auth.otp', template_id: '42', variables: { missing: 'CODE' } }],
+      [{ event_key: 'auth.otp', template_id: '42', variables: { code: 'CODE', other: 'CODE' } }],
+      [
+        { event_key: 'auth.otp', template_id: '42', variables: { code: 'CODE' } },
+        { event_key: 'auth.otp', template_id: '43', variables: { code: 'CODE' } },
+      ],
+    ]) {
+      it(`SMS rejects unusable mappings before sending: ${JSON.stringify(mappings)}`, async () => {
+        const { service, row, config, test, send } = await fixture();
+        await service.update(
+          row.id,
+          { config: { ...config, template_mappings: mappings } },
+          actor.userId,
+          actor
+        );
+        await expect(test()).rejects.toMatchObject({ status: 409 });
+        expect(send).not.toHaveBeenCalled();
+      });
+    }
   }
   it(`${transport}: rechecks session expiry after a delayed provider probe`, async () => {
     const { test, probe, dispatch, snapshot } = await fixture(),

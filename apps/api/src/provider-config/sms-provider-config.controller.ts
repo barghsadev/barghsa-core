@@ -42,8 +42,8 @@ export const RecordSmsTestSchema = z.object({
 
 /**
  * Optional body for `POST :id/test-connection`. `recipient` is the admin's
- * verified mobile number to receive the real test SMS; `eventKey` selects the
- * mapped template to send (defaults to the first mapping). An omitted
+ * verified mobile number to receive the real test SMS messages; `eventKey`
+ * selects which mapping runs first. Every configured mapping must pass. An omitted
  * recipient uses the admin's current verified mobile. Every successful
  * test must include a live send; another person's contact is forbidden.
  */
@@ -190,9 +190,10 @@ export class SmsProviderConfigController {
   @ApiOperation({
     summary: 'Run a live SMS.ir credential/template check and record the outcome',
     description:
-      'Validates draft SMS.ir credentials and credit, then sends through the mapped template ' +
+      'Validates draft SMS.ir credentials and credit, then sends through every configured mapping ' +
       'to the current staff member’s verified mobile. An omitted recipient uses that contact; ' +
-      'an explicit recipient must match it. Persists the server-produced test outcome.',
+      'an explicit recipient must match it. An eventKey runs that mapping first. ' +
+      'Activation requires successful delivery through all mappings for the saved configuration.',
   })
   @ApiResponse({ status: 200, description: 'Test outcome with the updated config state.' })
   async testConnection(

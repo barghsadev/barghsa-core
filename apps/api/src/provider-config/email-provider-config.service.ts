@@ -96,6 +96,8 @@ export interface UpdateProviderInput {
 export interface RecordTestInput {
   /** True only after a real test-send succeeded (T-05.06.02/03 do the send). */
   passed: boolean;
+  /** Internal sender evidence; never accepted from a client-supplied result. */
+  deliveryVerified?: boolean;
   /** Safe, non-secret error text when `passed` is false. */
   error?: string;
 }
@@ -167,7 +169,10 @@ const SELECT_COLUMNS = `id,
   activated_at AS "activatedAt",
   activated_by AS "activatedBy",
   last_test_at AS "lastTestAt",
-  last_test_status AS "lastTestStatus",
+  CASE WHEN status = 'draft' AND last_test_status = 'passed' AND NOT COALESCE(
+    delivery_verified_at = last_test_at AND
+    delivery_config_hash = encode(sha256(convert_to(jsonb_build_array(transport, config)::text, 'UTF8')), 'hex'), false)
+    THEN 'pending' ELSE last_test_status END AS "lastTestStatus",
   last_test_error AS "lastTestError",
   supersedes_id AS "supersedesId",
   created_at AS "createdAt",
@@ -306,7 +311,9 @@ export class EmailProviderConfigService {
         const encryptedPatch = this.secrets.encryptConfig(existing.transport, input.config);
         params.push(encryptedPatch);
         sets.push(`config = COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb`);
-        sets.push("last_test_status = 'pending', last_test_at = NULL, last_test_error = NULL");
+        sets.push(
+          "last_test_status = 'pending', last_test_at = NULL, last_test_error = NULL, delivery_verified_at = NULL, delivery_config_hash = NULL"
+        );
       }
       if (sets.length > 0) {
         params.push(id);
@@ -323,8 +330,8 @@ export class EmailProviderConfigService {
   }
 
   /**
-   * Record the outcome of a test-send. Only drafts may be tested. A passing
-   * test marks the row as eligible for activation.
+   * Record a server test outcome. Only trusted verified-contact delivery creates
+   * activation proof, bound to this exact transport, configuration and test time.
    */
   async recordTest(
     id: string,
@@ -339,10 +346,19 @@ export class EmailProviderConfigService {
 
     const testStatus = input.passed ? 'passed' : 'failed';
     await query.query(
-      `UPDATE email_provider_configs
-          SET last_test_status = $1, last_test_error = $2, last_test_at = NOW()
-        WHERE id = $3`,
-      [testStatus, input.passed ? null : (input.error ?? null), id]
+      `WITH tested AS (SELECT clock_timestamp() AS at)
+       UPDATE email_provider_configs
+          SET last_test_status = $1, last_test_error = $2, last_test_at = tested.at,
+              delivery_verified_at = CASE WHEN $4 THEN tested.at ELSE NULL END,
+              delivery_config_hash = CASE WHEN $4
+                THEN encode(sha256(convert_to(jsonb_build_array(transport, config)::text, 'UTF8')), 'hex') ELSE NULL END
+         FROM tested WHERE id = $3`,
+      [
+        testStatus,
+        input.passed ? null : (input.error ?? null),
+        id,
+        input.passed && input.deliveryVerified === true,
+      ]
     );
     const row = await this.findById(id, query);
     if (!row) throw new Error('Failed to read updated provider config');
@@ -457,6 +473,8 @@ export class EmailProviderConfigService {
          VALUES ($1, $2, $3, 'draft', $4, $5, $6)`,
         [id, source.transport, `${source.label} (rollback)`, config, createdBy, null]
       );
+      const tested = await this.testOnClient(id, undefined, client, session);
+      if (!tested.ok) throw new HttpException(ProviderErrors.testRequired(), 409);
       const before = await client.query(
         `UPDATE email_provider_configs SET status = 'superseded'
           WHERE status = 'active' RETURNING id`
@@ -528,52 +546,43 @@ export class EmailProviderConfigService {
     error: string | null;
     result: EmailProviderConfigResult;
   }> {
-    return testProvider(this.db, actorUserId, session, 'email', async (client) => {
-      const existing = await this.findById(id, client, true);
-      if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
-      if (existing.status !== 'draft') {
-        throw new HttpException(ProviderErrors.notEditable(), 409);
-      }
+    return testProvider(this.db, actorUserId, session, 'email', (client) =>
+      this.testOnClient(id, recipient, client, session)
+    );
+  }
 
-      // T-05.06.06 — while the circuit breaker is OPEN (degraded, cooldown not
-      // elapsed), no test-send is allowed through this provider. After the
-      // cooldown the breaker allows exactly one half-open probe, which is what
-      // this connection test performs; its outcome is fed back via
-      // recordBreakerOutcome and a success resets the breaker.
-      const boundBreaker = this.circuitBreaker?.using(client);
-      const breaker = await this.breakerDecision(existing.id, boundBreaker);
-      if (!breaker.allow) {
-        throw new HttpException(
-          errBody(
-            409,
-            ErrorCodes.CONFLICT_STATE.code,
-            `Email provider is degraded by the circuit breaker; test-send paused until ${breaker.cooldownUntil.toISOString()}`
-          ),
-          409
-        );
-      }
+  private async testOnClient(
+    id: string,
+    recipient: string | undefined,
+    client: Pick<ProviderPool, 'query'>,
+    session: ProviderMutationSession
+  ): Promise<{ ok: boolean; error: string | null; result: EmailProviderConfigResult }> {
+    const existing = await this.findById(id, client, true);
+    if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
+    if (existing.status !== 'draft') {
+      throw new HttpException(ProviderErrors.notEditable(), 409);
+    }
 
-      if (existing.transport === 'resend') {
-        const outcome = await this.testResendConnection(existing.id, recipient, client, session);
-        return this.recordBreakerOutcome(
-          existing.id,
-          outcome,
-          breaker.probeToken,
-          client,
-          boundBreaker
-        );
-      }
-      if (existing.transport !== 'smtp') {
-        throw new HttpException(
-          errBody(
-            400,
-            ErrorCodes.VALIDATION_PARSE_ZOD.code,
-            `Unsupported email transport: ${existing.transport}`
-          ),
-          400
-        );
-      }
-      const outcome = await this.testSmtpConnection(existing.id, recipient, client, session);
+    // T-05.06.06 — while the circuit breaker is OPEN (degraded, cooldown not
+    // elapsed), no test-send is allowed through this provider. After the
+    // cooldown the breaker allows exactly one half-open probe, which is what
+    // this connection test performs; its outcome is fed back via
+    // recordBreakerOutcome and a success resets the breaker.
+    const boundBreaker = this.circuitBreaker?.using(client);
+    const breaker = await this.breakerDecision(existing.id, boundBreaker);
+    if (!breaker.allow) {
+      throw new HttpException(
+        errBody(
+          409,
+          ErrorCodes.CONFLICT_STATE.code,
+          `Email provider is degraded by the circuit breaker; test-send paused until ${breaker.cooldownUntil.toISOString()}`
+        ),
+        409
+      );
+    }
+
+    if (existing.transport === 'resend') {
+      const outcome = await this.testResendConnection(existing.id, recipient, client, session);
       return this.recordBreakerOutcome(
         existing.id,
         outcome,
@@ -581,7 +590,25 @@ export class EmailProviderConfigService {
         client,
         boundBreaker
       );
-    });
+    }
+    if (existing.transport !== 'smtp') {
+      throw new HttpException(
+        errBody(
+          400,
+          ErrorCodes.VALIDATION_PARSE_ZOD.code,
+          `Unsupported email transport: ${existing.transport}`
+        ),
+        400
+      );
+    }
+    const outcome = await this.testSmtpConnection(existing.id, recipient, client, session);
+    return this.recordBreakerOutcome(
+      existing.id,
+      outcome,
+      breaker.probeToken,
+      client,
+      boundBreaker
+    );
   }
 
   /**
@@ -656,6 +683,7 @@ export class EmailProviderConfigService {
       id,
       {
         passed: outcome.ok,
+        deliveryVerified: outcome.ok,
         ...(outcome.error !== undefined ? { error: outcome.error } : {}),
       },
       query
@@ -713,6 +741,7 @@ export class EmailProviderConfigService {
       id,
       {
         passed: outcome.ok,
+        deliveryVerified: outcome.ok,
         ...(outcome.error !== undefined ? { error: outcome.error } : {}),
       },
       query

@@ -38,8 +38,8 @@ beforeEach(async () => {
     "INSERT INTO users(user_id,username,password_hash) VALUES ('provider-admin','provider@example.test','test-only')"
   );
   await fixture.pool.query(
-    `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status)
-    VALUES ('resend','Controlled mailbox','active',$1,'provider-admin','passed')`,
+    `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+    VALUES ('resend','Controlled mailbox','active',$1,'provider-admin','passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
     [JSON.stringify({ api_key: 'controlled-test-key', from_email: 'auth@example.test' })]
   );
   received = [];

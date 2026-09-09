@@ -728,8 +728,8 @@ it('delivers a queued email with the recipient locale, template and durable rece
   );
   await pool.query("DELETE FROM email_suppressions WHERE lower(address)='recipient@example.test'");
   await pool.query(
-    `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,supersedes_id)
-    VALUES ('resend','Local test','active',$1,'delivery-owner','passed',NULL)`,
+    `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,supersedes_id,last_test_at,delivery_verified_at,delivery_config_hash)
+    VALUES ('resend','Local test','active',$1,'delivery-owner','passed',NULL,NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
     [JSON.stringify({ api_key: 'local-test-only', from_email: 'sender@example.test' })]
   );
   await pool.query(`INSERT INTO notification_templates(event_key,channel,locale,subject,body_template,variables,status,is_active,created_by)
@@ -890,8 +890,8 @@ it('sends stable mapped SMS parameters across a retry and shares the provider qu
     ],
   };
   await pool.query(
-    `INSERT INTO sms_provider_configs(transport,label,status,config,created_by,last_test_status,supersedes_id)
-    VALUES ('smsir','Local test','active',$1,'delivery-owner','passed',NULL)`,
+    `INSERT INTO sms_provider_configs(transport,label,status,config,created_by,last_test_status,supersedes_id,last_test_at,delivery_verified_at,delivery_config_hash)
+    VALUES ('smsir','Local test','active',$1,'delivery-owner','passed',NULL,NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('smsir'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
     [JSON.stringify(config)]
   );
   await pool.query(`INSERT INTO notification_templates(event_key,channel,locale,body_template,variables,status,is_active,created_by)
