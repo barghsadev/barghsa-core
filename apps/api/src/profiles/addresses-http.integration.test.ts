@@ -70,6 +70,50 @@ async function create(user = 'owner') {
   expect(r.status, JSON.stringify(body) + http.logs()).toBe(201);
   return body;
 }
+it.each(['create', 'update', 'delete', 'main'] as const)(
+  'rolls back an address %s when the manager session expires during audit persistence',
+  async (operation) => {
+    const first = await create(),
+      second = await create();
+    const snapshot = async () =>
+      (
+        await http.pool.query('SELECT * FROM addresses WHERE profile_id=$1 ORDER BY id', [
+          profileId,
+        ])
+      ).rows;
+    const before = await snapshot();
+    const auditBefore = (await http.pool.query('SELECT count(*)::int AS count FROM audit_log'))
+      .rows[0].count;
+    await http.pool.query(
+      "CREATE SEQUENCE address_audit_reached; CREATE FUNCTION delay_address_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event LIKE 'address_%' THEN PERFORM nextval('address_audit_reached'); PERFORM pg_sleep(2.2); END IF; RETURN NEW; END $$; CREATE TRIGGER delay_address_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_address_audit()"
+    );
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE user_id='manager'"
+    );
+    const response =
+      operation === 'create'
+        ? await request('POST', '', 'manager', {
+            provinceId,
+            cityId,
+            fullAddress: 'Late address',
+            postalCode: '1234567890',
+          })
+        : operation === 'update'
+          ? await request('PUT', '/' + second.id, 'manager', { fullAddress: 'Late change' })
+          : operation === 'delete'
+            ? await request('DELETE', '/' + second.id, 'manager')
+            : await request('POST', '/' + second.id + '/set-main', 'manager');
+    expect(
+      (await http.pool.query('SELECT is_called FROM address_audit_reached')).rows[0].is_called
+    ).toBe(true);
+    expect(response.status, await response.clone().text()).toBe(401);
+    expect(await snapshot()).toEqual(before);
+    expect(
+      (await http.pool.query('SELECT count(*)::int AS count FROM audit_log')).rows[0].count
+    ).toBe(auditBefore);
+    expect(before.find((row) => row.id === first.id).main_address).toBe(true);
+  }
+);
 it('allows managers, automatically sets the first main address, and preserves order snapshots after edit/delete', async () => {
   const first = await create('manager'),
     second = await create('manager');

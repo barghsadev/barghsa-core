@@ -505,7 +505,7 @@ export class ProfilesController {
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    const address = await this.profilesService.createAddress(userId, profileId, parsed.data);
+    const address = await this.profilesService.createAddress(req.session, profileId, parsed.data);
 
     this.logger.log(`Address ${address.id} created for profile ${profileId} by user ${userId}`);
     return address;
@@ -547,7 +547,7 @@ export class ProfilesController {
         400
       );
     const address = await this.profilesService.updateAddress(
-      userId,
+      req.session,
       profileId,
       addressId,
       parsed.data
@@ -580,7 +580,7 @@ export class ProfilesController {
     @Req() req: AuthenticatedRequest
   ) {
     const userId = req.session.userId;
-    await this.profilesService.deleteAddress(userId, profileId, addressId);
+    await this.profilesService.deleteAddress(req.session, profileId, addressId);
     this.logger.log(`Address ${addressId} deleted for profile ${profileId} by user ${userId}`);
     return { message: 'Address deleted successfully.' };
   }
@@ -605,7 +605,7 @@ export class ProfilesController {
     @Req() req: AuthenticatedRequest
   ) {
     const userId = req.session.userId;
-    const address = await this.profilesService.setMainAddress(userId, profileId, addressId);
+    const address = await this.profilesService.setMainAddress(req.session, profileId, addressId);
     this.logger.log(`Address ${addressId} set as main for profile ${profileId} by user ${userId}`);
     return address;
   }

@@ -19,6 +19,8 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
+type AddressActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+
 export interface ProfileRow {
   id: string;
   userId: string;
@@ -584,8 +586,19 @@ export class ProfilesService {
     );
   }
 
+  private async lockAddressActor(client: PoolClient, actor: AddressActor): Promise<void> {
+    const account = (
+      await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+        actor.userId,
+      ])
+    ).rows[0];
+    if (!account || account.disabled_at)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    await requireCurrentSession(client, actor);
+  }
+
   async createAddress(
-    userId: string,
+    actor: AddressActor,
     profileId: string,
     data: {
       provinceId: string;
@@ -595,6 +608,7 @@ export class ProfilesService {
       mainAddress?: boolean | undefined;
     }
   ): Promise<AddressRow> {
+    const { userId } = actor;
     const pool = getDbPool();
 
     await this.requireAddressEditor(userId, profileId);
@@ -614,6 +628,7 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await this.lockAddressActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
 
       await requireAddressGeography(client, data.provinceId, data.cityId);
@@ -649,9 +664,10 @@ export class ProfilesService {
 
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'address_created',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,
-        [userId, profileId, result.rows[0].id]
+        VALUES (uuid_generate_v7(),$1,'address_created',jsonb_build_object('profileId',$2::text,'addressId',$3::text),COALESCE($4::uuid,uuid_generate_v7()),NOW())`,
+        [userId, profileId, result.rows[0].id, correlationIdStorage.getStore() ?? null]
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       this.logger.log(`Address ${result.rows[0].id} created for profile ${profileId}`);
       return mapAddressRow(result.rows[0]);
@@ -682,7 +698,7 @@ export class ProfilesService {
    * Historical orders retain their copied address snapshot.
    */
   async updateAddress(
-    userId: string,
+    actor: AddressActor,
     profileId: string,
     addressId: string,
     data: {
@@ -692,6 +708,7 @@ export class ProfilesService {
       postalCode?: string | undefined;
     }
   ): Promise<AddressRow> {
+    const { userId } = actor;
     const pool = getDbPool();
 
     await this.requireAddressEditor(userId, profileId);
@@ -725,6 +742,7 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await this.lockAddressActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
 
       if (data.provinceId !== undefined || data.cityId !== undefined) {
@@ -801,9 +819,10 @@ export class ProfilesService {
 
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'address_updated',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,
-        [userId, profileId, result.rows[0].id]
+        VALUES (uuid_generate_v7(),$1,'address_updated',jsonb_build_object('profileId',$2::text,'addressId',$3::text),COALESCE($4::uuid,uuid_generate_v7()),NOW())`,
+        [userId, profileId, result.rows[0].id, correlationIdStorage.getStore() ?? null]
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       this.logger.log(`Address ${addressId} updated for profile ${profileId}`);
       return mapAddressRow(result.rows[0]);
@@ -833,7 +852,8 @@ export class ProfilesService {
    * address. Orders retain copied snapshot fields independently of the saved
    * address, so removing the saved address preserves order history.
    */
-  async deleteAddress(userId: string, profileId: string, addressId: string): Promise<void> {
+  async deleteAddress(actor: AddressActor, profileId: string, addressId: string): Promise<void> {
+    const { userId } = actor;
     const pool = getDbPool();
 
     await this.requireAddressEditor(userId, profileId);
@@ -869,6 +889,7 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await this.lockAddressActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
       const deleted = await client.query(
         `DELETE FROM addresses WHERE id=$1 AND profile_id=$2 AND NOT main_address RETURNING id`,
@@ -885,9 +906,10 @@ export class ProfilesService {
         );
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'address_deleted',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,
-        [userId, profileId, addressId]
+        VALUES (uuid_generate_v7(),$1,'address_deleted',jsonb_build_object('profileId',$2::text,'addressId',$3::text),COALESCE($4::uuid,uuid_generate_v7()),NOW())`,
+        [userId, profileId, addressId, correlationIdStorage.getStore() ?? null]
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -906,7 +928,12 @@ export class ProfilesService {
    * address as the new main address. Wrapped in a transaction for
    * consistency.
    */
-  async setMainAddress(userId: string, profileId: string, addressId: string): Promise<AddressRow> {
+  async setMainAddress(
+    actor: AddressActor,
+    profileId: string,
+    addressId: string
+  ): Promise<AddressRow> {
+    const { userId } = actor;
     const pool = getDbPool();
 
     await this.requireAddressEditor(userId, profileId);
@@ -933,6 +960,7 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await this.lockAddressActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
 
       // Unset the current main address
@@ -962,9 +990,10 @@ export class ProfilesService {
 
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'address_main_changed',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,
-        [userId, profileId, result.rows[0].id]
+        VALUES (uuid_generate_v7(),$1,'address_main_changed',jsonb_build_object('profileId',$2::text,'addressId',$3::text),COALESCE($4::uuid,uuid_generate_v7()),NOW())`,
+        [userId, profileId, result.rows[0].id, correlationIdStorage.getStore() ?? null]
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       this.logger.log(`Address ${addressId} set as main for profile ${profileId}`);
       return mapAddressRow(result.rows[0]);

@@ -13,6 +13,21 @@ const mockClient = {
   release: vi.fn(),
 };
 
+const addressActor = { userId: 'user-1', sessionId: 'session-1', csrfToken: 'csrf' };
+// Business-rule units use a valid actor; real HTTP tests cover session deadlines.
+const transactionalClient = {
+  query(sql: string, params?: unknown[]) {
+    if (sql === 'SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE')
+      return Promise.resolve({ rows: [{ disabled_at: null }] });
+    if (sql.startsWith('SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2'))
+      return Promise.resolve({ rows: [{ session_id: 'session-1' }] });
+    if (sql.startsWith('SELECT csrf_token, step_up_verified_at,'))
+      return Promise.resolve({ rows: [{ csrf_token: 'csrf', active: true }] });
+    return mockClient.query(sql, params);
+  },
+  release: mockClient.release,
+};
+
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
 }));
@@ -33,7 +48,7 @@ describe('ProfilesService', () => {
     mockPool.connect.mockReset();
     mockClient.query.mockReset();
     mockClient.release.mockReset();
-    mockPool.connect.mockResolvedValue(mockClient);
+    mockPool.connect.mockResolvedValue(transactionalClient);
   });
 
   describe('canPlaceCommercialOrder', () => {
@@ -361,7 +376,7 @@ describe('ProfilesService', () => {
       // getProfileById: returns draft profile
       mockPool.query.mockResolvedValueOnce({ rows: [draftRow] });
       // connect() for transaction
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
       // BEGIN
       mockClient.query.mockResolvedValueOnce({});
       mockClient.query.mockResolvedValueOnce({ rows: [draftRow] }); // locked current profile
@@ -402,7 +417,7 @@ describe('ProfilesService', () => {
     it('transitions DRAFT to PENDING_VERIFICATION when verification is required', async () => {
       vi.mocked(configCache.get).mockResolvedValue('MANUAL');
       mockPool.query.mockResolvedValueOnce({ rows: [draftRow] });
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
       mockClient.query.mockResolvedValueOnce({}); // BEGIN
       mockClient.query.mockResolvedValueOnce({ rows: [draftRow] }); // locked current profile
       mockClient.query.mockResolvedValueOnce({
@@ -548,9 +563,9 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [addressRow] }) // INSERT RETURNING
         .mockResolvedValueOnce(undefined); // COMMIT
 
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
 
-      const result = await service.createAddress('user-1', 'prof-1', addressData);
+      const result = await service.createAddress(addressActor, 'prof-1', addressData);
 
       expect(result.id).toBe('addr-1');
       expect(result.mainAddress).toBe(true);
@@ -570,9 +585,9 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [{ ...addressRow, main_address: false }] }) // INSERT
         .mockResolvedValueOnce(undefined); // COMMIT
 
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
 
-      const result = await service.createAddress('user-1', 'prof-1', addressData);
+      const result = await service.createAddress(addressActor, 'prof-1', addressData);
 
       expect(result.mainAddress).toBe(false);
     });
@@ -580,7 +595,7 @@ describe('ProfilesService', () => {
     it('rejects when profile does not belong to the user', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] });
 
-      await expect(service.createAddress('user-1', 'prof-1', addressData)).rejects.toThrow(
+      await expect(service.createAddress(addressActor, 'prof-1', addressData)).rejects.toThrow(
         'Profile not found'
       );
     });
@@ -597,10 +612,10 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] })
         .mockResolvedValueOnce(undefined); // ROLLBACK (catch block)
 
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
 
       await expect(
-        service.createAddress('user-1', 'prof-1', { ...addressData, mainAddress: true })
+        service.createAddress(addressActor, 'prof-1', { ...addressData, mainAddress: true })
       ).rejects.toThrow('A main address already exists');
     });
 
@@ -624,7 +639,7 @@ describe('ProfilesService', () => {
       });
 
       await expect(
-        service.createAddress('user-1', 'prof-1', { ...addressData, postalCode: 'invalid' })
+        service.createAddress(addressActor, 'prof-1', { ...addressData, postalCode: 'invalid' })
       ).rejects.toThrow('Invalid postal code format');
     });
 
@@ -644,9 +659,9 @@ describe('ProfilesService', () => {
         .mockRejectedValueOnce(fkError)
         .mockResolvedValueOnce(undefined); // ROLLBACK
 
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
 
-      await expect(service.createAddress('user-1', 'prof-1', addressData)).rejects.toThrow(
+      await expect(service.createAddress(addressActor, 'prof-1', addressData)).rejects.toThrow(
         'Invalid province or city reference'
       );
     });
@@ -690,9 +705,9 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [{ ...addressRow, full_address: '456 New Street' }] }) // UPDATE
         .mockResolvedValueOnce(undefined); // COMMIT
 
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
 
-      const result = await service.updateAddress('user-1', 'prof-1', 'addr-1', {
+      const result = await service.updateAddress(addressActor, 'prof-1', 'addr-1', {
         fullAddress: '456 New Street',
       });
 
@@ -703,7 +718,7 @@ describe('ProfilesService', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] });
 
       await expect(
-        service.updateAddress('user-1', 'prof-1', 'addr-1', { fullAddress: '456 New Street' })
+        service.updateAddress(addressActor, 'prof-1', 'addr-1', { fullAddress: '456 New Street' })
       ).rejects.toThrow('Profile not found');
     });
 
@@ -713,7 +728,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [{ ...addressRow, id: 'other-addr' }] });
 
       await expect(
-        service.updateAddress('user-1', 'prof-1', 'addr-1', { fullAddress: '456 New Street' })
+        service.updateAddress(addressActor, 'prof-1', 'addr-1', { fullAddress: '456 New Street' })
       ).rejects.toThrow('Address not found');
     });
 
@@ -723,7 +738,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [addressRow] });
 
       await expect(
-        service.updateAddress('user-1', 'prof-1', 'addr-1', { postalCode: 'invalid' })
+        service.updateAddress(addressActor, 'prof-1', 'addr-1', { postalCode: 'invalid' })
       ).rejects.toThrow('Invalid postal code format');
     });
 
@@ -737,9 +752,9 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
         .mockResolvedValueOnce(undefined); // ROLLBACK
 
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
 
-      await expect(service.updateAddress('user-1', 'prof-1', 'addr-1', {})).rejects.toThrow(
+      await expect(service.updateAddress(addressActor, 'prof-1', 'addr-1', {})).rejects.toThrow(
         'No fields to update'
       );
     });
@@ -786,7 +801,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({}) // audit
         .mockResolvedValueOnce({}); // COMMIT
 
-      await service.deleteAddress('user-1', 'prof-1', 'addr-1');
+      await service.deleteAddress(addressActor, 'prof-1', 'addr-1');
 
       expect(mockClient.query.mock.calls[2]![0]).toContain('DELETE FROM addresses');
     });
@@ -796,7 +811,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [profileRow] })
         .mockResolvedValueOnce({ rows: [mainAddress] });
 
-      await expect(service.deleteAddress('user-1', 'prof-1', 'addr-main')).rejects.toThrow(
+      await expect(service.deleteAddress(addressActor, 'prof-1', 'addr-main')).rejects.toThrow(
         'Cannot delete the main address'
       );
     });
@@ -804,7 +819,7 @@ describe('ProfilesService', () => {
     it('rejects when profile does not belong to the user', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] });
 
-      await expect(service.deleteAddress('user-1', 'prof-1', 'addr-1')).rejects.toThrow(
+      await expect(service.deleteAddress(addressActor, 'prof-1', 'addr-1')).rejects.toThrow(
         'Profile not found'
       );
     });
@@ -814,7 +829,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [profileRow] })
         .mockResolvedValueOnce({ rows: [] });
 
-      await expect(service.deleteAddress('user-1', 'prof-1', 'addr-1')).rejects.toThrow(
+      await expect(service.deleteAddress(addressActor, 'prof-1', 'addr-1')).rejects.toThrow(
         'Address not found'
       );
     });
@@ -859,9 +874,9 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [{ ...nonMainAddress, main_address: true }] }) // UPDATE
         .mockResolvedValueOnce(undefined); // COMMIT
 
-      mockPool.connect.mockResolvedValue(mockClient);
+      mockPool.connect.mockResolvedValue(transactionalClient);
 
-      const result = await service.setMainAddress('user-1', 'prof-1', 'addr-1');
+      const result = await service.setMainAddress(addressActor, 'prof-1', 'addr-1');
 
       expect(result.mainAddress).toBe(true);
 
@@ -878,7 +893,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [profileRow] })
         .mockResolvedValueOnce({ rows: [alreadyMain] });
 
-      const result = await service.setMainAddress('user-1', 'prof-1', 'addr-1');
+      const result = await service.setMainAddress(addressActor, 'prof-1', 'addr-1');
 
       expect(result.mainAddress).toBe(true);
       expect(mockPool.connect).not.toHaveBeenCalled();
@@ -887,7 +902,7 @@ describe('ProfilesService', () => {
     it('rejects when profile does not belong to the user', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] });
 
-      await expect(service.setMainAddress('user-1', 'prof-1', 'addr-1')).rejects.toThrow(
+      await expect(service.setMainAddress(addressActor, 'prof-1', 'addr-1')).rejects.toThrow(
         'Profile not found'
       );
     });
@@ -897,7 +912,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({ rows: [profileRow] })
         .mockResolvedValueOnce({ rows: [] });
 
-      await expect(service.setMainAddress('user-1', 'prof-1', 'addr-1')).rejects.toThrow(
+      await expect(service.setMainAddress(addressActor, 'prof-1', 'addr-1')).rejects.toThrow(
         'Address not found'
       );
     });
