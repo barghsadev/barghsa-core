@@ -35,10 +35,10 @@ describe('wallet chargeback finance alert helpers (T-04.2.04.03)', () => {
     expect(CHARGEBACK_UNRESOLVED_STATUS_LABELS.unresolved.fa).toContain('برگشت');
   });
 
-  it('alerts only unmatched and reversal-failed chargebacks', () => {
+  it('alerts completed detection outcomes and skips processing or historical duplicates', () => {
     expect(needsFinanceChargebackAlert('unmatched')).toBe(true);
     expect(needsFinanceChargebackAlert('unresolved')).toBe(true);
-    expect(needsFinanceChargebackAlert('reversed')).toBe(false);
+    expect(needsFinanceChargebackAlert('reversed')).toBe(true);
     expect(needsFinanceChargebackAlert('processing')).toBe(false);
     expect(needsFinanceChargebackAlert('duplicate')).toBe(false);
   });

@@ -540,6 +540,22 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     ],
   },
   {
+    eventKey: 'finance.chargeback_reversed',
+    faSubject: 'برگشت شارژبک ثبت شد',
+    enSubject: 'Chargeback reversed',
+    faBody:
+      'برگشت شارژبک با تراکنش جبرانی ثبت شد.\nشناسه رویداد: {{event_id}}\nمبلغ (ریال): {{amount_irr}}\nتراکنش اصلی: {{original_transaction_id}}\nدلیل: {{reason}}',
+    enBody:
+      'The chargeback was recorded with a compensating reversal.\nEvent id: {{event_id}}\nAmount (IRR): {{amount_irr}}\nOriginal transaction: {{original_transaction_id}}\nReason: {{reason}}',
+    channels: ['in_app', 'email'],
+    variables: [
+      { name: 'event_id', description: 'Provider event id' },
+      { name: 'amount_irr', description: 'Amount in IRR' },
+      { name: 'original_transaction_id', description: 'Original transaction id' },
+      { name: 'reason', description: 'Chargeback reason' },
+    ],
+  },
+  {
     eventKey: 'admin.service_escalated',
     faSubject: 'ارتقای فوریت — {{service_type_name_fa}}',
     enSubject: 'Escalation — {{service_type_name_en}}',

@@ -42,6 +42,12 @@ const labels: Record<string, [string, string, string, string]> = {
     'این شارژبک نیازمند بررسی تیم مالی است.',
     'This chargeback needs finance review.',
   ],
+  'finance.chargeback_reversed': [
+    'برگشت شارژبک ثبت شد',
+    'Chargeback reversed',
+    'برگشت مبلغ شارژبک ارائه‌دهنده با تراکنش جبرانی ثبت شد.',
+    'The provider chargeback was recorded with a compensating reversal.',
+  ],
   'admin.service_target_breached': [
     'مهلت پاسخ‌گویی گذشته است',
     'Response target exceeded',

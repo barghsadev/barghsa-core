@@ -210,7 +210,7 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
     );
     await ctx.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [profileId]);
     const alert = new ChargebackAlertService(),
-      notify = vi.spyOn(alert, 'notifyUnresolved');
+      notify = vi.spyOn(alert, 'notifyChargeback');
     const handler = new ChargebackDetectionService(
       walletService,
       { webhookSecret: SECRET, merchantId: MERCHANT },

@@ -410,8 +410,8 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
   ] as const)(
     'rejects a payload mismatch against a terminal %s event',
     async (_status, eventOverrides) => {
-      const notifyUnresolved = vi.fn();
-      const { service, reverseTransaction } = makeService({ notifyUnresolved } as never);
+      const notifyChargeback = vi.fn();
+      const { service, reverseTransaction } = makeService({ notifyChargeback } as never);
       scriptClient({
         claimInserted: false,
         existingEvent: claimedEventRow({ ...eventOverrides }),
@@ -428,14 +428,14 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
         message: 'Payment chargeback event payload does not match the claimed notification',
       });
       expect(reverseTransaction).not.toHaveBeenCalled();
-      expect(notifyUnresolved).not.toHaveBeenCalled();
+      expect(notifyChargeback).not.toHaveBeenCalled();
     }
   );
 
   it('rejects a corrected locator after an unmatched event instead of remapping', async () => {
     const correctedOrderId = 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee';
-    const notifyUnresolved = vi.fn();
-    const { service, reverseTransaction } = makeService({ notifyUnresolved } as never);
+    const notifyChargeback = vi.fn();
+    const { service, reverseTransaction } = makeService({ notifyChargeback } as never);
     scriptClient({
       claimInserted: false,
       existingEvent: claimedEventRow({ status: 'unmatched' }),
@@ -457,7 +457,7 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       message: 'Payment chargeback event payload does not match the claimed notification',
     });
     expect(reverseTransaction).not.toHaveBeenCalled();
-    expect(notifyUnresolved).not.toHaveBeenCalled();
+    expect(notifyChargeback).not.toHaveBeenCalled();
   });
 
   it('does not reverse again when the original is already reversed', async () => {
@@ -497,11 +497,11 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
   });
 
   it('pushes a finance alert when the chargeback stays unmatched', async () => {
-    const notifyUnresolved = vi.fn().mockResolvedValue({ recipients: 1, inserted: 1 });
-    const { service } = makeService({ notifyUnresolved } as never);
+    const notifyChargeback = vi.fn().mockResolvedValue({ recipients: 1, inserted: 1 });
+    const { service } = makeService({ notifyChargeback } as never);
     scriptClient({ credit: null });
     await service.handle(signedInput(payload()));
-    expect(notifyUnresolved).toHaveBeenCalledWith(
+    expect(notifyChargeback).toHaveBeenCalledWith(
       mockClient,
       expect.objectContaining({
         eventId: EVENT_ID,
@@ -513,7 +513,7 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
   });
 
   it('pushes a finance alert when the mapped reversal cannot post', async () => {
-    const notifyUnresolved = vi.fn().mockResolvedValue({ recipients: 1, inserted: 1 });
+    const notifyChargeback = vi.fn().mockResolvedValue({ recipients: 1, inserted: 1 });
     const reverseTransaction = vi
       .fn()
       .mockRejectedValue(
@@ -522,11 +522,11 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     const service = new ChargebackDetectionService(
       { reverseTransaction } as never,
       { webhookSecret: SECRET, merchantId: MERCHANT },
-      { notifyUnresolved } as never
+      { notifyChargeback } as never
     );
     scriptClient({ credit: makeCreditRow() });
     await service.handle(signedInput(payload()));
-    expect(notifyUnresolved).toHaveBeenCalledWith(
+    expect(notifyChargeback).toHaveBeenCalledWith(
       mockClient,
       expect.objectContaining({
         eventId: EVENT_ID,
@@ -537,17 +537,25 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     );
   });
 
-  it('does not alert finance when the original top-up is reversed', async () => {
-    const notifyUnresolved = vi.fn();
-    const { service } = makeService({ notifyUnresolved } as never);
+  it('alerts finance when the original top-up is reversed', async () => {
+    const notifyChargeback = vi.fn();
+    const { service } = makeService({ notifyChargeback } as never);
     scriptClient({ credit: makeCreditRow() });
     await service.handle(signedInput(payload()));
-    expect(notifyUnresolved).not.toHaveBeenCalled();
+    expect(notifyChargeback).toHaveBeenCalledWith(
+      mockClient,
+      expect.objectContaining({
+        eventId: EVENT_ID,
+        status: 'reversed',
+        walletId: PROFILE_ID,
+        originalTransactionId: CREDIT_ID,
+      })
+    );
   });
 
   it('re-attempts the finance alert on a duplicate unmatched webhook', async () => {
-    const notifyUnresolved = vi.fn().mockResolvedValue({ recipients: 1, inserted: 0 });
-    const { service, reverseTransaction } = makeService({ notifyUnresolved } as never);
+    const notifyChargeback = vi.fn().mockResolvedValue({ recipients: 1, inserted: 0 });
+    const { service, reverseTransaction } = makeService({ notifyChargeback } as never);
     scriptClient({
       claimInserted: false,
       existingEvent: claimedEventRow({ status: 'unmatched' }),
@@ -555,7 +563,7 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     const result = await service.handle(signedInput(payload()));
     expect(result.status).toBe('unmatched');
     expect(reverseTransaction).not.toHaveBeenCalled();
-    expect(notifyUnresolved).toHaveBeenCalledWith(
+    expect(notifyChargeback).toHaveBeenCalledWith(
       mockClient,
       expect.objectContaining({ eventId: EVENT_ID, status: 'unmatched' })
     );

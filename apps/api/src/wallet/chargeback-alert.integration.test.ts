@@ -14,9 +14,13 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture';
 import { WALLET_CHARGEBACK_REASON } from '@barghsa/shared/finance';
+import { randomUUID } from 'node:crypto';
 import { runOutboxPoll } from '../../../worker/dist/notifications/outbox-runner.js';
 import { InAppNotificationTransport } from '../../../worker/dist/notifications/in-app-transport.js';
 import { NotificationCenterService } from '../notifications/notification-center.service.js';
+import { WalletService } from './wallet.service.js';
+import { ChargebackDetectionService } from './chargeback-detection.service.js';
+import { signPaymentCallback } from './payment-callback-verifier.js';
 import {
   ChargebackAlertService,
   enqueueFinanceChargebackAlert,
@@ -96,7 +100,7 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
   it('enqueues urgent in-app + email jobs for finance staff and admins', async () => {
     const client = await ctx.pool.connect();
     try {
-      const result = await service.notifyUnresolved(client, {
+      const result = await service.notifyChargeback(client, {
         eventId: EVENT_ID,
         status: 'unmatched',
         notification: notification(),
@@ -208,6 +212,118 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
     ).toEqual({ status: 'done', attempts: 1, provider_ref: 'previous-delivery' });
   });
 
+  it('serves the warning to a non-admin Finance session and enforces current permission and revocation', async () => {
+    const sessionId = randomUUID();
+    await ctx.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      [sessionId, FINANCE_USER, randomUUID(), randomUUID()]
+    );
+    await ctx.pool.query(`INSERT INTO wallet_chargeback_events(event_id,status,raw)
+      VALUES ('evt-http-warning','unmatched','{"amountIrR":"75000"}')`);
+    const read = () =>
+      fetch(`${ctx.base}/api/admin/wallet/chargebacks/unresolved-warning`, {
+        headers: { Cookie: `barghsa_session=${sessionId}` },
+      });
+    expect(
+      (await fetch(`${ctx.base}/api/admin/wallet/chargebacks/unresolved-warning`)).status
+    ).toBe(401);
+    const allowed = await read();
+    expect(allowed.status).toBe(200);
+    expect(await allowed.json()).toMatchObject({
+      count: 1,
+      items: [{ eventId: 'evt-http-warning' }],
+    });
+    await ctx.pool.query('DELETE FROM user_roles WHERE user_id=$1', [FINANCE_USER]);
+    try {
+      expect((await read()).status).toBe(403);
+    } finally {
+      await ctx.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance')", [
+        FINANCE_USER,
+      ]);
+    }
+    await ctx.pool.query('UPDATE sessions SET revoked_at=NOW() WHERE session_id=$1', [sessionId]);
+    expect((await read()).status).toBe(401);
+  });
+
+  it.each([false, true])(
+    'alerts Finance after a successful reversal, including a delivery retry=%s',
+    async (failFirstAlert) => {
+      const wallet = new WalletService();
+      await wallet.createWallet(FINANCE_PROFILE);
+      const pending = randomUUID(),
+        eventId = randomUUID();
+      const credit = await wallet.credit(
+        FINANCE_PROFILE,
+        75000n,
+        {
+          type: 'topup',
+          metadata: { channel: 'online', pendingTransactionId: pending, authority: pending },
+        },
+        `wallet-online-topup-credit:${pending}`
+      );
+      const alerts = new ChargebackAlertService();
+      if (failFirstAlert)
+        vi.spyOn(alerts, 'notifyChargeback').mockRejectedValueOnce(
+          new Error('alert enqueue unavailable')
+        );
+      const detector = new ChargebackDetectionService(
+        wallet,
+        { webhookSecret: 'test-chargeback', merchantId: 'm-1' },
+        alerts
+      );
+      const rawBody = JSON.stringify({
+        type: 'chargeback',
+        merchantId: 'm-1',
+        merchantOrderId: pending,
+        amountIrR: '75000',
+      });
+      const timestamp = String(Math.floor(Date.now() / 1000));
+      const request = {
+        rawBody,
+        headers: {
+          eventId,
+          timestamp,
+          signature: signPaymentCallback(rawBody, eventId, timestamp, 'test-chargeback'),
+        },
+      };
+      if (failFirstAlert)
+        await expect(detector.handle(request)).rejects.toThrow('alert enqueue unavailable');
+      expect(await detector.handle(request)).toMatchObject({
+        reversed: true,
+        originalTransactionId: credit.id,
+      });
+      expect(await detector.handle(request)).toMatchObject({ reversed: true, processed: false });
+      const outbox = await ctx.pool.query('SELECT event_key,payload FROM notification_outbox');
+      expect(outbox.rows).toHaveLength(2);
+      expect(
+        outbox.rows.every(
+          (row) =>
+            row.event_key === 'finance.chargeback_reversed' && row.payload.status === 'reversed'
+        )
+      ).toBe(true);
+      expect(
+        (
+          await ctx.pool.query(
+            'SELECT id FROM wallet_transactions WHERE reverses_transaction_id=$1',
+            [credit.id]
+          )
+        ).rows
+      ).toHaveLength(1);
+      await runOutboxPoll({
+        pool: ctx.pool,
+        transports: { in_app: new InAppNotificationTransport(ctx.pool) },
+      });
+      const inbox = await ctx.pool.query(
+        "SELECT localized_content FROM in_app_notifications WHERE type='finance.chargeback_reversed'"
+      );
+      expect(inbox.rows).toHaveLength(2);
+      expect(inbox.rows[0].localized_content.en.title).toBe('Chargeback reversed');
+      expect(inbox.rows[0].localized_content.fa.title).toBe('برگشت شارژبک ثبت شد');
+      expect((await service.getDashboardWarning()).count).toBe(0);
+    }
+  );
+
   it('surfaces unmatched and reversal-failed rows on the dashboard warning', async () => {
     await ctx.pool.query(
       `INSERT INTO wallet_chargeback_events (event_id, status, raw, created_at)
@@ -261,8 +377,8 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
         walletId: null,
         originalTransactionId: null,
       };
-      expect(await service.notifyUnresolved(client, input)).toEqual({ recipients: 5, inserted: 5 });
-      expect(await service.notifyUnresolved(client, input)).toEqual({ recipients: 5, inserted: 0 });
+      expect(await service.notifyChargeback(client, input)).toEqual({ recipients: 5, inserted: 5 });
+      expect(await service.notifyChargeback(client, input)).toEqual({ recipients: 5, inserted: 0 });
       const outbox = await ctx.pool.query('SELECT profile_id,user_id FROM notification_outbox');
       expect(outbox.rows.map((row) => row.user_id).sort()).toEqual(
         [FINANCE_USER, ADMIN_USER, 'cb-finance', 'cb-custom', 'cb-admin'].sort()

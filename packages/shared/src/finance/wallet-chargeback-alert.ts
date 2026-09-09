@@ -1,9 +1,9 @@
 /**
  * Finance chargeback alert contract (T-04.2.04.03 / S-04.2.04).
  *
- * Unmatched or reversal-failed provider chargebacks must alert the
- * finance team immediately (in-app push + email) and stay visible as a
- * dashboard warning until the durable event leaves the unresolved set.
+ * Completed detection outcomes alert finance immediately (in-app push + email).
+ * Unmatched or reversal-failed events also stay visible as a dashboard warning
+ * until the durable event leaves the unresolved set.
  *
  * @module finance
  */
@@ -18,6 +18,8 @@ import type { NotificationChannel } from '../notifications/notification-transpor
 
 /** Immediate staff alert event for an unresolved chargeback. */
 export const FINANCE_CHARGEBACK_ALERT_EVENT_KEY = 'finance.chargeback_unresolved' as const;
+export const FINANCE_CHARGEBACK_REVERSED_EVENT_KEY = 'finance.chargeback_reversed' as const;
+export type FinanceChargebackAlertStatus = WalletChargebackUnresolvedStatus | 'reversed';
 
 /** Capability gate documented on the dashboard warning API. */
 export const FINANCE_CHARGEBACK_ALERT_PERMISSION =
@@ -63,13 +65,17 @@ export const CHARGEBACK_UNRESOLVED_STATUS_LABELS: Record<
 
 export function needsFinanceChargebackAlert(
   status: WalletChargebackEventStatus
-): status is WalletChargebackUnresolvedStatus {
-  return isUnresolvedChargebackStatus(status);
+): status is FinanceChargebackAlertStatus {
+  return isUnresolvedChargebackStatus(status) || status === 'reversed';
 }
 
 /** Outbox idempotency key: one logical alert per (event, recipient). */
-export function financeChargebackAlertIdempotencyKey(eventId: string, recipientId: string): string {
-  return `${FINANCE_CHARGEBACK_ALERT_EVENT_KEY}:${eventId}:${recipientId}`;
+export function financeChargebackAlertIdempotencyKey(
+  eventId: string,
+  recipientId: string,
+  eventKey: string = FINANCE_CHARGEBACK_ALERT_EVENT_KEY
+): string {
+  return `${eventKey}:${eventId}:${recipientId}`;
 }
 
 export interface FinanceChargebackAlertInput {
@@ -82,7 +88,7 @@ export interface FinanceChargebackAlertInput {
 
 export interface FinanceChargebackAlertPayload {
   event_id: string;
-  status: WalletChargebackUnresolvedStatus;
+  status: FinanceChargebackAlertStatus;
   status_label_fa: string;
   status_label_en: string;
   amount_irr: string;
@@ -94,9 +100,12 @@ export interface FinanceChargebackAlertPayload {
 }
 
 export function buildFinanceChargebackAlertPayload(
-  input: FinanceChargebackAlertInput & { status: WalletChargebackUnresolvedStatus }
+  input: FinanceChargebackAlertInput & { status: FinanceChargebackAlertStatus }
 ): FinanceChargebackAlertPayload {
-  const labels = CHARGEBACK_UNRESOLVED_STATUS_LABELS[input.status];
+  const labels =
+    input.status === 'reversed'
+      ? { fa: 'برگشت ثبت شد', en: 'reversal posted' }
+      : CHARGEBACK_UNRESOLVED_STATUS_LABELS[input.status];
   return {
     event_id: input.eventId,
     status: input.status,

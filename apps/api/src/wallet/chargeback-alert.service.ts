@@ -5,6 +5,7 @@ import { resolveStaffPermissions } from '@barghsa/shared/admin';
 import {
   FINANCE_CHARGEBACK_ALERT_CHANNELS,
   FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
+  FINANCE_CHARGEBACK_REVERSED_EVENT_KEY,
   FINANCE_CHARGEBACK_ALERT_PERMISSION,
   FINANCE_CHARGEBACK_WARNING_LIMIT,
   buildFinanceChargebackAlertPayload,
@@ -61,16 +62,15 @@ interface QueryClient {
 /**
  * Finance chargeback alerts (T-04.2.04.03).
  *
- * Detection writes an immediate outbox row to every Finance-role staff
- * member (and platform admins) when a chargeback stays unmatched or the
- * compensating reversal cannot post. The dashboard warning reads the
- * same unresolved set so staff cannot miss an open exception.
+ * Detection writes an immediate account alert for each authorized finance
+ * recipient, including successful reversals. The dashboard lists unresolved
+ * events so staff cannot miss an open exception.
  */
 @Injectable()
 export class ChargebackAlertService {
   private readonly logger = new Logger(ChargebackAlertService.name);
 
-  async notifyUnresolved(
+  async notifyChargeback(
     client: QueryClient,
     input: FinanceChargebackAlertInput
   ): Promise<NotifyUnresolvedResult> {
@@ -94,6 +94,10 @@ export class ChargebackAlertService {
     for (const recipient of recipients) {
       const result = await enqueueFinanceChargebackAlert(client, {
         userId: recipient.userId,
+        eventKey:
+          input.status === 'reversed'
+            ? FINANCE_CHARGEBACK_REVERSED_EVENT_KEY
+            : FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
         eventId: input.eventId,
         payload,
       });
@@ -147,16 +151,20 @@ export async function enqueueFinanceChargebackAlert(
   client: QueryClient,
   input: {
     userId: string;
+    eventKey?:
+      typeof FINANCE_CHARGEBACK_ALERT_EVENT_KEY | typeof FINANCE_CHARGEBACK_REVERSED_EVENT_KEY;
     eventId: string;
     payload: FinanceChargebackAlertPayload | Record<string, unknown>;
   }
 ): Promise<{ outboxId: string | null; inserted: boolean }> {
   const channels = [...FINANCE_CHARGEBACK_ALERT_CHANNELS];
-  const idempotencyKey = financeChargebackAlertIdempotencyKey(input.eventId, input.userId);
-  const priority =
-    classifyNotificationType(FINANCE_CHARGEBACK_ALERT_EVENT_KEY) === 'immediate'
-      ? 'urgent'
-      : 'normal';
+  const eventKey = input.eventKey ?? FINANCE_CHARGEBACK_ALERT_EVENT_KEY;
+  const idempotencyKey = financeChargebackAlertIdempotencyKey(
+    input.eventId,
+    input.userId,
+    eventKey
+  );
+  const priority = classifyNotificationType(eventKey) === 'immediate' ? 'urgent' : 'normal';
 
   return withLocalTransaction(client, async () => {
     // Preserve prior profile-scoped deliveries when a provider retries an older event.
@@ -164,7 +172,7 @@ export async function enqueueFinanceChargebackAlert(
       `SELECT id FROM notification_outbox
        WHERE user_id=$1 AND event_key=$2 AND payload->>'event_id'=$3
        ORDER BY created_at, id LIMIT 1`,
-      [input.userId, FINANCE_CHARGEBACK_ALERT_EVENT_KEY, input.eventId]
+      [input.userId, eventKey, input.eventId]
     );
     const legacyId = (legacy.rows[0] as { id: string } | undefined)?.id;
     if (legacyId) {
@@ -181,7 +189,7 @@ export async function enqueueFinanceChargebackAlert(
       [
         null,
         input.userId,
-        FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
+        eventKey,
         input.payload,
         channels,
         'queued',

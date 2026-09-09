@@ -257,6 +257,11 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
     securityPinned: false,
     category: 'system',
   },
+  'finance.chargeback_reversed': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'system',
+  },
 } as const;
 
 /**

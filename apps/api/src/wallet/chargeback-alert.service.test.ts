@@ -51,7 +51,7 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
       }),
     };
     const service = new ChargebackAlertService();
-    const result = await service.notifyUnresolved(client, {
+    const result = await service.notifyChargeback(client, {
       eventId: EVENT_ID,
       status: 'unmatched',
       notification: notification(),
@@ -98,12 +98,12 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
     );
   });
 
-  it('skips reversed chargebacks and does not write the outbox', async () => {
+  it('skips processing chargebacks and does not write the outbox', async () => {
     const client = { query: vi.fn() };
     const service = new ChargebackAlertService();
-    const result = await service.notifyUnresolved(client, {
+    const result = await service.notifyChargeback(client, {
       eventId: EVENT_ID,
-      status: 'reversed',
+      status: 'processing',
       notification: notification(),
       walletId: PROFILE_ID,
       originalTransactionId: 'tx-1',
