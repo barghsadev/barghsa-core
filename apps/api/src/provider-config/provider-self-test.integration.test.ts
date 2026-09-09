@@ -53,6 +53,10 @@ beforeEach(async () => {
     email,
     mobile,
   ]);
+  await http.pool.query(
+    "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ($2,$1,'mobile',NOW()) ON CONFLICT (destination) DO NOTHING",
+    [actor.userId, mobile]
+  );
 });
 
 for (const transport of ['smtp', 'resend', 'smsir'] as const) {
@@ -372,6 +376,49 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
       ok: true,
     });
     expect(send.mock.calls[0]![1]).toBe(channel === 'email' ? email : mobile);
+  });
+  it(`${transport}: requires current secondary-contact proof, even when the account field matches`, async () => {
+    const { test, send, snapshot } = await fixture();
+    const destination = channel === 'email' ? 'secondary@example.test' : '+989122222222';
+    const kind = channel === 'email' ? 'email' : 'mobile';
+    await http.pool.query(`UPDATE users SET ${kind}=$2 WHERE user_id=$1`, [
+      actor.userId,
+      destination,
+    ]);
+    const before = await snapshot();
+    await expect(test(destination)).rejects.toMatchObject({ status: 403 });
+    expect(send).not.toHaveBeenCalled();
+    expect(await snapshot()).toEqual(before);
+    await http.pool.query(
+      'INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ($2,$1,$3,NOW())',
+      [actor.userId, destination, kind]
+    );
+    expect((await test(destination)).ok).toBe(true);
+    expect(send.mock.calls[0]![1]).toBe(destination);
+    send.mockClear();
+    await http.pool.query('DELETE FROM account_login_identifiers WHERE user_id=$1 AND kind=$2', [
+      actor.userId,
+      kind,
+    ]);
+    const after = await snapshot();
+    await expect(test(destination)).rejects.toMatchObject({ status: 403 });
+    expect(send).not.toHaveBeenCalled();
+    expect(await snapshot()).toEqual(after);
+  });
+  it(`${transport}: defaults past unverified secondary fields without sending to them`, async () => {
+    const { test, send } = await fixture();
+    await http.pool.query('UPDATE users SET email=$2,mobile=$3 WHERE user_id=$1', [
+      actor.userId,
+      'unverified@example.test',
+      '+989123333333',
+    ]);
+    if (channel === 'email') {
+      expect((await test()).ok).toBe(true);
+      expect(send.mock.calls[0]![1]).toBe(email);
+    } else {
+      await expect(test()).rejects.toMatchObject({ status: 400 });
+      expect(send).not.toHaveBeenCalled();
+    }
   });
   it(`${transport}: rejects a contact removed since the page was opened`, async () => {
     const { test, send, snapshot } = await fixture(),

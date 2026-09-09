@@ -29,7 +29,14 @@ export async function resolveProviderTestRecipient(
     );
   }
   const result = await client.query(
-    'SELECT username,email,mobile FROM users WHERE user_id=$1 AND disabled_at IS NULL AND activation_token IS NULL',
+    `SELECT
+      CASE WHEN EXISTS (SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id
+        AND i.kind='primary' AND i.destination=lower(u.username)) THEN u.username END AS username,
+      CASE WHEN EXISTS (SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id
+        AND i.kind='email' AND i.destination=lower(u.email) AND i.verified_at IS NOT NULL) THEN u.email END AS email,
+      CASE WHEN EXISTS (SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id
+        AND i.kind='mobile' AND i.destination=u.mobile AND i.verified_at IS NOT NULL) THEN u.mobile END AS mobile
+    FROM users u WHERE u.user_id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
     [actor.userId]
   );
   const account = result.rows[0];

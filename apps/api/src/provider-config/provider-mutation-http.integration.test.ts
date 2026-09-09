@@ -31,6 +31,9 @@ beforeAll(async () => {
     "INSERT INTO users(user_id,username,mobile,password_hash,is_staff) VALUES ('provider-writer','provider-writer@example.test','+989121234567','test-only',true)"
   );
   await http.pool.query(
+    "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ('+989121234567','provider-writer','mobile',NOW())"
+  );
+  await http.pool.query(
     "INSERT INTO user_roles(user_id,role_id) VALUES ('provider-writer','provider-writer')"
   );
   await http.pool.query(
