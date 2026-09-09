@@ -1,5 +1,6 @@
 import { getSmsirCredit, sendSmsirVerification } from '@barghsa/shared/auth-delivery';
 import { Injectable, Inject, Optional } from '@nestjs/common';
+import { buildSmsTestParameters } from '@barghsa/shared/notifications';
 import type { SmsirConfig } from './smsir-config.schema';
 
 /**
@@ -187,9 +188,7 @@ export class SmsirConnectionTesterService {
             : 'No SMS.ir template mapping exists to test-send against',
         };
       }
-      const variables = Object.entries(target.variables ?? {}).map(
-        ([internal, smsirName]) => ({ name: smsirName, value: `test-${internal}` }) as const
-      );
+      const variables = buildSmsTestParameters(target.variables);
       try {
         await beforeSend?.();
         const outcome = await this.client.sendVerifyCode(config.api_key, this.baseUrl(), {

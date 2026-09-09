@@ -9,6 +9,7 @@
  * @see INotificationTransport
  */
 export * from './notification-transport.js';
+export * from './sms-test-parameters.js';
 export * from './notification-registry.js';
 export * from './delivery-window-config.js';
 export * from './template-engine.js';

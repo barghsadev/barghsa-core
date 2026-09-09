@@ -59,15 +59,16 @@ function provider(value: unknown): EmailProvider {
   }
   return row as unknown as EmailProvider;
 }
-async function request(
+export async function providerRequest(
   path: string,
   method: 'GET' | 'POST' | 'PUT' = 'GET',
   body?: unknown,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  family: 'email' | 'sms' = 'email'
 ): Promise<unknown> {
   const payload = body === undefined ? undefined : JSON.stringify(body);
   try {
-    const response = await fetch(`/api/admin/email-providers${path}`, {
+    const response = await fetch(`/api/admin/${family}-providers${path}`, {
       method,
       ...(signal ? { signal } : {}),
       ...(method !== 'GET' ? { headers: withCsrf({ 'Content-Type': 'application/json' }) } : {}),
@@ -84,7 +85,7 @@ async function request(
         typeof errorBody?.error === 'string' ? errorBody.error : record(errorBody?.error)?.code;
       if (code === 'AUTHZ:STEP_UP_REQUIRED' || errorBody?.requiresStepUp === true) {
         throw new ProviderStepUpError({
-          path: `/api/admin/email-providers${path}`,
+          path: `/api/admin/${family}-providers${path}`,
           method,
           ...(payload !== undefined ? { body: JSON.parse(payload) as unknown } : {}),
         });
@@ -97,6 +98,8 @@ async function request(
     throw new ProviderRequestError();
   }
 }
+const request = providerRequest;
+
 export function validateProviderResult(value: unknown, status: Status, id?: string): EmailProvider {
   const row = provider(value);
   if (row.status !== status || (id !== undefined && row.id !== id))

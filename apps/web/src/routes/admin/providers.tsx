@@ -3,7 +3,7 @@ import { RouteSkeleton } from '../../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
 
 export const Route = createFileRoute('/admin/providers')({
-  component: lazyRouteComponent(() => import('../../pages/AdminEmailProvidersPage.js')),
+  component: lazyRouteComponent(() => import('../../pages/AdminDeliveryProvidersPage.js')),
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,
 });
