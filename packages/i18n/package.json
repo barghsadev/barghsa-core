@@ -136,6 +136,11 @@
       "types": "./dist/wallet-payment-return.d.ts",
       "import": "./dist/wallet-payment-return.js",
       "default": "./dist/wallet-payment-return.js"
+    },
+    "./manual-invoice": {
+      "types": "./dist/manual-invoice.d.ts",
+      "import": "./dist/manual-invoice.js",
+      "default": "./dist/manual-invoice.js"
     }
   },
   "scripts": {

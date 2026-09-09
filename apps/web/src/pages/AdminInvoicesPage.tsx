@@ -16,6 +16,7 @@ import {
   lookupMatchesLoadedInvoice,
 } from '../lib/due-at-override.js';
 import ReminderOffsetTogglePanel from '../components/ReminderOffsetTogglePanel.js';
+import ManualInvoicePanel from '../components/ManualInvoicePanel.js';
 
 /**
  * Staff dueAt override page (T-04.1.03.03).
@@ -161,12 +162,14 @@ export default function AdminInvoicesPage() {
 
   return (
     <div className="max-w-4xl space-y-8">
+      <h1 className="text-2xl font-bold">{t('admin.invoices.nav', locale)}</h1>
+      <ManualInvoicePanel />
       {time.notice}
       <ReminderOffsetTogglePanel />
 
       <div className="max-w-xl space-y-6">
         <header>
-          <h1 className="text-2xl font-bold">{t('admin.invoices.title', locale)}</h1>
+          <h2 className="text-2xl font-bold">{t('admin.invoices.title', locale)}</h2>
           <p className="text-gray-600 mt-2">{t('admin.invoices.description', locale)}</p>
         </header>
 
