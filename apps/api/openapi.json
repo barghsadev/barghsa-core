@@ -12794,6 +12794,38 @@
                       ],
                       "type": "string"
                     },
+                    "verificationNotice": {
+                      "nullable": true,
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "localizedContent": {
+                          "additionalProperties": {
+                            "properties": {
+                              "body": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "title",
+                              "body"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "localizedContent"
+                      ],
+                      "type": "object"
+                    },
                     "verificationRequired": {
                       "type": "boolean"
                     }

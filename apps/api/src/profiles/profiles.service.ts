@@ -77,6 +77,10 @@ export interface VerificationStatusDto {
   verificationRequired: boolean;
   verificationMethod: 'api' | 'manual';
   canAutoVerify: boolean;
+  verificationNotice: {
+    id: string;
+    localizedContent: Record<string, { title: string; body: string }>;
+  } | null;
 }
 
 function mapRow(row: Record<string, unknown>): ProfileRow {
@@ -290,12 +294,44 @@ export class ProfilesService {
         verificationRequired: mode !== 'DISABLED',
         verificationMethod: mode === 'API' ? 'api' : 'manual',
         canAutoVerify: false,
+        verificationNotice: null,
       };
     }
 
     const isVerified = defaultProfile.status === 'VERIFIED';
     const verificationRequired = mode !== 'DISABLED';
     const verificationMethod = mode === 'API' ? 'api' : 'manual';
+
+    // Scope notices to the current owner/default profile, including after a profile switch.
+    // Read the latest transition first: reading a newer notice must not revive an older one.
+    const notice = (
+      await getDbPool().query(
+        `SELECT n.id,n.localized_content,n.is_read,n.type,p.status
+       FROM in_app_notifications n JOIN profiles p ON p.id=n.profile_id
+       LEFT JOIN user_profile_contexts c ON c.user_id=$1
+       WHERE n.recipient_user_id=$1 AND p.user_id=$1 AND p.id=$2 AND p.archived=false
+         AND CASE WHEN c.user_id IS NULL THEN p.is_default ELSE p.id=c.profile_id END
+         AND n.type IN ('profile_verified','profile_unverified','profile_pending')
+       ORDER BY n.created_at DESC,n.id DESC LIMIT 1`,
+        [userId, defaultProfile.id]
+      )
+    ).rows[0];
+    const expectedStatus =
+      notice?.type === 'profile_verified'
+        ? 'VERIFIED'
+        : notice?.type === 'profile_unverified'
+          ? 'ACTIVE'
+          : 'PENDING_VERIFICATION';
+    const verificationNotice =
+      notice && notice.is_read === false && notice.status === expectedStatus
+        ? {
+            id: notice.id as string,
+            localizedContent: notice.localized_content as Record<
+              string,
+              { title: string; body: string }
+            >,
+          }
+        : null;
 
     return {
       activeProfileId: defaultProfile.id,
@@ -305,6 +341,7 @@ export class ProfilesService {
       verificationMethod,
       // No real provider has been selected. Never offer simulated approval.
       canAutoVerify: false,
+      verificationNotice,
     };
   }
 

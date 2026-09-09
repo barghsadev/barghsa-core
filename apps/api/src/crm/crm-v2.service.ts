@@ -609,7 +609,11 @@ export class CrmV2Service {
       await client.query('BEGIN');
       const profile = (
         await client.query(
-          'SELECT id,user_id,status FROM profiles WHERE id=$1 AND archived=false FOR UPDATE',
+          `SELECT p.id,p.user_id,p.status,
+           COALESCE(NULLIF(BTRIM(p.title),''), CASE WHEN p.profile_type='LEGAL' THEN NULLIF(BTRIM(lp.legal_name),'')
+             ELSE NULLIF(BTRIM(CONCAT_WS(' ',p.first_name,p.last_name)),'') END,p.id::text) AS profile_name
+           FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id
+           WHERE p.id=$1 AND p.archived=false FOR UPDATE OF p`,
           [profileId]
         )
       ).rows[0];
@@ -666,31 +670,34 @@ export class CrmV2Service {
       const content =
         action === 'verify'
           ? {
-              fa: { title: 'پروفایل شما تأیید شد', body: 'پروفایل شما توسط کارشناس تأیید شد.' },
+              fa: {
+                title: 'پروفایل شما تأیید شد',
+                body: `پروفایل «${profile.profile_name}» توسط کارشناس تأیید شد.`,
+              },
               en: {
                 title: 'Your profile was verified',
-                body: 'A staff reviewer verified your profile.',
+                body: `A staff reviewer verified your profile "${profile.profile_name}".`,
               },
             }
           : action === 'unverify'
             ? {
                 fa: {
                   title: 'تأیید پروفایل لغو شد',
-                  body: `تأیید پروفایل شما لغو شد. دلیل: ${reason}`,
+                  body: `تأیید پروفایل «${profile.profile_name}» لغو شد. دلیل: ${reason}\nدر تنظیمات پروفایل، این پروفایل را انتخاب و اطلاعات درخواست‌شده را اصلاح کنید. برای بررسی دوباره، تیکت پشتیبانی ارسال کنید.`,
                 },
                 en: {
                   title: 'Profile verification revoked',
-                  body: `Your profile verification was revoked. Reason: ${reason}`,
+                  body: `Verification of your profile "${profile.profile_name}" was revoked. Reason: ${reason}\nOpen profile settings, select this profile and correct the requested details. Send a support ticket to request another review.`,
                 },
               }
             : {
                 fa: {
                   title: 'پروفایل نیاز به تأیید مجدد دارد',
-                  body: `پروفایل شما در انتظار تأیید مجدد است. دلیل: ${reason}`,
+                  body: `پروفایل «${profile.profile_name}» در انتظار تأیید مجدد است. دلیل: ${reason}\nدر تنظیمات پروفایل، این پروفایل را انتخاب و اطلاعات درخواست‌شده را اصلاح کنید. برای بررسی دوباره، تیکت پشتیبانی ارسال کنید.`,
                 },
                 en: {
                   title: 'Profile verification requested again',
-                  body: `Your profile is awaiting verification again. Reason: ${reason}`,
+                  body: `Your profile "${profile.profile_name}" is awaiting verification again. Reason: ${reason}\nOpen profile settings, select this profile and correct the requested details. Send a support ticket to request another review.`,
                 },
               };
       await this.notificationsService.create(

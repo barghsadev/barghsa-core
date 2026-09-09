@@ -231,6 +231,22 @@ export class ProfilesController {
         verificationRequired: { type: 'boolean' },
         verificationMethod: { type: 'string', enum: ['api', 'manual'] },
         canAutoVerify: { type: 'boolean' },
+        verificationNotice: {
+          type: 'object',
+          nullable: true,
+          required: ['id', 'localizedContent'],
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            localizedContent: {
+              type: 'object',
+              additionalProperties: {
+                type: 'object',
+                required: ['title', 'body'],
+                properties: { title: { type: 'string' }, body: { type: 'string' } },
+              },
+            },
+          },
+        },
       },
     },
   })

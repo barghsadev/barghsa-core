@@ -1,7 +1,7 @@
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useEffect, useState } from 'react';
-import { Link, useRouter } from '@tanstack/react-router';
+import { Link, useLocation, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 
 interface VerificationStatusResponse {
@@ -11,6 +11,10 @@ interface VerificationStatusResponse {
   verificationRequired: boolean;
   verificationMethod: 'api' | 'manual';
   canAutoVerify: boolean;
+  verificationNotice?: {
+    id: string;
+    localizedContent: Record<string, { title: string; body: string }>;
+  } | null;
 }
 
 /**
@@ -31,15 +35,18 @@ export function VerificationBanner() {
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
   const router = useRouter();
+  const pathname = useLocation({ select: (location) => location.pathname });
 
   const locale = useLocale();
   const isRtl = locale === 'fa';
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setStatus(null);
 
     async function fetchStatus() {
       try {
@@ -75,10 +82,60 @@ export function VerificationBanner() {
     return () => {
       cancelled = true;
     };
-  }, [locale]);
+  }, [locale, pathname]);
 
   // Don't render anything while loading, or if no status data, or if dismissed
-  if (loading || !status || dismissed) return null;
+  if (loading || !status) return null;
+
+  const notice = status.verificationNotice;
+  const noticeContent = notice?.localizedContent?.[locale];
+  const noticeKey =
+    notice &&
+    typeof notice.id === 'string' &&
+    typeof noticeContent?.title === 'string' &&
+    typeof noticeContent?.body === 'string'
+      ? notice.id
+      : null;
+  const bannerKey = noticeKey ?? status.activeProfileId;
+  if (!bannerKey || dismissed === bannerKey) return null;
+  if (noticeKey && noticeContent) {
+    return (
+      <section
+        data-testid="verification-notice"
+        role={status.isVerified ? 'status' : 'alert'}
+        dir={isRtl ? 'rtl' : 'ltr'}
+        className="border-b border-border bg-muted px-4 py-3 text-sm text-foreground"
+      >
+        <div className="mx-auto flex max-w-7xl items-start justify-between gap-4">
+          <div className="min-w-0 space-y-2">
+            <p className="font-medium">{noticeContent.title}</p>
+            <p className="whitespace-pre-line break-words">{noticeContent.body}</p>
+            <div className="flex flex-wrap gap-4 text-xs">
+              <Link to="/settings/profile" className="underline underline-offset-2">
+                {t('settings.profile.title', locale)}
+              </Link>
+              {!status.isVerified && (
+                <Link to="/tickets" className="underline underline-offset-2">
+                  {t('verification.banner.support', locale)}
+                </Link>
+              )}
+              <Link to="/notifications" className="underline underline-offset-2">
+                {t('notifications.viewAll', locale)}
+              </Link>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setDismissed(noticeKey)}
+            aria-label={t('verification.banner.dismiss', locale)}
+            className="shrink-0 rounded p-1 focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            ✕
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   // Don't render if profile is verified or verification is not required
   if (status.isVerified || !status.verificationRequired) return null;
@@ -163,7 +220,7 @@ export function VerificationBanner() {
             </button>
           )}
           <button
-            onClick={() => setDismissed(true)}
+            onClick={() => setDismissed(bannerKey)}
             className="text-amber-600 hover:text-amber-800"
             aria-label={t('verification.banner.dismiss', locale)}
           >
