@@ -122,6 +122,8 @@ export class VatCalculationRepository {
         WHERE pvo.product_id = $1
           AND pvo.effective_from <= $2
           AND (pvo.effective_until IS NULL OR pvo.effective_until > $2)
+          AND vc.effective_from <= $2
+          AND (vc.effective_until IS NULL OR vc.effective_until > $2)
         ORDER BY pvo.effective_from DESC
         LIMIT 1`,
       [productId, at]

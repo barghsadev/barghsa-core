@@ -104,6 +104,49 @@ describe('VatCalculationRepository — real PostgreSQL integration (T-04.1.02.04
     expect(result).toEqual({ rateBasisPoints: 900, source: 'category' });
   });
 
+  it.each([
+    [
+      'before the linked rate starts',
+      '2026-08-01T00:00:00Z',
+      '2026-07-31T23:59:59.999Z',
+      900,
+      'category',
+    ],
+    [
+      'when the linked rate starts',
+      '2026-08-01T00:00:00Z',
+      '2026-08-01T00:00:00Z',
+      500,
+      'product_override',
+    ],
+    [
+      'just before the linked rate ends',
+      '2026-07-01T00:00:00Z',
+      '2026-08-31T23:59:59.999Z',
+      500,
+      'product_override',
+    ],
+    ['when the linked rate ends', '2026-07-01T00:00:00Z', '2026-09-01T00:00:00Z', 900, 'category'],
+  ])('honours the linked rate window %s', async (_label, from, at, rate, source) => {
+    const client = await ctx.pool.connect();
+    try {
+      await client.query('BEGIN');
+      // The product assignment remains open, but its linked rate has its own validity window.
+      await client.query(
+        `UPDATE vat_configurations SET effective_from = $2, effective_until = $3 WHERE id = $1`,
+        [RATE_OVERRIDE, from, '2026-09-01T00:00:00Z']
+      );
+      const result = await service.resolveRate(client, {
+        productId: PRODUCT_ID,
+        at: new Date(at),
+      });
+      expect(result).toEqual({ rateBasisPoints: rate, source });
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+    }
+  });
+
   it('returns 0% when resolving a category with no active rate', async () => {
     const result = await service.resolveRate(ctx.pool, {
       category: 'hardware',
