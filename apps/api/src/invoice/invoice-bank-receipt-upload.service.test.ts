@@ -1,3 +1,6 @@
+vi.mock('../storage/reserve-storage-copy.js', () => ({
+  reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ConflictException, HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';

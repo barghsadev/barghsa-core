@@ -1,3 +1,4 @@
+import { Pool } from 'pg';
 /**
  * Real-PostgreSQL integration tests for customer invoice bank-receipt
  * upload (T-04.3.01.02).
@@ -37,6 +38,7 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@barghsa/db')>();
   return {
     ...actual,
+    createDirectDbPool: () => new Pool({ ...poolHolder.pool!.options, max: 1 }),
     getDbPool: () => {
       if (!poolHolder.pool) {
         throw new Error('test pool not initialized — beforeAll must run first');

@@ -1,3 +1,5 @@
+import { cleanupStorageObjects } from '../../../worker/dist/storage/cleanup.js';
+import { Pool } from 'pg';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
@@ -13,6 +15,7 @@ const holder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }));
 vi.mock('@barghsa/db', async (original) => ({
   ...(await original<typeof import('@barghsa/db')>()),
   getDbPool: () => holder.pool!,
+  createDirectDbPool: () => new Pool({ ...holder.pool!.options, max: 1 }),
 }));
 let db: Awaited<ReturnType<typeof createMigratedTestDb>>;
 const objects = new Map<string, Uint8Array>();
@@ -35,7 +38,9 @@ const storage: StorageProvider = {
   async putObject(key, body) {
     if (body instanceof Uint8Array) objects.set(key, body);
   },
-  async deleteObject() {},
+  async deleteObject(key) {
+    objects.delete(key);
+  },
   async presignedPutUrl() {
     return '';
   },
@@ -120,7 +125,7 @@ async function seed() {
 type Submission = Awaited<ReturnType<typeof seed>>;
 function submit(flow: 'wallet' | 'invoice', input: Submission) {
   return flow === 'wallet'
-    ? new BankReceiptTopUpService(new WalletService()).submit(input)
+    ? new BankReceiptTopUpService(new WalletService(), storage).submit(input)
     : new InvoiceBankReceiptUploadService(new CustomerInvoiceDetailsService(), storage).submit(
         input
       );
@@ -294,4 +299,78 @@ for (const flow of ['wallet', 'invoice'] as const) {
       await db.pool.query('DROP FUNCTION delay_receipt_submission()');
     }
   });
+}
+
+for (const flow of ['wallet', 'invoice'] as const) {
+  it(`${flow} preserves submitted receipt bytes after the source upload is overwritten and retried`, async () => {
+    const input = await seed();
+    const original = objects.get(input.attachmentKey)!.slice();
+    const result = await submit(flow, input);
+    const tampered = original.slice();
+    tampered.set(new TextEncoder().encode('CHANGED'), 100);
+    objects.set(input.attachmentKey, tampered);
+    expect(result.attachmentKey).not.toBe(input.attachmentKey);
+    expect(objects.get(result.attachmentKey)).toEqual(original);
+    expect((await submit(flow, input)).attachmentKey).toBe(result.attachmentKey);
+    expect(objects.get(result.attachmentKey)).toEqual(original);
+    const row = (
+      await db.pool.query(
+        `SELECT ${flow === 'wallet' ? 'receipt_attachment_key' : 'attachment_key'} AS key FROM ${flow === 'wallet' ? 'wallet_transactions' : 'bank_receipts'} WHERE ${flow === 'wallet' ? 'wallet_id' : 'profile_id'}=$1`,
+        [input.profileId]
+      )
+    ).rows[0];
+    expect(row.key).toBe(result.attachmentKey);
+  });
+}
+
+for (const flow of ['wallet', 'invoice'] as const) {
+  for (const cleaned of [false, true])
+    it(`${flow} handles a failed copy with cleanup ${cleaned ? 'completed' : 'pending'}`, async () => {
+      const input = await seed();
+      const put = storage.putObject;
+      storage.putObject = async (key, body, contentType) => {
+        await put(key, body, contentType);
+        throw new Error('Copy acknowledgement lost');
+      };
+      try {
+        await expect(submit(flow, input)).rejects.toThrow('Copy acknowledgement lost');
+      } finally {
+        storage.putObject = put;
+      }
+      const copies = (
+        await db.pool.query(
+          "SELECT storage_key,status,metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+          [input.attachmentKey]
+        )
+      ).rows;
+      expect(copies).toHaveLength(1);
+      expect(copies[0]).toMatchObject({
+        status: 'removed',
+        metadata: { provisionalCopy: true, deletionRequested: true },
+      });
+      if (cleaned) {
+        await db.pool.query(
+          "UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes' WHERE storage_key=$1",
+          [copies[0].storage_key]
+        );
+        await cleanupStorageObjects(db.pool, storage);
+        expect(objects.has(copies[0].storage_key)).toBe(false);
+        await expect(submit(flow, input)).rejects.toMatchObject({ status: 409 });
+        expect(objects.has(copies[0].storage_key)).toBe(false);
+        return;
+      }
+      const result = await submit(flow, input);
+      expect(result.attachmentKey).toBe(copies[0].storage_key);
+      const record = (
+        await db.pool.query(
+          'SELECT status,removed_at,metadata FROM storage_records WHERE storage_key=$1',
+          [result.attachmentKey]
+        )
+      ).rows[0];
+      expect(record.status).toBe('immutable');
+      expect(record.removed_at).toBeNull();
+      expect(record.metadata.provisionalCopy).toBeUndefined();
+      expect(record.metadata.deletionRequested).toBeUndefined();
+      expect(objects.get(result.attachmentKey)).toEqual(objects.get(input.attachmentKey));
+    });
 }

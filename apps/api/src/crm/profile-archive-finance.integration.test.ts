@@ -1,3 +1,5 @@
+import { Pool } from 'pg';
+import { pdfBytes, memoryStorage } from '../test/receipt-storage.js';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -9,6 +11,7 @@ const holder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }));
 vi.mock('@barghsa/db', async (original) => ({
   ...(await original<typeof import('@barghsa/db')>()),
   getDbPool: () => holder.pool!,
+  createDirectDbPool: () => new Pool({ ...holder.pool!.options, max: 1 }),
 }));
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string, attachmentKey: string, headers: Record<string, string>;
@@ -45,7 +48,7 @@ beforeEach(async () => {
   await http.pool.query('INSERT INTO wallets(profile_id) VALUES ($1)', [profileId]);
   attachmentKey = `uploads/document/${randomUUID()}.pdf`;
   await http.pool.query(
-    `INSERT INTO storage_records(storage_key,status,metadata) VALUES ($1,'active',$2::jsonb)`,
+    `INSERT INTO storage_records(storage_key,status,metadata,file_size,content_type,category,file_name) VALUES ($1,'active',$2::jsonb,4096,'application/pdf','document','receipt.pdf')`,
     [
       attachmentKey,
       JSON.stringify({
@@ -70,7 +73,7 @@ beforeEach(async () => {
       return { paid: false, providerRefId: null };
     },
   });
-  bank = new BankReceiptTopUpService(wallet);
+  bank = new BankReceiptTopUpService(wallet, memoryStorage(new Map([[attachmentKey, pdfBytes()]])));
 }, 40000);
 afterEach(async () => {
   holder.pool = null;

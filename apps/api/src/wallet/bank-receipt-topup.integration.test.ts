@@ -1,3 +1,6 @@
+import { sealedInvoiceBankReceiptAttachmentKey } from '@barghsa/shared/finance';
+import { pdfBytes, memoryStorage } from '../test/receipt-storage.js';
+import { Pool } from 'pg';
 /**
  * Real-PostgreSQL integration tests for bank-receipt top-up submission
  * (T-04.2.02.03).
@@ -37,6 +40,7 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@barghsa/db')>();
   return {
     ...actual,
+    createDirectDbPool: () => new Pool({ ...poolHolder.pool!.options, max: 1 }),
     getDbPool: () => {
       if (!poolHolder.pool) {
         throw new Error('test pool not initialized — beforeAll must run first');
@@ -65,12 +69,13 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
   let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let walletService: WalletService;
   let service: BankReceiptTopUpService;
+  const objects = new Map<string, Uint8Array>();
 
   beforeAll(async () => {
     ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     walletService = new WalletService();
-    service = new BankReceiptTopUpService(walletService);
+    service = new BankReceiptTopUpService(walletService, memoryStorage(objects));
 
     await ctx.pool.query(
       `INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'test-only')`,
@@ -96,6 +101,7 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
     storageKey: string,
     overrides: Record<string, unknown> = {}
   ): Promise<void> {
+    objects.set(storageKey, pdfBytes());
     const metadata = {
       verified: true,
       uploadedBy: ACTOR_ID,
@@ -104,7 +110,7 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
       ...overrides,
     };
     await ctx.pool.query(
-      `INSERT INTO storage_records (storage_key, status, metadata) VALUES ($1, 'active', $2::jsonb)`,
+      `INSERT INTO storage_records (storage_key, status, metadata, file_size, content_type, category, file_name) VALUES ($1, 'active', $2::jsonb,4096,'application/pdf','document','receipt.pdf')`,
       [storageKey, JSON.stringify(metadata)]
     );
   }
@@ -168,7 +174,7 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
 
     expect(result.state).toBe('Pending');
     expect(result.amount).toBe(250_000n);
-    expect(result.attachmentKey).toBe(attachment);
+    expect(result.attachmentKey).toBe(sealedInvoiceBankReceiptAttachmentKey(attachment));
 
     const after = await fetchWallet(PROFILE_A);
     expect(after.posted_balance).toBe(before.posted_balance);
@@ -181,14 +187,14 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
       type: 'topup',
       amount: '250000',
       state: 'Pending',
-      receipt_attachment_key: attachment,
+      receipt_attachment_key: result.attachmentKey,
     });
     expect(row!.metadata).toMatchObject({
       channel: BANK_RECEIPT_TOPUP_CHANNEL,
       receipt: {
         paymentDate: '2026-08-15',
         payerReference: 'TRK-998877',
-        attachmentKey: attachment,
+        attachmentKey: result.attachmentKey,
         customerNote: 'Branch transfer',
       },
     });
@@ -367,7 +373,11 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
     expect(rejected).toHaveLength(1);
     expect((rejected[0] as PromiseRejectedResult).reason).toBeInstanceOf(ConflictException);
     const ledger = await fetchLedger(PROFILE_A);
-    expect(ledger.filter((row) => row.receipt_attachment_key === attachment)).toHaveLength(1);
+    expect(
+      ledger.filter(
+        (row) => row.receipt_attachment_key === sealedInvoiceBankReceiptAttachmentKey(attachment)
+      )
+    ).toHaveLength(1);
   });
 
   it('freezes the receipt as immutable so it cannot be physically deleted after Pending is committed', async () => {

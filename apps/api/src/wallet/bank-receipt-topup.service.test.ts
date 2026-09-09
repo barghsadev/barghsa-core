@@ -1,3 +1,8 @@
+import { sealedInvoiceBankReceiptAttachmentKey } from '@barghsa/shared/finance';
+import { pdfBytes, memoryStorage } from '../test/receipt-storage.js';
+vi.mock('../storage/reserve-storage-copy.js', () => ({
+  reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ConflictException, HttpException, NotFoundException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -50,6 +55,7 @@ function makePendingRow(overrides: Record<string, unknown> = {}) {
     amount: AMOUNT.toString(),
     state: 'Pending',
     idempotency_key: IDEM,
+    receipt_attachment_key: ATTACHMENT,
     ref_id: null,
     description: 'Bank receipt wallet top-up',
     metadata: {
@@ -80,7 +86,7 @@ type ScriptOptions = {
 };
 
 function scriptClient(opts: ScriptOptions = {}) {
-  mockClient.query.mockImplementation(async (sql: string) => {
+  mockClient.query.mockImplementation(async (sql: string, params: unknown[] = []) => {
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
       return { rows: [] };
     }
@@ -97,6 +103,10 @@ function scriptClient(opts: ScriptOptions = {}) {
         rows: [
           {
             status: opts.storageStatus ?? 'active',
+            file_size: 4096,
+            content_type: 'application/pdf',
+            category: 'document',
+            file_name: 'receipt.pdf',
             metadata:
               opts.storageMetadata === undefined ? VALID_STORAGE_METADATA : opts.storageMetadata,
           },
@@ -125,7 +135,15 @@ function scriptClient(opts: ScriptOptions = {}) {
     }
     if (sql.includes('INSERT INTO wallet_transactions')) {
       if (opts.insert instanceof Error) throw opts.insert;
-      return { rows: [opts.insert ?? makePendingRow()] };
+      return {
+        rows: [
+          opts.insert ??
+            makePendingRow({
+              metadata: JSON.parse(params[4] as string),
+              receipt_attachment_key: params[5],
+            }),
+        ],
+      };
     }
     return { rows: [] };
   });
@@ -157,7 +175,10 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
     mockClient.release.mockImplementation(() => {});
     mockClient.query.mockReset();
     walletService = makeWalletService();
-    service = new BankReceiptTopUpService(walletService as unknown as WalletService);
+    service = new BankReceiptTopUpService(
+      walletService as unknown as WalletService,
+      memoryStorage(new Map([[ATTACHMENT, pdfBytes()]]))
+    );
   });
 
   it('rejects a blank idempotency key before touching the wallet', async () => {
@@ -290,26 +311,26 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
       state: 'Pending',
       paymentDate: RECEIPT.paymentDate,
       payerReference: RECEIPT.payerReference,
-      attachmentKey: RECEIPT.attachmentKey,
+      attachmentKey: sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT),
     });
     expect(walletService.credit).not.toHaveBeenCalled();
     const insert = mockClient.query.mock.calls.find(([sql]) =>
       String(sql).includes('INSERT INTO wallet_transactions')
     );
     expect(insert?.[1]?.[3]).toBe('Bank receipt wallet top-up');
-    expect(insert?.[1]?.[5]).toBe(ATTACHMENT);
+    expect(insert?.[1]?.[5]).toBe(sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT));
     expect(JSON.parse(String(insert?.[1]?.[4]))).toMatchObject({
       channel: BANK_RECEIPT_TOPUP_CHANNEL,
-      receipt: RECEIPT,
+      receipt: { ...RECEIPT, attachmentKey: sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT) },
     });
     const protect = mockClient.query.mock.calls.find(([sql]) =>
       String(sql).includes('UPDATE storage_records')
     );
-    expect(protect?.[1]).toEqual([ATTACHMENT, ACTOR_ID]);
+    expect(protect?.[1]?.slice(0, 2)).toEqual([ATTACHMENT, ACTOR_ID]);
   });
 
-  it('does not rewrite an already-immutable receipt', async () => {
-    scriptClient({ storageStatus: 'immutable' });
+  it('does not rewrite an already-submitted immutable receipt on retry', async () => {
+    scriptClient({ storageStatus: 'immutable', existing: makePendingRow() });
     const result = await service.submit(submitInput());
     expect(result.state).toBe('Pending');
     expect(

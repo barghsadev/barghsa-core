@@ -1,4 +1,8 @@
-import { readCappedBytes } from '../storage/read-capped-bytes.js';
+import {
+  sealBankReceiptAttachment,
+  persistSealedBankReceipt,
+  type StorageLockRow,
+} from '../finance/seal-bank-receipt-attachment.js';
 import {
   auditReceiptSubmission,
   lockReceiptSubmissionActor,
@@ -18,29 +22,18 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   canCustomerSubmitInvoiceBankReceipt,
   evaluateBankReceiptStorageMetadata,
-  evaluateInvoiceBankReceiptStoredFile,
-  INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY,
   invoiceBankReceiptDetailsMatch,
   invoiceBankReceiptLookupKeys,
-  invoiceBankReceiptMaxBytes,
   parseInvoiceBankReceiptSubmission,
-  parsePositiveByteCount,
-  sealedInvoiceBankReceiptAttachmentKey,
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
-  type InvoiceBankReceiptFileCategory,
 } from '@barghsa/shared/finance';
-import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage';
+import { type StorageProvider } from '@barghsa/shared/storage';
 import {
   bankReceiptAttachmentAdvisoryLockKeys,
   claimBankReceiptAttachment,
 } from '../finance/claim-bank-receipt-attachment.js';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
-import {
-  pickDetectedContentType,
-  sniffContentTypes,
-  SNIFF_SAMPLE_BYTES,
-} from '../upload/content-type-sniffer.js';
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js';
 
 const PG_UNIQUE_VIOLATION = '23505';
@@ -52,14 +45,6 @@ const STORAGE_REJECTION_MESSAGE: Record<BankReceiptStorageRejection, string> = {
   wrong_owner: 'Bank receipt attachment does not belong to this account',
   wrong_purpose: 'Bank receipt attachment was not uploaded as a bank receipt',
 };
-
-const FILE_REJECTION_MESSAGE = {
-  type: 'Bank receipt file must be a PDF, JPEG, PNG, or WebP',
-  size: 'Bank receipt file exceeds the allowed size for its type',
-  empty: 'Bank receipt file is missing or empty',
-  size_unverified: 'Bank receipt file size could not be verified from storage',
-  size_mismatch: 'Bank receipt file size does not match the uploaded object',
-} as const;
 
 export interface SubmitInvoiceBankReceiptInput extends ReceiptSubmissionActor {
   invoiceId: string;
@@ -106,22 +91,6 @@ interface InvoiceLockRow {
   profile_id: string;
   state: string;
   adjustment_kind: string | null;
-}
-
-interface StorageLockRow {
-  status: string;
-  metadata: unknown;
-  file_size: string | number | bigint | null;
-  content_type: string | null;
-  category: string | null;
-  file_name: string | null;
-}
-
-interface SealedAttachment {
-  sealedKey: string;
-  bytes: Uint8Array;
-  detectedContentType: string;
-  category: InvoiceBankReceiptFileCategory;
 }
 
 /**
@@ -230,8 +199,14 @@ export class InvoiceBankReceiptUploadService {
         return existing;
       }
 
-      const sealed = await this.sealAttachmentBytes(receipt.attachmentKey, storageRow);
-      await this.persistSealedStorageRecords(
+      const sealed = await sealBankReceiptAttachment(
+        client,
+        this.storage,
+        actor.userId,
+        receipt.attachmentKey,
+        storageRow
+      );
+      await persistSealedBankReceipt(
         client,
         actor.userId,
         receipt.attachmentKey,
@@ -381,150 +356,6 @@ export class InvoiceBankReceiptUploadService {
     }
     return row;
   }
-
-  private async sealAttachmentBytes(
-    attachmentKey: string,
-    row: StorageLockRow
-  ): Promise<SealedAttachment> {
-    const sealedKey = sealedInvoiceBankReceiptAttachmentKey(attachmentKey);
-    if (sealedKey === null) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.type);
-    }
-
-    const keyCategory: InvoiceBankReceiptFileCategory = attachmentKey.startsWith('uploads/image/')
-      ? 'image'
-      : 'document';
-    const cap = invoiceBankReceiptMaxBytes(keyCategory);
-
-    const read = await this.readObjectBytesCapped(attachmentKey, cap);
-    if (read === null) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_unverified);
-    }
-    if (read.bytes.byteLength === 0) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.empty);
-    }
-    if (read.truncated) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size);
-    }
-
-    const sample = read.bytes.subarray(0, Math.min(read.bytes.byteLength, SNIFF_SAMPLE_BYTES));
-    const detected = pickDetectedContentType(
-      sniffContentTypes(sample),
-      INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY[keyCategory]
-    );
-    if (detected === null) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.type);
-    }
-
-    const file = evaluateInvoiceBankReceiptStoredFile({
-      attachmentKey,
-      fileSize: read.bytes.byteLength,
-      contentType: detected,
-      category: row.category,
-      fileName: row.file_name,
-    });
-    if (!file.ok) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE[file.reason]);
-    }
-
-    const recordedFileSize = row.file_size == null ? null : parsePositiveByteCount(row.file_size);
-    if (row.file_size != null && recordedFileSize !== read.bytes.byteLength) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_mismatch);
-    }
-
-    if (!this.storage) {
-      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_unverified);
-    }
-    await this.storage.putObject(sealedKey, read.bytes, detected);
-
-    return {
-      sealedKey,
-      bytes: read.bytes,
-      detectedContentType: detected,
-      category: keyCategory,
-    };
-  }
-
-  private async persistSealedStorageRecords(
-    client: QueryClient,
-    actorId: string,
-    originalKey: string,
-    original: StorageLockRow,
-    sealed: SealedAttachment
-  ): Promise<void> {
-    const originalMetadata = metadataRecord(original.metadata);
-    originalMetadata.sealedAttachmentKey = sealed.sealedKey;
-
-    const updated = await client.query(
-      `UPDATE storage_records
-          SET status = 'immutable',
-              file_size = $3,
-              content_type = $4,
-              metadata = $5::jsonb,
-              signed_at = NOW(),
-              signed_by = $2,
-              updated_at = NOW()
-        WHERE storage_key = $1
-          AND status IN ('active', 'immutable')`,
-      [
-        originalKey,
-        actorId,
-        sealed.bytes.byteLength,
-        sealed.detectedContentType,
-        JSON.stringify(originalMetadata),
-      ]
-    );
-    if ((updated.rowCount ?? 0) < 1) {
-      throw httpError(
-        ErrorCodes.VALIDATION_INPUT_INVALID,
-        'Bank receipt attachment could not be locked for review'
-      );
-    }
-
-    await client.query(
-      `INSERT INTO storage_records
-         (storage_key, status, metadata, file_size, content_type, category, file_name,
-          signed_at, signed_by, updated_at)
-       VALUES ($1, 'immutable', $2::jsonb, $3, $4, $5, $6, NOW(), $7, NOW())
-       ON CONFLICT (storage_key) DO UPDATE
-          SET status = 'immutable',
-              metadata = EXCLUDED.metadata,
-              file_size = EXCLUDED.file_size,
-              content_type = EXCLUDED.content_type,
-              category = EXCLUDED.category,
-              file_name = EXCLUDED.file_name,
-              signed_at = NOW(),
-              signed_by = EXCLUDED.signed_by,
-              updated_at = NOW()`,
-      [
-        sealed.sealedKey,
-        JSON.stringify({
-          ...originalMetadata,
-          sourceAttachmentKey: originalKey,
-          sealedAttachmentKey: sealed.sealedKey,
-        }),
-        sealed.bytes.byteLength,
-        sealed.detectedContentType,
-        sealed.category,
-        original.file_name,
-        actorId,
-      ]
-    );
-  }
-
-  private async readObjectBytesCapped(
-    attachmentKey: string,
-    maxBytes: number
-  ): Promise<{ bytes: Uint8Array; truncated: boolean } | null> {
-    if (!this.storage) return null;
-    try {
-      const object = await this.storage.getObject(attachmentKey);
-      return await readCappedBytes(object.body, maxBytes);
-    } catch (error) {
-      if (error instanceof StorageObjectNotFound) return null;
-      throw error;
-    }
-  }
 }
 
 function assertReusableSubmitted(
@@ -584,21 +415,4 @@ function httpError(
   statusCode = def.httpStatus
 ): never {
   throw new HttpException({ statusCode, error: def.code, message }, statusCode);
-}
-
-function metadataRecord(raw: unknown): Record<string, unknown> {
-  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
-    return { ...(raw as Record<string, unknown>) };
-  }
-  if (typeof raw === 'string') {
-    try {
-      const parsed: unknown = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-        return { ...(parsed as Record<string, unknown>) };
-      }
-    } catch {
-      return {};
-    }
-  }
-  return {};
 }

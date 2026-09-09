@@ -1,4 +1,11 @@
 import {
+  sealBankReceiptAttachment,
+  persistSealedBankReceipt,
+  type StorageLockRow,
+} from '../finance/seal-bank-receipt-attachment.js';
+import type { StorageProvider } from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
+import {
   auditReceiptSubmission,
   lockReceiptSubmissionActor,
   type ReceiptSubmissionActor,
@@ -9,6 +16,8 @@ import {
   ConflictException,
   HttpException,
   Injectable,
+  Inject,
+  Optional,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
@@ -20,6 +29,7 @@ import {
   evaluateBankReceiptStorageMetadata,
   parseBankReceiptTopUpSubmission,
   receiptDetailsMatch,
+  invoiceBankReceiptLookupKeys,
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
 } from '@barghsa/shared/finance';
@@ -83,7 +93,9 @@ interface QueryClient {
  *      the Pending ledger row is committed.
  *   4. Claim the storage key as `wallet_topup`. An invoice-receipt
  *      claim is rejected; same-flow retries continue.
- *   5. Insert a Pending `topup` ledger row (does not change balances)
+ *   5. Read, validate and seal receipt bytes under a server-only key.
+ *      Retries retain their first committed copy.
+ *   6. Insert a Pending `topup` ledger row (does not change balances)
  *      with a uniquely constrained `receipt_attachment_key`.
  *
  * Wallet credit is deferred to staff confirmation (T-04.2.02.04).
@@ -93,7 +105,10 @@ interface QueryClient {
 export class BankReceiptTopUpService {
   private readonly logger = new Logger(BankReceiptTopUpService.name);
 
-  constructor(private readonly walletService: WalletService) {}
+  constructor(
+    private readonly walletService: WalletService,
+    @Optional() @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null = null
+  ) {}
 
   async submit(input: SubmitBankReceiptTopUpInput): Promise<SubmitBankReceiptTopUpResult> {
     const idempotencyKey = input.idempotencyKey.trim();
@@ -145,7 +160,8 @@ export class BankReceiptTopUpService {
             state: 'Pending',
             paymentDate: parsed.receipt.paymentDate,
             payerReference: parsed.receipt.payerReference,
-            attachmentKey: parsed.receipt.attachmentKey,
+            attachmentKey: (pending.metadata as { receipt: BankReceiptTopUpDetails }).receipt
+              .attachmentKey,
           };
         } finally {
           await client.query('SELECT pg_advisory_unlock($1, $2)', idempotencyLockKeys);
@@ -158,20 +174,15 @@ export class BankReceiptTopUpService {
     }
   }
 
-  /**
-   * Lock the receipt storage row, require verified owner+purpose
-   * provenance, and freeze an `active` object as `immutable` so later
-   * physical deletes are rejected. Already immutable keys are left
-   * unchanged (idempotent retry) after the same provenance check.
-   */
-  private async lockAndProtectAttachment(
+  /** Lock and validate source provenance. New submissions freeze both source and sealed copy. */
+  private async lockAttachmentProvenance(
     client: QueryClient,
     attachmentKey: string,
     actorId: string,
     profileId: string
-  ): Promise<void> {
+  ): Promise<StorageLockRow> {
     const result = await client.query(
-      `SELECT status, metadata FROM storage_records WHERE storage_key = $1 FOR UPDATE`,
+      `SELECT status, metadata, file_size, content_type, category, file_name FROM storage_records WHERE storage_key = $1 FOR UPDATE`,
       [attachmentKey]
     );
     if (result.rows.length === 0) {
@@ -180,7 +191,7 @@ export class BankReceiptTopUpService {
         'Bank receipt attachment has not been uploaded and recorded'
       );
     }
-    const row = result.rows[0] as { status: string; metadata: unknown };
+    const row = result.rows[0] as unknown as StorageLockRow;
     if (row.status === 'removed') {
       throw httpError(
         ErrorCodes.VALIDATION_INPUT_INVALID,
@@ -197,7 +208,7 @@ export class BankReceiptTopUpService {
     }
 
     if (row.status === 'immutable') {
-      return;
+      return row;
     }
     if (row.status !== 'active') {
       throw httpError(
@@ -206,22 +217,7 @@ export class BankReceiptTopUpService {
       );
     }
 
-    const updated = await client.query(
-      `UPDATE storage_records
-          SET status = 'immutable',
-              signed_at = NOW(),
-              signed_by = $2,
-              updated_at = NOW()
-        WHERE storage_key = $1
-          AND status = 'active'`,
-      [attachmentKey, actorId]
-    );
-    if ((updated.rowCount ?? 0) < 1) {
-      throw httpError(
-        ErrorCodes.VALIDATION_INPUT_INVALID,
-        'Bank receipt attachment could not be locked for review'
-      );
-    }
+    return row;
   }
 
   private async insertOrReusePending(
@@ -247,7 +243,12 @@ export class BankReceiptTopUpService {
       }
       canonicalWalletId = (walletResult.rows[0] as { profile_id: string }).profile_id;
 
-      await this.lockAndProtectAttachment(client, receipt.attachmentKey, actor.userId, profileId);
+      const storageRow = await this.lockAttachmentProvenance(
+        client,
+        receipt.attachmentKey,
+        actor.userId,
+        profileId
+      );
       await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup');
 
       const idemResult = await client.query(
@@ -268,12 +269,28 @@ export class BankReceiptTopUpService {
       }
 
       const attachmentResult = await client.query(
-        `SELECT * FROM wallet_transactions WHERE receipt_attachment_key = $1 FOR UPDATE`,
-        [receipt.attachmentKey]
+        `SELECT * FROM wallet_transactions WHERE receipt_attachment_key = ANY($1::text[]) FOR UPDATE`,
+        [invoiceBankReceiptLookupKeys(receipt.attachmentKey)]
       );
       if (attachmentResult.rows.length > 0) {
         throw new ConflictException('This bank receipt attachment has already been submitted');
       }
+
+      const sealed = await sealBankReceiptAttachment(
+        client,
+        this.storage,
+        actor.userId,
+        receipt.attachmentKey,
+        storageRow
+      );
+      await persistSealedBankReceipt(
+        client,
+        actor.userId,
+        receipt.attachmentKey,
+        storageRow,
+        sealed
+      );
+      const sealedReceipt = { ...receipt, attachmentKey: sealed.sealedKey };
 
       const txResult = await client.query(
         `INSERT INTO wallet_transactions
@@ -285,8 +302,8 @@ export class BankReceiptTopUpService {
           amountIrR.toString(),
           idempotencyKey,
           BANK_RECEIPT_TOPUP_DESCRIPTION,
-          JSON.stringify(bankReceiptTopUpMetadata(receipt)),
-          receipt.attachmentKey,
+          JSON.stringify(bankReceiptTopUpMetadata(sealedReceipt)),
+          sealed.sealedKey,
         ]
       );
 
@@ -320,7 +337,7 @@ export class BankReceiptTopUpService {
         await client.query('BEGIN');
         try {
           await lockReceiptSubmissionActor(client, actor, profileId);
-          await this.lockAndProtectAttachment(
+          await this.lockAttachmentProvenance(
             client,
             receipt.attachmentKey,
             actor.userId,
@@ -359,6 +376,7 @@ function assertMatchingPendingBankReceipt(
     amount: string | number | bigint;
     state: string;
     metadata?: unknown;
+    receipt_attachment_key?: string;
   },
   canonicalWalletId: string,
   amountIrR: bigint,
@@ -371,7 +389,11 @@ function assertMatchingPendingBankReceipt(
     existing.state === 'Pending' &&
     existing.type === 'topup' &&
     BigInt(existing.amount) === amountIrR &&
-    receiptDetailsMatch(existing.metadata, receipt);
+    invoiceBankReceiptLookupKeys(receipt.attachmentKey).some(
+      (attachmentKey) =>
+        existing.receipt_attachment_key === attachmentKey &&
+        receiptDetailsMatch(existing.metadata, { ...receipt, attachmentKey })
+    );
   if (!isSamePending) {
     throw new ConflictException('Idempotency key already used for a different wallet operation');
   }

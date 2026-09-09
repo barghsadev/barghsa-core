@@ -1,3 +1,5 @@
+import { pdfBytes, memoryStorage } from '../test/receipt-storage.js';
+import { Pool } from 'pg';
 /**
  * Real-PostgreSQL cross-flow tests for bank-receipt attachment claims
  * (T-04.3.01.02).
@@ -15,12 +17,14 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
 import { ConflictException } from '@nestjs/common';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
-import { BANK_RECEIPT_STORAGE_PURPOSE } from '@barghsa/shared/finance';
+import {
+  BANK_RECEIPT_STORAGE_PURPOSE,
+  invoiceBankReceiptLookupKeys,
+} from '@barghsa/shared/finance';
 import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js';
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js';
 import { WalletService } from '../wallet/wallet.service.js';
 import { BankReceiptTopUpService } from '../wallet/bank-receipt-topup.service.js';
-import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage';
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }));
 
@@ -28,6 +32,7 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@barghsa/db')>();
   return {
     ...actual,
+    createDirectDbPool: () => new Pool({ ...poolHolder.pool!.options, max: 1 }),
     getDbPool: () => {
       if (!poolHolder.pool) {
         throw new Error('test pool not initialized — beforeAll must run first');
@@ -51,44 +56,6 @@ function receiptKey(suffix: string): string {
   return `uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-${pad}.pdf`;
 }
 
-function pdfBytes(size = 4096): Uint8Array {
-  const bytes = new Uint8Array(size);
-  bytes.set(new TextEncoder().encode('%PDF-1.4\n'));
-  return bytes;
-}
-
-function bytesBody(bytes: Uint8Array): ReadableStream<Uint8Array> {
-  return new ReadableStream({
-    start(controller) {
-      if (bytes.byteLength > 0) controller.enqueue(bytes);
-      controller.close();
-    },
-  });
-}
-
-function memoryStorage(objects: Map<string, Uint8Array>): StorageProvider {
-  return {
-    putObject: async (key, body) => {
-      if (body instanceof Uint8Array) objects.set(key, body);
-    },
-    getObject: async (key) => {
-      const bytes = objects.get(key);
-      if (!bytes) throw new StorageObjectNotFound(key);
-      return {
-        body: bytesBody(bytes),
-        contentType: 'application/pdf',
-        contentLength: bytes.byteLength,
-        metadata: {},
-        etag: undefined,
-      };
-    },
-    deleteObject: async () => {},
-    presignedPutUrl: async () => '',
-    presignedGetUrl: async () => '',
-    listObjects: async () => ({ items: [], isTruncated: false, continuationToken: undefined }),
-  };
-}
-
 describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.01.02)', () => {
   let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
   let invoiceUpload: InvoiceBankReceiptUploadService;
@@ -102,7 +69,7 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
       new CustomerInvoiceDetailsService(),
       memoryStorage(objects)
     );
-    walletTopUp = new BankReceiptTopUpService(new WalletService());
+    walletTopUp = new BankReceiptTopUpService(new WalletService(), memoryStorage(objects));
 
     await ctx.pool.query(
       `INSERT INTO users (user_id, username, password_hash) VALUES ($1, 'receipt-upload@example.test', 'test-only')`,
@@ -252,8 +219,8 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
       `SELECT count(*)::int AS n FROM bank_receipts`
     );
     const walletTx = await ctx.pool.query<{ n: number }>(
-      `SELECT count(*)::int AS n FROM wallet_transactions WHERE receipt_attachment_key = $1`,
-      [attachment]
+      `SELECT count(*)::int AS n FROM wallet_transactions WHERE receipt_attachment_key = ANY($1::text[])`,
+      [invoiceBankReceiptLookupKeys(attachment)]
     );
     if (claims[0]!.claim_type === 'wallet_topup') {
       expect(walletTx.rows[0]!.n).toBe(1);
