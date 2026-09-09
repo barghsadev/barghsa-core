@@ -151,6 +151,11 @@
       "types": "./dist/invoice-corrections.d.ts",
       "import": "./dist/invoice-corrections.js",
       "default": "./dist/invoice-corrections.js"
+    },
+    "./wallet-invoice-payment": {
+      "types": "./dist/wallet-invoice-payment.d.ts",
+      "import": "./dist/wallet-invoice-payment.js",
+      "default": "./dist/wallet-invoice-payment.js"
     }
   },
   "scripts": {

@@ -1,6 +1,7 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { WalletInvoicePaymentPanel } from '../components/WalletInvoicePaymentPanel.js';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance';
@@ -34,6 +35,10 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
   const [details, setDetails] = useState<CustomerInvoiceDetails | null>(null);
   const [error, setError] = useState<'not-found' | 'load' | null>(null);
   const [loading, setLoading] = useState(true);
+  const refreshDetails = useCallback(async () => {
+    const next = await fetchInvoiceDetails(invoiceId);
+    setDetails((current) => (current?.viewedInvoiceId === invoiceId ? next : current));
+  }, [invoiceId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -97,7 +102,11 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {t('invoices.details.error', locale)}
         </p>
       ) : details ? (
-        <InvoiceDetailsBody details={details} formatTimestamp={time.format} />
+        <InvoiceDetailsBody
+          details={details}
+          formatTimestamp={time.format}
+          onRefreshDetails={refreshDetails}
+        />
       ) : null}
     </div>
   );
@@ -106,9 +115,11 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
 function InvoiceDetailsBody({
   details,
   formatTimestamp,
+  onRefreshDetails,
 }: {
   details: CustomerInvoiceDetails;
   formatTimestamp: (value: string | null) => string;
+  onRefreshDetails: () => Promise<void>;
 }) {
   const locale = useLocale();
   const viewed = details.invoice;
@@ -154,6 +165,15 @@ function InvoiceDetailsBody({
         />
       ))}
 
+      <WalletInvoicePaymentPanel
+        key={viewed.invoiceId}
+        invoiceId={viewed.invoiceId}
+        eligible={
+          viewed.adjustmentKind !== 'credit' &&
+          ['Unpaid', 'PartiallyFunded', 'Overdue'].includes(viewed.state)
+        }
+        onRefreshDetails={onRefreshDetails}
+      />
       {canCustomerSubmitInvoiceBankReceipt({
         state: viewed.state,
         adjustmentKind: viewed.adjustmentKind,

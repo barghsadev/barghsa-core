@@ -53,7 +53,8 @@ export default defineConfig({
       output: {
         manualChunks: undefined, // let TanStack Router handle route-based splitting
         entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
+        // Short URLs reduce the shared preload map as the route inventory grows.
+        chunkFileNames: 'assets/c-[hash].js',
         assetFileNames: 'assets/[name]-[hash][extname]',
       },
     },
