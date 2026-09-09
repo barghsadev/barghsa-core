@@ -28,7 +28,7 @@ beforeAll(async () => {
     [grants]
   );
   await http.pool.query(
-    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ('provider-writer','provider-writer@example.test','test-only',true)"
+    "INSERT INTO users(user_id,username,mobile,password_hash,is_staff) VALUES ('provider-writer','provider-writer@example.test','+989121234567','test-only',true)"
   );
   await http.pool.query(
     "INSERT INTO user_roles(user_id,role_id) VALUES ('provider-writer','provider-writer')"

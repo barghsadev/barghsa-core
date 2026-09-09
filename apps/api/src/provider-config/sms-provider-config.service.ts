@@ -1,5 +1,6 @@
 import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
+import { resolveProviderTestRecipient } from './provider-test-recipient.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -497,9 +498,9 @@ export class SmsProviderConfigService {
   /**
    * Run a live connection check for a draft config via the SMS.ir connection
    * tester (parses the stored config, validates the API key / sender, checks
-   * the account credit, and when `recipient` is supplied performs a live
-   * test-send through the mapped template — validating template Id + variable
-   * names against SMS.ir), then persist the outcome as `last_test_*`.
+   * the account credit, and sends to the staff member's current verified mobile
+   * through the mapped template), then persist the outcome as `last_test_*`.
+   * An omitted recipient uses that contact; an explicit recipient must match it.
    *
    * @param recipient admin's verified mobile number to receive the test SMS
    * @param eventKey the mapped event to test-send; falls back to the first mapping
@@ -552,8 +553,11 @@ export class SmsProviderConfigService {
         };
       }
 
+      const target = await resolveProviderTestRecipient(client, session, 'sms', recipient);
       await requireSessionStepUp(client, session);
-      const outcome = await this.smsirTester.test(parsed.config, recipient, eventKey);
+      const outcome = await this.smsirTester.test(parsed.config, target, eventKey, async () => {
+        await requireSessionStepUp(client, session);
+      });
       const recorded = await this.recordTest(
         id,
         {

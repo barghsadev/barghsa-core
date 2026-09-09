@@ -53,6 +53,23 @@ describe('SmsirConnectionTesterService (T-09.06.02)', () => {
     expect(payload.parameters).toEqual([{ name: 'c', value: 'test-code' }]);
   });
 
+  it('checks authorization after credit lookup and before sending', async () => {
+    const sendVerifyCode = vi.fn(),
+      beforeSend = vi.fn(async () => {
+        throw new Error('expired');
+      });
+    const service = new SmsirConnectionTesterService(fakeClient({ sendVerifyCode }));
+    expect(
+      await service.test(
+        { ...baseConfig, template_mappings: [{ event_key: 'otp:login', template_id: '2001' }] },
+        '989121234567',
+        undefined,
+        beforeSend
+      )
+    ).toMatchObject({ ok: false });
+    expect(beforeSend).toHaveBeenCalledOnce();
+    expect(sendVerifyCode).not.toHaveBeenCalled();
+  });
   it('fails when the requested event has no template mapping', async () => {
     const sendVerifyCode = vi.fn(async () => ({ message_id: 1 }));
     const service = new SmsirConnectionTesterService(fakeClient({ sendVerifyCode }));
@@ -78,6 +95,46 @@ describe('SmsirConnectionTesterService (T-09.06.02)', () => {
     expect(result.error).toContain('template not found');
   });
 
+  it.each([undefined, 0, 'abc123', '-1'])(
+    'rejects an unconfirmed send id %s',
+    async (message_id) => {
+      const service = new SmsirConnectionTesterService(
+        fakeClient({ sendVerifyCode: async () => (message_id === undefined ? {} : { message_id }) })
+      );
+      const result = await service.test(
+        { ...baseConfig, template_mappings: [{ event_key: 'otp:login', template_id: '2001' }] },
+        '989121234567'
+      );
+      expect(result).toMatchObject({
+        ok: false,
+        error: expect.stringContaining('did not confirm'),
+      });
+    }
+  );
+  it.each(['credit', 'send'] as const)(
+    'redacts echoed credentials in a %s failure',
+    async (phase) => {
+      const diagnostic = `failed ${baseConfig.api_key} ${'x'.repeat(2000)}`;
+      const service = new SmsirConnectionTesterService(
+        fakeClient(
+          phase === 'credit'
+            ? {
+                getCredit: async () => {
+                  throw new Error(diagnostic);
+                },
+              }
+            : { sendVerifyCode: async () => ({ message: diagnostic }) }
+        )
+      );
+      const result = await service.test(
+        { ...baseConfig, template_mappings: [{ event_key: 'otp:login', template_id: '2001' }] },
+        '989121234567'
+      );
+      expect(result.ok).toBe(false);
+      expect(result.error).not.toContain(baseConfig.api_key);
+      expect(result.error!.length).toBeLessThanOrEqual(1000);
+    }
+  );
   it('fails closed when the API key is missing', async () => {
     const service = new SmsirConnectionTesterService(fakeClient({}));
     const result = await service.test({ ...baseConfig, api_key: '' });

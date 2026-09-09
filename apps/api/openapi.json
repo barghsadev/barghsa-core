@@ -3118,7 +3118,7 @@
     },
     "/api/admin/email-providers/{id}/test-connection": {
       "post": {
-        "description": "SMTP: performs a real SMTP handshake against the draft config and persists the result as last_test_status; SSRF guard rejects private/internal destinations unless allow-listed. Resend: validates the sending domain is verified and sends a real test email to body.recipient (the admin email).",
+        "description": "SMTP verifies the connection and requires acceptance of a test email; Resend checks the sending domain and sends a test email. Both use the current staff member’s verified email by default; an explicit recipient must match that contact. The SMTP network guard continues to reject private/internal destinations unless allow-listed.",
         "operationId": "EmailProviderConfigController_testConnection",
         "parameters": [
           {
@@ -6985,7 +6985,7 @@
     },
     "/api/admin/sms-providers/{id}/test-connection": {
       "post": {
-        "description": "Validates the draft SMS.ir credentials and account credit, and when body.recipient (the admin verified mobile) is supplied sends a real test SMS through the mapped template — proving the TemplateId and its variables exist on SMS.ir — then persists the result as last_test_status.",
+        "description": "Validates draft SMS.ir credentials and credit, then sends through the mapped template to the current staff member’s verified mobile. An omitted recipient uses that contact; an explicit recipient must match it. Persists the server-produced test outcome.",
         "operationId": "SmsProviderConfigController_testConnection",
         "parameters": [
           {

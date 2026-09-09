@@ -1,5 +1,6 @@
 import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
+import { resolveProviderTestRecipient } from './provider-test-recipient.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -509,7 +510,8 @@ export class EmailProviderConfigService {
    * Run a live connection test for a draft config — SMTP handshake
    * (T-05.06.02) or Resend domain-verification + test-send to the admin's
    * email (T-05.06.03) — then persist the outcome as `last_test_*`.
-   * `recipient` (the admin's email) is required for the Resend transport.
+   * Both transports send to the admin's current verified email. An omitted
+   * recipient uses that contact; an explicit recipient must match it.
    *
    * Circuit breaker integration (T-05.06.06): every test outcome is fed back
    * to the breaker, so a run of failures eventually marks the provider
@@ -571,7 +573,7 @@ export class EmailProviderConfigService {
           400
         );
       }
-      const outcome = await this.testSmtpConnection(existing.id, client, session);
+      const outcome = await this.testSmtpConnection(existing.id, recipient, client, session);
       return this.recordBreakerOutcome(
         existing.id,
         outcome,
@@ -609,9 +611,10 @@ export class EmailProviderConfigService {
     return { ok: outcome.ok, error: outcome.error, result };
   }
 
-  /** SMTP handshake connection test (T-05.06.02). */
+  /** SMTP connection and verified-contact delivery test. */
   private async testSmtpConnection(
     id: string,
+    recipient: string | undefined,
     query: Pick<ProviderPool, 'query'>,
     session: ProviderMutationSession
   ): Promise<{
@@ -644,8 +647,11 @@ export class EmailProviderConfigService {
       );
     }
 
+    const target = await resolveProviderTestRecipient(query, session, 'email', recipient);
     await requireSessionStepUp(query, session);
-    const outcome = await this.smtpTester.test(parsed.config);
+    const outcome = await this.smtpTester.test(parsed.config, target, async () => {
+      await requireSessionStepUp(query, session);
+    });
     const recorded = await this.recordTest(
       id,
       {
@@ -668,27 +674,7 @@ export class EmailProviderConfigService {
     error: string | null;
     result: EmailProviderConfigResult;
   }> {
-    if (!recipient || !recipient.trim()) {
-      throw new HttpException(
-        errBody(
-          400,
-          ErrorCodes.VALIDATION_PARSE_ZOD.code,
-          'A recipient email is required to test a Resend provider configuration'
-        ),
-        400
-      );
-    }
-    const trimmed = recipient.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      throw new HttpException(
-        errBody(
-          400,
-          ErrorCodes.VALIDATION_PARSE_ZOD.code,
-          'Invalid recipient email for the Resend test-send'
-        ),
-        400
-      );
-    }
+    const target = await resolveProviderTestRecipient(query, session, 'email', recipient);
 
     const saved = await this.readConfig(id, query);
     const parsed = parseResendConfig(saved);
@@ -720,7 +706,9 @@ export class EmailProviderConfigService {
     }
 
     await requireSessionStepUp(query, session);
-    const outcome = await this.resendTester.test(parsed.config, trimmed);
+    const outcome = await this.resendTester.test(parsed.config, target, async () => {
+      await requireSessionStepUp(query, session);
+    });
     const recorded = await this.recordTest(
       id,
       {

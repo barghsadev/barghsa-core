@@ -35,6 +35,18 @@ describe('ResendConnectionTesterService (T-05.06.03)', () => {
     expect(payload.from).toContain('no-reply@example.com');
   });
 
+  it('checks authorization after the domain lookup and before sending', async () => {
+    const sendEmail = vi.fn(),
+      beforeSend = vi.fn(async () => {
+        throw new Error('expired');
+      });
+    const service = new ResendConnectionTesterService(fakeClient({ sendEmail }));
+    expect(await service.test(baseConfig, 'admin@example.com', beforeSend)).toMatchObject({
+      ok: false,
+    });
+    expect(beforeSend).toHaveBeenCalledOnce();
+    expect(sendEmail).not.toHaveBeenCalled();
+  });
   it('uses from_email domain when sending_domain is absent', async () => {
     const listDomains = vi.fn(async () => [{ id: 'd1', name: 'example.com', status: 'verified' }]);
     const service = new ResendConnectionTesterService(fakeClient({ listDomains }));

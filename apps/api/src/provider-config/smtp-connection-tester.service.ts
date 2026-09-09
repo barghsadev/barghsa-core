@@ -6,9 +6,8 @@ import { SmtpDestinationBlockedError, SmtpNetworkGuard } from './smtp-network-gu
 /**
  * Live SMTP connection tester (E-05, T-05.06.02).
  *
- * Performs an actual SMTP handshake against the configured host using
- * `nodemailer`'s `transport.verify()`, which issues CONNECT → EHLO → (AUTH when
- * credentials are provided) and reports a granular success/failure. The SSRF
+ * Verifies the SMTP connection, then sends a test email and requires the server
+ * to accept its verified staff recipient. A handshake alone is insufficient. The SSRF
  * network guard runs first so private/internal destinations are rejected before
  * any socket is opened unless the deployment allow-list exempts them.
  */
@@ -22,6 +21,9 @@ export interface SmtpTestResult {
 /** Shape minimally exposed by a transport so tests can inject a fake. */
 export interface SmtpTransportLike {
   verify: () => Promise<boolean>;
+  sendMail: (
+    message: nodemailer.SendMailOptions
+  ) => Promise<{ accepted?: unknown[]; rejected?: unknown[] }>;
   close?: () => void;
 }
 
@@ -76,8 +78,14 @@ export class SmtpConnectionTesterService {
     this.guard = injectedGuard ?? new SmtpNetworkGuard();
   }
 
-  /** Validate + run the live SMTP handshake; never throws for connection errors. */
-  async test(config: SmtpConfig): Promise<SmtpTestResult> {
+  /** Verify SMTP and send to the staff contact already checked by the caller. */
+  async test(
+    config: SmtpConfig,
+    recipient: string,
+    beforeSend?: () => Promise<void>
+  ): Promise<SmtpTestResult> {
+    if (!recipient?.trim())
+      return { ok: false, error: 'A verified recipient is required for the SMTP test' };
     // SSRF guard first: never dial a private/internal destination unless allowed.
     try {
       await this.guard.assertHostAllowed(config.host);
@@ -92,8 +100,32 @@ export class SmtpConnectionTesterService {
     const transport = factory(config);
     try {
       const verified = await transport.verify();
-      if (verified) return { ok: true };
-      return { ok: false, error: 'SMTP verification returned no confirmation' };
+      if (!verified) return { ok: false, error: 'SMTP verification returned no confirmation' };
+      await beforeSend?.();
+      const result = await transport.sendMail({
+        from: config.from_name?.trim()
+          ? { name: config.from_name.trim(), address: config.from_email }
+          : config.from_email,
+        to: recipient,
+        ...(config.reply_to ? { replyTo: config.reply_to } : {}),
+        subject: 'Barghsa connection test',
+        text: 'This is a test email from Barghsa to confirm the SMTP email provider configuration.',
+      });
+      const accepted = result.accepted?.some((value) => {
+        const address =
+          typeof value === 'string'
+            ? value
+            : value && typeof value === 'object' && 'address' in value
+              ? value.address
+              : null;
+        return (
+          typeof address === 'string' &&
+          address.trim().toLowerCase() === recipient.trim().toLowerCase()
+        );
+      });
+      return accepted && !result.rejected?.length
+        ? { ok: true }
+        : { ok: false, error: 'SMTP server did not accept the test recipient' };
     } catch (err) {
       const message = sanitizeError(err, config);
       this.logger.warn(`SMTP connection test failed for ${config.host}: ${message}`);

@@ -179,10 +179,10 @@ export class EmailProviderConfigController {
   @ApiOperation({
     summary: 'Run a live connection test and record the outcome',
     description:
-      'SMTP: performs a real SMTP handshake against the draft config and persists ' +
-      'the result as last_test_status; SSRF guard rejects private/internal ' +
-      'destinations unless allow-listed. Resend: validates the sending domain is ' +
-      'verified and sends a real test email to body.recipient (the admin email).',
+      'SMTP verifies the connection and requires acceptance of a test email; Resend checks ' +
+      'the sending domain and sends a test email. Both use the current staff member’s verified ' +
+      'email by default; an explicit recipient must match that contact. The SMTP network guard ' +
+      'continues to reject private/internal destinations unless allow-listed.',
   })
   @ApiResponse({ status: 200, description: 'Test outcome with the updated config state.' })
   async testConnection(

@@ -24,11 +24,17 @@ function sessionFor(userId: string) {
  */
 function buildHarness() {
   const rows = new Map<string, any>();
+  const actorContacts = {
+    username: 'admin@example.com',
+    email: 'admin@example.com',
+    mobile: '+989121234567',
+  };
   const queries: string[] = [];
 
   const exec = async (text: string, params?: unknown[]): Promise<any> => {
     queries.push(text);
     const lower = text.toLowerCase();
+    if (lower.includes('from users')) return { rows: [actorContacts] };
     if (lower.includes('from sessions'))
       return {
         rows: [
@@ -225,7 +231,7 @@ function buildHarness() {
     secretsService
   );
 
-  return { service, pool, rows, queries };
+  return { service, pool, rows, queries, actorContacts };
 }
 
 describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
@@ -618,8 +624,10 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
     expect(out.result.lastTestStatus).toBe('failed');
   });
 
-  it('rejects a test when recipient is missing for resend (400)', async () => {
-    const { service } = buildHarness();
+  it('rejects a Resend test when no verified email exists (400)', async () => {
+    const { service, actorContacts } = buildHarness();
+    actorContacts.username = actorContacts.mobile;
+    actorContacts.email = '';
     const created = await service.create(
       {
         transport: 'resend',

@@ -121,7 +121,11 @@ export class ResendConnectionTesterService {
    * Validate domain verification, then send a real test email through Resend to
    * the admin's address. Never throws; returns a safe, non-secret result.
    */
-  async test(config: ResendConfig, recipient: string): Promise<ResendTestResult> {
+  async test(
+    config: ResendConfig,
+    recipient: string,
+    beforeSend?: () => Promise<void>
+  ): Promise<ResendTestResult> {
     const domain = this.targetDomain(config);
 
     // 1. Validate domain verification.
@@ -152,6 +156,7 @@ export class ResendConnectionTesterService {
       ? `"${config.from_name.trim()}" <${config.from_email}>`
       : config.from_email;
     try {
+      await beforeSend?.();
       const result = await this.client.sendEmail(config.api_key, {
         from,
         to: recipient,

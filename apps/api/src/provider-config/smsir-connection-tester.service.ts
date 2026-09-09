@@ -127,7 +127,24 @@ export class SmsirConnectionTesterService {
    * @param recipient optional admin mobile number to receive a real test SMS
    * @param eventKey optional mapped event to send; falls back to the first mapping
    */
-  async test(config: SmsirConfig, recipient?: string, eventKey?: string): Promise<SmsirTestResult> {
+  async test(
+    config: SmsirConfig,
+    recipient?: string,
+    eventKey?: string,
+    beforeSend?: () => Promise<void>
+  ): Promise<SmsirTestResult> {
+    const outcome = await this.runTest(config, recipient, eventKey, beforeSend);
+    if (outcome.error === undefined) return outcome;
+    const safe = config.api_key ? outcome.error.split(config.api_key).join('••••') : outcome.error;
+    return { ...outcome, error: safe.slice(0, 1000) || 'SMS.ir test failed' };
+  }
+
+  private async runTest(
+    config: SmsirConfig,
+    recipient?: string,
+    eventKey?: string,
+    beforeSend?: () => Promise<void>
+  ): Promise<SmsirTestResult> {
     // 1. Credential presence (structural integrity).
     if (!config.api_key || config.api_key.trim().length === 0) {
       return { ok: false, error: 'SMS.ir API key is missing' };
@@ -174,13 +191,17 @@ export class SmsirConnectionTesterService {
         ([internal, smsirName]) => ({ name: smsirName, value: `test-${internal}` }) as const
       );
       try {
+        await beforeSend?.();
         const outcome = await this.client.sendVerifyCode(config.api_key, this.baseUrl(), {
           mobile_number: recipient.trim(),
           template_id: target.template_id,
           parameters: variables,
         });
-        if (outcome.message && !String(outcome.message_id ?? '').match(/\d+/)) {
-          return { ok: false, error: `SMS.ir test-send failed: ${outcome.message}` };
+        if (!/^[1-9]\d*$/.test(String(outcome.message_id ?? ''))) {
+          return {
+            ok: false,
+            error: `SMS.ir test-send failed: ${outcome.message || 'provider did not confirm acceptance'}`,
+          };
         }
       } catch (error) {
         const detail = error instanceof Error ? error.message : String(error);
