@@ -1,5 +1,12 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
+  'admin.walletReceipts.emergencyTitle': 'تأیید اضطراری',
+  'admin.walletReceipts.emergencyHint':
+    'فقط همین رسید بدون تأیید کارشناس دوم تسویه می\u200cشود. دلیل ثبت می\u200cشود و کارشناسان مالی فوراً در برنامه مطلع می\u200cشوند.',
+  'admin.walletReceipts.emergencyReason': 'دلیل تأیید اضطراری (الزامی)',
+  'admin.walletReceipts.emergencyConfirm': 'تأیید اضطراری و تسویه رسید',
+  'admin.walletReceipts.emergencyConfirmed':
+    'رسید با تأیید اضطراری تسویه شد. کارشناسان مالی مطلع شدند.',
   'admin.walletReceipts.nav': 'رسیدهای کیف پول',
   'admin.walletReceipts.title': 'بررسی رسید شارژ کیف پول',
   'admin.walletReceipts.description':
@@ -57,6 +64,13 @@ const fa: Record<string, string> = {
   'admin.walletReceipts.error.allocationPending': 'صبر کنید تا پیش‌نمایش مانده فاکتور آماده شود',
 };
 const en: Record<string, string> = {
+  'admin.walletReceipts.emergencyTitle': 'Emergency override',
+  'admin.walletReceipts.emergencyHint':
+    'Settle only this receipt without a second reviewer. The reason is recorded and finance staff are alerted immediately in the app.',
+  'admin.walletReceipts.emergencyReason': 'Emergency override reason (required)',
+  'admin.walletReceipts.emergencyConfirm': 'Confirm emergency override and settle receipt',
+  'admin.walletReceipts.emergencyConfirmed':
+    'Receipt settled with emergency override. Finance staff alerted.',
   'admin.walletReceipts.nav': 'Wallet receipts',
   'admin.walletReceipts.title': 'Staff wallet receipt review',
   'admin.walletReceipts.description':

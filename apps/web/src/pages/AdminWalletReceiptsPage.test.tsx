@@ -135,6 +135,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await flush();
 
     expect(container.textContent).toContain('Staff wallet receipt review');
+    expect(container.querySelector('[data-testid="wallet-receipt-emergency-confirm"]')).toBeNull();
     expect(container.textContent).toContain('TRK-aaaa');
     expect(container.textContent).toContain('15 Aug 2026');
     expect(container.textContent).toContain('Sep 1, 2026, 3:00 AM');
@@ -209,6 +210,92 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       expect(invoice.value).toBe(INVOICE_ID);
       expect(invoice.readOnly).toBe(true);
       expect(container.querySelector('[data-testid="wallet-receipt-confirm"]')).toBeTruthy();
+    }
+  );
+
+  it.each(['en', 'fa'] as const)(
+    'captures a permitted emergency reason through step-up in %s',
+    async (locale) => {
+      document.documentElement.lang = locale;
+      const pending = receiptDto(TX_A, {
+        canEmergencyOverride: true,
+        dualApproval: { requestId: 'approval-1', initiatorId: 'finance-1', invoiceId: null },
+      });
+      let verified = false;
+      const bodies: unknown[] = [];
+      vi.mocked(fetch).mockImplementation(async (input, init) => {
+        const url = String(input);
+        if (url.endsWith(`/bank-receipt-top-ups/${TX_A}`))
+          return new Response(JSON.stringify(pending));
+        if (url.endsWith(`/${TX_A}/confirm`)) {
+          bodies.push(JSON.parse(String(init?.body)));
+          if (!verified) return stepUpForbidden();
+        }
+        if (url.endsWith('/api/auth/step-up')) {
+          verified = true;
+          return new Response('{}');
+        }
+        return defaultFetch(input, init);
+      });
+      await act(async () => {
+        root.render(<AdminWalletReceiptsPage />);
+      });
+      await flush();
+      const button = container.querySelector(
+        '[data-testid="wallet-receipt-emergency-confirm"]'
+      ) as HTMLButtonElement;
+      expect(button).toBeTruthy();
+      expect(button.disabled).toBe(true);
+      const reason = container.querySelector('#receipt-emergency-reason') as HTMLTextAreaElement;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+          reason,
+          '  Bank deadline; second reviewer unavailable  '
+        );
+        reason.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      await act(async () => {
+        button.click();
+      });
+      await flush();
+      expect(reason.disabled).toBe(true);
+      await act(async () => {
+        (
+          container.querySelector(
+            '[data-testid="wallet-receipt-step-up-cancel"]'
+          ) as HTMLButtonElement
+        ).click();
+      });
+      await flush();
+      expect(document.activeElement).toBe(button);
+      await act(async () => {
+        button.click();
+      });
+      await flush();
+      const password = container.querySelector('[data-testid="wallet-receipt-step-up-password"]')!;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+          password,
+          'secret'
+        );
+        password.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      await act(async () => {
+        (
+          container.querySelector(
+            '[data-testid="wallet-receipt-step-up-submit"]'
+          ) as HTMLButtonElement
+        ).click();
+      });
+      await flush();
+      expect(bodies).toEqual(
+        Array(3).fill({ emergencyOverrideReason: 'Bank deadline; second reviewer unavailable' })
+      );
+      expect(container.textContent).toContain(
+        locale === 'en'
+          ? 'Receipt settled with emergency override.'
+          : 'رسید با تأیید اضطراری تسویه شد.'
+      );
     }
   );
 

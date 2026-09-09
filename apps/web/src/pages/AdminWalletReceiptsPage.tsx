@@ -13,6 +13,7 @@ import type { Locale } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  APPROVAL_REVIEW_REASON_MAX_LENGTH,
   parseBankReceiptRejectReason,
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
@@ -46,6 +47,7 @@ interface StaffDecision {
 }
 
 interface BankReceiptReviewDto {
+  canEmergencyOverride?: boolean;
   transactionId: string;
   walletId: string;
   amount: string;
@@ -84,7 +86,8 @@ interface AllocationPreview {
 }
 
 type PendingAction = { transactionId: string } & (
-  { kind: 'confirm'; invoiceId: string | null } | { kind: 'reject'; reason: string }
+  | { kind: 'confirm'; invoiceId: string | null; emergencyOverrideReason?: string }
+  | { kind: 'reject'; reason: string }
 );
 
 function readErrorCode(data: unknown): string | null {
@@ -198,6 +201,7 @@ export default function AdminWalletReceiptsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selected, setSelected] = useState<BankReceiptReviewDto | null>(null);
   const [reason, setReason] = useState('');
+  const [emergencyReason, setEmergencyReason] = useState('');
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -217,6 +221,7 @@ export default function AdminWalletReceiptsPage() {
   const stepUpDialogRef = useRef<HTMLDivElement | null>(null);
   const stepUpPasswordRef = useRef<HTMLInputElement | null>(null);
   const confirmButtonRef = useRef<HTMLButtonElement | null>(null);
+  const emergencyButtonRef = useRef<HTMLButtonElement | null>(null);
   const rejectButtonRef = useRef<HTMLButtonElement | null>(null);
   const statusRef = useRef<HTMLParagraphElement | null>(null);
   const stepUpTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -358,7 +363,12 @@ export default function AdminWalletReceiptsPage() {
       body:
         action.kind === 'reject'
           ? JSON.stringify({ reason: action.reason })
-          : JSON.stringify(action.invoiceId ? { invoiceId: action.invoiceId } : {}),
+          : JSON.stringify({
+              ...(action.invoiceId ? { invoiceId: action.invoiceId } : {}),
+              ...(action.emergencyOverrideReason !== undefined
+                ? { emergencyOverrideReason: action.emergencyOverrideReason }
+                : {}),
+            }),
     });
     const data: unknown = await res.json().catch(() => null);
     if (isStepUpRequired(res, data)) return 'step_up';
@@ -379,12 +389,15 @@ export default function AdminWalletReceiptsPage() {
     const overpay = dto.overpayment && BigInt(dto.overpayment.walletCreditAmount) > 0n;
     setStatus(
       action.kind === 'confirm'
-        ? overpay
-          ? t('admin.walletReceipts.overpaymentConfirmed', locale)
-          : t('admin.walletReceipts.confirmed', locale)
+        ? action.emergencyOverrideReason !== undefined
+          ? t('admin.walletReceipts.emergencyConfirmed', locale)
+          : overpay
+            ? t('admin.walletReceipts.overpaymentConfirmed', locale)
+            : t('admin.walletReceipts.confirmed', locale)
         : t('admin.walletReceipts.rejected', locale)
     );
     setReason('');
+    setEmergencyReason('');
     setInvoiceId('');
     setAllocation(null);
     setClientIssue(null);
@@ -404,7 +417,11 @@ export default function AdminWalletReceiptsPage() {
       if (outcome === 'step_up') {
         restoreTriggerRef.current = true;
         stepUpTriggerRef.current =
-          action.kind === 'confirm' ? confirmButtonRef.current : rejectButtonRef.current;
+          action.kind === 'confirm'
+            ? action.emergencyOverrideReason !== undefined
+              ? emergencyButtonRef.current
+              : confirmButtonRef.current
+            : rejectButtonRef.current;
         setPendingAction(action);
         setStepUpPassword('');
         setStepUpError(null);
@@ -417,8 +434,16 @@ export default function AdminWalletReceiptsPage() {
     }
   }
 
-  function handleConfirm() {
+  function handleConfirm(emergencyOverrideReason?: string) {
     if (!selected || acting || stepUpOpen) return;
+    if (
+      emergencyOverrideReason !== undefined &&
+      (!selected.canEmergencyOverride ||
+        !selected.dualApproval ||
+        !emergencyOverrideReason.trim() ||
+        emergencyOverrideReason.trim().length > APPROVAL_REVIEW_REASON_MAX_LENGTH)
+    )
+      return;
     const trimmed = invoiceId.trim();
     if (trimmed && !isTransactionUuid(trimmed)) {
       setReasonInvalid(false);
@@ -440,6 +465,9 @@ export default function AdminWalletReceiptsPage() {
       transactionId: selected.transactionId,
       kind: 'confirm',
       invoiceId: isTransactionUuid(trimmed) ? trimmed : null,
+      ...(emergencyOverrideReason !== undefined
+        ? { emergencyOverrideReason: emergencyOverrideReason.trim() }
+        : {}),
     });
   }
 
@@ -573,6 +601,7 @@ export default function AdminWalletReceiptsPage() {
                     setClientIssue(null);
                     setReasonInvalid(false);
                     setReason('');
+                    setEmergencyReason('');
                   }}
                   className={`w-full text-start rounded px-3 py-2 text-sm ${
                     active ? 'bg-blue-50 text-blue-900' : 'hover:bg-gray-50'
@@ -760,7 +789,7 @@ export default function AdminWalletReceiptsPage() {
                     ref={confirmButtonRef}
                     type="button"
                     data-testid="wallet-receipt-confirm"
-                    onClick={handleConfirm}
+                    onClick={() => handleConfirm()}
                     disabled={
                       acting ||
                       (isTransactionUuid(invoiceId.trim()) &&
@@ -775,6 +804,50 @@ export default function AdminWalletReceiptsPage() {
                         ? t('admin.walletReceipts.confirmOverpayment', locale)
                         : t('admin.walletReceipts.confirm', locale)}
                   </button>
+
+                  {selected.dualApproval && selected.canEmergencyOverride && (
+                    <fieldset className="space-y-3 rounded border border-amber-500 p-4">
+                      <legend className="px-1 font-medium">
+                        {t('admin.walletReceipts.emergencyTitle', locale)}
+                      </legend>
+                      <p id="receipt-emergency-hint" className="text-sm">
+                        {t('admin.walletReceipts.emergencyHint', locale)}
+                      </p>
+                      <label
+                        htmlFor="receipt-emergency-reason"
+                        className="block text-sm font-medium"
+                      >
+                        {t('admin.walletReceipts.emergencyReason', locale)}
+                      </label>
+                      <textarea
+                        id="receipt-emergency-reason"
+                        rows={3}
+                        required
+                        aria-describedby="receipt-emergency-hint"
+                        maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
+                        value={emergencyReason}
+                        onChange={(event) => setEmergencyReason(event.target.value)}
+                        disabled={acting || stepUpOpen}
+                        className="w-full rounded border border-gray-300 px-3 py-2"
+                      />
+                      <button
+                        type="button"
+                        ref={emergencyButtonRef}
+                        data-testid="wallet-receipt-emergency-confirm"
+                        disabled={
+                          acting ||
+                          stepUpOpen ||
+                          !emergencyReason.trim() ||
+                          (!!invoiceId.trim() &&
+                            (allocationLoading || !!allocationError || !allocation))
+                        }
+                        onClick={() => handleConfirm(emergencyReason)}
+                        className="rounded bg-amber-900 px-4 py-2 text-white disabled:opacity-50"
+                      >
+                        {t('admin.walletReceipts.emergencyConfirm', locale)}
+                      </button>
+                    </fieldset>
+                  )}
 
                   <form onSubmit={handleReject} className="space-y-3" noValidate>
                     <div>
