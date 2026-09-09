@@ -7795,7 +7795,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
+          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -8764,7 +8764,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
+          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
@@ -13682,7 +13682,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
+          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -13916,7 +13916,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
+          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -13961,7 +13961,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
+          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
         },
         {
           "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
@@ -17095,6 +17095,19 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
       "note": "Refresh only immediate-base bindings for customer wallet access, optional history query client and exact decimal API response. Ledger settlement methods unchanged; affected service, receipt and owner payment tests pass. Older stale bindings retained."
+    },
+    {
+      "source_revision": "d1b156accf7c422bca669d7d792bc49b980b44d0",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.07.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-10.01.02",
+        "02-auth-users-admin.md#T-09.05.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-template-session-authority",
+      "note": "Only immediate-base hashes refreshed. Reviewed six template controller calls and the template authority boundary;192 controller/capability checks plus108 template checks pass. Unrelated admin methods unchanged; older stale bindings retained."
     }
   ]
 }

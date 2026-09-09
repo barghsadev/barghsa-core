@@ -12938,6 +12938,88 @@
         "/tmp/r02-provider-authority-tests.log",
         "/tmp/r02-provider-authority-types.log"
       ]
+    },
+    {
+      "id": "R02-template-session-authority",
+      "date": "2026-09-09",
+      "source_revision": "d1b156accf7c422bca669d7d792bc49b980b44d0",
+      "base_revision": "b89a28b550b8f08c4f065985deac19de48606875",
+      "product_commits": [
+        "d1b156accf7c422bca669d7d792bc49b980b44d0"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.04.01"
+      ],
+      "summary": "Template writes retain current session/CSRF/step-up through commit, with authority checked before test dispatch. Intermediate R02 checkpoint; no task/PR closure.",
+      "review": [
+        "Actual HTTP baseline reproduced creation201 after session expiry while staff grants were locked; expected401. Added18 post-guard expiry/CSRF/step-up races across all six actions,6 final rollback cases for creation/inbox delivery, and3 no-dispatch cases after settings waits.",
+        "Controller passes the complete authenticated actor. Shared mutation transaction holds the staff account/grants and session, then rechecks current database-clock validity before commit. Audit metadata records actual verified time/session and request correlation without CSRF secrets.",
+        "Email, SMS and in-app test dispatch recheck current authority after template locks. SMS checks again after message preparation. Existing immutable published versions, draft replacement, channel outcomes and receipt/audit behavior preserved.",
+        "Own-contact destination enforcement remains valid: staff account is locked, active contact values are reread, arbitrary destinations are denied, and test/development allowlists do not apply in production/staging/preview. Provider configuration testers still lack this restriction and are next.",
+        "Initial build exposed a local actor-name collision introduced by the parameter conversion; corrected before commit.192 controller/permission cases passed there. Final three template files pass105 cases; adding3 no-dispatch cases and rerunning the16-case delivery file yields108 distinct template cases,300 total.",
+        "Reviewed final source diff, every template controller call and failure boundaries. No public route/JSON schema, frontend, migration or dependency changed."
+      ],
+      "verification": {
+        "api": "300 distinct checks:192 controller/capability cases and108 template cases, including27 new regressions. Failed baseline/build logs retained. Overlapping reruns are not added.",
+        "quality": "API typecheck, scoped ESLint, Prettier and git diff --check pass. API/shared builds and actual HTTP fixture startup pass.",
+        "scope": "No broad-regression/browser/budget renewal claimed; frontend unchanged."
+      },
+      "remaining": [
+        "Provider tests need own verified recipient enforcement and SMTP actual self-send. Active branding, preferences/daytime and remaining template editor acceptance stay in this batch.",
+        "Successful external delivery cannot be undone after a later database or authority failure. Existing local rollback behavior is preserved; production delivery is not certified."
+      ],
+      "evidence_reuse": [
+        "5 immediate-base acceptance bindings refreshed; older stale bindings retained. Existing lifecycle and destination assertions rerun with the current session boundary."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
+        },
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "57857037c471926a43c43ffecfd298e960a695f490256b34d59709386acbdc10"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "816ccfa666463a3ed2a60cf25b743f8ee7b04e51fb540cb50d715a91d22c23dc"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "89162f3a067040f2b61ae7e722e45e8a17a34e05fb528098d4a308c1d07b2858"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "d9c26c479dd83b37fdcdc4c75010c075589b09606d8e9dba57fa463f6026e0ca"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.spec.ts",
+          "sha256": "0cdc2d49cb240e101392ca04c0cdcf17160c8cd2017ad9f452ed11abf6e1149f"
+        },
+        {
+          "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+          "sha256": "01a35987810c65b71d29f8690c91cc1c15f7818544d3da47597bdde23fd0f882"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-template-authority-baseline.log",
+        "/tmp/r02-template-authority-delivery-final.log",
+        "/tmp/r02-template-authority-format-check.log",
+        "/tmp/r02-template-authority-format-delivery.log",
+        "/tmp/r02-template-authority-format.log",
+        "/tmp/r02-template-authority-lint.log",
+        "/tmp/r02-template-authority-tests-final.log",
+        "/tmp/r02-template-authority-tests.log",
+        "/tmp/r02-template-authority-types.log"
+      ]
     }
   ]
 }

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "2b669c93a8dac98895713291f75ab6747de6314a",
+  "source_revision": "d1b156accf7c422bca669d7d792bc49b980b44d0",
   "active_step": "R02",
-  "next_action": "Continue template mutation authority and verified test recipients, then branding/preferences/daytime consumers. Reuse provider authority evidence.",
+  "next_action": "Repair own verified recipient enforcement for SMTP/Resend/SMS.ir and required SMTP self-send. Then review active branding, preferences/daytime and template editor consumers; preserve completed provider/template authority.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -650,6 +650,10 @@
     {
       "id": "R02-provider-session-authority",
       "review_record": "audit/evidence/step-reviews.json#R02-provider-session-authority"
+    },
+    {
+      "id": "R02-template-session-authority",
+      "review_record": "audit/evidence/step-reviews.json#R02-template-session-authority"
     }
   ],
   "deferred_improvements": [
@@ -992,7 +996,8 @@
       },
       {
         "defect": "Template mutations check staff permission without current session/step-up.",
-        "status": "remaining"
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-template-session-authority"
       },
       {
         "defect": "Email worker/template test-send omit active branding.",
@@ -1000,6 +1005,10 @@
       },
       {
         "defect": "SMTP provider test is handshake-only; required self-send remains.",
+        "status": "remaining"
+      },
+      {
+        "defect": "Provider testConnection forwards requested recipients without checking the acting staff contact.",
         "status": "remaining"
       }
     ],
@@ -1009,10 +1018,11 @@
       "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
     ],
     "new_evidence": [
-      "audit/evidence/step-reviews.json#R02-provider-session-authority"
+      "audit/evidence/step-reviews.json#R02-provider-session-authority",
+      "audit/evidence/step-reviews.json#R02-template-session-authority"
     ],
     "pr_dispositions": [],
-    "next_action": "Continue template mutation authority and verified test recipients, then branding/preferences/daytime consumers. Reuse provider authority evidence."
+    "next_action": "Repair own verified recipient enforcement for SMTP/Resend/SMS.ir and required SMTP self-send. Then review active branding, preferences/daytime and template editor consumers; preserve completed provider/template authority."
   },
   "open_domain_reviews": [
     {
