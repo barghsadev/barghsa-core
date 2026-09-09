@@ -1,4 +1,9 @@
 import { createHash } from 'node:crypto';
+import {
+  lockFinancialSubmissionActor,
+  type FinancialSubmissionActor,
+} from '../finance/financial-submission-actor.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
 import { HttpException, Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { z } from 'zod';
 import { getDbPool } from '@barghsa/db';
@@ -51,6 +56,7 @@ export interface HandleProviderCallbackResult {
 }
 
 interface ProcessVerifiedPayloadInput {
+  browserActor?: FinancialSubmissionActor | undefined;
   eventId: string;
   merchantOrderId: string;
   authority: string;
@@ -94,8 +100,8 @@ const CallbackBodySchema = z
  * Browser redirect query params are never proof of payment. Two ingress
  * paths share the same verify-then-credit pipeline:
  *   - HMAC-signed POST (http adapter / signed webhooks).
- *   - ZarinPal GET return (`orderId`, `Authority`, `Status`) bound to
- *     the stored Pending top-up, then confirmed via `verifyPayment()`.
+ *   - Session/CSRF-protected browser confirmation after the read-only ZarinPal
+ *     return, bound to current profile access and confirmed via `verifyPayment()`.
  *
  * Shared steps after authentication:
  *   1. Claims the provider event id before any business side effect
@@ -210,7 +216,8 @@ export class OnlineTopUpCallbackService {
    * before `WalletService.credit()`.
    */
   async handleZarinpalReturn(
-    input: HandleZarinpalReturnInput
+    input: HandleZarinpalReturnInput,
+    browserActor?: FinancialSubmissionActor
   ): Promise<HandleProviderCallbackResult> {
     const orderId = input.orderId.trim();
     const authority = input.authority.trim();
@@ -230,6 +237,7 @@ export class OnlineTopUpCallbackService {
       statusUpper === 'OK' ? 'paid' : statusUpper === 'NOK' ? 'cancelled' : 'failed';
 
     return this.processVerifiedPayload({
+      browserActor,
       eventId: zarinpalReturnEventId(orderId, authority, status),
       merchantOrderId: orderId,
       authority,
@@ -253,6 +261,25 @@ export class OnlineTopUpCallbackService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         const pending = await this.loadPendingTopUp(client, input.merchantOrderId);
+        if (input.browserActor) {
+          // Under the callback identity lock, authorize this provider enquiry and
+          // settlement of the original payment intent. No DB lock spans the PSP call.
+          try {
+            await client.query('BEGIN');
+            const actorClient = client as Parameters<typeof lockFinancialSubmissionActor>[0];
+            await lockFinancialSubmissionActor(
+              actorClient,
+              input.browserActor,
+              pending.walletId,
+              'wallet:charge'
+            );
+            await requireCurrentSession(actorClient, input.browserActor);
+            await client.query('COMMIT');
+          } catch (error) {
+            await client.query('ROLLBACK');
+            throw error;
+          }
+        }
         const amountIrR = input.amountIrR ?? pending.amount;
         this.assertMerchantContext(pending, input.authority, amountIrR);
 

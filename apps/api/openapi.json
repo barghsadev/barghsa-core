@@ -13563,14 +13563,11 @@
         "operationId": "OnlineTopUpCallbackController_browserReturn",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": "Return accepted (credited, unpaid, duplicate, or ignored)."
-          },
-          "401": {
-            "description": "orderId/Authority did not match a pending top-up"
+          "303": {
+            "description": "Redirect to wallet; no payment state changes."
           }
         },
-        "summary": "ZarinPal browser return; credits only after server-side verify",
+        "summary": "Read-only payment return to the wallet confirmation screen",
         "tags": [
           "Wallet"
         ]
@@ -14229,6 +14226,53 @@
         "summary": "Choose a default from accessible profiles",
         "tags": [
           "Profiles"
+        ]
+      }
+    },
+    "/api/wallet/top-ups/return": {
+      "post": {
+        "operationId": "OnlineTopUpCallbackController_confirmReturn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "orderId",
+                  "authority"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "orderId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "authority": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Server-verified payment result."
+          },
+          "401": {
+            "description": "Authentication or payment context invalid."
+          },
+          "403": {
+            "description": "Invalid CSRF token."
+          }
+        },
+        "summary": "Check a returned payment using the current session and CSRF token",
+        "tags": [
+          "Wallet"
         ]
       }
     }

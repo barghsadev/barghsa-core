@@ -131,6 +131,11 @@
       "types": "./dist/team.d.ts",
       "import": "./dist/team.js",
       "default": "./dist/team.js"
+    },
+    "./wallet-payment-return": {
+      "types": "./dist/wallet-payment-return.d.ts",
+      "import": "./dist/wallet-payment-return.js",
+      "default": "./dist/wallet-payment-return.js"
     }
   },
   "scripts": {

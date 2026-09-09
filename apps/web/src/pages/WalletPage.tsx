@@ -1,3 +1,7 @@
+import {
+  OnlinePaymentReturnPanel,
+  type WalletPaymentReturn,
+} from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
@@ -95,7 +99,9 @@ function isSafeGatewayRedirectUrl(raw: string): boolean {
  * uploads the file, then creates a Pending top-up. The wallet is credited
  * only after provider callback or finance confirmation.
  */
-export function WalletPage() {
+export function WalletPage({
+  paymentReturn,
+}: { paymentReturn?: WalletPaymentReturn | undefined } = {}) {
   const uploadReceiptAttachment = useReceiptAttachmentUpload();
   const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
@@ -369,6 +375,15 @@ export function WalletPage() {
         <h1 className="text-2xl font-bold text-gray-900">{t('wallet.page.title', locale)}</h1>
         <p className="mt-2 text-gray-600">{t('wallet.page.subtitle', locale)}</p>
       </header>
+
+      {paymentReturn && (
+        <OnlinePaymentReturnPanel
+          key={`${paymentReturn.orderId}:${paymentReturn.authority}`}
+          payment={paymentReturn}
+          locale={locale}
+          onConfirmed={() => void load()}
+        />
+      )}
 
       {loading ? (
         <div

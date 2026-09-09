@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 import {
   OnlineTopUpCallbackController,
   readZarinpalReturnQuery,
@@ -9,6 +9,8 @@ vi.mock('../rate-limit/rate-limit.decorator.js', () => ({
 }));
 
 describe('OnlineTopUpCallbackController (T-04.2.02.02)', () => {
+  beforeEach(() => vi.stubEnv('APP_PUBLIC_URL', 'https://app.example.test'));
+  afterEach(() => vi.unstubAllEnvs());
   it('does not credit the wallet on a GET without ZarinPal return params', async () => {
     const handle = vi.fn();
     const handleZarinpalReturn = vi.fn();
@@ -17,9 +19,7 @@ describe('OnlineTopUpCallbackController (T-04.2.02.02)', () => {
       handleZarinpalReturn,
     } as never);
     expect(await controller.browserReturn({})).toEqual({
-      ok: true,
-      credited: false,
-      reason: 'browser_redirect_ignored',
+      url: 'https://app.example.test/wallet',
     });
     expect(handle).not.toHaveBeenCalled();
     expect(handleZarinpalReturn).not.toHaveBeenCalled();
@@ -36,37 +36,36 @@ describe('OnlineTopUpCallbackController (T-04.2.02.02)', () => {
         orderId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
       })
     ).toEqual({
-      ok: true,
-      credited: false,
-      reason: 'browser_redirect_ignored',
+      url: 'https://app.example.test/wallet',
     });
     expect(handleZarinpalReturn).not.toHaveBeenCalled();
   });
 
-  it('delegates ZarinPal GET returns (orderId, Authority, Status) to the callback service', async () => {
-    const handleZarinpalReturn = vi.fn().mockResolvedValue({
-      ok: true,
-      processed: true,
-      credited: true,
-      transactionId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
-      creditTransactionId: 'credit-1',
-    });
-    const controller = new OnlineTopUpCallbackController({
-      handle: vi.fn(),
-      handleZarinpalReturn,
-    } as never);
-    await expect(
-      controller.browserReturn({
-        orderId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
-        Authority: 'A00000000000000000000000000000000001',
-        Status: 'OK',
-      })
-    ).resolves.toMatchObject({ credited: true });
-    expect(handleZarinpalReturn).toHaveBeenCalledWith({
+  it('redirects a complete GET to confirmation without calling the service', () => {
+    const handleZarinpalReturn = vi.fn();
+    const controller = new OnlineTopUpCallbackController({ handleZarinpalReturn } as never);
+    const result = controller.browserReturn({
       orderId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
-      authority: 'A00000000000000000000000000000000001',
-      status: 'OK',
+      Authority: 'auth-1',
+      Status: 'NOK',
     });
+    const url = new URL(result.url);
+    expect(url.origin).toBe('https://app.example.test');
+    expect(url.searchParams.get('paymentAuthority')).toBe('auth-1');
+    expect(handleZarinpalReturn).not.toHaveBeenCalled();
+  });
+
+  it('POST binds the trusted actor and always requests provider verification', async () => {
+    const handleZarinpalReturn = vi.fn().mockResolvedValue({ credited: true });
+    const controller = new OnlineTopUpCallbackController({ handleZarinpalReturn } as never);
+    const body = { orderId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa', authority: 'auth-1' };
+    const session = { userId: 'user', sessionId: 'session', csrfToken: 'csrf' };
+    await controller.confirmReturn(body, { session } as never);
+    expect(handleZarinpalReturn).toHaveBeenCalledWith({ ...body, status: 'OK' }, session);
+    await expect(
+      controller.confirmReturn({ ...body, status: 'NOK' }, { session } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    expect(handleZarinpalReturn).toHaveBeenCalledTimes(1);
   });
 
   it('reads ZarinPal query keys case-insensitively', () => {
