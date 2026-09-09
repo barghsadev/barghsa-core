@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "5b637a8ee64a72e2a80042a63ffe97a39c4049ca",
+  "source_revision": "948a216b9800a9e29f8c86d529884f25eb55b069",
   "active_step": "R01",
-  "next_action": "R01 tickets: write authority verified at5b637a8. Finish current read/privacy, attachment, assignment and UI requirement review, then repair confirmed gaps and consolidate the three task/PR dispositions.",
+  "next_action": "Continue the bounded ticket batch. Review the remaining shared assignment lock/role risks with focused regression, then implement missing ticket UI criteria using existing fields/routes and disposition dependencies. Reuse current70 API/service cases,10 browser cases and42 budget results while relevant source remains unchanged. Consolidate acceptance once; no ticket task or PR closed at this checkpoint.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -763,9 +763,12 @@
       "02-auth-users-admin.md#T-06.01.03"
     ],
     "remaining_checklist": [
-      "Exact ticket requirements and all three saved PR bodies read. PR138 attachment and PR140 team-assignment deferrals remain to be dispositioned against current implementations.",
-      "Review current authority, privacy, attachments, assignment and transitions with prior evidence.",
-      "Repair confirmed gaps, run focused checks and consolidate individual task/PR dispositions."
+      "Exact requirements and saved PR138/139/140 bodies are read. Do not repeat discovery or close all three tasks yet.",
+      "UI missing category/type selector, related entity link in list and staff customer-information panel. Full component reviewed once. Confirm available fields/routes before implementation; category taxonomy is unspecified.",
+      "Contract linking explicitly unavailable409 because contract table/workflow is unbuilt. Preserve V01/B01 dependency; no invented target route.",
+      "Automatic ticket/manual assignment race repaired948a216. The other choose caller, VerificationCaseService.createCase, still acquires actor before teams; review with a focused regression for cross-workflow deadlock and current assignee-role authority before changing it.",
+      "Attachment sealing and download implementation reviewed: verified ownership/profile/purpose, fixed bytes and provisional cleanup. Existing41 HTTP cases cover ticket integration; preserve generic storage evidence. Resolve PR138 historical deferral against this implementation.",
+      "Resolve PR140 team/assignment historical deferral and consolidate individual task/PR acceptance after remaining defects are handled."
     ],
     "confirmed_defects": [
       {
@@ -775,20 +778,66 @@
           "/tmp/r01-tickets-actor-baseline.log",
           "/tmp/r01-tickets-role-baseline.log"
         ]
+      },
+      {
+        "summary": "Staff ticket reads could use revoked broad-read grants or stale assigned scope after waiting; customer reads could finish after session expiry.",
+        "status": "repaired_and_verified_at_fa60a45",
+        "evidence": [
+          "/tmp/r01-tickets-read-baseline.log",
+          "/tmp/r01-tickets-read-http-final.log"
+        ]
+      },
+      {
+        "summary": "Mixed broad-read/assigned-only-write staff saw editor controls for other staff tickets; dark ticket fields, notes and list controls had unreadable contrast.",
+        "status": "repaired_and_verified_at_368c080",
+        "evidence": [
+          "/tmp/r01-tickets-ui-baseline.log",
+          "/tmp/r01-tickets-ui-browser.log",
+          "/tmp/r01-tickets-ui-browser-final.log"
+        ]
+      },
+      {
+        "summary": "Staff ticket creation locked its actor before auto-assignment teams, reversing manual-assignment lock order and causing a concurrent request to fail500.",
+        "status": "repaired_and_verified_at_948a216",
+        "evidence": [
+          "/tmp/r01-tickets-assignment-race-baseline.log",
+          "/tmp/r01-tickets-assignment-check.log"
+        ]
       }
     ],
-    "reused_evidence": [],
+    "reused_evidence": [
+      "22 unchanged ticket service cases rerun in70-case checkpoint; existing private attachment/transition coverage retained. No aggregate count across overlapping runs."
+    ],
     "new_evidence": [
       "5b637a8: current account/role/session checks run inside every HTTP ticket write transaction. Newly assigned-only grants restrict the locked ticket and assignment target. Final session checks roll back ticket/comment/audit/notification effects on expiry.",
-      "30 final HTTP cases pass in /tmp/r01-tickets-actor-http-verified.log.22 unchanged service cases pass in the earlier46-case run; counts overlap. API types, scoped lint, formatting and unchanged OpenAPI pass. All14 ended logs, including baseline failures and the transient-staff fixture correction, are archived through audit/evidence/index.json."
+      "30 final HTTP cases pass in /tmp/r01-tickets-actor-http-verified.log.22 unchanged service cases pass in the earlier46-case run; counts overlap. API types, scoped lint, formatting and unchanged OpenAPI pass. All14 ended logs, including baseline failures and the transient-staff fixture correction, are archived through audit/evidence/index.json.",
+      "fa60a45: 41 HTTP cases pass, including revoked/downgraded roles and expiry on customer reads. API types/lint/format/OpenAPI pass. Superseded by the overlapping70-case run at948a216; do not add the counts.",
+      "368c080: 10 production Chromium cases pass, including mixed full-read/assigned-only-write scope and FA/EN light/dark axe checks. Web build/types/lint/format and42 unchanged route/interaction budgets pass.",
+      "948a216: Concurrent staff ticket creation/manual assignment previously returned500; the regression now passes.70 cases pass across tickets HTTP41, service22 and assignment HTTP7. API types/lint/format/OpenAPI pass; HTTP setup rebuilt API. Test-only non-null annotations followed the runtime run and passed typecheck.",
+      "34 newly archived read/UI/assignment logs, including baseline failures and intermediate type/contrast failures. 2078 total indexed logs."
     ],
     "pr_dispositions": [],
-    "next_action": "Complete read/privacy, attachment and UI acceptance. Writes are verified at5b637a8; reuse unchanged tests and consolidate the three task/PR reviews once the batch is complete.",
+    "next_action": "Continue the bounded ticket batch. Review the remaining shared assignment lock/role risks with focused regression, then implement missing ticket UI criteria using existing fields/routes and disposition dependencies. Reuse current70 API/service cases,10 browser cases and42 budget results while relevant source remains unchanged. Consolidate acceptance once; no ticket task or PR closed at this checkpoint.",
     "product_commits": [
       {
         "revision": "5b637a8",
         "change": "Current ticket write authority through commit",
         "verification": "30 HTTP and22 reused service cases; API types/lint/format/OpenAPI pass. Existing HTTP fixture rebuilt the product API. No ticket task or PR marked closed yet."
+      },
+      {
+        "revision": "fa60a45",
+        "change": "Current ticket read authority through response assembly",
+        "verification": "41 HTTP cases pass, including revoked/downgraded roles and expiry on customer reads. API types/lint/format/OpenAPI pass. Superseded by the overlapping70-case run at948a216; do not add the counts."
+      },
+      {
+        "revision": "368c080",
+        "change": "Ticket editor permissions and light/dark contrast",
+        "verification": "10 production Chromium cases pass, including mixed full-read/assigned-only-write scope and FA/EN light/dark axe checks. Web build/types/lint/format and42 unchanged route/interaction budgets pass."
+      },
+      {
+        "revision": "948a216",
+        "change": "Consistent account/team lock order for automatic ticket assignment",
+        "verification": "Concurrent staff ticket creation/manual assignment previously returned500; the regression now passes.70 cases pass across tickets HTTP41, service22 and assignment HTTP7. API types/lint/format/OpenAPI pass; HTTP setup rebuilt API. Test-only non-null annotations followed the runtime run and passed typecheck."
       }
     ]
   },
