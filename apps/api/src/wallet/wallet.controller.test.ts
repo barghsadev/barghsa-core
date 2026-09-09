@@ -4,6 +4,16 @@ import { WalletController } from './wallet.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
+// Projection tests only; current authority/commit behavior uses the actual HTTP fixture.
+vi.mock('./customer-wallet-access.js', () => ({
+  withCustomerWalletAccess: (
+    _actor: unknown,
+    _profile: string,
+    _permission: string,
+    operation: (client: unknown) => Promise<unknown>
+  ) => operation({}),
+}));
+
 vi.mock('../session/session.guard.js', () => ({
   SessionAuthGuard: vi.fn(),
 }));
@@ -157,6 +167,7 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
       profileId: PROFILE_ID,
       amountIrR: 100_000n,
       idempotencyKey: 'from-header',
+      actor: req.session,
     });
   });
 
@@ -172,6 +183,7 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
       profileId: PROFILE_ID,
       amountIrR: 250_000n,
       idempotencyKey: 'from-body',
+      actor: req.session,
     });
     expect(result).toEqual({
       ok: true,

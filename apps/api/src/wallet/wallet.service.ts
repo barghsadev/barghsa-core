@@ -1059,8 +1059,13 @@ export class WalletService {
   /**
    * Get transaction history for a wallet.
    */
-  async getTransactions(walletId: string, limit = 50, offset = 0): Promise<TransactionRow[]> {
-    const pool = getDbPool();
+  async getTransactions(
+    walletId: string,
+    limit = 50,
+    offset = 0,
+    client?: WalletQueryClient
+  ): Promise<TransactionRow[]> {
+    const pool = client ?? getDbPool();
     const result = await pool.query(
       `SELECT * FROM wallet_transactions
        WHERE wallet_id = $1
@@ -1068,7 +1073,7 @@ export class WalletService {
        LIMIT $2 OFFSET $3`,
       [walletId, limit, offset]
     );
-    return result.rows.map(mapTransaction);
+    return result.rows.map((row) => mapTransaction(row as Parameters<typeof mapTransaction>[0]));
   }
 
   /**

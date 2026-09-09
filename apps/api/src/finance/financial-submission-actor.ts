@@ -19,7 +19,7 @@ export async function lockFinancialSubmissionActor(
   client: Client,
   actor: FinancialSubmissionActor,
   profileId: string,
-  permission: 'bank-receipts:submit' | 'wallet:charge' | 'wallet:move-funds'
+  permission: 'bank-receipts:submit' | 'wallet:charge' | 'wallet:move-funds' | 'wallet:view'
 ): Promise<void> {
   const account = (
     await client.query(
@@ -36,6 +36,8 @@ export async function lockFinancialSubmissionActor(
     ])
   ).rows[0];
   if (!profile) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+  if (profile.archived !== false && permission === 'wallet:view')
+    throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
   if (profile.archived !== false)
     throw new HttpException(
       {

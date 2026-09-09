@@ -24,6 +24,7 @@ import { WalletService } from './wallet.service.js';
 import { ProfilesService } from '../profiles/profiles.service.js';
 import { OnlineTopUpService } from './online-topup.service.js';
 import { BankReceiptTopUpService } from './bank-receipt-topup.service.js';
+import { withCustomerWalletAccess } from './customer-wallet-access.js';
 
 const InitiateBodySchema = z
   .object({
@@ -79,44 +80,49 @@ export class WalletController {
   @Get(':profileId')
   @ApiOperation({ summary: 'Get wallet balance for a profile' })
   async getWallet(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
-    await this.assertProfileAccess(req, profileId);
-    this.logger.debug(`Wallet inquiry: user=${req.session.userId} profile=${profileId}`);
-    const wallet = await this.walletService.getWallet(profileId);
-    const limit = await this.walletService.resolveOnlineTopUpLimit();
-    const limitFields =
-      limit === null
-        ? {}
-        : {
-            onlineTopUpLimit: limit.onlineTopUpLimit,
-            configVersion: limit.configVersion,
-          };
-    if (!wallet) {
+    assertUuid(profileId, 'profileId');
+    return withCustomerWalletAccess(req.session, profileId, 'wallet:view', async (client) => {
+      this.logger.debug(`Wallet inquiry: user=${req.session.userId} profile=${profileId}`);
+      const wallet = await this.walletService.getWallet(profileId, client);
+      const limit = await this.walletService.resolveOnlineTopUpLimit();
+      const limitFields =
+        limit === null
+          ? {}
+          : {
+              onlineTopUpLimit: limit.onlineTopUpLimit,
+              configVersion: limit.configVersion,
+            };
+      if (!wallet) {
+        return {
+          balance: '0',
+          currency: 'IRR',
+          ...limitFields,
+        };
+      }
       return {
-        balance: '0',
+        balance: wallet.availableBalance.toString(),
+        postedBalance: wallet.postedBalance.toString(),
+        reservedBalance: wallet.reservedBalance.toString(),
         currency: 'IRR',
         ...limitFields,
       };
-    }
-    return {
-      balance: wallet.availableBalance.toString(),
-      postedBalance: wallet.postedBalance.toString(),
-      reservedBalance: wallet.reservedBalance.toString(),
-      currency: 'IRR',
-      ...limitFields,
-    };
+    });
   }
 
   @Post(':profileId/create')
   @ApiOperation({ summary: 'Create wallet for a profile' })
   async createWallet(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
+    assertUuid(profileId, 'profileId');
     await this.assertProfileAccess(req, profileId, 'wallet:charge');
-    this.logger.debug(`Wallet creation: user=${req.session.userId} profile=${profileId}`);
-    const wallet = await this.walletService.createWallet(profileId);
-    return {
-      ok: true,
-      balance: wallet.availableBalance.toString(),
-      currency: 'IRR',
-    };
+    return withCustomerWalletAccess(req.session, profileId, 'wallet:charge', async (client) => {
+      this.logger.debug(`Wallet creation: user=${req.session.userId} profile=${profileId}`);
+      const wallet = await this.walletService.createWallet(profileId, client);
+      return {
+        ok: true,
+        balance: wallet.availableBalance.toString(),
+        currency: 'IRR',
+      };
+    });
   }
 
   /**
@@ -276,21 +282,49 @@ export class WalletController {
 
   @Get(':profileId/transactions')
   @ApiOperation({ summary: 'Get wallet transaction history' })
+  @ApiResponse({
+    status: 200,
+    description: 'Wallet history; signed IRR amounts are exact decimal strings.',
+    schema: {
+      type: 'object',
+      required: ['transactions'],
+      properties: {
+        transactions: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'type', 'amount', 'state', 'refId', 'description', 'createdAt'],
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              type: { type: 'string' },
+              amount: { type: 'string', pattern: '^-?[0-9]+$', example: '9007199254740993' },
+              state: { type: 'string' },
+              refId: { type: 'string', nullable: true },
+              description: { type: 'string', nullable: true },
+              createdAt: { type: 'string', format: 'date-time' },
+            },
+          },
+        },
+      },
+    },
+  })
   async getTransactions(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
-    await this.assertProfileAccess(req, profileId);
-    this.logger.debug(`Wallet transactions: user=${req.session.userId} profile=${profileId}`);
-    const transactions = await this.walletService.getTransactions(profileId);
-    return {
-      transactions: transactions.map((tx) => ({
-        id: tx.id,
-        type: tx.type,
-        amount: Number(tx.amount),
-        state: tx.state,
-        refId: tx.refId,
-        description: tx.description,
-        createdAt: tx.createdAt,
-      })),
-    };
+    assertUuid(profileId, 'profileId');
+    return withCustomerWalletAccess(req.session, profileId, 'wallet:view', async (client) => {
+      this.logger.debug(`Wallet transactions: user=${req.session.userId} profile=${profileId}`);
+      const transactions = await this.walletService.getTransactions(profileId, 50, 0, client);
+      return {
+        transactions: transactions.map((tx) => ({
+          id: tx.id,
+          type: tx.type,
+          amount: tx.amount.toString(),
+          state: tx.state,
+          refId: tx.refId,
+          description: tx.description,
+          createdAt: tx.createdAt,
+        })),
+      };
+    });
   }
 }
 

@@ -14998,7 +14998,63 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "transactions": {
+                      "items": {
+                        "properties": {
+                          "amount": {
+                            "example": "9007199254740993",
+                            "pattern": "^-?[0-9]+$",
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "description": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "refId": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "amount",
+                          "state",
+                          "refId",
+                          "description",
+                          "createdAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "transactions"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Wallet history; signed IRR amounts are exact decimal strings."
           }
         },
         "security": [
