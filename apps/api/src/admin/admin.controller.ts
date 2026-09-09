@@ -715,7 +715,7 @@ export class AdminController {
    * Resolves the effective permission set for a staff user by taking the union
    * of permissions across their assigned roles (deny-by-default, additive).
    * Platform admins resolve to the wildcard set.
-   * Permission: admin or with `staff:roles:view`.
+   * Permission: `admin:roles:edit`, matching the role catalogue.
    */
   @Get('users/:userId/effective-permissions')
   @ApiOperation({ summary: 'Get effective permissions for a staff user' })
@@ -731,7 +731,7 @@ export class AdminController {
     @Param('userId') userId: string,
     @Req() req: AuthenticatedRequest
   ): Promise<EffectivePermissionsResult> {
-    if (!hasStaffPermission(req, 'staff:roles:view')) {
+    if (!hasStaffPermission(req, 'admin:roles:edit')) {
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to read effective permissions`
       );

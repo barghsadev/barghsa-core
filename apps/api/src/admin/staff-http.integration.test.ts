@@ -195,6 +195,55 @@ it('restricts staff permission history to current authorized viewers', async () 
   expect((await fetch(url, { headers })).status).toBe(403);
 });
 
+it('lets current role administrators read the catalogue and effective permissions under one grant', async () => {
+  const userId = randomUUID(),
+    roleId = `role-catalogue-${randomUUID()}`,
+    target = randomUUID();
+  for (const id of [userId, target])
+    await http.pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'fixture-only',true)",
+      [id, `${id}@example.test`]
+    );
+  await http.pool.query(
+    'INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$2,$3,$4)',
+    [roleId, 'Role catalogue', 'Fixture', '["admin:roles:edit"]']
+  );
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [userId, roleId]);
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-customer-support'),($1,'role-crm-verification')",
+    [target]
+  );
+  const headers = await session(userId);
+  const catalogue = `${http.base}/api/admin/roles`,
+    lookup = `${http.base}/api/admin/users/${target}/effective-permissions`;
+  expect((await fetch(catalogue, { headers })).status).toBe(200);
+  const effective = await fetch(lookup, { headers });
+  expect(effective.status, await effective.clone().text()).toBe(200);
+  const body = (await effective.json()) as {
+    permissions: { permission: string }[];
+    isWildcard: boolean;
+  };
+  const permissions = body.permissions.map((item) => item.permission);
+  expect(body.isWildcard).toBe(false);
+  expect(permissions).toContain('tickets:read');
+  expect(permissions).toContain('crm:verify');
+  expect(permissions.filter((item) => item === 'profiles:read')).toHaveLength(1);
+  expect(permissions).not.toContain('payments:write');
+  await http.pool.query('UPDATE users SET disabled_at=NOW() WHERE user_id=$1', [target]);
+  expect(await (await fetch(lookup, { headers })).json()).toMatchObject({
+    permissions: [],
+    isWildcard: false,
+  });
+  await http.pool.query(
+    'UPDATE staff_roles SET permissions=\'["staff:roles:view"]\' WHERE role_id=$1',
+    [roleId]
+  );
+  for (const url of [catalogue, lookup]) {
+    expect((await fetch(url, { headers })).status).toBe(403);
+    expect((await fetch(url)).status).toBe(401);
+  }
+});
+
 it('creates staff with named roles without granting platform administration, including staff without roles', async () => {
   for (const roles of [[], ['role-customer-support'], ['role-finance'], ['role-legal-contracts']]) {
     const response = await fetch(`${http.base}/api/admin/users/create-staff`, {

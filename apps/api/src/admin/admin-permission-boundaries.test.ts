@@ -97,7 +97,7 @@ const operations: Operation[] = [
   { name: 'list roles', permission: 'admin:roles:edit', invoke: (c, r) => c.listRoles(r) },
   {
     name: 'effective permissions',
-    permission: 'staff:roles:view',
+    permission: 'admin:roles:edit',
     invoke: (c, r) => c.getEffectivePermissions(target, r),
   },
   {
@@ -108,7 +108,8 @@ const operations: Operation[] = [
   {
     name: 'change verification mode',
     permission: 'admin:config:write',
-    invoke: (c, r) => c.setProfileVerificationMode({ mode: 'MANUAL' }, r),
+    invoke: (c, r) =>
+      c.setProfileVerificationMode({ mode: 'MANUAL', action: 'draft', expectedVersion: 0 }, r),
   },
   {
     name: 'read active branding',

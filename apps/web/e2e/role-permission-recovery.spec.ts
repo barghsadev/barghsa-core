@@ -1,20 +1,21 @@
 import { test, expect } from './coverage-fixture';
+import AxeBuilder from '@axe-core/playwright';
 
 const roles = [
   {
-    roleId: 'role-support',
-    name: 'Support',
+    roleId: 'role-customer-support',
+    name: 'Customer Support',
     description: 'Tickets only',
-    permissions: ['tickets:view'],
+    permissions: ['tickets:read'],
     predefined: true,
   },
 ];
 const result = (userId: string) => ({
   userId,
   isAdmin: false,
-  roleIds: ['role-support'],
-  roleNames: ['Support'],
-  permissions: [{ permission: 'tickets:view', group: 'tickets' }],
+  roleIds: ['role-customer-support'],
+  roleNames: ['Customer Support'],
+  permissions: [{ permission: 'tickets:read', group: 'tickets' }],
   isWildcard: false,
 });
 
@@ -36,7 +37,88 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .getByRole('button', { name: locale === 'fa' ? 'تلاش مجدد' : 'Retry', exact: true })
       .click();
-    await expect(page.getByRole('cell', { name: 'tickets tickets:view' })).toBeVisible();
+    const checkbox = page.getByRole('checkbox', { name: 'tickets:read', exact: true });
+    await expect(checkbox).toBeVisible();
+    await expect(checkbox).toBeChecked();
+    await expect(checkbox).toBeDisabled();
+  });
+
+  test(`role catalogue groups read-only grants and localizes effective roles (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa';
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    const writes: string[] = [];
+    page.on('request', (request) => {
+      if (request.url().includes('/api/admin/') && request.method() !== 'GET')
+        writes.push(request.url());
+    });
+    await page.route('**/api/admin/roles', (route) =>
+      route.fulfill({
+        json: [
+          ...roles,
+          {
+            roleId: 'role-finance',
+            name: 'Finance',
+            description: 'Money',
+            permissions: ['payments:write', 'invoices:read'],
+            predefined: true,
+          },
+          {
+            roleId: 'role-admin',
+            name: 'Admin',
+            description: 'Everything',
+            permissions: ['*'],
+            predefined: true,
+          },
+        ],
+      })
+    );
+    await page.route('**/api/admin/users/requested/effective-permissions', (route) =>
+      route.fulfill({ json: result('requested') })
+    );
+    await page.goto('/admin/roles');
+    await page.evaluate((lang) => {
+      document.documentElement.lang = lang;
+    }, locale);
+    const content = page.locator('#admin-content');
+    const finance = page
+      .getByRole('row')
+      .filter({ has: page.getByRole('rowheader', { name: fa ? /^مالی/ : /^Finance/ }) });
+    await expect(
+      finance.getByRole('group', { name: fa ? 'پرداخت‌ها' : 'Payments', exact: true })
+    ).toBeVisible();
+    const checkboxes = content.getByRole('checkbox');
+    await expect(checkboxes).toHaveCount(4);
+    for (const checkbox of await checkboxes.all()) {
+      await expect(checkbox).toBeChecked();
+      await expect(checkbox).toBeDisabled();
+    }
+    await expect(
+      content.getByRole('checkbox', { name: fa ? 'همه دسترسی‌ها' : 'All permissions', exact: true })
+    ).toBeChecked();
+    await page.locator('#staffUserId').fill('requested');
+    await page.locator('button[type=submit]').click();
+    await expect(content).toContainText(
+      fa ? 'نقش‌ها: پشتیبانی مشتریان' : 'Roles: Customer Support'
+    );
+    for (const dark of [false, true]) {
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((a) => a.effect?.getComputedTiming().endTime !== Infinity)
+            .map((a) => a.finished.catch(() => {}))
+        );
+      }, dark);
+      const report = await new AxeBuilder({ page }).include('#admin-content').analyze();
+      expect(report.violations, `role catalogue accessibility, dark=${dark}`).toEqual([]);
+    }
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)
+    ).toBe(true);
+    expect(writes).toEqual([]);
   });
 
   test(`permission lookup rejects another user and recovers (${locale})`, async ({ page }) => {
