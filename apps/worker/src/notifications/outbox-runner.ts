@@ -8,6 +8,7 @@ import {
   normalizeLeaseDurationMs,
   type OutboxRow,
   type OutboxReaderOptions,
+  type WorkerNotificationTransport,
 } from './outbox-reader.js';
 import { assertOutboxClaim, OutboxLeaseLost, startOutboxLease } from './outbox-lease.js';
 import {
@@ -122,12 +123,19 @@ export async function runOutboxPoll(
         const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT;
         const decision = resolveChannelAvailability(row.eventKey, pendingChannels, ctx);
         const outcomes = await dispatchOutbox(
-          { ...row, channels: decision.allowed },
+          { ...row, channels: decision.allowed.filter((channel) => channel !== 'in_app') },
           options?.transports ?? {},
           lease
         );
         if (lease.signal.aborted) throw new OutboxLeaseLost();
-        const aggregate = await persistOutcomes(pool, row, outcomes, channelJobs, decision.skipped);
+        const aggregate = await persistOutcomes(
+          pool,
+          row,
+          outcomes,
+          channelJobs,
+          decision.skipped,
+          decision.allowed.includes('in_app') ? (options?.transports ?? {}) : undefined
+        );
         if (
           outcomes.some((outcome) => outcome.result.status === 'failed') ||
           aggregate === 'failed'
@@ -282,24 +290,35 @@ async function persistOutcomes(
   row: OutboxRow,
   outcomes: DispatchOutcome[],
   jobs: ChannelJob[],
-  skipped: ReadonlyArray<{ channel: 'email' | 'sms'; reason: ChannelSkipReason }> = []
+  skipped: ReadonlyArray<{ channel: 'email' | 'sms'; reason: ChannelSkipReason }> = [],
+  localTransports?: Partial<Record<NotificationChannel, WorkerNotificationTransport>>
 ): Promise<'delivered' | 'failed' | 'pending'> {
-  // All per-row persistence (job status, dead-letter, delivery log, outbox
+  // All per-row persistence (inbox, job status, dead-letter, delivery log, outbox
   // state) is committed atomically on a pinned client in production.
   const tx = await withWorkerTx(pool);
   const q = tx.q;
   // Minimal pool-like surface so the shared writers route through the tx.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const qpool = { query: q } as any;
+  const qpool: QueryPool = { query: q };
+  let localOutcomes: DispatchOutcome[] = [];
   try {
     await assertOutboxClaim(qpool, row);
+    if (localTransports) {
+      // The parent row lock fences this write. Renewing through the pool here
+      // would wait on our own transaction, so no lease callback is passed.
+      localOutcomes = await dispatchOutbox(
+        { ...row, channels: ['in_app'] },
+        localTransports,
+        undefined,
+        qpool
+      );
+      outcomes.push(...localOutcomes);
+    }
     await markSkippedJobs(qpool, row, skipped);
     for (const outcome of outcomes) {
       const job = jobs.find((item) => item.channel === outcome.channel);
       const attempts = (job?.attempts ?? row.attempts) + 1;
       const maxAttempts = job?.max_attempts ?? row.maxAttempts;
       const ok = outcome.result.status === 'delivered';
-      recordDeliveryAttempt(outcome.channel, ok ? 'delivered' : 'failed');
       const exhausted = attempts >= maxAttempts;
       // Jittered backoff before the next attempt (null when the budget is spent).
       const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, maxAttempts);
@@ -363,10 +382,13 @@ async function persistOutcomes(
 
     await tx.commit();
     tx.release();
+    for (const outcome of localOutcomes)
+      recordDeliveryAttempt(outcome.channel, outcome.result.status);
     return aggregate;
   } catch (err) {
     await tx.rollback();
     tx.release();
+    for (const outcome of localOutcomes) recordDeliveryAttempt(outcome.channel, 'failed');
     throw err;
   }
 }

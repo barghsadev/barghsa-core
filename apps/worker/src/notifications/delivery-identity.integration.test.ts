@@ -288,9 +288,9 @@ it('the real runner reuses delivered channel outcomes after an email failure', a
   const transports = {
     in_app: {
       channel: 'in_app' as const,
-      async send(payload: Parameters<InAppNotificationTransport['send']>[0]) {
+      async send(...args: Parameters<InAppNotificationTransport['send']>) {
         inAppCalls++;
-        return inApp.send(payload);
+        return inApp.send(...args);
       },
     },
     email: {

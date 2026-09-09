@@ -5,6 +5,7 @@ import {
 } from '@barghsa/shared/notifications';
 export { relativeLinkRoute } from '@barghsa/shared/notifications';
 import { getDbPool } from '@barghsa/db';
+import type { QueryPool } from './channel-scheduling.js';
 import type {
   INotificationTransport,
   NotificationSendPayload,
@@ -50,12 +51,15 @@ export class InAppNotificationTransport implements INotificationTransport {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(private readonly pool: any = null) {}
 
-  async send(payload: NotificationSendPayload): Promise<NotificationSendResult> {
+  async send(
+    payload: NotificationSendPayload,
+    transaction?: QueryPool
+  ): Promise<NotificationSendResult> {
     if (!payload.profileId && !payload.recipientId) {
       throw new Error('in_app transport requires a profile or account recipient');
     }
 
-    const pool = this.pool ?? getDbPool();
+    const pool = transaction ?? this.pool ?? getDbPool();
     const deliveryKey = payload.outboxId
       ? `outbox:${payload.outboxId}`
       : `transport:${payload.idempotencyKey}`;

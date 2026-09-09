@@ -14,6 +14,130 @@ import { runOutboxPoll } from './outbox-runner.js';
 import { InAppNotificationTransport } from './in-app-transport.js';
 import { EmailNotificationTransport } from './email-transport.js';
 import { SmsNotificationTransport } from './sms-transport.js';
+import { notificationsDeliveryAttempts } from './worker-metrics.js';
+
+for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
+  it(`rolls inbox delivery back on ${failure} failure without double-counting attempts`, async () => {
+    const { userId, profileId } = await account();
+    const id = await queue(userId, profileId, ['in_app', 'email']);
+    const keys: string[] = [];
+    const options = {
+      pool,
+      deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
+      availability: () => ({
+        enabledChannels: { email: true, sms: true },
+        verifiedEmail: true,
+        verifiedPhone: false,
+        marketingOptedIn: {},
+      }),
+      transports: {
+        in_app: new InAppNotificationTransport(pool),
+        email: {
+          channel: 'email' as const,
+          async send(payload: { idempotencyKey: string }) {
+            keys.push(payload.idempotencyKey);
+            return { status: 'delivered' as const, providerRef: 'accepted-email' };
+          },
+        },
+      },
+    };
+    const table = {
+      inbox: 'in_app_notifications',
+      job: 'notification_job',
+      log: 'notification_delivery_log',
+      outbox: 'notification_outbox',
+    }[failure];
+    const condition =
+      failure === 'inbox'
+        ? `NEW.delivery_key='outbox:${id}'`
+        : failure === 'job'
+          ? `NEW.outbox_id='${id}' AND NEW.status='done'`
+          : failure === 'log'
+            ? `NEW.notification_id='${id}' AND NEW.status='delivered'`
+            : `NEW.id='${id}' AND NEW.status='delivered'`;
+    await pool.query(`CREATE FUNCTION reject_atomic_delivery() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN RAISE EXCEPTION 'test delivery persistence failure'; END $$;
+      CREATE TRIGGER reject_atomic_delivery BEFORE INSERT OR UPDATE ON ${table}
+      FOR EACH ROW WHEN (${condition}) EXECUTE FUNCTION reject_atomic_delivery()`);
+    notificationsDeliveryAttempts.reset();
+    const attempts = async (channel: string, status: string) =>
+      (await notificationsDeliveryAttempts.get()).values.find(
+        (entry) => entry.labels.channel === channel && entry.labels.status === status
+      )?.value ?? 0;
+    try {
+      expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 0, failed: 1 });
+      expect(
+        (
+          await pool.query('SELECT id FROM in_app_notifications WHERE delivery_key=$1', [
+            `outbox:${id}`,
+          ])
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await pool.query(
+            "SELECT id FROM notification_delivery_log WHERE notification_id=$1 AND status='delivered'",
+            [id]
+          )
+        ).rows
+      ).toEqual([]);
+      expect(
+        (
+          await pool.query(
+            'SELECT status,attempts FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+            [id]
+          )
+        ).rows
+      ).toEqual([
+        { status: 'retrying', attempts: 1 },
+        { status: 'retrying', attempts: 1 },
+      ]);
+      expect(await attempts('email', 'delivered')).toBe(1);
+      expect(await attempts('email', 'failed')).toBe(0);
+      expect(await attempts('in_app', 'delivered')).toBe(0);
+      expect(await attempts('in_app', 'failed')).toBe(1);
+    } finally {
+      await pool.query(`DROP TRIGGER reject_atomic_delivery ON ${table}`);
+      await pool.query('DROP FUNCTION reject_atomic_delivery()');
+    }
+    await pool.query(
+      "UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1",
+      [id]
+    );
+    await pool.query(
+      "UPDATE notification_outbox SET scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1",
+      [id]
+    );
+    expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+    expect(keys).toHaveLength(2);
+    expect(keys[1]).toBe(keys[0]);
+    const inbox = (
+      await pool.query('SELECT id FROM in_app_notifications WHERE delivery_key=$1', [
+        `outbox:${id}`,
+      ])
+    ).rows;
+    expect(inbox).toHaveLength(1);
+    expect(
+      (
+        await pool.query(
+          "SELECT provider_ref FROM notification_job WHERE outbox_id=$1 AND channel='in_app' AND status='done'",
+          [id]
+        )
+      ).rows
+    ).toEqual([{ provider_ref: inbox[0].id }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT provider_ref FROM notification_delivery_log WHERE notification_id=$1 AND channel='in_app' AND status='delivered'",
+          [id]
+        )
+      ).rows
+    ).toEqual([{ provider_ref: inbox[0].id }]);
+    expect(await attempts('email', 'delivered')).toBe(2);
+    expect(await attempts('in_app', 'delivered')).toBe(1);
+    expect(await attempts('in_app', 'failed')).toBe(1);
+  });
+}
 
 const name = `test_recipient_${randomUUID().replaceAll('-', '')}`;
 let management: Pool, pool: Pool;

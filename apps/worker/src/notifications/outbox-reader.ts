@@ -8,6 +8,13 @@ import type {
 } from '@barghsa/shared/notifications';
 import { sanitizeError } from './error-redact.js';
 import { deriveChannelIdempotencyKey } from './outbox-writer.js';
+import type { QueryPool } from './channel-scheduling.js';
+import { recordDeliveryAttempt } from './worker-metrics.js';
+
+/** Local delivery can share the worker's pinned persistence transaction. */
+export interface WorkerNotificationTransport extends INotificationTransport {
+  send(payload: NotificationSendPayload, transaction?: QueryPool): Promise<NotificationSendResult>;
+}
 
 /**
  * Base outbox reader (E-05, T-05.01.01).
@@ -56,7 +63,7 @@ export interface OutboxRow {
 
 export interface OutboxReaderOptions {
   /** Transport registry keyed by channel. In-app is mandatory. */
-  transports: Partial<Record<NotificationChannel, INotificationTransport>>;
+  transports: Partial<Record<NotificationChannel, WorkerNotificationTransport>>;
   /** Pool override for isolated database checks. */
   pool?: {
     query: (
@@ -149,8 +156,9 @@ export interface DispatchOutcome {
  */
 export async function dispatchOutbox(
   row: OutboxRow,
-  transports: Partial<Record<NotificationChannel, INotificationTransport>>,
-  control?: { signal: AbortSignal; beforeSend: () => Promise<void> }
+  transports: Partial<Record<NotificationChannel, WorkerNotificationTransport>>,
+  control?: { signal: AbortSignal; beforeSend: () => Promise<void> },
+  transaction?: QueryPool
 ): Promise<DispatchOutcome[]> {
   const outcomes: DispatchOutcome[] = [];
   for (const channel of new Set(row.channels)) {
@@ -177,7 +185,7 @@ export async function dispatchOutbox(
     try {
       if (!transport || transport.channel !== channel)
         throw new Error(`${channel} transport unavailable`);
-      const result = await transport.send(payload);
+      const result = await transport.send(payload, transaction);
       if (
         !result ||
         !['delivered', 'failed'].includes(result.status) ||
@@ -194,6 +202,9 @@ export async function dispatchOutbox(
         error: sanitizeError(error instanceof Error ? error.message : String(error)),
       });
     }
+    // Transactional inbox delivery is counted by its commit/rollback owner.
+    // External attempts must not be counted again when persistence retries.
+    if (!transaction) recordDeliveryAttempt(channel, outcomes[outcomes.length - 1]!.result.status);
   }
   return outcomes;
 }
