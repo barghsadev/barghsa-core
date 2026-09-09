@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "69b9e1a0d46fb426e40f23b4a72137d97907b95a",
+  "source_revision": "214c8a1bfde80d08a2aa3088508711ee9ec013e5",
   "active_step": "R01",
-  "next_action": "Compare staff history UI/API and focused tests; repair confirmed gaps and explicitly disposition PR219 timeline deferrals.",
+  "next_action": "Read existing role-permission recovery tests and relevant prior evidence. Repair the required role catalogue presentation and verify current permission lookup/authority; preserve predefined read-only scope.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -635,6 +635,10 @@
     {
       "id": "R01-invitation-dashboard",
       "review_record": "audit/evidence/step-reviews.json#R01-invitation-dashboard"
+    },
+    {
+      "id": "R01-staff-permission-audit",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit"
     }
   ],
   "deferred_improvements": [
@@ -653,9 +657,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 129,
+    "acceptance_verified": 130,
     "partial": 32,
-    "pending": 161,
+    "pending": 160,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -944,27 +948,30 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-staff-permission-audit",
-    "name": "Staff permission audit timeline",
+    "id": "R01-staff-role-catalogue",
+    "name": "Staff role catalogue and effective permissions",
     "status": "in_progress",
     "prs": [
-      219
+      162
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-10.01.02"
+      "02-auth-users-admin.md#T-09.05.01"
     ],
     "remaining_checklist": [
-      "Exact requirement and saved PR219 body read. Review role addition/removal, target-user/date filters and current authorization.",
-      "Resolve both historical timeline/UI deferrals against StaffPermissionHistory and its staff-page integration. Reuse valid staff authority and role-change evidence.",
-      "Run focused checks for confirmed gaps, then consolidate task/PR disposition."
+      "Exact requirement, saved PR162 body and both deferrals read. Predefined roles are explicitly read-only; custom-role editing is a future extension. Disposition role_permission_change accordingly.",
+      "AdminRolesPage and list/effective API methods read. Compare required grouped permission checkboxes, FA/EN labels, effective-user lookup and theme behavior. Existing page renders permission strings instead of required checkboxes and uses fixed light-theme colors.",
+      "Reuse repaired lookup validation/race and current staff authority evidence; read role-permission-recovery.spec.ts before adding checks. Review only confirmed remaining gaps and consolidate task/PR disposition."
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      "Required grouped permission-checkbox presentation is absent from current role catalogue."
+    ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+      "audit/evidence/step-reviews.json#R01-staff-task-acceptance",
+      "audit/evidence/step-reviews.json#R01-staff-permission-audit"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Compare staff history UI/API and focused tests; repair confirmed gaps and explicitly disposition PR219 timeline deferrals."
+    "next_action": "Read existing role-permission recovery tests and relevant prior evidence. Repair the required role catalogue presentation and verify current permission lookup/authority; preserve predefined read-only scope."
   },
   "open_domain_reviews": [
     {

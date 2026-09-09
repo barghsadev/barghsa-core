@@ -12415,6 +12415,108 @@
         "/tmp/r01-invitation-dashboard-browser.log",
         "/tmp/r01-invitation-dashboard-lint.log"
       ]
+    },
+    {
+      "id": "R01-staff-permission-audit",
+      "date": "2026-09-09",
+      "source_revision": "214c8a1bfde80d08a2aa3088508711ee9ec013e5",
+      "base_revision": "937484ca9d3e9de4a488487c564896cd3d72d5bb",
+      "product_commits": [
+        "214c8a1bfde80d08a2aa3088508711ee9ec013e5"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-10.01.02"
+      ],
+      "summary": "Staff audit timeline and filters verified; fixed unreadable dark-theme text.",
+      "review": [
+        "Read exact T-10.01.02 and saved PR219 including both timeline deferrals. Current staff page exposes all-user and per-user history; keyed remount isolates target filters. Native timeline names target, actor, localized roles, reason and account-local timestamp.",
+        "Current API filters role_change events by target/date, orders newest first with deterministic tie-break, resolves role names and computes added/removed differences. Session-bound admin:staff:view controls reads using current grants. Role changes retain their atomic role/session/audit transaction.",
+        "Two new actual-HTTP/PostgreSQL cases verify persisted additions/removals, actor/target identities, pagination, full-day filters, empty range and invalid filters, plus unauthenticated/unauthorized denial and next-request permission revocation.",
+        "The enhanced production-browser test reproduced dark-theme contrast1.04:1. Replaced fixed white/gray presentation with existing card/muted theme colors. Desktop/mobile fa/en checks pass light/dark axe scans, displayed additions/removals, actor/date, timezone failure/retry, per-user scope, pagination, full-calendar-day filters, inverted range rejection and clearing.",
+        "Both PR219 UI deferrals are satisfied by later implementation with this current verification. No replacement or duplicate audit service is needed. No backend runtime change or contract change.",
+        "Initial browser run contains confirmed English contrast failure and a Persian fixture wording mismatch, corrected to existing dictionary text. Initial API typecheck caught missing test response typing; type-only correction passes final types without changing tested runtime behavior. Retain failed logs."
+      ],
+      "verification": {
+        "api": "49 distinct cases across admin.service.test.ts and staff-http.integration.test.ts pass, including2 new HTTP cases.",
+        "browser": "4 production Chromium cases:fa/en desktop/mobile, with both themes in each case.",
+        "quality": "API/web types, scoped lint, Prettier, production build,42 unchanged payload budgets and diff check pass."
+      },
+      "remaining": [],
+      "pr_dispositions": [
+        {
+          "pr": 219,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-10.01.02"
+          ],
+          "reason": "Current timeline, role deltas, identities, dates, filters, authorization and both historical UI deferrals verified.",
+          "source_revision": "214c8a1bfde80d08a2aa3088508711ee9ec013e5",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-staff-permission-audit"
+          ]
+        }
+      ],
+      "pr_counts": {
+        "closed": 1,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "Unchanged AdminStaffUsersPage and shared/session staff-permission sources match R01-staff-task-acceptance. Reuse staff table/role-edit decisions and authority evidence; changed staff-mutation helper is not claimed byte-identical to that older revision.",
+        "Existing service tests rerun once with new HTTP checks. Browser cases enhance existing filters/retry scenarios; do not count earlier overlapping runs as additional cases.",
+        "6 exact immediate-base acceptance source bindings refreshed for theme-only/additive-test changes; older stale bindings remain pending."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/StaffPermissionHistory.tsx",
+          "sha256": "35d5c0764908b237df567615d0a71e76dd1e2755fb79e4df916ade39f00bc616"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "f80feddaf74ed96f396d270db2dbbcf207542c5a15456b547c05038f81b6b8c9"
+        },
+        {
+          "path": "apps/web/e2e/staff-users.spec.ts",
+          "sha256": "c583b2b17ac3edb2b644b7ebde6222fea171ece77faeadf09c24026698aedc66"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "5fcf4799e88da331a11abc5a7a477832c0b48d740af7bb61bd1ad89651f3840c"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "1d335cd2f15bbfb71a5f625d1654617d566703303cc17e4a4f778e20e9517485"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "8726d58a5d98796484fcce91511b22fb03ea72df0f55120a426ec5bfe2ffed47"
+        },
+        {
+          "path": "packages/shared/src/admin/staff-permissions.ts",
+          "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-staff-audit-api-types-final.log",
+        "/tmp/r01-staff-audit-api-types.log",
+        "/tmp/r01-staff-audit-api.log",
+        "/tmp/r01-staff-audit-browser-before.log",
+        "/tmp/r01-staff-audit-browser-final.log",
+        "/tmp/r01-staff-audit-budgets.log",
+        "/tmp/r01-staff-audit-build.log",
+        "/tmp/r01-staff-audit-format-final.log",
+        "/tmp/r01-staff-audit-format.log",
+        "/tmp/r01-staff-audit-lint.log",
+        "/tmp/r01-staff-audit-web-types.log"
+      ]
     }
   ]
 }

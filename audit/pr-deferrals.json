@@ -791,7 +791,21 @@
       "- Read-only slice: no schema changes, no migrations. UI timeline view deferred (same convention as T-10.01.01's deferred admin web UI).",
       "- [ ] Timeline UI per user (\"Assigned [role] by [admin] on [date]\") — deferred with the admin web UI slice"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Reviewed locally: required all-user/per-user timeline is implemented and verified.",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "StaffPermissionHistory and its staff-page integration show additions/removals, actor/date, user/date filters and pagination. Current API and production browser checks pass; audit/evidence/step-reviews.json#R01-staff-permission-audit"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "StaffPermissionHistory and its staff-page integration show additions/removals, actor/date, user/date filters and pagination. Current API and production browser checks pass; audit/evidence/step-reviews.json#R01-staff-permission-audit"
+      }
+    ],
+    "reviewed_source_revision": "214c8a1bfde80d08a2aa3088508711ee9ec013e5",
+    "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit"
   },
   {
     "pr": 218,

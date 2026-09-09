@@ -2769,7 +2769,7 @@
         },
         {
           "path": "apps/web/src/components/StaffPermissionHistory.tsx",
-          "sha256": "4e51513c19de9d4135388eeaab2fb001493e574c051b6cf3d1630ee87350def4"
+          "sha256": "35d5c0764908b237df567615d0a71e76dd1e2755fb79e4df916ade39f00bc616"
         },
         {
           "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -3133,7 +3133,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "3a4418e02e52b6058b50b4cd0b610e78e3f9f05e14083e5b113d835326be4433"
+          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -3299,7 +3299,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "3a4418e02e52b6058b50b4cd0b610e78e3f9f05e14083e5b113d835326be4433"
+          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5212,7 +5212,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "3a4418e02e52b6058b50b4cd0b610e78e3f9f05e14083e5b113d835326be4433"
+          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
         },
         {
           "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
@@ -5248,7 +5248,7 @@
         },
         {
           "path": "apps/web/e2e/staff-users.spec.ts",
-          "sha256": "991ad5193e175e7a98ee1e35c4fd0f4154878d351e50c0eb94f14b920f77890d"
+          "sha256": "c583b2b17ac3edb2b644b7ebde6222fea171ece77faeadf09c24026698aedc66"
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
@@ -5330,7 +5330,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "3a4418e02e52b6058b50b4cd0b610e78e3f9f05e14083e5b113d835326be4433"
+          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
         },
         {
           "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
@@ -5366,7 +5366,7 @@
         },
         {
           "path": "apps/web/e2e/staff-users.spec.ts",
-          "sha256": "991ad5193e175e7a98ee1e35c4fd0f4154878d351e50c0eb94f14b920f77890d"
+          "sha256": "c583b2b17ac3edb2b644b7ebde6222fea171ece77faeadf09c24026698aedc66"
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
@@ -5423,7 +5423,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "3a4418e02e52b6058b50b4cd0b610e78e3f9f05e14083e5b113d835326be4433"
+          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
         },
         {
           "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
@@ -5459,7 +5459,7 @@
         },
         {
           "path": "apps/web/e2e/staff-users.spec.ts",
-          "sha256": "991ad5193e175e7a98ee1e35c4fd0f4154878d351e50c0eb94f14b920f77890d"
+          "sha256": "c583b2b17ac3edb2b644b7ebde6222fea171ece77faeadf09c24026698aedc66"
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
@@ -13799,7 +13799,65 @@
         137
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-invitation-dashboard"
+      "review_record": "audit/evidence/step-reviews.json#R01-invitation-dashboard",
+      "requirement_line": 521
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-10.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "214c8a1bfde80d08a2aa3088508711ee9ec013e5",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 936,
+      "requirement": "**T-10.01.02 — Staff permission audit view**\n\n- Description: Admin can view permission changes for staff users. Timeline of role additions/removals.\n- Technical notes: Queries audit_log for role changes. Filterable by user, date range.\n- UI/UX: Timeline view per user: \"Assigned [role] by [admin] on [date]\", \"Removed [role] by [admin] on [date]\".\n- Dependencies: T-09.05.01, audit module\n- Complexity: M\n\n---",
+      "requirement_sha256": "6259adcdaba869dcf870465475dbb574a6516a3be63d24fb07709933a55351bc",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/StaffPermissionHistory.tsx",
+          "sha256": "35d5c0764908b237df567615d0a71e76dd1e2755fb79e4df916ade39f00bc616"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "f80feddaf74ed96f396d270db2dbbcf207542c5a15456b547c05038f81b6b8c9"
+        },
+        {
+          "path": "apps/web/e2e/staff-users.spec.ts",
+          "sha256": "c583b2b17ac3edb2b644b7ebde6222fea171ece77faeadf09c24026698aedc66"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "5fcf4799e88da331a11abc5a7a477832c0b48d740af7bb61bd1ad89651f3840c"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "1d335cd2f15bbfb71a5f625d1654617d566703303cc17e4a4f778e20e9517485"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "8726d58a5d98796484fcce91511b22fb03ea72df0f55120a426ec5bfe2ffed47"
+        },
+        {
+          "path": "packages/shared/src/admin/staff-permissions.ts",
+          "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+        }
+      ],
+      "checks": [
+        "Exact requirement and saved PR219 reviewed.",
+        "audit/evidence/step-reviews.json#R01-staff-permission-audit"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        219
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit"
     }
   ],
   "pending_task_keys": [
@@ -13956,7 +14014,6 @@
     "02-auth-users-admin.md#T-09.12.03",
     "02-auth-users-admin.md#T-09.12.04",
     "02-auth-users-admin.md#T-09.12.06",
-    "02-auth-users-admin.md#T-10.01.02",
     "03-core-business.md#T-03.01.01.01",
     "03-core-business.md#T-03.01.01.02",
     "03-core-business.md#T-03.01.01.03",
@@ -16810,6 +16867,20 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "note": "Prior assessments retained in Git. Refresh only previously current bindings after scoped notification/context/provider review; stale bindings remain pending."
+    },
+    {
+      "source_revision": "214c8a1bfde80d08a2aa3088508711ee9ec013e5",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.03.04",
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-10.01.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit",
+      "note": "Refresh only exact immediate-base bindings for two theme classes and additive tests. Existing unrelated test bodies and staff list/authority implementation remain unchanged; older stale bindings retained."
     }
   ]
 }
