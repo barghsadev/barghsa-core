@@ -154,7 +154,7 @@ function script(opts: ScriptOptions = {}) {
       return { rows: [opts.locked ?? makeReceiptRow()] };
     }
     if (sql.includes('SELECT u.user_id, u.is_admin')) return { rows: [] };
-    if (sql.includes('AS role_permissions'))
+    if (sql.includes('AS role_permissions') || sql.includes('SELECT u.is_admin FROM users'))
       return { rows: [{ is_admin: true, role_permissions: [] }] };
     if (sql.includes('SELECT metadata::jsonb AS metadata FROM audit_log'))
       return {

@@ -397,6 +397,130 @@ it('respects generic rejection and revoked reviewer permissions before wallet se
   );
 });
 
+for (const kind of ['wallet', 'invoice'] as const) {
+  for (const other of ['initiator', 'reviewer'] as const) {
+    for (const change of ['role', 'account'] as const) {
+      it(`${kind} settlement retains the other ${other} ${change} authority while money waits`, async () => {
+        await resetReceiptReviewer();
+        await http.pool.query(
+          "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='initiator'"
+        );
+        await http.pool.query(
+          `UPDATE app_config SET value='{"threshold_irr":100000}' WHERE key='finance.dual_approval_threshold'`
+        );
+        const receipt = kind === 'wallet' ? await walletReceipt() : await invoiceReceipt();
+        const confirm = kind === 'wallet' ? confirmWallet : confirmInvoice;
+        const first = await confirm('initiator', receipt.id);
+        expect(first.status, await first.clone().text()).toBe(200);
+        const parked = (await first.json()) as {
+          dualApproval: { requestId: string };
+          dualApprovalRequestId: string;
+        };
+        const requestId =
+          kind === 'wallet' ? parked.dualApproval.requestId : parked.dualApprovalRequestId;
+        if (other === 'reviewer') expect((await decide('reviewer', requestId)).status).toBe(200);
+        await http.pool.query(
+          'INSERT INTO wallets(profile_id) VALUES ($1) ON CONFLICT DO NOTHING',
+          [receipt.profile]
+        );
+        const client = await http.pool.connect();
+        let pending: Promise<Response> | undefined, mutation: Promise<unknown> | undefined;
+        try {
+          await client.query('BEGIN');
+          await client.query('SELECT profile_id FROM wallets WHERE profile_id=$1 FOR UPDATE', [
+            receipt.profile,
+          ]);
+          pending = confirm(other === 'initiator' ? 'reviewer' : 'initiator', receipt.id);
+          await expect
+            .poll(async () =>
+              Number(
+                (
+                  await http.pool.query(
+                    "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%wallets%' "
+                  )
+                ).rows[0].count
+              )
+            )
+            .toBe(1);
+          const sql =
+            change === 'role'
+              ? 'DELETE FROM user_roles WHERE user_id=$1'
+              : 'UPDATE users SET disabled_at=NOW() WHERE user_id=$1';
+          mutation = http.pool.query(sql, [other]);
+          await expect
+            .poll(
+              async () =>
+                Number(
+                  (
+                    await http.pool.query(
+                      "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query=$1",
+                      [sql]
+                    )
+                  ).rows[0].count
+                ),
+              { timeout: 1000 }
+            )
+            .toBe(1);
+          await client.query('COMMIT');
+          expect((await pending).status).toBe(200);
+          await mutation;
+          const snapshot = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+          expect(snapshot.receipt[0].state).toBe(kind === 'wallet' ? 'Released' : 'Confirmed');
+          expect(
+            kind === 'wallet'
+              ? snapshot.wallets[0].posted_balance
+              : snapshot.invoices[0].paid_amount
+          ).toBe('100000');
+        } finally {
+          await client.query('ROLLBACK');
+          client.release();
+          await pending;
+          await mutation;
+          await http.pool.query('UPDATE users SET disabled_at=NULL WHERE user_id=$1', [other]);
+          await http.pool.query(
+            "INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance') ON CONFLICT DO NOTHING",
+            [other]
+          );
+        }
+      });
+    }
+  }
+}
+
+for (const kind of ['wallet', 'invoice'] as const) {
+  it(`${kind} settlement refuses busy reviewer authority without money or audit changes`, async () => {
+    await resetReceiptReviewer();
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='initiator'"
+    );
+    await http.pool.query(
+      `UPDATE app_config SET value='{"threshold_irr":100000}' WHERE key='finance.dual_approval_threshold'`
+    );
+    const receipt = kind === 'wallet' ? await walletReceipt() : await invoiceReceipt();
+    const confirm = kind === 'wallet' ? confirmWallet : confirmInvoice;
+    const parked = (await (await confirm('initiator', receipt.id)).json()) as {
+      dualApproval: { requestId: string };
+      dualApprovalRequestId: string;
+    };
+    const requestId =
+      kind === 'wallet' ? parked.dualApproval.requestId : parked.dualApprovalRequestId;
+    expect((await decide('reviewer', requestId)).status).toBe(200);
+    const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+    const client = await http.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='reviewer' FOR UPDATE");
+      const response = await confirm('initiator', receipt.id);
+      expect(response.status, await response.text()).toBe(409);
+      expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+    }
+    expect((await confirm('initiator', receipt.id)).status).toBe(200);
+  });
+}
+
 it('applies below-threshold, disabled and corrupt configuration without bypassing saved requests', async () => {
   const below = await walletReceipt(99999n);
   expect((await confirmWallet('initiator', below.id)).status).toBe(200);
