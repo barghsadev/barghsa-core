@@ -49,12 +49,25 @@ function makeInvoiceRow(overrides: Record<string, unknown> = {}) {
   };
 }
 
-function mockTransitionFlowSuccess(fromState: string, _updateParamCount: number) {
+function mockTransitionFlowSuccess(
+  fromState: string,
+  _updateParamCount: number,
+  financials?: TransitionContext
+) {
   // BEGIN → SELECT ... FOR UPDATE → idempotency check (none) → UPDATE → INSERT audit → COMMIT
   mockClient.query
     .mockReset()
     .mockResolvedValueOnce({ rows: [] }) // BEGIN
-    .mockResolvedValueOnce({ rows: [makeInvoiceRow({ state: fromState })] }) // FOR UPDATE
+    .mockResolvedValueOnce({
+      rows: [
+        makeInvoiceRow({
+          state: fromState,
+          total_amount: String(financials?.totalAmount ?? 0n),
+          paid_amount: String(financials?.paidAmount ?? 0n),
+          refunded_amount: String(financials?.refundedAmount ?? 0n),
+        }),
+      ],
+    }) // FOR UPDATE
     .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE
     .mockResolvedValueOnce({ rows: [] }) // INSERT audit
     .mockResolvedValueOnce({ rows: [] }); // COMMIT
@@ -170,7 +183,11 @@ describe('InvoiceStateMachineService', () => {
     });
 
     it('transitions Paid → Refunded successfully', async () => {
-      mockTransitionFlowSuccess('Paid', 3);
+      mockTransitionFlowSuccess('Paid', 3, {
+        totalAmount: 1_000_000n,
+        paidAmount: 1_000_000n,
+        refundedAmount: 1_000_000n,
+      });
 
       const result = await service.transition('inv-001', 'Paid', 'Refunded', {
         actorUserId: 'staff-001',
@@ -425,7 +442,7 @@ describe('InvoiceStateMachineService', () => {
       for (const from of Object.keys(ALLOWED_TRANSITIONS) as InvoiceState[]) {
         for (const to of ALLOWED_TRANSITIONS[from]) {
           pairs += 1;
-          mockTransitionFlowSuccess(from, 3);
+          mockTransitionFlowSuccess(from, 3, financialsFor(to));
 
           const financials = financialsFor(to);
           await service.transition('inv-001', from, to, {

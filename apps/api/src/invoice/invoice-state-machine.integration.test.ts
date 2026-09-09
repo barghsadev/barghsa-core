@@ -134,6 +134,44 @@ describe('InvoiceStateMachineService — real PostgreSQL integration (T-04.1.01.
     await ctx.close();
   });
 
+  it.each(['omitted', 'fabricated'] as const)(
+    'rejects an unfunded Paid transition when caller financials are %s',
+    async (context) => {
+      const id = await insertInvoice({ state: 'Unpaid', total: TOTAL, paid: 0n });
+      const opts =
+        context === 'omitted'
+          ? transitionOpts()
+          : transitionOpts({
+              financials: { totalAmount: TOTAL, paidAmount: TOTAL, refundedAmount: 0n },
+            });
+      await expect(service.transition(id, 'Unpaid', 'Paid', opts)).rejects.toBeInstanceOf(
+        BadRequestException
+      );
+      expect((await fetchInvoice(id)).state).toBe('Unpaid');
+      expect(await auditRows(id)).toHaveLength(0);
+    }
+  );
+
+  it('rejects a refund completion backed only by caller amounts', async () => {
+    const id = await insertInvoice({ state: 'Paid', total: TOTAL, paid: TOTAL, refunded: 0n });
+    await expect(
+      service.transition(
+        id,
+        'Paid',
+        'Refunded',
+        transitionOpts({
+          financials: {
+            totalAmount: TOTAL,
+            paidAmount: TOTAL,
+            refundedAmount: TOTAL,
+          },
+        })
+      )
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect((await fetchInvoice(id)).state).toBe('Paid');
+    expect(await auditRows(id)).toHaveLength(0);
+  });
+
   // ---- Helpers ------------------------------------------------------------
 
   async function insertInvoice(

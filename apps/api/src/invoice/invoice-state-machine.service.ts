@@ -128,10 +128,18 @@ export class InvoiceStateMachineService {
 
       // Lock the invoice row and verify its current state
       const lockResult = (await client.query(
-        `SELECT id, state, adjustment_kind FROM invoices WHERE id = $1 FOR UPDATE`,
+        `SELECT id, state, adjustment_kind, total_amount, paid_amount, refunded_amount
+         FROM invoices WHERE id = $1 FOR UPDATE`,
         [invoiceId]
       )) as {
-        rows: Array<{ id: string; state: string; adjustment_kind: string | null }>;
+        rows: Array<{
+          id: string;
+          state: string;
+          adjustment_kind: string | null;
+          total_amount: string;
+          paid_amount: string;
+          refunded_amount: string;
+        }>;
       };
       if (lockResult.rows.length === 0) {
         throw new NotFoundException(`Invoice not found: ${invoiceId}`);
@@ -147,6 +155,22 @@ export class InvoiceStateMachineService {
         isCustomerPaymentTransition(transition)
       ) {
         throw new BadRequestException(TRANSITION_ERRORS.CREDIT_NOT_PAYABLE(invoiceId));
+      }
+
+      // Money must already be persisted by the caller on this transaction.
+      // Optional caller snapshots cannot authorize a payment/refund state.
+      if (['Paid', 'PartiallyFunded', 'PartiallyRefunded', 'Refunded'].includes(to)) {
+        const invoice = lockResult.rows[0]!;
+        try {
+          validateTransition(from, to, {
+            totalAmount: BigInt(invoice.total_amount),
+            paidAmount: BigInt(invoice.paid_amount),
+            refundedAmount: BigInt(invoice.refunded_amount),
+          });
+        } catch (error) {
+          if (error instanceof Error) throw new BadRequestException(error.message);
+          throw error;
+        }
       }
 
       // --- 3. Build side-effect column updates ---
