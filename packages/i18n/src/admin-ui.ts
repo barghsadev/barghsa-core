@@ -3,6 +3,9 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.invoices.stepUp.title': 'تأیید تغییر مهلت پرداخت',
+  'admin.invoices.stepUp.description':
+    'رمز عبور خود را وارد کنید تا همین تاریخ و دلیل برای فاکتور ثبت شود.',
   'admin.catalogue.title': 'فهرست محصولات',
   'admin.gifts.title': 'کدهای تخفیف',
   'admin.vat.title': 'تنظیمات مالیات بر ارزش افزوده',
@@ -851,6 +854,9 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.invoices.stepUp.title': 'Verify deadline change',
+  'admin.invoices.stepUp.description':
+    'Enter your password to apply this deadline and reason to the invoice.',
   'admin.catalogue.title': 'Product catalogue',
   'admin.gifts.title': 'Gift codes',
   'admin.vat.title': 'VAT configuration',

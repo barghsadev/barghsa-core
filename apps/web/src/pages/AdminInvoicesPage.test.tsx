@@ -18,8 +18,8 @@ function invoiceDto(invoiceId: string) {
   };
 }
 
-function setInputValue(el: HTMLInputElement, value: string) {
-  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+function setInputValue(el: HTMLInputElement | HTMLTextAreaElement, value: string) {
+  const setter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value')?.set;
   setter?.call(el, value);
   el.dispatchEvent(new Event('input', { bubbles: true }));
 }
@@ -95,5 +95,89 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
     expect(container.querySelector('#due-at')).toBeNull();
     expect(container.querySelector('#override-reason')).toBeNull();
     expect(container.textContent).not.toContain('Apply due-date override');
+  });
+
+  it('does not report success for a mismatched override response', async () => {
+    const originalFetch = globalThis.fetch;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+        if (init?.method === 'POST')
+          return Promise.resolve(
+            new Response(
+              JSON.stringify({
+                ...invoiceDto(INVOICE_B),
+                dueAt: '2026-09-20T08:00:00.000Z',
+                dueAtOverride: { reason: 'Customer requested more time' },
+              })
+            )
+          );
+        return originalFetch(input, init);
+      })
+    );
+    await act(async () => {
+      root.render(<AdminInvoicesPage />);
+    });
+    const lookup = container.querySelector('#invoice-id') as HTMLInputElement;
+    await act(async () => {
+      setInputValue(lookup, INVOICE_A);
+    });
+    await act(async () => {
+      lookup
+        .closest('form')!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+    const due = container.querySelector('#due-at') as HTMLInputElement;
+    await act(async () => {
+      setInputValue(due, '2026-09-20T01:00');
+      setInputValue(
+        container.querySelector('#override-reason') as HTMLTextAreaElement,
+        'Customer requested more time'
+      );
+    });
+    await act(async () => {
+      due.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+    expect(container.querySelector('[data-testid="loaded-invoice-id"]')?.textContent).toBe(
+      INVOICE_A
+    );
+    expect(container.textContent).not.toContain('Due date overridden');
+    expect(container.querySelector('#invoice-deadline-panel [role="alert"]')).toBeTruthy();
+  });
+
+  it('ignores a late response after the user changes the lookup ID', async () => {
+    const originalFetch = globalThis.fetch;
+    let resolveLookup!: (value: Response) => void;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+        if (String(input).endsWith(`/api/admin/invoices/${INVOICE_A}/due-at`))
+          return new Promise<Response>((resolve) => {
+            resolveLookup = resolve;
+          });
+        return originalFetch(input, init);
+      })
+    );
+    await act(async () => {
+      root.render(<AdminInvoicesPage />);
+    });
+    const lookup = container.querySelector('#invoice-id') as HTMLInputElement;
+    await act(async () => {
+      setInputValue(lookup, INVOICE_A);
+    });
+    await act(async () => {
+      lookup
+        .closest('form')!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+    await act(async () => {
+      setInputValue(lookup, INVOICE_B);
+    });
+    await act(async () => {
+      resolveLookup(new Response(JSON.stringify(invoiceDto(INVOICE_A))));
+    });
+    expect(lookup.value).toBe(INVOICE_B);
+    expect(container.querySelector('#due-at')).toBeNull();
+    expect(container.querySelector('[data-testid="loaded-invoice-id"]')).toBeNull();
   });
 });
