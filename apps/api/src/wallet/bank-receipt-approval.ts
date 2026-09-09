@@ -46,6 +46,8 @@ export async function gateWalletReceiptApproval(
     attachmentKey: string | null;
     invoiceId: string | null;
     actorUserId: string;
+    sessionId: string;
+    correlationId?: string;
     ip: string;
     now: Date;
   }
@@ -107,12 +109,13 @@ export async function gateWalletReceiptApproval(
         randomUUID(),
         input.actorUserId,
         JSON.stringify({
+          sessionId: input.sessionId,
           receiptId: input.id,
           requestId: binding.requestId,
           amount: input.amount.toString(),
           fingerprint,
         }),
-        randomUUID(),
+        input.correlationId ?? randomUUID(),
         input.ip,
       ]
     );
@@ -146,6 +149,8 @@ export async function gateWalletReceiptApproval(
     await applyApprovalRequestResolutionOnClient(client, {
       requestId: saved.requestId,
       reviewerUserId: input.actorUserId,
+      sessionId: input.sessionId,
+      ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
       initiatorId: saved.initiatorId,
       status: 'pending',
       decision: 'approve',
@@ -174,6 +179,8 @@ export async function rejectWalletReceiptApproval(
     id: string;
     metadata: unknown;
     actorUserId: string;
+    sessionId: string;
+    correlationId?: string;
     reason: string;
     ip: string;
     now: Date;
@@ -204,6 +211,8 @@ export async function rejectWalletReceiptApproval(
   await applyApprovalRequestResolutionOnClient(client, {
     requestId: binding.requestId,
     reviewerUserId: input.actorUserId,
+    sessionId: input.sessionId,
+    ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
     initiatorId: binding.initiatorId,
     status: 'pending',
     decision: 'reject',

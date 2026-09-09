@@ -419,6 +419,7 @@ export class InvoiceBankReceiptConfirmationService {
           await applyApprovalRequestResolutionOnClient(client, {
             requestId: latestRequest.id,
             reviewerUserId: input.actorUserId,
+            sessionId: input.sessionId,
             ip: input.ip,
             decision: 'approve',
             reviewReason: null,
@@ -434,6 +435,7 @@ export class InvoiceBankReceiptConfirmationService {
             receipt,
             latestRequest,
             actorUserId: input.actorUserId,
+            sessionId: input.sessionId,
             ip: input.ip,
             ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
             now,
@@ -452,6 +454,7 @@ export class InvoiceBankReceiptConfirmationService {
           const parked = await this.parkForDualApproval(client, {
             receipt,
             actorUserId: input.actorUserId,
+            sessionId: input.sessionId,
             ip: input.ip,
             ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
             now,
@@ -666,6 +669,7 @@ export class InvoiceBankReceiptConfirmationService {
           receiptId: receipt.id,
           receiptAmount: receipt.amount,
           reviewerUserId: input.actorUserId,
+          sessionId: input.sessionId,
           ip: input.ip,
           reason: parsed.reason,
           now,
@@ -728,6 +732,7 @@ export class InvoiceBankReceiptConfirmationService {
     input: {
       receipt: BankReceiptRow & { invoiceId: string; profileId: string; amount: bigint };
       actorUserId: string;
+      sessionId: string;
       ip: string;
       correlationId?: string;
       now: Date;
@@ -762,6 +767,7 @@ export class InvoiceBankReceiptConfirmationService {
       ip: input.ip,
       correlationId: input.correlationId,
       metadata: {
+        sessionId: input.sessionId,
         receiptId: input.receipt.id,
         invoiceId: input.receipt.invoiceId,
         profileId: input.receipt.profileId,
@@ -883,6 +889,7 @@ export class InvoiceBankReceiptConfirmationService {
       receiptId: string;
       receiptAmount: bigint;
       reviewerUserId: string;
+      sessionId: string;
       ip: string;
       reason: string;
       now: Date;
@@ -896,6 +903,7 @@ export class InvoiceBankReceiptConfirmationService {
     await applyApprovalRequestResolutionOnClient(client, {
       requestId: latestRequest.id,
       reviewerUserId: input.reviewerUserId,
+      sessionId: input.sessionId,
       ip: input.ip,
       decision: 'reject',
       reviewReason: input.reason,
@@ -926,6 +934,7 @@ export class InvoiceBankReceiptConfirmationService {
       receipt: BankReceiptRow & { invoiceId: string; profileId: string; amount: bigint };
       latestRequest: DualApprovalRequestSummary;
       actorUserId: string;
+      sessionId: string;
       ip: string;
       correlationId?: string;
       now: Date;
@@ -957,6 +966,7 @@ export class InvoiceBankReceiptConfirmationService {
       ip: input.ip,
       correlationId: input.correlationId,
       metadata: {
+        sessionId: input.sessionId,
         receiptId: input.receipt.id,
         invoiceId: input.receipt.invoiceId,
         profileId: input.receipt.profileId,

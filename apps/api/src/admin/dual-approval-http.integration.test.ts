@@ -521,6 +521,49 @@ for (const kind of ['wallet', 'invoice'] as const) {
   });
 }
 
+for (const kind of ['wallet', 'invoice'] as const) {
+  for (const decision of ['confirm', 'reject'] as const) {
+    it(`${kind} approval ${decision} audit retains the HTTP session and correlation`, async () => {
+      await resetReceiptReviewer();
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='initiator'"
+      );
+      await http.pool.query(
+        `UPDATE app_config SET value='{"threshold_irr":100000}' WHERE key='finance.dual_approval_threshold'`
+      );
+      const receipt = kind === 'wallet' ? await walletReceipt() : await invoiceReceipt();
+      const correlations = [randomUUID(), randomUUID()];
+      for (const [index, user] of ['initiator', 'reviewer'].entries()) {
+        const previous = (await http.pool.query('SELECT id FROM audit_log')).rows.map(
+          (row) => row.id
+        );
+        const response = await fetch(
+          `${http.base}/api/admin/${kind === 'wallet' ? 'wallet/bank-receipt-top-ups' : 'invoices/bank-receipts'}/${receipt.id}/${index === 0 ? 'confirm' : decision}`,
+          {
+            method: 'POST',
+            headers: { ...headers[user]!, 'X-Correlation-ID': correlations[index]! },
+            body: JSON.stringify({ reason: 'Receipt does not match' }),
+          }
+        );
+        expect(response.status, await response.text()).toBe(200);
+        const audits = (
+          await http.pool.query(
+            `SELECT event,user_id,metadata::jsonb AS metadata,correlation_id FROM audit_log WHERE NOT(id=ANY($1::text[])) AND (metadata::jsonb->>'receiptId'=$2 OR metadata::jsonb->>'transactionId'=$2 OR event IN ('approval_request_approved','approval_request_rejected'))`,
+            [previous, receipt.id]
+          )
+        ).rows;
+        expect(audits.length).toBeGreaterThan(0);
+        for (const audit of audits)
+          expect(audit).toMatchObject({
+            user_id: user,
+            correlation_id: correlations[index],
+            metadata: { sessionId: headers[user]!.Cookie!.split('=')[1] },
+          });
+      }
+    });
+  }
+}
+
 it('applies below-threshold, disabled and corrupt configuration without bypassing saved requests', async () => {
   const below = await walletReceipt(99999n);
   expect((await confirmWallet('initiator', below.id)).status).toBe(200);

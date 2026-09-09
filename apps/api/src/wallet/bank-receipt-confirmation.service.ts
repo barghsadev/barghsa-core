@@ -360,6 +360,8 @@ export class BankReceiptConfirmationService {
           attachmentKey: pending.receipt_attachment_key ?? receipt?.attachmentKey ?? null,
           invoiceId,
           actorUserId: input.actorUserId,
+          sessionId: input.sessionId,
+          ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
           ip: input.ip,
           now,
         });
@@ -551,6 +553,8 @@ export class BankReceiptConfirmationService {
           id: pending.id,
           metadata: pending.metadata,
           actorUserId: input.actorUserId,
+          sessionId: input.sessionId,
+          ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
           reason: parsed.reason,
           ip: input.ip,
           now,
