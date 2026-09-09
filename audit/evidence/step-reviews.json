@@ -6573,6 +6573,382 @@
         "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
         "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
       ]
+    },
+    {
+      "id": "R01-account-settings",
+      "date": "2026-09-09",
+      "source_revision": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+      "base_revision": "ab09a87",
+      "product_commits": [
+        "56498a12d726418a0990faa415573b706d6a84e0",
+        "e3981b9",
+        "71f5e49",
+        "9526cc5",
+        "39317d4",
+        "90f6415ec7d1f7056f928ce03ba50c9fcf58842b"
+      ],
+      "summary": "Account-settings batch repaired and reviewed locally:2 task acceptances verified,2 partial;2 saved PR reviews closed,2 open for assigned consumers.",
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.03.03",
+        "02-auth-users-admin.md#T-03.03.04",
+        "02-auth-users-admin.md#T-03.03.05",
+        "02-auth-users-admin.md#T-03.03.06"
+      ],
+      "review": [
+        "Profile details, verification badge and field permissions are reviewed. Verified identity stays locked except staff editing their own individual profile. Complete address/geography inputs are validated and changes append history. Confirmation, pencils, lock explanations, pending/failure preservation and matching save acknowledgements are checked in fa/en. Account/session/profile locks and audit rollback/expiry checks pass.",
+        "Username changes require both linked old/new OTPs with actor, purpose, destination and account-version binding. Failed attempts, uniqueness conflicts, rollback and replay are checked. Verified secondary email/mobile supports alternate login and recovery. Device/IP/user quotas and delivery rollback pass. Username changes retain the current session and revoke peers; correlated audit commits atomically. Six unchanged fa/en browser cases cover masked flows, both-code retry and secondary-contact verification/reload.",
+        "Creation defaults now include IN_APP plus the primary available channel without rewriting prior choices. Preference API/UI uses primary or verified secondary aliases, disables unavailable channels, keeps IN_APP on and persists an account-scoped audited choice. Six browser cases cover invalid reads, availability, opt-outs and failures. Actual delivery recipients and application of these choices remain for R02; its loader currently trusts nonempty legacy contacts.",
+        "Timezone defaults to Asia/Tehran; strict IANA input, account-only persistence, correlated audit and session expiry checks pass. Searchable keyboard selection, current-time/date/offset preview and locale-based calendar formatting are reviewed. Two unchanged browser cases cover load/save recovery and reload. Every timestamp consumer still requires R03 evidence."
+      ],
+      "checks": [
+        "Shared CSRF:120 distinct API cases across recorded current/reused runs. Contacts:74. Profile/timezone/preferences:60. These groups overlap; do not sum them. Creation defaults retain their34-case evidence.",
+        "Browser evidence:9 profile-settings cases,6 current preference cases,6 unchanged contact cases and2 unchanged timezone cases. Narrow reruns overlap. API/web types,lint,format,OpenAPI and42 unchanged budgets pass at relevant revisions. Final API-only repairs preserve frontend evidence.",
+        "AST comparison of five classes confirms only the named contact/profile/timezone members changed;83 other members are unchanged. Initial root TypeScript7 comparison lacked the compiler API; the successful comparison used the API package compiler without dependency changes."
+      ],
+      "repairs": [
+        {
+          "commit": "56498a12d726418a0990faa415573b706d6a84e0",
+          "summary": "Profile settings requires confirmation before save, serializes repeated submissions and accepts success only for the requested profile ID/type. Failures stay localized in the dialog and preserve edits; cancel and successful refresh return focus. Editable fields show pencils; locked fields retain visible explanations and native hover hints on focusable buttons.",
+          "checks": "9 distinct production Chromium cases pass at the final workflow run;2 overlapping fa/en cases pass again after the final icon-button correction. Web types/lint/format/build and all42 unchanged budgets pass. Electricity249.93KB/250KB. API/schema/dependencies unchanged.",
+          "review": "Reviewed single in-flight guard, modal pending/cancel policy, changed-field payload, CSRF, response binding, refresh/focus and unchanged verified/staff field policy. Initial2 browser cases reproduce missing confirmation. Intermediate failures were premature second-save selection during dialog exit and test keyboard modality; the tooltip import caused budget regression and was removed. Native hint has a persistent visible equivalent; no custom tooltip library is added.",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/routes/_app/settings/profile.tsx",
+              "sha256": "64f8346f7691e38bc7bc671ddd5e7f2ccdf0158574707f7f2eec146d49577c1f"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "1839f4b16488a7b9ada75a4d949a054160a74dd899e65842e4d601eda7897f9b"
+            }
+          ],
+          "logs": [
+            "audit/evidence/56498a1/r01-profile-settings-before.log.gz",
+            "audit/evidence/56498a1/r01-profile-settings-browser-final.log.gz",
+            "audit/evidence/56498a1/r01-profile-settings-browser-hints.log.gz",
+            "audit/evidence/56498a1/r01-profile-settings-budgets-v5.log.gz",
+            "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+            "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+            "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+            "audit/evidence/56498a1/r01-profile-settings-build-v5.log.gz"
+          ]
+        },
+        {
+          "commit": "e3981b9",
+          "summary": "Initialize email/mobile and IN_APP plus the primary contact channel in the two existing account-creation transactions. No existing-row rewrite or schema change.",
+          "checks": "Four failing email/mobile registration/staff HTTP cases reproduce the defect.34 affected API cases, API types/lint/format and unchanged OpenAPI pass. Includes rollback/deadline/dedup/alternate-login behavior and opt-out persistence. Frontend source unchanged; reuse56498a1 browser/budget evidence.",
+          "logs": [
+            "audit/evidence/9526cc5/r01-notification-defaults-api.log.gz",
+            "audit/evidence/9526cc5/r01-notification-defaults-before.log.gz",
+            "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+            "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+            "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+            "audit/evidence/9526cc5/r01-notification-defaults-test-format.log.gz",
+            "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+          ]
+        },
+        {
+          "commit": "71f5e49",
+          "summary": "Bind the submitted CSRF token through locked authentication before idle touch. Preserve safe methods, independent callback proofs and pre-login CSRF.",
+          "checks": "31 focused cases pass:12 guard policy,18 pre-login,1 reproduced lock race.89 other passing API cases from the earlier combined run are reused,120 distinct total. API types/lint/format pass. The first run reproduced200; the subsequent403 test had a wrong error-code literal, corrected to the existing contract.",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "df7a5476a1366f8a7d7c82623560725928dc1b31b24c39054797700f12e78335"
+            },
+            {
+              "path": "apps/api/src/session/session.service.ts",
+              "sha256": "d06e0b410789a0b5b355fab52fe719e2c336459004f8ffa7c3cfeb83a5a7355a"
+            }
+          ],
+          "logs": [
+            "audit/evidence/9526cc5/r01-session-csrf-race-before.log.gz",
+            "audit/evidence/9526cc5/r01-session-csrf-race-api.log.gz",
+            "audit/evidence/9526cc5/r01-session-csrf-race-final-api.log.gz"
+          ]
+        },
+        {
+          "commit": "9526cc5",
+          "summary": "Notification availability comes from the current primary or verified secondary contact. Account-scoped saves preserve choices, always include IN_APP, reject unavailable destinations and commit audit with the write. UI disables unavailable channels with a localized explanation and validates availability acknowledgements.",
+          "checks": "8 notification HTTP cases pass in the combined session run; registration response cases pass there too.6 production Chromium cases cover fa/en availability, malformed reads, opt-outs and failure/retry. API/web types,lint,format,OpenAPI,web build and42 unchanged budgets pass. No schema or dependency changes. Actual delivery consumer proof remains R02.",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/user-settings/user-settings.controller.ts",
+              "sha256": "fbca215ea8a747979358e36713825c902445c4fcbec0963670bc25f242fd117f"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/index.tsx",
+              "sha256": "94e5f2b4ddbe05c2178a0e8f0cc1946c2753a5d77e10b71e00d51307ef48b193"
+            },
+            {
+              "path": "packages/i18n/src/preferences.ts",
+              "sha256": "2b505a2022a1fafe8f4242f4d5f38a9e3ed970ef7a22ba2edc7f20c12338a4ae"
+            }
+          ],
+          "logs": [
+            "audit/evidence/9526cc5/r01-session-csrf-race-api.log.gz",
+            "audit/evidence/9526cc5/r01-notification-preferences-browser.log.gz",
+            "audit/evidence/9526cc5/r01-notification-preferences-budgets.log.gz",
+            "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz"
+          ]
+        },
+        {
+          "commit": "39317d4",
+          "summary": "Contact issuance/completion now locks the account/session, rechecks request proof before commit and preserves the current session while revoking peers on username change. Codes, delivery, contact, sessions and correlated audit roll back together.",
+          "checks": "74 distinct API cases pass:72 in the combined run, with4 overlapping deadline cases and2 new policy cases in the final6-case run. API types/lint/format/OpenAPI pass. Six unchanged contact browser cases are reused. Four failing baseline cases prove late-expiry acceptance.",
+          "logs": [
+            "audit/evidence/90f6415/r01-contact-session-before.log.gz",
+            "audit/evidence/90f6415/r01-contact-session-api.log.gz",
+            "audit/evidence/90f6415/r01-contact-session-final-api.log.gz",
+            "audit/evidence/90f6415/r01-account-settings-contact-reuse.log.gz"
+          ]
+        },
+        {
+          "commit": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+          "summary": "Profile edits retain current account/session/staff authority through their identity/address/history/audit transaction. Timezone saves validate the whole input, write only the actor account and commit a correlated audit with current-session checks.",
+          "checks": "60 distinct API cases pass:14 unchanged cases from the first run,44 from the next run and2 corrected concurrency cases from the final run. Three stale unit mocks were adapted. Two concurrency fixtures now follow the actual authentication lock chain, including a waiter behind another waiter; exact request success/default/audit assertions remain. API types/lint/format/OpenAPI pass. Frontend unchanged.",
+          "logs": [
+            "audit/evidence/90f6415/r01-settings-transactions-profile-before.log.gz",
+            "audit/evidence/90f6415/r01-settings-transactions-timezone-before.log.gz",
+            "audit/evidence/90f6415/r01-settings-transactions-api.log.gz",
+            "audit/evidence/90f6415/r01-settings-transactions-final-api.log.gz",
+            "audit/evidence/90f6415/r01-settings-transactions-default-diagnostic.log.gz",
+            "audit/evidence/90f6415/r01-settings-transactions-default-final.log.gz"
+          ]
+        }
+      ],
+      "historical_dispositions": [
+        "PR111–114 each contribute a distinct task. No saved frozen deferrals or duplicate builds occur in this batch; useful schema/UI slices remain.",
+        "Historical picker/preferences claims do not prove all delivery/timestamp consumers; PR113 and114 remain open."
+      ],
+      "remaining": [
+        "R02: verify actual delivery recipients and application of per-user channel choices, including historical unverified secondary contacts.",
+        "R03: link complete timestamp-consumer coverage to the account timezone while calendar selection remains locale-based.",
+        "Preserve12 older evidence refreshes. Broad regression, coverage, images, deployment and fresh GitHub coverage are not renewed."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 111,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.03.03"
+          ],
+          "reason": "Profile details, verification badge and field permissions are reviewed. Verified identity stays locked except staff editing their own individual profile. Complete address/geography inputs are validated and changes append history. Confirmation, pencils, lock explanations, pending/failure preservation and matching save acknowledgements are checked in fa/en. Account/session/profile locks and audit rollback/expiry checks pass.",
+          "source_revision": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+          "evidence": "audit/evidence/step-reviews.json#R01-account-settings"
+        },
+        {
+          "pr": 112,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.03.04"
+          ],
+          "reason": "Username changes require both linked old/new OTPs with actor, purpose, destination and account-version binding. Failed attempts, uniqueness conflicts, rollback and replay are checked. Verified secondary email/mobile supports alternate login and recovery. Device/IP/user quotas and delivery rollback pass. Username changes retain the current session and revoke peers; correlated audit commits atomically. Six unchanged fa/en browser cases cover masked flows, both-code retry and secondary-contact verification/reload.",
+          "source_revision": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+          "evidence": "audit/evidence/step-reviews.json#R01-account-settings"
+        },
+        {
+          "pr": 113,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.03.05"
+          ],
+          "reason": "Creation defaults now include IN_APP plus the primary available channel without rewriting prior choices. Preference API/UI uses primary or verified secondary aliases, disables unavailable channels, keeps IN_APP on and persists an account-scoped audited choice. Six browser cases cover invalid reads, availability, opt-outs and failures. Actual delivery recipients and application of these choices remain for R02; its loader currently trusts nonempty legacy contacts.",
+          "source_revision": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+          "evidence": "audit/evidence/step-reviews.json#R01-account-settings"
+        },
+        {
+          "pr": 114,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.03.06"
+          ],
+          "reason": "Timezone defaults to Asia/Tehran; strict IANA input, account-only persistence, correlated audit and session expiry checks pass. Searchable keyboard selection, current-time/date/offset preview and locale-based calendar formatting are reviewed. Two unchanged browser cases cover load/save recovery and reload. Every timestamp consumer still requires R03 evidence.",
+          "source_revision": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+          "evidence": "audit/evidence/step-reviews.json#R01-account-settings"
+        }
+      ],
+      "pr_counts": {
+        "closed": 2,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": "Reuse exact unchanged contact/timezone UI and browser cases from9529872, profile UI56498a1 and preference UI/budgets9526cc5. Current API changes have focused checks. Preserve original review/hash provenance; the bounded AST comparison supports unchanged members.",
+      "reused_review_records": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/evidence/step-reviews.json#R01-registration-otp",
+        "audit/evidence/step-reviews.json#R01-session-recovery",
+        "audit/final-repair-checkpoint.json"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "0b14ae1da4cf5a684138f59e5d651e8f918f714e9fe8f210406ea42eb5a986bd"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
+        },
+        {
+          "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
+          "sha256": "36def018116ef8327f18439ae24583dd3f0928a1c80193e32ae52ad9d87c4030"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
+          "sha256": "32151765991c168a91751b888c09aa9bf1baccd712ff372fc84c8eb46d663272"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "dd3cb4bd4290740953282c01c71c084adc60a99094c65530d0b7a52a7806ea3d"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "855d010ead30a7390ac5096247fe6636f3b29f76eabefaba4589a1ca3121cb9a"
+        },
+        {
+          "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+          "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+        },
+        {
+          "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+          "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "28557fa310054156f9b36ef036b0464dfd4099c5dd603ca3152589ef90f76ca7"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
+        },
+        {
+          "path": "apps/web/e2e/username-pair.spec.ts",
+          "sha256": "12ed0a3a0aacd4fce81e90671b0727188a5158be80c3a0de4d4f24319d7ae9bf"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "94e5f2b4ddbe05c2178a0e8f0cc1946c2753a5d77e10b71e00d51307ef48b193"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "64f8346f7691e38bc7bc671ddd5e7f2ccdf0158574707f7f2eec146d49577c1f"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "3424252822d7c2e305c62edb02a96e37b2a5a964e4b42a3e86bffe5f9f02a78d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/username.tsx",
+          "sha256": "8a9ffd9a893f40540e7fad44552a0985c40f3bd2612920ecfebd917aa89ba391"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability-loader.ts",
+          "sha256": "6f30fcd96217e7a090c0ef39b9e78dfacb6a74e3a24c13d64b1370cb876eb75e"
+        },
+        {
+          "path": "packages/i18n/src/preferences.ts",
+          "sha256": "2b505a2022a1fafe8f4242f4d5f38a9e3ed970ef7a22ba2edc7f20c12338a4ae"
+        }
+      ],
+      "evidence": [
+        "audit/evidence/56498a1/r01-account-settings-source-reuse.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-before.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-browser-final.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-browser-hints.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-budgets-v5.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-build-v5.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/612434d/barghsa-repair-final-backlog.log.gz",
+        "audit/evidence/90f6415/r01-account-settings-checkpoint-audit.log.gz",
+        "audit/evidence/90f6415/r01-account-settings-contact-reuse.log.gz",
+        "audit/evidence/90f6415/r01-account-settings-source-reuse-final-v2.log.gz",
+        "audit/evidence/90f6415/r01-account-settings-timezone-reuse.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-api.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-before.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-final-api.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-format-code.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-format-final-test.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-format-test.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-openapi-generate.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-api.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-default-diagnostic.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-default-final.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-default-format.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-final-api.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-fixture-format.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-format-write.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-openapi-generate.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-profile-before.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-profile-test-format.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-timezone-before.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-timezone-test-format.log.gz",
+        "audit/evidence/9526cc5/r01-notification-defaults-api.log.gz",
+        "audit/evidence/9526cc5/r01-notification-defaults-before.log.gz",
+        "audit/evidence/9526cc5/r01-notification-defaults-test-format.log.gz",
+        "audit/evidence/9526cc5/r01-notification-preferences-browser.log.gz",
+        "audit/evidence/9526cc5/r01-notification-preferences-budgets.log.gz",
+        "audit/evidence/9526cc5/r01-session-csrf-race-api.log.gz",
+        "audit/evidence/9526cc5/r01-session-csrf-race-before.log.gz",
+        "audit/evidence/9526cc5/r01-session-csrf-race-final-api.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-requirements.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+      ],
+      "logs": [
+        "audit/evidence/56498a1/r01-account-settings-source-reuse.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-before.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-browser-final.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-browser-hints.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-budgets-v5.log.gz",
+        "audit/evidence/56498a1/r01-profile-settings-build-v5.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/612434d/barghsa-repair-final-backlog.log.gz",
+        "audit/evidence/90f6415/r01-account-settings-checkpoint-audit.log.gz",
+        "audit/evidence/90f6415/r01-account-settings-contact-reuse.log.gz",
+        "audit/evidence/90f6415/r01-account-settings-source-reuse-final-v2.log.gz",
+        "audit/evidence/90f6415/r01-account-settings-timezone-reuse.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-api.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-before.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-final-api.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-format-code.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-format-final-test.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-format-test.log.gz",
+        "audit/evidence/90f6415/r01-contact-session-openapi-generate.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-api.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-default-diagnostic.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-default-final.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-default-format.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-final-api.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-fixture-format.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-format-write.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-openapi-generate.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-profile-before.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-profile-test-format.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-timezone-before.log.gz",
+        "audit/evidence/90f6415/r01-settings-transactions-timezone-test-format.log.gz",
+        "audit/evidence/9526cc5/r01-notification-defaults-api.log.gz",
+        "audit/evidence/9526cc5/r01-notification-defaults-before.log.gz",
+        "audit/evidence/9526cc5/r01-notification-defaults-test-format.log.gz",
+        "audit/evidence/9526cc5/r01-notification-preferences-browser.log.gz",
+        "audit/evidence/9526cc5/r01-notification-preferences-budgets.log.gz",
+        "audit/evidence/9526cc5/r01-session-csrf-race-api.log.gz",
+        "audit/evidence/9526cc5/r01-session-csrf-race-before.log.gz",
+        "audit/evidence/9526cc5/r01-session-csrf-race-final-api.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-requirements.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
+      ]
     }
   ]
 }

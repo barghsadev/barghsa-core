@@ -6895,6 +6895,194 @@
         "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "audit/evidence/step-reviews.json#R01-crm-legal-documents"
       ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.03",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 292,
+      "requirement": "**T-03.03.03 — Profile settings page**\n\n- Description: `/app/settings/profile` page showing current profile details. Some fields editable (address, contact info) while identity fields (first name, last name, national ID for individuals; legal name, national identifier for legal) are read-only after verification. Staff can always update their own individual profile.\n- Technical notes: If profile is verified, protected fields are not editable through normal UI. Changes to protected fields require a verification case (CRM staff action). PUT `/api/profiles/:id` with field-level validation. Address changes create new address record (historical addresses retained).\n- UI/UX: Editable fields show pencil icon. Read-only fields show lock icon with explanation tooltip. Save button with confirmation. Verification badge shows status.\n- Dependencies: T-03.03.01, E-06 (CRM profile details)\n- Complexity: L",
+      "requirement_sha256": "0a7bc53817b0aa4615818af53af8d7a5e1846708e550b81652322504122d2f60",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "855d010ead30a7390ac5096247fe6636f3b29f76eabefaba4589a1ca3121cb9a"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "dd3cb4bd4290740953282c01c71c084adc60a99094c65530d0b7a52a7806ea3d"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
+          "sha256": "32151765991c168a91751b888c09aa9bf1baccd712ff372fc84c8eb46d663272"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "64f8346f7691e38bc7bc671ddd5e7f2ccdf0158574707f7f2eec146d49577c1f"
+        }
+      ],
+      "checks": [
+        "Profile details, verification badge and field permissions are reviewed. Verified identity stays locked except staff editing their own individual profile. Complete address/geography inputs are validated and changes append history. Confirmation, pencils, lock explanations, pending/failure preservation and matching save acknowledgements are checked in fa/en. Account/session/profile locks and audit rollback/expiry checks pass.",
+        "Exact repairs, focused checks, historical dispositions and bounded reuse are recorded once in audit/evidence/step-reviews.json#R01-account-settings."
+      ],
+      "merged_prs": [
+        111
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+      "limitations": [
+        "Local fixture-backed implementation evidence; live operation remains external."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-account-settings",
+        "audit/final-repair-checkpoint.json"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.04",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 300,
+      "requirement": "**T-03.03.04 — Username/contact changes**\n\n- Description: User can change their username (email or mobile) with availability check and OTP verification. If registered with email, can add and verify a mobile number. If registered with mobile, can add one email address. Username change requires verifying both old and new destination (when applicable).\n- Technical notes: POST `/api/auth/change-username` with `{ newUsername, otpChallengeId, otp }`. OTP sent to new destination. Username uniqueness check. Rate limited. If user has both email and mobile, they can log in with either. Username change invalidates sessions except current one? (Design decision: invalidate all or keep current).\n- UI/UX: Settings page section: current username (masked), \"Change\" button. Flow: enter new username → OTP verify → confirmation. Add email/mobile: separate section. Success toast.\n- Dependencies: T-03.03.03, T-02.03.02\n- Complexity: M",
+      "requirement_sha256": "6213da998daa482dbd53fe7f796535c03674470de64090f5540b61ac0a653875",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "0b14ae1da4cf5a684138f59e5d651e8f918f714e9fe8f210406ea42eb5a986bd"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+        },
+        {
+          "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
+          "sha256": "36def018116ef8327f18439ae24583dd3f0928a1c80193e32ae52ad9d87c4030"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/username.tsx",
+          "sha256": "8a9ffd9a893f40540e7fad44552a0985c40f3bd2612920ecfebd917aa89ba391"
+        },
+        {
+          "path": "apps/web/e2e/username-pair.spec.ts",
+          "sha256": "12ed0a3a0aacd4fce81e90671b0727188a5158be80c3a0de4d4f24319d7ae9bf"
+        }
+      ],
+      "checks": [
+        "Username changes require both linked old/new OTPs with actor, purpose, destination and account-version binding. Failed attempts, uniqueness conflicts, rollback and replay are checked. Verified secondary email/mobile supports alternate login and recovery. Device/IP/user quotas and delivery rollback pass. Username changes retain the current session and revoke peers; correlated audit commits atomically. Six unchanged fa/en browser cases cover masked flows, both-code retry and secondary-contact verification/reload.",
+        "Exact repairs, focused checks, historical dispositions and bounded reuse are recorded once in audit/evidence/step-reviews.json#R01-account-settings."
+      ],
+      "merged_prs": [
+        112
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+      "limitations": [
+        "Local fixture-backed implementation evidence; live operation remains external."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-account-settings",
+        "audit/final-repair-checkpoint.json"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.05",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 308,
+      "requirement": "**T-03.03.05 — Notification channel preferences**\n\n- Description: User selects notification channels: SMS (if mobile present), Email (if present), both, or in-app only. In-app is always enabled.\n- Technical notes: Store as array/enum `['SMS', 'EMAIL', 'IN_APP']`. Default: all available. PUT `/api/user/settings/notifications`. Preferences applied per user, not per profile.\n- UI/UX: Toggle switches per channel. Note explaining recommended settings for security notifications.\n- Dependencies: T-03.03.03\n- Complexity: S",
+      "requirement_sha256": "4423fe5e7def8de8f74302468731dc98d1265634e9ae537c573f2140977a9a88",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "28557fa310054156f9b36ef036b0464dfd4099c5dd603ca3152589ef90f76ca7"
+        },
+        {
+          "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+          "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "94e5f2b4ddbe05c2178a0e8f0cc1946c2753a5d77e10b71e00d51307ef48b193"
+        },
+        {
+          "path": "packages/i18n/src/preferences.ts",
+          "sha256": "2b505a2022a1fafe8f4242f4d5f38a9e3ed970ef7a22ba2edc7f20c12338a4ae"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability-loader.ts",
+          "sha256": "6f30fcd96217e7a090c0ef39b9e78dfacb6a74e3a24c13d64b1370cb876eb75e"
+        }
+      ],
+      "checks": [
+        "Creation defaults now include IN_APP plus the primary available channel without rewriting prior choices. Preference API/UI uses primary or verified secondary aliases, disables unavailable channels, keeps IN_APP on and persists an account-scoped audited choice. Six browser cases cover invalid reads, availability, opt-outs and failures. Actual delivery recipients and application of these choices remain for R02; its loader currently trusts nonempty legacy contacts.",
+        "Exact repairs, focused checks, historical dispositions and bounded reuse are recorded once in audit/evidence/step-reviews.json#R01-account-settings."
+      ],
+      "merged_prs": [
+        113
+      ],
+      "historically_skipped": false,
+      "status": "partial",
+      "reviewed_sha": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+      "limitations": [
+        "R02: verify actual delivery recipients and application of per-user channel choices, including historical unverified secondary contacts."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-account-settings",
+        "audit/final-repair-checkpoint.json"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.06",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 316,
+      "requirement": "**T-03.03.06 — Timezone settings**\n\n- Description: User can change their timezone. Default: Iran Standard Time (UTC+3:30).\n- Technical notes: Store as IANA timezone string. Used for all date/time displays (not for calendar selection — calendar is language-based Jalali/Gregorian). PUT `/api/user/settings/timezone`.\n- UI/UX: Searchable select/timezone picker. Show current time in selected timezone for preview.\n- Dependencies: T-03.03.03\n- Complexity: S",
+      "requirement_sha256": "458e8470ed627d52a80968acf9417a8713a56c6c55a14897c49a1e17c9740f17",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "28557fa310054156f9b36ef036b0464dfd4099c5dd603ca3152589ef90f76ca7"
+        },
+        {
+          "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+          "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "3424252822d7c2e305c62edb02a96e37b2a5a964e4b42a3e86bffe5f9f02a78d"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
+        }
+      ],
+      "checks": [
+        "Timezone defaults to Asia/Tehran; strict IANA input, account-only persistence, correlated audit and session expiry checks pass. Searchable keyboard selection, current-time/date/offset preview and locale-based calendar formatting are reviewed. Two unchanged browser cases cover load/save recovery and reload. Every timestamp consumer still requires R03 evidence.",
+        "Exact repairs, focused checks, historical dispositions and bounded reuse are recorded once in audit/evidence/step-reviews.json#R01-account-settings."
+      ],
+      "merged_prs": [
+        114
+      ],
+      "historically_skipped": false,
+      "status": "partial",
+      "reviewed_sha": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+      "limitations": [
+        "R03: link complete timestamp-consumer coverage to the account timezone while calendar selection remains locale-based."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-account-settings",
+        "audit/final-repair-checkpoint.json"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -6996,10 +7184,6 @@
     "01-platform-infrastructure.md#T-07.05.02",
     "01-platform-infrastructure.md#T-07.05.03",
     "01-platform-infrastructure.md#T-07.05.04",
-    "02-auth-users-admin.md#T-03.03.03",
-    "02-auth-users-admin.md#T-03.03.04",
-    "02-auth-users-admin.md#T-03.03.05",
-    "02-auth-users-admin.md#T-03.03.06",
     "02-auth-users-admin.md#T-03.04.01",
     "02-auth-users-admin.md#T-03.04.02",
     "02-auth-users-admin.md#T-05.05.02",

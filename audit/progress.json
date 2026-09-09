@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "9526cc54909955817b273963667e5e1060949f3b",
+  "source_revision": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
   "active_step": "R01",
-  "next_action": "Review username/contact issuance and completion authority plus existing old/new OTP evidence. Then finish profile-update and timezone criteria and consolidate the four-task batch. Notification defaults/availability and shared CSRF repair are committed and verified.",
+  "next_action": "Read existing address/ordering implementation once and compare exact PR115/116 requirements. Preserve repaired geography/history/ordering form evidence; reproduce only confirmed remaining defects before editing.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -575,6 +575,10 @@
     {
       "id": "R01-profiles-onboarding",
       "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+    },
+    {
+      "id": "R01-account-settings",
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings"
     }
   ],
   "deferred_improvements": [
@@ -593,9 +597,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 76,
-    "partial": 18,
-    "pending": 228,
+    "acceptance_verified": 78,
+    "partial": 20,
+    "pending": 224,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -709,175 +713,44 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-account-settings",
-    "name": "Profile settings, verified contacts and user preferences",
-    "status": "in_progress",
+    "id": "R01-profile-addresses",
+    "name": "Current-profile addresses and ordering address selection",
+    "status": "selected",
     "prs": [
-      111,
-      112,
-      113,
-      114
+      115,
+      116
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-03.03.03",
-      "02-auth-users-admin.md#T-03.03.04",
-      "02-auth-users-admin.md#T-03.03.05",
-      "02-auth-users-admin.md#T-03.03.06"
+      "02-auth-users-admin.md#T-03.04.01",
+      "02-auth-users-admin.md#T-03.04.02"
     ],
     "remaining_checklist": [
-      "Profile edit permissions and verified identity protection, staff self exception, address history, confirmation and fa/en field affordances.",
-      "Username/contact availability, both applicable OTP destinations, rate limits, alternate login, current-session policy and success acknowledgement.",
-      "Per-user notification availability/defaults, always-on in-app and security recommendation; assign downstream delivery consumer acceptance to R02.",
-      "IANA timezone persistence/default, searchable preview and actual date/time consumers; assign shared display gaps to R03."
+      "Review current-profile owner/agent address CRUD, one main address, delete restrictions and order-linked history.",
+      "Review fa/en address forms, geography, main selection and delete confirmation.",
+      "Reconcile existing order selectors with immutable address snapshots across required product flows; retain future product prerequisites explicitly."
     ],
-    "historical_deferrals": [],
-    "confirmed_defects": [
+    "historical_deferrals": [
       {
+        "pr": 115,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/115",
         "task_keys": [
-          "02-auth-users-admin.md#T-03.03.03"
+          "02-auth-users-admin.md#T-03.04.01"
         ],
-        "summary": "Profile Save bypasses confirmation, accepts any successful HTTP body, and lacks required editable-field icons and keyboard-accessible lock tooltips.",
-        "status": "fixed_and_verified",
-        "commit": "56498a12d726418a0990faa415573b706d6a84e0"
-      },
-      {
-        "task_keys": [
-          "02-auth-users-admin.md#T-03.03.05"
+        "historical_deferrals": [
+          "- [ ] Order flow integration (T-03.04.02)"
         ],
-        "summary": "Customer/staff account creation now initializes the primary contact and its available notification channel. Existing choices remain unchanged.",
-        "status": "fixed_and_verified",
-        "commit": "e3981b9"
-      },
-      {
-        "task_keys": [
-          "02-auth-users-admin.md#T-03.03.05"
-        ],
-        "status": "fixed_and_verified",
-        "summary": "Existing accounts may have primary username only, so preference PUT incorrectly rejects their primary channel. UI enables channels with no available contact; raw legacy secondary contacts are treated as available without verification. Preference writes have no audit transaction.",
-        "commit": "9526cc5"
-      },
-      {
-        "task_keys": [
-          "02-auth-users-admin.md#T-02.02.03",
-          "02-auth-users-admin.md#T-03.03.05"
-        ],
-        "status": "fixed_and_verified",
-        "summary": "Global CSRF validates middleware session snapshot; SessionAuthGuard then reloads a changed CSRF token after its account-lock wait and replaces req.session. Unsafe requests can use the old submitted token and reach mutations. Bind submitted token inside locked session validation before idle touch.",
-        "evidence": "/tmp/r01-notification-preferences-api.log; independent committed-profile-route reproduction in /tmp/r01-session-csrf-race-before.log.",
-        "commit": "71f5e49"
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
+    "confirmed_defects": [],
     "reused_evidence": [
+      "audit/evidence/step-reviews.json#R01-account-settings",
       "audit/evidence/step-reviews.json#R01-profiles-onboarding",
-      "R01-session-recovery",
-      "Existing source-bound contact-change, settings and timezone repairs; compare only affected sources before reuse."
+      "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+      "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Review username/contact issuance and completion authority plus existing old/new OTP evidence. Then finish profile-update and timezone criteria and consolidate the four-task batch. Notification defaults/availability and shared CSRF repair are committed and verified.",
-    "local_repairs": [
-      {
-        "commit": "56498a12d726418a0990faa415573b706d6a84e0",
-        "summary": "Profile settings requires confirmation before save, serializes repeated submissions and accepts success only for the requested profile ID/type. Failures stay localized in the dialog and preserve edits; cancel and successful refresh return focus. Editable fields show pencils; locked fields retain visible explanations and native hover hints on focusable buttons.",
-        "checks": "9 distinct production Chromium cases pass at the final workflow run;2 overlapping fa/en cases pass again after the final icon-button correction. Web types/lint/format/build and all42 unchanged budgets pass. Electricity249.93KB/250KB. API/schema/dependencies unchanged.",
-        "review": "Reviewed single in-flight guard, modal pending/cancel policy, changed-field payload, CSRF, response binding, refresh/focus and unchanged verified/staff field policy. Initial2 browser cases reproduce missing confirmation. Intermediate failures were premature second-save selection during dialog exit and test keyboard modality; the tooltip import caused budget regression and was removed. Native hint has a persistent visible equivalent; no custom tooltip library is added.",
-        "source_evidence": [
-          {
-            "path": "apps/web/src/routes/_app/settings/profile.tsx",
-            "sha256": "64f8346f7691e38bc7bc671ddd5e7f2ccdf0158574707f7f2eec146d49577c1f"
-          },
-          {
-            "path": "apps/web/e2e/form-accessibility.spec.ts",
-            "sha256": "1839f4b16488a7b9ada75a4d949a054160a74dd899e65842e4d601eda7897f9b"
-          }
-        ],
-        "logs": [
-          "audit/evidence/56498a1/r01-profile-settings-before.log.gz",
-          "audit/evidence/56498a1/r01-profile-settings-browser-final.log.gz",
-          "audit/evidence/56498a1/r01-profile-settings-browser-hints.log.gz",
-          "audit/evidence/56498a1/r01-profile-settings-budgets-v5.log.gz",
-          "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
-          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
-          "audit/evidence/56498a1/r01-profile-settings-build-v5.log.gz"
-        ]
-      },
-      {
-        "commit": "e3981b9",
-        "summary": "Initialize email/mobile and IN_APP plus the primary contact channel in the two existing account-creation transactions. No existing-row rewrite or schema change.",
-        "checks": "Four failing email/mobile registration/staff HTTP cases reproduce the defect.34 affected API cases, API types/lint/format and unchanged OpenAPI pass. Includes rollback/deadline/dedup/alternate-login behavior and opt-out persistence. Frontend source unchanged; reuse56498a1 browser/budget evidence.",
-        "logs": [
-          "audit/evidence/9526cc5/r01-notification-defaults-api.log.gz",
-          "audit/evidence/9526cc5/r01-notification-defaults-before.log.gz",
-          "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
-          "audit/evidence/612434d/barghsa-notification-lint.log.gz",
-          "audit/evidence/9526cc5/r01-notification-defaults-test-format.log.gz",
-          "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
-        ]
-      },
-      {
-        "commit": "71f5e49",
-        "summary": "Bind the submitted CSRF token through locked authentication before idle touch. Preserve safe methods, independent callback proofs and pre-login CSRF.",
-        "checks": "31 focused cases pass:12 guard policy,18 pre-login,1 reproduced lock race.89 other passing API cases from the earlier combined run are reused,120 distinct total. API types/lint/format pass. The first run reproduced200; the subsequent403 test had a wrong error-code literal, corrected to the existing contract.",
-        "source_evidence": [
-          {
-            "path": "apps/api/src/session/session.guard.ts",
-            "sha256": "df7a5476a1366f8a7d7c82623560725928dc1b31b24c39054797700f12e78335"
-          },
-          {
-            "path": "apps/api/src/session/session.service.ts",
-            "sha256": "d06e0b410789a0b5b355fab52fe719e2c336459004f8ffa7c3cfeb83a5a7355a"
-          }
-        ],
-        "logs": [
-          "audit/evidence/9526cc5/r01-session-csrf-race-before.log.gz",
-          "audit/evidence/9526cc5/r01-session-csrf-race-api.log.gz",
-          "audit/evidence/9526cc5/r01-session-csrf-race-final-api.log.gz"
-        ]
-      },
-      {
-        "commit": "9526cc5",
-        "summary": "Notification availability comes from the current primary or verified secondary contact. Account-scoped saves preserve choices, always include IN_APP, reject unavailable destinations and commit audit with the write. UI disables unavailable channels with a localized explanation and validates availability acknowledgements.",
-        "checks": "8 notification HTTP cases pass in the combined session run; registration response cases pass there too.6 production Chromium cases cover fa/en availability, malformed reads, opt-outs and failure/retry. API/web types,lint,format,OpenAPI,web build and42 unchanged budgets pass. No schema or dependency changes. Actual delivery consumer proof remains R02.",
-        "source_evidence": [
-          {
-            "path": "apps/api/src/user-settings/user-settings.controller.ts",
-            "sha256": "fbca215ea8a747979358e36713825c902445c4fcbec0963670bc25f242fd117f"
-          },
-          {
-            "path": "apps/web/src/routes/_app/settings/index.tsx",
-            "sha256": "94e5f2b4ddbe05c2178a0e8f0cc1946c2753a5d77e10b71e00d51307ef48b193"
-          },
-          {
-            "path": "packages/i18n/src/preferences.ts",
-            "sha256": "2b505a2022a1fafe8f4242f4d5f38a9e3ed970ef7a22ba2edc7f20c12338a4ae"
-          }
-        ],
-        "logs": [
-          "audit/evidence/9526cc5/r01-session-csrf-race-api.log.gz",
-          "audit/evidence/9526cc5/r01-notification-preferences-browser.log.gz",
-          "audit/evidence/9526cc5/r01-notification-preferences-budgets.log.gz",
-          "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz"
-        ]
-      }
-    ],
-    "checkpoint": {
-      "revision": "9526cc54909955817b273963667e5e1060949f3b",
-      "reviewed_sources": [
-        "Profile settings UI and ProfilesService.updateProfile with its controller schema boundary. Backend permission/transaction acceptance remains to reconcile.",
-        "UserSettingsController notification/timezone GET/PUT: notifications validate availability against email/mobile and persist an account string; timezone validates using Intl. New-user default is IN_APP; registration INSERT does not supply preferences. Two product creation sites found: AuthService.completeRegistration and AdminService.createStaffUser.",
-        "Timezone and notification UI sources are unchanged from9529872; reuse after their specific requirement review. Contact page likewise unchanged; old/new OTP and session-effect review still needed."
-      ],
-      "source_reuse_log": "audit/evidence/56498a1/r01-account-settings-source-reuse.log.gz",
-      "evidence_reuse": "Previous profile/onboarding closure remains valid: no onboarding product file changed. Form-accessibility changes add settings cases and adapt four existing settings saves;19 previous onboarding cases retain their source. Two current default-settings cases pass again, refreshing the changed SettingsProfilePage binding for T-03.03.02 without rebuilding its endpoint or first-default transaction.",
-      "remaining_review": [
-        "Finish current profile edit permission/staff exception/address-history and contact-field criteria; do not claim whole task verified from UI repair.",
-        "Read username/contact OTP and alternate-login transaction evidence once; preserve current-session revocation policy.",
-        "Reconcile notification preference account scope and required security guidance; downstream delivery consumers remain R02.",
-        "Reconcile timezone selector/preview/persistence and actual display consumers; shared display gaps remain R03.",
-        "Record one consolidated four-task/four-PR review after the batch, retaining partial criteria individually."
-      ]
-    }
+    "next_action": "Read existing address/ordering implementation once and compare exact PR115/116 requirements. Preserve repaired geography/history/ordering form evidence; reproduce only confirmed remaining defects before editing."
   },
   "open_domain_reviews": [
     {
@@ -938,7 +811,16 @@
     {
       "task_key": "02-auth-users-admin.md#T-03.03.05",
       "owning_batch": "R02 notification delivery",
-      "remaining": "loadNotificationRecipient reads raw legacy email/mobile and loadChannelAvailabilityContext labels nonempty values verified. Reconcile actual delivery recipients with account_login_identifiers proof, including primary fallback and unverified historical secondary contacts, before claiming delivery acceptance."
+      "remaining": "R02: verify actual delivery recipients and application of per-user channel choices, including historical unverified secondary contacts.",
+      "pr": 113,
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.06",
+      "pr": 114,
+      "owning_batch": "R03 timestamp consumers",
+      "remaining": "R03: link complete timestamp-consumer coverage to the account timezone while calendar selection remains locale-based.",
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings"
     }
   ]
 }
