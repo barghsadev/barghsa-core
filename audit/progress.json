@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+  "source_revision": "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
   "active_step": "R01",
-  "next_action": "Review bank receipt submission, confirmations/rejections, excess credit and shared dual approval as one bounded workflow. Preserve valid wallet evidence; verify each confirmed repair before proceeding.",
+  "next_action": "Review receipt/customer/staff UI and shared approval criteria; implement the required emergency override and repair any confirmed current dual-approver permission/notification binding gaps. Compare repeated PRs and consolidate this batch individually.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -879,14 +879,87 @@
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.03",
+          "04-invoices-wallet-contracts.md#T-04.3.01.02"
+        ],
+        "status": "fixed_and_verified",
+        "summary": "Customer receipt submissions now lock the account, current session and owner/Finance profile permission through commit, then recheck session expiry and CSRF. Missing wallet creation and submission audit are atomic.222 distinct affected API cases pass; API types/lint/build/OpenAPI pass.",
+        "commit": "0d75b640e7ef2bea4be352de70c4577ebb97147e"
+      },
+      {
+        "status": "fixed_and_verified",
+        "commit": "397d8fd6080a4b617224d757c56b3642d1795833",
+        "summary": "Generic approval creation and resolution retain current account, role, session and step-up through commit.64 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
+      },
+      {
+        "status": "fixed_and_verified",
+        "commit": "d646396a854c9ba77cfb40b88696ee9de67c7120",
+        "summary": "Wallet/invoice receipt confirmations and rejections retain current session and step-up inside the transaction and before every commit, including replay and approval parking.202 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
+      },
+      {
+        "status": "fixed_and_verified",
+        "commit": "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
+        "summary": "Threshold config requires current session/step-up through commit, serializes missing-row creation with complete previous-value/version audit, and retains the threshold used by receipt/generic approval transactions.215 distinct affected API cases pass. Policy locks precede staff/session locks after review caught notification foreign-key deadlocks. Types/lint/format/OpenAPI pass."
+      },
+      {
+        "status": "fixed_and_verified",
+        "commit": "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
+        "summary": "Wallet receipts now seal validated bytes under server-only keys using extracted invoice sealing code. Both flows journal copy cleanup outside the business transaction, keep the journal locked until commit, preserve matching retries, and refuse to recreate a copy whose cleanup already finished.90 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
+      },
+      {
+        "status": "confirmed_missing_requirement",
+        "summary": "T-09.07.01 emergency override with required reason, elevated permission, immediate alert and audit has no current implementation. Keep within this batch and do not close threshold acceptance prematurely."
+      }
+    ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "audit/evidence/step-reviews.json#R01-archive-wallet-writers",
       "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Review bank receipt submission, confirmations/rejections, excess credit and shared dual approval as one bounded workflow. Preserve valid wallet evidence; verify each confirmed repair before proceeding."
+    "next_action": "Review receipt/customer/staff UI and shared approval criteria; implement the required emergency override and repair any confirmed current dual-approver permission/notification binding gaps. Compare repeated PRs and consolidate this batch individually.",
+    "product_commits": [
+      "0d75b640e7ef2bea4be352de70c4577ebb97147e",
+      "397d8fd6080a4b617224d757c56b3642d1795833",
+      "d646396a854c9ba77cfb40b88696ee9de67c7120",
+      "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
+      "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9"
+    ],
+    "verification": {
+      "receipt_submission": {
+        "source_revision": "0d75b640e7ef2bea4be352de70c4577ebb97147e",
+        "distinct_api_cases": 222,
+        "logs_prefix": "/tmp/r01-receipt-submission-",
+        "limits": "218-case affected run plus4 new cases; focused runs overlap. First fixtures incorrectly queried audit session_id/text metadata and were corrected. A type-check overlapped fixture rebuilding and passed after serialized retry. No browser/budget/full-suite claim."
+      },
+      "generic_approval": {
+        "source_revision": "397d8fd6080a4b617224d757c56b3642d1795833",
+        "distinct_api_cases": 64,
+        "logs_prefix": "/tmp/r01-approval-",
+        "limits": "28 unit,35 HTTP and1 invoice caller case. Initial user-lock reproduction was an invalid fixture because SessionAuthGuard already locks users. Later fixture fixes restore idle_deadline after expiry. No valid 12-case baseline reproduction claimed; current tests verify held authority and late expiry rollback. One outdated direct caller found by types was repaired before final passing typecheck."
+      },
+      "receipt_decisions": {
+        "source_revision": "d646396a854c9ba77cfb40b88696ee9de67c7120",
+        "distinct_api_cases": 202,
+        "logs_prefix": "/tmp/r01-receipt-decision-",
+        "limits": "All20 added HTTP cases reproduced success after stale authority before the fix.10-file202-case run then a79-case rerun of2 files; counts deduplicated. Corrected CSRF expectation to403 and a pre-existing invoice unit profile-lock fixture. Real integration confirms rollback of money, receipt, approval/outbox/audit. No new browser/budget/broad coverage claim."
+      },
+      "threshold_transactions": {
+        "source_revision": "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
+        "distinct_api_cases": 215,
+        "logs_prefix": "/tmp/r01-threshold-",
+        "limits": "Six baseline HTTP failures reproduced expiry, missing previous audit and mid-decision policy change.177-case affected run plus38 archive cases;99-case HTTP/archive rerun overlaps. Initial lock order caused2 config500s through notification recipient FK waits and was corrected before commit. No new browser/budget/full suite claim."
+      },
+      "receipt_sealing": {
+        "source_revision": "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
+        "distinct_api_cases": 90,
+        "logs_prefix": "/tmp/r01-receipt-sealing-",
+        "limits": "Wallet overwrite baseline failed; invoice baseline passed.88-case run,41-case fixture rerun and24 authority/overwrite/copy cases total90 after deduplication.4 failed-copy cases rerun against the built production worker. Older fixture expectations changed from uploaded keys to sealed keys; archive fixture now supplies real bytes. Initial extraction typo and cross-project source import type failures fixed. Existing receipts are preserved; historical bytes changed before this fix cannot be reconstructed locally. No new browser/budget/full suite claim."
+      }
+    }
   },
   "open_domain_reviews": [
     {

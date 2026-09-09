@@ -10179,6 +10179,531 @@
       "sha256": "a4c15dded12e0cf4f344e2d9c692b1a7f28254e777693fea37a2addd9913a3b1",
       "encoding": "gzip",
       "stored_sha256": "8072c65f6e253e83308388fb251b5c60343269cb965f499493351e9f3daccd77"
+    },
+    {
+      "original_path": "/tmp/r01-approval-boundaries-format.log",
+      "path": "audit/evidence/397d8fd/r01-approval-boundaries-format.log.gz",
+      "sha256": "0339c5c44eedb8f3adce11226354f3e6fdf51337de24ff15bdfb615c1d2e2333",
+      "encoding": "gzip",
+      "stored_sha256": "b7d780c70a6c10a3071a2b3efcf072bef9509105b40d8f9156be60a9188f40b1"
+    },
+    {
+      "original_path": "/tmp/r01-approval-caller-format.log",
+      "path": "audit/evidence/397d8fd/r01-approval-caller-format.log.gz",
+      "sha256": "7651d3714bce8f6ed576c78ce69579957b89b03ad9999f8ff25e156e79f7f449",
+      "encoding": "gzip",
+      "stored_sha256": "8d2ac091f9aafee0b0bdfce589df08a47807dec45e53dc447b754d08200f4b76"
+    },
+    {
+      "original_path": "/tmp/r01-approval-caller-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-approval-lock-diagnostic.log",
+      "path": "audit/evidence/397d8fd/r01-approval-lock-diagnostic.log.gz",
+      "sha256": "9acd09f510ddfc6ab44f215ffdb9ff468342ef8b4dd892f51baaff881d1c1824",
+      "encoding": "gzip",
+      "stored_sha256": "f4c3443c5f7522149d083d571e2af52156aedc123d215e45b1d6b7198c39852e"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-api.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-api.log.gz",
+      "sha256": "cf5f5bdcafdf98a51b33d29625b20698ee0af6785155250ecef4f4224af0861d",
+      "encoding": "gzip",
+      "stored_sha256": "08f0d03cc19ca36a78320e77414fa54bd47574e4aaf24a9a11f0d2249238da0d"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-before.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-before.log.gz",
+      "sha256": "0efed7e95cd2b0d3a4aec72ccbedeb154ac43326312914d305b1465be9f30cd9",
+      "encoding": "gzip",
+      "stored_sha256": "983b7e15f3860d9c7b742e81854e8e6943da9e660b507b18d937a3692cf0143b"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-caller.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-caller.log.gz",
+      "sha256": "2e158ac367372ee6b74f6350ed9ce8fdbd443a801c422fb2228690368e2b5c98",
+      "encoding": "gzip",
+      "stored_sha256": "9bfbf617101f55ebd063bb3dcdbc8324aa5861b125c0b742f2f6411056a2410f"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-contract.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-contract.log.gz",
+      "sha256": "adf6d9a9bee5e1eedbe86918bdb48cae091ba1a29e61e3e06f7db8d6f9090e8b",
+      "encoding": "gzip",
+      "stored_sha256": "eeb267a6fc43aa6a72fc7e3fa57d776678ceb8dace5becd4128e48c94c422a53"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-format.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-format.log.gz",
+      "sha256": "9a9be30d207753a617b34c9da40ec6683c4f3afc699555edd4ef6ee7e855fd4c",
+      "encoding": "gzip",
+      "stored_sha256": "ac50b675bda4aa15f3a78cc7645ac8680421683228b0e645c124033956eeac53"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-http-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-http-v2.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-http-v2.log.gz",
+      "sha256": "5e03f675ec14a23926cc50b37370d351418cd4b0e7b4f03fa4fffe941f0661bb",
+      "encoding": "gzip",
+      "stored_sha256": "bbb20c9ff33942314ff2ca40d4b42df166158fedf14be61291f7b758e0e3e10b"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-http-v3.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-http-v3.log.gz",
+      "sha256": "2135d4084c6056e4116761d83b7308f5acdfab128810f06cbbef1fab1b82c876",
+      "encoding": "gzip",
+      "stored_sha256": "38831e3883d6b889e7acf82f42090e9b6047eb702f5116c3bad633bbc5583759"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-openapi-generate.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-openapi-generate.log.gz",
+      "sha256": "7e79c4094597aac7091f028bbb748d70a1d180378bf739500e1669319521245a",
+      "encoding": "gzip",
+      "stored_sha256": "dfc09a2b3ad6a68ed207d851c0a77fb717be95a04e074bf9ad6d5f35d7e6f230"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-approval-session-types.log",
+      "path": "audit/evidence/397d8fd/r01-approval-session-types.log.gz",
+      "sha256": "6107029d13ec798fb0b0a02610c7731a25d6cb50f5bc85df23a852a425542966",
+      "encoding": "gzip",
+      "stored_sha256": "b706b22729d1b3ff60446f11e0cc045919f9b2f65c1cc4286d3e72f22775dc69"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-authority.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-authority.log.gz",
+      "sha256": "f6106f5e657dc84e8bce01ce50f2bde5bcb45fdb1bf1ffbafadd1a9802293e52",
+      "encoding": "gzip",
+      "stored_sha256": "346238ea28179a8bd12975cfc619a25490a3bd5363506d669db7220cabef6156"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-before-boundaries.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-before-boundaries.log.gz",
+      "sha256": "a5266c2f31f5d86e03216d9e4e497e4e09da7bdbe8059549f5de04f1e0ff3c86",
+      "encoding": "gzip",
+      "stored_sha256": "33165011516d06870877c4112b1ed3fa160dc1216efaf5c45e1c6a25cbe54a60"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-before.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-before.log.gz",
+      "sha256": "dd33c01997351fa79e63b1e09266c446429026fb55f075d071363ec9064140cb",
+      "encoding": "gzip",
+      "stored_sha256": "0a953645cba537ae86f5d63d06e3770945b2fa879dba46e296dcf78fc3350a19"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-boundaries-format.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-boundaries-format.log.gz",
+      "sha256": "6da8d298e842302701cf83b9a9fd483b1a907a747bb47d10700e9226908d479c",
+      "encoding": "gzip",
+      "stored_sha256": "4ea14d805c776e13c0476cd53ab53cc4a8d5c936b4ede99a3922883c9ccf2f8c"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-build.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-build.log.gz",
+      "sha256": "079ca8a77d081109cb9a0e93260995935ccc196897d34f9d3e3fb69acff87a29",
+      "encoding": "gzip",
+      "stored_sha256": "6c0bccc45ea11e8159bb9328ca7b577981a1b869f3e3cd3774ac014349205f05"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-contract.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-contract.log.gz",
+      "sha256": "04534e8acca990720370b37b7e6ab070af969be854aaa1f7944db1af1cdd5486",
+      "encoding": "gzip",
+      "stored_sha256": "855bb8ec2108a70eebcb018b2f2d39e72ff44470fa504c15b7dcfc9c74da0a8e"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-extra-boundaries.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-extra-boundaries.log.gz",
+      "sha256": "60ce2f642aa8ae7b95b01461060f78b0193ed2376eb99dbc3bc28427ca77909b",
+      "encoding": "gzip",
+      "stored_sha256": "4ba261546375aa31cb84505b24eff7b2d3928c82db59a2ad231df293729cec96"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-format.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-format.log.gz",
+      "sha256": "c5be745d55ccc3aeec8bcf91e006f3e41bb95e36a5c010956b6de9b2ba99b822",
+      "encoding": "gzip",
+      "stored_sha256": "f80063ff6b025841ffd339a951ab7a7d58126c114141d43e2c6fbd5837594c82"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-regression.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-regression.log.gz",
+      "sha256": "51bcfdaebe6b9b084158e8f4f635e627b8aa33a441dcc4d6293beeb292c15b3e",
+      "encoding": "gzip",
+      "stored_sha256": "93e5e6639338cac64b4b6952905a4ad6a73292eab78c3cda7f70f15fc253abb0"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-types-first.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-types-first.log.gz",
+      "sha256": "43801d311e7f85324f05e7685895a0d803cff1638e4ecb0641166afcf2a269a8",
+      "encoding": "gzip",
+      "stored_sha256": "765d9a8c2c099be6ae5c289fda1594fde46043219a6e8630fe30f51622a23e39"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-submission-types-v2.log",
+      "path": "audit/evidence/397d8fd/r01-receipt-submission-types-v2.log.gz",
+      "sha256": "d7a98a631d16bf2ad13106f2f9de0a3d74fbcfcf6600fd6cce1c9d6cdd4cc4f7",
+      "encoding": "gzip",
+      "stored_sha256": "0ffa90c36aba9dc7823140f9b423642fa359343a512237dd6c78b62c0211ade5"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-before.log",
+      "path": "audit/evidence/d646396/r01-receipt-decision-before.log.gz",
+      "sha256": "c5fea8fa780de866ad5fea2102612539e812e2aadceb872fb07fb2f8c41cf961",
+      "encoding": "gzip",
+      "stored_sha256": "9e7d08462fbe7b49d1376937094f01c7a49352fed2a26fda0ea5918c4668bdb7"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-contract.log",
+      "path": "audit/evidence/d646396/r01-receipt-decision-contract.log.gz",
+      "sha256": "6c573bded87b2a38e405492d56afac32953d9cdc7b4614c0c1f0ed317af13dc9",
+      "encoding": "gzip",
+      "stored_sha256": "f36650026ff751b359e21bf024ffc0fe6d0bb9c12a5aa8d14a475ee9538440ee"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-format.log",
+      "path": "audit/evidence/d646396/r01-receipt-decision-format.log.gz",
+      "sha256": "0c8130e4da48cb2d85d929f19a269d502e53347026a55ec4672a72cdb4be5a10",
+      "encoding": "gzip",
+      "stored_sha256": "98f14de4f280591b9dbd839501eb7a6b86128853a5ca1fd8a839eac05604d413"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-helper-format.log",
+      "path": "audit/evidence/d646396/r01-receipt-decision-helper-format.log.gz",
+      "sha256": "0925abb60e6f3240dbdda30cfa80a5b20d3903664d64e6a98289daae553a2f00",
+      "encoding": "gzip",
+      "stored_sha256": "0fa9b7f603aef008b04fa743d33156163c52fb15e317ceb15e8a2283ce83029f"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-lint-final.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-openapi.log",
+      "path": "audit/evidence/d646396/r01-receipt-decision-openapi.log.gz",
+      "sha256": "449ce4fe959c3a1e903f665c88d0a0f4e20cb4f9929eccbc0ad4b35f67cf7728",
+      "encoding": "gzip",
+      "stored_sha256": "4c4d940fd01eed9703909d6c6781a23b46eb37629e393a142b91ddeda8b26bdd"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-regression-v2.log",
+      "path": "audit/evidence/d646396/r01-receipt-decision-regression-v2.log.gz",
+      "sha256": "0d3de93ed865de83121eacc9d705629b5c810a61a932c7a7571f353cddd12b7b",
+      "encoding": "gzip",
+      "stored_sha256": "933090288ca81e74f411662df6aaaa381e22c03d50ec62e59a35a0a0756b4893"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-regression.log",
+      "path": "audit/evidence/d646396/r01-receipt-decision-regression.log.gz",
+      "sha256": "f5a785ce88bb57fbcbdd0a44f1c50bf2c0125524f74a64311c1afb16acb7d5bf",
+      "encoding": "gzip",
+      "stored_sha256": "263c2359fc4f62efe8542c78fb94968a26a9e85f87edf8cc2d0bf54a2302221f"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-types-first.log",
+      "path": "audit/evidence/d646396/r01-receipt-decision-types-first.log.gz",
+      "sha256": "5d4bc811316152cff6f4ed31564acc7de3adfa68e0c76b005a070264310fc3c2",
+      "encoding": "gzip",
+      "stored_sha256": "52fc4799a110fdb00f137343f11a1923ff4ec8524cba44bccfc11f211de22efb"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-decision-types-v2.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-before.log",
+      "path": "audit/evidence/18ee061/r01-threshold-before.log.gz",
+      "sha256": "f370ac14f830e4846eb758cd729f3ad48bfc617582304464b6e1bafdf1c719e3",
+      "encoding": "gzip",
+      "stored_sha256": "dc4036b13a1604728ac63b773c91bde9a89ba3dd867bd482e20837f8aa1b1fd2"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-contract.log",
+      "path": "audit/evidence/18ee061/r01-threshold-contract.log.gz",
+      "sha256": "0a5805449f8383182368f88da007a0b5382ecdc5061aae56873d6c4d898a2d6e",
+      "encoding": "gzip",
+      "stored_sha256": "ba9f5c647fb411b11854a9841fd4d2c2637121f7db28bb52e968ade5f562eafb"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-format.log",
+      "path": "audit/evidence/18ee061/r01-threshold-format.log.gz",
+      "sha256": "bfa0ee2d860bab65f579876bcd9e2aa45c1c3dffd9cf1037bb9f7e0f809e9961",
+      "encoding": "gzip",
+      "stored_sha256": "910eff744ef64be66d6ecc50dea40796a38d64bdf28bffee530f61cbc72cfac5"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-lint-final.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-lock-format.log",
+      "path": "audit/evidence/18ee061/r01-threshold-lock-format.log.gz",
+      "sha256": "475ab014aaacc54bf92140c545d9d0318baa50376f847b231eae1495c372fd5b",
+      "encoding": "gzip",
+      "stored_sha256": "9500330254c6beabe7ec177a3138a69a7ab69cf2049e145847722fce7fd7718b"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-lock-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-lock-order.log",
+      "path": "audit/evidence/18ee061/r01-threshold-lock-order.log.gz",
+      "sha256": "87f519bb2f269397f191c97c7ce502a50afd2bb15d2d3451dc806ede4d49bb10",
+      "encoding": "gzip",
+      "stored_sha256": "d9f9a9579c555ff58fa5525fcac5ccd40f3ffdd5ca8c0ad1a05758beb892060c"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-openapi.log",
+      "path": "audit/evidence/18ee061/r01-threshold-openapi.log.gz",
+      "sha256": "998c6a71a0211cfd2f45b612d568439cccaf2beea3c0ff0140fb4df94cbc790a",
+      "encoding": "gzip",
+      "stored_sha256": "eda409cce9d801a28c7311ee14e5abcaefd30f4d09c83810291856d0e18fd8e3"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-regression.log",
+      "path": "audit/evidence/18ee061/r01-threshold-regression.log.gz",
+      "sha256": "1deccb2c934225e88fbb14d739340321a8b1021ebd777b24583b2380f0a40752",
+      "encoding": "gzip",
+      "stored_sha256": "2bd47588076fbcbefecd863fb7d46c515da9d03813b51b9a568e1ededed77ede"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-threshold-types-first.log",
+      "path": "audit/evidence/18ee061/r01-threshold-types-first.log.gz",
+      "sha256": "3fcdae6d438fb4d210984d3c276eb05afa73ced1ca781cc202f303a271b937c3",
+      "encoding": "gzip",
+      "stored_sha256": "07ebef58c4747e4300cb65826c27da7d79870b76814696af163aaa1b017a0bc1"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-before.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-before.log.gz",
+      "sha256": "b374ab1dd8bb7e7d8856c5aa212440ee23cebca53cd376ec6b8a1b915206c092",
+      "encoding": "gzip",
+      "stored_sha256": "4cdf6e2388825a71a09f850d635ad3752302775d709773168684f1d44d460968"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-cleanup.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-cleanup.log.gz",
+      "sha256": "d777967ae9c4bd1a3487515456585591ddb462e857f30989326273b589142918",
+      "encoding": "gzip",
+      "stored_sha256": "9ce1a15c92d16e3cc17cb4d4cd42202953cfcefeca451a8716f1af022cafb50a"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-contract.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-contract.log.gz",
+      "sha256": "fd7a2cf76d981d0f4fc399ddf4ce68cb9b0784f26d113fda4d704fb949e1f336",
+      "encoding": "gzip",
+      "stored_sha256": "24f683df0669013d8fa39c02beb373436c4570d62f27cee009268a733c8dca47"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-fixture-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-format-final.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-format-final.log.gz",
+      "sha256": "6cb76f34432872e7d4d98e016c1f5abf87f1511a46071b7419600c724ff43a9c",
+      "encoding": "gzip",
+      "stored_sha256": "e7eec2d2eab027cbe4eb751d18061056e6cfa4465ff30e9660ac04125b7a200b"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-format.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-format.log.gz",
+      "sha256": "14b10c409c51d92ea8d72de522778b97ba067fa37fe69963d2885cf81020e62b",
+      "encoding": "gzip",
+      "stored_sha256": "1f52ee5e1aed9161c4a174d9fed79cb4c08a6969d27a17b6696a8e4262874931"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-lint-final.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-new-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-new-format.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-new-format.log.gz",
+      "sha256": "196184b217df6a304af8daad1c002a082db1f980797e9e965eb8fe579f94f5d9",
+      "encoding": "gzip",
+      "stored_sha256": "5c0cae9b2758a7d92718d63f6665311b4e991c6c35ebf043244dfcce22c89edc"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-new-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-openapi.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-openapi.log.gz",
+      "sha256": "8f7ae98490c6cfefa66b9adbe7c6f9d1d7ec46f606364352dc6d7248653daa43",
+      "encoding": "gzip",
+      "stored_sha256": "03a71bb0dc11f7b5ca8757778e2f5a377f40c4dc8f759fbacb37146b9f88996e"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-regression-v2.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-regression-v2.log.gz",
+      "sha256": "16d489466ab2d244abffd7af597e7c74b29d7a461637ea8b5424e3098ce6630f",
+      "encoding": "gzip",
+      "stored_sha256": "d14ca2102b45d40fcbd7b5921b27fc9daa540225e239a3945e84a1e1662320ab"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-regression.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-regression.log.gz",
+      "sha256": "11d1ed7ebc7ccd7ca5a8a9decd441d604e9ad5d56c38bb6a151ccfe256c921d4",
+      "encoding": "gzip",
+      "stored_sha256": "a8c606add663c5ea333a81107c7984db769241c5612fd8823ed7e94c72b2f5c4"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-types-complete.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-types-final.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-types-final.log.gz",
+      "sha256": "cc7bca45b756f5794b604d7c70c128ce9078df2e80571edf208d57713c1f9f6d",
+      "encoding": "gzip",
+      "stored_sha256": "262212a30d74665721da78251484c8270fa6aa40b6f10846c3b4d3b7741e589e"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-types-first.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-types-first.log.gz",
+      "sha256": "8e4717bb04474457120e28376a53b04be1d88f565aaa337482820bdc79a3a9aa",
+      "encoding": "gzip",
+      "stored_sha256": "6986356786c565df971c10dad5c096a594a2e90e0891af95e8ba900bfbc7945e"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-types-v2.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-receipt-sealing-worker-cleanup.log",
+      "path": "audit/evidence/ff75281/r01-receipt-sealing-worker-cleanup.log.gz",
+      "sha256": "7b8b193a34b2560f01ce6535e417b32a321e641d4da6db3dcd1cd7d557666c36",
+      "encoding": "gzip",
+      "stored_sha256": "b515354cd1d928f4d32f40584345a29a88b1902499917ee81e69fc9d35fee040"
     }
   ]
 }

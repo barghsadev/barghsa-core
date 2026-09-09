@@ -1,20 +1,30 @@
 # Continue here
 
-Read [fix-plan.md](fix-plan.md) and [progress.json](progress.json), then only the selected requirements and evidence. Use feature batches; preserve valid checks.
+Read [fix-plan.md](fix-plan.md) and [progress.json](progress.json), then only selected requirements and evidence. Use feature batches; preserve valid checks.
 
 ## Current checkpoint
 
-Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **48ac9d7**. Latest consolidated batch **R01-wallet-ledger**:8 new task acceptances plus preserved balance card;14 PR reviews closed. Schema, credit/debit, reservation/release, version conflicts, nonnegative balances, reconciliation and dashboard balance are locally verified.
+Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **ff75281**. Last consolidated batch **R01-wallet-ledger** remains complete at48ac9d7:8 new task acceptances plus preserved balance card;14 PR reviews closed. Preserve unchanged money/concurrency and dashboard evidence.
 
-One repair: ledger sums beyond PostgreSQL int8 no longer abort the reconciliation scan. Three overflow cases now report alongside ordinary mismatches with exact deltas, no balance mutation and no duplicate exception.14 distinct scanner checks pass:5 full-production-migration integration cases and9 unit cases. Worker types/lint/format pass.1454 logs indexed; initial failures retained.
+Active **R01-bank-receipts-approval**:16 saved PRs195,196,266–268,278–279,286–287,296–302;10 mapped tasks. Exact keys, criteria, deferrals and checks are in progress.json.active_batch. No receipt task/PR closure yet.
 
-Core wallet/schema/tests are unchanged since7af0a76. Preserve their prior money/concurrency evidence; the historical648-case finance regression is not a new run or complete receipt/payment acceptance. Dashboard/card source and existing fa/en live-browser checks remain valid. Source comparison records the unrelated added default-selection tests and geoip/password-estimator dependencies. Four repeated wallet groups contain useful corrections; no duplicate current service needs removal. Details live once in [batch review](evidence/step-reviews.json#R01-wallet-ledger).
+Five repairs verified locally:
 
-## Next feature batch
+- **0d75b64**: customer receipt session/owner/Finance authority through commit, atomic empty-wallet creation and submission audit.222 distinct affected API cases.
+- **397d8fd**: generic approval creation/resolution retains current account, role, session and step-up.64 distinct affected API cases.
+- **d646396**: wallet/invoice confirmation and rejection retain session/step-up through every commit, including replay and approval parking.202 distinct affected API cases.
+- **18ee061**: threshold session authority, first-write previous-value/version audit, and policy held through decisions.215 distinct affected API cases. Policy locks precede staff/session locks; earlier order deadlocked receipt notification recipient FKs and was corrected.
+- **ff75281**: wallet bytes sealed using extracted invoice policy; both flows journal interrupted copies for cleanup and keep matching retries.90 distinct affected API cases, including real production-worker cleanup. A cleaned failed copy requires a new upload; retries cannot recreate an untracked object.
 
-Selected **R01-bank-receipts-approval**:16 saved PRs **195,196,266,267,268,278,279,286,287,296,297,298,299,300,301,302**;10 mapped tasks. Exact keys and historical deferrals are in progress.json.active_batch.
+Counts overlap across repairs. Relevant API types/lint/format/build/OpenAPI pass.1529 logs indexed, including failures. No new browser/budget/broad/coverage claim. Fixtures and extraction/type errors are documented with retained logs in progress.json. Receipt API fixtures rebuild worker; the cleanup integration imports its built output to respect TypeScript project boundaries.
 
-Review receipt upload/attachment ownership, current actor authority and step-up through settlement, amount/threshold policy, independent approval, rejection, invoice overpayment credit and customer/staff UI. Compare repeated confirmation/overpayment PRs once. PR298 may incidentally cover T-04.3.01.06 notification; inspect before declaring it unbuilt. Provider callbacks/expiry remain a following batch. No new receipt defect confirmed yet.
+WalletService getWallet/createWallet now accept an optional transaction client. Default behavior is unchanged; customer receipt regression includes wallet unit/controller checks. Refresh narrow wallet/card bindings when consolidating; do not rerun or claim renewal of all648 historical finance cases. Historical receipt bytes modified before the sealing repair cannot be reconstructed locally.
+
+## Next action
+
+Review current customer/staff receipt UI, queue and shared approval criteria. T-09.07.01 emergency override remains unimplemented: reason, elevated permission, immediate alert and audit are required. Current dual-approver permission checks read the other approver without retained locks; examine the actual settlement race before deciding a fix. Wallet approval helper still creates unrelated correlation IDs and omits session metadata; review against required audit/notification binding.
+
+Compare repeated confirmation/overpayment PRs once and close individual tasks/PRs with one batch review. PR298 may incidentally cover T-04.3.01.06 notification; inspect before declaring it unbuilt. Provider callbacks/expiry remain a following batch. Preserve stored requirements, earlier checks and user decisions.
 
 ## Counts and preserved work
 
