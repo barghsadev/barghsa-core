@@ -7903,7 +7903,7 @@
         },
         {
           "path": "apps/api/src/finance/receipt-submission-actor.ts",
-          "sha256": "be0b893055b67f214f05d0cc60602804609a95b17e01f50809967cdf0e3005f8"
+          "sha256": "909fa438dfa40a712f258279e1d6b172f5d7e2359cae7ec1213e2a99825489c2"
         },
         {
           "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
@@ -7923,7 +7923,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.controller.ts",
-          "sha256": "014123670b2a6a9f4b77e749dbb653ea551fd96d707a2c57e40db7e58a37e2cd"
+          "sha256": "59baebb6e7f95a6dece273043728ffb10cce91c6aa4a10d3530c335381a3257a"
         },
         {
           "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -7944,11 +7944,16 @@
         {
           "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
           "sha256": "b519660905ec9505441cb39a2b24ad45ceddc7481fe09e6b2484a98024b2b78c"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "931d6fdf0ebb811e6a822755d1b51690dad8d60555af4c31f632cb1721fec198"
         }
       ],
       "checks": [
         "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added.",
+        "fc7ee0b source refresh: receipt authority extracted unchanged to financial-submission-actor, with24 receipt authority cases passing. WalletController only adds trusted session to online initiation; other methods unchanged,14 controller cases pass. Existing domain evidence is retained, not rerun or renewed wholesale. See progress.json.active_batch.verification.online_initiation."
       ],
       "merged_prs": [
         266
@@ -8185,7 +8190,7 @@
         },
         {
           "path": "apps/api/src/finance/receipt-submission-actor.ts",
-          "sha256": "be0b893055b67f214f05d0cc60602804609a95b17e01f50809967cdf0e3005f8"
+          "sha256": "909fa438dfa40a712f258279e1d6b172f5d7e2359cae7ec1213e2a99825489c2"
         },
         {
           "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
@@ -8230,11 +8235,16 @@
         {
           "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
           "sha256": "d0a0015a576246312a7a7988c262bedda8091f4e70758e02c4348c22f4f6c878"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "931d6fdf0ebb811e6a822755d1b51690dad8d60555af4c31f632cb1721fec198"
         }
       ],
       "checks": [
         "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added.",
+        "fc7ee0b source refresh: receipt authority extracted unchanged to financial-submission-actor, with24 receipt authority cases passing. WalletController only adds trusted session to online initiation; other methods unchanged,14 controller cases pass. Existing domain evidence is retained, not rerun or renewed wholesale. See progress.json.active_batch.verification.online_initiation."
       ],
       "merged_prs": [
         297

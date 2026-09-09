@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a",
+  "source_revision": "09aa638602c74fd7384b365af8ae70febd698513",
   "active_step": "R01",
-  "next_action": "Repair online initiation authority across advisory/DB/provider waits, preserving durable provider claims and recovery. Limit setting and receipt work are complete; do not rebuild them.",
+  "next_action": "Repair browser payment-return GET/CSRF without disrupting provider reconciliation; then finish signed callback/replay/credit and expiry acceptance and saved PR dispositions. Initiation authority, limit writes and expiry recovery are fixed; preserve their checks.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -788,11 +788,23 @@
       },
       {
         "id": "online-initiation-authority",
-        "status": "pending_repair",
+        "status": "fixed",
         "tasks": [
           "04-invoices-wallet-contracts.md#T-04.2.02.01"
         ],
-        "summary": "Initiation service receives no actor/session; controller access check precedes advisory/DB/provider waits and empty-wallet creation happens separately. Need preserve current authority while retaining durable provider recovery semantics."
+        "summary": "Initiation service receives no actor/session; controller access check precedes advisory/DB/provider waits and empty-wallet creation happens separately. Need preserve current authority while retaining durable provider recovery semantics.",
+        "source_revision": "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778"
+      },
+      {
+        "id": "online-expiry-recovery-and-channel",
+        "status": "fixed",
+        "source_revision": "09aa638602c74fd7384b365af8ae70febd698513",
+        "tasks": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.01",
+          "04-invoices-wallet-contracts.md#T-04.2.02.02",
+          "04-invoices-wallet-contracts.md#T-04.2.02.07"
+        ],
+        "summary": "Provider results were discarded when TTL expiry won the race; ambiguous claims could not recover after expiry. Pending bank-receipt keys could initialize an online provider. Preserve bound provider references, allow recovery without new starts, require online channel, and recheck Pending under lock before returning checkout."
       }
     ],
     "reused_evidence": [
@@ -801,9 +813,11 @@
       "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Repair online initiation authority across advisory/DB/provider waits, preserving durable provider claims and recovery. Limit setting and receipt work are complete; do not rebuild them.",
+    "next_action": "Repair browser payment-return GET/CSRF without disrupting provider reconciliation; then finish signed callback/replay/credit and expiry acceptance and saved PR dispositions. Initiation authority, limit writes and expiry recovery are fixed; preserve their checks.",
     "product_commits": [
-      "aeb2d1bf1e7d9630532e89f813002da91302f81a"
+      "aeb2d1bf1e7d9630532e89f813002da91302f81a",
+      "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778",
+      "09aa638602c74fd7384b365af8ae70febd698513"
     ],
     "verification": {
       "online_limit": {
@@ -811,14 +825,30 @@
         "distinct_api_cases": 70,
         "logs_prefix": "/tmp/r01-online-limit-",
         "limits": "Seven valid baseline failures: revoke/CSRF/step-up changed after the HTTP guard while waiting on policy, session/step-up expiry during audit, misleading corrupt read and missing session/correlation audit. Four-file70-case run passed61; two unit audit expectations needed sessionId, and seven old actor-lock fixtures incorrectly waited for a service query while authentication held the request. Those fixtures now explicitly test the authentication boundary, not post-guard service authority. Two-file51-case rerun passes; combined70 distinct cases. Initial type error was a missing non-null fixture header assertion, corrected before final passing types. Lint, formatting, API build and freshly generated OpenAPI comparison pass. No UI change; prior limit-screen browser evidence is retained."
+      },
+      "online_initiation": {
+        "source_revision": "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778",
+        "distinct_api_cases": 94,
+        "logs_prefix": "/tmp/r01-online-authority-",
+        "limits": "13 original failing regressions; 94 distinct final API cases across service, real-DB actor/receipt/archive and HTTP/controller checks. Initial six-file run had 19 outdated actor-fixture failures plus 3 unhandled rejections; corrected four-file54 pass combined with unchanged24 receipt and14 controller cases gives92; two HTTP cases add2. Initial HTTP fixture included a forbidden extra body field and failed400 before reaching service; corrected strict input passes. Duplicate fixture actor fields and unknown JSON response types corrected. Types/lint/format/build/fresh OpenAPI comparison pass. Receipt permission behavior was extracted unchanged to financial-submission-actor; controller change only passes trusted session to online initiation."
+      },
+      "online_expiry_recovery": {
+        "source_revision": "09aa638602c74fd7384b365af8ae70febd698513",
+        "distinct_api_cases_current_or_reused": 50,
+        "logs_prefixes": [
+          "/tmp/r01-online-expiry-",
+          "/tmp/r01-online-channel-",
+          "/tmp/r01-online-post-expiry-"
+        ],
+        "limits": "Four confirmed regressions: expiry during provider start, expiry during recovery, recovery first attempted after expiry, and cross-channel Pending-key reuse. Real expiry worker invoked against the same migrated DB; later provider-verified callbacks credit once after expiry. First expiry baseline also used an incorrect expected reason string, corrected; missing authority/ref was independently observed. First 48-case run passed41 and failed7 because unit query mock lacked the new final-row read. Corrected unit cases pass. Final34 service/authority cases pass; reuse14 real initiation and2 HTTP cases from same repair checkpoint for50 distinct. Types/lint/format pass. No controller/schema change in this second repair; prior fresh contract comparison remains applicable."
       }
     },
     "historical_review_notes": [
-      "Current initiation/insert, signed callback/merchant validation, browser return/processing and expiry/reject methods read. Initiation receives no actor/session; its transaction only checks active profile and creates an empty wallet before the Pending transaction. This confirmed authority gap remains next.",
       "Signed POST checks HMAC/time window/event/merchant and verifyPayment before credit. Browser GET Status=NOK currently changes intent/event state without provider verification; payment-return GET/CSRF disposition remains required. Do not remove durable callback/recovery semantics without reviewing their tests.",
       "PR259/265/269/288/289 descriptions and selected280/281 risks read; remaining bounded repeated history still needs disposition. PR281 says expiry customer notification belongs to notification tasks; preserve that separate R02 requirement even though the historical deferral parser omitted this risk note.",
       "Receipt schema follow-up57d6582: a fresh API build exposed two missing emergencyOverrideReason request-body fields in the committed OpenAPI. These now match verified controller decorators, with no other semantic contract change. Previous receipt OpenAPI-pass notes do not establish fresh generated-contract coverage; this passing build/comparison supersedes them.",
-      "Limit policy lock now precedes staff/session locks. Future initiation authority repair must use compatible policy/account/session/profile/wallet ordering and preserve provider idempotency/recovery."
+      "Limit policy lock now precedes staff/session locks. Future initiation authority repair must use compatible policy/account/session/profile/wallet ordering and preserve provider idempotency/recovery.",
+      "fc7ee0b and09aa638 complete initiation authority, shared receipt lock extraction, final checkout state and durable expiry/recovery/channel fixes. The receipt wrapper retains identical bank-receipts:submit semantics;24 unchanged receipt authority cases and14 wallet controller cases passed after extraction. No new task/PR acceptance closure until consolidated online batch review."
     ]
   },
   "open_domain_reviews": [
