@@ -126,10 +126,11 @@ function adjustmentExcerpt(overrides: Record<string, unknown> = {}) {
 }
 
 describe('isAdjustableInvoiceState', () => {
-  it('accepts only post-payment Paid / PartiallyFunded / PartiallyRefunded / Refunded', () => {
+  it('accepts paid-capable states; the service separately requires confirmed payment', () => {
     expect(ADJUSTABLE_INVOICE_STATES).toEqual([
       'Paid',
       'PartiallyFunded',
+      'Overdue',
       'PartiallyRefunded',
       'Refunded',
     ]);
@@ -139,7 +140,7 @@ describe('isAdjustableInvoiceState', () => {
     expect(isAdjustableInvoiceState('Refunded')).toBe(true);
     expect(isAdjustableInvoiceState('Draft')).toBe(false);
     expect(isAdjustableInvoiceState('Unpaid')).toBe(false);
-    expect(isAdjustableInvoiceState('Overdue')).toBe(false);
+    expect(isAdjustableInvoiceState('Overdue')).toBe(true);
     expect(isAdjustableInvoiceState('Cancelled')).toBe(false);
     expect(isAdjustableInvoiceState('PaymentUnderReview')).toBe(false);
   });

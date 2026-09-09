@@ -28,7 +28,7 @@ import { requireStaffMutationPermission } from '../admin/staff-mutation-permissi
  *   1. Validate `reason` and non-zero `amount` (pure).
  *   2. Lock the original (`SELECT … FOR UPDATE`).
  *   3. Reject missing invoices, `paid_amount = 0`, and states other
- *      than Paid / PartiallyFunded / PartiallyRefunded / Refunded.
+ *      than Paid / PartiallyFunded / Overdue / PartiallyRefunded / Refunded.
  *   4. Insert a Draft adjustment with one non-taxable line (the signed
  *      amount as an absolute IRR total), calculation snapshot, origin
  *      FKs copied from the original, and `adjustment_for_invoice_id`.
@@ -77,11 +77,13 @@ import type { ManualInvoiceLineResult } from './manual-invoice.service.js';
  *
  * S-04.1.05: after payment, corrections use an adjustment (or refund).
  * PartiallyFunded / PartiallyRefunded / Refunded all imply confirmed
- * payment has occurred. Unpaid / Draft / Overdue use cancel+replace.
+ * payment has occurred. Overdue may retain a partial payment; the locked
+ * paid_amount check distinguishes it from an unpaid overdue invoice.
  */
 export const ADJUSTABLE_INVOICE_STATES = [
   'Paid',
   'PartiallyFunded',
+  'Overdue',
   'PartiallyRefunded',
   'Refunded',
 ] as const satisfies readonly InvoiceState[];
@@ -96,7 +98,7 @@ export const CREATE_ADJUSTMENT_ERRORS = {
   NO_PAYMENT: (invoiceId: string) =>
     `Cannot adjust invoice ${invoiceId}: no confirmed payment; use cancel-and-replace before payment`,
   STATE_NOT_ADJUSTABLE: (invoiceId: string, state: string) =>
-    `Cannot adjust invoice ${invoiceId} in state '${state}'; only Paid, PartiallyFunded, PartiallyRefunded, or Refunded invoices may receive an adjustment`,
+    `Cannot adjust invoice ${invoiceId} in state '${state}'; only Paid, PartiallyFunded, Overdue, PartiallyRefunded, or Refunded invoices may receive an adjustment`,
 } as const;
 
 /** Command to create a linked post-payment adjustment invoice. */

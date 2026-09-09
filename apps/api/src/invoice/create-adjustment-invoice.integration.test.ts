@@ -334,31 +334,62 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     expect(unpaidSiblingId).toBeTruthy();
   });
 
-  it('rejects an unpaid invoice and leaves it untouched', async () => {
-    const originalId = await insertInvoice({ state: 'Unpaid', paidAmount: 0n });
-    const before = await originalSnapshot(originalId);
-
-    await expect(
-      service.createAdjustmentInvoice({
+  it.each([25_000n, -25_000n])(
+    'corrects a partially paid overdue invoice by %s without changing issued lines',
+    async (amount) => {
+      const originalId = await insertInvoice({ state: 'Overdue', paidAmount: 100_000n });
+      const before = await originalSnapshot(originalId);
+      const result = await service.createAdjustmentInvoice({
         originalInvoiceId: originalId,
-        amount: 10_000n,
-        reason: 'Should not apply',
+        amount,
+        reason: 'Correct overdue usage',
         actorUserId: ACTOR_USER_ID,
         now: NOW,
-      })
-    ).rejects.toThrow(ConflictException);
+      });
+      expect(result.accountingAmount).toBe(amount);
+      expect(result.originalState).toBe('Overdue');
+      expect(result.adjustmentForInvoiceId).toBe(originalId);
+      expect(result.kind).toBe(amount > 0n ? 'charge' : 'credit');
+      const after = await originalSnapshot(originalId);
+      expect(after.lines).toEqual(before.lines);
+      expect(after.invoice).toEqual({
+        ...before.invoice,
+        metadata: {
+          ...before.invoice.metadata,
+          adjustedByInvoiceIds: [result.adjustmentInvoiceId],
+        },
+      });
+    }
+  );
 
-    const after = await originalSnapshot(originalId);
-    expect(after.invoice.state).toBe('Unpaid');
-    expect(after.invoice.metadata).toEqual(before.invoice.metadata);
-    expect(after.lines).toEqual(before.lines);
+  it.each(['Unpaid', 'Overdue'])(
+    'rejects a %s invoice with no payment and leaves it untouched',
+    async (state) => {
+      const originalId = await insertInvoice({ state, paidAmount: 0n });
+      const before = await originalSnapshot(originalId);
 
-    const extras = await ctx.pool.query<{ n: number }>(
-      `SELECT COUNT(*)::int AS n FROM invoices WHERE adjustment_for_invoice_id = $1`,
-      [originalId]
-    );
-    expect(extras.rows[0]!.n).toBe(0);
-  });
+      await expect(
+        service.createAdjustmentInvoice({
+          originalInvoiceId: originalId,
+          amount: 10_000n,
+          reason: 'Should not apply',
+          actorUserId: ACTOR_USER_ID,
+          now: NOW,
+        })
+      ).rejects.toThrow(ConflictException);
+
+      const after = await originalSnapshot(originalId);
+      expect(after.invoice.state).toBe(state);
+      expect(after.invoice.metadata).toEqual(before.invoice.metadata);
+      expect(after.lines).toEqual(before.lines);
+
+      const extras = await ctx.pool.query<{ n: number }>(
+        `SELECT COUNT(*)::int AS n FROM invoices WHERE adjustment_for_invoice_id = $1`,
+        [originalId]
+      );
+      expect(extras.rows[0]!.n).toBe(0);
+    }
+  );
 
   it('throws NotFoundException for a missing original', async () => {
     await expect(
