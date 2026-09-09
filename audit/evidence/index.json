@@ -16010,6 +16010,48 @@
       "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
       "encoding": "gzip",
       "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r02-recipient-preferences-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-recipient-preferences-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r02-recipient-preferences-types-final.log",
+      "path": "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz",
+      "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
+      "encoding": "gzip",
+      "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r02-recipient-preferences-types.log",
+      "path": "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz",
+      "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
+      "encoding": "gzip",
+      "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r02-recipient-preferences-worker-final.log",
+      "path": "audit/evidence/r02/r02-recipient-preferences-worker-final.log.gz",
+      "sha256": "581c9402598867eaf0c9b9b429bc7757ca42fc4634183a2d7f57b80212dc025c",
+      "encoding": "gzip",
+      "stored_sha256": "a92e2783e7e8f61e4904af1848c068d3990eaff7215b91edff4976891945bb70"
+    },
+    {
+      "original_path": "/tmp/r02-recipient-preferences-worker.log",
+      "path": "audit/evidence/r02/r02-recipient-preferences-worker.log.gz",
+      "sha256": "5e11c24f6dd07ef09efe325b2d1df5f9e4fe519a198bb4f1b101cd005902ad6c",
+      "encoding": "gzip",
+      "stored_sha256": "4ec9590c1f02ec4acebc189377efda19f3e82da0d323af9926643ab98ceb80f6"
     }
   ]
 }

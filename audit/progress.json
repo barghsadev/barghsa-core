@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "5dade2d638fbf9ea9258dd918cd8e5cfc4c1c803",
+  "source_revision": "deeb133b90321dfb06dbbcb66e0e18eacfe9f749",
   "active_step": "R02",
-  "next_action": "Review and finish delivery preferences/daytime consumers for the active R02 foundation batch, then remaining provider/template UI acceptance. Preserve branded admin previews5dade2d6, email/auth branding31585375 and provider activation83a27ac8; reuse their valid focused evidence.",
+  "next_action": "Finish daytime-window configuration/consumers and remaining provider/template UI in the active R02 foundation batch. Daytime UI currently accepts whole-hour selects rather than required HH:MM inputs; save still deliberately defers step-up and passes only actor userId. Reuse existing per-user timezone, immediate bypass, DST and scheduled-snapshot evidence; repair only confirmed gaps. Preserve recipient choices/verified contacts atdeeb133b and earlier brand/provider repairs.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -670,6 +670,10 @@
     {
       "id": "R02-branded-admin-previews",
       "review_record": "audit/evidence/step-reviews.json#R02-branded-admin-previews"
+    },
+    {
+      "id": "R02-recipient-channel-delivery",
+      "review_record": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
     }
   ],
   "deferred_improvements": [
@@ -688,8 +692,8 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 131,
-    "partial": 32,
+    "acceptance_verified": 132,
+    "partial": 31,
     "pending": 159,
     "merged_prs": 301,
     "historical_skips": 58,
@@ -1049,6 +1053,19 @@
         "defect": "Actual admin template preview shows unbranded body/source; service-level saved preview is not wired to that editor.",
         "status": "repaired",
         "review_record": "audit/evidence/step-reviews.json#R02-branded-admin-previews"
+      },
+      {
+        "defect": "Dispatch ignores saved per-user channel choices and trusts nonempty legacy contacts as verified.",
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+      },
+      {
+        "defect": "Delivery-window UI uses whole-hour selectors rather than required HH:MM time inputs.",
+        "status": "open"
+      },
+      {
+        "defect": "Delivery-window mutation still defers step-up and does not carry current session/CSRF identity through the transaction.",
+        "status": "open"
       }
     ],
     "reused_evidence": [
@@ -1062,10 +1079,22 @@
       "audit/evidence/step-reviews.json#R02-provider-self-tests",
       "audit/evidence/step-reviews.json#R02-provider-activation-proof",
       "audit/evidence/step-reviews.json#R02-email-branding-delivery",
-      "audit/evidence/step-reviews.json#R02-branded-admin-previews"
+      "audit/evidence/step-reviews.json#R02-branded-admin-previews",
+      "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
     ],
-    "pr_dispositions": [],
-    "next_action": "Review and finish delivery preferences/daytime consumers for the active R02 foundation batch, then remaining provider/template UI acceptance. Preserve branded admin previews5dade2d6, email/auth branding31585375 and provider activation83a27ac8; reuse their valid focused evidence."
+    "pr_dispositions": [
+      {
+        "pr": 113,
+        "status": "closed",
+        "task_keys": [
+          "02-auth-users-admin.md#T-03.03.05"
+        ],
+        "reason": "Account choices now reach queued email/SMS dispatch and are rechecked after message preparation. Only current primary or verified secondary destinations are eligible. In-app remains enabled; per-profile marketing consent and address suppression remain additional gates. R01 API/UI/default/availability evidence matches unchanged source and is reused. PR113 has no retained historical deferrals; its former unavailable lint is superseded by applicable checked lint evidence.",
+        "source_revision": "deeb133b90321dfb06dbbcb66e0e18eacfe9f749",
+        "evidence": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+      }
+    ],
+    "next_action": "Finish daytime-window configuration/consumers and remaining provider/template UI in the active R02 foundation batch. Daytime UI currently accepts whole-hour selects rather than required HH:MM inputs; save still deliberately defers step-up and passes only actor userId. Reuse existing per-user timezone, immediate bypass, DST and scheduled-snapshot evidence; repair only confirmed gaps. Preserve recipient choices/verified contacts atdeeb133b and earlier brand/provider repairs."
   },
   "open_domain_reviews": [
     {
