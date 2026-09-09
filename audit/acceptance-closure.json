@@ -752,77 +752,6 @@
       "historically_skipped": false
     },
     {
-      "task_key": "02-auth-users-admin.md#T-08.01.02",
-      "status": "acceptance_verified",
-      "reviewed_sha": "7af0a7697f86b89339fea04a8c79078f14b78d95",
-      "requirement_file": "kanban/epics/02-auth-users-admin.md",
-      "requirement_line": 610,
-      "requirement": "**T-08.01.02 — Wallet balance card**\n\n- Description: Shows available wallet balance in IRR and toman. Link to wallet page. Alert if balance is low relative to pending invoices.\n- Technical notes: Calls wallet service for balance. Format IRR with locale-aware number formatting.\n- UI/UX: Card with balance prominently displayed. Currency label (IRR/تومان). Button: \"Charge wallet\". Warning banner if low balance for due invoices.\n- Dependencies: wallet module\n- Complexity: S",
-      "requirement_sha256": "0ae7ccd5841717e0263307f72c0a84b6845cf7f43a07f8c068b3bb06dcf45bb2",
-      "source_evidence": [
-        {
-          "path": "apps/api/src/dashboard/dashboard.controller.ts",
-          "sha256": "ae8d15ee7a3470b6aef7475907393102300d3fa2ce4305a501967f2bda5bc584"
-        },
-        {
-          "path": "apps/api/src/dashboard/dashboard.service.ts",
-          "sha256": "4e17fafcdea722cbd3ae22dd8e359ef1e3de6de66493baf6414d6ebedbbc17d7"
-        },
-        {
-          "path": "apps/api/src/dashboard/dashboard.module.ts",
-          "sha256": "94a10a3ecfff82439ba4b504e477e92e22e58c44719048eb1ff56908caccd2c9"
-        },
-        {
-          "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
-        },
-        {
-          "path": "apps/api/src/profiles/context-http.integration.test.ts",
-          "sha256": "ff04f269af3ff78106ea7382fdba7452909e4273cf5c4b651160c9f7ea4ff8f5"
-        },
-        {
-          "path": "apps/web/src/pages/DashboardPage.tsx",
-          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
-        },
-        {
-          "path": "apps/web/src/components/WalletBalanceCard.tsx",
-          "sha256": "3ed84578f7406c59455c1b7eac5b70c96fa29ef027dc6e4631af7e43b5396b60"
-        },
-        {
-          "path": "apps/web/src/components/QuickStatusCards.tsx",
-          "sha256": "1dd94195b50ad7ab1cab11ca96d65bd5fe459dd8832af7320c28dd0da249a590"
-        },
-        {
-          "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
-        },
-        {
-          "path": "apps/web/e2e/profile-switch.spec.ts",
-          "sha256": "221caf47f5bbcc37fd4470ace69303d4872b37d88d35c899a8562eb8fdaab006"
-        }
-      ],
-      "checks": [
-        "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
-        "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
-        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
-        "At 7af0a76, reviewed wallet archival changes. getWallet remains identical to 9635e76; every other recorded source hash still matches. Preserve existing balance-card browser evidence; this step does not claim a new browser run.",
-        "At 5543cc2, reviewed atomic invitation credential rotation and focused evidence; see audit/evidence/step-reviews.json#R01-invitation-credentials. Other methods/criteria and older drift remain unchanged."
-      ],
-      "limitations": [
-        "Dashboard reads are informational snapshots, not payment authorization. External wallet HTTP consumers must accept decimal-string money."
-      ],
-      "merged_prs": [
-        153
-      ],
-      "historically_skipped": false,
-      "evidence_refresh": {
-        "source_revision": "7af0a7697f86b89339fea04a8c79078f14b78d95",
-        "previous_reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
-        "review": "Unchanged wallet reads and other recorded sources; archival changes affect mutations only.",
-        "record": "audit/evidence/step-reviews.json#R01-archive-wallet-writers"
-      }
-    },
-    {
       "task_key": "02-auth-users-admin.md#T-08.01.03",
       "status": "partial",
       "reviewed_sha": "469a96777f93d9af4606c8aabfd3d462b6fd2b0e",
@@ -7265,6 +7194,530 @@
         "audit/evidence/step-reviews.json#R01-profile-addresses",
         "audit/evidence/step-reviews.json#R01-profiles-onboarding"
       ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 228,
+      "requirement": "| T-04.2.01.01 | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` | M |",
+      "requirement_sha256": "871fe0f0c807a52bf3a1601c49d98ddfe2904178211ae88141f20c0e07805572",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        149
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 229,
+      "requirement": "| T-04.2.01.02 | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps | L |",
+      "requirement_sha256": "ff470f5cd09d63e459ceeb7282f0448853c218779d4f6435e238d327ef7e1de2",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        149,
+        251,
+        260
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 230,
+      "requirement": "| T-04.2.01.03 | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` | M |",
+      "requirement_sha256": "767cb12016acf034cfc1c5c12aa35ec0ab2db8a613ffa56da99d9a25f5d0dd39",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        252,
+        254,
+        261
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 231,
+      "requirement": "| T-04.2.01.04 | Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes | L |",
+      "requirement_sha256": "e858207e76ad03f0889eafaef718069e0b48165762eefe36425bc052bc18e680",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        253,
+        262
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 232,
+      "requirement": "| T-04.2.01.05 | Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow | M |",
+      "requirement_sha256": "157ef01cd6bc1a9c943bc80ae489ee78a140bb828a72732fb85e5103bd02abfa",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        255,
+        263
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.06",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 233,
+      "requirement": "| T-04.2.01.06 | Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion` | M |",
+      "requirement_sha256": "58f3ff2b362e3a2e0c0d3ed0d46e4629925c6c36cbf5ab3826624fed8ff54427",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        256
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.07",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 234,
+      "requirement": "| T-04.2.01.07 | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column | M |",
+      "requirement_sha256": "d1ce1b93936733c5096227e8b578e7807d770ea3da411abcc690bd6d5201e2dd",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        257
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.08",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 235,
+      "requirement": "| T-04.2.01.08 | Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue | M |\n\n---",
+      "requirement_sha256": "31f8d3c602f8d5f39979de25e69798edcf8897e523b59b909670d11c5d50421b",
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
+          "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
+          "sha256": "2b34d3aa7602cf784c62f0665760c8736e76f0bac2504c93acc6b5b503244506"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
+          "sha256": "7c63417d465ac9f5ec9b7851235839362011eba700918b242bb6dd0e9756d1e6"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "d485a28edf1db7d2288d30b1e7e5f9923c1d612421bc44d46a634fbe2bcad560"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reconciliation.ts",
+          "sha256": "6e9b100dfa56f366f183fcab9b82ec50a7b12715a6792712ce9e3d56dd460712"
+        },
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        258
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 610,
+      "requirement": "**T-08.01.02 — Wallet balance card**\n\n- Description: Shows available wallet balance in IRR and toman. Link to wallet page. Alert if balance is low relative to pending invoices.\n- Technical notes: Calls wallet service for balance. Format IRR with locale-aware number formatting.\n- UI/UX: Card with balance prominently displayed. Currency label (IRR/تومان). Button: \"Charge wallet\". Warning banner if low balance for due invoices.\n- Dependencies: wallet module\n- Complexity: S",
+      "requirement_sha256": "0ae7ccd5841717e0263307f72c0a84b6845cf7f43a07f8c068b3bb06dcf45bb2",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "ae8d15ee7a3470b6aef7475907393102300d3fa2ce4305a501967f2bda5bc584"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.service.ts",
+          "sha256": "4e17fafcdea722cbd3ae22dd8e359ef1e3de6de66493baf6414d6ebedbbc17d7"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.module.ts",
+          "sha256": "94a10a3ecfff82439ba4b504e477e92e22e58c44719048eb1ff56908caccd2c9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "29a1a05d9edd3f9a5ad2aee201b78736d7cb72b12d605dbc75764daae32a8bf6"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "3ed84578f7406c59455c1b7eac5b70c96fa29ef027dc6e4631af7e43b5396b60"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "1dd94195b50ad7ab1cab11ca96d65bd5fe459dd8832af7320c28dd0da249a590"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "ffd7cc7fbbf0727e71ce3067d6a261dc77ba431b1e004a552850b1cbe1388853"
+        }
+      ],
+      "checks": [
+        "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
+        "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "At 7af0a76, reviewed wallet archival changes. getWallet remains identical to 9635e76; every other recorded source hash still matches. Preserve existing balance-card browser evidence; this step does not claim a new browser run.",
+        "At 5543cc2, reviewed atomic invitation credential rotation and focused evidence; see audit/evidence/step-reviews.json#R01-invitation-credentials. Other methods/criteria and older drift remain unchanged.",
+        "Current bounded source comparison and consolidated wallet review: audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        153
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Dashboard reads are informational snapshots, not payment authorization. External wallet HTTP consumers must accept decimal-string money."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -7456,14 +7909,6 @@
     "04-invoices-wallet-contracts.md#T-04.1.05.02",
     "04-invoices-wallet-contracts.md#T-04.1.05.03",
     "04-invoices-wallet-contracts.md#T-04.1.05.04",
-    "04-invoices-wallet-contracts.md#T-04.2.01.01",
-    "04-invoices-wallet-contracts.md#T-04.2.01.02",
-    "04-invoices-wallet-contracts.md#T-04.2.01.03",
-    "04-invoices-wallet-contracts.md#T-04.2.01.04",
-    "04-invoices-wallet-contracts.md#T-04.2.01.05",
-    "04-invoices-wallet-contracts.md#T-04.2.01.06",
-    "04-invoices-wallet-contracts.md#T-04.2.01.07",
-    "04-invoices-wallet-contracts.md#T-04.2.01.08",
     "04-invoices-wallet-contracts.md#T-04.2.02.01",
     "04-invoices-wallet-contracts.md#T-04.2.02.02",
     "04-invoices-wallet-contracts.md#T-04.2.02.03",
@@ -9294,6 +9739,77 @@
         99
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7af0a7697f86b89339fea04a8c79078f14b78d95",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 610,
+      "requirement": "**T-08.01.02 — Wallet balance card**\n\n- Description: Shows available wallet balance in IRR and toman. Link to wallet page. Alert if balance is low relative to pending invoices.\n- Technical notes: Calls wallet service for balance. Format IRR with locale-aware number formatting.\n- UI/UX: Card with balance prominently displayed. Currency label (IRR/تومان). Button: \"Charge wallet\". Warning banner if low balance for due invoices.\n- Dependencies: wallet module\n- Complexity: S",
+      "requirement_sha256": "0ae7ccd5841717e0263307f72c0a84b6845cf7f43a07f8c068b3bb06dcf45bb2",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "ae8d15ee7a3470b6aef7475907393102300d3fa2ce4305a501967f2bda5bc584"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.service.ts",
+          "sha256": "4e17fafcdea722cbd3ae22dd8e359ef1e3de6de66493baf6414d6ebedbbc17d7"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.module.ts",
+          "sha256": "94a10a3ecfff82439ba4b504e477e92e22e58c44719048eb1ff56908caccd2c9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "ff04f269af3ff78106ea7382fdba7452909e4273cf5c4b651160c9f7ea4ff8f5"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "3ed84578f7406c59455c1b7eac5b70c96fa29ef027dc6e4631af7e43b5396b60"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "1dd94195b50ad7ab1cab11ca96d65bd5fe459dd8832af7320c28dd0da249a590"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "221caf47f5bbcc37fd4470ace69303d4872b37d88d35c899a8562eb8fdaab006"
+        }
+      ],
+      "checks": [
+        "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
+        "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "At 7af0a76, reviewed wallet archival changes. getWallet remains identical to 9635e76; every other recorded source hash still matches. Preserve existing balance-card browser evidence; this step does not claim a new browser run.",
+        "At 5543cc2, reviewed atomic invitation credential rotation and focused evidence; see audit/evidence/step-reviews.json#R01-invitation-credentials. Other methods/criteria and older drift remain unchanged."
+      ],
+      "limitations": [
+        "Dashboard reads are informational snapshots, not payment authorization. External wallet HTTP consumers must accept decimal-string money."
+      ],
+      "merged_prs": [
+        153
+      ],
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "source_revision": "7af0a7697f86b89339fea04a8c79078f14b78d95",
+        "previous_reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+        "review": "Unchanged wallet reads and other recorded sources; archival changes affect mutations only.",
+        "record": "audit/evidence/step-reviews.json#R01-archive-wallet-writers"
+      }
     }
   ],
   "current_requirements_register": "audit/current-task-requirements.json"

@@ -10109,6 +10109,76 @@
       "sha256": "2ece924e11ae3355f57283f5669ca0664f6b3b8080591b0f7a3e05acb612c06b",
       "encoding": "gzip",
       "stored_sha256": "95238ef2e2c339ad6caaf2029d589b3e31ae10d9c6e4bdecdedbe07c8dde863a"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-batch-source-reuse-final.log",
+      "path": "audit/evidence/48ac9d7/r01-wallet-batch-source-reuse-final.log.gz",
+      "sha256": "29d8ae64b61c6aed9ec0a011de86360bb678621fce5f88ff41c3543b76cb3e82",
+      "encoding": "gzip",
+      "stored_sha256": "edbe4e99a74d4343cb6c927cacf356791ad2927a2a24b1888ce6bb16cca48588"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-batch-source-reuse.log",
+      "path": "audit/evidence/48ac9d7/r01-wallet-batch-source-reuse.log.gz",
+      "sha256": "556075f3d6df22703ed668495d4ed2d6637e92a32cd698a89580dad35e8bc8a3",
+      "encoding": "gzip",
+      "stored_sha256": "3b02d3a512ed320feaaacd73d8b51d223bd3c848afe719bd8f99261c3c25ca0b"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-reconciliation-before.log",
+      "path": "audit/evidence/48ac9d7/r01-wallet-reconciliation-before.log.gz",
+      "sha256": "801a240f716c91dbe7b6e0f1cbab1c5d4099f5eb3d52676919ce6271bffed9dd",
+      "encoding": "gzip",
+      "stored_sha256": "e9c35479e2c1fe0d98f748d37cf386499ecdea7ddf4ba6ce725a549e989ed884"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-reconciliation-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-reconciliation-format.log",
+      "path": "audit/evidence/48ac9d7/r01-wallet-reconciliation-format.log.gz",
+      "sha256": "c676cee1db65fc4f19e93a60c8a740f8b03e9261f862e6590183a5dda48fe552",
+      "encoding": "gzip",
+      "stored_sha256": "c51a95d97d72bde34a69cde13b8bb824c95bf1708ad625708d0401a28e96bb69"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-reconciliation-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-reconciliation-test-format.log",
+      "path": "audit/evidence/48ac9d7/r01-wallet-reconciliation-test-format.log.gz",
+      "sha256": "8cfb1aad7d555f62e4ed5ef1946191ae30f90ab8c3258f863987b690a037fdb1",
+      "encoding": "gzip",
+      "stored_sha256": "429bca92d07a62c5c2fa1408637071519341171ee4bd3d0191adaa3affa393bd"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-reconciliation-types.log",
+      "path": "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz",
+      "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
+      "encoding": "gzip",
+      "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-reconciliation-unit-final.log",
+      "path": "audit/evidence/48ac9d7/r01-wallet-reconciliation-unit-final.log.gz",
+      "sha256": "ed4ba198b8fb6e5bc38d1458a2f73926e2d86c0f1e3a26fea22d689453fa7daa",
+      "encoding": "gzip",
+      "stored_sha256": "7449e8033710ddd714edd51a1d21eb50165459d9ebbc157777b870310355808a"
+    },
+    {
+      "original_path": "/tmp/r01-wallet-reconciliation-worker.log",
+      "path": "audit/evidence/48ac9d7/r01-wallet-reconciliation-worker.log.gz",
+      "sha256": "a4c15dded12e0cf4f344e2d9c692b1a7f28254e777693fea37a2addd9913a3b1",
+      "encoding": "gzip",
+      "stored_sha256": "8072c65f6e253e83308388fb251b5c60343269cb965f499493351e9f3daccd77"
     }
   ]
 }

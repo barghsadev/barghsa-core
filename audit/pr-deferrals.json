@@ -248,7 +248,16 @@
     "historical_deferrals": [
       "- [ ] HTTP/API surface for credit is unchanged — this task is the service method only (top-up/refund callers are later stories)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Service-method acceptance verified; HTTP top-up/refund callers are separate task requirements.",
+    "reviewed_source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "The exact task requires WalletService.credit only. Current service and command replay/atomicity pass. HTTP top-up/refund consumers belong to other finance stories, reviewed separately. audit/evidence/step-reviews.json#R01-wallet-ledger"
+      }
+    ]
   },
   {
     "pr": 252,
@@ -259,7 +268,16 @@
     "historical_deferrals": [
       "- [ ] HTTP/API surface for credit is unchanged — this task is the service method only (top-up/refund callers are later stories)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Service-method acceptance verified; HTTP top-up/refund callers are separate task requirements.",
+    "reviewed_source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "The exact task requires WalletService.credit only. Current service and command replay/atomicity pass. HTTP top-up/refund consumers belong to other finance stories, reviewed separately. audit/evidence/step-reviews.json#R01-wallet-ledger"
+      }
+    ]
   },
   {
     "pr": 249,

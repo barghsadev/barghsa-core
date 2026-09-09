@@ -7264,6 +7264,321 @@
         "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
         "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz"
       ]
+    },
+    {
+      "id": "R01-wallet-ledger",
+      "date": "2026-09-09",
+      "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "base_revision": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+      "product_commits": [
+        "48ac9d7"
+      ],
+      "summary": "Wallet/ledger batch:8 newly verified tasks, preserved verified balance card,14 PR reviews closed. Reconciliation no longer aborts when ledger totals exceed int8. Existing credit/debit/reservation corrections and valid evidence retained.",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.01.01",
+        "04-invoices-wallet-contracts.md#T-04.2.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.01.03",
+        "04-invoices-wallet-contracts.md#T-04.2.01.04",
+        "04-invoices-wallet-contracts.md#T-04.2.01.05",
+        "04-invoices-wallet-contracts.md#T-04.2.01.06",
+        "04-invoices-wallet-contracts.md#T-04.2.01.07",
+        "04-invoices-wallet-contracts.md#T-04.2.01.08",
+        "02-auth-users-admin.md#T-08.01.02"
+      ],
+      "review": [
+        "One UUID wallet per profile; int8 posted/reserved defaults, version and timestamp. Available balance is derived. Ledger has UUIDv7 identity, wallet FK, constrained types/states, nonzero signed amounts, unique idempotency, references, metadata and timestamps. Production constraints prevent negative posted/reserved/available balances; no stored available column.",
+        "Credit, debit and reserve lock profile then wallet, bind the canonical UUID and validate exact command replay. Different wallet/type/amount/ref/state collisions reject. New writes reject archived profiles. Credit atomically inserts Completed ledger and increments posted/version with the required nonnegative predicate. Debit reserves then completes inside one transaction; insufficient available balance leaves no debit. Reserve/release update only held funds; release is idempotent and preserves ledger history.",
+        "Optimistic delta requires the expected version and increments it atomically; stale/missing rows fail. Production callers are credit/reversal transaction owners. Existing integration cases cover same-key and distinct-key races, overdraw/overreserve prevention, canonical UUIDs and rollback. Original completed reversal rows remain in the ledger with a compensating row, consistent with reconciliation aggregation.",
+        "Reconciliation runs through the guarded scheduled poller, compares Completed and Reserved sums, locks/rechecks candidates, records exact deltas in the finance exception queue and suppresses duplicate unresolved exceptions. It never rewrites balances. Six unsafe numeric-to-int8 SUM casts could abort the candidate query;48ac9d7 removes them. Three real production-schema cases prove positive posted, positive reserved and negative posted overflow are reported alongside ordinary mismatches, with exact values and no duplicate or money mutation.",
+        "Dashboard/wallet reads enforce current owner/agent permissions and return exact decimal-string money. Low-balance warning compares available funds with due unpaid invoice liabilities, excluding unrelated/future invoices. Preserved fa/en live-browser checks cover exact IRR/Toman display, charge link and failed-read recovery. Dashboard is an informational read, not payment authority.",
+        "Four repeated groups reviewed: ledger149/251/260, credit252/254/261, debit253/262, reservation255/263. These converge on one current implementation. Later commits repair UUID contract/bindings, replay semantics and the credit predicate weakened by the PR256 abstraction. Keep corrective history; no duplicate current service to delete."
+      ],
+      "checks": [
+        "14 distinct scanner checks pass across final focused runs:5 production-migrated PostgreSQL integration cases and9 unit cases. Initial3 overflow failures preserved. Intermediate13/14 run failed only an obsolete SQL-cast assertion, corrected before the9-case final unit pass.",
+        "Worker types, focused lint, formatting and diff checks pass. Runtime repair changes only aggregate SQL; no API, UI, schema or shared money helper change.",
+        "Bounded source reuse confirms core wallet service/profile lock/schema, four wallet integration suites and wallet unit/controller suites unchanged since7af0a76. Their passing checks in R01-archive-wallet-writers remain valid. The648 distinct broad finance cases are historical evidence across runs, not a new run or all renewed acceptance.",
+        "Balance-card/dashboard sources and live browser suite match prior accepted hashes. Context/profile-switch changes only add unrelated default-selection cases. Lockfile additions are geoip and password-estimator dependencies; existing wallet/DB/browser versions unchanged. Reuse9529872 browser and prior dashboard API evidence; no browser rerun required for worker-only repair.",
+        "No complete-suite, coverage, image, deployment or fresh GitHub result is claimed. Local batch audit/requirements/backlog reconciliation checked separately."
+      ],
+      "repairs": [
+        "48ac9d7: retain PostgreSQL numeric ledger sums beyond int8 and prove all-wallet reporting with full production migrations"
+      ],
+      "historical_dispositions": [
+        "PR252/254 explicitly limit these tasks to the service credit method. Their HTTP/top-up/refund callers are separate stories; current ledger acceptance does not claim those callers verified. Four repeated groups retain useful corrective work."
+      ],
+      "remaining": [
+        "Provider initiation/callback/expiry, receipt confirmations and invoice settlement remain their owning finance batches. Customer wallet reads are linked here; agent money mutations and refund rights remain open.",
+        "Full finance queue UI and operational scheduler deployment remain separate acceptance. Local scanner/poller review does not establish the other machine scheduler or production execution."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 149,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.01",
+            "04-invoices-wallet-contracts.md#T-04.2.01.02"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 153,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-08.01.02"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 251,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.02"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 252,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.03"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 253,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.04"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 254,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.03"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 255,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.05"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 256,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.06"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 257,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.07"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 258,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.08"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 260,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.02"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 261,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.03"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 262,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.04"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        },
+        {
+          "pr": 263,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.01.05"
+          ],
+          "reason": "All mapped wallet/ledger or balance-card criteria have current source review and valid focused/reused evidence; PR252/254 caller deferrals explicitly belong to separate stories. Corrective history retained.",
+          "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+          "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        }
+      ],
+      "pr_counts": {
+        "closed": 14,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "Core wallet evidence bounded to unchanged source since7af0a76; balance-card acceptance preserved after source/test-diff review. See saved source-reuse log; first whole-lock equality attempt stopped on expected unrelated additions."
+      ],
+      "reused_review_records": [
+        "audit/evidence/step-reviews.json#R01-archive-wallet-writers",
+        "audit/acceptance-closure.json#02-auth-users-admin.md#T-08.01.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
+          "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
+          "sha256": "2b34d3aa7602cf784c62f0665760c8736e76f0bac2504c93acc6b5b503244506"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
+          "sha256": "7c63417d465ac9f5ec9b7851235839362011eba700918b242bb6dd0e9756d1e6"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "d485a28edf1db7d2288d30b1e7e5f9923c1d612421bc44d46a634fbe2bcad560"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reconciliation.ts",
+          "sha256": "6e9b100dfa56f366f183fcab9b82ec50a7b12715a6792712ce9e3d56dd460712"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "ae8d15ee7a3470b6aef7475907393102300d3fa2ce4305a501967f2bda5bc584"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.service.ts",
+          "sha256": "4e17fafcdea722cbd3ae22dd8e359ef1e3de6de66493baf6414d6ebedbbc17d7"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.module.ts",
+          "sha256": "94a10a3ecfff82439ba4b504e477e92e22e58c44719048eb1ff56908caccd2c9"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "29a1a05d9edd3f9a5ad2aee201b78736d7cb72b12d605dbc75764daae32a8bf6"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "3ed84578f7406c59455c1b7eac5b70c96fa29ef027dc6e4631af7e43b5396b60"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "1dd94195b50ad7ab1cab11ca96d65bd5fe459dd8832af7320c28dd0da249a590"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "ffd7cc7fbbf0727e71ce3067d6a261dc77ba431b1e004a552850b1cbe1388853"
+        }
+      ],
+      "evidence": [
+        "audit/evidence/48ac9d7/r01-wallet-batch-source-reuse-final.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-batch-source-reuse.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-before.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-format.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-test-format.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-unit-final.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-worker.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz"
+      ],
+      "logs": [
+        "audit/evidence/48ac9d7/r01-wallet-batch-source-reuse-final.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-batch-source-reuse.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-before.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-format.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-test-format.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-unit-final.log.gz",
+        "audit/evidence/48ac9d7/r01-wallet-reconciliation-worker.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz"
+      ]
     }
   ]
 }

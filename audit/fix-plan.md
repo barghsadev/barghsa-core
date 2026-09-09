@@ -1,16 +1,16 @@
 # Remaining fix plan
 
-Current through product/test `1c06613`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `48ac9d7`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 77 | 20 | 166 | 263 |
+| Tasks with merged PR evidence | 85 | 20 | 158 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 80 | 20 | 222 | 322 |
+| All claims | 88 | 20 | 214 | 322 |
 
-**242 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twelve verified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
+**234 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twelve verified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
@@ -26,11 +26,13 @@ Session/recovery batch is consolidated at `1695680`: **4 task acceptances verifi
 
 Profile/onboarding batch is consolidated at `ab09a87`: **7 tasks verified /1 partial;8 PR reviews closed /1 open**, saved PRs #102–#110. Settings default selection, its required API endpoint, localized identifiers and first invited-profile default are repaired.53 distinct affected API cases and29 distinct current/reused browser cases support the batch;42 budgets pass. PR103 retains actual commercial-order enforcement acceptance. PR106's frontend deferral is satisfied by PR108 and the current form. [Consolidated review](evidence/step-reviews.json#R01-profiles-onboarding).
 
-Account-settings batch is consolidated at `90f6415`, PRs111–114: **2 tasks verified /2 partial;2 PR reviews closed /2 open**. Profile confirmation/authority/history, contact OTP/session transactions, notification defaults/availability and timezone validation/audit are repaired. Shared CSRF lock-race71f5e49 is also repaired. Required notification delivery consumers remain R02 and all timestamp consumers R03. Checks and source reuse are recorded once in [consolidated review](evidence/step-reviews.json#R01-account-settings). Current explicit PR totals after the address batch: **28 closed /8 open /265 not reviewed**.
+Account-settings batch is consolidated at `90f6415`, PRs111–114: **2 tasks verified /2 partial;2 PR reviews closed /2 open**. Profile confirmation/authority/history, contact OTP/session transactions, notification defaults/availability and timezone validation/audit are repaired. Shared CSRF lock-race71f5e49 is also repaired. Required notification delivery consumers remain R02 and all timestamp consumers R03. Checks and source reuse are recorded once in [consolidated review](evidence/step-reviews.json#R01-account-settings). Current explicit PR totals after the wallet batch: **42 closed /8 open /251 not reviewed**.
 
 Address/order batch is consolidated at `1c06613`, saved PRs115–116 plus linked PR103: **2 tasks verified /1 partial;1 linked PR closed /2 open**. Address history/removal/session authority and current commercial-order verification are repaired.110 distinct affected API cases,24 distinct Chromium cases,2 migration cases and relevant quality gates pass. PR115's integration deferral is satisfied for electricity; required savings/solar consumers remain open with their product prerequisites. [Consolidated review](evidence/step-reviews.json#R01-profile-addresses) records source reuse and limits.1444 logs indexed.
 
-Active **R01-wallet-ledger**:14 saved PRs149,153,251–258,260–263. Nine tasks:04-invoices-wallet-contracts.md#T-04.2.01.01 through.08 and02-auth-users-admin.md#T-08.01.02. Review ledger/reservation/concurrency/reconciliation and balance display as one workflow; compare repeated implementations and PR252/254 deferrals without rebuilding preserved work. Exact membership and prerequisites are in progress.json.active_batch. No new defect has yet been confirmed for this batch.
+Wallet/ledger batch is consolidated at `48ac9d7`: **8 new task acceptances plus preserved balance card;14 PR reviews closed**. Reconciliation now reports ledger sums beyond int8 instead of aborting.14 distinct scanner checks and worker quality gates pass; unchanged core money/concurrency and dashboard evidence is reused. Four repeated groups retain corrective implementations. PR252/254 caller deferrals belong to separate service-consumer stories. [Consolidated review](evidence/step-reviews.json#R01-wallet-ledger).1454 logs indexed.
+
+Active **R01-bank-receipts-approval**:16 saved PRs195,196,266–268,278–279,286–287,296–302. Ten mapped tasks cover wallet/invoice receipt submission, confirmation/rejection, excess credit and shared dual approval. Exact keys, criteria and deferrals are in progress.json.active_batch. Review both transaction owners together and preserve valid wallet evidence. Provider callbacks/expiry stay in a following batch.
 
 ## Execution order
 
@@ -88,15 +90,15 @@ For all 20 partial records, use the exact limitations in [acceptance](acceptance
 
 | Current mapping | PRs |
 | --- | ---: |
-| At least one unresolved mapped task | 218 |
-| Only recorded verified tasks | 79 |
+| At least one unresolved mapped task | 205 |
+| Only recorded verified tasks | 92 |
 | No current task mapping | 4 |
 
 These are mapping counts, not completed PR-review counts. Even a PR mapped only to verified tasks may have an unresolved deferral or stale source evidence.
 
-Review the combined implementation once per qualified task, then associate every contributing PR. The 186 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 48, core business 4, finance 52, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review the combined implementation once per qualified task, then associate every contributing PR. The 178 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 48, core business 4, finance 44, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
-For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Ten statements in PR92/106/115/129/132/218 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
+For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Twelve statements in PR92/106/115/129/132/218/252/254 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
 
 Specific reconciliation remains for #47 in R05 and #234/#235/#242 in V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before treating that gap as unbuilt. Five Docker groups were rebuilt after completion loss; fifteen wallet groups include useful corrective work. The other three repeated groups concern legal-profile slices, bookkeeping and replaced invoice snapshots. Repeated PRs alone do not justify deleting code.
 
@@ -113,7 +115,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Deployment, operations and CI, T-05.* | 20 |
 | Total | 55 |
 
-Task dependencies override batch order. These 55 overlap the 244 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
+Task dependencies override batch order. These 55 overlap the 234 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+  "source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
   "active_step": "R01",
-  "next_action": "Review the selected wallet/ledger and balance-card batch once against requirements and prior evidence. Compare repeated wallet PRs, repair only confirmed gaps, then record one combined disposition. Preserve address/order repairs and pending savings/solar dependencies.",
+  "next_action": "Review bank receipt submission, confirmations/rejections, excess credit and shared dual approval as one bounded workflow. Preserve valid wallet evidence; verify each confirmed repair before proceeding.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -583,6 +583,10 @@
     {
       "id": "R01-profile-addresses",
       "review_record": "audit/evidence/step-reviews.json#R01-profile-addresses"
+    },
+    {
+      "id": "R01-wallet-ledger",
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger"
     }
   ],
   "deferred_improvements": [
@@ -601,9 +605,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 80,
+    "acceptance_verified": 88,
     "partial": 20,
-    "pending": 222,
+    "pending": 214,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -717,80 +721,180 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-wallet-ledger",
-    "name": "Wallet ledger, reservations, reconciliation and balance display",
-    "status": "selected",
+    "id": "R01-bank-receipts-approval",
+    "name": "Bank receipt submission, settlement and independent approval",
+    "status": "in_progress",
     "prs": [
-      149,
-      153,
-      251,
-      252,
-      253,
-      254,
-      255,
-      256,
-      257,
-      258,
-      260,
-      261,
-      262,
-      263
+      195,
+      196,
+      266,
+      267,
+      268,
+      278,
+      279,
+      286,
+      287,
+      296,
+      297,
+      298,
+      299,
+      300,
+      301,
+      302
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.2.01.01",
-      "04-invoices-wallet-contracts.md#T-04.2.01.02",
-      "04-invoices-wallet-contracts.md#T-04.2.01.03",
-      "04-invoices-wallet-contracts.md#T-04.2.01.04",
-      "04-invoices-wallet-contracts.md#T-04.2.01.05",
-      "04-invoices-wallet-contracts.md#T-04.2.01.06",
-      "04-invoices-wallet-contracts.md#T-04.2.01.07",
-      "04-invoices-wallet-contracts.md#T-04.2.01.08",
-      "02-auth-users-admin.md#T-08.01.02"
+      "02-auth-users-admin.md#T-09.07.01",
+      "02-auth-users-admin.md#T-09.07.02",
+      "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "04-invoices-wallet-contracts.md#T-04.2.02.04",
+      "04-invoices-wallet-contracts.md#T-04.2.02.05",
+      "04-invoices-wallet-contracts.md#T-04.3.01.01",
+      "04-invoices-wallet-contracts.md#T-04.3.01.02",
+      "04-invoices-wallet-contracts.md#T-04.3.01.03",
+      "04-invoices-wallet-contracts.md#T-04.3.01.04",
+      "04-invoices-wallet-contracts.md#T-04.3.01.05"
     ],
     "remaining_checklist": [
-      "Read exact ledger/schema/credit/debit/reserve/release/optimistic-lock/nonnegative/reconciliation and balance-card requirements.",
-      "Review current implementation and valid evidence once; compare repeated PRs without rebuilding or deleting preserved corrective work.",
-      "Verify money/idempotency/concurrency, current owner/agent reads, derived balances, reservation/release and reconciliation failure/reporting paths. Keep provider payments and receipt approvals for following finance batches."
+      "Read exact10 mapped requirements, their story context, PR deferrals and existing receipt/approval evidence.",
+      "Review both wallet and invoice receipt transaction owners, current authorization/step-up, attachment binding, amount/threshold policy, independent approval/rejection, excess credit and customer/staff UI.",
+      "Compare repeated confirmation/overpayment PRs once. Trace PR298 incidental T-04.3.01.06 notification before treating it as unbuilt; notification delivery remains R02 where necessary."
     ],
     "historical_deferrals": [
       {
-        "pr": 254,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/254",
+        "pr": 301,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/301",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.01.03"
+          "04-invoices-wallet-contracts.md#T-04.2.02.04"
         ],
         "historical_deferrals": [
-          "- [ ] HTTP/API surface for credit is unchanged — this task is the service method only (top-up/refund callers are later stories)."
+          "- [ ] Dual-approval for high-value wallet top-ups is out of this task (owned by T-04.3.01.05 / C-04.CC.02 for invoice receipts)."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       },
       {
-        "pr": 252,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/252",
+        "pr": 298,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/298",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.01.03"
+          "04-invoices-wallet-contracts.md#T-04.3.01.03"
         ],
         "historical_deferrals": [
-          "- [ ] HTTP/API surface for credit is unchanged — this task is the service method only (top-up/refund callers are later stories)."
+          "- [ ] Dual-approval for amounts ≥ admin threshold — deferred to T-04.3.01.05.",
+          "- [ ] Staff rejection API — deferred to T-04.3.01.04.",
+          "- [ ] Staff confirmation UI — not in this API-only task."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 297,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/297",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.3.01.02"
+        ],
+        "historical_deferrals": [
+          "- Remaining-balance / overpayment checks are deferred to staff confirmation (T-04.3.01.03)."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 296,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/296",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.3.01.01"
+        ],
+        "historical_deferrals": [
+          "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid → Partially funded → Paid tracking are intentionally deferred to T-04.3.01.02–07."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 286,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/286",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.04"
+        ],
+        "historical_deferrals": [
+          "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 278,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/278",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.04"
+        ],
+        "historical_deferrals": [
+          "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 267,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/267",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.04"
+        ],
+        "historical_deferrals": [
+          "- Dual-approval thresholds for bank-payment confirmation are owned by T-04.3.01.05 / C-04.CC.02 and are not implemented here."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 266,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/266",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.03"
+        ],
+        "historical_deferrals": [
+          "- Posted and reserved balances are unchanged. Credit is deferred to staff confirmation (`T-04.2.02.04`). Idempotent retries reuse the matching Pending row.",
+          "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) — this task only creates the Pending submission."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 196,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/196",
+        "task_keys": [
+          "02-auth-users-admin.md#T-09.07.02"
+        ],
+        "historical_deferrals": [
+          "- [ ] UI: \"Pending approvals\" in finance dashboard — deferred (finance module & dashboard do not exist yet; web surface will consume these endpoints when the finance module lands)",
+          "- [ ] Step-up auth on resolve — deferred (step-up flow design pending; noted in epic S-09.07)",
+          "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) — deferred (sessions expose only `isAdmin`; documented in the service and gate)",
+          "Deferred from this slice and tracked in PR description: UI, step-up on resolution, role-based eligibility, and the finance-module threshold consumer (its own epic tasks)."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 195,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/195",
+        "task_keys": [
+          "02-auth-users-admin.md#T-09.07.01"
+        ],
+        "historical_deferrals": [
+          "- [x] Step-up auth on the mutation: deferred — the web app has no step-up challenge flow yet and admin config panels use raw fetch; requiring it would regress the working save path (follow-up with T-09.06.01/02/03 step-up UI)",
+          "- [ ] Emergency override (reason + elevated permission + immediate alert + audit): deferred until the step-up flow and alert pipeline exist",
+          "- [ ] T-09.07.02 workflow consumption: not part of this task (finance module doesn't exist yet; the config contract documents the `> threshold && threshold > 0` semantics it must use)"
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-profile-addresses",
-      "audit/final-repair-checkpoint.json",
-      "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "audit/evidence/step-reviews.json#R01-archive-wallet-writers",
+      "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Review the selected wallet/ledger and balance-card batch once against requirements and prior evidence. Compare repeated wallet PRs, repair only confirmed gaps, then record one combined disposition. Preserve address/order repairs and pending savings/solar dependencies."
+    "next_action": "Review bank receipt submission, confirmations/rejections, excess credit and shared dual approval as one bounded workflow. Preserve valid wallet evidence; verify each confirmed repair before proceeding."
   },
   "open_domain_reviews": [
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "owner_batch": "wallet/ledger and receipts/approvals/payments",
       "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
-      "status": "pending linked acceptance"
+      "status": "Wallet/dashboard read evidence linked; receipt/payment/refund mutation acceptance remains.",
+      "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
@@ -839,8 +943,9 @@
       "task_key": "02-auth-users-admin.md#T-03.01.02",
       "pr": 103,
       "owning_batch": "R01 commercial orders",
-      "remaining": "Verify actual new commercial-order submission rejection and blocking UI for an unverified profile when enforcement is enabled. Allowed pages and no-provider fallback are reviewed; future provider prerequisites remain explicit.",
-      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+      "remaining": "Current commercial-order acceptance closes at1c06613; no-provider/future product prerequisites remain as recorded.",
+      "review_record": "audit/evidence/step-reviews.json#R01-profile-addresses",
+      "status": "verified for implemented commercial orders"
     },
     {
       "task_key": "02-auth-users-admin.md#T-03.03.05",
