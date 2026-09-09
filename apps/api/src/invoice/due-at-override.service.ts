@@ -230,6 +230,7 @@ export class DueAtOverrideService {
         : [];
       const nextMetadata = {
         ...metadata,
+        reminderPlanDirty: true,
         due: {
           ...existingDue,
           dueAt: snapshot.dueAt,
@@ -245,6 +246,14 @@ export class DueAtOverrideService {
          SET due_at = $1, metadata = $2::jsonb, updated_at = $3
          WHERE id = $4`,
         [parsed.value.dueAt, JSON.stringify(nextMetadata), now, input.invoiceId]
+      );
+
+      // Stop the old plan in this transaction. The scheduler will rebuild
+      // unsent offsets for the new deadline without reopening sent rows.
+      await client.query(
+        `UPDATE invoice_reminder_schedule SET status = 'cancelled'
+         WHERE invoice_id = $1 AND status = 'scheduled'`,
+        [input.invoiceId]
       );
 
       const auditId = await this.auditRepository.recordDueAtOverride(

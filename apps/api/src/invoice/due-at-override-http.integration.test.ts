@@ -69,6 +69,11 @@ async function stored(invoiceId: string) {
 
 it('Finance reads and changes the deadline with an attributed customer-visible reason', async () => {
   const f = await fixture();
+  await http.pool.query(
+    `INSERT INTO invoice_reminder_schedule(invoice_id,"offset",channel,scheduled_at,status,sent_at)
+    VALUES ($1,-1,'in_app',$2,'scheduled',NULL),($1,-7,'in_app',$2,'sent',$2)`,
+    [f.invoiceId, oldDue]
+  );
   expect((await fetch(f.url, { headers: f.headers })).status).toBe(200);
   const response = await f.submit();
   expect(response.status).toBe(200);
@@ -77,6 +82,18 @@ it('Finance reads and changes the deadline with an attributed customer-visible r
     dueAtOverride: { reason: body.reason, actorUserId: 'due-finance', customerVisible: true },
   });
   expect(await stored(f.invoiceId)).toMatchObject({ dueAt: body.dueAt, audits: 1 });
+  expect((await stored(f.invoiceId)).metadata).toMatchObject({ reminderPlanDirty: true });
+  expect(
+    (
+      await http.pool.query(
+        `SELECT "offset",status FROM invoice_reminder_schedule WHERE invoice_id=$1 ORDER BY "offset"`,
+        [f.invoiceId]
+      )
+    ).rows
+  ).toEqual([
+    { offset: -7, status: 'sent' },
+    { offset: -1, status: 'cancelled' },
+  ]);
 });
 
 it('requires session, CSRF, current permission and step-up', async () => {
@@ -114,6 +131,11 @@ it.each(['invoice', 'audit', 'read'] as const)(
   'rolls back when session expires while waiting for %s lock',
   async (target) => {
     const f = await fixture();
+    await http.pool.query(
+      `INSERT INTO invoice_reminder_schedule(invoice_id,"offset",channel,scheduled_at)
+      VALUES ($1,0,'in_app',$2)`,
+      [f.invoiceId, oldDue]
+    );
     const blocker = await http.pool.connect();
     let pending: Promise<Response> | undefined;
     try {
@@ -157,6 +179,14 @@ it.each(['invoice', 'audit', 'read'] as const)(
       await blocker.query('COMMIT');
       expect((await pending).status).toBe(401);
       expect(await stored(f.invoiceId)).toMatchObject({ dueAt: oldDue, audits: 0 });
+      expect(
+        (
+          await http.pool.query(
+            'SELECT status FROM invoice_reminder_schedule WHERE invoice_id=$1',
+            [f.invoiceId]
+          )
+        ).rows
+      ).toEqual([{ status: 'scheduled' }]);
     } finally {
       await blocker.query('ROLLBACK');
       blocker.release();

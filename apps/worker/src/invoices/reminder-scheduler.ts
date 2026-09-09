@@ -25,7 +25,8 @@ import {
  *
  * Periodic worker pass that finds invoices that have already been issued
  * (`issued_at` and `due_at` set) and still have no
- * `invoice_reminder_schedule` rows, then inserts one row per
+ * `invoice_reminder_schedule` rows, or whose deadline override invalidated
+ * their unsent plan, then inserts one row per
  * (offset, channel).
  *
  * "On invoice issue" is implemented as a catch-up poll so every issue
@@ -165,7 +166,8 @@ const defaultLogger = {
 /**
  * Candidate selector. `invoices.state` is PostgreSQL type `invoice_state`;
  * bind the stop-state array as `invoice_state[]`. Skip invoices that
- * already have any schedule row so a re-run is a no-op.
+ * already have any schedule row unless a deadline override invalidated
+ * their plan, so an unchanged re-run is a no-op.
  *
  * `$3` is the pass `now`. Invoices whose latest possible reminder
  * (`due_at` + {@link REMINDER_SCHEDULE_HORIZON_DAYS}) is already before
@@ -190,9 +192,9 @@ export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due
         WHERE i.issued_at IS NOT NULL
           AND i.due_at IS NOT NULL
           AND NOT (i.state = ANY($1::invoice_state[]))
-          AND NOT EXISTS (
+          AND (i.metadata @> '{"reminderPlanDirty":true}'::jsonb OR NOT EXISTS (
             SELECT 1 FROM invoice_reminder_schedule s WHERE s.invoice_id = i.id
-          )
+          ))
           AND i.due_at + INTERVAL '${REMINDER_SCHEDULE_HORIZON_DAYS} days' >= GREATEST(
             i.issued_at,
             $3::timestamptz - INTERVAL '${REMINDER_SCHEDULE_CATCH_UP_GRACE_MS / 1000} seconds'
@@ -206,6 +208,7 @@ export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due
         LIMIT $2`;
 
 const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.due_at, i.issued_at,
+               (i.metadata @> '{"reminderPlanDirty":true}'::jsonb) AS reminder_plan_dirty,
                NULLIF(i.metadata #>> '{due,serviceType}', '') AS service_type,
                COALESCE(u.timezone, 'Asia/Tehran') AS timezone,
                COALESCE(u.notification_preferences, 'IN_APP') AS notification_preferences
@@ -225,6 +228,7 @@ interface CandidateRow {
   service_type: string | null;
   timezone: string | null;
   notification_preferences: string | null;
+  reminder_plan_dirty?: boolean | null;
 }
 
 /**
@@ -470,7 +474,7 @@ async function scheduleOneInvoice(
   if (!isEligibleForReminderSchedule(row.state, row.issued_at, row.due_at)) return false;
 
   const existing = await client.query(EXISTING_SCHEDULE_SQL, [row.id]);
-  if ((existing.rowCount ?? existing.rows.length) > 0) return false;
+  if ((existing.rowCount ?? existing.rows.length) > 0 && !row.reminder_plan_dirty) return false;
 
   const dueAt = parseDueAtValue(row.due_at);
   const issuedAt = parseDueAtValue(row.issued_at);
@@ -494,9 +498,18 @@ async function scheduleOneInvoice(
   await client.query(
     `INSERT INTO invoice_reminder_schedule (invoice_id, "offset", channel, scheduled_at)
      VALUES ${placeholders.join(', ')}
-     ON CONFLICT (invoice_id, "offset", channel) DO NOTHING`,
+     ON CONFLICT (invoice_id, "offset", channel) DO UPDATE
+       SET scheduled_at = EXCLUDED.scheduled_at, status = 'scheduled', sent_at = NULL
+       WHERE invoice_reminder_schedule.status = 'cancelled'`,
     values
   );
+
+  if (row.reminder_plan_dirty) {
+    await client.query(
+      `UPDATE invoices SET metadata = metadata - 'reminderPlanDirty' WHERE id = $1`,
+      [row.id]
+    );
+  }
 
   return true;
 }

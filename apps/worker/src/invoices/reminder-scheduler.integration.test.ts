@@ -179,6 +179,127 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
     expect(result.rows.some((row) => row.id === already)).toBe(false);
   });
 
+  it.each(['2026-09-14T12:00:00.000Z', '2026-09-01T12:00:00.000Z'])(
+    'replans unsent reminders for changed deadline %s while retaining sent history',
+    async (changedDue) => {
+      const invoiceId = await insertInvoice({ state: 'Unpaid', dueAt: DUE, issuedAt: ISSUED });
+      const options = {
+        pool: ctx.pool,
+        deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+        batchSize: 50,
+        now: ISSUED,
+      };
+      await scheduleIssuedInvoiceReminders(options);
+      await ctx.pool.query(
+        `UPDATE invoice_reminder_schedule SET status='sent',sent_at=$2 WHERE invoice_id=$1 AND "offset"=-7`,
+        [invoiceId, ISSUED]
+      );
+      const sentBefore = (
+        await ctx.pool.query(
+          `SELECT * FROM invoice_reminder_schedule WHERE invoice_id=$1 AND "offset"=-7`,
+          [invoiceId]
+        )
+      ).rows[0];
+      // The deadline transaction invalidates unsent rows while leaving sent history intact.
+      await ctx.pool.query(
+        `UPDATE invoices SET due_at=$2,metadata='{"reminderPlanDirty":true}'::jsonb WHERE id=$1`,
+        [invoiceId, changedDue]
+      );
+      await ctx.pool.query(
+        `UPDATE invoice_reminder_schedule SET status='cancelled' WHERE invoice_id=$1 AND status='scheduled'`,
+        [invoiceId]
+      );
+      const result = await scheduleIssuedInvoiceReminders(options);
+      expect(result.errors).toEqual([]);
+      expect(result.scheduled).toBe(1);
+      const rows = (
+        await ctx.pool.query(
+          `SELECT * FROM invoice_reminder_schedule WHERE invoice_id=$1 ORDER BY "offset"`,
+          [invoiceId]
+        )
+      ).rows;
+      expect(rows).toHaveLength(6);
+      expect(rows.find((row) => row.offset === -7)).toEqual(sentBefore);
+      expect(rows.find((row) => row.offset === 0)).toMatchObject({
+        status: 'scheduled',
+        scheduled_at: new Date(changedDue),
+        sent_at: null,
+      });
+      if (changedDue.startsWith('2026-09-01'))
+        expect(rows.find((row) => row.offset === -3).status).toBe('cancelled');
+      expect((await scheduleIssuedInvoiceReminders(options)).scheduled).toBe(0);
+    }
+  );
+
+  it('retries a failed replan and adds newly eligible offsets once across concurrent planners', async () => {
+    const invoiceId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: new Date('2026-09-02T12:00:00Z'),
+      issuedAt: ISSUED,
+    });
+    const options = {
+      pool: ctx.pool,
+      deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+      batchSize: 50,
+      now: ISSUED,
+    };
+    await scheduleIssuedInvoiceReminders(options);
+    expect(
+      (
+        await ctx.pool.query('SELECT count(*) FROM invoice_reminder_schedule WHERE invoice_id=$1', [
+          invoiceId,
+        ])
+      ).rows[0].count
+    ).toBe('4');
+    await ctx.pool.query(
+      `UPDATE invoices SET due_at=$2,metadata='{"reminderPlanDirty":true}'::jsonb WHERE id=$1`,
+      [invoiceId, DUE]
+    );
+    await ctx.pool.query(
+      `UPDATE invoice_reminder_schedule SET status='cancelled' WHERE invoice_id=$1`,
+      [invoiceId]
+    );
+    await ctx.pool
+      .query(`CREATE FUNCTION fail_reminder_replan() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+      IF NEW."offset"=-3 THEN RAISE EXCEPTION 'test replan failure'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER test_replan_failure BEFORE INSERT OR UPDATE ON invoice_reminder_schedule FOR EACH ROW EXECUTE FUNCTION fail_reminder_replan()`);
+    try {
+      const failed = await scheduleIssuedInvoiceReminders(options);
+      expect(failed.errors).toHaveLength(1);
+      expect(
+        (
+          await ctx.pool.query(
+            `SELECT count(*) FROM invoice_reminder_schedule WHERE invoice_id=$1 AND status='cancelled'`,
+            [invoiceId]
+          )
+        ).rows[0].count
+      ).toBe('4');
+      expect(
+        (await ctx.pool.query('SELECT metadata FROM invoices WHERE id=$1', [invoiceId])).rows[0]
+          .metadata.reminderPlanDirty
+      ).toBe(true);
+    } finally {
+      await ctx.pool.query(
+        'DROP TRIGGER test_replan_failure ON invoice_reminder_schedule; DROP FUNCTION fail_reminder_replan()'
+      );
+    }
+    const retries = await Promise.all([
+      scheduleIssuedInvoiceReminders(options),
+      scheduleIssuedInvoiceReminders(options),
+    ]);
+    expect(retries.flatMap((result) => result.errors)).toEqual([]);
+    expect(retries.map((result) => result.scheduled).sort()).toEqual([0, 1]);
+    expect(
+      (
+        await ctx.pool.query(
+          `SELECT count(*) FROM invoice_reminder_schedule WHERE invoice_id=$1 AND status='scheduled'`,
+          [invoiceId]
+        )
+      ).rows[0].count
+    ).toBe('6');
+    expect((await scheduleIssuedInvoiceReminders(options)).scheduled).toBe(0);
+  });
+
   it('inserts six in_app schedule rows on a real issued invoice and is idempotent', async () => {
     const invoiceId = await insertInvoice({
       state: 'Unpaid',
