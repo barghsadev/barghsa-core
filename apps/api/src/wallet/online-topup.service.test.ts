@@ -1,3 +1,10 @@
+const testActor = { userId: 'test-actor', sessionId: 'test-session', csrfToken: 'test-csrf' };
+vi.mock('../finance/financial-submission-actor.js', () => ({
+  lockFinancialSubmissionActor: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock('../session/session-step-up.js', () => ({
+  requireCurrentSession: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ConflictException, HttpException, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
@@ -86,6 +93,7 @@ function scriptClient(opts: ScriptOptions = {}) {
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
       return { rows: [] };
     }
+    if (sql.includes('INSERT INTO audit_log')) return { rows: [] };
     if (sql.includes('FROM profiles')) return { rows: [{ archived: false }] };
     if (sql.includes('FROM wallets')) {
       if (opts.wallet === null) return { rows: [] };
@@ -163,7 +171,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
 
   it('rejects a blank idempotency key before touching the wallet or gateway', async () => {
     await expect(
-      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: '   ' })
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: '   ',
+        actor: testActor,
+      })
     ).rejects.toMatchObject({ status: 400 });
     expect(walletService.validateOnlineTopUpAmount).not.toHaveBeenCalled();
     expect(gateway.startPayment).not.toHaveBeenCalled();
@@ -177,7 +190,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       )
     );
     await expect(
-      service.initiate({ profileId: PROFILE_ID, amountIrR: 2_000_000_001n, idempotencyKey: IDEM })
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: 2_000_000_001n,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
     ).rejects.toBeInstanceOf(BadRequestException);
     expect(mockClient.query).not.toHaveBeenCalledWith(
       expect.stringContaining('INSERT INTO wallet_transactions'),
@@ -196,7 +214,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
         )
       );
     await expect(
-      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
     ).rejects.toBeInstanceOf(BadRequestException);
     expect(walletService.validateOnlineTopUpAmount).toHaveBeenNthCalledWith(2, AMOUNT, mockClient);
     expect(mockClient.query).not.toHaveBeenCalledWith(
@@ -217,13 +240,14 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       profileId: canonical.toUpperCase(),
       amountIrR: AMOUNT,
       idempotencyKey: IDEM,
+      actor: testActor,
     });
 
     expect(mockClient.query).toHaveBeenCalledWith(
       expect.stringContaining("VALUES ($1, 'topup', $2::bigint, 'Pending'"),
       expect.arrayContaining([canonical, AMOUNT.toString(), IDEM])
     );
-    expect(walletService.createWallet).toHaveBeenCalledWith(canonical.toUpperCase());
+    expect(walletService.createWallet).toHaveBeenCalledWith(canonical.toUpperCase(), mockClient);
   });
 
   it('creates a Pending top-up, starts the gateway, and does not credit the wallet', async () => {
@@ -232,11 +256,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       profileId: PROFILE_ID,
       amountIrR: AMOUNT,
       idempotencyKey: IDEM,
+      actor: testActor,
     });
 
     expect(walletService.validateOnlineTopUpAmount).toHaveBeenNthCalledWith(1, AMOUNT);
     expect(walletService.validateOnlineTopUpAmount).toHaveBeenNthCalledWith(2, AMOUNT, mockClient);
-    expect(walletService.createWallet).toHaveBeenCalledWith(PROFILE_ID);
+    expect(walletService.createWallet).toHaveBeenCalledWith(PROFILE_ID, mockClient);
     expect(result).toEqual({
       transactionId: TX_ID,
       amount: AMOUNT,
@@ -287,6 +312,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       profileId: PROFILE_ID,
       amountIrR: AMOUNT,
       idempotencyKey: IDEM,
+      actor: testActor,
     });
 
     expect(result.redirectUrl).toBe(REDIRECT);
@@ -300,6 +326,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       profileId: PROFILE_ID,
       amountIrR: AMOUNT,
       idempotencyKey: IDEM,
+      actor: testActor,
     });
 
     expect(gateway.startPayment).toHaveBeenCalledTimes(1);
@@ -310,7 +337,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     scriptClient({ existing: makePendingRow({ amount: '50000' }) });
 
     await expect(
-      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
     ).rejects.toBeInstanceOf(ConflictException);
     expect(gateway.startPayment).not.toHaveBeenCalled();
   });
@@ -319,7 +351,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     scriptClient({ existing: makePendingRow({ state: 'Completed' }) });
 
     await expect(
-      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
     ).rejects.toBeInstanceOf(ConflictException);
   });
 
@@ -339,6 +376,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       profileId: PROFILE_ID,
       amountIrR: AMOUNT,
       idempotencyKey: IDEM,
+      actor: testActor,
     });
 
     expect(result.redirectUrl).toBe(REDIRECT);
@@ -349,7 +387,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     scriptClient({ wallet: null });
 
     await expect(
-      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
     ).rejects.toBeInstanceOf(NotFoundException);
     expect(gateway.startPayment).not.toHaveBeenCalled();
     expect(mockClient.query).toHaveBeenCalledWith(
@@ -368,7 +411,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     );
 
     const rejection = await service
-      .initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      .initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
       .catch((e: unknown) => e);
 
     expect(rejection).toBeInstanceOf(HttpException);
@@ -394,7 +442,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       .mockRejectedValue(new PaymentGatewayRejectedError('Merchant is invalid'));
 
     await expect(
-      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
     ).rejects.toBeInstanceOf(HttpException);
 
     expect(mockClient.query).toHaveBeenCalledWith(
@@ -407,7 +460,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     scriptClient({ persistError: true });
 
     const rejection = await service
-      .initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      .initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
       .catch((e: unknown) => e);
 
     expect(rejection).toBeInstanceOf(HttpException);
@@ -457,6 +515,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       profileId: PROFILE_ID,
       amountIrR: AMOUNT,
       idempotencyKey: IDEM,
+      actor: testActor,
     });
 
     expect(result.redirectUrl).toBe(REDIRECT);
@@ -500,7 +559,12 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
 
     scriptClient();
     await expect(
-      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
     ).rejects.toBeInstanceOf(HttpException);
     expect(created).toEqual(['auth-1']);
     expect(mockClient.query).not.toHaveBeenCalledWith(
@@ -529,6 +593,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       profileId: PROFILE_ID,
       amountIrR: AMOUNT,
       idempotencyKey: IDEM,
+      actor: testActor,
     });
 
     expect(result.redirectUrl).toBe(REDIRECT);

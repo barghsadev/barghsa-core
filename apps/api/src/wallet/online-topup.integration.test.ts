@@ -154,6 +154,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       profileId: PROFILE_A,
       amountIrR: 250_000n,
       idempotencyKey: 'online-topup-happy',
+      actor: limitActor,
     });
 
     expect(result.state).toBe('Pending');
@@ -190,6 +191,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       profileId: PROFILE_B,
       amountIrR: 1_000n,
       idempotencyKey: 'online-topup-new-wallet',
+      actor: limitActor,
     });
     expect(result.state).toBe('Pending');
     const wallet = await fetchWallet(PROFILE_B);
@@ -203,6 +205,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         profileId: PROFILE_A,
         amountIrR: 2_000_000_001n,
         idempotencyKey: 'online-topup-over-default',
+        actor: limitActor,
       })
     ).rejects.toBeInstanceOf(BadRequestException);
 
@@ -221,6 +224,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
           profileId: PROFILE_A,
           amountIrR: 50_001n,
           idempotencyKey: 'online-topup-over-admin',
+          actor: limitActor,
         })
       ).rejects.toBeInstanceOf(BadRequestException);
       try {
@@ -228,6 +232,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
           profileId: PROFILE_A,
           amountIrR: 50_001n,
           idempotencyKey: 'online-topup-over-admin-body',
+          actor: limitActor,
         });
         throw new Error('expected over-limit rejection');
       } catch (err) {
@@ -242,6 +247,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         profileId: PROFILE_A,
         amountIrR: 50_000n,
         idempotencyKey: 'online-topup-at-admin',
+        actor: limitActor,
       });
       expect(ok.amount).toBe(50_000n);
       const ledger = await fetchLedger(PROFILE_A);
@@ -266,6 +272,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         profileId: PROFILE_A,
         amountIrR: 80_000n,
         idempotencyKey: 'online-topup-before-tighten',
+        actor: limitActor,
       });
       expect(first.amount).toBe(80_000n);
 
@@ -280,6 +287,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         profileId: PROFILE_A,
         amountIrR: 80_000n,
         idempotencyKey: 'online-topup-before-tighten',
+        actor: limitActor,
       });
       expect(replay.transactionId).toBe(first.transactionId);
 
@@ -288,6 +296,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
           profileId: PROFILE_A,
           amountIrR: 10_001n,
           idempotencyKey: 'online-topup-after-tighten',
+          actor: limitActor,
         })
       ).rejects.toBeInstanceOf(BadRequestException);
 
@@ -295,6 +304,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         profileId: PROFILE_A,
         amountIrR: 10_000n,
         idempotencyKey: 'online-topup-after-tighten-ok',
+        actor: limitActor,
       });
       expect(next.amount).toBe(10_000n);
       const ledger = await fetchLedger(PROFILE_A);
@@ -320,6 +330,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
           profileId: PROFILE_A,
           amountIrR: 1_000n,
           idempotencyKey: 'online-topup-corrupt-limit',
+          actor: limitActor,
         })
       ).rejects.toBeInstanceOf(BadRequestException);
       try {
@@ -327,6 +338,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
           profileId: PROFILE_A,
           amountIrR: 1_000n,
           idempotencyKey: 'online-topup-corrupt-limit-body',
+          actor: limitActor,
         });
         throw new Error('expected corrupt-config rejection');
       } catch (err) {
@@ -353,11 +365,13 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       profileId: PROFILE_A,
       amountIrR: 10_000n,
       idempotencyKey: 'online-topup-retry',
+      actor: limitActor,
     });
     const second = await service.initiate({
       profileId: PROFILE_A,
       amountIrR: 10_000n,
       idempotencyKey: 'online-topup-retry',
+      actor: limitActor,
     });
 
     expect(second.transactionId).toBe(first.transactionId);
@@ -373,11 +387,13 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       profileId: PROFILE_A,
       amountIrR: 7_000n,
       idempotencyKey: 'online-topup-uuid-case',
+      actor: limitActor,
     });
     const second = await service.initiate({
       profileId: PROFILE_A.toUpperCase(),
       amountIrR: 7_000n,
       idempotencyKey: 'online-topup-uuid-case',
+      actor: limitActor,
     });
 
     expect(second.transactionId).toBe(first.transactionId);
@@ -394,12 +410,14 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       profileId: PROFILE_A,
       amountIrR: 3_000n,
       idempotencyKey: 'online-topup-collision',
+      actor: limitActor,
     });
     await expect(
       service.initiate({
         profileId: PROFILE_A,
         amountIrR: 4_000n,
         idempotencyKey: 'online-topup-collision',
+        actor: limitActor,
       })
     ).rejects.toBeInstanceOf(ConflictException);
   });
@@ -430,8 +448,8 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
     };
 
     const [first, second] = await Promise.all([
-      concurrentService.initiate(input),
-      concurrentService.initiate(input),
+      concurrentService.initiate({ ...input, actor: limitActor }),
+      concurrentService.initiate({ ...input, actor: limitActor }),
     ]);
 
     expect(localStarts).toBe(1);
@@ -529,6 +547,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       profileId: PROFILE_A,
       amountIrR: 9_000n,
       idempotencyKey: 'online-topup-crash-before-persist',
+      actor: limitActor,
     });
 
     expect(result.transactionId).toBe(transactionId);
@@ -585,12 +604,14 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       amountIrR: 11_000n,
       idempotencyKey: 'malformed-provider-response',
     };
-    await expect(repairedService.initiate(input)).rejects.toBeInstanceOf(HttpException);
+    await expect(repairedService.initiate({ ...input, actor: limitActor })).rejects.toBeInstanceOf(
+      HttpException
+    );
     const pending = (await fetchLedger(PROFILE_A)).find(
       (row) => row.idempotency_key === input.idempotencyKey
     )!;
     expect(pending.metadata).toMatchObject({ gateway: { status: 'initializing' } });
-    const recovered = await repairedService.initiate(input);
+    const recovered = await repairedService.initiate({ ...input, actor: limitActor });
     expect(recovered.transactionId).toBe(pending.id);
     expect(recovered.redirectUrl).toContain('created-before-response-loss');
     expect(creates).toBe(1);
@@ -628,7 +649,9 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       idempotencyKey: 'online-topup-timeout-then-retry',
     };
 
-    const first = await timeoutService.initiate(input).catch((error: unknown) => error);
+    const first = await timeoutService
+      .initiate({ ...input, actor: limitActor })
+      .catch((error: unknown) => error);
     expect(first).toBeInstanceOf(HttpException);
     expect((first as HttpException).getStatus()).toBe(502);
     expect(createdAuthorities).toHaveLength(1);
@@ -647,7 +670,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       },
     });
 
-    const result = await timeoutService.initiate(input);
+    const result = await timeoutService.initiate({ ...input, actor: limitActor });
     expect(result.transactionId).toBe(pending!.id);
     expect(result.redirectUrl).toBe(sessions.get(pending!.id)!.redirectUrl);
     expect(createdAuthorities).toEqual([`auth-timeout-${pending!.id}-1`]);
@@ -710,6 +733,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       profileId: PROFILE_A,
       amountIrR: 100_000n,
       idempotencyKey: 'online-topup-absent-row-race',
+      actor: limitActor,
     });
 
     await gatedWallet.readReleased;

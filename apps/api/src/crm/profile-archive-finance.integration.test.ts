@@ -87,7 +87,12 @@ const archive = () =>
   });
 function topup(channel: 'online' | 'bank') {
   return channel === 'online'
-    ? online.initiate({ profileId, amountIrR: 100000n, idempotencyKey: randomUUID() })
+    ? online.initiate({
+        profileId,
+        amountIrR: 100000n,
+        idempotencyKey: randomUUID(),
+        actor: { userId: 'archive-owner', ...ownerSession },
+      })
     : bank.submit({
         profileId,
         amount: '100000',

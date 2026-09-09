@@ -176,6 +176,7 @@ export class WalletController {
     }
 
     const result = await this.onlineTopUpService.initiate({
+      actor: req.session,
       profileId,
       amountIrR,
       idempotencyKey,

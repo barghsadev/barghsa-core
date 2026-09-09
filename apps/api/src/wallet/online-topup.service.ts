@@ -1,4 +1,14 @@
 import { lockActiveTopUpProfile } from './active-profile.js';
+import {
+  lockFinancialSubmissionActor,
+  type FinancialSubmissionActor,
+} from '../finance/financial-submission-actor.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import {
+  WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+} from '@barghsa/shared/finance';
 import { createHash, randomUUID } from 'node:crypto';
 import {
   ConflictException,
@@ -26,6 +36,7 @@ const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency';
 const ONLINE_TOPUP_DESCRIPTION = 'Online wallet top-up';
 
 export interface InitiateOnlineTopUpInput {
+  actor: FinancialSubmissionActor;
   profileId: string;
   amountIrR: bigint;
   idempotencyKey: string;
@@ -55,7 +66,7 @@ interface QueryClient {
   query: (
     text: string,
     params?: unknown[]
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
+  ) => Promise<{ rows: Record<string, unknown>[]; rowCount?: number | null }>;
 }
 
 /**
@@ -63,7 +74,8 @@ interface QueryClient {
  *
  * Order of operations:
  *   1. Enforce the admin-configured per-transaction limit.
- *   2. Ensure the profile wallet exists.
+ *   2. Lock current account/session/profile permission and create a wallet atomically
+ *      with the Pending intent and its submission audit.
  *   3. Serialize gateway initialization per idempotency key (advisory lock
  *      + Pending-row claim) so concurrent retries cannot start two PSP
  *      sessions.
@@ -103,7 +115,6 @@ export class OnlineTopUpService {
       // New inserts still fail closed via the in-lock re-check.
       if (!(err instanceof BadRequestException)) throw err;
     }
-    await this.walletService.createWallet(input.profileId);
 
     const pool = getDbPool();
     const client = await pool.connect();
@@ -111,16 +122,13 @@ export class OnlineTopUpService {
     try {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
-        const pending = await this.insertOrReusePending(
-          client,
-          input.profileId,
-          input.amountIrR,
-          idempotencyKey
-        );
+        const pending = await this.insertOrReusePending(client, input, idempotencyKey);
 
         const existing = readGatewaySession(pending.metadata);
         if (existing) {
-          return toResult(pending, existing.redirectUrl);
+          return await this.withCurrentActor(client, input, async () =>
+            toResult(pending, existing.redirectUrl)
+          );
         }
 
         const callbackUrl = paymentCallbackUrlForOrder(
@@ -135,18 +143,24 @@ export class OnlineTopUpService {
           claimId = recovered.claimId;
         } else {
           claimId = randomUUID();
-          const claimed = await this.claimGatewayInitialization(
-            client,
-            pending.id,
-            claimId,
-            input.amountIrR,
-            callbackUrl
+          // Committing this current-authority claim authorizes one provider start.
+          const claimed = await this.withCurrentActor(client, input, () =>
+            this.claimGatewayInitialization(
+              client,
+              pending.id,
+              claimId,
+              input.amountIrR,
+              callbackUrl
+            )
           );
           if (claimed) {
             ownsFreshClaim = true;
           } else {
             const stored = await this.loadStoredSession(client, pending.id);
-            if (stored) return toResult(pending, stored.redirectUrl);
+            if (stored)
+              return await this.withCurrentActor(client, input, async () =>
+                toResult(pending, stored.redirectUrl)
+              );
             recovered = await this.loadInitializingClaim(client, pending.id, callbackUrl);
             if (!recovered) {
               throw httpError(
@@ -206,6 +220,9 @@ export class OnlineTopUpService {
           }
         }
 
+        // Provider reconciliation belongs to the durable authorized attempt. Persist its
+        // result even if the requester has since lost access; check access again before
+        // returning a redirect. Discarding this result could mint a second payment.
         let persisted: GatewaySessionMeta | null;
         try {
           persisted = await this.persistGatewaySession(
@@ -227,11 +244,16 @@ export class OnlineTopUpService {
           );
         }
         if (persisted) {
-          return toResult(pending, persisted.redirectUrl);
+          return await this.withCurrentActor(client, input, async () =>
+            toResult(pending, persisted.redirectUrl)
+          );
         }
 
         const stored = await this.loadStoredSession(client, pending.id);
-        if (stored) return toResult(pending, stored.redirectUrl);
+        if (stored)
+          return await this.withCurrentActor(client, input, async () =>
+            toResult(pending, stored.redirectUrl)
+          );
         throw httpError(
           ErrorCodes.PROVIDER_DOWNSTREAM,
           'Payment gateway session could not be stored',
@@ -245,92 +267,119 @@ export class OnlineTopUpService {
     }
   }
 
+  private async withCurrentActor<T>(
+    client: QueryClient,
+    input: InitiateOnlineTopUpInput,
+    action: () => Promise<T>
+  ): Promise<T> {
+    try {
+      await client.query('BEGIN');
+      // Same policy-before-account order as the admin writer. No DB transaction
+      // or account lock spans a provider call.
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))', [
+        WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+        WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+      ]);
+      await lockFinancialSubmissionActor(client, input.actor, input.profileId, 'wallet:charge');
+      const result = await action();
+      await requireCurrentSession(client, input.actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    }
+  }
+
   /**
    * Insert a Pending online top-up, or reuse a matching in-flight row
    * when the client retries with the same idempotency key.
    */
   private async insertOrReusePending(
     client: QueryClient,
-    profileId: string,
-    amountIrR: bigint,
+    input: InitiateOnlineTopUpInput,
     idempotencyKey: string
   ): Promise<TransactionRow> {
-    // PostgreSQL UUID columns return canonical lowercase; callers may pass
-    // any valid spelling. The Pending ledger row must use the locked
-    // wallet's `profile_id`, matching credit/debit/reserve.
+    const { profileId, amountIrR, actor } = input;
     let canonicalWalletId: string | undefined;
     try {
-      await client.query('BEGIN');
-      await lockActiveTopUpProfile(client, profileId);
-
-      const walletResult = await client.query(
-        `SELECT profile_id FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [profileId]
-      );
-      if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${profileId}`);
-      }
-      canonicalWalletId = (walletResult.rows[0] as { profile_id: string }).profile_id;
-
-      const idemResult = await client.query(
-        `SELECT * FROM wallet_transactions WHERE idempotency_key = $1 FOR UPDATE`,
-        [idempotencyKey]
-      );
-      if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0]!;
-        assertMatchingPendingTopUp(
-          existing as Parameters<typeof assertMatchingPendingTopUp>[0],
-          canonicalWalletId,
-          amountIrR
+      return await this.withCurrentActor(client, input, async () => {
+        await lockActiveTopUpProfile(client, profileId);
+        await this.walletService.createWallet(profileId, client);
+        const walletResult = await client.query(
+          'SELECT profile_id FROM wallets WHERE profile_id = $1 FOR UPDATE',
+          [profileId]
         );
-        await client.query('COMMIT');
-        return mapTransaction(existing as Parameters<typeof mapTransaction>[0]);
-      }
-
-      // Re-read the versioned `onlineTopUpLimit` under the shared advisory
-      // lock + FOR UPDATE so a concurrent first admin write cannot sneak
-      // in between the fail-fast check and this insert (T-04.2.02.06).
-      // Existing Pending retries above keep the limit that was enforced
-      // at original submission.
-      const snapshot = await this.walletService.validateOnlineTopUpAmount(amountIrR, client);
-
-      const txResult = await client.query(
-        `INSERT INTO wallet_transactions
-           (wallet_id, type, amount, state, idempotency_key, description, metadata)
-         VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5::jsonb)
-         RETURNING *`,
-        [
-          canonicalWalletId,
-          amountIrR.toString(),
-          idempotencyKey,
-          ONLINE_TOPUP_DESCRIPTION,
-          JSON.stringify({
-            channel: 'online',
-            onlineTopUpLimit: snapshot.onlineTopUpLimit,
-            configVersion: snapshot.configVersion,
-          }),
-        ]
-      );
-
-      await client.query('COMMIT');
-      return mapTransaction(txResult.rows[0] as Parameters<typeof mapTransaction>[0]);
-    } catch (error) {
-      await client.query('ROLLBACK');
-      if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
+        if (walletResult.rows.length === 0)
+          throw new NotFoundException(`Wallet not found: ${profileId}`);
+        canonicalWalletId = walletResult.rows[0]!.profile_id as string;
         const existing = await client.query(
-          `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+          'SELECT * FROM wallet_transactions WHERE idempotency_key = $1 FOR UPDATE',
           [idempotencyKey]
         );
-        if (existing.rows.length === 0 || canonicalWalletId === undefined) {
-          throw new ConflictException('Idempotency key already used');
+        if (existing.rows.length > 0) {
+          const row = existing.rows[0]!;
+          assertMatchingPendingTopUp(
+            row as Parameters<typeof assertMatchingPendingTopUp>[0],
+            canonicalWalletId,
+            amountIrR
+          );
+          return mapTransaction(row as Parameters<typeof mapTransaction>[0]);
         }
-        const committed = existing.rows[0]!;
-        assertMatchingPendingTopUp(
-          committed as Parameters<typeof assertMatchingPendingTopUp>[0],
-          canonicalWalletId,
-          amountIrR
+        // Existing accepted intents retain their original limit; new intents use
+        // the locked current version. Any failure also rolls back empty-wallet creation.
+        const snapshot = await this.walletService.validateOnlineTopUpAmount(amountIrR, client);
+        const inserted = await client.query(
+          `INSERT INTO wallet_transactions
+             (wallet_id, type, amount, state, idempotency_key, description, metadata)
+           VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5::jsonb) RETURNING *`,
+          [
+            canonicalWalletId,
+            amountIrR.toString(),
+            idempotencyKey,
+            ONLINE_TOPUP_DESCRIPTION,
+            JSON.stringify({
+              channel: 'online',
+              onlineTopUpLimit: snapshot.onlineTopUpLimit,
+              configVersion: snapshot.configVersion,
+            }),
+          ]
         );
-        return mapTransaction(committed as Parameters<typeof mapTransaction>[0]);
+        const row = mapTransaction(inserted.rows[0] as Parameters<typeof mapTransaction>[0]);
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+           VALUES(uuid_generate_v7(),$1,'wallet_online_topup_initiated',$2::jsonb,COALESCE($3::uuid,uuid_generate_v7()),NOW())`,
+          [
+            actor.userId,
+            JSON.stringify({
+              sessionId: actor.sessionId,
+              profileId: canonicalWalletId,
+              transactionId: row.id,
+            }),
+            actor.correlationId ?? correlationIdStorage.getStore() ?? null,
+          ]
+        );
+        return row;
+      });
+    } catch (error) {
+      if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
+        // A different transaction owner can race the shared unique index. Re-read
+        // the committed row only in a new transaction with current authorization.
+        return await this.withCurrentActor(client, input, async () => {
+          const existing = await client.query(
+            'SELECT * FROM wallet_transactions WHERE idempotency_key = $1',
+            [idempotencyKey]
+          );
+          if (existing.rows.length === 0 || canonicalWalletId === undefined)
+            throw new ConflictException('Idempotency key already used');
+          const row = existing.rows[0]!;
+          assertMatchingPendingTopUp(
+            row as Parameters<typeof assertMatchingPendingTopUp>[0],
+            canonicalWalletId,
+            amountIrR
+          );
+          return mapTransaction(row as Parameters<typeof mapTransaction>[0]);
+        });
       }
       throw error;
     }
