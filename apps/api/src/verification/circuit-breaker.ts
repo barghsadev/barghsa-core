@@ -73,13 +73,13 @@ export class CircuitBreaker {
         this.state = 'HALF_OPEN';
         this.halfOpenProbes = 0;
       } else {
-        throw new Error('Circuit breaker is OPEN');
+        throw new CircuitOpenError('Circuit breaker is OPEN');
       }
     }
 
     if (this.state === 'HALF_OPEN') {
       if (this.halfOpenProbes >= this.config.halfOpenMaxProbes) {
-        throw new Error('Circuit breaker is OPEN (half-open probes exhausted)');
+        throw new CircuitOpenError('Circuit breaker is OPEN (half-open probes exhausted)');
       }
       this.halfOpenProbes++;
     }
@@ -103,3 +103,5 @@ export class CircuitBreaker {
     }
   }
 }
+
+export class CircuitOpenError extends Error {}

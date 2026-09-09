@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { DEFAULT_CIRCUIT_BREAKER, type VerificationResult } from '@barghsa/shared/verification';
 import { VerificationProviderRegistry } from './provider-registry.js';
 import { StubVerificationProvider } from './providers/stub.provider.js';
 
@@ -106,4 +107,53 @@ describe('VerificationProviderRegistry', () => {
       expect(result.code).toBe('NOT_FOUND');
     });
   });
+
+  for (const concurrent of [false, true]) {
+    it(`recovers automatically after the open interval and bounds probes (concurrent=${concurrent})`, async () => {
+      vi.useFakeTimers();
+      const adapter = new StubVerificationProvider();
+      const verify = vi.spyOn(adapter, 'verify').mockRejectedValue(new Error('provider offline'));
+      registry.register(adapter);
+      const config = { providerId: 'stub', enabled: true, settings: { maxRetries: '0' } };
+      const input = { nationalId: '1234567890' };
+      let release!: (value: VerificationResult) => void;
+      const recovered: VerificationResult = {
+        verified: true,
+        code: 'VERIFIED',
+        message: 'Recovered',
+        durationMs: 0,
+      };
+      try {
+        for (let i = 0; i < DEFAULT_CIRCUIT_BREAKER.failureThreshold; i++)
+          expect((await registry.verify('stub', input, config)).code).toBe('PROVIDER_ERROR');
+        expect((await registry.verify('stub', input, config)).code).toBe('CIRCUIT_OPEN');
+        expect(verify).toHaveBeenCalledTimes(DEFAULT_CIRCUIT_BREAKER.failureThreshold);
+        vi.advanceTimersByTime(DEFAULT_CIRCUIT_BREAKER.resetTimeoutMs);
+        if (!concurrent) {
+          verify.mockResolvedValue(recovered);
+          expect((await registry.verify('stub', input, config)).verified).toBe(true);
+        } else {
+          // Share one deferred response so every admitted probe completes together.
+          const response = new Promise<VerificationResult>((resolve) => {
+            release = resolve;
+          });
+          verify.mockReturnValue(response);
+          const pending = Array.from({ length: DEFAULT_CIRCUIT_BREAKER.halfOpenMaxProbes }, () =>
+            registry.verify('stub', input, config)
+          );
+          expect((await registry.verify('stub', input, config)).code).toBe('CIRCUIT_OPEN');
+          expect(verify).toHaveBeenCalledTimes(
+            DEFAULT_CIRCUIT_BREAKER.failureThreshold + DEFAULT_CIRCUIT_BREAKER.halfOpenMaxProbes
+          );
+          release(recovered);
+          expect((await Promise.all(pending)).every((result) => result.verified)).toBe(true);
+        }
+        expect(registry.listProviders()[0]!.state).toBe('CLOSED');
+      } finally {
+        release?.(recovered);
+        vi.useRealTimers();
+        vi.restoreAllMocks();
+      }
+    });
+  }
 });

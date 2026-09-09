@@ -7,7 +7,7 @@ import {
   VerificationErrorCodes,
 } from '@barghsa/shared/verification';
 import { VerificationProviderAdapter } from './provider.interface.js';
-import { CircuitBreaker } from './circuit-breaker.js';
+import { CircuitBreaker, CircuitOpenError } from './circuit-breaker.js';
 
 /**
  * Registry of available verification providers.
@@ -127,17 +127,6 @@ export class VerificationProviderRegistry {
       };
     }
 
-    // Circuit breaker check
-    if (entry.breaker.isOpen) {
-      return {
-        verified: false,
-        code: 'CIRCUIT_OPEN',
-        message: 'Verification service is temporarily unavailable. Please try again later.',
-        durationMs: 0,
-        rawResponse: { error: VerificationErrorCodes.CIRCUIT_OPEN },
-      };
-    }
-
     // Execute with timeout and retry
     const rawTimeoutMs = config?.settings?.['timeoutMs'];
     const timeoutMs =
@@ -178,6 +167,16 @@ export class VerificationProviderRegistry {
           durationMs: Date.now() - startTime,
         };
       } catch (error) {
+        // Let the breaker admit recovery probes; an open circuit is not a provider failure.
+        if (error instanceof CircuitOpenError) {
+          return {
+            verified: false,
+            code: 'CIRCUIT_OPEN',
+            message: 'Verification service is temporarily unavailable. Please try again later.',
+            durationMs: Date.now() - startTime,
+            rawResponse: { error: VerificationErrorCodes.CIRCUIT_OPEN },
+          };
+        }
         lastError = error;
         if (attempt < maxRetries) {
           // Exponential backoff using config defaults
