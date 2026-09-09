@@ -17,7 +17,7 @@ import { SmsNotificationTransport } from './sms-transport.js';
 import { notificationsDeliveryAttempts } from './worker-metrics.js';
 
 for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
-  it(`rolls inbox delivery back on ${failure} failure without double-counting attempts`, async () => {
+  it(`rolls inbox delivery back on transient ${failure} failure and preserves accepted external receipts`, async () => {
     const { userId, profileId } = await account();
     const id = await queue(userId, profileId, ['in_app', 'email']);
     const keys: string[] = [];
@@ -55,8 +55,9 @@ for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
           : failure === 'log'
             ? `NEW.notification_id='${id}' AND NEW.status='delivered'`
             : `NEW.id='${id}' AND NEW.status='delivered'`;
-    await pool.query(`CREATE FUNCTION reject_atomic_delivery() RETURNS trigger LANGUAGE plpgsql AS $$
-      BEGIN RAISE EXCEPTION 'test delivery persistence failure'; END $$;
+    await pool.query(`CREATE SEQUENCE atomic_delivery_failure;
+      CREATE FUNCTION reject_atomic_delivery() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF nextval('atomic_delivery_failure')=1 THEN RAISE EXCEPTION 'test delivery persistence failure'; END IF; RETURN NEW; END $$;
       CREATE TRIGGER reject_atomic_delivery BEFORE INSERT OR UPDATE ON ${table}
       FOR EACH ROW WHEN (${condition}) EXECUTE FUNCTION reject_atomic_delivery()`);
     notificationsDeliveryAttempts.reset();
@@ -76,11 +77,11 @@ for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
       expect(
         (
           await pool.query(
-            "SELECT id FROM notification_delivery_log WHERE notification_id=$1 AND status='delivered'",
+            "SELECT channel,provider_ref FROM notification_delivery_log WHERE notification_id=$1 AND status='delivered'",
             [id]
           )
         ).rows
-      ).toEqual([]);
+      ).toEqual([{ channel: 'email', provider_ref: 'accepted-email' }]);
       expect(
         (
           await pool.query(
@@ -89,7 +90,7 @@ for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
           )
         ).rows
       ).toEqual([
-        { status: 'retrying', attempts: 1 },
+        { status: 'done', attempts: 1 },
         { status: 'retrying', attempts: 1 },
       ]);
       expect(await attempts('email', 'delivered')).toBe(1);
@@ -99,6 +100,7 @@ for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
     } finally {
       await pool.query(`DROP TRIGGER reject_atomic_delivery ON ${table}`);
       await pool.query('DROP FUNCTION reject_atomic_delivery()');
+      await pool.query('DROP SEQUENCE atomic_delivery_failure');
     }
     await pool.query(
       "UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1",
@@ -109,8 +111,7 @@ for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
       [id]
     );
     expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
-    expect(keys).toHaveLength(2);
-    expect(keys[1]).toBe(keys[0]);
+    expect(keys).toHaveLength(1);
     const inbox = (
       await pool.query('SELECT id FROM in_app_notifications WHERE delivery_key=$1', [
         `outbox:${id}`,
@@ -133,7 +134,7 @@ for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
         )
       ).rows
     ).toEqual([{ provider_ref: inbox[0].id }]);
-    expect(await attempts('email', 'delivered')).toBe(2);
+    expect(await attempts('email', 'delivered')).toBe(1);
     expect(await attempts('in_app', 'delivered')).toBe(1);
     expect(await attempts('in_app', 'failed')).toBe(1);
   });

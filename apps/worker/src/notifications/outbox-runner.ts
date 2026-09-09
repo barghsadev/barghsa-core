@@ -101,6 +101,7 @@ export async function runOutboxPoll(
   const settled = await Promise.allSettled(
     rows.map(async (row) => {
       let lease: Awaited<ReturnType<typeof startOutboxLease>> | undefined;
+      let externalOutcomes: DispatchOutcome[] = [];
       try {
         lease = await startOutboxLease(
           pool,
@@ -127,6 +128,9 @@ export async function runOutboxPoll(
           options?.transports ?? {},
           lease
         );
+        // A rollback cannot undo an external send. Retain its actual receipt
+        // if recording the combined inbox/outcome transaction needs another try.
+        externalOutcomes = outcomes.slice();
         if (lease.signal.aborted) throw new OutboxLeaseLost();
         const aggregate = await persistOutcomes(
           pool,
@@ -159,12 +163,15 @@ export async function runOutboxPoll(
             await persistOutcomes(
               pool,
               row,
-              due.map((job) => ({
-                channel: job.channel,
-                result: { status: 'failed', providerRef: '' },
-                latencyMs: 0,
-                error: message,
-              })),
+              due.map(
+                (job) =>
+                  externalOutcomes.find((outcome) => outcome.channel === job.channel) ?? {
+                    channel: job.channel,
+                    result: { status: 'failed', providerRef: '' },
+                    latencyMs: 0,
+                    error: message,
+                  }
+              ),
               jobs
             );
           } catch (recordingError) {
