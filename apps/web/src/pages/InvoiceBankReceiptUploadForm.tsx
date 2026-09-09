@@ -1,17 +1,17 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
 import {
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,
   parseInvoiceBankReceiptAmountIrR,
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
+import { useReceiptAttachmentUpload } from '../hooks/useReceiptAttachmentUpload.js';
 import {
   fetchActiveProfileId,
   isAllowedInvoiceReceiptFile,
   mapInvoiceReceiptSubmitError,
   normalizeIrrAmountDigits,
   submitInvoiceBankReceipt,
-  uploadInvoiceReceiptAttachment,
   utcTodayIso,
   type InvoiceReceiptError,
 } from '../lib/invoice-bank-receipt-upload.js';
@@ -40,6 +40,8 @@ const ERROR_I18N: Record<InvoiceReceiptError, string> = {
  */
 export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUploadFormProps) {
   const locale = useLocale();
+  const uploadInvoiceReceiptAttachment = useReceiptAttachmentUpload();
+  const fileInput = useRef<HTMLInputElement>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
   const [amountInput, setAmountInput] = useState('');
   const [paymentDate, setPaymentDate] = useState('');
@@ -115,6 +117,7 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
       }
       setSuccess(true);
       setFile(null);
+      if (fileInput.current) fileInput.current.value = '';
       setAmountInput('');
       setPayerReference('');
       setCustomerNote('');
@@ -236,6 +239,7 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
           {t('invoices.details.receiptFileLabel', locale)}
         </label>
         <input
+          ref={fileInput}
           id="invoice-receipt-file"
           data-testid="invoice-receipt-file"
           name="receiptFile"
@@ -277,7 +281,7 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
         type="submit"
         data-testid="invoice-receipt-submit"
         disabled={submitting}
-        className="w-full rounded-lg border border-primary bg-white px-4 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-60"
+        className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
       >
         {submitting
           ? t('invoices.details.receiptSubmitting', locale)

@@ -1,14 +1,19 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
 import {
   parseBankReceiptTopUpAmountIrR,
-  BANK_RECEIPT_STORAGE_PURPOSE,
   isValidWalletTopUpLimit,
   readOnlineTopUpLimitFromErrorBody,
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import { useReceiptAttachmentUpload } from '../hooks/useReceiptAttachmentUpload.js';
+import {
+  isAllowedInvoiceReceiptFile as isAllowedReceiptFile,
+  normalizeIrrAmountDigits,
+  utcTodayIso,
+} from '../lib/invoice-bank-receipt-upload.js';
 
 interface WalletBalance {
   balance: string;
@@ -36,9 +41,6 @@ type ReceiptError =
   | 'upload'
   | 'conflict'
   | 'generic';
-
-const DOCUMENT_MAX_BYTES = 10 * 1024 * 1024;
-const IMAGE_MAX_BYTES = 20 * 1024 * 1024;
 
 function newIdempotencyKey(): string {
   return crypto.randomUUID();
@@ -69,25 +71,6 @@ function mapReceiptSubmitError(status: number): ReceiptError {
   return 'generic';
 }
 
-/**
- * Map Persian (`۰`–`۹`) and Arabic-Indic (`٠`–`٩`) digits to ASCII, then keep
- * decimal digits only so localized keyboards can enter an IRR amount.
- */
-function normalizeIrrAmountDigits(raw: string): string {
-  let ascii = '';
-  for (const ch of raw) {
-    const code = ch.codePointAt(0) ?? 0;
-    if (code >= 0x06f0 && code <= 0x06f9) {
-      ascii += String(code - 0x06f0);
-    } else if (code >= 0x0660 && code <= 0x0669) {
-      ascii += String(code - 0x0660);
-    } else {
-      ascii += ch;
-    }
-  }
-  return ascii.replace(/[^\d]/g, '');
-}
-
 /** Browser redirects must be https destinations without embedded credentials. */
 function isSafeGatewayRedirectUrl(raw: string): boolean {
   try {
@@ -103,103 +86,6 @@ function isSafeGatewayRedirectUrl(raw: string): boolean {
   }
 }
 
-function utcTodayIso(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function receiptCategoryForFile(file: File): 'document' | 'image' | null {
-  const name = file.name.toLowerCase();
-  const type = file.type.toLowerCase();
-  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'document';
-  if (
-    type === 'image/jpeg' ||
-    type === 'image/png' ||
-    type === 'image/webp' ||
-    name.endsWith('.jpg') ||
-    name.endsWith('.jpeg') ||
-    name.endsWith('.png') ||
-    name.endsWith('.webp')
-  ) {
-    return 'image';
-  }
-  return null;
-}
-
-function isAllowedReceiptFile(file: File): boolean {
-  const category = receiptCategoryForFile(file);
-  if (category === null) return false;
-  const max = category === 'document' ? DOCUMENT_MAX_BYTES : IMAGE_MAX_BYTES;
-  return file.size > 0 && file.size <= max;
-}
-
-async function uploadReceiptAttachment(file: File, profileId: string): Promise<string | null> {
-  const category = receiptCategoryForFile(file);
-  if (category === null) return null;
-  const presignRes = await fetch('/api/upload/presigned-url', {
-    method: 'POST',
-    credentials: 'include',
-    headers: withCsrf({
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    }),
-    body: JSON.stringify({
-      fileName: file.name,
-      contentType: file.type || (category === 'document' ? 'application/pdf' : 'image/jpeg'),
-      fileSize: file.size,
-      category,
-      metadata: { recordType: 'receipt' },
-    }),
-  });
-  const presign = (await presignRes.json().catch(() => ({}))) as {
-    key?: string;
-    presignedUrl?: string;
-  };
-  if (
-    !presignRes.ok ||
-    typeof presign.key !== 'string' ||
-    typeof presign.presignedUrl !== 'string'
-  ) {
-    return null;
-  }
-
-  const putRes = await fetch(presign.presignedUrl, {
-    method: 'PUT',
-    body: file,
-    headers: {
-      'Content-Type': file.type || (category === 'document' ? 'application/pdf' : 'image/jpeg'),
-    },
-  });
-  if (!putRes.ok) return null;
-
-  const encodedKey = encodeURIComponent(presign.key);
-  const verifyRes = await fetch(`/api/upload/${encodedKey}/verify`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: withCsrf({ Accept: 'application/json' }),
-  });
-  const verify = (await verifyRes.json().catch(() => ({}))) as { status?: string };
-  if (!verifyRes.ok || verify.status !== 'confirmed') return null;
-
-  const recordRes = await fetch(`/api/upload/${encodedKey}/record`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: withCsrf({
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    }),
-    body: JSON.stringify({
-      fileName: file.name,
-      contentType: file.type || undefined,
-      fileSize: file.size,
-      category,
-      purpose: BANK_RECEIPT_STORAGE_PURPOSE,
-      profileId,
-    }),
-  });
-  if (!recordRes.ok) return null;
-  return presign.key;
-}
-
 /**
  * Customer wallet top-up page (T-04.2.02.01 / T-04.2.02.03).
  *
@@ -210,6 +96,8 @@ async function uploadReceiptAttachment(file: File, profileId: string): Promise<s
  * only after provider callback or finance confirmation.
  */
 export function WalletPage() {
+  const uploadReceiptAttachment = useReceiptAttachmentUpload();
+  const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
@@ -422,6 +310,7 @@ export function WalletPage() {
       setReceiptSuccess(true);
       setReceiptIdempotencyKey(newIdempotencyKey());
       setReceiptFile(null);
+      if (receiptFileInput.current) receiptFileInput.current.value = '';
       const walletRes = await fetch(`/api/wallet/${profileId}`, { credentials: 'include' });
       if (walletRes.ok) {
         setWallet((await walletRes.json()) as WalletBalance);
@@ -681,6 +570,7 @@ export function WalletPage() {
                   {t('wallet.page.receiptFileLabel', locale)}
                 </label>
                 <input
+                  ref={receiptFileInput}
                   id="receipt-file"
                   data-testid="wallet-receipt-file"
                   name="receiptFile"
@@ -724,7 +614,7 @@ export function WalletPage() {
                 type="submit"
                 data-testid="wallet-receipt-submit"
                 disabled={receiptSubmitting}
-                className="w-full rounded-lg border border-primary bg-white px-4 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-60"
+                className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
               >
                 {receiptSubmitting
                   ? t('wallet.page.receiptSubmitting', locale)
