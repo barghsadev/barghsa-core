@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
+  readOnlineTopUpChannel,
   isOnlineTopUpCallbackOpenState,
   isOnlineTopUpIntentReleasable,
   parseOnlineTopUpAmountIrR,
@@ -443,10 +444,10 @@ export class OnlineTopUpCallbackService {
     authority: string,
     amountIrR: bigint
   ): void {
-    if (pending.type !== 'topup') {
+    if (pending.type !== 'topup' || readOnlineTopUpChannel(pending.metadata) !== 'online') {
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
-        'Payment callback merchant order is not a top-up'
+        'Payment callback merchant order is not an online top-up'
       );
     }
     if (pending.amount !== amountIrR) {

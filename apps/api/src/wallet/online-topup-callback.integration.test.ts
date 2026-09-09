@@ -131,6 +131,44 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     return result.rows[0]!;
   }
 
+  it('rejects a signed online callback aimed at a bank-receipt intent even with a matching payment reference', async () => {
+    const row = (
+      await ctx.pool.query<{ id: string }>(
+        "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,ref_id,metadata) VALUES($1,'topup',$2,'Pending',$3,$4,'{\"channel\":\"bank_receipt\"}'::jsonb) RETURNING id",
+        [PROFILE_A, AMOUNT.toString(), randomUUID(), AUTHORITY]
+      )
+    ).rows[0]!;
+    const balance = await fetchWallet();
+    const eventId = randomUUID();
+    await expect(
+      service.handle(
+        signed(
+          {
+            merchantOrderId: row.id,
+            merchantId: MERCHANT,
+            authority: AUTHORITY,
+            amountIrR: AMOUNT.toString(),
+            status: 'paid',
+          },
+          eventId
+        )
+      )
+    ).rejects.toMatchObject({ status: 401 });
+    expect(await fetchWallet()).toEqual(balance);
+    expect(
+      (await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [row.id])).rows[0]
+    ).toEqual({ state: 'Pending' });
+    expect(
+      (
+        await ctx.pool.query(
+          'SELECT event_id FROM wallet_topup_callback_events WHERE event_id=$1',
+          [eventId]
+        )
+      ).rows
+    ).toEqual([]);
+    await ctx.pool.query('DELETE FROM wallet_transactions WHERE id=$1', [row.id]);
+  });
+
   it('credits the wallet once from a signed callback and releases the Pending intent', async () => {
     const result = await service.handle(
       signed(
