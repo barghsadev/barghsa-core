@@ -1,3 +1,5 @@
+import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission, requireStaffStepUp } from './staff-mutation-permission.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -1264,9 +1266,10 @@ export class AdminService {
    */
   async setDualApprovalThresholdConfig(
     input: unknown,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<DualApprovalConfig> {
+    const actorUserId = actor.userId;
     const validation = validateDualApprovalConfig(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -1292,12 +1295,11 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await lockDualApprovalThreshold(client, 'write');
       await requireStaffMutationPermission(client, actorUserId, 'admin:financial:edit');
+      await requireSessionStepUp(client, actor);
 
-      // Lock the existing row (if any) so the previous value recorded in the
-      // audit trail is the true value that is being replaced — read it before
-      // the upsert mutates it. Concurrent writers serialize on this row lock,
-      // so no threshold change can be dropped from the audit trail.
+      // The advisory lock also protects creation when no config row exists.
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
         [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY]
@@ -1326,7 +1328,7 @@ export class AdminService {
       // so a threshold change (e.g. lowering it to 0 and disabling dual
       // approval entirely) can be reconstructed end-to-end later.
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1335,6 +1337,7 @@ export class AdminService {
           actorUserId,
           'config_change',
           JSON.stringify({
+            sessionId: actor.sessionId,
             key: DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
             previousValue,
             previousVersion,
@@ -1347,6 +1350,7 @@ export class AdminService {
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(

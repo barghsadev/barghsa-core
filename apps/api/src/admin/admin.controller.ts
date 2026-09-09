@@ -2000,7 +2000,7 @@ export class AdminController {
   async setDualApprovalThreshold(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertFinancialThresholdPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.setDualApprovalThresholdConfig(rawBody, req.session.userId, ip);
+    return this.adminService.setDualApprovalThresholdConfig(rawBody, req.session, ip);
   }
 
   /**

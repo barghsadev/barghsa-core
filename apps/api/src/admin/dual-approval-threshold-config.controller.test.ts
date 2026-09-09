@@ -8,7 +8,12 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: {
+    isAdmin: true,
+    userId: 'admin-1',
+    sessionId: 'threshold-session',
+    csrfToken: 'threshold-csrf',
+  },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -92,7 +97,7 @@ describe('dual-approval-threshold config permission gate (T-09.07.01)', () => {
     expect(result).toEqual({ thresholdIrR: 500_000_000 });
     expect(adminService.setDualApprovalThresholdConfig).toHaveBeenCalledWith(
       body,
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });

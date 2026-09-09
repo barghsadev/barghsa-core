@@ -1,3 +1,6 @@
+vi.mock('./dual-approval-threshold-lock.js', () => ({
+  lockDualApprovalThreshold: vi.fn().mockResolvedValue(undefined),
+}));
 // Authorization is exercised with real sessions/roles in dual-approval-http.integration.test.ts.
 vi.mock('./staff-mutation-permission.js', () => ({ requireStaffMutationPermission: vi.fn() }));
 vi.mock('../session/session-step-up.js', () => ({
@@ -95,8 +98,10 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
   });
 
   it('refuses to create when no threshold is configured (dual approval disabled)', async () => {
-    const { mockQuery } = await loadService();
-    mockQuery.mockResolvedValueOnce({ rows: [] }); // app_config empty → disabled default
+    const { mockConnect } = await loadService();
+    const { client } = mockClient();
+    mockConnect.mockResolvedValue(client);
+    client.query.mockResolvedValue({ rows: [] }); // no configured threshold
 
     const rejection = await service
       .createApprovalRequest(VALID_INPUT, actor('user-1'), '1.1.1.1')
@@ -106,8 +111,12 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
   });
 
   it('refuses to create when the amount is below the threshold', async () => {
-    const { mockQuery } = await loadService();
-    mockQuery.mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS });
+    const { mockConnect } = await loadService();
+    const { client } = mockClient();
+    mockConnect.mockResolvedValue(client);
+    client.query.mockImplementation(async (sql: string) => ({
+      rows: sql.includes('app_config') ? ENABLED_THRESHOLD_ROWS : [],
+    }));
 
     const rejection = await service
       .createApprovalRequest({ ...VALID_INPUT, amount_irr: 99_999_999 }, actor('user-1'), '1.1.1.1')
@@ -121,32 +130,31 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     mockConnect.mockResolvedValue(client);
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS }) // locked threshold
       .mockResolvedValueOnce({ rows: [] }) // INSERT approval_requests
       .mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
       .mockResolvedValueOnce({ rows: [] }) // eligible staff
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
-    mockQuery
-      .mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS }) // threshold
-      .mockResolvedValueOnce({
-        rows: [
-          {
-            id: 'req-1',
-            action_type: 'refund',
-            amount_irr: '250000000',
-            initiator_id: 'user-1',
-            initiator_username: 'staff1',
-            reason: 'Customer overpaid for package 204',
-            details: {},
-            status: 'pending',
-            reviewer_id: null,
-            reviewer_username: null,
-            review_reason: null,
-            reviewed_at: null,
-            created_at: new Date('2026-08-28T00:00:00Z'),
-            updated_at: new Date('2026-08-28T00:00:00Z'),
-          },
-        ],
-      }); // getRequestDto
+    mockQuery.mockResolvedValueOnce({
+      rows: [
+        {
+          id: 'req-1',
+          action_type: 'refund',
+          amount_irr: '250000000',
+          initiator_id: 'user-1',
+          initiator_username: 'staff1',
+          reason: 'Customer overpaid for package 204',
+          details: {},
+          status: 'pending',
+          reviewer_id: null,
+          reviewer_username: null,
+          review_reason: null,
+          reviewed_at: null,
+          created_at: new Date('2026-08-28T00:00:00Z'),
+          updated_at: new Date('2026-08-28T00:00:00Z'),
+        },
+      ],
+    }); // getRequestDto
 
     const result = await service.createApprovalRequest(VALID_INPUT, actor('user-1'), '1.1.1.1');
 
@@ -159,13 +167,13 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     });
 
     // Insert used the snake_case table shape with the amount as a number.
-    const insertCall = mockClientQuery.mock.calls[1]!;
+    const insertCall = mockClientQuery.mock.calls[2]!;
     expect(String(insertCall[0])).toContain('INSERT INTO approval_requests');
     expect(insertCall[1]).toContain('refund');
     expect(insertCall[1]).toContain(250_000_000);
 
     // Audit trail write happened in the same transaction.
-    const auditCall = mockClientQuery.mock.calls[2]!;
+    const auditCall = mockClientQuery.mock.calls[3]!;
     expect(String(auditCall[0])).toContain('INSERT INTO audit_log');
     expect(auditCall[1]).toContain('approval_request_created');
     expect(String(auditCall[1]![3])).toContain('amountIrR');
@@ -179,19 +187,21 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     const { mockClientQuery, client } = mockClient();
     mockConnect.mockResolvedValue(client);
     mockClientQuery.mockImplementation(async (sql: string) => ({
-      rows: sql.includes('SELECT u.user_id')
-        ? [
-            { user_id: 'admin-2', is_admin: true },
-            {
-              user_id: 'admin-3',
-              is_admin: false,
-              role_permissions: ['["admin:financial:edit"]'],
-            },
-            { user_id: 'unqualified', is_admin: false, role_permissions: ['["tickets:read"]'] },
-          ]
-        : [],
+      rows: sql.includes('app_config')
+        ? ENABLED_THRESHOLD_ROWS
+        : sql.includes('SELECT u.user_id')
+          ? [
+              { user_id: 'admin-2', is_admin: true },
+              {
+                user_id: 'admin-3',
+                is_admin: false,
+                role_permissions: ['["admin:financial:edit"]'],
+              },
+              { user_id: 'unqualified', is_admin: false, role_permissions: ['["tickets:read"]'] },
+            ]
+          : [],
     }));
-    mockQuery.mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS }).mockResolvedValueOnce({
+    mockQuery.mockResolvedValueOnce({
       rows: [
         {
           id: 'req-2',
@@ -224,11 +234,11 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
   });
 
   it('rolls back when staff enumeration fails before commit', async () => {
-    const { mockQuery, mockConnect } = await loadService();
+    const { mockConnect } = await loadService();
     const { mockClientQuery, client } = mockClient();
     mockConnect.mockResolvedValue(client);
-    mockQuery.mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS });
     mockClientQuery.mockImplementation(async (sql: string) => {
+      if (sql.includes('app_config')) return { rows: ENABLED_THRESHOLD_ROWS };
       if (sql.includes('SELECT u.user_id')) throw new Error('eligibility query down');
       return { rows: [] };
     });

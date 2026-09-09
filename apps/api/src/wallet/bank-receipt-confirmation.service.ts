@@ -1,3 +1,4 @@
+import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 import {
   lockWalletProfile,
   assertWalletProfileWritable,
@@ -299,6 +300,7 @@ export class BankReceiptConfirmationService {
       try {
         await client.query('BEGIN');
         const profile = await lockWalletProfile(client, 'transaction', input.transactionId);
+        await lockDualApprovalThreshold(client, 'read');
         await requireStaffMutationPermission(
           client,
           input.actorUserId,

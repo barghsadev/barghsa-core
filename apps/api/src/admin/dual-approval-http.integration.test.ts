@@ -1119,3 +1119,194 @@ for (const kind of ['wallet', 'invoice'] as const) {
     }
   }
 }
+
+function setThresholdHttp(user: string, amount: number) {
+  return fetch(`${http.base}/api/admin/config/dual-approval-threshold`, {
+    method: 'PUT',
+    headers: headers[user]!,
+    body: JSON.stringify({ threshold_irr: amount }),
+  });
+}
+for (const expiry of ['session', 'step-up'] as const) {
+  it(`threshold change rolls back config, version and audit when ${expiry} expires during its audit`, async () => {
+    await resetReceiptReviewer();
+    const config = (
+      await http.pool.query("SELECT * FROM app_config WHERE key='finance.dual_approval_threshold'")
+    ).rows;
+    const version = (await http.pool.query('SELECT * FROM config_version')).rows;
+    const audits = (await http.pool.query('SELECT count(*) FROM audit_log')).rows;
+    await http.pool.query(
+      'CREATE FUNCTION delay_threshold_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM pg_sleep(1.2); RETURN NEW; END $$'
+    );
+    await http.pool.query(
+      'CREATE TRIGGER delay_threshold_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_threshold_audit()'
+    );
+    let pending: Promise<Response> | undefined;
+    try {
+      await http.pool.query(
+        expiry === 'session'
+          ? "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
+          : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
+      );
+      pending = setThresholdHttp('reviewer', 500000);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event='PgSleep'"
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      expect((await pending).status).toBe(expiry === 'session' ? 401 : 403);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT * FROM app_config WHERE key='finance.dual_approval_threshold'"
+          )
+        ).rows
+      ).toEqual(config);
+      expect((await http.pool.query('SELECT * FROM config_version')).rows).toEqual(version);
+      expect((await http.pool.query('SELECT count(*) FROM audit_log')).rows).toEqual(audits);
+    } finally {
+      await pending;
+      await http.pool.query('DROP TRIGGER delay_threshold_audit ON audit_log');
+      await http.pool.query('DROP FUNCTION delay_threshold_audit()');
+      await resetReceiptReviewer();
+    }
+  });
+}
+it('threshold concurrent first writes preserve the complete previous value and version audit chain', async () => {
+  await resetReceiptReviewer();
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='initiator'");
+  await http.pool.query("DELETE FROM app_config WHERE key='finance.dual_approval_threshold'");
+  const before = Number(
+    (await http.pool.query('SELECT version FROM config_version')).rows[0].version
+  );
+  const blocker = await http.pool.connect();
+  const correlation1 = randomUUID(),
+    correlation2 = randomUUID();
+  let writes: Promise<Response>[] = [];
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('LOCK TABLE app_config IN SHARE MODE');
+    writes = ['reviewer', 'initiator'].map((user, i) =>
+      fetch(`${http.base}/api/admin/config/dual-approval-threshold`, {
+        method: 'PUT',
+        headers: { ...headers[user]!, 'X-Correlation-ID': i === 0 ? correlation1 : correlation2 },
+        body: JSON.stringify({ threshold_irr: i === 0 ? 123000 : 456000 }),
+      })
+    );
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND (query LIKE '%app_config%' OR query LIKE '%pg_advisory_xact_lock%')"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(2);
+    await blocker.query('COMMIT');
+    expect((await Promise.all(writes)).map((r) => r.status)).toEqual([200, 200]);
+    const audit = (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'key'='finance.dual_approval_threshold' AND (metadata::jsonb->'newValue'->>'threshold_irr')::bigint IN (123000,456000) ORDER BY (metadata::jsonb->>'version')::int"
+      )
+    ).rows.map((row) => row.metadata);
+    expect(audit).toHaveLength(2);
+    expect(audit[0]).toMatchObject({ previousValue: null, previousVersion: 0, version: 1 });
+    expect(audit[1]).toMatchObject({
+      previousValue: audit[0].newValue,
+      previousVersion: 1,
+      version: 2,
+    });
+    expect(
+      Number((await http.pool.query('SELECT version FROM config_version')).rows[0].version)
+    ).toBe(before + 2);
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await Promise.all(writes);
+  }
+});
+for (const kind of ['wallet', 'invoice', 'generic'] as const) {
+  it(`threshold change waits for the policy used by an in-flight ${kind} decision`, async () => {
+    await resetReceiptReviewer();
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='initiator'"
+    );
+    if (kind === 'generic')
+      await http.pool.query(
+        `UPDATE app_config SET value='{"threshold_irr":1}' WHERE key='finance.dual_approval_threshold'`
+      );
+    const receipt = kind === 'wallet' ? await walletReceipt() : await invoiceReceipt();
+    await http.pool.query('INSERT INTO wallets(profile_id) VALUES ($1) ON CONFLICT DO NOTHING', [
+      receipt.profile,
+    ]);
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined, update: Promise<Response> | undefined;
+    let changed = false;
+    try {
+      await blocker.query('BEGIN');
+      if (kind === 'generic') await blocker.query('LOCK TABLE approval_requests IN SHARE MODE');
+      else
+        await blocker.query('SELECT profile_id FROM wallets WHERE profile_id=$1 FOR UPDATE', [
+          receipt.profile,
+        ]);
+      pending =
+        kind === 'generic'
+          ? fetch(`${http.base}/api/admin/approval-requests`, {
+              method: 'POST',
+              headers: headers.reviewer!,
+              body: JSON.stringify({
+                action_type: 'bank_payment_confirmation',
+                amount_irr: 100000,
+                reason: 'Policy snapshot test',
+              }),
+            })
+          : receiptDecision(kind, 'confirm', receipt.id);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE $1",
+                [kind === 'generic' ? '%approval_requests%' : '%wallets%']
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      update = setThresholdHttp('initiator', 50000).then((r) => {
+        changed = true;
+        return r;
+      });
+      await expect
+        .poll(
+          async () =>
+            changed ||
+            Number(
+              (
+                await http.pool.query(
+                  "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%pg_advisory_xact_lock%'"
+                )
+              ).rows[0].count
+            ) === 1
+        )
+        .toBe(true);
+      expect(changed).toBe(false);
+      await blocker.query('COMMIT');
+      expect((await pending).status).toBe(kind === 'generic' ? 201 : 200);
+      expect((await update).status).toBe(200);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending;
+      await update;
+    }
+  });
+}

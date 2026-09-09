@@ -1,3 +1,14 @@
+const thresholdActor = {
+  userId: 'admin-1',
+  sessionId: 'threshold-session',
+  csrfToken: 'threshold-csrf',
+};
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
+vi.mock('./dual-approval-threshold-lock.js', () => ({
+  lockDualApprovalThreshold: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import type { AdminService as AdminServiceType } from './admin.service.js';
@@ -93,7 +104,7 @@ describe('AdminService.setDualApprovalThresholdConfig (T-09.07.01)', () => {
   it('rejects a negative threshold with a 400', async () => {
     const { pool } = await loadService();
     await expect(
-      service.setDualApprovalThresholdConfig({ threshold_irr: -1 }, 'admin-1', '127.0.0.1')
+      service.setDualApprovalThresholdConfig({ threshold_irr: -1 }, thresholdActor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
     expect(pool.connect).not.toHaveBeenCalled();
   });
@@ -101,14 +112,14 @@ describe('AdminService.setDualApprovalThresholdConfig (T-09.07.01)', () => {
   it('rejects a fractional threshold with a 400', async () => {
     await loadService();
     await expect(
-      service.setDualApprovalThresholdConfig({ threshold_irr: 1.5 }, 'admin-1', '127.0.0.1')
+      service.setDualApprovalThresholdConfig({ threshold_irr: 1.5 }, thresholdActor, '127.0.0.1')
     ).rejects.toThrowError(HttpException);
   });
 
   it('rejects a missing threshold with a 400', async () => {
     await loadService();
     await expect(
-      service.setDualApprovalThresholdConfig({}, 'admin-1', '127.0.0.1')
+      service.setDualApprovalThresholdConfig({}, thresholdActor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
   });
 
@@ -128,7 +139,7 @@ describe('AdminService.setDualApprovalThresholdConfig (T-09.07.01)', () => {
 
     await service.setDualApprovalThresholdConfig(
       { threshold_irr: 500_000_000 },
-      'admin-1',
+      thresholdActor,
       '127.0.0.1'
     );
 
@@ -153,6 +164,7 @@ describe('AdminService.setDualApprovalThresholdConfig (T-09.07.01)', () => {
     const auditQuery = client.query.mock.calls[4]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata).toEqual({
+      sessionId: thresholdActor.sessionId,
       key: DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
       previousValue: null,
       previousVersion: 0,
@@ -178,11 +190,12 @@ describe('AdminService.setDualApprovalThresholdConfig (T-09.07.01)', () => {
       .mockResolvedValueOnce({ rows: [] }) // audit_log
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    await service.setDualApprovalThresholdConfig({ threshold_irr: 0 }, 'admin-1', '127.0.0.1');
+    await service.setDualApprovalThresholdConfig({ threshold_irr: 0 }, thresholdActor, '127.0.0.1');
 
     const auditQuery = client.query.mock.calls[4]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata).toEqual({
+      sessionId: thresholdActor.sessionId,
       key: DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
       previousValue: { threshold_irr: 5_000_000_000 },
       previousVersion: 3,
@@ -205,7 +218,7 @@ describe('AdminService.setDualApprovalThresholdConfig (T-09.07.01)', () => {
 
     const result = await service.setDualApprovalThresholdConfig(
       { threshold_irr: 0 },
-      'admin-1',
+      thresholdActor,
       '127.0.0.1'
     );
     expect(result).toEqual({ thresholdIrR: 0 });

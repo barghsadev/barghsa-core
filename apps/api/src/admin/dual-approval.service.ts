@@ -1,3 +1,4 @@
+import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -123,18 +124,6 @@ export class DualApprovalService {
     }
 
     const normalized = toApprovalRequestInput(input);
-    const threshold = await this.getThresholdConfig();
-
-    if (!shouldRequireDualApproval(threshold, normalized.amountIrR)) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Dual approval is disabled or the amount is below the configured threshold',
-        },
-        400
-      );
-    }
 
     const pool = getDbPool();
     const id = uuidv7();
@@ -145,8 +134,21 @@ export class DualApprovalService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await lockDualApprovalThreshold(client, 'read');
       await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
       await requireSessionStepUp(client, actor);
+      const threshold = await this.getThresholdConfig(client);
+
+      if (!shouldRequireDualApproval(threshold, normalized.amountIrR)) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'Dual approval is disabled or the amount is below the configured threshold',
+          },
+          400
+        );
+      }
 
       await client.query(
         `INSERT INTO approval_requests
@@ -299,13 +301,14 @@ export class DualApprovalService {
   // ─── Internals ─────────────────────────────────────────────────────────
 
   /** Read the current dual-approval threshold (disabled default when unset). */
-  private async getThresholdConfig(): Promise<{ thresholdIrR: number }> {
-    const pool = getDbPool();
-    const result = await pool.query(`SELECT value FROM app_config WHERE key = $1`, [
+  private async getThresholdConfig(
+    client: DualApprovalQueryClient
+  ): Promise<{ thresholdIrR: number }> {
+    const result = await client.query(`SELECT value FROM app_config WHERE key = $1`, [
       DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
     ]);
     if (result.rows.length === 0) return { ...DEFAULT_DUAL_APPROVAL_CONFIG };
-    return toDualApprovalConfig(result.rows[0]!.value);
+    return toDualApprovalConfig((result.rows[0] as { value: unknown }).value);
   }
 
   /**
