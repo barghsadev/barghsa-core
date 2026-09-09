@@ -46,7 +46,7 @@ PR225 remains open for missing concrete submission workflows; existing order cre
 
 Active **R01-invoice-deadlines-reminders**:10 tasks T-04.1.03.01–.04 and T-04.1.04.01–.06, saved PRs236–241,243–246. Review due defaults, permission/reason overrides, overdue behavior, issue scheduling, offset/timezone/preferences, outbox, idempotency and terminal-state cancellation. Exact membership/deferrals in progress.json. Reuse prior21 overdue worker cases and state/creation/receipt evidence; actual notification delivery remains linked to R02.
 
-Checkpoint0e370f7: due-date override authority repaired and reviewed with21 distinct API cases and quality checks. Override UI repaired atb6f46be with9 web cases,4 production Chromium cases and42 budgets. Reminder rescheduling and due-period admin consumer disposition remain. Creation follow-up03bcf45 corrects the real nested error envelope;4 browser cases, a matching real HTTP assertion and42 budgets pass. 1831 logs indexed.
+Checkpoint0e370f7: due-date override authority repaired and reviewed with21 distinct API cases and quality checks. Override UI repaired atb6f46be with9 web cases,4 production Chromium cases and42 budgets. Reminder rescheduling repaired at7fe8924 with71 worker and21 API cases, plus final5 HTTP rollback checks. Reminder-toggle authority9a954fa, customer reason0566eea and reminder save confirmationdf34b30 are repaired and reviewed. Required due-period admin configuration remains to build. Creation follow-up03bcf45 corrects the real nested error envelope;4 browser cases, a matching real HTTP assertion and42 budgets pass. 1878 logs indexed.
 
 ## Execution order
 

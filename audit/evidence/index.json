@@ -12818,6 +12818,335 @@
       "sha256": "a4c15dded12e0cf4f344e2d9c692b1a7f28254e777693fea37a2addd9913a3b1",
       "encoding": "gzip",
       "stored_sha256": "8072c65f6e253e83308388fb251b5c60343269cb965f499493351e9f3daccd77"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-api-baseline.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-api-baseline.log.gz",
+      "sha256": "5603e59b62e0f748a18152228618d4c4053a4f07c166367347cb68def9a1ab2d",
+      "encoding": "gzip",
+      "stored_sha256": "23f8a8c46a36edbfb3275a18f19ed626c197859910fb3ac24121b0bf027d9c41"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-api-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-api.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-api.log.gz",
+      "sha256": "3d3cb4bc20b11133bc01bb24b8f24e6377f76928bd5d7723044aff4cc37a2d10",
+      "encoding": "gzip",
+      "stored_sha256": "ef260e18790732bf4f9170f0c428f54663d2fe9280251540587439de17b77518"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-baseline.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-baseline.log.gz",
+      "sha256": "4b42c0c1cdcd95d05acbec4b6c39ba3d9bbcc05609c38bb5def574fe3ea513bd",
+      "encoding": "gzip",
+      "stored_sha256": "c006fa2a2b70e02be673d0f0e8e84c4794c3db0c620106cb6debb03795714da3"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-final-test-format.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-final-test-format.log.gz",
+      "sha256": "bfded04d99344d35cbd24cecd8537d64c9692a718c7094ac791f9914ab75b299",
+      "encoding": "gzip",
+      "stored_sha256": "13ee1b4fad9012574b3f798ec01d312846cf0052925fe423b184c4c98ea25161"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-format.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-format.log.gz",
+      "sha256": "1f4a728c1a84d673dce1041ace8e9012b03d1796b4ff5ac53a8172c7beea655e",
+      "encoding": "gzip",
+      "stored_sha256": "91fd6d392cf89fb749e02bbbcfa640814b2761115a140e7e2aaf1626483bcac3"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-http-final.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-http-final.log.gz",
+      "sha256": "6c27c762656784a81885a763428ba0c0ba8a1e9df2dfff06dd81740b547938aa",
+      "encoding": "gzip",
+      "stored_sha256": "bea0943923cd2d89e4bcb795d66eb7c53ce4359315e3b0895a6e4f00a60175f3"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-test-format.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-test-format.log.gz",
+      "sha256": "0316274b0a9cc27fff6716688d3275981e5892ca6c5ffedd7adad8121e36ceea",
+      "encoding": "gzip",
+      "stored_sha256": "60744bb5390fbfbef73fea88dc72a8cf308b3d133bfce93c3e5e016d504b1e7c"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-worker-final.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-worker-final.log.gz",
+      "sha256": "f2bcbbd7edf47f8f0001bdda30da4d943fe2093aa4a4205d28b24b232a3b8bcd",
+      "encoding": "gzip",
+      "stored_sha256": "c127776a05bd85e3bf6ae80e63368f22df060b00e3e0f7602765a0318f469b2c"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-worker-types.log",
+      "path": "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz",
+      "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
+      "encoding": "gzip",
+      "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-reminder-deadline-worker.log",
+      "path": "audit/evidence/7fe8924/r01-invoice-reminder-deadline-worker.log.gz",
+      "sha256": "08a40ff1506698aa6cc868684ca5fb7002e2589ecf4034e113c55e26cb50b532",
+      "encoding": "gzip",
+      "stored_sha256": "db3175d079a858f892f7656d9b0552af6a911dd255b5c8312d8c43396ccb7d85"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-session-baseline-corrected.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-session-baseline-corrected.log.gz",
+      "sha256": "164e866561b6df80199fff2d8aa519150212ccfd7c54bacac2866f8f2a44860a",
+      "encoding": "gzip",
+      "stored_sha256": "aeecd9f70c1273020b12b3d396213739c570069c4b888fec56fbc901c0b1415f"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-session-baseline.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-session-baseline.log.gz",
+      "sha256": "ef2af37408c9e7954162e564c9f26dbf26818d8095ba2aa3be04ef271ffa89fa",
+      "encoding": "gzip",
+      "stored_sha256": "606b64508169ffb132115aae266c81c148357a7336b87fc0f7ef0789ae814754"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-session-final.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-session-final.log.gz",
+      "sha256": "104c284f78ba698e105c9e5952f3e77054948a70b74e3f1e419ffbb88194728f",
+      "encoding": "gzip",
+      "stored_sha256": "3c475f7e9eff21443f32178bc2c1e43b7a56fae610fa133327eb9bd257b4a457"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-session-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-session-format.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-session-format.log.gz",
+      "sha256": "560aff1f799a22a22954782bfd060d2f2af3d57d6eba4bb7ffe30a7d0a44cd34",
+      "encoding": "gzip",
+      "stored_sha256": "484dd1ebefffbd67e1e670361d15484238daf4e2ad1492ebc0b1690667053114"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-session-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-session-test-format.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-session-test-format.log.gz",
+      "sha256": "96aa2fa450b7d61198547a78931bbd08ef54047ef62cc006144e18c186f4aad6",
+      "encoding": "gzip",
+      "stored_sha256": "1998c6e7300df24fcaa3978e8e1962f07bfe59c63a7447701cfb033ebb8765a4"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-session-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-api-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-api-types.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-api-types.log.gz",
+      "sha256": "d55ec51e7a2d3e101bff8ffa45bc3c673b075266f9b9ed01e7cd165fa7147139",
+      "encoding": "gzip",
+      "stored_sha256": "1934d28312a1740b35bb45cadc349d47e94e832bdf8548cc55734320fdfe0983"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-api.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-api.log.gz",
+      "sha256": "bd0ee7fe560d0e559b99cc9845ef3aeef7b53d8c3cceb90622c4ad517249aa76",
+      "encoding": "gzip",
+      "stored_sha256": "183f04d07d0306edfb0431a7040318319fb1273f617e4aed94d6bce4ff314757"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-browser-final.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-browser-final.log.gz",
+      "sha256": "60ec61af871373223af574672d5f804ca87090cc48044b17ab13b9daa592e0d2",
+      "encoding": "gzip",
+      "stored_sha256": "d284e3dc3aeead4b4a22a76606323828d9dc97cdf90b28496556ab05b8bd8a91"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-browser.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-browser.log.gz",
+      "sha256": "04abaa4dd9a55edcdc103e1e5898195863c868c97f4a25acb441ad85994eba99",
+      "encoding": "gzip",
+      "stored_sha256": "ee82f38cfb53f51da2d1ee5059543ea7996f7781d4be27e4dce0557d7100a492"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-budgets.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-budgets.log.gz",
+      "sha256": "887068a4a4efc63578d279acd94068d003c789a184a4fcc09e4e109d6c7924a5",
+      "encoding": "gzip",
+      "stored_sha256": "98a4161c5f0b4b03538e0cb6906f643dc6ef844e108225d77456531f713d3f9e"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-contract-final.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-contract-final.log.gz",
+      "sha256": "6c1482dfdb9ba5ce1b521a05d9d54ebe9e31ef11f63f73a21ea2e6cfe601bbe3",
+      "encoding": "gzip",
+      "stored_sha256": "0c450e3e2b687545e478be68e8dfc0e8abaefed107332ed5602240596a7a456a"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-fixture-format.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-fixture-format.log.gz",
+      "sha256": "d90a811fe6e304a144792103724e91774f24e511663effbc136d9d8d878f8c78",
+      "encoding": "gzip",
+      "stored_sha256": "bc6f2d5430185bc44f8bf1b3482457b0f97b7ff281ae2f8a3ed49393c5dc4ea6"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-format.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-format.log.gz",
+      "sha256": "e6e2696a0cde8eef2f810410708cb85e285509d417529eef32cc934cd9de86b6",
+      "encoding": "gzip",
+      "stored_sha256": "f806319726b348564b95fe68c47ad9b8aa14e82e1ad179a63b352d6d68256c5b"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-http-final.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-http-final.log.gz",
+      "sha256": "6ce959aa4a3ba6191e41cc162f8bcb3decd09ccf3bb8aa1ed56d4e4596b11688",
+      "encoding": "gzip",
+      "stored_sha256": "ad1f10ba1f4d9ad85ff64a44793790e46b9846e5b7cc3d4fd4fd438b898bde6d"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-theme-budgets.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-theme-budgets.log.gz",
+      "sha256": "204b44bbd51e4dbb87c9186f294b57c233344a5417c6db337b038f7f41400a69",
+      "encoding": "gzip",
+      "stored_sha256": "bf34ad88278ff759df047bf0bfc5f9fd5e72f572353b0f1860e1de52ed0fb429"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-theme-build.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-theme-build.log.gz",
+      "sha256": "3e75ccb507254e97962220ba10d094eedcaefdd80afc0c246a8ec7ff66ca7c87",
+      "encoding": "gzip",
+      "stored_sha256": "2a8d2f735fec57d68506237f7969c02fd50239233674a6f74fb9d1f2f1bbecbb"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-theme-format.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-theme-format.log.gz",
+      "sha256": "9677661247dc8eafe5592d882fd29f03c457f212051384b36bb2d24d7152c5fa",
+      "encoding": "gzip",
+      "stored_sha256": "f5854db1611cb7de184adb789d596c4050486072e6a3259e1147b15ccbe4909e"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-type-format.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-type-format.log.gz",
+      "sha256": "f0bf8516e238d6483f21d935116603bb05a48afc4357fa6daff752e6b866c928",
+      "encoding": "gzip",
+      "stored_sha256": "e8c0fbed622524fba5f7d336640118f27c683bf2bceaf7bf0de1143960801948"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-web-build.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-web-build.log.gz",
+      "sha256": "a7acdb330bbeb2a54ee5ba4a699f8c90f8027460cb06d9b00217273bf7908101",
+      "encoding": "gzip",
+      "stored_sha256": "26b2c50d4bff371e162c7bd62e264b8b81a3558cae47e2504d2df342ca1baa7f"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-web-format.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-web-format.log.gz",
+      "sha256": "b4fa6cd84b75064e9ea2e95dc3b56c1751cc394559e9e9809b376688f9ac0c7c",
+      "encoding": "gzip",
+      "stored_sha256": "59e36b8186f3fc086d74d4fe46bceb406f3713fc3bf5c6d0ee5fecde6a8c86be"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-web-types.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-customer-deadline-web-unit.log",
+      "path": "audit/evidence/df34b30/r01-invoice-customer-deadline-web-unit.log.gz",
+      "sha256": "c25d02542f4d6a18ed68e4307ac2f2a2560ecc60787e6dd6b1d8044d736c8d68",
+      "encoding": "gzip",
+      "stored_sha256": "b8c922ff8e9c11422d5cbb3475cbf7887799476cd0f3068b2d8d08e1d3e5fc7a"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-response-baseline.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-response-baseline.log.gz",
+      "sha256": "fef1fe8619cc0468dcefa556717eee394b336dd1aead2292e29fd566f0fd7498",
+      "encoding": "gzip",
+      "stored_sha256": "832529af23fc62d841e7c68c05f5bdc712f4b5c9357c4498d1716e3e60ad6374"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-response-final.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-response-final.log.gz",
+      "sha256": "3da4741b55226b7be5b8e691b1d7ad4ce79a759dc31ba98e7ab625c41f0d7283",
+      "encoding": "gzip",
+      "stored_sha256": "392ac464dd810533bad639b55c08d64d703ac705b0d4427f70ef008079a44ca6"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-response-format.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-response-format.log.gz",
+      "sha256": "818a7d83ad82855dffea12f4034b9951b52b84592feee1a830d7f9ab066487f5",
+      "encoding": "gzip",
+      "stored_sha256": "8544e2af01cd5885eec67076600c5424ee8ce0c4e96319ab23dd3914e73aa842"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-response-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-response-test-format.log",
+      "path": "audit/evidence/df34b30/r01-reminder-toggle-response-test-format.log.gz",
+      "sha256": "c4f0da1d3322ad9a5004b89d4eb9a33dbcb7446c8230678e194127e375e93c9a",
+      "encoding": "gzip",
+      "stored_sha256": "731e9522e35ed190d2090273511f8e83194780766536f32d72cd8c6ceb636d51"
+    },
+    {
+      "original_path": "/tmp/r01-reminder-toggle-response-types.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
     }
   ]
 }
