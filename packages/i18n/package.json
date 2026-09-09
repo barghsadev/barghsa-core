@@ -141,6 +141,11 @@
       "types": "./dist/manual-invoice.d.ts",
       "import": "./dist/manual-invoice.js",
       "default": "./dist/manual-invoice.js"
+    },
+    "./invoice-due-periods": {
+      "types": "./dist/invoice-due-periods.d.ts",
+      "import": "./dist/invoice-due-periods.js",
+      "default": "./dist/invoice-due-periods.js"
     }
   },
   "scripts": {

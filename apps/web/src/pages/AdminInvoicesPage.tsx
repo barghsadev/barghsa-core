@@ -21,6 +21,7 @@ import {
 } from '../lib/due-at-override.js';
 import ReminderOffsetTogglePanel from '../components/ReminderOffsetTogglePanel.js';
 import ManualInvoicePanel from '../components/ManualInvoicePanel.js';
+import ServiceDuePeriodPanel from '../components/ServiceDuePeriodPanel.js';
 
 /**
  * Staff dueAt override page (T-04.1.03.03).
@@ -243,6 +244,7 @@ export default function AdminInvoicesPage() {
 
       {time.notice}
       <ReminderOffsetTogglePanel />
+      <ServiceDuePeriodPanel />
 
       <div id="invoice-deadline-panel" className="max-w-xl space-y-6">
         <header>
