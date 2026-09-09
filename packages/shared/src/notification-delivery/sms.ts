@@ -6,6 +6,7 @@ import {
 import { resolvePath } from '../notifications/template-engine.js';
 import { PostgresRateLimiterStore } from '../rate-limit/index.js';
 import type { DeliveryPool } from './email.js';
+import type { DeliveryExecutor } from './execution.js';
 
 export interface SmsMessage {
   providerId: string;
@@ -52,10 +53,20 @@ export async function prepareSmsMessage(
   };
 }
 
-export function createSmsSender(pool: DeliveryPool, request: typeof fetch = fetch) {
+export function createSmsSender(
+  pool: DeliveryPool,
+  request: typeof fetch = fetch,
+  execute?: DeliveryExecutor
+) {
   return async (message: SmsMessage, signal?: AbortSignal): Promise<string> => {
     signal?.throwIfAborted();
-    if (!/^(?:\+98|0)9\d{9}$/.test(message.destination) || !message.parameters.length)
+    if (
+      !/^(?:\+98|0)9\d{9}$/.test(message.destination) ||
+      !message.parameters.length ||
+      !/^\d+$/.test(message.templateId) ||
+      !Number.isSafeInteger(Number(message.templateId)) ||
+      Number(message.templateId) <= 0
+    )
       throw new Error('Invalid SMS message');
     const rows = (
       await pool.query(
@@ -70,15 +81,18 @@ export function createSmsSender(pool: DeliveryPool, request: typeof fetch = fetc
     ).incrementSecurity(`provider:smsir:${message.providerId}`, config.throughput_limit, 60_000);
     if (!quota.allowed) throw new Error('SMS provider quota reached');
     signal?.throwIfAborted();
-    return sendSmsirVerification(
-      decryptProviderSecret(config.api_key),
-      process.env.SMSIR_API_BASE || 'https://api.sms.ir',
-      message.destination,
-      message.templateId,
-      message.parameters,
-      request,
-      config.timeout * 1000,
-      signal
-    );
+    const apiKey = decryptProviderSecret(config.api_key);
+    const send = () =>
+      sendSmsirVerification(
+        apiKey,
+        process.env.SMSIR_API_BASE || 'https://api.sms.ir',
+        message.destination,
+        message.templateId,
+        message.parameters,
+        request,
+        config.timeout * 1000,
+        signal
+      );
+    return execute ? execute({ id: message.providerId, transport: 'smsir' }, send) : send();
   };
 }

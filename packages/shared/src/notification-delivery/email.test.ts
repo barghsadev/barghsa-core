@@ -1,9 +1,12 @@
+const breaker = vi.hoisted(() => ({ record: vi.fn() }));
 vi.mock('./email-breaker.js', () => ({
   EmailCircuitBreaker: class {
     async decision() {
       return { allow: true, kind: 'closed' };
     }
-    async recordOutcome() {}
+    async recordOutcome() {
+      await breaker.record();
+    }
   },
 }));
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
@@ -41,7 +44,11 @@ const message = {
   html: '<p>5000</p>',
   idempotencyKey: 'stable-test-key',
 };
-function setup(suppressed = false, provider = true) {
+function setup(
+  suppressed = false,
+  provider = true,
+  execute?: Parameters<typeof createEmailSender>[2]
+) {
   const query = vi.fn(async (sql: string) => ({
     rows: sql.includes('email_suppressions')
       ? suppressed
@@ -58,8 +65,39 @@ function setup(suppressed = false, provider = true) {
         : [],
   }));
   const request = vi.fn<typeof fetch>(async (_url, options) => fetch(endpoint, options));
-  return { send: createEmailSender({ query }, request), request };
+  return { send: createEmailSender({ query }, request, execute), request };
 }
+
+it('places durable execution after preflight and preserves acceptance when health recording fails', async () => {
+  code = 200;
+  body = { id: 'durable-receipt' };
+  const seen: string[] = [];
+  const execute = vi.fn<NonNullable<Parameters<typeof createEmailSender>[2]>>(
+    async (provider, send) => {
+      expect(provider).toEqual({ id: 'provider', transport: 'resend' });
+      seen.push('started');
+      const receipt = await send();
+      seen.push(receipt);
+      return receipt;
+    }
+  );
+  const { send, request } = setup(false, true, execute);
+  breaker.record.mockRejectedValueOnce(new Error('database unavailable after acceptance'));
+  expect(await send(message)).toBe('durable-receipt');
+  expect(seen).toEqual(['started', 'durable-receipt']);
+  expect(request).toHaveBeenCalledOnce();
+  execute.mockClear();
+  await expect(setup(true, true, execute).send(message)).rejects.toThrow('suppressed');
+  expect(execute).not.toHaveBeenCalled();
+  execute.mockResolvedValueOnce('previously-stored-receipt');
+  const cached = setup(false, true, execute);
+  expect(await cached.send(message)).toBe('previously-stored-receipt');
+  expect(cached.request).not.toHaveBeenCalled();
+  execute.mockRejectedValueOnce(new Error('cannot persist send intent'));
+  const blocked = setup(false, true, execute);
+  await expect(blocked.send(message)).rejects.toThrow('cannot persist');
+  expect(blocked.request).not.toHaveBeenCalled();
+});
 it('sends the selected content and stable key through the HTTP boundary', async () => {
   code = 200;
   body = { id: 'provider-receipt' };

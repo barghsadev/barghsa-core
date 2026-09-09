@@ -1,4 +1,5 @@
 /** SMS.ir v1 envelope and field names, shared by activation tests and delivery. */
+import { DeliveryRejected } from '../notification-delivery/execution.js';
 async function smsirRequest(
   path: string,
   apiKey: string,
@@ -28,7 +29,15 @@ async function smsirRequest(
     data?: unknown;
     Data?: unknown;
   };
-  if ((result.status ?? result.Status) !== 1) throw new Error('SMS.ir rejected request');
+  const status = result.status ?? result.Status;
+  if (typeof status !== 'number' || !Number.isSafeInteger(status))
+    throw new Error('SMS.ir returned an invalid outcome');
+  if (status !== 1) {
+    const data = result.data ?? result.Data;
+    if (data && typeof data === 'object' && ('messageId' in data || 'MessageId' in data))
+      throw new Error('SMS.ir returned a conflicting outcome');
+    throw new DeliveryRejected('SMS.ir rejected request');
+  }
   return result.data ?? result.Data;
 }
 

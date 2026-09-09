@@ -3,6 +3,7 @@ import { lookup } from 'node:dns/promises';
 import { createHash } from 'node:crypto';
 import nodemailer from 'nodemailer';
 import { z } from 'zod';
+import { DeliveryRejected, type DeliveryExecutor } from './execution.js';
 import {
   decryptProviderSecret,
   ResendConfigSchema,
@@ -24,7 +25,11 @@ export interface EmailMessage {
 }
 
 /** Server-only sender shared by queued notifications and staff template tests. */
-export function createEmailSender(pool: DeliveryPool, request: typeof fetch = fetch) {
+export function createEmailSender(
+  pool: DeliveryPool,
+  request: typeof fetch = fetch,
+  execute?: DeliveryExecutor
+) {
   return async (message: EmailMessage): Promise<string> => {
     if (
       !z.string().email().safeParse(message.destination).success ||
@@ -57,29 +62,35 @@ export function createEmailSender(pool: DeliveryPool, request: typeof fetch = fe
         : AbortSignal.timeout(25_000);
       if (provider.transport === 'resend') {
         const config = ResendConfigSchema.parse(provider.config);
-        const response = await request('https://api.resend.com/emails', {
-          method: 'POST',
-          redirect: 'error',
-          signal,
-          headers: {
-            Authorization: `Bearer ${decryptProviderSecret(config.api_key)}`,
-            'Content-Type': 'application/json',
-            'Idempotency-Key': message.idempotencyKey,
-          },
-          body: JSON.stringify({
-            from: config.from_email,
-            to: [message.destination],
-            subject: message.subject,
-            ...(message.html ? { html: message.html } : {}),
-            ...(message.text ? { text: message.text } : {}),
-            reply_to: config.reply_to,
-          }),
-        });
-        if (!response.ok) throw new Error('Email provider rejected message');
-        const body = (await response.json()) as { id?: unknown };
-        if (typeof body.id !== 'string' || !body.id.trim())
-          throw new Error('Email provider returned no receipt');
-        return body.id;
+        const authorization = `Bearer ${decryptProviderSecret(config.api_key)}`;
+        const deliver = async () => {
+          const response = await request('https://api.resend.com/emails', {
+            method: 'POST',
+            redirect: 'error',
+            signal,
+            headers: {
+              Authorization: authorization,
+              'Content-Type': 'application/json',
+              'Idempotency-Key': message.idempotencyKey,
+            },
+            body: JSON.stringify({
+              from: config.from_email,
+              to: [message.destination],
+              subject: message.subject,
+              ...(message.html ? { html: message.html } : {}),
+              ...(message.text ? { text: message.text } : {}),
+              reply_to: config.reply_to,
+            }),
+          });
+          if (!response.ok) throw new Error('Email provider rejected message');
+          const body = (await response.json()) as { id?: unknown };
+          if (typeof body.id !== 'string' || !body.id.trim())
+            throw new Error('Email provider returned no receipt');
+          return body.id;
+        };
+        return execute
+          ? execute({ id: provider.id as string, transport: 'resend' }, deliver)
+          : deliver();
       }
       if (provider.transport !== 'smtp') throw new Error('Email transport unavailable');
       const config = SmtpConfigSchema.parse(provider.config);
@@ -105,34 +116,45 @@ export function createEmailSender(pool: DeliveryPool, request: typeof fetch = fe
         disableFileAccess: true,
         disableUrlAccess: true,
       });
-      let abort!: () => void;
-      const cancelled = new Promise<never>((_, reject) => {
-        abort = () => {
-          transport.close();
-          reject(new Error('Email delivery cancelled'));
-        };
-        signal.addEventListener('abort', abort, { once: true });
-        if (signal.aborted) abort();
-      });
-      try {
+      const deliver = async () => {
         signal.throwIfAborted();
-        const result = await Promise.race([
-          cancelled,
-          transport.sendMail({
-            from: { name: config.from_name ?? 'Barghsa', address: config.from_email },
-            to: message.destination,
-            replyTo: config.reply_to,
-            subject: message.subject,
-            ...(message.html ? { html: message.html } : {}),
-            ...(message.text ? { text: message.text } : {}),
-            messageId: `<${createHash('sha256').update(message.idempotencyKey).digest('hex')}@${config.from_email.split('@')[1]}>`,
-          }),
-        ]);
-        if (result.accepted?.length !== 1 || result.rejected?.length || !result.messageId)
-          throw new Error('SMTP recipient rejected');
-        return result.messageId;
+        let abort!: () => void;
+        const cancelled = new Promise<never>((_, reject) => {
+          abort = () => {
+            transport.close();
+            reject(new Error('Email delivery cancelled'));
+          };
+          signal.addEventListener('abort', abort, { once: true });
+          if (signal.aborted) abort();
+        });
+        try {
+          signal.throwIfAborted();
+          const result = await Promise.race([
+            cancelled,
+            transport.sendMail({
+              from: { name: config.from_name ?? 'Barghsa', address: config.from_email },
+              to: message.destination,
+              replyTo: config.reply_to,
+              subject: message.subject,
+              ...(message.html ? { html: message.html } : {}),
+              ...(message.text ? { text: message.text } : {}),
+              messageId: `<${createHash('sha256').update(message.idempotencyKey).digest('hex')}@${config.from_email.split('@')[1]}>`,
+            }),
+          ]);
+          if (!result.accepted?.length && result.rejected?.length === 1)
+            throw new DeliveryRejected('SMTP recipient rejected');
+          if (result.accepted?.length !== 1 || result.rejected?.length || !result.messageId)
+            throw new Error('SMTP returned an uncertain outcome');
+          return result.messageId;
+        } finally {
+          signal.removeEventListener('abort', abort);
+        }
+      };
+      try {
+        return await (execute
+          ? execute({ id: provider.id as string, transport: 'smtp' }, deliver)
+          : deliver());
       } finally {
-        signal.removeEventListener('abort', abort);
         transport.close();
       }
     };
@@ -140,16 +162,20 @@ export function createEmailSender(pool: DeliveryPool, request: typeof fetch = fe
     try {
       receipt = await send();
     } catch (error) {
-      await breaker.recordOutcome(provider.id, {
-        ok: false,
-        ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
-      });
+      await breaker
+        .recordOutcome(provider.id, {
+          ok: false,
+          ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
+        })
+        .catch(() => {});
       throw error;
     }
-    await breaker.recordOutcome(provider.id, {
-      ok: true,
-      ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
-    });
+    await breaker
+      .recordOutcome(provider.id, {
+        ok: true,
+        ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
+      })
+      .catch(() => {});
     return receipt;
   };
 }

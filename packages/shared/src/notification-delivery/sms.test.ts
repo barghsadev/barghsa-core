@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { createSmsSender, prepareSmsMessage } from './sms.js';
+import { DeliveryRejected } from './execution.js';
 let server: Server,
   endpoint: string,
   response: unknown = { status: 1, data: { messageId: 123 } };
@@ -49,6 +50,50 @@ function setup(count = 1) {
   const request = vi.fn<typeof fetch>(async (_url, options) => fetch(endpoint, options));
   return { pool: { query }, request };
 }
+
+it('executes only after preflight, preserves receipts and distinguishes explicit rejection from uncertainty', async () => {
+  const { pool, request } = setup();
+  const message = await prepareSmsMessage(pool, '+989121234567', 'invoice.created', ['amount'], {
+    amount: 5000,
+  });
+  const execute = vi.fn<NonNullable<Parameters<typeof createSmsSender>[2]>>(
+    async (provider, send) => {
+      expect(provider).toEqual({ id: 'sms-provider', transport: 'smsir' });
+      return send();
+    }
+  );
+  response = { status: 1, data: { messageId: 321 } };
+  expect(await createSmsSender(pool, request, execute)(message)).toBe('321');
+  execute.mockClear();
+  request.mockClear();
+  const limited = setup(3);
+  await expect(createSmsSender(limited.pool, limited.request, execute)(message)).rejects.toThrow(
+    'quota'
+  );
+  expect(execute).not.toHaveBeenCalled();
+  await expect(
+    createSmsSender(pool, request, execute)({ ...message, templateId: 'not-numeric' })
+  ).rejects.toThrow('Invalid');
+  expect(execute).not.toHaveBeenCalled();
+  execute.mockResolvedValueOnce('previously-stored-receipt');
+  expect(await createSmsSender(pool, request, execute)(message)).toBe('previously-stored-receipt');
+  expect(request).not.toHaveBeenCalled();
+  response = { status: 0, data: null };
+  await expect(createSmsSender(pool, request, execute)(message)).rejects.toBeInstanceOf(
+    DeliveryRejected
+  );
+  for (const body of [{}, { status: 1, data: {} }, { status: 0, data: { messageId: 1 } }]) {
+    response = body;
+    const error = await createSmsSender(
+      pool,
+      request,
+      execute
+    )(message).catch((error: unknown) => error);
+    expect(error).toBeInstanceOf(Error);
+    expect(error).not.toBeInstanceOf(DeliveryRejected);
+  }
+  response = { status: 1, data: { messageId: 123 } };
+});
 it('uses only approved mapped variables and requires an actual provider receipt', async () => {
   const { pool, request } = setup();
   const message = await prepareSmsMessage(pool, '+989121234567', 'invoice.created', ['amount'], {

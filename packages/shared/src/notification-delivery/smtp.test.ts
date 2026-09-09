@@ -26,26 +26,30 @@ beforeEach(() => {
     messageId: 'smtp-receipt',
   });
 });
-function sender() {
-  return createEmailSender({
-    query: async (sql) => ({
-      rows: sql.includes('email_suppressions')
-        ? []
-        : [
-            {
-              id: 'smtp-provider',
-              transport: 'smtp',
-              config: {
-                host: 'mail.example.test',
-                from_email: 'sender@example.test',
-                security: 'STARTTLS',
-                username: 'test-only',
-                password: 'test-only',
+function sender(execute?: Parameters<typeof createEmailSender>[2]) {
+  return createEmailSender(
+    {
+      query: async (sql) => ({
+        rows: sql.includes('email_suppressions')
+          ? []
+          : [
+              {
+                id: 'smtp-provider',
+                transport: 'smtp',
+                config: {
+                  host: 'mail.example.test',
+                  from_email: 'sender@example.test',
+                  security: 'STARTTLS',
+                  username: 'test-only',
+                  password: 'test-only',
+                },
               },
-            },
-          ],
-    }),
-  });
+            ],
+      }),
+    },
+    undefined,
+    execute
+  );
 }
 const message = {
   destination: 'staff@example.test',
@@ -53,6 +57,34 @@ const message = {
   text: '5000',
   idempotencyKey: 'same-occurrence',
 };
+it('runs the durable owner after network preflight and can recover without sending again', async () => {
+  const execute = vi.fn<NonNullable<Parameters<typeof createEmailSender>[2]>>(
+    async (provider, send) => {
+      expect(provider).toEqual({ id: 'smtp-provider', transport: 'smtp' });
+      expect(sendMail).not.toHaveBeenCalled();
+      return send();
+    }
+  );
+  expect(await sender(execute)(message)).toBe('smtp-receipt');
+  sendMail.mockClear();
+  execute.mockResolvedValueOnce('stored-smtp-receipt');
+  expect(await sender(execute)(message)).toBe('stored-smtp-receipt');
+  expect(sendMail).not.toHaveBeenCalled();
+  execute.mockClear();
+  lookup.mockResolvedValue([{ address: '127.0.0.1', family: 4 }]);
+  await expect(sender(execute)(message)).rejects.toThrow();
+  expect(execute).not.toHaveBeenCalled();
+});
+it('does not send or leave an unhandled cancellation when the claim owner delays dispatch', async () => {
+  const controller = new AbortController();
+  const execute: NonNullable<Parameters<typeof createEmailSender>[2]> = async (_provider, send) => {
+    controller.abort();
+    return send();
+  };
+  await expect(sender(execute)({ ...message, signal: controller.signal })).rejects.toThrow();
+  expect(sendMail).not.toHaveBeenCalled();
+  expect(close).toHaveBeenCalledOnce();
+});
 it('pins the checked address, requires TLS and keeps stable message IDs across retries', async () => {
   const send = sender();
   expect(await send(message)).toBe('smtp-receipt');
