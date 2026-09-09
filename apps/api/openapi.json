@@ -11722,6 +11722,102 @@
         ]
       }
     },
+    "/api/invoices/{invoiceId}/wallet-payment": {
+      "get": {
+        "operationId": "CustomerWalletInvoicePaymentController_context",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "invoiceId, profileId, remainingAmount and availableBalance as exact IRR strings, and canPay."
+          },
+          "404": {
+            "description": "Invoice or wallet-debit authority unavailable on the active profile."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review remaining invoice amount and available wallet balance for the active owner profile",
+        "tags": [
+          "Invoices"
+        ]
+      },
+      "post": {
+        "operationId": "CustomerWalletInvoicePaymentController_pay",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedRemainingAmount": {
+                    "description": "Positive int8 IRR remaining amount shown at confirmation. Changes require a new review.",
+                    "pattern": "^[1-9]\\d{0,18}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "expectedRemainingAmount"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Exact invoice/profile/key, Paid state, signed-independent positive amount string, walletTransactionId and auditId. Safe retry returns the original result."
+          },
+          "400": {
+            "description": "Invalid input, insufficient available funds or an unpayable invoice."
+          },
+          "403": {
+            "description": "Current session, CSRF, wallet-debit authority and fresh verification are required through commit."
+          },
+          "409": {
+            "description": "Confirmed amount changed or request-key conflict."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Pay the confirmed remaining invoice amount in one atomic wallet debit",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
     "/api/notifications": {
       "get": {
         "operationId": "NotificationsController_findByUser",

@@ -19,7 +19,7 @@ export async function lockFinancialSubmissionActor(
   client: Client,
   actor: FinancialSubmissionActor,
   profileId: string,
-  permission: 'bank-receipts:submit' | 'wallet:charge'
+  permission: 'bank-receipts:submit' | 'wallet:charge' | 'wallet:move-funds'
 ): Promise<void> {
   const account = (
     await client.query(
@@ -43,7 +43,9 @@ export async function lockFinancialSubmissionActor(
         message:
           permission === 'wallet:charge'
             ? 'Archived profiles cannot initiate top-ups'
-            : 'Archived profiles cannot submit bank receipts',
+            : permission === 'wallet:move-funds'
+              ? 'Archived profiles cannot pay invoices'
+              : 'Archived profiles cannot submit bank receipts',
       },
       409
     );

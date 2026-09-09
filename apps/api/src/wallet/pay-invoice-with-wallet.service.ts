@@ -45,6 +45,7 @@ import {
 } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import {
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
@@ -72,6 +73,10 @@ import { isInvoiceState, type InvoiceState } from '../invoice/invoice-state.mode
 import { WalletService, type TransactionRow, type WalletQueryClient } from './wallet.service.js';
 
 export interface PayInvoiceWithWalletOptions {
+  /** A caller may own the transaction to enforce authority through commit. */
+  client?: PoolClient;
+  /** Customer-confirmed remaining amount; reject a changed invoice or replay payload. */
+  expectedRemainingAmount?: bigint;
   /** Override "now" for tests (payableFrom + paid_at). */
   now?: Date;
   /** Source IP of the paying user; omit for system-initiated calls. */
@@ -154,9 +159,9 @@ export class PayInvoiceWithWalletService {
     const now = options.now ?? new Date();
     const key = idempotencyKey.trim();
     const pool = getDbPool();
-    const client = await pool.connect();
+    const client = options.client ?? (await pool.connect());
     try {
-      await client.query('BEGIN');
+      if (!options.client) await client.query('BEGIN');
       const profile = await lockWalletProfile(client, 'profile', ids.profileId);
 
       const claim = await this.idempotencyKeys.claimOrLoad(client, {
@@ -172,8 +177,10 @@ export class PayInvoiceWithWalletService {
           throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
         }
         this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId, key);
-        await client.query('COMMIT');
-        return resultFromCache(parsed);
+        const result = resultFromCache(parsed);
+        this.assertExpectedAmount(result.remainingPaid, options.expectedRemainingAmount);
+        if (!options.client) await client.query('COMMIT');
+        return result;
       }
       if (claim.kind === 'in_flight') {
         throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT());
@@ -199,8 +206,13 @@ export class PayInvoiceWithWalletService {
       });
 
       const existing = await this.findLedgerByIdempotencyKey(client, key);
+      this.assertExpectedAmount(
+        existing ? -existing.amount : remaining,
+        options.expectedRemainingAmount
+      );
       if (existing) {
         return await this.replayOrReject({
+          commit: !options.client,
           client,
           invoice,
           existing,
@@ -259,16 +271,16 @@ export class PayInvoiceWithWalletService {
         replayed: false,
       };
       await this.persistCachedResult(client, key, invoice.id, result);
-      await client.query('COMMIT');
+      if (!options.client) await client.query('COMMIT');
       this.logger.log(
         `Invoice ${invoice.id} paid from wallet ${invoice.profile_id} debit=${debit.id} remaining=${remaining.toString()}`
       );
       return result;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
+      if (!options.client) await client.query('ROLLBACK').catch(() => {});
       throw error;
     } finally {
-      client.release();
+      if (!options.client) client.release();
     }
   }
 
@@ -391,6 +403,7 @@ export class PayInvoiceWithWalletService {
   }
 
   private async replayOrReject(input: {
+    commit: boolean;
     client: WalletQueryClient;
     invoice: LockedInvoiceRow;
     existing: TransactionRow;
@@ -427,7 +440,7 @@ export class PayInvoiceWithWalletService {
         replayed: true,
       };
       await this.persistCachedResult(input.client, input.idempotencyKey, input.invoice.id, result);
-      await input.client.query('COMMIT');
+      if (input.commit) await input.client.query('COMMIT');
       return result;
     }
 
@@ -461,8 +474,15 @@ export class PayInvoiceWithWalletService {
       replayed: true,
     };
     await this.persistCachedResult(input.client, input.idempotencyKey, input.invoice.id, result);
-    await input.client.query('COMMIT');
+    if (input.commit) await input.client.query('COMMIT');
     return result;
+  }
+
+  private assertExpectedAmount(actual: bigint, expected: bigint | undefined) {
+    if (expected !== undefined && expected !== actual)
+      throw new ConflictException(
+        'Invoice amount changed; review the current amount before paying'
+      );
   }
 
   private async settleInvoice(
