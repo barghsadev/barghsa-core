@@ -66,7 +66,7 @@ export function StaffPermissionHistory({
     return value === key ? role.roleName : value;
   };
   return (
-    <section className="space-y-4 rounded-lg border bg-white p-4" aria-label={label('title')}>
+    <section className="space-y-4 rounded-lg border bg-card p-4" aria-label={label('title')}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">
           {label('title')}
@@ -141,7 +141,7 @@ export function StaffPermissionHistory({
             {label('clear')}
           </Button>
         </div>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-muted-foreground">
           {zone.status === 'ready' && label('timezone').replace('{timezone}', zone.timezone)}
         </p>
         {invalid && <p role="alert">{label('invalidRange')}</p>}

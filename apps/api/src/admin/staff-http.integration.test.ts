@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import * as argon2 from 'argon2';
 import { startHttpFixture } from '../test/http-fixture.js';
+import type { StaffAuditResult } from './admin.service.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let adminHeaders: Record<string, string>;
@@ -107,6 +108,91 @@ it('lets staff creators select initial roles without granting role-management ac
   await http.pool.query('DELETE FROM user_roles WHERE user_id=$1', [userId]);
   expect((await fetch(`${http.base}/api/admin/staff-role-options`, { headers })).status).toBe(403);
   expect((await fetch(`${http.base}/api/admin/staff-role-options`)).status).toBe(401);
+});
+
+it('reads persisted role additions and removals with target and date filters', async () => {
+  const userId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'fixture-only',true)",
+    [userId, `${userId}@example.test`]
+  );
+  for (const roleIds of [['role-finance'], ['role-customer-support']]) {
+    const response = await fetch(`${http.base}/api/admin/users/${userId}/roles`, {
+      method: 'PUT',
+      headers: adminHeaders,
+      body: JSON.stringify({ roleIds, reason: 'Timeline review' }),
+    });
+    expect(response.status, await response.text()).toBe(200);
+  }
+  const rows = await http.pool.query<{ id: string }>(
+    "SELECT id FROM audit_log WHERE event='role_change' AND metadata::jsonb->>'targetUserId'=$1 ORDER BY created_at,id",
+    [userId]
+  );
+  expect(rows.rows).toHaveLength(2);
+  for (const [index, row] of rows.rows.entries())
+    await http.pool.query('UPDATE audit_log SET created_at=$2 WHERE id=$1', [
+      row.id,
+      `2026-03-${20 + index}T12:00:00Z`,
+    ]);
+  const read = async (query: string) => {
+    const response = await fetch(`${http.base}/api/admin/staff/audit?userId=${userId}&${query}`, {
+      headers: adminHeaders,
+    });
+    expect(response.status, await response.clone().text()).toBe(200);
+    return response.json() as Promise<StaffAuditResult>;
+  };
+  const all = await read('limit=1');
+  expect(all).toMatchObject({ total: 2, limit: 1, offset: 0 });
+  expect(all.items).toEqual([
+    expect.objectContaining({
+      targetUserId: userId,
+      targetUsername: `${userId}@example.test`,
+      actorUsername: 'admin@example.test',
+      addedRoles: [{ roleId: 'role-customer-support', roleName: 'Customer Support' }],
+      removedRoles: [{ roleId: 'role-finance', roleName: 'Finance' }],
+      reason: 'Timeline review',
+      createdAt: '2026-03-21T12:00:00.000Z',
+    }),
+  ]);
+  const older = await read('limit=1&offset=1');
+  expect(older.items[0]).toMatchObject({
+    addedRoles: [{ roleId: 'role-finance', roleName: 'Finance' }],
+    removedRoles: [],
+  });
+  const filtered = await read('from=2026-03-21T00:00:00Z&to=2026-03-21T23:59:59.999Z');
+  expect(filtered.total).toBe(1);
+  expect(filtered.items).toEqual(all.items);
+  expect(await read('from=2026-03-22T00:00:00Z')).toMatchObject({ items: [], total: 0 });
+  for (const query of [
+    'userId=invalid',
+    'from=invalid',
+    'to=invalid',
+    'from=2026-03-22&to=2026-03-21',
+  ])
+    expect(
+      (await fetch(`${http.base}/api/admin/staff/audit?${query}`, { headers: adminHeaders })).status
+    ).toBe(400);
+});
+
+it('restricts staff permission history to current authorized viewers', async () => {
+  const userId = randomUUID(),
+    roleId = `audit-viewer-${randomUUID()}`;
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'fixture-only',true)",
+    [userId, `${userId}@example.test`]
+  );
+  const headers = await session(userId);
+  const url = `${http.base}/api/admin/staff/audit`;
+  expect((await fetch(url)).status).toBe(401);
+  expect((await fetch(url, { headers })).status).toBe(403);
+  await http.pool.query(
+    'INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$2,$3,$4)',
+    [roleId, 'Audit viewer', 'Fixture', '["admin:staff:view"]']
+  );
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [userId, roleId]);
+  expect((await fetch(url, { headers })).status).toBe(200);
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id=$1", [roleId]);
+  expect((await fetch(url, { headers })).status).toBe(403);
 });
 
 it('creates staff with named roles without granting platform administration, including staff without roles', async () => {

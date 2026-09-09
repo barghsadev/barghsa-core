@@ -231,6 +231,25 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(history).toContainText(
       fa ? 'نقش‌های حذف‌شده: پشتیبانی مشتریان' : 'Roles removed: Customer Support'
     );
+    await expect(history).toContainText(fa ? 'نقش‌های افزوده: مالی' : 'Roles added: Finance');
+    await expect(history).toContainText('actor@example.test');
+    await expect(history.locator('time')).toHaveAttribute('datetime', '2026-03-21T12:00:00Z');
+    for (const dark of [false, true]) {
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((animation) => animation.effect?.getComputedTiming().endTime !== Infinity)
+            .map((animation) => animation.finished.catch(() => {}))
+        );
+      }, dark);
+      const report = await new AxeBuilder({ page })
+        .include('section[aria-label="' + (fa ? 'تاریخچه مجوزها' : 'Permission history') + '"]')
+        .analyze();
+      expect(report.violations, `permission history accessibility, dark=${dark}`).toEqual([]);
+    }
+    await page.evaluate(() => document.documentElement.classList.remove('dark'));
     await history.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
     await page.locator('#staff-audit-from').click();
