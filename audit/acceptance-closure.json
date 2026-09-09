@@ -6554,41 +6554,62 @@
       "source_evidence": [
         {
           "path": "apps/api/src/profiles/profiles.service.ts",
-          "sha256": "8d99a65832d1c8d0ca10352973f06e72092c3848e417dbbbb124989523a99d80"
+          "sha256": "90c73377b0491a4fb7dfe97e76543bb1e7d83a4b781ff7c705fa6e73d03b141a"
         },
         {
-          "path": "apps/api/src/profiles/profiles.guard.ts",
-          "sha256": "853391a898f19ef6386234216fad187e59d6686cead2fff36320516e14071d3d"
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "e84f403690fd60b010f16653baafe431555ec19eccab8fc92f3197e257da0886"
         },
         {
-          "path": "apps/api/src/profiles/verification-http.integration.test.ts",
-          "sha256": "32baac0d151eec8df6d6cc5aa2bff6d15d98a636e8115685a92dd780addfa704"
+          "path": "apps/api/src/orders/orders.controller.ts",
+          "sha256": "1ee5451a2828fa4713160e93c0d98e5fa1201907a684f0c39ebd32fbf32ef226"
+        },
+        {
+          "path": "apps/api/src/orders/orders.service.test.ts",
+          "sha256": "93119ad51ad45b01f9f10f6dfb35a02f8333a816722da2f8d0d9f228520c276a"
+        },
+        {
+          "path": "apps/api/src/orders/orders.controller.test.ts",
+          "sha256": "dddfa67ba632d99082ffd4c43ddfe27ad11df4a5773b56110fd87cf9575eab7b"
+        },
+        {
+          "path": "apps/api/src/orders/order-access-http.integration.test.ts",
+          "sha256": "b5bd279fcb3d18080d7bebb3d3eb2b4fb8fca96f193478bd67c13c59bffe2388"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/order.tsx",
+          "sha256": "176811b7b2d0b03d5d43b1a9abaa271ddf7fa2ac6533e382630b1dfe6080fc29"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "c3f244681f482fcf615a697c50f1d06ca2b509e6e9dc7a220d41d6ea68286e48"
         },
         {
           "path": "apps/web/src/components/VerificationBanner.tsx",
           "sha256": "ee5b6b4bc9d9c7eab8e01ec1cd232dec5a2eef434c708f361ee3ed9c1d1701d4"
+        },
+        {
+          "path": "apps/api/src/profiles/verification-http.integration.test.ts",
+          "sha256": "32baac0d151eec8df6d6cc5aa2bff6d15d98a636e8115685a92dd780addfa704"
         }
       ],
       "checks": [
-        "Verification banner reflects current active profile and system mode, provides localized manual/support guidance, and does not gate switching or allowed non-commercial pages. No identity provider exists, so API verification returns unavailable and never simulates success. Actual commercial-order submission enforcement and blocking UI remain assigned to the order domain; reusable guard existence does not close this task.",
-        "Exact focused checks, failure history, evidence reuse and limitations are recorded once in audit/evidence/step-reviews.json#R01-profiles-onboarding."
+        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses"
       ],
       "merged_prs": [
         103
       ],
       "historically_skipped": false,
-      "status": "partial",
-      "reviewed_sha": "ab09a87771f0257f95d65cc4221add205d21f2bf",
+      "status": "acceptance_verified",
+      "reviewed_sha": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
       "limitations": [
-        "Local implementation and fixture-backed acceptance only; live deployment/data/provider operation remains external.",
-        "Actual new commercial-order submission enforcement and blocking UI require the assigned order-domain acceptance. Future provider integration requires an approved contract and existing authorization/configuration/audit prerequisites; automatic verification remains unavailable."
+        "Local source and fixture-backed acceptance; no production/provider deployment claim.",
+        "No identity provider exists. Automatic verification remains unavailable; integration requires an approved future provider contract. Current commercial-order submission is enforced; future product endpoints must preserve the same policy."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+      "review_record": "audit/evidence/step-reviews.json#R01-profile-addresses",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
-        "audit/final-repair-checkpoint.json",
-        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+        "audit/evidence/step-reviews.json#R01-profile-addresses",
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding"
       ]
     },
     {
@@ -7083,6 +7104,167 @@
         "audit/evidence/step-reviews.json#R01-account-settings",
         "audit/final-repair-checkpoint.json"
       ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.04.01",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 326,
+      "requirement": "**T-03.04.01 — Address CRUD for current profile**\n\n- Description: Customers can manage addresses under their active profile. Main address (from onboarding) shown. Can add, edit, delete, or set as main. Only one address can be main. Addresses filtered by current active profile only.\n- Technical notes: GET/POST/PUT/DELETE `/api/profiles/:profileId/addresses`. Main address flag is unique per profile. Deleting the main address requires selecting a new main address first. Addresses linked to orders cannot be deleted (soft delete + warn).\n- UI/UX: Address list with main badge. Add/edit modal form with province/city selects. Set as main action via star/radio. Confirmation on delete.\n- Dependencies: T-03.02.02 (address schema), T-03.03.01\n- Complexity: M",
+      "requirement_sha256": "1bbcdddaa6b5e32b5cf5daab2358916df235e1126a22ec096bc9762b93756d4d",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "90c73377b0491a4fb7dfe97e76543bb1e7d83a4b781ff7c705fa6e73d03b141a"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "5229d1572ac3787c3484d6dca47a071e37d9fb197add2f31b3295aae9eb21878"
+        },
+        {
+          "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+          "sha256": "9f6f56a2e45944abfe9e5699856ad3fa0a1431354cd03f8055bbf756d57b0979"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.test.ts",
+          "sha256": "14f49816644201e0b74c5e1c0ff0235c16b296a6343baa0c0948220082051076"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-address.ts",
+          "sha256": "400401f147460031e4eb57fa85631065e52e5b85ad1d064119ceedfc7ec72483"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "46bb215a81797f4d248153825a98d509ee05466d26be79ee9492b248fa78bc6f"
+        },
+        {
+          "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
+          "sha256": "e5abfbef6a331f8a493bd855dfa38da13819ee91e31759d55faec76faf392bcc"
+        },
+        {
+          "path": "packages/db/src/schema/addresses.ts",
+          "sha256": "dc372575f421db116a85dc8102ce11a11c7a7316c059053f2f9e6249f8a12879"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "438e14bb18424aa9b3b151a4eb9956ac99f3e9c0c245c467c46de5dc0994694a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0124_address_soft_delete.sql",
+          "sha256": "9891d9cb7ed2c01b6e80d8b7278f3131a5f56c1d5c1c0cbb5363ac6b319b973e"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0124_snapshot.json",
+          "sha256": "4d90b1aaa2568ff2e5c2534da3deb245279300f4ae636d7d8839f383cc80c7c8"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "dd5dc33eafd2350f650b515c09c97523162dc4a5a51dcb4e3416fd6dbb1a8c63"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+          "sha256": "00840c7119786257ebfcfdd916e70352b72bd0b6df9eebef1ff6d297aa913b25"
+        },
+        {
+          "path": "packages/i18n/src/addresses.ts",
+          "sha256": "dd00f1d5d8eae271822bd7e78790a581573e851ae04d0e57c539a3489c1f7f45"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "c3f244681f482fcf615a697c50f1d06ca2b509e6e9dc7a220d41d6ea68286e48"
+        }
+      ],
+      "checks": [
+        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses"
+      ],
+      "merged_prs": [
+        115
+      ],
+      "historically_skipped": false,
+      "status": "acceptance_verified",
+      "reviewed_sha": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+      "limitations": [
+        "Local source and fixture-backed acceptance; no production/provider deployment claim."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profile-addresses",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profile-addresses",
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.04.02",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 334,
+      "requirement": "**T-03.04.02 — Address in order flow**\n\n- Description: Address selection/creation available during order flows (electricity, saving plans, solar). User can select from saved addresses or add new one (which becomes saved).\n- Technical notes: Order stores snapshot of address (values copied, not foreign key). This ensures historical accuracy if address changes later.\n- UI/UX: Address selector with \"Use existing\" list and \"Add new address\" option.\n- Dependencies: T-03.04.01\n- Complexity: M\n\n---",
+      "requirement_sha256": "922256768c786ce391de2b9fa542241ca7a2f40bdad928ca0b0182ae0e58ee28",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "90c73377b0491a4fb7dfe97e76543bb1e7d83a4b781ff7c705fa6e73d03b141a"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "5229d1572ac3787c3484d6dca47a071e37d9fb197add2f31b3295aae9eb21878"
+        },
+        {
+          "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+          "sha256": "9f6f56a2e45944abfe9e5699856ad3fa0a1431354cd03f8055bbf756d57b0979"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.test.ts",
+          "sha256": "14f49816644201e0b74c5e1c0ff0235c16b296a6343baa0c0948220082051076"
+        },
+        {
+          "path": "packages/db/src/schema/addresses.ts",
+          "sha256": "dc372575f421db116a85dc8102ce11a11c7a7316c059053f2f9e6249f8a12879"
+        },
+        {
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "e84f403690fd60b010f16653baafe431555ec19eccab8fc92f3197e257da0886"
+        },
+        {
+          "path": "apps/api/src/orders/orders.controller.ts",
+          "sha256": "1ee5451a2828fa4713160e93c0d98e5fa1201907a684f0c39ebd32fbf32ef226"
+        },
+        {
+          "path": "apps/api/src/orders/orders.service.test.ts",
+          "sha256": "93119ad51ad45b01f9f10f6dfb35a02f8333a816722da2f8d0d9f228520c276a"
+        },
+        {
+          "path": "apps/api/src/orders/orders.controller.test.ts",
+          "sha256": "dddfa67ba632d99082ffd4c43ddfe27ad11df4a5773b56110fd87cf9575eab7b"
+        },
+        {
+          "path": "apps/api/src/orders/order-access-http.integration.test.ts",
+          "sha256": "b5bd279fcb3d18080d7bebb3d3eb2b4fb8fca96f193478bd67c13c59bffe2388"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/order.tsx",
+          "sha256": "176811b7b2d0b03d5d43b1a9abaa271ddf7fa2ac6533e382630b1dfe6080fc29"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "c3f244681f482fcf615a697c50f1d06ca2b509e6e9dc7a220d41d6ea68286e48"
+        }
+      ],
+      "checks": [
+        "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses"
+      ],
+      "merged_prs": [
+        116
+      ],
+      "historically_skipped": false,
+      "status": "partial",
+      "reviewed_sha": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+      "limitations": [
+        "Local source and fixture-backed acceptance; no production/provider deployment claim.",
+        "Savings/solar address selection and saved-address creation remain incomplete with their unbuilt product flows. Reconcile generic snapshot requirements with future product schemas before building. Track in V01/B01; do not recreate whole order products in this repair batch."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-profile-addresses",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-profile-addresses",
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -7184,8 +7366,6 @@
     "01-platform-infrastructure.md#T-07.05.02",
     "01-platform-infrastructure.md#T-07.05.03",
     "01-platform-infrastructure.md#T-07.05.04",
-    "02-auth-users-admin.md#T-03.04.01",
-    "02-auth-users-admin.md#T-03.04.02",
     "02-auth-users-admin.md#T-05.05.02",
     "02-auth-users-admin.md#T-06.01.01",
     "02-auth-users-admin.md#T-06.01.02",

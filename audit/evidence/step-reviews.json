@@ -6949,6 +6949,321 @@
         "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
         "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz"
       ]
+    },
+    {
+      "id": "R01-profile-addresses",
+      "date": "2026-09-09",
+      "source_revision": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+      "base_revision": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+      "product_commits": [
+        "47bdfc2",
+        "e8f9007",
+        "9fc1da7",
+        "c77aafb",
+        "1c06613"
+      ],
+      "summary": "Address CRUD and linked commercial-verification enforcement verified; electricity order selection/snapshots verified locally. Savings/solar integration remains partial. Two task records verified, one partial; one linked PR closed and two open.",
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.04.01",
+        "02-auth-users-admin.md#T-03.04.02",
+        "02-auth-users-admin.md#T-03.01.02"
+      ],
+      "primary_task_keys": [
+        "02-auth-users-admin.md#T-03.04.01",
+        "02-auth-users-admin.md#T-03.04.02"
+      ],
+      "review": [
+        "Address mutations lock the enabled actor account, current session and owner/Manager profile authority through commit. Finance/Legal/stranger and removed memberships are denied. Main selection remains unique; geography membership/activity and concurrent main/remove behavior pass.",
+        "Removal now updates deleted_at and retains saved values. Customer/CRM active lists and edits exclude removed rows. Main addresses cannot be removed until another is selected, enforced by application checks and the database constraint. Orders copy address values without a saved-address FK; actual order API creation/read/edit/remove tests preserve those values.",
+        "Address UI presents a localized confirmation with the chosen address and retention warning. Cancel is initially focused, pending requests cannot be dismissed/repeated, failures remain retryable and focus returns to the trigger or heading. Main removal shows the required prerequisite. Reads distinguish errors from an empty list; writes use the displayed profile, avoiding retargeting after another context change.",
+        "New order creation now checks the submitted profile rather than an unrelated default. Locked profile status and current canonical/legacy policy enforce verification, reject DRAFT/SUSPENDED and treat invalid explicit mode as enforced. A short SHARE lock on app_config covers absent keys and prevents policy writes during the order transaction. Owner/Manager rights remain current. Existing orders remain readable/cancellable when verification becomes required.",
+        "Order create/cancel bind current session and submitted CSRF through commit, with correlated audit. Expiry rolls back orders, audit and gift redemption/release together. Profile and policy changes during lock waits are rechecked. UI also blocks draft/suspended profiles and unavailable/malformed verification results.",
+        "PR116 implements the electricity selector/new saved address path. Savings remains a placeholder and no solar route exists. Those product-flow requirements are incomplete. PR115's order-integration deferral is only partly satisfied; PR115/116 remain open. PR103 verification enforcement closes for implemented order submission after linked current evidence; real identity-provider integration remains unavailable by the recorded user decision."
+      ],
+      "checks": [
+        "110 distinct API cases across six affected files:59 address/profile/CRM and51 order cases. Order runs46+3+2 are distinct; repeated gift and address reruns overlap and are not added. Initial address/session/history and eight order-policy/session failing reproductions are preserved.",
+        "Two production migration tests pass, including populated0123 upgrade to0124, preservation of saved values, main/deleted constraint, fresh baseline, legacy upgrade and repeat no-op. Existing legacy fixture downgrade was corrected to remove new0123/0124 fields; the initial fixture failure is retained. Generated snapshot consistency and DB/API types/lint pass.",
+        "24 distinct Chromium browser cases:8 address cases across focused runs and16 current ordering cases in fa/en. Address dialog/geography evidence is reused after unchanged source; the unrelated invitation shell fixture now returns an empty list. Order UI checks cover selection/new save, captured drafts, malformed acknowledgements, retry, field labels, stale geography and verification blocking. Initial fixture selector/readiness failures remain saved.",
+        "Current production web build, web types, focused lint, generated OpenAPI contract and42 unchanged route/interaction budgets pass. No broad regression, coverage, image, fresh GitHub or deployment result is renewed.",
+        "Generated OpenAPI JSON is semantically identical to the committed artifact. Original key ordering retained to avoid an unrelated503-line reorder. Audit/requirements/backlog checks pass; saved GitHub inventory is unchanged."
+      ],
+      "repairs": [
+        "47bdfc2: address session authority",
+        "e8f9007: retained address history and additive migration0124",
+        "9fc1da7: localized removal confirmation and displayed-profile binding",
+        "c77aafb: current order session and commercial verification",
+        "1c06613: draft/suspended order UI gate"
+      ],
+      "historical_dispositions": [
+        "PR115 order-flow deferral partially satisfied by PR116/current electricity implementation; remaining savings/solar dependencies explicit. No repeated-task group covers PR103/115/116."
+      ],
+      "remaining": [
+        "Savings/solar address selection and saved-address creation remain incomplete with their unbuilt product flows. Reconcile generic snapshot requirements with future product schemas before building. Track in V01/B01; do not recreate whole order products in this repair batch.",
+        "Migration0124 must precede API rollout. Only disposable local databases were migrated; deployed legacy addresses/orders require operational reconciliation.",
+        "Real identity provider, full payment/order/invoice lifecycle, broad V02 and remaining cross-domain agent permissions retain their assigned phases."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 103,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.01.02"
+          ],
+          "reason": "Current target-profile enforcement and blocking UI now complement preserved verification context/banner/manual-unavailable-provider evidence. Saved auto-success stub claim is superseded by the user decision that no provider exists.",
+          "source_revision": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+          "evidence": "audit/evidence/step-reviews.json#R01-profile-addresses"
+        },
+        {
+          "pr": 115,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.04.01"
+          ],
+          "reason": "Address CRUD acceptance is verified. Historical order-flow integration deferral is satisfied for electricity but still requires savings/solar consumers.",
+          "source_revision": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+          "evidence": "audit/evidence/step-reviews.json#R01-profile-addresses"
+        },
+        {
+          "pr": 116,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.04.02"
+          ],
+          "reason": "Electricity selector/new saved address and immutable order snapshots pass. Required savings/solar screens are incomplete.",
+          "source_revision": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+          "evidence": "audit/evidence/step-reviews.json#R01-profile-addresses"
+        }
+      ],
+      "pr_counts": {
+        "closed": 1,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "Four verification service members, VerificationBanner and verification HTTP test are unchanged sinceab09a87; comparison log binds this reuse.",
+        "Earlier account-settings and onboarding checks remain limited to unchanged members. Current API-only changes preserve9fc1da7 address UI evidence; ordering has current browser evidence."
+      ],
+      "reused_review_records": [
+        "audit/evidence/step-reviews.json#R01-profiles-onboarding",
+        "audit/evidence/step-reviews.json#R01-account-settings",
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "90c73377b0491a4fb7dfe97e76543bb1e7d83a4b781ff7c705fa6e73d03b141a"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "5229d1572ac3787c3484d6dca47a071e37d9fb197add2f31b3295aae9eb21878"
+        },
+        {
+          "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
+          "sha256": "9f6f56a2e45944abfe9e5699856ad3fa0a1431354cd03f8055bbf756d57b0979"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.test.ts",
+          "sha256": "14f49816644201e0b74c5e1c0ff0235c16b296a6343baa0c0948220082051076"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-address.ts",
+          "sha256": "400401f147460031e4eb57fa85631065e52e5b85ad1d064119ceedfc7ec72483"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "46bb215a81797f4d248153825a98d509ee05466d26be79ee9492b248fa78bc6f"
+        },
+        {
+          "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
+          "sha256": "e5abfbef6a331f8a493bd855dfa38da13819ee91e31759d55faec76faf392bcc"
+        },
+        {
+          "path": "packages/db/src/schema/addresses.ts",
+          "sha256": "dc372575f421db116a85dc8102ce11a11c7a7316c059053f2f9e6249f8a12879"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "438e14bb18424aa9b3b151a4eb9956ac99f3e9c0c245c467c46de5dc0994694a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0124_address_soft_delete.sql",
+          "sha256": "9891d9cb7ed2c01b6e80d8b7278f3131a5f56c1d5c1c0cbb5363ac6b319b973e"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0124_snapshot.json",
+          "sha256": "4d90b1aaa2568ff2e5c2534da3deb245279300f4ae636d7d8839f383cc80c7c8"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "dd5dc33eafd2350f650b515c09c97523162dc4a5a51dcb4e3416fd6dbb1a8c63"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/addresses.tsx",
+          "sha256": "00840c7119786257ebfcfdd916e70352b72bd0b6df9eebef1ff6d297aa913b25"
+        },
+        {
+          "path": "packages/i18n/src/addresses.ts",
+          "sha256": "dd00f1d5d8eae271822bd7e78790a581573e851ae04d0e57c539a3489c1f7f45"
+        },
+        {
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "e84f403690fd60b010f16653baafe431555ec19eccab8fc92f3197e257da0886"
+        },
+        {
+          "path": "apps/api/src/orders/orders.controller.ts",
+          "sha256": "1ee5451a2828fa4713160e93c0d98e5fa1201907a684f0c39ebd32fbf32ef226"
+        },
+        {
+          "path": "apps/api/src/orders/orders.service.test.ts",
+          "sha256": "93119ad51ad45b01f9f10f6dfb35a02f8333a816722da2f8d0d9f228520c276a"
+        },
+        {
+          "path": "apps/api/src/orders/orders.controller.test.ts",
+          "sha256": "dddfa67ba632d99082ffd4c43ddfe27ad11df4a5773b56110fd87cf9575eab7b"
+        },
+        {
+          "path": "apps/api/src/orders/order-access-http.integration.test.ts",
+          "sha256": "b5bd279fcb3d18080d7bebb3d3eb2b4fb8fca96f193478bd67c13c59bffe2388"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/order.tsx",
+          "sha256": "176811b7b2d0b03d5d43b1a9abaa271ddf7fa2ac6533e382630b1dfe6080fc29"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "c3f244681f482fcf615a697c50f1d06ca2b509e6e9dc7a220d41d6ea68286e48"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "ee5b6b4bc9d9c7eab8e01ec1cd232dec5a2eef434c708f361ee3ed9c1d1701d4"
+        },
+        {
+          "path": "apps/api/src/profiles/verification-http.integration.test.ts",
+          "sha256": "32baac0d151eec8df6d6cc5aa2bff6d15d98a636e8115685a92dd780addfa704"
+        }
+      ],
+      "evidence": [
+        "audit/evidence/1c06613/r01-address-batch-audit.log.gz",
+        "audit/evidence/1c06613/r01-address-batch-source-reuse.log.gz",
+        "audit/evidence/1c06613/r01-address-checkpoint-audit.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-api.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-before.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-boundaries.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-format.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-gift-rollback-final.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-gift-rollback.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-openapi-generate.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-openapi-reuse.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-openapi.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-test-format-v2.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-test-format-v3.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-test-format.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-types.log.gz",
+        "audit/evidence/1c06613/r01-order-verification-ui-browser.log.gz",
+        "audit/evidence/1c06613/r01-order-verification-ui-budgets.log.gz",
+        "audit/evidence/1c06613/r01-order-verification-ui-build.log.gz",
+        "audit/evidence/1c06613/r01-order-verification-ui-format.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/612434d/barghsa-repair-final-backlog.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-browser-v2.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-browser-v3.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-browser-v4.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-browser.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-budgets-v3.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-budgets.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-build-v2.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-build-v3.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-build.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-format-v2.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-format-v3.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-test-format-v4.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-test-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-api.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-before.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-generate.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-migration-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-migrations-v2.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-migrations.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-schema-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-snapshot.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-test-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-session-api.log.gz",
+        "audit/evidence/9fc1da7/r01-address-session-before.log.gz",
+        "audit/evidence/9fc1da7/r01-address-session-format-write.log.gz",
+        "audit/evidence/9fc1da7/r01-address-session-openapi-generate.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-prs.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-requirements.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-skips.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-db-types.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz"
+      ],
+      "logs": [
+        "audit/evidence/1c06613/r01-address-batch-audit.log.gz",
+        "audit/evidence/1c06613/r01-address-batch-source-reuse.log.gz",
+        "audit/evidence/1c06613/r01-address-checkpoint-audit.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-api.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-before.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-boundaries.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-format.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-gift-rollback-final.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-gift-rollback.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-openapi-generate.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-openapi-reuse.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-openapi.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-test-format-v2.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-test-format-v3.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-test-format.log.gz",
+        "audit/evidence/1c06613/r01-order-authority-types.log.gz",
+        "audit/evidence/1c06613/r01-order-verification-ui-browser.log.gz",
+        "audit/evidence/1c06613/r01-order-verification-ui-budgets.log.gz",
+        "audit/evidence/1c06613/r01-order-verification-ui-build.log.gz",
+        "audit/evidence/1c06613/r01-order-verification-ui-format.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/612434d/barghsa-repair-final-backlog.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-browser-v2.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-browser-v3.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-browser-v4.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-browser.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-budgets-v3.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-budgets.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-build-v2.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-build-v3.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-build.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-format-v2.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-format-v3.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-test-format-v4.log.gz",
+        "audit/evidence/9fc1da7/r01-address-confirm-test-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-api.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-before.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-generate.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-migration-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-migrations-v2.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-migrations.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-schema-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-snapshot.log.gz",
+        "audit/evidence/9fc1da7/r01-address-history-test-format.log.gz",
+        "audit/evidence/9fc1da7/r01-address-session-api.log.gz",
+        "audit/evidence/9fc1da7/r01-address-session-before.log.gz",
+        "audit/evidence/9fc1da7/r01-address-session-format-write.log.gz",
+        "audit/evidence/9fc1da7/r01-address-session-openapi-generate.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-prs.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-requirements.log.gz",
+        "audit/evidence/r01/barghsa-audit-refresh-skips.log.gz",
+        "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+        "audit/evidence/r01/barghsa-device-trust-ip-db-types.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz"
+      ]
     }
   ]
 }

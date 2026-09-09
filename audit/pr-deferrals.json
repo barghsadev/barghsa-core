@@ -1015,7 +1015,16 @@
     "historical_deferrals": [
       "- [ ] Order flow integration (T-03.04.02)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Electricity integration satisfied by PR116/current source; required savings/solar consumers remain open.",
+    "reviewed_source_revision": "1c066138f38de21a32d6ca6b7a0d604eb7963f0d",
+    "review_record": "audit/evidence/step-reviews.json#R01-profile-addresses",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "future_dependency",
+        "evidence": "Electricity selector/new saved address and copied order snapshots pass. Savings/solar consumers are not implemented; their product flows remain V01/B01 dependencies. PR115 remains open. audit/evidence/step-reviews.json#R01-profile-addresses"
+      }
+    ]
   },
   {
     "pr": 106,
