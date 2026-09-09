@@ -14,3 +14,4 @@ export * from './delivery-window-config.js';
 export * from './template-engine.js';
 export * from './navigation.js';
 export * from './inbox-content.js';
+export * from './email-branding.js';

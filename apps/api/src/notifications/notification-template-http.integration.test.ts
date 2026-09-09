@@ -75,6 +75,36 @@ async function seed(action: Action, event = `fix.template.${randomUUID()}`) {
     await http.pool.query("UPDATE notification_templates SET channel='in_app' WHERE id=$1", [id]);
   return { id, event };
 }
+
+for (const locale of ['fa', 'en'])
+  for (const channel of ['email', 'sms', 'in_app']) {
+    it(`previews ${locale} ${channel} with current branding and actual variable semantics`, async () => {
+      await http.pool.query('DELETE FROM brand_config');
+      await http.pool.query(`INSERT INTO brand_config(config,version,status,created_by)
+      VALUES ('{"appTitle":"Published preview","primaryColor":"#123456"}',1,'active','template-editor'),
+      ('{"appTitle":"Hidden draft"}',2,'draft','template-editor')`);
+      const response = await fetch(`${http.base}/api/admin/notifications/templates/preview`, {
+        method: 'POST',
+        headers: headers.editor!,
+        body: JSON.stringify({
+          channel,
+          locale,
+          bodyTemplate: '<p>Hello {{user.name}}</p>',
+          variables: ['user.name'],
+          sampleData: { 'user.name': 'A&B' },
+        }),
+      });
+      expect(response.status).toBe(200);
+      const result = (await response.json()) as { body: string };
+      if (channel === 'email') {
+        expect(result.body).toContain('Published preview');
+        expect(result.body).toContain('#123456');
+        expect(result.body).toContain(`dir="${locale === 'fa' ? 'rtl' : 'ltr'}"`);
+        expect(result.body).toContain('<p>Hello A&amp;B</p>');
+        expect(result.body).not.toContain('Hidden draft');
+      } else expect(result.body).toBe('<p>Hello A&B</p>');
+    });
+  }
 function write(action: Action, value: { id: string; event: string }, user = 'editor') {
   const path =
     action === 'create'

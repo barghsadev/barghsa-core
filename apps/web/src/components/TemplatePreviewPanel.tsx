@@ -2,6 +2,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useState, useEffect, useCallback } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import type { Locale } from '@barghsa/i18n/app';
+import BrandedEmailPreview from './BrandedEmailPreview.js';
 import {
   renderTemplatePreview,
   buildSampleData,
@@ -145,12 +146,17 @@ export default function TemplatePreviewPanel({
 
   const subjectPreview =
     selected?.subject != null && selected.subject.trim() !== ''
-      ? renderTemplatePreview(selected.subject, selected.variables)
+      ? renderTemplatePreview(selected.subject, selected.variables, undefined, false)
       : null;
 
   const bodyContext = buildSampleData(selected?.variables);
   const bodyPreview = selected
-    ? renderTemplatePreview(selected.bodyTemplate, selected.variables, bodyContext)
+    ? renderTemplatePreview(
+        selected.bodyTemplate,
+        selected.variables,
+        bodyContext,
+        selected.channel === 'email'
+      )
     : null;
 
   const undeclared = new Set<string>([
@@ -326,12 +332,20 @@ export default function TemplatePreviewPanel({
                 <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase">
                   {t('admin.notifications.bodyTemplate', uiLocale)}
                 </h4>
-                <pre
-                  dir={selected.locale === 'fa' ? 'rtl' : 'ltr'}
-                  className="text-sm whitespace-pre-wrap font-sans text-gray-800"
-                >
-                  {bodyPreview?.output}
-                </pre>
+                {selected.channel === 'email' ? (
+                  <BrandedEmailPreview
+                    body={bodyPreview?.output ?? ''}
+                    locale={selected.locale}
+                    title={t('admin.notifications.preview', uiLocale)}
+                  />
+                ) : (
+                  <pre
+                    dir={selected.locale === 'fa' ? 'rtl' : 'ltr'}
+                    className="text-sm whitespace-pre-wrap font-sans text-gray-800"
+                  >
+                    {bodyPreview?.output}
+                  </pre>
+                )}
               </div>
 
               {/* Available variables + descriptions */}

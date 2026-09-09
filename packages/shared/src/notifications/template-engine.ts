@@ -82,6 +82,44 @@ export function resolvePath(root: unknown, path: string): unknown {
   return node;
 }
 
+/** Preview/test values use the same nested paths as real notification data. */
+export function buildTemplateSampleData(
+  names: Iterable<string>,
+  values?: Record<string, unknown>
+): Record<string, unknown> {
+  const data: Record<string, unknown> = {};
+  for (const name of names) {
+    if (!isSafePath(name)) continue;
+    const explicit = values ? Object.getOwnPropertyDescriptor(values, name) : undefined;
+    const value = values
+      ? explicit?.enumerable && 'value' in explicit
+        ? (explicit.value as unknown)
+        : resolvePath(values, name)
+      : name
+          .replace(/([A-Z])/g, ' $1')
+          .trim()
+          .toLowerCase();
+    if (
+      value === undefined ||
+      value === null ||
+      typeof value === 'object' ||
+      typeof value === 'function' ||
+      typeof value === 'symbol'
+    )
+      continue;
+    const parts = name.split('.');
+    let target = data;
+    for (const part of parts.slice(0, -1)) {
+      if (!target[part] || typeof target[part] !== 'object') target[part] = {};
+      target = target[part] as Record<string, unknown>;
+    }
+    const key = parts[parts.length - 1]!;
+    // If both a parent and child are declared, retain the child structure.
+    if (!target[key] || typeof target[key] !== 'object') target[key] = value;
+  }
+  return data;
+}
+
 export interface RenderOptions {
   /** False for plain-text channels and email subjects; HTML bodies escape values. */
   escapeValues?: boolean;

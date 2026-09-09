@@ -1,3 +1,8 @@
+import {
+  buildTemplateSampleData,
+  renderTemplate as renderSharedTemplate,
+  resolvePath,
+} from '@barghsa/shared/notifications';
 /**
  * Notification template preview helpers (E-05, T-05.04.03).
  *
@@ -52,7 +57,7 @@ export function escapeHtmlTemplate(value: string): string {
 export function isValidVariableName(name: string): boolean {
   if (!NAME_RE.test(name)) return false;
   for (const seg of name.split('.')) {
-    if (BLOCKED_KEYS.has(seg)) return false;
+    if (!/^[A-Za-z0-9_]+$/.test(seg) || BLOCKED_KEYS.has(seg)) return false;
   }
   return true;
 }
@@ -76,29 +81,6 @@ export function collectPlaceholders(template: string): string[] {
   return [...names];
 }
 
-/** Resolve a dotted variable path against a data context using only own keys. */
-function resolve(data: Record<string, string>, path: string): string | undefined {
-  const segments = path.split('.');
-  // Mirror the server: refuse prototype/constructor property access at any level.
-  for (const seg of segments) {
-    if (BLOCKED_KEYS.has(seg)) return undefined;
-  }
-  // Sample data is built with flat keys (e.g. `order.amount`), so check the
-  // full path as a direct own property before attempting dotted traversal.
-  if (Object.prototype.hasOwnProperty.call(data, path)) {
-    return data[path];
-  }
-  let node: unknown = data;
-  for (const seg of segments) {
-    if (node === null || node === undefined) return undefined;
-    if (typeof node !== 'object') return undefined;
-    const desc = Object.getOwnPropertyDescriptor(node, seg);
-    if (!desc || !desc.enumerable) return undefined;
-    node = (node as Record<string, unknown>)[seg];
-  }
-  return typeof node === 'string' ? node : undefined;
-}
-
 /**
  * Render a template body/subject against sample (or caller-supplied) data.
  * Mirrors the server engine's allow-list + HTML-escaping behaviour.
@@ -106,46 +88,25 @@ function resolve(data: Record<string, string>, path: string): string | undefined
 export function renderTemplatePreview(
   template: string,
   variables: TemplateVariable[] | null | undefined,
-  data?: Record<string, string>
+  data?: Record<string, unknown>,
+  escapeValues = true
 ): TemplatePreviewRenderResult {
-  const allowed = new Set(templateVariableNames(variables));
-  const ctx = data ?? buildSampleData(variables);
-  const missing = new Set<string>();
-  const undeclared = new Set<string>();
-
-  const output = template.replace(/{{([^{}]+)}}/g, (match, raw: string) => {
-    const name = raw.trim();
-    if (!isValidVariableName(name) || !allowed.has(name)) {
-      undeclared.add(name);
-      return escapeHtmlTemplate(match);
-    }
-    const value = resolve(ctx, name);
-    if (value === undefined || value === '') {
-      missing.add(name);
-      return '';
-    }
-    return escapeHtmlTemplate(value);
-  });
-
+  const allowed = templateVariableNames(variables);
+  const ctx = buildTemplateSampleData(allowed, data);
+  const rendered = renderSharedTemplate(template, allowed, { data: ctx, escapeValues });
+  const empty = collectPlaceholders(template).filter(
+    (name) => allowed.includes(name) && resolvePath(ctx, name) === ''
+  );
   return {
-    output,
-    missingRequired: [...missing],
-    undeclared: [...undeclared],
+    output: rendered.output,
+    missingRequired: [...new Set([...rendered.missing, ...empty])],
+    undeclared: rendered.unknown,
   };
 }
 
-/** Build sample values for every allow-listed variable (same strategy as the server). */
+/** Build nested preview values using the same helper as server test sends. */
 export function buildSampleData(
   variables: TemplateVariable[] | null | undefined
-): Record<string, string> {
-  const data: Record<string, string> = {};
-  for (const v of variables ?? []) {
-    const key = v.name.trim();
-    if (key)
-      data[key] = key
-        .replace(/([A-Z])/g, ' $1')
-        .trim()
-        .toLowerCase();
-  }
-  return data;
+): Record<string, unknown> {
+  return buildTemplateSampleData(templateVariableNames(variables));
 }

@@ -1,3 +1,4 @@
+import { renderTemplatePreview } from '../lib/template-preview.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -8,6 +9,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import DeadLetterPanel from '../components/DeadLetterPanel.js';
 import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.js';
 import TemplatePreviewPanel from '../components/TemplatePreviewPanel.js';
+import BrandedEmailPreview from '../components/BrandedEmailPreview.js';
 
 interface NotificationVariable {
   name: string;
@@ -120,53 +122,6 @@ const KNOWN_EVENT_KEYS = [
 
 const CHANNEL_OPTIONS: TemplateChannel[] = ['email', 'sms', 'in_app'];
 const LOCALE_OPTIONS: TemplateLocale[] = ['fa', 'en'];
-
-/** HTML-escape a value for safe display in a rendered template (mirrors server). */
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-/** Neutral sample values for each allow-listed variable name (preview / test-send). */
-function buildSampleData(variables: NotificationVariable[]): Record<string, string> {
-  const data: Record<string, string> = {};
-  for (const v of variables) {
-    const key = v.name.trim();
-    if (key)
-      data[key] = key
-        .replace(/([A-Z])/g, ' $1')
-        .trim()
-        .toLowerCase();
-  }
-  return data;
-}
-
-/** Select just the allow-listed variable names. */
-function variableNames(variables: NotificationVariable[]): string[] {
-  return variables.map((v) => v.name.trim()).filter(Boolean);
-}
-
-/** Substitute {{variable}} placeholders with escaped sample values.
- * MUST mirror NotificationTemplateService.render() (apps/api) so the client
- * preview matches what the server validates on save — keep in lockstep. */
-function renderTemplate(
-  template: string,
-  variables: NotificationVariable[],
-  data?: Record<string, string>
-): string {
-  const allowed = new Set(variableNames(variables));
-  const ctx = data ?? buildSampleData(variables);
-  return template.replace(/{{([^{}]+)}}/g, (match, raw: string) => {
-    const name = raw.trim();
-    if (!allowed.has(name)) return escapeHtml(match);
-    const value = ctx[name];
-    return escapeHtml(value === undefined ? '' : value);
-  });
-}
 
 /**
  * Parse the editor's variable textarea/lines into structured variable
@@ -881,15 +836,23 @@ export default function AdminNotificationsPage() {
                     <span className="font-semibold">
                       {t('admin.notifications.subjectLabel', uiLocale)}
                     </span>{' '}
-                    {renderTemplate(subject, parsedVariables)}
+                    {renderTemplatePreview(subject, parsedVariables, undefined, false).output}
                   </p>
                 )}
-                <pre
-                  className="text-sm whitespace-pre-wrap font-sans text-gray-800"
-                  dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                >
-                  {renderTemplate(bodyTemplate, parsedVariables)}
-                </pre>
+                {channel === 'email' ? (
+                  <BrandedEmailPreview
+                    body={renderTemplatePreview(bodyTemplate, parsedVariables).output}
+                    locale={locale}
+                    title={t('admin.notifications.preview', uiLocale)}
+                  />
+                ) : (
+                  <pre
+                    className="text-sm whitespace-pre-wrap font-sans text-gray-800"
+                    dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                  >
+                    {renderTemplatePreview(bodyTemplate, parsedVariables, undefined, false).output}
+                  </pre>
+                )}
               </div>
             </div>
 

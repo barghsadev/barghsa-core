@@ -4,9 +4,37 @@ import {
   renderTemplate,
   resolvePath,
   validateTemplate,
+  buildTemplateSampleData,
 } from './template-engine.js';
 
 describe('shared notification rendering', () => {
+  it('builds safe nested samples and accepts explicit flat or nested variable values', () => {
+    const names = ['user.name', 'order.amount', '__proto__.polluted', 'a..b'];
+    expect(buildTemplateSampleData(names)).toEqual({
+      user: { name: 'user.name' },
+      order: { amount: 'order.amount' },
+    });
+    for (const values of [{ 'user.name': 'A&B' }, { user: { name: 'A&B' } }]) {
+      const data = buildTemplateSampleData(names, values);
+      expect(renderTemplate('{{user.name}}', names, { data }).output).toBe('A&amp;B');
+      expect(Object.hasOwn(data, '__proto__')).toBe(false);
+    }
+  });
+  it('never invokes sample getters or mutates caller objects', () => {
+    let reads = 0;
+    const input = {
+      user: { name: 'Original' },
+      get dangerous() {
+        reads++;
+        return 'secret';
+      },
+    };
+    expect(buildTemplateSampleData(['user', 'user.name', 'dangerous'], input)).toEqual({
+      user: { name: 'Original' },
+    });
+    expect(input.user).toEqual({ name: 'Original' });
+    expect(reads).toBe(0);
+  });
   it('escapes HTML bodies but preserves literal characters in subjects and SMS', () => {
     const data = { name: 'A&B <customer>', amount: 5000 };
     expect(renderTemplate('{{name}}: {{amount}}', ['name', 'amount'], { data }).output).toBe(

@@ -5650,6 +5650,23 @@
                     "description": "Template body with {{variable}} placeholders",
                     "type": "string"
                   },
+                  "channel": {
+                    "description": "Email previews include active branding; omitted preserves the generic body preview.",
+                    "enum": [
+                      "email",
+                      "sms",
+                      "in_app"
+                    ],
+                    "type": "string"
+                  },
+                  "locale": {
+                    "description": "Email reading direction; defaults to en.",
+                    "enum": [
+                      "fa",
+                      "en"
+                    ],
+                    "type": "string"
+                  },
                   "sampleData": {
                     "description": "Optional sample values keyed by variable name",
                     "type": "object"

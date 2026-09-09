@@ -44,18 +44,18 @@ describe('template-preview helpers', () => {
     expect(buildSampleData(VARIABLES)).toEqual({
       userName: 'user name',
       profileLink: 'profile link',
-      'order.amount': 'order.amount',
+      order: { amount: 'order.amount' },
     });
   });
 
-  it('flags an undeclared variable and resolves dotted vars from flat sample data', () => {
+  it('flags an undeclared variable and resolves dotted vars like the server', () => {
     const result = renderTemplatePreview(
       'Hi {{userName}}. Order: {{order.status}}. Amount: {{order.amount}}',
       [{ name: 'userName' }, ...VARIABLES.filter((v) => v.name === 'order.amount')]
     );
     // order.status is used but not in the allow-list -> undeclared
     expect(result.undeclared).toEqual(['order.status']);
-    // order.amount is allow-listed and resolves from the flat sample data key
+    // Nested neutral data also resolves in the server's test-send renderer.
     expect(result.missingRequired).toEqual([]);
     expect(result.output).toContain('Hi user name');
     expect(result.output).toContain('Order: {{order.status}}');

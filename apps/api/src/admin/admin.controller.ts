@@ -1652,6 +1652,7 @@ export class AdminController {
    * Permission: admin:notifications:edit.
    */
   @Post('notifications/templates/preview')
+  @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Preview a rendered notification template body' })
@@ -1660,6 +1661,17 @@ export class AdminController {
       type: 'object',
       required: ['bodyTemplate', 'variables'],
       properties: {
+        channel: {
+          type: 'string',
+          enum: ['email', 'sms', 'in_app'],
+          description:
+            'Email previews include active branding; omitted preserves the generic body preview.',
+        },
+        locale: {
+          type: 'string',
+          enum: ['fa', 'en'],
+          description: 'Email reading direction; defaults to en.',
+        },
         bodyTemplate: {
           type: 'string',
           description: 'Template body with {{variable}} placeholders',
@@ -1702,6 +1714,8 @@ export class AdminController {
     this.assertNotificationPermission(req);
 
     const schema = z.object({
+      channel: z.enum(['email', 'sms', 'in_app']).optional(),
+      locale: z.enum(['fa', 'en']).optional(),
       bodyTemplate: z.string().min(1),
       variables: z
         .array(
@@ -1728,7 +1742,11 @@ export class AdminController {
     return this.notificationTemplateService.previewFromBody(
       parsed.data.bodyTemplate,
       parsed.data.variables,
-      parsed.data.sampleData
+      parsed.data.sampleData,
+      {
+        ...(parsed.data.channel ? { channel: parsed.data.channel } : {}),
+        ...(parsed.data.locale ? { locale: parsed.data.locale } : {}),
+      }
     );
   }
 

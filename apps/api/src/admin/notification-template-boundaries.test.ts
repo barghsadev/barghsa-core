@@ -171,7 +171,7 @@ describe('notification template input boundaries', () => {
       { bodyTemplate: 'Hi {{user}}', variables: ['user'], sampleData: { user: 'Example' } },
       request()
     );
-    expect(call).toHaveBeenCalledWith('Hi {{user}}', ['user'], { user: 'Example' });
+    expect(call).toHaveBeenCalledWith('Hi {{user}}', ['user'], { user: 'Example' }, {});
   });
   it('trims an explicit test destination and binds the initiating actor', async () => {
     const { controller, call } = fixture();

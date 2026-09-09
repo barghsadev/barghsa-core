@@ -16,6 +16,7 @@ import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { NotificationsService } from './notifications.service.js';
 import { escapeHtml, renderTemplate, validateTemplate } from './template-engine.js';
+import { buildTemplateSampleData } from '@barghsa/shared/notifications';
 
 export type TemplateMutationActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -287,17 +288,10 @@ export class NotificationTemplateService {
    * Build neutral sample values for every allow-listed variable, used by
    * preview and test-send.
    */
-  buildSampleData(variables: TemplateVariableInput[]): Record<string, string> {
-    const data: Record<string, string> = {};
-    for (const v of NotificationTemplateService.normalizeVariables(variables)) {
-      const key = v.name.trim();
-      if (key)
-        data[key] = key
-          .replace(/([A-Z])/g, ' $1')
-          .trim()
-          .toLowerCase();
-    }
-    return data;
+  buildSampleData(variables: TemplateVariableInput[]): Record<string, unknown> {
+    return buildTemplateSampleData(
+      NotificationTemplateService.normalizeVariables(variables).map((v) => v.name)
+    );
   }
 
   /**
@@ -461,7 +455,10 @@ export class NotificationTemplateService {
    */
   async preview(id: string, sampleData?: Record<string, string>): Promise<RenderedTemplate> {
     const tpl = await this.getById(id);
-    const data = sampleData ?? this.buildSampleData(tpl.variables);
+    const data = buildTemplateSampleData(
+      tpl.variables.map((v) => v.name),
+      sampleData
+    );
     const body = this.render(tpl.bodyTemplate, tpl.variables, data, tpl.channel === 'email');
     return {
       subject: tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data, false) : null,
@@ -480,14 +477,27 @@ export class NotificationTemplateService {
   async previewFromBody(
     bodyTemplate: string,
     variables: TemplateVariableInput[],
-    sampleData?: Record<string, string>
+    sampleData?: Record<string, string>,
+    context?: { channel?: TemplateChannel; locale?: TemplateLocale }
   ): Promise<RenderedTemplate> {
     const normalized = NotificationTemplateService.normalizeVariables(variables);
     this.validateVariables(bodyTemplate, normalized);
-    const data = sampleData ?? this.buildSampleData(normalized);
+    const data = buildTemplateSampleData(
+      normalized.map((v) => v.name),
+      sampleData
+    );
+    const body = this.render(
+      bodyTemplate,
+      normalized,
+      data,
+      context?.channel === undefined || context.channel === 'email'
+    );
     return {
       subject: null,
-      body: this.render(bodyTemplate, normalized, data),
+      body:
+        context?.channel === 'email'
+          ? renderBrandedEmail(body, await loadEmailBranding(getDbPool()), context.locale ?? 'en')
+          : body,
       variables: normalized,
     };
   }
