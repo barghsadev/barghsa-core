@@ -63,3 +63,9 @@ Staff role changes, disablement and activation resend are now repaired at`a4cd92
 At `ab10771`, staff creation, role assignment and staff listing are verified locally. The new GET `/api/admin/staff-role-options` inherits SessionAuthGuard and permits either staff creation or role editing; it returns only assignable role names/descriptions. Existing role-management permissions are unchanged. Runtime metadata and allow/deny HTTP checks pass. The inventory is now343 routes;203 unsafe methods and121 step-up registrations are unchanged.
 
 Ten immediate-predecessor evidence bindings were reconciled. Twelve older verified-record drifts remain. Next review agent-role permissions T-05.04.04 and their current audit/UI criteria using prior credential evidence. Full shared-shell accessibility and remaining CSRF/domain dispositions retain their existing scope.
+
+## Authentication CSRF race
+
+At71f5e49, session guards forward the submitted unsafe-request token into locked session validation. A token changed during an account-lock wait returns403 before idle touch or handler mutation. Safe methods and independently authenticated exemptions retain their policy; pre-login CSRF is unchanged.31 focused cases and89 unchanged passing cases cover120 distinct checks. The initial real-profile-route test reproduced200; final test proves403, unchanged deadline/no profile selection, fresh-token success and no token logs. Evidence is in progress.json.active_batch and the1334-entry log index.
+
+Notification availability9526cc5 uses current primary or verified secondary aliases, locks the account/session and commits its audit with preferences.8 HTTP cases and6 fa/en browser cases pass. UserSettingsController source binding is refreshed;347 routes,205 unsafe registrations and122 step-up registrations are unchanged. This does not renew domain-wide, coverage or deployed evidence.

@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `56498a1`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `9526cc5`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -26,7 +26,7 @@ Session/recovery batch is consolidated at `1695680`: **4 task acceptances verifi
 
 Profile/onboarding batch is consolidated at `ab09a87`: **7 tasks verified /1 partial;8 PR reviews closed /1 open**, saved PRs #102–#110. Settings default selection, its required API endpoint, localized identifiers and first invited-profile default are repaired.53 distinct affected API cases and29 distinct current/reused browser cases support the batch;42 budgets pass. PR103 retains actual commercial-order enforcement acceptance. PR106's frontend deferral is satisfied by PR108 and the current form. [Consolidated review](evidence/step-reviews.json#R01-profiles-onboarding).
 
-Active **R01-account-settings**, saved PRs **#111–#114**, four qualified tasks. Review profile editing, username/contact verification, notification preferences and timezone settings. Exact membership, criteria and evidence reuse are in progress.json.active_batch. Profile-save confirmation/acknowledgement and edit hints are repaired at56498a1;9 distinct browser cases and42 budgets pass. Whole account-settings acceptance remains pending. Current explicit PR totals: **25 closed /5 open /271 not reviewed**. Follow the feature-batch rules below.
+Active **R01-account-settings**, saved PRs **#111–#114**, four qualified tasks. Review profile editing, username/contact verification, notification preferences and timezone settings. Exact membership, criteria and evidence reuse are in progress.json.active_batch. Profile-save confirmation/acknowledgement and edit hints are repaired at56498a1;9 distinct browser cases and42 budgets pass. Notification creation defaults e3981b9 and verified-channel API/UI9526cc5 are repaired;8 notification HTTP cases and6 browser cases pass. Shared CSRF race71f5e49 is repaired with31 focused checks plus89 reused passing cases.42 budgets remain green. Whole account-settings acceptance remains pending. Current explicit PR totals: **25 closed /5 open /271 not reviewed**. Follow the feature-batch rules below.
 
 ## Execution order
 
