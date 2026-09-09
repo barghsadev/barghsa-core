@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `d1b156ac`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `01f4a856`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,7 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Active R02 batch: notification delivery foundation, PR113/156/161/192/193/194. All six requirements, saved bodies and deferrals read. Provider authority repaired at2b669c93;173 distinct focused cases and types/lint/format pass. Template authority repaired atd1b156ac;300 distinct focused API cases and types/lint/format pass. Continue provider verified recipients and SMTP actual self-send, then delivery consumers. Cross-domain reconciliation atd594990 links completed R01 callers and repairs wallet read/create authorization and history precision;176 API checks and relevant backend gates pass. PR92/134 remain open for R02/future consumers. [Cross-domain review](evidence/step-reviews.json#R01-cross-domain-authorization).
+Active R02 batch: notification delivery foundation, PR113/156/161/192/193/194. All six requirements, saved bodies and deferrals read. Provider authority repaired at2b669c93;173 distinct focused cases and types/lint/format pass. Template authority repaired atd1b156ac;300 distinct focused API cases and types/lint/format pass. Provider self-tests repaired at01f4a856;204 distinct focused cases and backend gates pass. Next: durable activation proof for every SMS mapping and legacy/old-writer handling, then delivery consumers. Cross-domain reconciliation atd594990 links completed R01 callers and repairs wallet read/create authorization and history precision;176 API checks and relevant backend gates pass. PR92/134 remain open for R02/future consumers. [Cross-domain review](evidence/step-reviews.json#R01-cross-domain-authorization).
 
 Verification batch consolidated at709d28b:3 task acceptances partial/3 saved PR reviews open. Mode Draft→Active at1858caf passes90 backend/18 browser cases. Named actionable notices/current-owner dashboard/inbox atd74c8f8 pass68 backend/6 browser cases. Circuit recovery at709d28b passes29 distinct provider cases across focused runs. API/web types, lint/format, build, OpenAPI and42 unchanged budgets pass.2154 logs indexed;22 further current bindings refreshed. [Review](evidence/step-reviews.json#R01-verification-policy). Current saved PR totals108 closed/23 open/170 unreviewed.
 

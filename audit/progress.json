@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "d1b156accf7c422bca669d7d792bc49b980b44d0",
+  "source_revision": "01f4a856a5ee5db30d2268ab8a3551cc06238631",
   "active_step": "R02",
-  "next_action": "Repair own verified recipient enforcement for SMTP/Resend/SMS.ir and required SMTP self-send. Then review active branding, preferences/daytime and template editor consumers; preserve completed provider/template authority.",
+  "next_action": "Bind activation to durable verified self-delivery proof for every configured SMS mapping, including legacy/old-writer behavior. Preserve active-provider recovery. Then finish branding/preferences/daytime and remaining UI acceptance.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -654,6 +654,10 @@
     {
       "id": "R02-template-session-authority",
       "review_record": "audit/evidence/step-reviews.json#R02-template-session-authority"
+    },
+    {
+      "id": "R02-provider-self-tests",
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
     }
   ],
   "deferred_improvements": [
@@ -1005,10 +1009,20 @@
       },
       {
         "defect": "SMTP provider test is handshake-only; required self-send remains.",
-        "status": "remaining"
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
       },
       {
         "defect": "Provider testConnection forwards requested recipients without checking the acting staff contact.",
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
+      },
+      {
+        "defect": "Activation accepts legacy passing results without current verified self-delivery proof.",
+        "status": "remaining"
+      },
+      {
+        "defect": "One tested SMS mapping can approve other untested mappings.",
         "status": "remaining"
       }
     ],
@@ -1019,10 +1033,11 @@
     ],
     "new_evidence": [
       "audit/evidence/step-reviews.json#R02-provider-session-authority",
-      "audit/evidence/step-reviews.json#R02-template-session-authority"
+      "audit/evidence/step-reviews.json#R02-template-session-authority",
+      "audit/evidence/step-reviews.json#R02-provider-self-tests"
     ],
     "pr_dispositions": [],
-    "next_action": "Repair own verified recipient enforcement for SMTP/Resend/SMS.ir and required SMTP self-send. Then review active branding, preferences/daytime and template editor consumers; preserve completed provider/template authority."
+    "next_action": "Bind activation to durable verified self-delivery proof for every configured SMS mapping, including legacy/old-writer behavior. Preserve active-provider recovery. Then finish branding/preferences/daytime and remaining UI acceptance."
   },
   "open_domain_reviews": [
     {

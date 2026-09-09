@@ -13020,6 +13020,143 @@
         "/tmp/r02-template-authority-tests.log",
         "/tmp/r02-template-authority-types.log"
       ]
+    },
+    {
+      "id": "R02-provider-self-tests",
+      "date": "2026-09-09",
+      "source_revision": "01f4a856a5ee5db30d2268ab8a3551cc06238631",
+      "base_revision": "6333feffaf387d9bdf136263ed71408368ee5814",
+      "product_commits": [
+        "01f4a856a5ee5db30d2268ab8a3551cc06238631"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.06.02"
+      ],
+      "summary": "Verified staff recipients, SMTP self-send, SMS acknowledgements/redaction and send-time authority repaired. Intermediate R02 checkpoint; activation evidence remains.",
+      "review": [
+        "Baselines reproduced SMTP success without sendMail and acceptance of a foreign recipient through a stub tester under real PostgreSQL. Initial recipient fixture lacked required description; corrected before the valid baseline. No external message was sent.",
+        "Shared resolver rereads the active account under existing staff/session locks, normalizes contacts, defaults omitted recipients to the verified channel contact and rejects foreign, removed or missing contacts before dispatch.",
+        "SMTP now verifies and sends using configured sender/reply-to, requiring the exact accepted recipient and no rejections. Failed sends close the transport and redact credentials. Network/TLS protections remain.",
+        "SMS.ir rejects missing/zero/malformed message identifiers and bounds/redacts provider diagnostics, including echoed API keys from credit/send failures. Standalone credential-only tester calls remain diagnostic; configuration tests always supply a verified recipient.",
+        "SMTP/Resend/SMS.ir invoke a caller-provided current-session check immediately before sending, after handshake/domain/credit checks. Three DB-clock expiry cases verify service callback wiring; adapter checks prove callback denial prevents sending.",
+        "Reviewed final service/helper/adapter changes and all affected quality outputs. Only two test-connection OpenAPI descriptions changed; public request/response schema, frontend, dependencies and migrations remain unchanged."
+      ],
+      "verification": {
+        "api": "204 distinct focused cases:149 lifecycle/authority/service cases from initial affected evidence and corrected22-case email file, plus55 final recipient/SMTP/SMS.ir/Resend cases. Earlier190 overlaps. Final55 includes18 real-DB recipient/expiry cases. Initial176 had one fixture-return failure, fixed.",
+        "quality": "API typechecks, scoped ESLint/Prettier, OpenAPI generation/check, semantic two-path comparison and diff checks pass.",
+        "scope": "Transport/SDK substitutes prove local behavior only. No real-provider delivery, browser/budget or broad-regression renewal."
+      },
+      "remaining": [
+        "Activation still trusts legacy last_test_status=passed without current verified self-delivery evidence. Add durable proof resistant to old-writer renewals; preserve active service and explicitly handle legacy draft/history evidence.",
+        "SMS tests verify one selected/default mapping; activation only checks other mappings structurally. Require proof for every configured mapping rather than approving untested template IDs/variables.",
+        "Branding, preferences/daytime, remaining editor/provider UI and localized diagnostic copy remain assigned R02/R03. Real delivery needs operational evidence. External sends cannot roll back after later database/authority failure."
+      ],
+      "external_sources": [
+        {
+          "url": "https://nodemailer.com/smtp",
+          "claim": "Verification alone does not exercise message acceptance; installed Nodemailer types also checked."
+        }
+      ],
+      "evidence_reuse": [
+        "17 immediate-base bindings refreshed; older stale hashes retained. Existing provider/template authority preserved."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
+          "sha256": "26ac7b689182276399648807e66211cf36fec4bb88291029cd36006ac6966606"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "sha256": "85eaa234c24462f3e1734b2a35f53db8ca2719e80190db5542d5c244221dab43"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "6ccc63d4f0cfd2d34215028669c5ee89fc74715500d43ab8a294676c2071b7dd"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "b174da2801d36698997ec4fabd7462e04ca7834f39fb45c0c2e77d6bacb98021"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "b4f4cbd100b6dca7f82afb66470d4e84281cb7da7c8988d2ff97131f128a65dc"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-recipient.ts",
+          "sha256": "26df416f30f96e0129f1bba3d0d38df5cf4c08978d7abeeb1095619a4c7be573"
+        },
+        {
+          "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+          "sha256": "83d6d8ea5f5e08d9b314c8fd18a7d58b735fb3c83a9e65afa4bab71bf5e0a486"
+        },
+        {
+          "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
+          "sha256": "f6212597ac553e90d393aedf8d6aa394ae1f63aac4bf50073e5001987cab50e7"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "bff54f913ea98910fd6cfc5ccc92abaa78ac75337b178bc51faa709e0ab414f5"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "c1be38c42b9f8a25fc8287e559547d2b7a2f53238cee4b577263297693a66430"
+        },
+        {
+          "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
+          "sha256": "ffa92af835d39a7c925e0eb6901b0564ea675c4627bb40bd39b8c46fe2370d99"
+        },
+        {
+          "path": "apps/api/src/provider-config/smsir-connection-tester.service.ts",
+          "sha256": "c89e4fc9c87a7e1d92b9d02b41c40a083be7455f295905369936820db18abaaa"
+        },
+        {
+          "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
+          "sha256": "6babb86547ad302ccbc14dd1f0f443d423d6e60db0f7fe4e8a809644c35f7128"
+        },
+        {
+          "path": "apps/api/src/provider-config/smtp-connection-tester.service.ts",
+          "sha256": "caaf67b38f4cfe85a0ff914e09dc3cdaee4ed8da261ae459d02c268cd4713a9b"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "2049fdf756bedfa70b32df7ab67cfe5f40f537ebb24d318f729e0325992266aa"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
+          "sha256": "fbad1f936053c7ff24a14faf20cd88499a494c0045e6f4a470c2f63273094a1e"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+          "sha256": "34cae00dc765168924b9bfbc1ba65860d61959196c36675f413e00716466e255"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-provider-self-test-dispatch-format.log",
+        "/tmp/r02-provider-self-test-dispatch-lint.log",
+        "/tmp/r02-provider-self-test-dispatch-tests.log",
+        "/tmp/r02-provider-self-test-dispatch-types.log",
+        "/tmp/r02-provider-self-test-final.log",
+        "/tmp/r02-provider-self-test-format-check.log",
+        "/tmp/r02-provider-self-test-format-final.log",
+        "/tmp/r02-provider-self-test-format.log",
+        "/tmp/r02-provider-self-test-lint.log",
+        "/tmp/r02-provider-self-test-openapi-check.log",
+        "/tmp/r02-provider-self-test-openapi-generate.log",
+        "/tmp/r02-provider-self-test-recipient-baseline-valid.log",
+        "/tmp/r02-provider-self-test-recipient-baseline.log",
+        "/tmp/r02-provider-self-test-smtp-baseline.log",
+        "/tmp/r02-provider-self-test-tests.log",
+        "/tmp/r02-provider-self-test-types.log"
+      ]
     }
   ]
 }

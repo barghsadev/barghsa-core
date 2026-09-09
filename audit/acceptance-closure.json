@@ -3790,7 +3790,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3945,7 +3945,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -4510,7 +4510,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4655,7 +4655,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -5102,7 +5102,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5634,7 +5634,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -11291,7 +11291,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11450,7 +11450,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11609,7 +11609,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11768,7 +11768,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11927,7 +11927,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12086,7 +12086,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12245,7 +12245,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12406,7 +12406,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12565,7 +12565,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12726,7 +12726,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -13078,7 +13078,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+          "sha256": "c51618ae2a11472c792cc53c7426562532aaff85b911fa6c0cf8fb0bf0d509de"
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -17108,6 +17108,31 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-template-session-authority",
       "note": "Only immediate-base hashes refreshed. Reviewed six template controller calls and the template authority boundary;192 controller/capability checks plus108 template checks pass. Unrelated admin methods unchanged; older stale bindings retained."
+    },
+    {
+      "source_revision": "01f4a856a5ee5db30d2268ab8a3551cc06238631",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests",
+      "note": "Immediate-base hashes only. Provider recipient/dispatch repairs, current lifecycle/authority checks and two OpenAPI descriptions reviewed. Older stale hashes retained; no broad renewal."
     }
   ]
 }
