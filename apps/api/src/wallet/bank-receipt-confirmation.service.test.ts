@@ -1,3 +1,4 @@
+import { receiptDecisionSession } from '../test/receipt-decision-session.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -28,6 +29,9 @@ const mockClient = {
 };
 
 // Current authority is exercised by the migrated service and HTTP race suites.
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 vi.mock('../admin/staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -285,6 +289,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     const result = await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       correlationId: 'corr-1',
       now: NOW,
@@ -325,6 +330,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       transactionId: TX_ID,
       raw: { reason: '  Illegible scan  ' },
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -350,6 +356,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         transactionId: TX_ID,
         raw: { reason: '   ' },
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
       })
       .catch((error: unknown) => error);
@@ -368,6 +375,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       .confirm({
         transactionId: TX_ID,
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
       })
       .catch((error: unknown) => error);
@@ -382,6 +390,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         transactionId: TX_ID,
         raw: { reason: 'Too late' },
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
       })
       .catch((error: unknown) => error);
@@ -396,6 +405,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         transactionId: TX_ID,
         raw: { reason: 'Illegible scan' },
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -418,6 +428,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     const result = await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
@@ -510,6 +521,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     const result = await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
@@ -544,6 +556,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     const result = await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
@@ -582,6 +595,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
@@ -602,6 +616,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
@@ -636,6 +651,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       .confirm({
         transactionId: TX_ID,
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         invoiceId: INVOICE_ID,
         now: NOW,
@@ -658,6 +674,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         .confirm({
           transactionId: TX_ID,
           actorUserId: ACTOR_ID,
+          ...receiptDecisionSession(ACTOR_ID),
           ip: '10.0.0.9',
           invoiceId: INVOICE_ID,
           now: NOW,
@@ -687,6 +704,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       .confirm({
         transactionId: TX_ID,
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         invoiceId: INVOICE_ID,
         now: NOW,

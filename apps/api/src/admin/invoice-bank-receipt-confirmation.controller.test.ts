@@ -34,7 +34,12 @@ const DTO = {
 };
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: {
+    isAdmin: true,
+    userId: 'admin-1',
+    sessionId: 'staff-session',
+    csrfToken: 'staff-csrf',
+  },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -142,6 +147,8 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
     expect(service.confirm).toHaveBeenCalledWith({
       receiptId: RECEIPT_ID,
       actorUserId: 'admin-1',
+      sessionId: 'staff-session',
+      csrfToken: 'staff-csrf',
       ip: '127.0.0.1',
       correlationId: 'corr-1',
     });
@@ -154,6 +161,8 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
       receiptId: RECEIPT_ID,
       raw: { reason: 'Illegible scan' },
       actorUserId: 'admin-1',
+      sessionId: 'staff-session',
+      csrfToken: 'staff-csrf',
       ip: '127.0.0.1',
       correlationId: 'corr-1',
     });

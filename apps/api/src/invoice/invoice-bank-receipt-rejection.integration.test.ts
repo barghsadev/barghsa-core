@@ -1,3 +1,7 @@
+import {
+  receiptDecisionSession,
+  seedReceiptDecisionSessions,
+} from '../test/receipt-decision-session.js';
 /**
  * Real-PostgreSQL integration tests for staff invoice bank-receipt
  * rejection (T-04.3.01.04).
@@ -90,6 +94,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
       PROFILE_A,
       PROFILE_B,
     ]);
+    await seedReceiptDecisionSessions(ctx.pool, [ACTOR_USER_ID]);
   }, 60_000);
 
   afterAll(async () => {
@@ -184,6 +189,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
         receiptId,
         raw: { reason: 'Illegible scan' },
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       };
@@ -231,6 +237,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
       receiptId,
       raw: { reason: '  Illegible scan  ' },
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -296,6 +303,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
       receiptId,
       raw: { reason: 'Illegible scan' },
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -319,6 +327,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
       receiptId,
       raw: { reason: 'Payer name mismatch' },
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -339,6 +348,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
       receiptId,
       raw: { reason: 'Illegible scan' },
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -347,6 +357,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
         receiptId,
         raw: { reason: 'Wrong amount' },
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -369,6 +380,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
       receiptId: rejectedId,
       raw: { reason: 'Blurry photo' },
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -376,6 +388,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
       .confirm({
         receiptId: rejectedId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -390,6 +403,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
     await service.confirm({
       receiptId: confirmedId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -398,6 +412,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
         receiptId: confirmedId,
         raw: { reason: 'Too late' },
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -437,6 +452,7 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
         receiptId,
         raw: { reason: 'Illegible scan' },
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })

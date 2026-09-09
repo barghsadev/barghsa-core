@@ -1,3 +1,4 @@
+import { receiptDecisionSession } from '../test/receipt-decision-session.js';
 import { invoiceReceiptFingerprint } from './invoice-bank-receipt-confirmation.service.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HttpException } from '@nestjs/common';
@@ -34,6 +35,9 @@ const mockClient = {
 };
 
 // Permission locking is covered through real HTTP and migrated integration tests.
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 vi.mock('../admin/staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -136,6 +140,9 @@ function thresholdRows(opts: ScriptOptions): { rows: Array<{ value: unknown }> }
 
 function script(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string) => {
+    if (sql.startsWith('SELECT id, archived FROM profiles')) {
+      return { rows: [{ id: PROFILE_ID, archived: false }] };
+    }
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
       return { rows: [] };
     }
@@ -351,6 +358,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
     const result = await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       correlationId: 'corr-1',
       now: NOW,
@@ -405,6 +413,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
     const result = await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -422,6 +431,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
     await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -447,6 +457,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
     const result = await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -491,6 +502,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
     const result = await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -506,6 +518,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
       .confirm({
         receiptId: RECEIPT_ID,
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -527,6 +540,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
       .confirm({
         receiptId: RECEIPT_ID,
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -547,6 +561,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
       .confirm({
         receiptId: RECEIPT_ID,
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -564,6 +579,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
       receiptId: RECEIPT_ID,
       raw: { reason: '  Illegible scan  ' },
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -593,6 +609,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
         receiptId: RECEIPT_ID,
         raw: { reason: '   ' },
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
       })
       .catch((error: unknown) => error);
@@ -618,6 +635,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
         receiptId: RECEIPT_ID,
         raw: { reason: 'Too late' },
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -640,6 +658,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
       receiptId: RECEIPT_ID,
       raw: { reason: 'Illegible scan' },
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -664,6 +683,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
         receiptId: RECEIPT_ID,
         raw: { reason: 'Wrong amount' },
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -681,6 +701,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
         receiptId: RECEIPT_ID,
         raw: { reason: 'Illegible scan' },
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -735,6 +756,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
     const result = await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -757,6 +779,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
     const result = await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -791,6 +814,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
     const result = await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: ACTOR_ID,
+      ...receiptDecisionSession(ACTOR_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -830,6 +854,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
     const result = await service.confirm({
       receiptId: RECEIPT_ID,
       actorUserId: SECOND_ACTOR,
+      ...receiptDecisionSession(SECOND_ACTOR),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -874,6 +899,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
       receiptId: RECEIPT_ID,
       raw: { reason: 'Payer name does not match' },
       actorUserId: SECOND_ACTOR,
+      ...receiptDecisionSession(SECOND_ACTOR),
       ip: '10.0.0.9',
       now: NOW,
       correlationId: 'corr-reject-parked',
@@ -921,6 +947,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
         receiptId: RECEIPT_ID,
         raw: { reason: 'Changed my mind' },
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -946,6 +973,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
       .confirm({
         receiptId: RECEIPT_ID,
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -984,6 +1012,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
       .confirm({
         receiptId: RECEIPT_ID,
         actorUserId: ACTOR_ID,
+        ...receiptDecisionSession(ACTOR_ID),
         ip: '10.0.0.9',
         now: NOW,
       })

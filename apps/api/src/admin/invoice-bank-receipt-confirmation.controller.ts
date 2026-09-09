@@ -166,6 +166,8 @@ export class InvoiceBankReceiptConfirmationController {
     return this.service.confirm({
       receiptId,
       actorUserId: req.session.userId,
+      sessionId: req.session.sessionId,
+      csrfToken: req.session.csrfToken,
       ip: requestIp(req),
       ...(correlationId ? { correlationId } : {}),
     });
@@ -215,6 +217,8 @@ export class InvoiceBankReceiptConfirmationController {
       receiptId,
       raw: body,
       actorUserId: req.session.userId,
+      sessionId: req.session.sessionId,
+      csrfToken: req.session.csrfToken,
       ip: requestIp(req),
       ...(correlationId ? { correlationId } : {}),
     });

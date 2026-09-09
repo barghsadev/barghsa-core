@@ -3,6 +3,7 @@ import {
   assertWalletProfileWritable,
   assertWalletProfileMatches,
 } from '../wallet/profile-lock.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { requireCurrentFinancePermission } from '../admin/approval-permissions.js';
@@ -141,6 +142,8 @@ export interface InvoiceBankReceiptAllocationPreviewDto {
 export interface ConfirmInvoiceBankReceiptInput {
   receiptId: string;
   actorUserId: string;
+  sessionId: string;
+  csrfToken: string;
   ip: string;
   correlationId?: string;
   now?: Date;
@@ -150,6 +153,8 @@ export interface RejectInvoiceBankReceiptInput {
   receiptId: string;
   raw: Record<string, unknown>;
   actorUserId: string;
+  sessionId: string;
+  csrfToken: string;
   ip: string;
   correlationId?: string;
   now?: Date;
@@ -317,6 +322,11 @@ export class InvoiceBankReceiptConfirmationService {
   }
 
   async confirm(input: ConfirmInvoiceBankReceiptInput): Promise<InvoiceBankReceiptConfirmDto> {
+    const actor = {
+      userId: input.actorUserId,
+      sessionId: input.sessionId,
+      csrfToken: input.csrfToken,
+    };
     const now = input.now ?? new Date();
     const pool = getDbPool();
     const client = await pool.connect();
@@ -331,11 +341,13 @@ export class InvoiceBankReceiptConfirmationService {
           input.actorUserId,
           'admin:finance:invoices:bank-receipt-confirm'
         );
+        await requireSessionStepUp(client, actor);
         const receipt = await this.lockReceipt(client, input.receiptId);
         assertWalletProfileMatches(profile, receipt.profileId);
 
         if (receipt.state === 'Confirmed') {
           const extra = await this.loadConfirmedAllocation(client, receipt);
+          await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           return this.toDto(receipt, extra);
         }
@@ -395,6 +407,7 @@ export class InvoiceBankReceiptConfirmationService {
         if (latestRequest?.status === 'pending') {
           if (latestRequest.initiatorId === input.actorUserId) {
             const parked = await this.ensureUnderReview(client, receipt.id);
+            await requireSessionStepUp(client, actor);
             await client.query('COMMIT');
             return this.toDto(parked, {
               ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
@@ -423,6 +436,7 @@ export class InvoiceBankReceiptConfirmationService {
             ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
             now,
           });
+          await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           this.logger.log(
             `Invoice bank receipt ${receipt.id} blocked after dual-approval rejection of ${latestRequest.id}`
@@ -441,6 +455,7 @@ export class InvoiceBankReceiptConfirmationService {
             now,
             thresholdRead,
           });
+          await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           this.logger.log(
             `Invoice bank receipt ${receipt.id} parked for dual approval by ${input.actorUserId}`
@@ -531,6 +546,7 @@ export class InvoiceBankReceiptConfirmationService {
           ip: input.ip,
           correlationId: input.correlationId,
           metadata: {
+            sessionId: input.sessionId,
             receiptId: receipt.id,
             invoiceId: invoice.id,
             profileId: receipt.profileId,
@@ -547,6 +563,7 @@ export class InvoiceBankReceiptConfirmationService {
           },
           occurredAt: now,
         });
+        await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
 
         this.logger.log(
@@ -578,6 +595,11 @@ export class InvoiceBankReceiptConfirmationService {
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);
     }
 
+    const actor = {
+      userId: input.actorUserId,
+      sessionId: input.sessionId,
+      csrfToken: input.csrfToken,
+    };
     const now = input.now ?? new Date();
     const pool = getDbPool();
     const client = await pool.connect();
@@ -592,11 +614,13 @@ export class InvoiceBankReceiptConfirmationService {
           input.actorUserId,
           'admin:finance:invoices:bank-receipt-confirm'
         );
+        await requireSessionStepUp(client, actor);
         const receipt = await this.lockReceipt(client, input.receiptId);
         assertWalletProfileMatches(profile, receipt.profileId);
 
         if (receipt.state === 'Rejected') {
           if (receipt.rejection_reason === parsed.reason) {
+            await requireSessionStepUp(client, actor);
             await client.query('COMMIT');
             return this.toDto(receipt);
           }
@@ -661,6 +685,7 @@ export class InvoiceBankReceiptConfirmationService {
           ip: input.ip,
           correlationId: input.correlationId,
           metadata: {
+            sessionId: input.sessionId,
             receiptId: receipt.id,
             invoiceId: receipt.invoiceId,
             profileId: receipt.profileId,
@@ -675,6 +700,7 @@ export class InvoiceBankReceiptConfirmationService {
           },
           occurredAt: now,
         });
+        await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
 
         this.logger.log(

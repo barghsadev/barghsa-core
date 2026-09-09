@@ -1,3 +1,7 @@
+import {
+  receiptDecisionSession,
+  seedReceiptDecisionSessions,
+} from '../test/receipt-decision-session.js';
 /**
  * Real-PostgreSQL integration tests for staff invoice bank-receipt
  * confirmation (T-04.3.01.03).
@@ -93,6 +97,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
       PROFILE_A,
       PROFILE_B,
     ]);
+    await seedReceiptDecisionSessions(ctx.pool, [ACTOR_USER_ID]);
   }, 60_000);
 
   afterAll(async () => {
@@ -193,6 +198,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     const result = await service.confirm({
       receiptId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -228,6 +234,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     const second = await service.confirm({
       receiptId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -250,6 +257,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     const result = await service.confirm({
       receiptId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -274,6 +282,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     const result = await service.confirm({
       receiptId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -316,6 +325,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     const result = await service.confirm({
       receiptId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -349,6 +359,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
       .confirm({
         receiptId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -369,7 +380,13 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     const invoiceId = await insertInvoice({ total: 400_000n, paid: 0n, state: 'Overdue' });
     const receiptId = await insertReceipt({ invoiceId, amount, suffix: `overdue-${amount}` });
     const before = await walletBalances();
-    await service.confirm({ receiptId, actorUserId: ACTOR_USER_ID, ip: '10.0.0.9', now: NOW });
+    await service.confirm({
+      receiptId,
+      actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
+      ip: '10.0.0.9',
+      now: NOW,
+    });
     const settled = await invoiceSettlement(invoiceId);
     expect(settled.paid).toBe(amount);
     expect(settled.state).toBe(amount === 400_000n ? 'Paid' : 'PartiallyFunded');
@@ -395,7 +412,13 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
       FOR EACH ROW EXECUTE FUNCTION suppress_receipt_confirmation()`);
       try {
         await expect(
-          service.confirm({ receiptId, actorUserId: ACTOR_USER_ID, ip: '10.0.0.9', now: NOW })
+          service.confirm({
+            receiptId,
+            actorUserId: ACTOR_USER_ID,
+            ...receiptDecisionSession(ACTOR_USER_ID),
+            ip: '10.0.0.9',
+            now: NOW,
+          })
         ).rejects.toMatchObject({ status: 409 });
         expect(await invoiceSettlement(invoiceId)).toEqual({
           paid: 250_000n,
@@ -426,8 +449,15 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
       }
       // The failed transaction releases locks and permits one successful retry.
       expect(
-        (await service.confirm({ receiptId, actorUserId: ACTOR_USER_ID, ip: '10.0.0.9', now: NOW }))
-          .state
+        (
+          await service.confirm({
+            receiptId,
+            actorUserId: ACTOR_USER_ID,
+            ...receiptDecisionSession(ACTOR_USER_ID),
+            ip: '10.0.0.9',
+            now: NOW,
+          })
+        ).state
       ).toBe('Confirmed');
       expect((await walletBalances()).posted).toBe(beforeWallet.posted + 150_000n);
     }
@@ -457,6 +487,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
       .confirm({
         receiptId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -494,12 +525,14 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
       service.confirm({
         receiptId: firstId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       }),
       service.confirm({
         receiptId: secondId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       }),
@@ -557,6 +590,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     const result = await service.confirm({
       receiptId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });

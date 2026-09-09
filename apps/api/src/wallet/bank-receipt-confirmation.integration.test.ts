@@ -1,3 +1,7 @@
+import {
+  receiptDecisionSession,
+  seedReceiptDecisionSessions,
+} from '../test/receipt-decision-session.js';
 /**
  * Real-PostgreSQL integration tests for staff bank-receipt confirmation
  * (T-04.2.02.04).
@@ -108,6 +112,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       PROFILE_A,
       PROFILE_B,
     ]);
+    await seedReceiptDecisionSessions(ctx.pool, [ACTOR_USER_ID]);
   }, 60_000);
 
   afterAll(async () => {
@@ -210,6 +215,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       const input = {
         transactionId: pendingId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
         raw: { reason: 'Missing stamp' },
@@ -273,6 +279,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const result = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       correlationId: 'corr-confirm',
       now: NOW,
@@ -344,6 +351,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const first = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -351,6 +359,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const second = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -372,6 +381,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       transactionId: pendingId,
       raw: { reason: 'Payer name does not match the profile' },
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -432,6 +442,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       transactionId: rejectedId,
       raw: { reason: 'Duplicate slip' },
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -439,6 +450,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       .confirm({
         transactionId: rejectedId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -450,6 +462,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     await service.confirm({
       transactionId: confirmedId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -458,6 +471,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
         transactionId: confirmedId,
         raw: { reason: 'Changed my mind' },
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -484,6 +498,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
         transactionId: pendingId,
         raw: { reason: 'Missing stamp' },
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -518,6 +533,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       .confirm({
         transactionId: pendingId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -558,6 +574,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const result = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       invoiceId,
       now: NOW,
@@ -620,6 +637,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const second = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       invoiceId,
       now: NOW,
@@ -637,6 +655,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const result = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       invoiceId,
       now: NOW,
@@ -663,6 +682,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const result = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       invoiceId,
       now: NOW,
@@ -695,6 +715,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const result = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       invoiceId,
       now: NOW,
@@ -725,6 +746,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       .confirm({
         transactionId: pendingId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         invoiceId,
         now: NOW,
@@ -754,6 +776,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       transactionId: pendingId,
       invoiceId,
       actorUserId: ACTOR_USER_ID,
+      ...receiptDecisionSession(ACTOR_USER_ID),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -787,6 +810,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       .confirm({
         transactionId: pendingId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         invoiceId,
         now: NOW,
@@ -816,6 +840,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       service.confirm({
         transactionId: firstId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         invoiceId,
         now: NOW,
@@ -823,6 +848,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       service.confirm({
         transactionId: secondId,
         actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
         ip: '10.0.0.9',
         invoiceId,
         now: NOW,

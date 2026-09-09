@@ -3,6 +3,7 @@ import {
   assertWalletProfileWritable,
   assertWalletProfileMatches,
 } from './profile-lock.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import {
   gateWalletReceiptApproval,
@@ -123,6 +124,8 @@ export interface BankReceiptAllocationPreviewDto {
 export interface ConfirmBankReceiptInput {
   transactionId: string;
   actorUserId: string;
+  sessionId: string;
+  csrfToken: string;
   ip: string;
   invoiceId?: string | null;
   correlationId?: string;
@@ -133,6 +136,8 @@ export interface RejectBankReceiptInput {
   transactionId: string;
   raw: unknown;
   actorUserId: string;
+  sessionId: string;
+  csrfToken: string;
   ip: string;
   correlationId?: string;
   now?: Date;
@@ -280,6 +285,11 @@ export class BankReceiptConfirmationService {
   }
 
   async confirm(input: ConfirmBankReceiptInput): Promise<BankReceiptReviewDto> {
+    const actor = {
+      userId: input.actorUserId,
+      sessionId: input.sessionId,
+      csrfToken: input.csrfToken,
+    };
     const now = input.now ?? new Date();
     const pool = getDbPool();
     const client = await pool.connect();
@@ -294,6 +304,7 @@ export class BankReceiptConfirmationService {
           input.actorUserId,
           'admin:finance:wallet:bank-receipt-confirm'
         );
+        await requireSessionStepUp(client, actor);
         const pending = await this.lockBankReceipt(client, input.transactionId);
         assertWalletProfileMatches(profile, pending.walletId);
 
@@ -309,6 +320,7 @@ export class BankReceiptConfirmationService {
               409
             );
           }
+          await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           return this.toDto(pending, {
             creditTransactionId: existing?.id ?? existingOverpayment?.id ?? null,
@@ -350,6 +362,7 @@ export class BankReceiptConfirmationService {
           now,
         });
         if (approval) {
+          await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           return this.toDto(pending, { dualApproval: approval });
         }
@@ -425,6 +438,7 @@ export class BankReceiptConfirmationService {
           ip: input.ip,
           correlationId: input.correlationId,
           metadata: {
+            sessionId: input.sessionId,
             transactionId: pending.id,
             walletId: pending.walletId,
             amount: pending.amount.toString(),
@@ -444,6 +458,7 @@ export class BankReceiptConfirmationService {
           },
           occurredAt: now,
         });
+        await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
 
         this.logger.log(
@@ -474,6 +489,11 @@ export class BankReceiptConfirmationService {
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);
     }
 
+    const actor = {
+      userId: input.actorUserId,
+      sessionId: input.sessionId,
+      csrfToken: input.csrfToken,
+    };
     const now = input.now ?? new Date();
     const pool = getDbPool();
     const client = await pool.connect();
@@ -488,12 +508,14 @@ export class BankReceiptConfirmationService {
           input.actorUserId,
           'admin:finance:wallet:bank-receipt-confirm'
         );
+        await requireSessionStepUp(client, actor);
         const pending = await this.lockBankReceipt(client, input.transactionId);
         assertWalletProfileMatches(profile, pending.walletId);
 
         if (pending.state === 'Rejected') {
           const existing = readBankReceiptStaffDecision(pending.metadata);
           if (existing?.reason === parsed.reason) {
+            await requireSessionStepUp(client, actor);
             await client.query('COMMIT');
             return this.toDto(pending);
           }
@@ -565,6 +587,7 @@ export class BankReceiptConfirmationService {
           ip: input.ip,
           correlationId: input.correlationId,
           metadata: {
+            sessionId: input.sessionId,
             transactionId: pending.id,
             walletId: pending.walletId,
             amount: pending.amount.toString(),
@@ -576,6 +599,7 @@ export class BankReceiptConfirmationService {
           },
           occurredAt: now,
         });
+        await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
 
         this.logger.log(

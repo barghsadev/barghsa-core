@@ -79,11 +79,15 @@ async function payment(kind: 'wallet-receipt' | 'invoice-receipt' | 'pay') {
         ? new BankReceiptConfirmationService(wallet).confirm({
             transactionId: receiptId,
             actorUserId: 'archive-wallet-staff',
+            sessionId: headers.Cookie!.split('=')[1]!,
+            csrfToken: headers['X-CSRF-Token']!,
             ip: '127.0.0.1',
           })
         : new InvoiceBankReceiptConfirmationService(wallet).confirm({
             receiptId,
             actorUserId: 'archive-wallet-staff',
+            sessionId: headers.Cookie!.split('=')[1]!,
+            csrfToken: headers['X-CSRF-Token']!,
             ip: '127.0.0.1',
           });
   return { ...f, confirm, receiptId, invoiceId };

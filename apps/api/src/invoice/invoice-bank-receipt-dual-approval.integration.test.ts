@@ -1,3 +1,7 @@
+import {
+  receiptDecisionSession,
+  seedReceiptDecisionSessions,
+} from '../test/receipt-decision-session.js';
 /**
  * Real-PostgreSQL integration tests for invoice bank-receipt dual-approval
  * (T-04.3.01.05).
@@ -108,6 +112,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       CUSTOMER_USER_ID,
     ]);
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [PROFILE_A]);
+    await seedReceiptDecisionSessions(ctx.pool, [FIRST_STAFF, SECOND_STAFF]);
   }, 60_000);
 
   afterAll(async () => {
@@ -229,7 +234,13 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       BEGIN IF NEW.state = 'UnderReview' THEN RETURN ${returned}; END IF; RETURN NEW; END $$;
       CREATE TRIGGER suppress_receipt_parking BEFORE UPDATE ON bank_receipts
       FOR EACH ROW EXECUTE FUNCTION suppress_receipt_parking()`);
-      const input = { receiptId, actorUserId: FIRST_STAFF, ip: '10.0.0.9', now: NOW };
+      const input = {
+        receiptId,
+        actorUserId: FIRST_STAFF,
+        ...receiptDecisionSession(FIRST_STAFF),
+        ip: '10.0.0.9',
+        now: NOW,
+      };
       try {
         await expect(service.confirm(input)).rejects.toMatchObject({ status: 409 });
         expect(await receiptState(receiptId)).toBe('Submitted');
@@ -265,6 +276,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const result = await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -288,6 +300,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const first = await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -317,6 +330,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const retry = await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -328,6 +342,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const second = await service.confirm({
       receiptId,
       actorUserId: SECOND_STAFF,
+      ...receiptDecisionSession(SECOND_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -380,6 +395,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const first = await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -399,6 +415,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const result = await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -418,6 +435,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const result = await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -437,6 +455,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       .confirm({
         receiptId,
         actorUserId: FIRST_STAFF,
+        ...receiptDecisionSession(FIRST_STAFF),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -463,6 +482,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -471,6 +491,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
         receiptId,
         raw: { reason: 'Changed my mind' },
         actorUserId: FIRST_STAFF,
+        ...receiptDecisionSession(FIRST_STAFF),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -487,6 +508,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       receiptId,
       raw: { reason: 'Payer name does not match' },
       actorUserId: SECOND_STAFF,
+      ...receiptDecisionSession(SECOND_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -525,6 +547,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     await service.confirm({
       receiptId,
       actorUserId: FIRST_STAFF,
+      ...receiptDecisionSession(FIRST_STAFF),
       ip: '10.0.0.9',
       now: NOW,
     });
@@ -556,6 +579,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       .confirm({
         receiptId,
         actorUserId: FIRST_STAFF,
+        ...receiptDecisionSession(FIRST_STAFF),
         ip: '10.0.0.9',
         now: NOW,
       })
@@ -584,6 +608,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       .confirm({
         receiptId,
         actorUserId: SECOND_STAFF,
+        ...receiptDecisionSession(SECOND_STAFF),
         ip: '10.0.0.9',
         now: NOW,
       })

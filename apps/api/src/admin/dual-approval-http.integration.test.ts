@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { bankReceiptConfirmationLockKeys } from '../wallet/bank-receipt-confirmation.service.js';
+import { invoiceBankReceiptConfirmationLockKeys } from '../invoice/invoice-bank-receipt-confirmation.service.js';
 import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
@@ -986,3 +988,134 @@ it('holds current authority through staff due-date overrides', async () => {
     ).rows
   ).toHaveLength(1);
 });
+
+async function resetReceiptReviewer() {
+  await http.pool.query(
+    "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,step_up_verified_at=NOW(),expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes' WHERE user_id='reviewer'",
+    [headers.reviewer!['X-CSRF-Token']]
+  );
+  await http.pool.query(
+    `INSERT INTO app_config(key,value) VALUES ('finance.dual_approval_threshold','{"threshold_irr":0}') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
+  );
+}
+function receiptDecision(kind: 'wallet' | 'invoice', action: string, id: string) {
+  return fetch(
+    `${http.base}/api/admin/${kind === 'wallet' ? 'wallet/bank-receipt-top-ups' : 'invoices/bank-receipts'}/${id}/${action}`,
+    {
+      method: 'POST',
+      headers: headers.reviewer!,
+      body: JSON.stringify({ reason: 'Payer reference mismatch' }),
+    }
+  );
+}
+async function receiptWriteSnapshot(kind: 'wallet' | 'invoice', id: string, profile: string) {
+  return {
+    receipt: (
+      await http.pool.query(
+        `SELECT * FROM ${kind === 'wallet' ? 'wallet_transactions' : 'bank_receipts'} WHERE id=$1`,
+        [id]
+      )
+    ).rows,
+    wallets: (await http.pool.query('SELECT * FROM wallets WHERE profile_id=$1', [profile])).rows,
+    invoices: (
+      await http.pool.query('SELECT * FROM invoices WHERE profile_id=$1 ORDER BY id', [profile])
+    ).rows,
+    ledger: (
+      await http.pool.query('SELECT * FROM wallet_transactions WHERE wallet_id=$1 ORDER BY id', [
+        profile,
+      ])
+    ).rows,
+    counts: (
+      await http.pool.query(
+        'SELECT (SELECT count(*) FROM audit_log) audits,(SELECT count(*) FROM notification_outbox) outbox,(SELECT count(*) FROM approval_requests) approvals,(SELECT count(*) FROM notifications) notifications'
+      )
+    ).rows,
+  };
+}
+for (const kind of ['wallet', 'invoice'] as const) {
+  for (const action of ['confirm', 'reject'] as const) {
+    for (const change of ['revoke', 'csrf', 'step-up'] as const) {
+      it(`receipt ${kind} ${action} refuses ${change} after its guard while waiting for the receipt lock`, async () => {
+        await resetReceiptReviewer();
+        const receipt = kind === 'wallet' ? await walletReceipt() : await invoiceReceipt();
+        const keys =
+          kind === 'wallet'
+            ? bankReceiptConfirmationLockKeys(receipt.id)
+            : invoiceBankReceiptConfirmationLockKeys(receipt.id);
+        const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+        const blocker = await http.pool.connect();
+        let pending: Promise<Response> | undefined;
+        try {
+          await blocker.query('SELECT pg_advisory_lock($1,$2)', keys);
+          pending = receiptDecision(kind, action, receipt.id);
+          await expect
+            .poll(async () =>
+              Number(
+                (
+                  await http.pool.query(
+                    "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event='advisory' AND query LIKE '%pg_advisory_lock%'"
+                  )
+                ).rows[0].count
+              )
+            )
+            .toBe(1);
+          await http.pool.query(
+            change === 'revoke'
+              ? "UPDATE sessions SET revoked_at=NOW() WHERE user_id='reviewer'"
+              : change === 'csrf'
+                ? "UPDATE sessions SET csrf_token='changed' WHERE user_id='reviewer'"
+                : "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '16 minutes' WHERE user_id='reviewer'"
+          );
+          await blocker.query('SELECT pg_advisory_unlock($1,$2)', keys);
+          expect((await pending).status).toBe(change === 'revoke' ? 401 : 403);
+          expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+        } finally {
+          await blocker.query('SELECT pg_advisory_unlock($1,$2)', keys);
+          blocker.release();
+          await pending;
+          await resetReceiptReviewer();
+        }
+      });
+    }
+    for (const expiry of ['session', 'step-up'] as const) {
+      it(`receipt ${kind} ${action} rolls back money, decision and notices when ${expiry} expires during audit`, async () => {
+        await resetReceiptReviewer();
+        const receipt = kind === 'wallet' ? await walletReceipt() : await invoiceReceipt();
+        const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
+        await http.pool.query(
+          'CREATE FUNCTION delay_receipt_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM pg_sleep(1.2); RETURN NEW; END $$'
+        );
+        await http.pool.query(
+          'CREATE TRIGGER delay_receipt_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_receipt_audit()'
+        );
+        let pending: Promise<Response> | undefined;
+        try {
+          await http.pool.query(
+            expiry === 'session'
+              ? "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
+              : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
+          );
+          pending = receiptDecision(kind, action, receipt.id);
+          await expect
+            .poll(async () =>
+              Number(
+                (
+                  await http.pool.query(
+                    "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event='PgSleep'"
+                  )
+                ).rows[0].count
+              )
+            )
+            .toBe(1);
+          expect((await pending).status).toBe(expiry === 'session' ? 401 : 403);
+          expect(await receiptWriteSnapshot(kind, receipt.id, receipt.profile)).toEqual(before);
+        } finally {
+          await pending;
+          await http.pool.query('DROP TRIGGER delay_receipt_audit ON audit_log');
+          await http.pool.query('DROP FUNCTION delay_receipt_audit()');
+          await resetReceiptReviewer();
+        }
+      });
+    }
+  }
+}
