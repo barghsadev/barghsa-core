@@ -86,6 +86,72 @@ async function chooseOwner(page: Page, locale = 'en') {
 }
 
 for (const locale of ['fa', 'en'] as const) {
+  test(`dashboard invitations stay visible until a decision and sit above the header (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    let decisions = 0;
+    let finish!: () => void;
+    const pending = new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    await page.route('**/api/invitations/pending', (route) =>
+      route.fulfill({
+        json: {
+          invitations: [
+            {
+              id,
+              profileId,
+              profileName: 'Dashboard company',
+              role: 'Finance',
+              invitedBy: 'owner',
+              inviterName: 'owner@example.test',
+              createdAt: '2026-09-01T01:00:00Z',
+              expiresAt: '2099-09-08T01:00:00Z',
+            },
+          ],
+        },
+      })
+    );
+    const decision = locale === 'fa' ? 'decline' : 'accept';
+    await page.route(`**/api/invitations/${id}/${decision}`, async (route) => {
+      decisions++;
+      await pending;
+      return route.fulfill({
+        json: {
+          message: `Invitation ${decision === 'accept' ? 'accepted' : 'declined'} successfully.`,
+        },
+      });
+    });
+    await page.goto('/dashboard');
+    const banner = page.getByRole('alert').filter({ hasText: 'Dashboard company' });
+    await expect(banner).toContainText('owner@example.test');
+    await expect(banner).toContainText(locale === 'fa' ? 'مالی' : 'Finance');
+    await expect(banner.getByRole('button')).toHaveCount(2);
+    await page.keyboard.press('Escape');
+    await expect(banner).toBeVisible();
+    expect(decisions).toBe(0);
+    const box = await banner.boundingBox(),
+      header = await page.locator('header').first().boundingBox();
+    expect(box!.y + box!.height).toBeLessThanOrEqual(header!.y + 1);
+    const action = banner.getByRole('button', {
+      name: locale === 'fa' ? 'رد کردن' : 'Accept',
+      exact: true,
+    });
+    await action.click();
+    try {
+      await expect.poll(() => decisions).toBe(1);
+      await expect(banner).toBeVisible();
+      for (const button of await banner.getByRole('button').all())
+        await expect(button).toBeDisabled();
+    } finally {
+      finish();
+    }
+    await expect(banner).toHaveCount(0);
+    expect(decisions).toBe(1);
+  });
+
   test(`invitation modal previews the entity, cancels safely and retries without losing input (${locale})`, async ({
     page,
   }) => {
