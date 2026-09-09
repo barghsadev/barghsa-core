@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
+  "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
   "active_step": "R01",
-  "next_action": "Resume R01-wallet-invoice-payments-reversals. All13 saved PR bodies read;68 payment/cache baseline cases pass. Complete remaining service/reversal and customer/system authority integration review, then repair confirmed gaps.",
+  "next_action": "R01 tickets batch: read exact requirements and saved PR138/139/140 bodies, review current customer/staff workflow and valid prior evidence, then fix confirmed gaps and consolidate once.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -619,6 +619,10 @@
     {
       "id": "R01-invoice-adjustment-approval",
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+    },
+    {
+      "id": "R01-wallet-invoice-payments-reversals",
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
     }
   ],
   "deferred_improvements": [
@@ -637,9 +641,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 122,
+    "acceptance_verified": 127,
     "partial": 27,
-    "pending": 173,
+    "pending": 168,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -745,161 +749,37 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-wallet-invoice-payments-reversals",
-    "name": "Atomic wallet invoice settlement and transaction reversals",
+    "id": "R01-tickets",
+    "name": "Customer and staff ticket workflow",
     "status": "in_progress",
     "prs": [
-      271,
-      272,
-      273,
-      274,
-      275,
-      282,
-      283,
-      284,
-      285,
-      290,
-      291,
-      292,
-      293
+      138,
+      139,
+      140
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.2.03.01",
-      "04-invoices-wallet-contracts.md#T-04.2.03.02",
-      "04-invoices-wallet-contracts.md#T-04.2.03.03",
-      "04-invoices-wallet-contracts.md#T-04.2.03.04",
-      "04-invoices-wallet-contracts.md#T-04.2.04.01"
+      "02-auth-users-admin.md#T-06.01.01",
+      "02-auth-users-admin.md#T-06.01.02",
+      "02-auth-users-admin.md#T-06.01.03"
     ],
     "remaining_checklist": [
-      "Exact story/task criteria and all13 saved PR bodies read; /tmp/r01-wallet-payments-reversals-pr-history.log retains full history.",
-      "Reuse prior wallet and chargeback authority/money evidence. Check actual payment/reversal callers, current session/agent permissions, exact remaining amounts, idempotency and transaction/audit behavior.",
-      "Fix confirmed gaps, review focused checks, then consolidate this bounded batch."
+      "Read exact ticket requirements and saved PR bodies.",
+      "Review current authority, privacy, attachments, assignment and transitions with prior evidence.",
+      "Repair confirmed gaps, run focused checks and consolidate individual task/PR dispositions."
     ],
-    "historical_deferrals": [
-      {
-        "pr": 291,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/291",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.03.02"
-        ],
-        "historical_deferrals": [
-          "- [ ] Full concurrent-racer matrix (two payers, one winner) belongs to T-04.2.03.04 — existing concurrency file still passes but is not this task’s scope.",
-          "- [ ] Idempotency cache unique index + retry contract belongs to T-04.2.03.03 — existing path is unchanged, not expanded here."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 290,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/290",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.03.01"
-        ],
-        "historical_deferrals": [
-          "- [ ] HTTP/controller surface is not added; this task is the service method only.",
-          "- [ ] Concurrent payment integration tests remain T-04.2.03.04 (already on `main`)."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 285,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/285",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.04.01"
-        ],
-        "historical_deferrals": [
-          "- The same migration copies violating rows into `wallet_tx_reversal_check_violations` (idempotent `ON CONFLICT DO NOTHING`) and documents the audited staff reconciliation procedure. VALIDATE is deferred to a later contract-phase migration after operators reconcile those rows. Ledger history is not rewritten automatically."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 282,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/282",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.03.02"
-        ],
-        "historical_deferrals": [
-          "- [ ] Concurrent payment races / duplicate idempotency-key unique index — covered by already-merged T-04.2.03.03 / T-04.2.03.04; not re-scoped here."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 275,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/275",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.04.01"
-        ],
-        "historical_deferrals": [
-          "- [ ] Finance alert on chargeback detection — owned by T-04.2.04.03, not this task.",
-          "- [ ] Provider chargeback inbound mapping — owned by T-04.2.04.02, not this task."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 273,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/273",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.03.03"
-        ],
-        "historical_deferrals": [
-          "- TTL cleanup of stale in-flight rows is not implemented in this task; `expires_at` is written (24h) for a later worker. Successful cached responses are kept so a retry after TTL still cannot debit twice."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 272,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/272",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.03.02"
-        ],
-        "historical_deferrals": [
-          "- [ ] Concurrent payment races / duplicate idempotency-key unique index — deferred to T-04.2.03.03 / T-04.2.03.04."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 271,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/271",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.03.01"
-        ],
-        "historical_deferrals": [
-          "- [ ] T-04.2.03.02-style explicit dual `FOR UPDATE` + audit insert details beyond the current invoice lock + debit client join + state-machine audit — left for the follow-up task that owns that wording.",
-          "- [ ] Concurrent payment integration tests (T-04.2.03.04) not in this PR."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      }
-    ],
-    "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-wallet-ledger",
-      "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
-      "audit/evidence/step-reviews.json#R01-invoice-corrections",
-      "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
-    ],
-    "confirmed_defects": [
-      {
-        "summary": "Wallet invoice payment has no production caller (graph plus source search); service options do not bind session/agent authority.",
-        "status": "confirmed_missing_workflow"
-      }
-    ],
+    "confirmed_defects": [],
+    "reused_evidence": [],
+    "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Resume R01-wallet-invoice-payments-reversals. All13 saved PR bodies read;68 payment/cache baseline cases pass. Complete remaining service/reversal and customer/system authority integration review, then repair confirmed gaps.",
-    "new_evidence": [
-      "68 current payment/cache cases pass across5 suites; /tmp/r01-wallet-payments-reversals-baseline.log. No payment math repair indicated by baseline."
-    ],
-    "cross_feature_check": {
-      "status": "repaired_and_verified",
-      "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-      "source_revision": "8a9ea4264ac757d8f2f0a317a05d24081cdfdaaa",
-      "verification": "146 backend,23 distinct production browser and42 budget checks pass; prior acceptance counts preserved."
-    }
+    "next_action": "R01 tickets batch: read exact requirements and saved PR138/139/140 bodies, review current customer/staff workflow and valid prior evidence, then fix confirmed gaps and consolidate once."
   },
   "open_domain_reviews": [
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "owner_batch": "wallet/ledger and receipts/approvals/payments",
       "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
-      "status": "Current wallet/receipt/payment authority verified, including additive Finance and Manager/Legal money denial; refund-specific acceptance remains.",
-      "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+      "status": "Top-up/receipt Finance grants and owner-only wallet invoice settlement are verified through commit. Manager/Legal money denial retained. Refund-specific criteria remain with their workflow.",
+      "evidence": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
@@ -1044,6 +924,15 @@
       "criteria": "Retire old adjustment writers and validate legacy ck_invoices_adjustment_kind_matches_link after reconciliation.",
       "status": "External operational evidence required; current new writes and backfill tested.",
       "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.04.01",
+      "prs": [
+        285
+      ],
+      "owner_batch": "V01 operational migration validation",
+      "remaining": "Reconcile reported legacy reversal rows and validate chk_wallet_tx_reversal_original. Current new-write constraints and reversal service are verified; no operator execution claimed.",
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
     }
   ]
 }

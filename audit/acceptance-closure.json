@@ -521,7 +521,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 192,
       "requirement": "- **T-01.04.05:** Wire `test` and `test:coverage` tasks in `turbo.json`\n  - **Notes:** `test` depends on `^build` (upstream packages must compile first). `test:coverage` passes `--coverage` flag. CI runs `turbo test` with `--filter` for affected packages on PR, full suite on main.\n  - **Dependencies:** T-01.04.01, T-01.01.02\n  - **Complexity:** S",
@@ -573,7 +573,7 @@
         },
         {
           "path": "packages/i18n/package.json",
-          "sha256": "f54380ff2fae6dddf9855a9c3b454defe7397af6c55daa2cc5c13bd58fa33fe6"
+          "sha256": "1aaba89199af1fafc36136720b0182b443ee086d2aa869d95715a0c7ad9103ed"
         }
       ],
       "checks": [
@@ -597,12 +597,15 @@
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
-      }
+      },
+      "evidence_reuse": [
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 129,
       "requirement": "- **T-01.03.01:** Configure Vite SPA build pipeline in `apps/web`\n  - **Notes:** Use the Vite build command with TanStack Router and client-side React rendering, as approved in ADR 004. Keep route-level CSS/JS splitting and avoid inlining all dynamic imports. The production server serves the HTML shell and static assets; authorization, pricing and state transitions stay in backend modules. TanStack Start and server-side React rendering are not required.\n  - **Dependencies:** S-01.02, packages/i18n, packages/shared, packages/ui\n  - **Complexity:** L",
@@ -610,7 +613,7 @@
       "source_evidence": [
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "2a4a5b13fe68f9b93fb7516dde50931a4e966871792f6015e0ebef3c200fb9dc"
+          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
         },
         {
           "path": "apps/web/package.json",
@@ -648,7 +651,10 @@
           "apps/web/package.json"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "evidence_reuse": [
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.02",
@@ -2087,7 +2093,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.03",
       "status": "partial",
-      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 139,
       "requirement": "- **T-01.03.03:** Implement route-level code splitting and lazy loading for heavy modules\n  - **Notes:** Lazy-load: admin dashboards, AI chat UI, document editors, chart visualizations, video upload viewers. Use dynamic `import()` with React.lazy or TanStack Router's lazy routes. Customer purchase paths (electricity ordering, saving plans, wallet top-up) must NOT be lazy-loaded. Verify that lazy boundaries don't cause layout shift.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M\n  - **UI/UX:** Loading states for lazy routes must match the app skeleton and respect `prefers-reduced-motion`. Show a skeleton or minimal spinner, never a blank page.",
@@ -2095,7 +2101,7 @@
       "source_evidence": [
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "2a4a5b13fe68f9b93fb7516dde50931a4e966871792f6015e0ebef3c200fb9dc"
+          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
         },
         {
           "path": "apps/web/src/routes/_app/wallet.tsx",
@@ -2120,7 +2126,10 @@
       "merged_prs": [
         12
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_reuse": [
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.04",
@@ -2183,7 +2192,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "86bff5146dab10fb3c824affb211e0b9e5c3edd3",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 150,
       "requirement": "- **T-01.03.05:** Configure hashed filenames and CDN-ready public asset output\n  - **Notes:** Vite config sets `build.assetsDir: 'assets'` with content-hash filenames. Set `build.cssCodeSplit: true`. Output manifest for CDN cache invalidation. Ensure public assets set `Cache-Control: public, immutable, max-age=31536000`. Authenticated API responses set `private, no-cache`.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
@@ -2191,7 +2200,7 @@
       "source_evidence": [
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "2a4a5b13fe68f9b93fb7516dde50931a4e966871792f6015e0ebef3c200fb9dc"
+          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
         },
         {
           "path": "apps/web/server.js",
@@ -2294,6 +2303,9 @@
             "evidence": "audit/evidence/acceptance-refresh.json"
           }
         }
+      ],
+      "evidence_reuse": [
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
@@ -3705,7 +3717,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -3733,7 +3745,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3823,13 +3835,14 @@
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       },
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3885,7 +3898,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3954,7 +3967,8 @@
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       },
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
@@ -4225,7 +4239,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -4313,7 +4327,7 @@
         },
         {
           "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-          "sha256": "504887e043c134ad58cd24bc40c02058d5c17b9d9d6c193d2680cf2705abe523"
+          "sha256": "5085d5e6eaa442c54c449f859b047fdc301cf9764608830c46228bec9eca59e9"
         },
         {
           "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
@@ -4410,13 +4424,14 @@
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       },
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 378,
       "requirement": "**T-05.01.01 — CRM users list page**\n\n- Description: `/app/crm` — list of all registered users. Columns: Username, profiles (legal/individual indicators), registration date, last login, verification status, profile count. Staff and admin only.\n- Technical notes: Backend: GET `/api/crm/users` with pagination, search, sort, filter. Server-side filtering/sorting. Cursor pagination recommended for large datasets. Permission: staff roles `crm:read` or `admin`. Profile type columns: \"Legal\" icon and \"Individual\" icon shown per user if they have that profile type. Search by username (email/mobile).\n- UI/UX: Table with sortable columns. Filter bar: profile type (all/individual/legal), verification status (verified/unverified/pending), registration date range. Search input. Pagination controls. \"Collapse all\" on row expansion.\n- Dependencies: T-03.01.01, authorization framework\n- Complexity: L",
@@ -4444,7 +4459,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4499,7 +4514,8 @@
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       },
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
@@ -4566,7 +4582,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.05.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 513,
       "requirement": "**T-05.05.01 — Profiles awaiting verification widget**\n\n- Description: On staff dashboard, widget showing profiles pending verification (if verification is not disabled). Shows count and \"Show all\" link to CRM with verification filter.\n- Technical notes: GET `/api/crm/dashboard/pending-verification` returns count and last 5 entries. Permission: staff with `crm:verify`.\n- UI/UX: Card: icon + count + \"Profiles awaiting verification\" + \"Show all\" link. Click opens CRM with `?verification=PENDING` filter.\n- Dependencies: T-05.01.02, E-07 (verification settings)\n- Complexity: S",
@@ -4586,7 +4602,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4635,7 +4651,8 @@
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       },
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
@@ -5022,7 +5039,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 167,
       "requirement": "**T-02.03.02 — OTP verification and password reset**\n\n- Description: POST `/api/auth/reset-password` with `{ challengeId, otp, newPassword }`. Backend verifies OTP, validates new password strength (same policy), hashes new password, updates user record.\n- Technical notes: On success: invalidate ALL existing sessions and refresh tokens for that user. Audit: password_reset event with user ID, timestamp, correlation ID. OTP consumed. Password history check enforced. Rate limit: 5 reset attempts per hour per destination.\n- UI/UX: After OTP verified, show new password form with strength meter and confirm password field. Success: redirect to login page with success toast. \"Your password has been reset. Please log in with your new password.\"\n- Dependencies: T-02.03.01, T-01.02.03\n- Complexity: M",
@@ -5030,7 +5047,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5156,7 +5173,8 @@
       "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
       "evidence_reuse": [
         "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
@@ -5538,7 +5556,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.04.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 472,
       "requirement": "**T-05.04.02 — Agent invitation flow**\n\n- Description: Owner/manager invites by email or mobile number. Must select role: Manager, Finance, Legal. If user is registered, send notification. If not registered, they see the invite when they register with that username.\n- Technical notes: POST `/api/profiles/:profileId/invitations` with `{ username, role }`. Constraints: legal profile must have exactly one owner at all times. Owner cannot be removed without ownership transfer. Rate limited: 10 invitations per hour per profile. Audit: invitation_created. When invited user registers, check pending invitations and link automatically. Invitation states: Pending, Accepted, Withdrawn, Declined, Expired (default 7 days).\n- UI/UX: Modal: username field (email/mobile), role dropdown. Preview: \"Invite [username] as [role] to [legal entity name].\" Confirmation. Success: \"Invitation sent. User will be notified when available.\"\n- Dependencies: T-05.04.01\n- Complexity: L",
@@ -5546,7 +5564,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -5643,7 +5661,8 @@
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       },
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
@@ -7763,7 +7782,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 265,
       "requirement": "| T-04.2.02.03 | Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state | M |",
@@ -7819,7 +7838,7 @@
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
-          "sha256": "931d6fdf0ebb811e6a822755d1b51690dad8d60555af4c31f632cb1721fec198"
+          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
         }
       ],
       "checks": [
@@ -7837,7 +7856,8 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
@@ -8053,7 +8073,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 349,
       "requirement": "| T-04.3.01.02 | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state | M |",
@@ -8113,7 +8133,7 @@
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
-          "sha256": "931d6fdf0ebb811e6a822755d1b51690dad8d60555af4c31f632cb1721fec198"
+          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
         }
       ],
       "checks": [
@@ -8130,7 +8150,8 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -8396,7 +8417,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "a1d995953e6303d7697664de615dfb8a71cc1130",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 263,
       "requirement": "| T-04.2.02.01 | Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway | M |",
@@ -8408,7 +8429,7 @@
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
-          "sha256": "931d6fdf0ebb811e6a822755d1b51690dad8d60555af4c31f632cb1721fec198"
+          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
         },
         {
           "path": "apps/api/src/wallet/wallet.controller.ts",
@@ -8458,7 +8479,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger",
-        "audit/final-repair-checkpoint.json"
+        "audit/final-repair-checkpoint.json",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ]
     },
     {
@@ -10977,7 +10999,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 143,
       "requirement": "| T-04.1.03.01 | Add `service_due_periods` admin config table (service type, default days, active period) | M |",
@@ -11065,7 +11087,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11085,7 +11107,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -11118,7 +11140,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11135,7 +11158,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 144,
       "requirement": "| T-04.1.03.02 | Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override) | S |",
@@ -11223,7 +11246,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11243,7 +11266,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -11276,7 +11299,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11293,7 +11317,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 145,
       "requirement": "| T-04.1.03.03 | Build staff override UI/API: override input + reason field, stored in audit + invoice metadata | M |",
@@ -11381,7 +11405,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11401,7 +11425,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -11434,7 +11458,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11451,7 +11476,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 146,
       "requirement": "| T-04.1.03.04 | Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded | M |\n\n---",
@@ -11539,7 +11564,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11559,7 +11584,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -11592,7 +11617,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11609,7 +11635,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 170,
       "requirement": "| T-04.1.04.01 | Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status` | M |",
@@ -11697,7 +11723,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11717,7 +11743,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -11750,7 +11776,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11767,7 +11794,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 171,
       "requirement": "| T-04.1.04.02 | Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows | M |",
@@ -11855,7 +11882,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11875,7 +11902,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -11908,7 +11935,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -11925,7 +11953,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
       "status": "partial",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 172,
       "requirement": "| T-04.1.04.03 | Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox | M |",
@@ -12013,7 +12041,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12033,7 +12061,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -12068,7 +12096,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12085,7 +12114,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 173,
       "requirement": "| T-04.1.04.04 | Enforce idempotency: unique index on (invoiceId, offset, channel) | S |",
@@ -12173,7 +12202,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12193,7 +12222,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -12226,7 +12255,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12243,7 +12273,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
       "status": "partial",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 174,
       "requirement": "| T-04.1.04.05 | Admin toggle UI: enable/disable each offset per service type | M |",
@@ -12331,7 +12361,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12351,7 +12381,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -12386,7 +12416,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12403,7 +12434,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 175,
       "requirement": "| T-04.1.04.06 | Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled | M |\n\n---",
@@ -12491,7 +12522,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "ebd64ff8e8ddc449751035ad539dd8b069fc179a0a01b059c36923857eb2ae78"
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12511,7 +12542,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -12544,7 +12575,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12762,7 +12794,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 199,
       "requirement": "| T-04.1.05.04 | Customer-facing invoice details page shows original + linked corrections/replacements with explanations | M |\n\n---",
@@ -12782,7 +12814,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
-          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
         },
         {
           "path": "apps/web/src/routes/__root.tsx",
@@ -12802,7 +12834,319 @@
         250
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+      "evidence_reuse": [
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 292,
+      "requirement": "| T-04.2.03.01 | Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method | L |",
+      "requirement_sha256": "3697bf58d50d05c9b56061330866d28d0db9f814ada53733091264a7638b54ec",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "5085d5e6eaa442c54c449f859b047fdc301cf9764608830c46228bec9eca59e9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+          "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "7498588c1230d5d6b5f3825507225c114dacf382bbd83c0d86bfc646c26b1365"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+          "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "9d060d8d745c973f9f4610831a09f4b33bbf36432d998b5932b1b7eeb6907f7a"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
+          "sha256": "f937fa473cb55c967f1d465046e1b4968a95a6241e1f43711f42a44a98dd554d"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+          "sha256": "1053ae024538360910e760ec087dada05c1767866abe316ac1c2747144a7de35"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.module.ts",
+          "sha256": "dbcb8148241952851d8cc4d2f0950da9e7f37faaca68feb172a316f59756f873"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "ec7e32f908bb23412bcf88a529ca8e7162043f742cb2d7031e7e8420997069a9"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "5e3aa9f9172194c7773f038d1036ad17ecf6772cba1ad7bd8670b0c1fac57a0f"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "1aaba89199af1fafc36136720b0182b443ee086d2aa869d95715a0c7ad9103ed"
+        },
+        {
+          "path": "packages/i18n/src/wallet-invoice-payment.ts",
+          "sha256": "5b7dd5c43287c2342de67381e88e8b2373548c454d704092c801763300f6477a"
+        }
+      ],
+      "checks": [
+        "Exact requirements and all contributing saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+        "Current focused checks and unchanged reversal evidence are recorded once in the batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        271,
+        290
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 293,
+      "requirement": "| T-04.2.03.02 | Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit | L |",
+      "requirement_sha256": "4516999adbadf808be4a0f9cdad6e10062ad296ebd6f777351b06571b6067bf4",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "5085d5e6eaa442c54c449f859b047fdc301cf9764608830c46228bec9eca59e9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+          "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "7498588c1230d5d6b5f3825507225c114dacf382bbd83c0d86bfc646c26b1365"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+          "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+          "sha256": "1053ae024538360910e760ec087dada05c1767866abe316ac1c2747144a7de35"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "9d060d8d745c973f9f4610831a09f4b33bbf36432d998b5932b1b7eeb6907f7a"
+        }
+      ],
+      "checks": [
+        "Exact requirements and all contributing saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+        "Current focused checks and unchanged reversal evidence are recorded once in the batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        272,
+        282,
+        291
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 294,
+      "requirement": "| T-04.2.03.03 | Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry | M |",
+      "requirement_sha256": "25e87bd0f2fa753fd19495091416f6e824ee1716af9257f8804bf4d185dfa71d",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "5085d5e6eaa442c54c449f859b047fdc301cf9764608830c46228bec9eca59e9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+          "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "7498588c1230d5d6b5f3825507225c114dacf382bbd83c0d86bfc646c26b1365"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+          "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+          "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.test.ts",
+          "sha256": "0cc320eaddc8731850409d3c4f121bc2468404264a24da994f8c3effb0d10662"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.integration.test.ts",
+          "sha256": "ed9ec6b98ed5651cd5fe2718e0c8b78fd7ff79b4b35b2a97c2a7c2c3ad92e605"
+        },
+        {
+          "path": "packages/db/drizzle/0073_create_idempotency_keys.sql",
+          "sha256": "8fc896d59c81d151d1c899ee8bfef60f55766e226a66380be545467c647abf20"
+        }
+      ],
+      "checks": [
+        "Exact requirements and all contributing saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+        "Current focused checks and unchanged reversal evidence are recorded once in the batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        273,
+        283,
+        292
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 295,
+      "requirement": "| T-04.2.03.04 | Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions | L |\n\n---",
+      "requirement_sha256": "5cfc39b021f396dd364abb6c93315355dfd7348a2c331599c10934af8b5e6dc2",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "5085d5e6eaa442c54c449f859b047fdc301cf9764608830c46228bec9eca59e9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+          "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "7498588c1230d5d6b5f3825507225c114dacf382bbd83c0d86bfc646c26b1365"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+          "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "9d060d8d745c973f9f4610831a09f4b33bbf36432d998b5932b1b7eeb6907f7a"
+        }
+      ],
+      "checks": [
+        "Exact requirements and all contributing saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+        "Current focused checks and unchanged reversal evidence are recorded once in the batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        274,
+        284,
+        293
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.04.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 316,
+      "requirement": "| T-04.2.04.01 | Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance | M |",
+      "requirement_sha256": "0a0c1dad30d47e6173241cf1b62f58201b2892be9c3d1f7c4bc3a61d0509f98e",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reverse.integration.test.ts",
+          "sha256": "88e11be3b150c4addef6f91f2abd270f94ca945a0c4b4df5c21a5a0646f088d6"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reversal.ts",
+          "sha256": "06f138304ced158ded6b6beea0171dd5b1dc5cf9891dac327c48112b07b13306"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reversal.test.ts",
+          "sha256": "4442fdf214314e87fe4892d232e955ae6e570366b36de3844ea9d9742f0f0edd"
+        },
+        {
+          "path": "packages/db/drizzle/0077_wallet_tx_reversal_original_check.sql",
+          "sha256": "2cd9237a798e37a1b05e1c16e661ab6e523a96f42af9723edf816af31f8dc1ba"
+        }
+      ],
+      "checks": [
+        "Exact requirements and all contributing saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+        "Current focused checks and unchanged reversal evidence are recorded once in the batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        275,
+        285
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
     }
   ],
   "pending_task_keys": [
@@ -12967,11 +13311,6 @@
     "02-auth-users-admin.md#T-09.12.04",
     "02-auth-users-admin.md#T-09.12.06",
     "02-auth-users-admin.md#T-10.01.02",
-    "04-invoices-wallet-contracts.md#T-04.2.03.01",
-    "04-invoices-wallet-contracts.md#T-04.2.03.02",
-    "04-invoices-wallet-contracts.md#T-04.2.03.03",
-    "04-invoices-wallet-contracts.md#T-04.2.03.04",
-    "04-invoices-wallet-contracts.md#T-04.2.04.01",
     "03-core-business.md#T-03.01.01.01",
     "03-core-business.md#T-03.01.01.02",
     "03-core-business.md#T-03.01.01.03",
@@ -15684,6 +16023,39 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
       "note": "Prior full assessments remain in this immutable Git revision. Refresh only bindings current at that revision and affected by this reviewed change; preserve all statuses and other stale/future limitations."
+    },
+    {
+      "source_revision": "691cd6618a78d90463eb5f51520a7ae874cf3170",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.03.01",
+        "01-platform-infrastructure.md#T-01.03.03",
+        "01-platform-infrastructure.md#T-01.03.05",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.06",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+      "note": "Prior full assessments retained in this Git revision. Only previously current bindings changed by the reviewed wallet batch are refreshed; unrelated stale evidence and limitations remain."
     }
   ]
 }

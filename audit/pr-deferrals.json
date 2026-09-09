@@ -141,7 +141,21 @@
       "- [ ] Full concurrent-racer matrix (two payers, one winner) belongs to T-04.2.03.04 — existing concurrency file still passes but is not this task’s scope.",
       "- [ ] Idempotency cache unique index + retry contract belongs to T-04.2.03.03 — existing path is unchanged, not expanded here."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
+    "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "T-04.2.03.04 and current concurrent settlement tests cover one winner and safe retries. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "T-04.2.03.03 and current cache schema/repository preserve unique claims and exact retry responses. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      }
+    ]
   },
   {
     "pr": 290,
@@ -153,7 +167,21 @@
       "- [ ] HTTP/controller surface is not added; this task is the service method only.",
       "- [ ] Concurrent payment integration tests remain T-04.2.03.04 (already on `main`)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
+    "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "7e541df/cb7ac5b add the customer quote/payment API and confirmation UI with current owner/session authority, CSRF, step-up and exact amount checks. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "The current T-04.2.03.04 concurrency suite passes; the API adds real authorization/expiry/audit rollback cases. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      }
+    ]
   },
   {
     "pr": 288,
@@ -210,7 +238,16 @@
     "historical_deferrals": [
       "- The same migration copies violating rows into `wallet_tx_reversal_check_violations` (idempotent `ON CONFLICT DO NOTHING`) and documents the audited staff reconciliation procedure. VALIDATE is deferred to a later contract-phase migration after operators reconcile those rows. Ledger history is not rewritten automatically."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
+    "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "external_evidence_required",
+        "evidence": "Migration0077 enforces new reversal writes and reports legacy violations without rewriting ledger history. Operator reconciliation and later VALIDATE remain V01. Current service, constraints and rollback evidence are reused. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      }
+    ]
   },
   {
     "pr": 282,
@@ -221,7 +258,16 @@
     "historical_deferrals": [
       "- [ ] Concurrent payment races / duplicate idempotency-key unique index — covered by already-merged T-04.2.03.03 / T-04.2.03.04; not re-scoped here."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
+    "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "The current cache unique index/repository and concurrent settlement suites satisfy T-04.2.03.03/.04. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      }
+    ]
   },
   {
     "pr": 278,
@@ -279,7 +325,21 @@
       "- [ ] Finance alert on chargeback detection — owned by T-04.2.04.03, not this task.",
       "- [ ] Provider chargeback inbound mapping — owned by T-04.2.04.02, not this task."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
+    "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "Finance alerts belong to T-04.2.04.03 and are reviewed in R01-chargebacks-alerts. External delivery remains R02. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "separate_future_dependency",
+        "evidence": "Provider mapping belongs to T-04.2.04.02 and is reviewed in R01-chargebacks-alerts; signed-webhook requirements wording remains pending there. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      }
+    ]
   },
   {
     "pr": 273,
@@ -290,7 +350,16 @@
     "historical_deferrals": [
       "- TTL cleanup of stale in-flight rows is not implemented in this task; `expires_at` is written (24h) for a later worker. Successful cached responses are kept so a retry after TTL still cannot debit twice."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
+    "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "Background deletion of un-retried NULL cache rows remains a future cleanup worker. Current retries reclaim expired in-flight claims; successful responses remain durable. Cleanup is not required to satisfy the unique-index and retry task. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      }
+    ]
   },
   {
     "pr": 272,
@@ -301,7 +370,16 @@
     "historical_deferrals": [
       "- [ ] Concurrent payment races / duplicate idempotency-key unique index — deferred to T-04.2.03.03 / T-04.2.03.04."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
+    "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "The current cache unique index/repository and concurrent settlement suites satisfy T-04.2.03.03/.04. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      }
+    ]
   },
   {
     "pr": 271,
@@ -313,7 +391,21 @@
       "- [ ] T-04.2.03.02-style explicit dual `FOR UPDATE` + audit insert details beyond the current invoice lock + debit client join + state-machine audit — left for the follow-up task that owns that wording.",
       "- [ ] Concurrent payment integration tests (T-04.2.03.04) not in this PR."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
+    "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+    "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "PR272/282/291 and current atomic settlement lock wallet and invoice, check versions and available funds, and insert the debit, invoice transition and audit in one transaction. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "PR274/284/293 and the current concurrency suite verify one winner, same-key replay, insufficient funds and reservation races. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      }
+    ]
   },
   {
     "pr": 267,

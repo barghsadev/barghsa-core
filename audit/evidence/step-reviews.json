@@ -11469,6 +11469,363 @@
         "/tmp/r01-adjustment-approval-requirements-check.log",
         "/tmp/r01-adjustment-approval-backlog-check.log"
       ]
+    },
+    {
+      "id": "R01-wallet-invoice-payments-reversals",
+      "date": "2026-09-09",
+      "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "base_revision": "691cd6618a78d90463eb5f51520a7ae874cf3170",
+      "product_commits": [
+        "7e541df7aba84412d7c3ad5e0a110e1dbc586490",
+        "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d"
+      ],
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.03",
+        "04-invoices-wallet-contracts.md#T-04.2.03.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.01"
+      ],
+      "summary": "Five task acceptances verified and13 saved PR reviews closed. Added the missing customer wallet invoice payment workflow; preserved atomic settlement, idempotency and compensating reversal implementations.",
+      "review": [
+        "Current settlement locks the wallet and invoice, uses exact bigint remaining/available amounts and version checks, and commits one completed debit with the Paid transition, audit and cached response. Wrong invoice/profile/key bindings reject; cached retries cannot debit twice. Live NULL claims conflict, expired claims can be reclaimed, and successful cached results survive TTL.",
+        "The service previously had no production customer caller. The new GET/POST derives the profile and user from current session context, enforces the existing owner-only wallet:move-funds permission and rejects forged authority fields. Profile, account and session locks bind authorization through commit. CSRF and fresh step-up protect writes; expiry, context changes and audit failure roll back all effects. Existing Finance top-up permissions are not broadened to owner-only wallet settlement.",
+        "The confirmation UI displays exact remaining amount and available balance, handles failed quotes and insufficient funds, retains the same key and amount after ambiguous responses and password verification, and requires a new review/key when the amount changes. It validates the returned invoice/profile/key/amount/transaction before success, then refreshes invoice details. FA/EN, both themes and hover contrast are verified.",
+        "Reversal implementation and tests are unchanged since ab17007. A compensating Completed transaction points to the original, applies the opposite signed amount and leaves original history unchanged. Unique original/key constraints, available-funds checks, concurrency and caller-owned rollback retain their earlier evidence. The chargeback caller remains covered by R01-chargebacks-alerts.",
+        "Five repeated task groups converge on one current payment/cache/reversal implementation. Later PRs add useful locking, cache recovery, concurrency and reversal constraints. No duplicate service needs deletion.",
+        "Adding route imports exposed a 250KB budget overage in the shared preload filename map. Short c-[hash].js chunk names remove about2KB while preserving content hashes, manifest resolution and immutable asset caching. The numeric budgets and counted dependency graph are unchanged."
+      ],
+      "verification": {
+        "backend": "68 baseline payment/cache cases pass across5 suites. After API integration,56 affected existing payment cases and9 new real HTTP cases pass. These56 overlap the baseline; do not add them. Unchanged cache and reversal cases are reused.",
+        "browser": "5 new production Chromium cases pass after final build.4 unchanged invoice-deadline cases passed in the first run;9 invoice-page unit cases pass. Final five-case runs overlap.",
+        "quality": "API/web types, scoped lint, formatting, i18n/API/web builds and OpenAPI checks pass. All42 route/interaction budgets pass; electricity ordering247.94KB/250KB. Manifest asset names and live cache responses pass focused checks.",
+        "failures": "Failed logs retained: SQL fixture column and connection cleanup, UUID fixture typing, established insufficient-funds400 expectation, modal-hidden test locator, new button hover contrast, two budget attempts and an overly exact cache-header assertion. Product fixes and fixture corrections were checked before commit.",
+        "reuse": "No reversal source or test changes since ab17007. Existing financial-submission branches and invoice presentation behavior reviewed for compatibility.25 prior current source bindings refreshed without changing statuses or unrelated limits. Full regression/coverage remains V02."
+      },
+      "remaining": [
+        "V01 retains legacy reversal reconciliation and CHECK validation.",
+        "Future cleanup of abandoned in-flight cache rows remains separate from durable successful-result replay.",
+        "Provider/alert requirements stay with their assigned chargeback/R02 records; the signed-webhook decision remains pending. Refund and unbuilt order/contract submission workflows remain their own prerequisites."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 271,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.01"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 272,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.02"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 273,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.03"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 274,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.04"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 275,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.01"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+            "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+          ]
+        },
+        {
+          "pr": 282,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.02"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 283,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.03"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 284,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.04"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 285,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.01"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+            "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+          ]
+        },
+        {
+          "pr": 290,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.01"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 291,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.02"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 292,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.03"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        },
+        {
+          "pr": 293,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.03.04"
+          ],
+          "reason": "Current mapped acceptance verified; all saved deferrals explicitly dispositioned. Separate future/operational work remains assigned and is not claimed complete.",
+          "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+          ]
+        }
+      ],
+      "pr_counts": {
+        "closed": 13,
+        "open": 0,
+        "blocked": 0,
+        "newly_closed": 13
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-archive-wallet-writers",
+        "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "1039acbf0cb27b3436d49d8474570795f7093080c2ca9a0643a8acea0a4808da"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "9d060d8d745c973f9f4610831a09f4b33bbf36432d998b5932b1b7eeb6907f7a"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
+          "sha256": "f937fa473cb55c967f1d465046e1b4968a95a6241e1f43711f42a44a98dd554d"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+          "sha256": "1053ae024538360910e760ec087dada05c1767866abe316ac1c2747144a7de35"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "5085d5e6eaa442c54c449f859b047fdc301cf9764608830c46228bec9eca59e9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.module.ts",
+          "sha256": "dbcb8148241952851d8cc4d2f0950da9e7f37faaca68feb172a316f59756f873"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "ec7e32f908bb23412bcf88a529ca8e7162043f742cb2d7031e7e8420997069a9"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "5e3aa9f9172194c7773f038d1036ad17ecf6772cba1ad7bd8670b0c1fac57a0f"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "1aaba89199af1fafc36136720b0182b443ee086d2aa869d95715a0c7ad9103ed"
+        },
+        {
+          "path": "packages/i18n/src/wallet-invoice-payment.ts",
+          "sha256": "5b7dd5c43287c2342de67381e88e8b2373548c454d704092c801763300f6477a"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+          "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "7498588c1230d5d6b5f3825507225c114dacf382bbd83c0d86bfc646c26b1365"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+          "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+          "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.test.ts",
+          "sha256": "0cc320eaddc8731850409d3c4f121bc2468404264a24da994f8c3effb0d10662"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.integration.test.ts",
+          "sha256": "ed9ec6b98ed5651cd5fe2718e0c8b78fd7ff79b4b35b2a97c2a7c2c3ad92e605"
+        },
+        {
+          "path": "packages/db/drizzle/0073_create_idempotency_keys.sql",
+          "sha256": "8fc896d59c81d151d1c899ee8bfef60f55766e226a66380be545467c647abf20"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reverse.integration.test.ts",
+          "sha256": "88e11be3b150c4addef6f91f2abd270f94ca945a0c4b4df5c21a5a0646f088d6"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reversal.ts",
+          "sha256": "06f138304ced158ded6b6beea0171dd5b1dc5cf9891dac327c48112b07b13306"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reversal.test.ts",
+          "sha256": "4442fdf214314e87fe4892d232e955ae6e570366b36de3844ea9d9742f0f0edd"
+        },
+        {
+          "path": "packages/db/drizzle/0077_wallet_tx_reversal_original_check.sql",
+          "sha256": "2cd9237a798e37a1b05e1c16e661ab6e523a96f42af9723edf816af31f8dc1ba"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-wallet-payment-browser-1.log",
+        "/tmp/r01-wallet-payment-browser-final.log",
+        "/tmp/r01-wallet-payment-browser-format.log",
+        "/tmp/r01-wallet-payment-budgets-final.log",
+        "/tmp/r01-wallet-payment-budgets.log",
+        "/tmp/r01-wallet-payment-compact-assets-browser.log",
+        "/tmp/r01-wallet-payment-compact-assets-budgets.log",
+        "/tmp/r01-wallet-payment-compact-assets-build.log",
+        "/tmp/r01-wallet-payment-compact-assets-cache-final.log",
+        "/tmp/r01-wallet-payment-compact-assets-cache.log",
+        "/tmp/r01-wallet-payment-compact-assets-lint.log",
+        "/tmp/r01-wallet-payment-http-api-build.log",
+        "/tmp/r01-wallet-payment-http-api-types-final.log",
+        "/tmp/r01-wallet-payment-http-api-types.log",
+        "/tmp/r01-wallet-payment-http-backend-1.log",
+        "/tmp/r01-wallet-payment-http-backend-2.log",
+        "/tmp/r01-wallet-payment-http-backend-final.log",
+        "/tmp/r01-wallet-payment-http-fixture-format.log",
+        "/tmp/r01-wallet-payment-http-format-check.log",
+        "/tmp/r01-wallet-payment-http-format.log",
+        "/tmp/r01-wallet-payment-http-lint.log",
+        "/tmp/r01-wallet-payment-http-openapi-check.log",
+        "/tmp/r01-wallet-payment-http-openapi-write.log",
+        "/tmp/r01-wallet-payment-i18n-build.log",
+        "/tmp/r01-wallet-payment-invoice-page-tests.log",
+        "/tmp/r01-wallet-payment-ui-build-final.log",
+        "/tmp/r01-wallet-payment-ui-build.log",
+        "/tmp/r01-wallet-payment-ui-format-check.log",
+        "/tmp/r01-wallet-payment-ui-format-final.log",
+        "/tmp/r01-wallet-payment-ui-format.log",
+        "/tmp/r01-wallet-payment-ui-lint-final.log",
+        "/tmp/r01-wallet-payment-ui-lint.log",
+        "/tmp/r01-wallet-payment-ui-types-final.log",
+        "/tmp/r01-wallet-payment-ui-types.log",
+        "/tmp/r01-wallet-payments-reversals-baseline.log",
+        "/tmp/r01-wallet-payments-reversals-pr-history.log",
+        "/tmp/r01-wallet-batch-audit-check.log",
+        "/tmp/r01-wallet-batch-requirements-check.log",
+        "/tmp/r01-wallet-batch-backlog-check.log"
+      ]
     }
   ]
 }

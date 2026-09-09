@@ -1,20 +1,22 @@
 # Remaining fix plan
 
-Current through product/test `0aae9d5`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `cb7ac5b`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 119 | 27 | 117 | 263 |
+| Tasks with merged PR evidence | 124 | 27 | 112 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 122 | 27 | 173 | 322 |
+| All claims | 127 | 27 | 168 | 322 |
 
-**200 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Ten retained records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
+**195 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Ten retained records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
+
+Active R01 batch: customer/staff tickets, saved PRs138–140 and tasks `02-auth-users-admin.md#T-06.01.01` through `.03`. Review current requirements and existing implementation before fixing confirmed gaps. Preserve the completed batches below.
 
 First feature batch completed locally at `1bf4680`: agents, invitations and ownership, saved PRs #131–#135. **4 PR reviews closed / 1 open / 0 blocked**. Tasks T-05.04.01, .02, .03 and .05 are verified; T-05.04.04 remains partial until wallet/invoice/contract/order role evidence is linked from its assigned batches. All three PR132 deferrals are satisfied locally. [Consolidated batch review](evidence/step-reviews.json#R01-agents-invitations-ownership).
 
@@ -70,7 +72,9 @@ Audit cleanup and inventory reconciliation are complete. R01 is active; eight ph
 
 Invoice corrections consolidated at `0aae9d5`: **4 tasks verified /4 PR reviews closed**, saved PRs247–250. Paid Overdue correction, missing staff API/UI, safe retries and customer read authority are repaired.54 correction service/HTTP,30 customer read/assembly,5 deadline compatibility and40 DB cases support the batch; counts overlap earlier runs.12 current production Chromium cases,3 host cases and42 unchanged budgets pass. [Consolidated review](evidence/step-reviews.json#R01-invoice-corrections) preserves failed logs and valid evidence reuse; one snapshot refresh closes,10 remain. Credit wallet payout belongs to S-04.4.01; old-writer retirement and legacy CHECK validation remain V01 operational work. No external execution claimed. Active next batch: wallet invoice payments and reversals,13 saved PRs for5 tasks.
 
-Invoice-adjustment approval follow-up is verified at `8a9ea42`. The new manual-adjustment route now consumes the configured threshold through the existing queue, with atomic approval/issuance and safe retries.146 backend,23 distinct browser and42 budget checks pass. Existing task/PR counts are preserved. See [review](evidence/step-reviews.json#R01-invoice-adjustment-approval). Resume wallet payment/reversal batch; all13 saved PR bodies and68 baseline cases are already reviewed.
+Invoice-adjustment approval follow-up is verified at `8a9ea42`. The new manual-adjustment route now consumes the configured threshold through the existing queue, with atomic approval/issuance and safe retries.146 backend,23 distinct browser and42 budget checks pass. Existing task/PR counts are preserved. See [review](evidence/step-reviews.json#R01-invoice-adjustment-approval).
+
+Wallet invoice payment/reversal is consolidated at `cb7ac5b`: **5 tasks verified /13 PR reviews closed**. The customer API/UI now binds current owner/session/CSRF/step-up authority and exact confirmed amount through atomic settlement.68 baseline payment/cache cases pass;56 overlapping existing cases and9 new HTTP cases pass after API integration.5 new production Chromium cases,4 unchanged deadline cases,9 invoice-page unit cases and42 budgets pass. Reversal evidence is unchanged and reused.25 prior source bindings refreshed;2030 logs indexed. [Consolidated review](evidence/step-reviews.json#R01-wallet-invoice-payments-reversals) retains every historical deferral and failed log. Saved PR totals are104 closed/18 open/179 unreviewed. Legacy reversal CHECK validation stays V01; abandoned-claim cleanup is a future worker.
 
 ## Feature-batch rules
 
@@ -98,7 +102,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 
 - Sessions and permissions: finish activation and remaining manual-verification acceptance; profile/onboarding, contact/address boundaries and current commercial-order verification are consolidated; link the remaining cross-domain agent-role checks. Local agent/invitation/ownership acceptance is recorded above. Reuse [session caller evidence](session-caller-review.md) and [route/CSRF review](security-route-review.md). Guard registration alone does not prove handler, transaction or UI behavior.
 - CSRF boundaries: pre-login tokens for public JSON authentication are implemented and verified at f1b879b. Explicitly disposition refresh, signed-callback requirements and CSP telemetry. Browser payment return GET and explicit session/CSRF confirmation are repaired in the online batch. Current inventory has 347 routes, 205 unsafe-method registrations and 122 guarded step-up routes.
-- Finance and tickets: wallet invoice payments/reversals, remaining refund/order/contract authority, and customer/staff ticket privacy, attachments, assignment and transitions. Wallet, receipt, online-payment and chargeback repairs are consolidated above; preserve their evidence and the pending signed-webhook decision. Keep separate workflows in their assigned feature batches.
+- Finance and tickets: remaining refund/order/contract authority, and customer/staff ticket privacy, attachments, assignment and transitions. Wallet settlement/reversal, receipt, online-payment and chargeback repairs are consolidated above; preserve their evidence and the pending signed-webhook decision. Keep separate workflows in their assigned feature batches.
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
@@ -110,13 +114,13 @@ For all 27 partial records, use the exact limitations in [acceptance](acceptance
 
 | Current mapping | PRs |
 | --- | ---: |
-| At least one unresolved mapped task | 159 |
-| Only recorded verified tasks | 138 |
+| At least one unresolved mapped task | 146 |
+| Only recorded verified tasks | 151 |
 | No current task mapping | 4 |
 
 These are mapping counts, not completed PR-review counts. Even a PR mapped only to verified tasks may have an unresolved deferral or stale source evidence.
 
-Review the combined implementation once per qualified task, then associate every contributing PR. The 144 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 46, core business 4, finance 12, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review the combined implementation once per qualified task, then associate every contributing PR. The 139 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 46, core business 4, finance 7, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
 For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Twelve statements in PR92/106/115/129/132/218/252/254 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
 
@@ -135,7 +139,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Deployment, operations and CI, T-05.* | 20 |
 | Total | 55 |
 
-Task dependencies override batch order. These 55 overlap the 200 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
+Task dependencies override batch order. These 55 overlap the 195 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 
