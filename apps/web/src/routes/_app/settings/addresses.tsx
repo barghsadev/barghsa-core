@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t } from '@barghsa/i18n/app';
+import { addressesText } from '@barghsa/i18n/addresses';
 import {
   MapPinIcon,
   PlusIcon,
@@ -12,7 +13,15 @@ import {
   SaveIcon,
   XIcon,
 } from 'lucide-react';
-import { Button, Card, CardContent, Dialog, DialogContent, DialogTitle } from '@barghsa/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 
@@ -63,10 +72,17 @@ function SettingsAddressesPage() {
   const [citiesError, setCitiesError] = useState(false);
   const [citiesRetry, setCitiesRetry] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [profileId, setProfileId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
   const [saving, setSaving] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const deletingRef = useRef(false);
+  const deleteTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const cancelDeleteRef = useRef<HTMLButtonElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   // Form state
   const [formProvinceId, setFormProvinceId] = useState('');
@@ -77,6 +93,9 @@ function SettingsAddressesPage() {
   // ── Fetch addresses ────────────────────────────────────────────────
 
   const fetchAddresses = useCallback(async () => {
+    setLoading(true);
+    setLoadError(false);
+    setProfileId(null);
     try {
       // First get the active profile
       const profileRes = await fetch('/api/profiles');
@@ -85,21 +104,22 @@ function SettingsAddressesPage() {
       }
       const profileData: { activeProfileId: string | null } = await profileRes.json();
       if (!profileData.activeProfileId) {
-        setLoading(false);
+        setAddresses([]);
         return;
       }
 
       const res = await fetch(`/api/profiles/${profileData.activeProfileId}/addresses`);
-      if (res.ok) {
-        const data: { addresses: Address[] } = await res.json();
-        setAddresses(data.addresses);
-      }
+      if (!res.ok) throw new Error('Failed to load addresses');
+      const data: { addresses: Address[] } = await res.json();
+      if (!Array.isArray(data.addresses)) throw new Error('Invalid address list');
+      setAddresses(data.addresses);
+      setProfileId(profileData.activeProfileId);
     } catch {
-      toast.error(t('settings.addresses.error.load', locale));
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
-  }, [locale]);
+  }, []);
 
   // ── Fetch provinces ────────────────────────────────────────────────
 
@@ -192,13 +212,7 @@ function SettingsAddressesPage() {
 
     setSaving(true);
     try {
-      // Get the active profile
-      const profileRes = await fetch('/api/profiles');
-      if (!profileRes.ok) throw new Error();
-      const profileData: { activeProfileId: string | null } = await profileRes.json();
-      if (!profileData.activeProfileId) throw new Error();
-
-      const profileId = profileData.activeProfileId;
+      if (!profileId) throw new Error();
       const body = {
         provinceId: formProvinceId,
         cityId: formCityId,
@@ -264,6 +278,7 @@ function SettingsAddressesPage() {
     formFullAddress,
     formPostalCode,
     editingAddress,
+    profileId,
     locale,
     fetchAddresses,
   ]);
@@ -273,18 +288,12 @@ function SettingsAddressesPage() {
   const handleSetMain = useCallback(
     async (addressId: string) => {
       try {
-        const profileRes = await fetch('/api/profiles');
-        if (!profileRes.ok) throw new Error();
-        const profileData: { activeProfileId: string | null } = await profileRes.json();
-        if (!profileData.activeProfileId) throw new Error();
+        if (!profileId) throw new Error();
 
-        const res = await fetch(
-          `/api/profiles/${profileData.activeProfileId}/addresses/${addressId}/set-main`,
-          {
-            method: 'POST',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-          }
-        );
+        const res = await fetch(`/api/profiles/${profileId}/addresses/${addressId}/set-main`, {
+          method: 'POST',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+        });
 
         if (!res.ok) {
           toast.error(t('settings.addresses.error.setMain', locale));
@@ -297,31 +306,24 @@ function SettingsAddressesPage() {
         toast.error(t('settings.addresses.error.setMain', locale));
       }
     },
-    [locale, fetchAddresses]
+    [locale, profileId, fetchAddresses]
   );
 
   // ── Delete address ─────────────────────────────────────────────────
 
   const handleDelete = useCallback(
     async (addressId: string) => {
+      if (deletingRef.current || !profileId) return;
+      deletingRef.current = true;
+      setDeleting(true);
       try {
-        const profileRes = await fetch('/api/profiles');
-        if (!profileRes.ok) throw new Error();
-        const profileData: { activeProfileId: string | null } = await profileRes.json();
-        if (!profileData.activeProfileId) throw new Error();
-
-        const res = await fetch(
-          `/api/profiles/${profileData.activeProfileId}/addresses/${addressId}`,
-          {
-            method: 'DELETE',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-          }
-        );
+        const res = await fetch(`/api/profiles/${profileId}/addresses/${addressId}`, {
+          method: 'DELETE',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+        });
 
         if (!res.ok) {
-          const errBody = await res.json().catch(() => ({}));
-          const message = (errBody as { message?: string }).message;
-          toast.error(message || t('settings.addresses.error.delete', locale));
+          toast.error(t('settings.addresses.error.delete', locale));
           return;
         }
 
@@ -330,9 +332,12 @@ function SettingsAddressesPage() {
         fetchAddresses();
       } catch {
         toast.error(t('settings.addresses.error.delete', locale));
+      } finally {
+        deletingRef.current = false;
+        setDeleting(false);
       }
     },
-    [locale, fetchAddresses]
+    [locale, profileId, fetchAddresses]
   );
 
   // ── Helpers ────────────────────────────────────────────────────────
@@ -352,12 +357,15 @@ function SettingsAddressesPage() {
     t('settings.addresses.unknownCity', locale);
 
   // ── Render ─────────────────────────────────────────────────────────
+  const deletingAddress = addresses.find((address) => address.id === deleteConfirmId);
 
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">{t('settings.addresses.title', locale)}</h1>
-        <Button onClick={openAddForm} className="gap-2">
+        <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-bold">
+          {t('settings.addresses.title', locale)}
+        </h1>
+        <Button disabled={loading || !profileId} onClick={openAddForm} className="gap-2">
           <PlusIcon className="h-4 w-4" />
           {t('settings.addresses.add', locale)}
         </Button>
@@ -376,7 +384,15 @@ function SettingsAddressesPage() {
       )}
 
       {/* Address list */}
-      {!loading && (
+      {!loading && loadError && (
+        <div role="alert">
+          <p>{t('settings.addresses.error.load', locale)}</p>
+          <Button variant="outline" onClick={fetchAddresses}>
+            {t('settings.addresses.retry', locale)}
+          </Button>
+        </div>
+      )}
+      {!loading && !loadError && (
         <div className="space-y-3">
           {addresses.length === 0 && (
             <Card>
@@ -435,36 +451,18 @@ function SettingsAddressesPage() {
                     >
                       <PencilIcon className="h-4 w-4" />
                     </button>
-                    {deleteConfirmId === address.id ? (
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(address.id)}
-                          className="rounded p-1.5 text-destructive hover:bg-destructive/10 transition-colors"
-                          aria-label="Confirm delete"
-                        >
-                          <Trash2Icon className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setDeleteConfirmId(null)}
-                          className="rounded p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                          aria-label="Cancel delete"
-                        >
-                          <XIcon className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setDeleteConfirmId(address.id)}
-                        className="rounded p-1.5 text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
-                        title={t('settings.addresses.delete', locale)}
-                        aria-label={t('settings.addresses.delete', locale)}
-                      >
-                        <Trash2Icon className="h-4 w-4" />
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        deleteTriggerRef.current = event.currentTarget;
+                        setDeleteConfirmId(address.id);
+                      }}
+                      className="rounded p-1.5 text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
+                      title={t('settings.addresses.delete', locale)}
+                      aria-label={t('settings.addresses.delete', locale)}
+                    >
+                      <Trash2Icon className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               </CardContent>
@@ -472,6 +470,49 @@ function SettingsAddressesPage() {
           ))}
         </div>
       )}
+
+      <Dialog
+        open={Boolean(deletingAddress)}
+        onOpenChange={(open) => {
+          if (!open && !deletingRef.current) setDeleteConfirmId(null);
+        }}
+      >
+        <DialogContent
+          showCloseButton={false}
+          initialFocus={cancelDeleteRef}
+          finalFocus={() =>
+            deleteTriggerRef.current?.isConnected ? deleteTriggerRef.current : headingRef.current
+          }
+          dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        >
+          <DialogTitle>{t('settings.addresses.deleteConfirm', locale)}</DialogTitle>
+          <p className="break-words">{deletingAddress?.fullAddress}</p>
+          <DialogDescription>
+            {deletingAddress?.mainAddress
+              ? t('settings.addresses.deleteConfirmMain', locale)
+              : addressesText('removalHistory', locale)}
+          </DialogDescription>
+          <div className="flex justify-end gap-2">
+            <Button
+              ref={cancelDeleteRef}
+              variant="outline"
+              disabled={deleting}
+              onClick={() => setDeleteConfirmId(null)}
+            >
+              {t('settings.addresses.form.cancel', locale)}
+            </Button>
+            {!deletingAddress?.mainAddress && (
+              <Button
+                variant="destructive"
+                disabled={deleting || !profileId}
+                onClick={() => deletingAddress && handleDelete(deletingAddress.id)}
+              >
+                {t('settings.addresses.delete', locale)}
+              </Button>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Add/Edit Modal */}
       {showForm && (
@@ -495,7 +536,7 @@ function SettingsAddressesPage() {
                 type="button"
                 onClick={closeForm}
                 className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                aria-label="Close"
+                aria-label={t('settings.addresses.form.cancel', locale)}
               >
                 <XIcon className="h-4 w-4" />
               </button>

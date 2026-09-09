@@ -162,6 +162,7 @@ for (const locale of ['en', 'fa']) {
       name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address',
       exact: true,
     });
+    await expect(add).toBeEnabled();
     await add.focus();
     await page.keyboard.press('Enter');
     const dialog = page.getByRole('dialog', {
@@ -3199,5 +3200,150 @@ for (const locale of ['en', 'fa']) {
       page.getByText((await lock.getAttribute('aria-label')) as string, { exact: true }).first()
     ).toBeVisible();
     await expect(page.locator('#profile-first-name')).toBeDisabled();
+  });
+}
+
+for (const locale of ['en', 'fa']) {
+  test(`address removal warns, preserves main address and protects pending confirmation (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const addresses = [true, false].map((mainAddress) => ({
+      id: mainAddress ? 'main' : 'second',
+      provinceId: 'province',
+      cityId: 'city',
+      fullAddress: mainAddress ? 'Main street' : 'Second street',
+      postalCode: '1234567890',
+      mainAddress,
+    }));
+    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+      route.fulfill({ json: { addresses } })
+    );
+    let pending: import('@playwright/test').Route | undefined;
+    let writes = 0;
+    await page.route('**/api/profiles/profile-one/addresses/second', (route) => {
+      writes++;
+      pending = route;
+    });
+    await page.goto('/settings/addresses');
+    const removeName = locale === 'fa' ? 'حذف' : 'Delete';
+    const cancelName = locale === 'fa' ? 'انصراف' : 'Cancel';
+    const removeMain = page.getByRole('button', { name: removeName, exact: true }).first();
+    await removeMain.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(
+      locale === 'fa' ? 'ابتدا' : 'Set another address as main first'
+    );
+    await expect(dialog.getByRole('button', { name: removeName, exact: true })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(removeMain).toBeFocused();
+    const remove = page.getByRole('button', { name: removeName, exact: true }).nth(1);
+    await remove.click();
+    await expect(dialog).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+    await expect(dialog).toContainText('Second street');
+    await expect(dialog).toContainText(
+      locale === 'fa'
+        ? 'آدرس سفارش‌های قبلی حفظ خواهد شد'
+        : 'addresses on existing orders will be retained'
+    );
+    const cancel = dialog.getByRole('button', { name: cancelName, exact: true });
+    await expect(cancel).toBeFocused();
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await expect(cancel).toBeFocused();
+    await cancel.click();
+    await expect(remove).toBeFocused();
+    expect(writes).toBe(0);
+    await remove.click();
+    const confirm = dialog.getByRole('button', { name: removeName, exact: true });
+    await confirm.click();
+    await expect.poll(() => writes).toBe(1);
+    await expect(confirm).toBeDisabled();
+    await expect(cancel).toBeDisabled();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeVisible();
+    await pending!.fulfill({ status: 503, json: { message: 'Internal English detail' } });
+    await expect(confirm).toBeEnabled();
+    await expect(
+      page.getByText(locale === 'fa' ? 'خطا در حذف آدرس' : 'Failed to delete address', {
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(page.getByText('Internal English detail')).toHaveCount(0);
+    await confirm.click();
+    await expect.poll(() => writes).toBe(2);
+    addresses.splice(1, 1);
+    await pending!.fulfill({ json: { deleted: true } });
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByText('Second street', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('Main street', { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: locale === 'fa' ? 'مدیریت آدرس‌ها' : 'Manage Addresses',
+        exact: true,
+      })
+    ).toBeFocused();
+  });
+
+  test(`address load failure can retry and creation stays with the displayed profile (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let fail = true;
+    let saved: unknown;
+    await page.route('**/api/profiles/profile-one/addresses', (route) => {
+      if (route.request().method() === 'POST') {
+        saved = route.request().postDataJSON();
+        return route.fulfill({ status: 201, json: { id: 'new' } });
+      }
+      return route.fulfill(fail ? { status: 503, json: {} } : { json: { addresses: [] } });
+    });
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({ json: [{ id: 'province', nameFa: 'استان', nameEn: 'Province' }] })
+    );
+    await page.route('**/api/geography/provinces/province/cities', (route) =>
+      route.fulfill({
+        json: [{ id: 'city', provinceId: 'province', nameFa: 'شهر', nameEn: 'City' }],
+      })
+    );
+    await page.goto('/settings/addresses');
+    const add = page.getByRole('button', {
+      name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address',
+      exact: true,
+    });
+    const loadError = page.getByRole('alert').filter({
+      hasText: locale === 'fa' ? 'خطا در بارگذاری آدرس‌ها' : 'Failed to load addresses',
+    });
+    await expect(loadError).toBeVisible();
+    await expect(add).toBeDisabled();
+    fail = false;
+    await loadError
+      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+      .click();
+    await expect(add).toBeEnabled();
+    await add.click();
+    // A context change elsewhere must not silently retarget this already displayed form.
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({ json: { activeProfileId: 'profile-two', profiles: [] } })
+    );
+    const dialog = page.getByRole('dialog');
+    await dialog.locator('#addresses-field-1').selectOption('province');
+    await expect(dialog.locator('#addresses-field-2 option[value="city"]')).toHaveCount(1);
+    await dialog.locator('#addresses-field-2').selectOption('city');
+    await dialog.locator('#addresses-field-3').fill('Displayed profile street');
+    await dialog.locator('#addresses-field-4').fill('1234567890');
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
+      .click();
+    await expect
+      .poll(() => saved)
+      .toEqual({
+        provinceId: 'province',
+        cityId: 'city',
+        fullAddress: 'Displayed profile street',
+        postalCode: '1234567890',
+      });
+    await expect(dialog).toHaveCount(0);
   });
 }
