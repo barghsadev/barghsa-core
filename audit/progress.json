@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
+  "source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
   "active_step": "R02",
-  "next_action": "Finish remaining provider/template UI acceptance for active R02 foundation PR156/161/192/193. Preserve closed PR113 recipient choices/verified contacts and PR194 minute-precision daytime settings/current session-step-up saves. Check SMS self-test disclosure for all mappings and original template editor criteria; reuse completed provider activation/rollback, self-send, branding, authority and delivery evidence. Keep event-specific producers/reminders/retries in subsequent R02 batches.",
+  "next_action": "Finish remaining email/template acceptance in R02 foundation PR156/161/192. Prefill email drafts from validated saved nonsecret settings; preserve write-only secrets. Replace the legacy-only new-event selector and implement required template variable drag-to-insert. Preserve closed PR113/193/194 and verified provider/template contact repairs. Full theme remains R03; event-specific delivery remains subsequent R02 batches.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -678,6 +678,10 @@
     {
       "id": "R02-daytime-window",
       "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
+    },
+    {
+      "id": "R02-sms-provider-ui-and-verified-self-tests",
+      "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
     }
   ],
   "deferred_improvements": [
@@ -696,9 +700,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 133,
+    "acceptance_verified": 134,
     "partial": 31,
-    "pending": 158,
+    "pending": 157,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1014,6 +1018,16 @@
     ],
     "confirmed_defects": [
       {
+        "defect": "SMS.ir admin UI is absent; backend-only PR193 still needs mapping editing and self-test preview/lifecycle controls.",
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+      },
+      {
+        "defect": "Provider self-test recipient helper trusts nonempty account contact fields without current verification-ledger proof.",
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+      },
+      {
         "defect": "Provider mutations lack current session/CSRF/step-up through commit.",
         "status": "repaired",
         "review_record": "audit/evidence/step-reviews.json#R02-provider-session-authority"
@@ -1072,6 +1086,19 @@
         "defect": "Delivery-window mutation still defers step-up and does not carry current session/CSRF identity through the transaction.",
         "status": "repaired",
         "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
+      },
+      {
+        "defect": "Template self-test recipient lookup trusts contact fields without current verification-ledger proof.",
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+      },
+      {
+        "defect": "Email draft editor blanks saved nonsecret configuration and may overwrite stored transport settings with defaults.",
+        "status": "open"
+      },
+      {
+        "defect": "Template editor restricts new events to a legacy list and lacks required drag-to-insert variable interaction.",
+        "status": "open"
       }
     ],
     "reused_evidence": [
@@ -1087,7 +1114,8 @@
       "audit/evidence/step-reviews.json#R02-email-branding-delivery",
       "audit/evidence/step-reviews.json#R02-branded-admin-previews",
       "audit/evidence/step-reviews.json#R02-recipient-channel-delivery",
-      "audit/evidence/step-reviews.json#R02-daytime-window"
+      "audit/evidence/step-reviews.json#R02-daytime-window",
+      "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
     ],
     "pr_dispositions": [
       {
@@ -1109,9 +1137,19 @@
         "reason": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
         "source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
         "evidence": "audit/evidence/step-reviews.json#R02-daytime-window"
+      },
+      {
+        "pr": 193,
+        "status": "closed",
+        "task_keys": [
+          "02-auth-users-admin.md#T-09.06.02"
+        ],
+        "reason": "SMS.ir configuration now has localized draft creation/edit/clone, nonsecret saved fields, write-only credentials, event/TemplateId/variable mapping editing, exact all-mapping sample previews and verified self-tests. Current authority/password confirmation, actual delivery proof, activation, rollback and OTP recovery checks are reviewed. Both PR193 historical self-send/UI deferrals are satisfied by the linked provider repairs and current UI.",
+        "source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
+        "evidence": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
       }
     ],
-    "next_action": "Finish remaining provider/template UI acceptance for active R02 foundation PR156/161/192/193. Preserve closed PR113 recipient choices/verified contacts and PR194 minute-precision daytime settings/current session-step-up saves. Check SMS self-test disclosure for all mappings and original template editor criteria; reuse completed provider activation/rollback, self-send, branding, authority and delivery evidence. Keep event-specific producers/reminders/retries in subsequent R02 batches."
+    "next_action": "Finish remaining email/template acceptance in R02 foundation PR156/161/192. Prefill email drafts from validated saved nonsecret settings; preserve write-only secrets. Replace the legacy-only new-event selector and implement required template variable drag-to-insert. Preserve closed PR113/193/194 and verified provider/template contact repairs. Full theme remains R03; event-specific delivery remains subsequent R02 batches."
   },
   "open_domain_reviews": [
     {

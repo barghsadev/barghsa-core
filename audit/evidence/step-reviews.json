@@ -13756,6 +13756,194 @@
         "26 immediate-base source bindings refreshed; older evidence-refresh queue retained.",
         "Preserve R02 recipient, branded preview/email/auth and provider approval/self-send evidence."
       ]
+    },
+    {
+      "id": "R02-sms-provider-ui-and-verified-self-tests",
+      "date": "2026-09-09",
+      "source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
+      "base_revision": "b45f6300a9b678f740dbc82ff6528e2b32ca1d31",
+      "product_commits": [
+        "0af048d6de464562d5da37cdcfe941066b2d0aa1",
+        "47f69fe33e0e85064bb0ae7937c2a66a0992b0e1",
+        "58a8df909bd1892a70bc52549cfa1ac6ec32fe27"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.04.01"
+      ],
+      "summary": "SMS provider UI and current verification proof for provider/template self-tests are repaired. SMS task and saved PR193 close locally; remaining email/template criteria stay open.",
+      "review": [
+        "Rechecked exact T-09.06.02 and PR193 body/deferrals. The SMS admin page was entirely absent. The new lazy SMS tab shares the existing provider request/password-confirmation flow without changing the email default tab or route budgets.",
+        "Editor loads saved sender, timeout, throughput, low-credit threshold and mappings; blank credentials preserve stored secrets on edit, while creation/cloning requires a fresh key. Masked key values never enter form state. Inputs validate mapping uniqueness, template IDs, variable pairs and numeric limits. Base URL remains application-managed.",
+        "Test selection determines the first mapping; disclosure and preview show every mapping that will send, with the same shared sample-parameter helper used by the server. The request omits a recipient override; backend selects the acting staff verified mobile. Tests still require every mapping to succeed before activation. Failed tests, recovery conflicts and malformed/wrong-ID or wrong-state acknowledgements cannot show success. Rollback accepts only a newly created active version.",
+        "Provider and template self-test contact lookups incorrectly treated nonempty users contact fields as verified. Both now require the current primary identifier or a matching verified secondary identifier while existing account/session/permission locks are held. Real database tests prove absent/deleted proof is denied without state/audit changes, and eligible template recipients reach a controlled unavailable-provider result. Existing development/test-only template allowlist behavior is unchanged.",
+        "Browser fixtures initially omitted the CSRF cookie/timezone response, used textbox for a datalist combobox and matched only one path segment for nested lifecycle routes. Those fixtures were corrected. Accessibility checks wait for theme color transitions to finish; both themes, mobile width and FA/EN direction pass. Template fixtures initially tried impossible unverified/mismatched identifier rows; existing database constraints rejected them. Final cases use supported absent/current/deleted proof states. All failed logs are preserved.",
+        "Focused results:198 provider authority/contact cases,118 distinct template service/HTTP cases,15 SMS tester cases,26 existing email-client cases and50 i18n cases =407. Browser evidence is13 unchanged email cases plus8 SMS cases =21; overlapping reruns are not added. Applicable types/lint/format, production build and42 unchanged budgets pass. HTTP tests used no active provider; other delivery tests use controlled adapters. No production delivery or full regression claim.",
+        "Final review found two further original-criteria gaps: email draft editing resets saved nonsecret fields to defaults, and template creation is restricted to legacy events with no drag insertion. These remain explicitly open in the same foundation batch; broad theme acceptance stays R03."
+      ],
+      "verification": {
+        "unit_integration": "407 distinct focused cases; see review for breakdown and overlap handling.",
+        "browser": "21 distinct Chromium cases:13 email and8 SMS, with FA/EN lifecycle and mobile/light/dark accessibility.",
+        "quality": "API/web/shared/i18n types, scoped lint/format, production web build and42 unchanged budgets pass. API routes/contracts unchanged.",
+        "regression": "Full repository regression and coverage remain V02."
+      },
+      "remaining": [
+        "Finish remaining email/template acceptance in R02 foundation PR156/161/192. Prefill email drafts from validated saved nonsecret settings; preserve write-only secrets. Replace the legacy-only new-event selector and implement required template variable drag-to-insert. Preserve closed PR113/193/194 and verified provider/template contact repairs. Full theme remains R03; event-specific delivery remains subsequent R02 batches.",
+        "Preserve migrations0123–0126 and coordinated minute-window/auth-branding worker rollout prerequisites. No operational execution."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 193,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.06.02"
+          ],
+          "reason": "SMS.ir configuration now has localized draft creation/edit/clone, nonsecret saved fields, write-only credentials, event/TemplateId/variable mapping editing, exact all-mapping sample previews and verified self-tests. Current authority/password confirmation, actual delivery proof, activation, rollback and OTP recovery checks are reviewed. Both PR193 historical self-send/UI deferrals are satisfied by the linked provider repairs and current UI.",
+          "source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
+          "evidence": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+        }
+      ],
+      "pr_counts": {
+        "closed": 1,
+        "open": 0,
+        "blocked": 0
+      },
+      "source_evidence": [
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "2201400dd7b853e680452a8c139fe4e6fa375a72917d971f285ad565eb3bc31c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
+          "sha256": "fbad1f936053c7ff24a14faf20cd88499a494c0045e6f4a470c2f63273094a1e"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-recipient.ts",
+          "sha256": "19d353697c73b9c58f170b11edb3144e8d59476ae33266f91107f599776f01c5"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "a04f0bd143ac644ea99dacad645f7ae48d03056ffb03b32a2b0adf552224a318"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+          "sha256": "641da3a08452af096a507d4d6dc2868f2e963d8595e435a75e9e49ef3ae95e3c"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2b71b8097c562332e3899fd13c215a18bfc73482742d58ed5b3112ba9c35d3e9"
+        },
+        {
+          "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
+          "sha256": "ffa92af835d39a7c925e0eb6901b0564ea675c4627bb40bd39b8c46fe2370d99"
+        },
+        {
+          "path": "apps/api/src/provider-config/smsir-connection-tester.service.ts",
+          "sha256": "7ceeaf7a409c2205227fcc20b29dfa5dd076d756e337b16dc4924c1484f1bc18"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "b44f385a73415127a248180ab3c0a5d08b5192115434336db53ca541d0c9f75a"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "2eaee8113de4cd31139bc2e82ac77d2acdd361b65de1573c7f68a88a5ed4e27a"
+        },
+        {
+          "path": "apps/web/src/lib/sms-providers-api.ts",
+          "sha256": "5b6141c437a66cb4e837a76d2918e21fb60ea52518a7e9e489df229c01a482d2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "sha256": "d0a6fea408f1b51484dc797b3f9b801db409f252f2c695c210dee6eed2481c48"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "7472859618c9a8e8f07a0c4da1c7f4158cd7965a2e972051f79a0832403c4f6d"
+        },
+        {
+          "path": "apps/web/src/routes/admin/providers.tsx",
+          "sha256": "774b9561ab7d9126f4a941cb4ec0cdd985ffd6ea63bea31d33ee3ece96e05ba7"
+        },
+        {
+          "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
+          "sha256": "e35d9078a52c79b5f2b2d3e622a5938eeebfcdca642bb63b0b779529a3e7cd41"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0126_snapshot.json",
+          "sha256": "468b31bc09aa47f6367a83c7b15025326908c160b33100d47e3d1b5771e66f3c"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "f0c9e7a899917980a40c2c5e98210ee0f55f62c601f340e6db16ee40974af65f"
+        },
+        {
+          "path": "packages/i18n/src/providers.ts",
+          "sha256": "d7b5a28081d78e93a77a76fe8cc8e85474f8941ed92a91a458363b01848b7562"
+        },
+        {
+          "path": "packages/shared/src/notifications/index.ts",
+          "sha256": "d56dcf37ae4cead3f97dec1400246d5714ff8d7c71b562438f293ca901bfd705"
+        },
+        {
+          "path": "packages/shared/src/notifications/sms-test-parameters.ts",
+          "sha256": "fbc2e5a7f23fb41091b81155df0f555d52c82cf8b0b75a5ff1d4908e64573801"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-provider-contact-api.log",
+        "/tmp/r02-provider-contact-format.log",
+        "/tmp/r02-provider-contact-lint.log",
+        "/tmp/r02-provider-contact-types.log",
+        "/tmp/r02-sms-ui-a11y-format.log",
+        "/tmp/r02-sms-ui-a11y.log",
+        "/tmp/r02-sms-ui-api.log",
+        "/tmp/r02-sms-ui-browser-final.log",
+        "/tmp/r02-sms-ui-browser-format-final.log",
+        "/tmp/r02-sms-ui-browser-format-reviewed.log",
+        "/tmp/r02-sms-ui-browser-format.log",
+        "/tmp/r02-sms-ui-browser-lint.log",
+        "/tmp/r02-sms-ui-browser-reviewed.log",
+        "/tmp/r02-sms-ui-browser.log",
+        "/tmp/r02-sms-ui-budgets.log",
+        "/tmp/r02-sms-ui-email-unit.log",
+        "/tmp/r02-sms-ui-format-check.log",
+        "/tmp/r02-sms-ui-format-write.log",
+        "/tmp/r02-sms-ui-i18n-build.log",
+        "/tmp/r02-sms-ui-i18n-tests.log",
+        "/tmp/r02-sms-ui-lint.log",
+        "/tmp/r02-sms-ui-types.log",
+        "/tmp/r02-sms-ui-web-build.log",
+        "/tmp/r02-sms-ui-web-types.log",
+        "/tmp/r02-template-contact-api.log",
+        "/tmp/r02-template-contact-format-check.log",
+        "/tmp/r02-template-contact-format.log",
+        "/tmp/r02-template-contact-http-final.log",
+        "/tmp/r02-template-contact-http-reviewed.log",
+        "/tmp/r02-template-contact-lint.log",
+        "/tmp/r02-template-contact-types.log"
+      ],
+      "evidence_reuse": [
+        "2 immediate-base ledger bindings refreshed;38 older evidence refresh records remain.",
+        "Reuse unchanged provider lifecycle/encryption/activation/recovery proof; SMS tester sample extraction is behavior-preserving and retested."
+      ]
     }
   ]
 }

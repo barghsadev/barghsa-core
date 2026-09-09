@@ -1158,7 +1158,21 @@
       "- [ ] Test send to admin's verified mobile number — live SMS.ir send endpoint is a follow-up; the connection tester checks credentials + account balance today.",
       "- [ ] Admin UI (template mapping table, test-send preview) — follows in a separate UI PR."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Both historical self-send and admin UI deferrals satisfied locally.",
+    "reviewed_source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
+    "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "SMS.ir configuration now has localized draft creation/edit/clone, nonsecret saved fields, write-only credentials, event/TemplateId/variable mapping editing, exact all-mapping sample previews and verified self-tests. Current authority/password confirmation, actual delivery proof, activation, rollback and OTP recovery checks are reviewed. Both PR193 historical self-send/UI deferrals are satisfied by the linked provider repairs and current UI. audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "SMS.ir configuration now has localized draft creation/edit/clone, nonsecret saved fields, write-only credentials, event/TemplateId/variable mapping editing, exact all-mapping sample previews and verified self-tests. Current authority/password confirmation, actual delivery proof, activation, rollback and OTP recovery checks are reviewed. Both PR193 historical self-send/UI deferrals are satisfied by the linked provider repairs and current UI. audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+      }
+    ]
   },
   {
     "pr": 192,

@@ -14077,7 +14077,7 @@
         },
         {
           "path": "packages/i18n/src/admin-ui.ts",
-          "sha256": "90382be6df86f6dae9f82a687fba5f14b1efd8d87b532be78f0270d0173a3488"
+          "sha256": "f0c9e7a899917980a40c2c5e98210ee0f55f62c601f340e6db16ee40974af65f"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -14100,7 +14100,8 @@
         "Exact requirement and saved PR162 reviewed.",
         "audit/evidence/step-reviews.json#R01-staff-role-catalogue",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/src/admin/admin.controller.ts. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
-        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification."
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "Narrow source binding refresh: provider request/helper, SMS navigation/copy or verified template-contact query changed; unrelated methods remain unchanged. audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
       ],
       "limitations": [
         "Predefined roles are read-only as explicitly required initially. Custom-role editing and its role_permission_change audit belong to that future extension; no mutation endpoint or editing acceptance claimed."
@@ -14166,7 +14167,7 @@
         },
         {
           "path": "packages/i18n/src/admin-ui.ts",
-          "sha256": "90382be6df86f6dae9f82a687fba5f14b1efd8d87b532be78f0270d0173a3488"
+          "sha256": "f0c9e7a899917980a40c2c5e98210ee0f55f62c601f340e6db16ee40974af65f"
         },
         {
           "path": "packages/shared/src/notifications/delivery-window-config.test.ts",
@@ -14179,7 +14180,8 @@
       ],
       "checks": [
         "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
-        "168 focused unit/integration/i18n and6 browser cases pass, with unchanged budgets and scoped quality checks. See audit/evidence/step-reviews.json#R02-daytime-window."
+        "168 focused unit/integration/i18n and6 browser cases pass, with unchanged budgets and scoped quality checks. See audit/evidence/step-reviews.json#R02-daytime-window.",
+        "Narrow source binding refresh: provider request/helper, SMS navigation/copy or verified template-contact query changed; unrelated methods remain unchanged. audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
       ],
       "limitations": [],
       "merged_prs": [
@@ -14187,6 +14189,125 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.06.02",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 714,
+      "requirement": "**T-09.06.02 — SMS.ir configuration**\n\n- Description: Admin configures SMS.ir provider: API key, sender/line number, timeout, throughput limits, low-credit threshold, event-to-template mappings.\n- Technical notes: Same lifecycle as email provider. Template mapping: internal event key → SMS.ir TemplateId + variable mapping. Activation validates template IDs and variable availability. Provider base URL application-managed (not admin-editable). Test send to admin's verified mobile number.\n- UI/UX: Similar to email config. Additional section: template mapping table with add/edit. Test send: select event → preview rendered params → send to admin.\n- Dependencies: admin config framework, notification service\n- Complexity: L",
+      "requirement_sha256": "4aaf901f5444353d8e3f3bb69ea20777f01532e156c4148f96159675d7a4f2d2",
+      "status": "acceptance_verified",
+      "reviewed_sha": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "2201400dd7b853e680452a8c139fe4e6fa375a72917d971f285ad565eb3bc31c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
+          "sha256": "fbad1f936053c7ff24a14faf20cd88499a494c0045e6f4a470c2f63273094a1e"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-recipient.ts",
+          "sha256": "19d353697c73b9c58f170b11edb3144e8d59476ae33266f91107f599776f01c5"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "a04f0bd143ac644ea99dacad645f7ae48d03056ffb03b32a2b0adf552224a318"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+          "sha256": "641da3a08452af096a507d4d6dc2868f2e963d8595e435a75e9e49ef3ae95e3c"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2b71b8097c562332e3899fd13c215a18bfc73482742d58ed5b3112ba9c35d3e9"
+        },
+        {
+          "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
+          "sha256": "ffa92af835d39a7c925e0eb6901b0564ea675c4627bb40bd39b8c46fe2370d99"
+        },
+        {
+          "path": "apps/api/src/provider-config/smsir-connection-tester.service.ts",
+          "sha256": "7ceeaf7a409c2205227fcc20b29dfa5dd076d756e337b16dc4924c1484f1bc18"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "b44f385a73415127a248180ab3c0a5d08b5192115434336db53ca541d0c9f75a"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "2eaee8113de4cd31139bc2e82ac77d2acdd361b65de1573c7f68a88a5ed4e27a"
+        },
+        {
+          "path": "apps/web/src/lib/sms-providers-api.ts",
+          "sha256": "5b6141c437a66cb4e837a76d2918e21fb60ea52518a7e9e489df229c01a482d2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "sha256": "d0a6fea408f1b51484dc797b3f9b801db409f252f2c695c210dee6eed2481c48"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "7472859618c9a8e8f07a0c4da1c7f4158cd7965a2e972051f79a0832403c4f6d"
+        },
+        {
+          "path": "apps/web/src/routes/admin/providers.tsx",
+          "sha256": "774b9561ab7d9126f4a941cb4ec0cdd985ffd6ea63bea31d33ee3ece96e05ba7"
+        },
+        {
+          "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
+          "sha256": "e35d9078a52c79b5f2b2d3e622a5938eeebfcdca642bb63b0b779529a3e7cd41"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0126_snapshot.json",
+          "sha256": "468b31bc09aa47f6367a83c7b15025326908c160b33100d47e3d1b5771e66f3c"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "f0c9e7a899917980a40c2c5e98210ee0f55f62c601f340e6db16ee40974af65f"
+        },
+        {
+          "path": "packages/i18n/src/providers.ts",
+          "sha256": "d7b5a28081d78e93a77a76fe8cc8e85474f8941ed92a91a458363b01848b7562"
+        },
+        {
+          "path": "packages/shared/src/notifications/index.ts",
+          "sha256": "d56dcf37ae4cead3f97dec1400246d5714ff8d7c71b562438f293ca901bfd705"
+        },
+        {
+          "path": "packages/shared/src/notifications/sms-test-parameters.ts",
+          "sha256": "fbc2e5a7f23fb41091b81155df0f555d52c82cf8b0b75a5ff1d4908e64573801"
+        }
+      ],
+      "checks": [
+        "SMS.ir configuration now has localized draft creation/edit/clone, nonsecret saved fields, write-only credentials, event/TemplateId/variable mapping editing, exact all-mapping sample previews and verified self-tests. Current authority/password confirmation, actual delivery proof, activation, rollback and OTP recovery checks are reviewed. Both PR193 historical self-send/UI deferrals are satisfied by the linked provider repairs and current UI.",
+        "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
+        "Reuse unchanged provider lifecycle/proof/rollback/recovery evidence in R02-provider-session-authority, R02-provider-self-tests and R02-provider-activation-proof; current recipient proof and shared tester helper are rechecked.",
+        "407 focused cases and21 distinct browser cases pass; scopes and logs in audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        193
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
     }
   ],
   "pending_task_keys": [
@@ -14321,7 +14442,6 @@
     "05-notifications-documents-ai.md#T-05.06.06",
     "05-notifications-documents-ai.md#T-05.06.07",
     "02-auth-users-admin.md#T-09.06.01",
-    "02-auth-users-admin.md#T-09.06.02",
     "02-auth-users-admin.md#T-09.08.01",
     "02-auth-users-admin.md#T-09.08.02",
     "02-auth-users-admin.md#T-09.08.03",
@@ -17406,6 +17526,16 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-daytime-window",
       "note": "Immediate-base hashes only; daytime API/worker/UI and scoped tests reviewed. Other methods/copy in shared files unchanged. Older stale bindings retained."
+    },
+    {
+      "source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.05.01",
+        "02-auth-users-admin.md#T-09.06.03"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
+      "note": "Immediate-base hashes only; bounded shared changes reviewed and relevant checks pass. Older stale bindings retained."
     }
   ]
 }
