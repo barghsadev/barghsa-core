@@ -128,7 +128,11 @@ function ElectricityOrderPage() {
       }
       if (current !== verificationGeneration.current) return;
       setActiveProfileId(data.activeProfileId);
-      setBlocked(data.verificationRequired && !data.isVerified);
+      setBlocked(
+        data.profileStatus === 'DRAFT' ||
+          data.profileStatus === 'SUSPENDED' ||
+          (data.verificationRequired && !data.isVerified)
+      );
     } catch {
       if (current === verificationGeneration.current) setVerificationError(true);
     } finally {

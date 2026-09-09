@@ -116,6 +116,9 @@ async function shell(page: Page, locale = 'en') {
     }).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/invitations/pending', (route) =>
+    route.fulfill({ json: { invitations: [] } })
+  );
   await page.route('**/api/admin/config/otp', (route) =>
     route.fulfill({ json: { ttlSeconds: 300, version: 0 } })
   );
@@ -1925,6 +1928,7 @@ for (const locale of ['en', 'fa']) {
       return route.fulfill({
         json: {
           activeProfileId: mode === 'no-profile' ? null : 'profile-one',
+          profileStatus: mode === 'draft' ? 'DRAFT' : mode === 'suspended' ? 'SUSPENDED' : 'ACTIVE',
           verificationRequired: mode === 'unverified',
           isVerified: false,
         },
@@ -1963,21 +1967,23 @@ for (const locale of ['en', 'fa']) {
       })
     ).toBeVisible();
     expect(writes).toBe(0);
-    mode = 'unverified';
-    await page.reload();
-    await expect(
-      page.getByRole('button', {
-        name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
-        exact: true,
-      })
-    ).toHaveCount(0);
-    await expect(
-      page.getByRole('heading', {
-        name: locale === 'fa' ? 'ثبت سفارش جدید امکان‌پذیر نیست' : 'New orders are not available',
-        exact: true,
-      })
-    ).toBeVisible();
-    expect(writes).toBe(0);
+    for (const blockedMode of ['unverified', 'draft', 'suspended']) {
+      mode = blockedMode;
+      await page.reload();
+      await expect(
+        page.getByRole('button', {
+          name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+          exact: true,
+        })
+      ).toHaveCount(0);
+      await expect(
+        page.getByRole('heading', {
+          name: locale === 'fa' ? 'ثبت سفارش جدید امکان‌پذیر نیست' : 'New orders are not available',
+          exact: true,
+        })
+      ).toBeVisible();
+      expect(writes).toBe(0);
+    }
   });
 }
 
