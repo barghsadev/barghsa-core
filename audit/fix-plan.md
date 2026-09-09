@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `7d4c577`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `0e370f7`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -45,6 +45,8 @@ Invoice creation/calculation is consolidated at `7d4c577`: **7 tasks verified, i
 PR225 remains open for missing concrete submission workflows; existing order creation saves DRAFTs and must not issue invoices. PR227 remains open for missing contract/consultation target tables/FKs. Preserve the working automatic service and current snapshot implementation; no duplicate deletion is needed.
 
 Active **R01-invoice-deadlines-reminders**:10 tasks T-04.1.03.01–.04 and T-04.1.04.01–.06, saved PRs236–241,243–246. Review due defaults, permission/reason overrides, overdue behavior, issue scheduling, offset/timezone/preferences, outbox, idempotency and terminal-state cancellation. Exact membership/deferrals in progress.json. Reuse prior21 overdue worker cases and state/creation/receipt evidence; actual notification delivery remains linked to R02.
+
+Checkpoint0e370f7: due-date override authority repaired and reviewed with21 distinct API cases and quality checks. Deadline-reminder rescheduling and override UI step-up remain. Creation follow-up03bcf45 corrects the real nested error envelope;4 browser cases, a matching real HTTP assertion and42 budgets pass. 1814 logs indexed.
 
 ## Execution order
 

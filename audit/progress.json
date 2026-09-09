@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+  "source_revision": "0e370f76f6849d989da5887f5ba98b1b6a903f29",
   "active_step": "R01",
-  "next_action": "Review the current invoice deadlines/reminders workflow and ten saved PR descriptions; reuse state/overdue and creation checks. Repair confirmed gaps, then consolidate task/PR dispositions. Actual notification delivery stays linked to R02.",
+  "next_action": "Continue reminder deadline-rescheduling review, then implement due-date override step-up/response validation UI. Reuse21 current authority cases and existing overdue checks.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -768,7 +768,7 @@
       "04-invoices-wallet-contracts.md#T-04.1.04.06"
     ],
     "remaining_checklist": [
-      "Review exact due-date and reminder requirements, consumer permissions and transaction boundaries.",
+      "Exact requirements and all ten full saved PR descriptions read. Continue current workflow review.",
       "Review defaults/override visibility, issue scheduling, offsets/timezones/preferences, outbox dispatch, idempotency and terminal-state cancellation.",
       "Reuse21 overdue worker cases and state/creation/receipt evidence; no repeat full finance suite. Actual delivery remains R02."
     ],
@@ -828,9 +828,32 @@
       "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
       "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "revision": "0e370f7",
+        "summary": "Bind due-date read/mutation requests to the current session. Keep permission locks, require fresh session/step-up after invoice locking and before commit.",
+        "verification": "Two baseline expired-session mutations returned200 and wrote changes. Corrected21 distinct cases pass:5 real HTTP cases plus16 unchanged controller/service/integration cases. The initial baseline also exposed the nested-error fixture mismatch, corrected at03bcf45. API types/lint/format/diff pass.",
+        "status": "repaired_and_reviewed"
+      }
+    ],
     "pr_dispositions": [],
-    "next_action": "Review the current invoice deadlines/reminders workflow and ten saved PR descriptions; reuse state/overdue and creation checks. Repair confirmed gaps, then consolidate task/PR dispositions. Actual notification delivery stays linked to R02."
+    "next_action": "Continue reminder deadline-rescheduling review, then implement due-date override step-up/response validation UI. Reuse21 current authority cases and existing overdue checks.",
+    "integration_findings": [
+      "ReminderScheduler skips every invoice with any existing schedule row. Due-date override changes only invoice/audit, so existing reminders retain the old deadline. Confirm with a focused workflow regression before repairing.",
+      "Staff due-date override page has no step-up prompt and parses only legacy errors. Review response validation/request races and implement required current-session retry UI."
+    ],
+    "new_evidence": [
+      "/tmp/r01-invoice-deadlines-authority-api.log",
+      "/tmp/r01-invoice-deadlines-authority-baseline.log",
+      "/tmp/r01-invoice-deadlines-authority-format-check.log",
+      "/tmp/r01-invoice-deadlines-authority-format.log",
+      "/tmp/r01-invoice-deadlines-authority-http-final.log",
+      "/tmp/r01-invoice-deadlines-authority-lint.log",
+      "/tmp/r01-invoice-deadlines-authority-read-format.log",
+      "/tmp/r01-invoice-deadlines-authority-test-format.log",
+      "/tmp/r01-invoice-deadlines-authority-types.log",
+      "/tmp/r01-invoice-deadlines-pr-history.log"
+    ]
   },
   "open_domain_reviews": [
     {

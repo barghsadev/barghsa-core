@@ -9239,7 +9239,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 114,
       "requirement": "| T-04.1.02.01 | Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints | M |",
@@ -9291,7 +9291,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -9367,7 +9367,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -9375,7 +9375,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -9411,7 +9411,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 115,
       "requirement": "| T-04.1.02.02 | Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice | L |",
@@ -9463,7 +9463,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -9539,7 +9539,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -9547,7 +9547,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -9583,7 +9583,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
       "status": "partial",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 116,
       "requirement": "| T-04.1.02.03 | Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms | M |",
@@ -9635,7 +9635,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -9711,7 +9711,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -9719,7 +9719,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -9755,7 +9755,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 117,
       "requirement": "| T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |",
@@ -9807,7 +9807,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -9883,7 +9883,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -9891,7 +9891,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -9927,7 +9927,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
       "status": "partial",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 118,
       "requirement": "| T-04.1.02.05 | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys | S |",
@@ -9979,7 +9979,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -10055,7 +10055,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10063,7 +10063,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -10099,7 +10099,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.06",
       "status": "acceptance_verified",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 119,
       "requirement": "| T-04.1.02.06 | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) | M |",
@@ -10151,7 +10151,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -10227,7 +10227,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10235,7 +10235,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -10271,7 +10271,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
       "status": "acceptance_verified",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 120,
       "requirement": "| T-04.1.02.07 | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements | M |",
@@ -10323,7 +10323,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -10399,7 +10399,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10407,7 +10407,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -10443,7 +10443,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
       "status": "acceptance_verified",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 121,
       "requirement": "| T-04.1.02.08 | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility | S |",
@@ -10495,7 +10495,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -10571,7 +10571,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10579,7 +10579,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -10616,7 +10616,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.09",
       "status": "acceptance_verified",
-      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 122,
       "requirement": "| T-04.1.02.09 | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals | M |\n\n---",
@@ -10668,7 +10668,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -10744,7 +10744,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10752,7 +10752,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",

@@ -10046,12 +10046,13 @@
     {
       "id": "R01-invoice-creation-calculation",
       "date": "2026-09-09",
-      "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
       "base_revision": "dbc3e45",
       "product_commits": [
         "f5b743b",
         "1b1d7d1",
-        "7d4c577"
+        "7d4c577",
+        "03bcf45"
       ],
       "summary": "Seven task acceptances verified, including four preserved earlier acceptances, two partial; eight saved PR reviews closed and two open. VAT validity and unreachable manual creation repaired and reviewed.",
       "task_keys": [
@@ -10071,7 +10072,8 @@
         "AutoInvoiceService locks the order, rejects duplicate initial automatic invoices, supports caller rollback and snapshots effective price, product terms/title, VAT and gift discount. Existing OrdersService creates DRAFTs and has no auto-invoice caller. Missing production submissions are explicitly partial, not simulated by charging draft saves.",
         "VAT applies product override before category default then0. Both assignment and linked rate validity windows now apply. Discounts precede VAT; non-taxable lines carry0. Half-up uses integer division with no floating point. Pure calculations, invalid inputs, int8 values, versioned steps and replay tests pass.",
         "Snapshot replay uses saved inputs only, ignores stored totals, and reproduces invoice/line/VAT totals after JSONB round trips. PR232 replaces the earlier snapshot implementation; retain legacy metadata and issued rows. No duplicate feature or destructive cleanup is needed.",
-        "Staff browser UI reviewed for current profile selection, exact preview, keyboard labels/RTL/themes, password clearing, preventing concurrent requests, and preserving the same immutable request through step-up/unknown-result retries. Browser fixtures mock transport; real HTTP authorization, concurrency and transaction rollback are independently verified. No live delivery/deployment evidence claimed."
+        "Staff browser UI reviewed for current profile selection, exact preview, keyboard labels/RTL/themes, password clearing, preventing concurrent requests, and preserving the same immutable request through step-up/unknown-result retries. Browser fixtures mock transport; real HTTP authorization, concurrency and transaction rollback are independently verified. No live delivery/deployment evidence claimed.",
+        "Follow-up03bcf45 verifies the actual HTTP error envelope; the original string-only browser fixture was insufficient for current step-up failures. The corrected fixture now matches the real manual HTTP response."
       ],
       "repairs": [
         {
@@ -10088,6 +10090,11 @@
           "revision": "7d4c577",
           "summary": "Add localized staff manual-invoice form with profile search, exact IRR preview, step-up and a frozen retry request/key after uncertain results. Add reusable Field and NativeSelect primitives without overwriting existing components.",
           "verification": "Four distinct production Chromium cases pass in FA/EN and light/dark, including accessibility/contrast, localized digits, invalid VAT, step-up and same-key retry after503 or malformed success. UI distribution5, i18n/web builds, web types, scoped lint/format and42 unchanged budgets pass. Early dropdown bundle attempts failed the250KB electricity gate; native selector resolves the introduced shared-chunk overhead. Failed logs retained."
+        },
+        {
+          "revision": "03bcf45",
+          "summary": "Correct manual-invoice step-up handling to read canonical nested error.code using the existing auth error parser. Initial browser fixture used the legacy string envelope and missed the production mismatch.",
+          "verification": "Corrected fixture fails before the fix. Four current production Chromium cases pass after it; targeted real manual HTTP check asserts the same nested code. Earlier11 unchanged HTTP cases retained. API/web types, lint, format, build and42 unchanged budgets pass."
         }
       ],
       "verification": {
@@ -10158,7 +10165,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.01"
           ],
           "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10168,7 +10175,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.02"
           ],
           "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10178,7 +10185,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.03"
           ],
           "reason": "Submission callers and their product prerequisites remain missing.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10188,7 +10195,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.04"
           ],
           "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10198,7 +10205,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.05"
           ],
           "reason": "Required contract/consultation foreign keys await missing target schemas.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10208,7 +10215,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.06"
           ],
           "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10218,7 +10225,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.07"
           ],
           "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10228,7 +10235,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.08"
           ],
           "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks. PR232 supplies the dedicated snapshot after PR231; retain legacy metadata and issued records, with no duplicate implementation deletion.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10238,7 +10245,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.08"
           ],
           "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks. PR232 supplies the dedicated snapshot after PR231; retain legacy metadata and issued records, with no duplicate implementation deletion.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         },
         {
@@ -10248,7 +10255,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.09"
           ],
           "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
-          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "source_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
           "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
         }
       ],
@@ -10309,7 +10316,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+          "sha256": "7c515dd345b4c7a8ee2266ca0c056a66c96af6c20850ff1906baef93a45e6aef"
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
@@ -10385,7 +10392,7 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
@@ -10393,7 +10400,7 @@
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
-          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+          "sha256": "f20dc1dc9a195dc069f2b95df97cde3d7e2060c4a52ffff71f2370f695adbf06"
         },
         {
           "path": "packages/i18n/src/manual-invoice.ts",
@@ -10473,7 +10480,16 @@
         "/tmp/r01-invoice-creation-vat-window-format-check.log",
         "/tmp/r01-invoice-creation-vat-window-format.log",
         "/tmp/r01-invoice-creation-vat-window-lint.log",
-        "/tmp/r01-invoice-creation-vat-window-types.log"
+        "/tmp/r01-invoice-creation-vat-window-types.log",
+        "/tmp/r01-invoice-creation-error-envelope-api-types.log",
+        "/tmp/r01-invoice-creation-error-envelope-baseline.log",
+        "/tmp/r01-invoice-creation-error-envelope-browser.log",
+        "/tmp/r01-invoice-creation-error-envelope-budgets.log",
+        "/tmp/r01-invoice-creation-error-envelope-format.log",
+        "/tmp/r01-invoice-creation-error-envelope-http.log",
+        "/tmp/r01-invoice-creation-error-envelope-lint.log",
+        "/tmp/r01-invoice-creation-error-envelope-web-build.log",
+        "/tmp/r01-invoice-creation-error-envelope-web-types.log"
       ]
     }
   ]
