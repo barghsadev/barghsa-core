@@ -10491,6 +10491,499 @@
         "/tmp/r01-invoice-creation-error-envelope-web-build.log",
         "/tmp/r01-invoice-creation-error-envelope-web-types.log"
       ]
+    },
+    {
+      "id": "R01-invoice-deadlines-reminders",
+      "date": "2026-09-09",
+      "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "base_revision": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "product_commits": [
+        "0e370f7",
+        "b6f46be",
+        "7fe8924",
+        "9a954fa",
+        "0566eea",
+        "df34b30",
+        "b8bff5d",
+        "6b9831c"
+      ],
+      "summary": "Eight task acceptances verified, two partial; eight saved PR reviews closed and two open. Seven confirmed gaps repaired. Actual delivery and current offset policy on existing plans remain R02.",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06"
+      ],
+      "review": [
+        "Exact task/story criteria and ten full saved PR descriptions reviewed. Production0080/0081 retain valid service/day ranges, non-overlapping due-period windows, reminder offset/channel/status checks, FKs, invoice/offset/channel uniqueness and terminal-state cancellation.69 DB cases pass; API fixtures apply the production journal.",
+        "Due calculation uses inclusive/exclusive active windows or7 days. New protected configuration versions the current default while preserving future windows and issued deadlines. Current finance grants/session/step-up are held through commit. CAS prevents stale changes; matching current values allow safe retries. Real invoice issuance consumes the setting.",
+        "Override permission/reason/audit now stay bound to current session authority through waits and commit. Form captures invoice/date/reason through step-up, validates replies and rejects stale lookups. Customer details show only the public reason matching the stored deadline, with escaped text and no staff identity/internal metadata.",
+        "Override cancels unsent rows and marks reminderPlanDirty in the same transaction. Invoice-locked replanning updates cancelled rows, preserves sent history and unique keys, adds eligible offsets and clears the marker only on success. Failed/concurrent retries pass. Updated worker must precede or accompany API rollout; old overrides without markers need operational reconciliation.",
+        "Scheduler runs every60 seconds with one-hour issue catch-up grace. It computes canonical offsets, applies owner timezone/channel choices and default09–21 window, skips elapsed/terminal/fully disabled candidates and keyset-pages eligible rows. Runtime in-flight flags and invoice locks prevent overlapping work and duplicate schedules.",
+        "Hourly sender locks the invoice before due rows, checks current state, groups channels by invoice/offset and atomically enqueues with a stable key before marking sent. Stop-state trigger and catch-up cancel every unsent scheduled row, retaining sent history. Actual delivery and policy/deadline revalidation after scheduling remain R02.",
+        "Reminder toggle mutations retain current permissions and session/step-up through commit, with truthful concurrent audit history. UI requires exact response confirmation and preserves existing step-up/focus/concurrency behavior. Current policy on existing plans is unfinished and keeps PR245 open.",
+        "Reuse21 overdue worker cases and invoice-state/payment evidence: Overdue stays payable via wallet/bank receipt, partial settlement can become Overdue again, and no late fee is added. No deployment, live delivery, remote state or loop/scheduler operation is claimed."
+      ],
+      "repairs": [
+        {
+          "revision": "0e370f7",
+          "summary": "Bind due-date read/mutation requests to the current session. Keep permission locks, require fresh session/step-up after invoice locking and before commit.",
+          "verification": "Two baseline expired-session mutations returned200 and wrote changes. Corrected21 distinct cases pass:5 real HTTP cases plus16 unchanged controller/service/integration cases. The initial baseline also exposed the nested-error fixture mismatch, corrected at03bcf45. API types/lint/format/diff pass.",
+          "status": "repaired_and_reviewed"
+        },
+        {
+          "revision": "b6f46be",
+          "summary": "Due-date form lacked step-up and accepted stale/mismatched replies. It now captures and freezes the submitted target/date/reason, uses the existing password dialog, validates replies, rejects late lookups, and renders localized errors/states with theme-aware colors.",
+          "verification": "9 focused web cases and4 distinct production Chromium cases pass, including FA/EN, light/dark, accessibility, exact timezone conversion, focus, canonical step-up and response binding. Initial2 English axe cases sampled CSS animations; waiting for actual animations fixes the fixture. Web types/lint/format/build, i18n build and42 unchanged budgets pass. Final generic error-copy edit is covered by the9 unit cases; existing4 browser behavior checks remain valid.",
+          "status": "repaired_and_reviewed"
+        },
+        {
+          "revision": "7fe892487957d06db5fa53e474608ea6cd7bf420",
+          "summary": "Deadline override cancels scheduled rows and marks its reminder plan dirty in the same audited transaction. Scheduler recomputes cancelled rows against the current deadline, adds newly eligible offsets and preserves sent history and unique keys.",
+          "verification": "Two worker baseline failures and one real HTTP baseline failure reproduce stale schedules. Final71 worker cases across4 files and21 API cases pass; final5 HTTP cases also assert reminder rollback on session expiry. Tests cover extension/shortening, sent-history preservation, failed replanning rollback and concurrent retries. API/worker types, scoped lint, format and diff pass. Earlier browser/HTTP-shape/migration evidence remains valid.",
+          "status": "repaired_and_reviewed",
+          "limitations": [
+            "Roll out the updated worker before or with the API; no deployment occurred. Historical overrides without the marker need operational reconciliation. Already accepted outbox delivery remains in R02."
+          ]
+        },
+        {
+          "revision": "9a954fa",
+          "summary": "Reminder offset reads and writes now pass the authenticated session into the service, retain current grant locks and recheck session/step-up after waits and before commit.",
+          "verification": "Four corrected baseline HTTP cases returned200 despite session or step-up expiry. Final19 cases across4 API files pass, covering expiry after pair/audit/read locks, lost step-up, revoked grants, audit rollback and concurrent audit history. API types/lint/format/diff pass. The initial fixture used a stale guard-lock pattern and did not reset idle expiry; corrected baseline retained.",
+          "status": "repaired_and_reviewed"
+        },
+        {
+          "revision": "0566eea",
+          "summary": "Customer invoice details now expose the latest public reason only when it matches the stored deadline. Staff identity and internal metadata remain private. The page displays escaped text with existing translations and consistent theme colors/background.",
+          "verification": "24 assembly/service cases plus5 real HTTP cases pass;9 web cases and4 production Chromium cases cover FA/EN and light/dark, Tehran time, public explanation and accessibility. All42 route budgets and API/web quality checks pass; OpenAPI remains unchanged. Initial HTTP fixture lacked a default profile; corrected. Initial2 dark browser cases found the page background mismatch; repaired. A test assertion required an unknown-value type fix before final API types passed.",
+          "status": "repaired_and_reviewed"
+        },
+        {
+          "revision": "df34b301013d86cd57e244ac58d816f9371f3e4d",
+          "summary": "Reminder switches now require a single response row confirming the exact requested service, offset and boolean value before claiming success.",
+          "verification": "Five new regressions failed before the fix. All22 component cases now pass, preserving concurrency, step-up and focus evidence; web types/lint/diff pass. No layout or shared dependency change; next batch build will include the small response check.",
+          "status": "repaired_and_reviewed"
+        },
+        {
+          "revision": "b8bff5d / 6b9831c",
+          "summary": "Add the missing default-period administration API/form using the existing versioned table. Preserve future windows and issued invoices, reject stale writers and support safe retries.",
+          "verification": "9 real HTTP cases include actual invoice issuance, concurrent saves, future windows, audit rollback and session expiry.4 Chromium cases cover FA/EN/light/dark, Persian digits, captured step-up, false success, conflict/reload, focus and hover contrast.3 host-page cases, API/web quality checks, OpenAPI and42 unchanged budgets pass. Failed fixture/type/budget/hover logs retained.",
+          "status": "repaired_and_reviewed"
+        }
+      ],
+      "verification": {
+        "api": "Due authority21 cases; subsequent29 customer assembly/HTTP cases overlap those HTTP cases. Toggle19 and default-period9 real HTTP cases pass. Do not add overlapping counts.",
+        "worker": "71 reminder scheduler/sender cases pass, including replanning, rollback, concurrency and sent-history preservation. Reuse21 unchanged overdue worker cases.",
+        "database": "69 cases across5 due-period/reminder schema/uniqueness/cancellation/toggle files pass. No schema migration needed.",
+        "browser": "4 due override,4 customer reason and4 default-period production Chromium cases pass. Each covers FA/EN and light/dark. Mocked transport is separate from real HTTP transaction proof.",
+        "web": "9 due-form/helper,9 customer-page,22 reminder component and3 current host-page cases pass. Host cases overlap earlier due-page evidence.",
+        "quality": "Scoped API/web/worker types/lint/format, builds, OpenAPI and42 unchanged budgets pass at recorded revisions. Local validation avoids growing the shared electricity chunk; local hover contrast corrected. Failed logs retained. Broad regression remains V02."
+      },
+      "historical_dispositions": [
+        {
+          "pr": 241,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/241",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.02"
+          ],
+          "historical_deferrals": [
+            "- [ ] Unique index on `(invoiceId, offset, channel)` — out of scope (T-04.1.04.04).",
+            "- [ ] Admin per-offset toggle per service type — out of scope (T-04.1.04.05).",
+            "- [ ] ReminderSender dispatch via outbox — out of scope (T-04.1.04.03).",
+            "- [ ] Cancel future rows on Paid/Cancelled/Refunded — out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 240,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/240",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.01"
+          ],
+          "historical_deferrals": [
+            "- Enforces `sent_at` is set exactly when `status = 'sent'`, plus lookup indexes for cancel-by-invoice and due pickup. The `(invoiceId, offset, channel)` unique index is deferred to T-04.1.04.04."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 237,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/237",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.03.02"
+          ],
+          "historical_deferrals": [
+            "- [ ] Staff override permission + customer-visible reason in audit/metadata — deferred to T-04.1.03.03."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 236,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/236",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.03.01"
+          ],
+          "historical_deferrals": [
+            "- [ ] `dueAt` calculation (`issuedAt + config_days`) — out of scope; owned by T-04.1.03.02.",
+            "- [ ] Staff override UI/API — out of scope; owned by T-04.1.03.03.",
+            "- [ ] Overdue cron — out of scope; owned by T-04.1.03.04."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        }
+      ],
+      "remaining": [
+        "R02 retains actual versioned FA/EN delivery, recipient/channel/window enforcement and current invoice/deadline revalidation after outbox acceptance. Hourly claiming, current invoice state, atomic outbox insertion and idempotency are verified. A sent schedule row means outbox acceptance, not external delivery.",
+        "The repaired UI/API stores offset policy safely; scheduler applies it to new/rebuilt plans. A later toggle does not change existing plans, and sender does not recheck it. R02 must enforce current offset policy on already planned/queued reminders. The historical new-plans-only limit is unfinished acceptance, not a requirements waiver.",
+        "Historical reminder reconciliation, actual delivery and deployment require operational evidence."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 236,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.03.01"
+          ],
+          "reason": "Mapped local requirements and historical deferrals have supported dispositions; downstream delivery acceptance retains its own partial records.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 237,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.03.02"
+          ],
+          "reason": "Mapped local requirements and historical deferrals have supported dispositions; downstream delivery acceptance retains its own partial records.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 238,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.03.03"
+          ],
+          "reason": "Mapped local requirements and historical deferrals have supported dispositions; downstream delivery acceptance retains its own partial records.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 239,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.03.04"
+          ],
+          "reason": "Mapped local requirements and historical deferrals have supported dispositions; downstream delivery acceptance retains its own partial records.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 240,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.01"
+          ],
+          "reason": "Mapped local requirements and historical deferrals have supported dispositions; downstream delivery acceptance retains its own partial records.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 241,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.02"
+          ],
+          "reason": "Mapped local requirements and historical deferrals have supported dispositions; downstream delivery acceptance retains its own partial records.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 243,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.03"
+          ],
+          "reason": "R02 retains actual versioned FA/EN delivery, recipient/channel/window enforcement and current invoice/deadline revalidation after outbox acceptance. Hourly claiming, current invoice state, atomic outbox insertion and idempotency are verified. A sent schedule row means outbox acceptance, not external delivery.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 244,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.04"
+          ],
+          "reason": "Mapped local requirements and historical deferrals have supported dispositions; downstream delivery acceptance retains its own partial records.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 245,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.05"
+          ],
+          "reason": "The repaired UI/API stores offset policy safely; scheduler applies it to new/rebuilt plans. A later toggle does not change existing plans, and sender does not recheck it. R02 must enforce current offset policy on already planned/queued reminders. The historical new-plans-only limit is unfinished acceptance, not a requirements waiver.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        },
+        {
+          "pr": 246,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.06"
+          ],
+          "reason": "Mapped local requirements and historical deferrals have supported dispositions; downstream delivery acceptance retains its own partial records.",
+          "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        }
+      ],
+      "pr_counts": {
+        "closed": 8,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-invoice-deadlines-authority-api.log",
+        "/tmp/r01-invoice-deadlines-authority-baseline.log",
+        "/tmp/r01-invoice-deadlines-authority-format-check.log",
+        "/tmp/r01-invoice-deadlines-authority-format.log",
+        "/tmp/r01-invoice-deadlines-authority-http-final.log",
+        "/tmp/r01-invoice-deadlines-authority-lint.log",
+        "/tmp/r01-invoice-deadlines-authority-read-format.log",
+        "/tmp/r01-invoice-deadlines-authority-test-format.log",
+        "/tmp/r01-invoice-deadlines-authority-types.log",
+        "/tmp/r01-invoice-deadlines-pr-history.log",
+        "/tmp/r01-invoice-deadlines-form-browser-format.log",
+        "/tmp/r01-invoice-deadlines-form-browser-settled.log",
+        "/tmp/r01-invoice-deadlines-form-browser.log",
+        "/tmp/r01-invoice-deadlines-form-budgets.log",
+        "/tmp/r01-invoice-deadlines-form-final-budgets.log",
+        "/tmp/r01-invoice-deadlines-form-final-build.log",
+        "/tmp/r01-invoice-deadlines-form-final-format.log",
+        "/tmp/r01-invoice-deadlines-form-final-types.log",
+        "/tmp/r01-invoice-deadlines-form-format.log",
+        "/tmp/r01-invoice-deadlines-form-i18n-build.log",
+        "/tmp/r01-invoice-deadlines-form-lint.log",
+        "/tmp/r01-invoice-deadlines-form-response-tests.log",
+        "/tmp/r01-invoice-deadlines-form-tests-format.log",
+        "/tmp/r01-invoice-deadlines-form-types.log",
+        "/tmp/r01-invoice-deadlines-form-unit-final.log",
+        "/tmp/r01-invoice-deadlines-form-unit.log",
+        "/tmp/r01-invoice-deadlines-form-web-build.log",
+        "/tmp/r01-invoice-reminder-deadline-api-baseline.log",
+        "/tmp/r01-invoice-reminder-deadline-api-types.log",
+        "/tmp/r01-invoice-reminder-deadline-api.log",
+        "/tmp/r01-invoice-reminder-deadline-baseline.log",
+        "/tmp/r01-invoice-reminder-deadline-final-test-format.log",
+        "/tmp/r01-invoice-reminder-deadline-format-check.log",
+        "/tmp/r01-invoice-reminder-deadline-format.log",
+        "/tmp/r01-invoice-reminder-deadline-http-final.log",
+        "/tmp/r01-invoice-reminder-deadline-lint.log",
+        "/tmp/r01-invoice-reminder-deadline-test-format.log",
+        "/tmp/r01-invoice-reminder-deadline-worker-final.log",
+        "/tmp/r01-invoice-reminder-deadline-worker-types.log",
+        "/tmp/r01-invoice-reminder-deadline-worker.log",
+        "/tmp/r01-reminder-toggle-session-baseline-corrected.log",
+        "/tmp/r01-reminder-toggle-session-baseline.log",
+        "/tmp/r01-reminder-toggle-session-final.log",
+        "/tmp/r01-reminder-toggle-session-format-check.log",
+        "/tmp/r01-reminder-toggle-session-format.log",
+        "/tmp/r01-reminder-toggle-session-lint.log",
+        "/tmp/r01-reminder-toggle-session-test-format.log",
+        "/tmp/r01-reminder-toggle-session-types.log",
+        "/tmp/r01-invoice-customer-deadline-api-types-final.log",
+        "/tmp/r01-invoice-customer-deadline-api-types.log",
+        "/tmp/r01-invoice-customer-deadline-api.log",
+        "/tmp/r01-invoice-customer-deadline-browser-final.log",
+        "/tmp/r01-invoice-customer-deadline-browser.log",
+        "/tmp/r01-invoice-customer-deadline-budgets.log",
+        "/tmp/r01-invoice-customer-deadline-contract-final.log",
+        "/tmp/r01-invoice-customer-deadline-fixture-format.log",
+        "/tmp/r01-invoice-customer-deadline-format-check.log",
+        "/tmp/r01-invoice-customer-deadline-format.log",
+        "/tmp/r01-invoice-customer-deadline-http-final.log",
+        "/tmp/r01-invoice-customer-deadline-lint.log",
+        "/tmp/r01-invoice-customer-deadline-theme-budgets.log",
+        "/tmp/r01-invoice-customer-deadline-theme-build.log",
+        "/tmp/r01-invoice-customer-deadline-theme-format.log",
+        "/tmp/r01-invoice-customer-deadline-type-format.log",
+        "/tmp/r01-invoice-customer-deadline-web-build.log",
+        "/tmp/r01-invoice-customer-deadline-web-format.log",
+        "/tmp/r01-invoice-customer-deadline-web-types.log",
+        "/tmp/r01-invoice-customer-deadline-web-unit.log",
+        "/tmp/r01-reminder-toggle-response-baseline.log",
+        "/tmp/r01-reminder-toggle-response-final.log",
+        "/tmp/r01-reminder-toggle-response-format.log",
+        "/tmp/r01-reminder-toggle-response-lint.log",
+        "/tmp/r01-reminder-toggle-response-test-format.log",
+        "/tmp/r01-reminder-toggle-response-types.log",
+        "/tmp/r01-due-period-api-build.log",
+        "/tmp/r01-due-period-api-consumer.log",
+        "/tmp/r01-due-period-api-contract-check.log",
+        "/tmp/r01-due-period-api-contract-final.log",
+        "/tmp/r01-due-period-api-contract-format.log",
+        "/tmp/r01-due-period-api-contract-new.log",
+        "/tmp/r01-due-period-api-contract-write.log",
+        "/tmp/r01-due-period-api-format.log",
+        "/tmp/r01-due-period-api-lint-final.log",
+        "/tmp/r01-due-period-api-test-format.log",
+        "/tmp/r01-due-period-api-types-final.log",
+        "/tmp/r01-due-period-api-types.log",
+        "/tmp/r01-due-period-api.log",
+        "/tmp/r01-due-period-consumer-format.log",
+        "/tmp/r01-due-period-form-browser-final.log",
+        "/tmp/r01-due-period-form-browser-first.log",
+        "/tmp/r01-due-period-form-browser-format.log",
+        "/tmp/r01-due-period-form-budgets.log",
+        "/tmp/r01-due-period-form-build.log",
+        "/tmp/r01-due-period-form-format-check.log",
+        "/tmp/r01-due-period-form-format.log",
+        "/tmp/r01-due-period-form-host-tests.log",
+        "/tmp/r01-due-period-form-hover-budgets.log",
+        "/tmp/r01-due-period-form-hover-build.log",
+        "/tmp/r01-due-period-form-hover-format.log",
+        "/tmp/r01-due-period-form-i18n.log",
+        "/tmp/r01-due-period-form-lint.log",
+        "/tmp/r01-due-period-form-local-validation-budgets.log",
+        "/tmp/r01-due-period-form-local-validation-build.log",
+        "/tmp/r01-due-period-form-local-validation-format.log",
+        "/tmp/r01-due-period-form-types-final.log",
+        "/tmp/r01-due-period-form-types.log",
+        "/tmp/r01-invoice-deadlines-db-contracts.log"
+      ]
     }
   ]
 }

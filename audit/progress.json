@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "df34b301013d86cd57e244ac58d816f9371f3e4d",
+  "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
   "active_step": "R01",
-  "next_action": "Build the missing administrator default due-period API and form using the existing versioned table, current authority helpers and unchanged budgets. Then consolidate the remaining scheduling/cancellation review.",
+  "next_action": "Read PR247–250 bodies and current correction services/controllers; resolve the two retained snapshot-consumer evidence paths. Fix confirmed gaps and review before advancing.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -607,6 +607,10 @@
     {
       "id": "R01-invoice-creation-calculation",
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+    },
+    {
+      "id": "R01-invoice-deadlines-reminders",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
     }
   ],
   "deferred_improvements": [
@@ -625,9 +629,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 110,
-    "partial": 25,
-    "pending": 187,
+    "acceptance_verified": 118,
+    "partial": 27,
+    "pending": 177,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -740,218 +744,61 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-invoice-deadlines-reminders",
-    "name": "Invoice due periods, staff overrides and payment reminder scheduling",
+    "id": "R01-invoice-corrections",
+    "name": "Invoice cancel-and-replace, post-payment adjustments and customer correction chains",
     "status": "in_progress",
     "prs": [
-      236,
-      237,
-      238,
-      239,
-      240,
-      241,
-      243,
-      244,
-      245,
-      246
+      247,
+      248,
+      249,
+      250
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.1.03.01",
-      "04-invoices-wallet-contracts.md#T-04.1.03.02",
-      "04-invoices-wallet-contracts.md#T-04.1.03.03",
-      "04-invoices-wallet-contracts.md#T-04.1.03.04",
-      "04-invoices-wallet-contracts.md#T-04.1.04.01",
-      "04-invoices-wallet-contracts.md#T-04.1.04.02",
-      "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "04-invoices-wallet-contracts.md#T-04.1.04.04",
-      "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "04-invoices-wallet-contracts.md#T-04.1.04.06"
+      "04-invoices-wallet-contracts.md#T-04.1.05.01",
+      "04-invoices-wallet-contracts.md#T-04.1.05.02",
+      "04-invoices-wallet-contracts.md#T-04.1.05.03",
+      "04-invoices-wallet-contracts.md#T-04.1.05.04"
     ],
     "remaining_checklist": [
-      "Exact requirements and all ten full saved PR descriptions read. Continue current workflow review.",
-      "Review default admin configuration/override visibility, issue scheduling, offsets/timezones/preferences, outbox dispatch, idempotency and terminal-state cancellation.",
-      "Reuse21 overdue worker cases and state/creation/receipt evidence; no repeat full finance suite. Actual delivery remains R02."
+      "Exact story/task criteria read; read the four saved PR bodies before current implementation review.",
+      "Review immutable issued lines, payment/state constraints, staff authority through commit, snapshots and customer profile/agent isolation.",
+      "Resolve retained correction-consumer snapshot refresh; preserve earlier state/creation/customer evidence."
     ],
     "historical_deferrals": [
       {
-        "pr": 241,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/241",
+        "pr": 249,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/249",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.04.02"
+          "04-invoices-wallet-contracts.md#T-04.1.05.03"
         ],
         "historical_deferrals": [
-          "- [ ] Unique index on `(invoiceId, offset, channel)` — out of scope (T-04.1.04.04).",
-          "- [ ] Admin per-offset toggle per service type — out of scope (T-04.1.04.05).",
-          "- [ ] ReminderSender dispatch via outbox — out of scope (T-04.1.04.03).",
-          "- [ ] Cancel future rows on Paid/Cancelled/Refunded — out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
+          "- Migration 0067 is expand/migrate: nullable `adjustment_kind` + generated `accounting_amount`, deterministic backfill of existing linked rows (`metadata.kind` when charge/credit, otherwise `charge`), and the kind/link CHECK added as `NOT VALID`. VALIDATE is deferred until old writers are retired.",
+          "- [ ] Customer-facing invoice details page showing the correction chain — out of scope (T-04.1.05.04).",
+          "- [ ] Applying a credit as a wallet refund/payout — out of scope (S-04.4.01).",
+          "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` — deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       },
       {
-        "pr": 240,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/240",
+        "pr": 248,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/248",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.04.01"
+          "04-invoices-wallet-contracts.md#T-04.1.05.02"
         ],
         "historical_deferrals": [
-          "- Enforces `sent_at` is set exactly when `status = 'sent'`, plus lookup indexes for cancel-by-invoice and due pickup. The `(invoiceId, offset, channel)` unique index is deferred to T-04.1.04.04."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 237,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/237",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.03.02"
-        ],
-        "historical_deferrals": [
-          "- [ ] Staff override permission + customer-visible reason in audit/metadata — deferred to T-04.1.03.03."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 236,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/236",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.03.01"
-        ],
-        "historical_deferrals": [
-          "- [ ] `dueAt` calculation (`issuedAt + config_days`) — out of scope; owned by T-04.1.03.02.",
-          "- [ ] Staff override UI/API — out of scope; owned by T-04.1.03.03.",
-          "- [ ] Overdue cron — out of scope; owned by T-04.1.03.04."
+          "- [ ] Staff HTTP API / UI for this command — not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
     "reused_evidence": [
+      "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
       "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
-      "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-      "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
     ],
-    "confirmed_defects": [
-      {
-        "revision": "0e370f7",
-        "summary": "Bind due-date read/mutation requests to the current session. Keep permission locks, require fresh session/step-up after invoice locking and before commit.",
-        "verification": "Two baseline expired-session mutations returned200 and wrote changes. Corrected21 distinct cases pass:5 real HTTP cases plus16 unchanged controller/service/integration cases. The initial baseline also exposed the nested-error fixture mismatch, corrected at03bcf45. API types/lint/format/diff pass.",
-        "status": "repaired_and_reviewed"
-      },
-      {
-        "revision": "b6f46be",
-        "summary": "Due-date form lacked step-up and accepted stale/mismatched replies. It now captures and freezes the submitted target/date/reason, uses the existing password dialog, validates replies, rejects late lookups, and renders localized errors/states with theme-aware colors.",
-        "verification": "9 focused web cases and4 distinct production Chromium cases pass, including FA/EN, light/dark, accessibility, exact timezone conversion, focus, canonical step-up and response binding. Initial2 English axe cases sampled CSS animations; waiting for actual animations fixes the fixture. Web types/lint/format/build, i18n build and42 unchanged budgets pass. Final generic error-copy edit is covered by the9 unit cases; existing4 browser behavior checks remain valid.",
-        "status": "repaired_and_reviewed"
-      },
-      {
-        "revision": "7fe892487957d06db5fa53e474608ea6cd7bf420",
-        "summary": "Deadline override cancels scheduled rows and marks its reminder plan dirty in the same audited transaction. Scheduler recomputes cancelled rows against the current deadline, adds newly eligible offsets and preserves sent history and unique keys.",
-        "verification": "Two worker baseline failures and one real HTTP baseline failure reproduce stale schedules. Final71 worker cases across4 files and21 API cases pass; final5 HTTP cases also assert reminder rollback on session expiry. Tests cover extension/shortening, sent-history preservation, failed replanning rollback and concurrent retries. API/worker types, scoped lint, format and diff pass. Earlier browser/HTTP-shape/migration evidence remains valid.",
-        "status": "repaired_and_reviewed",
-        "limitations": [
-          "Roll out the updated worker before or with the API; no deployment occurred. Historical overrides without the marker need operational reconciliation. Already accepted outbox delivery remains in R02."
-        ]
-      },
-      {
-        "revision": "9a954fa",
-        "summary": "Reminder offset reads and writes now pass the authenticated session into the service, retain current grant locks and recheck session/step-up after waits and before commit.",
-        "verification": "Four corrected baseline HTTP cases returned200 despite session or step-up expiry. Final19 cases across4 API files pass, covering expiry after pair/audit/read locks, lost step-up, revoked grants, audit rollback and concurrent audit history. API types/lint/format/diff pass. The initial fixture used a stale guard-lock pattern and did not reset idle expiry; corrected baseline retained.",
-        "status": "repaired_and_reviewed"
-      },
-      {
-        "revision": "0566eea",
-        "summary": "Customer invoice details now expose the latest public reason only when it matches the stored deadline. Staff identity and internal metadata remain private. The page displays escaped text with existing translations and consistent theme colors/background.",
-        "verification": "24 assembly/service cases plus5 real HTTP cases pass;9 web cases and4 production Chromium cases cover FA/EN and light/dark, Tehran time, public explanation and accessibility. All42 route budgets and API/web quality checks pass; OpenAPI remains unchanged. Initial HTTP fixture lacked a default profile; corrected. Initial2 dark browser cases found the page background mismatch; repaired. A test assertion required an unknown-value type fix before final API types passed.",
-        "status": "repaired_and_reviewed"
-      },
-      {
-        "revision": "df34b301013d86cd57e244ac58d816f9371f3e4d",
-        "summary": "Reminder switches now require a single response row confirming the exact requested service, offset and boolean value before claiming success.",
-        "verification": "Five new regressions failed before the fix. All22 component cases now pass, preserving concurrency, step-up and focus evidence; web types/lint/diff pass. No layout or shared dependency change; next batch build will include the small response check.",
-        "status": "repaired_and_reviewed"
-      }
-    ],
+    "confirmed_defects": [],
     "pr_dispositions": [],
-    "next_action": "Build the missing administrator default due-period API and form using the existing versioned table, current authority helpers and unchanged budgets. Then consolidate the remaining scheduling/cancellation review.",
-    "integration_findings": [
-      "Repaired7fe8924: new overrides cancel unsent rows transactionally and scheduler rebuilds their plan while preserving sent rows. Legacy reconciliation and accepted outbox delivery are not claimed.",
-      "Confirmed missing required consumer: no other canonical task supplies administrator default due-period configuration. Preserve the existing table/calculator; add a minimal protected setting flow within S-04.1.03.",
-      "Reminder-offset session authority repaired at9a954fa; false save confirmation repaired in the subsequent component change."
-    ],
-    "new_evidence": [
-      "/tmp/r01-invoice-deadlines-authority-api.log",
-      "/tmp/r01-invoice-deadlines-authority-baseline.log",
-      "/tmp/r01-invoice-deadlines-authority-format-check.log",
-      "/tmp/r01-invoice-deadlines-authority-format.log",
-      "/tmp/r01-invoice-deadlines-authority-http-final.log",
-      "/tmp/r01-invoice-deadlines-authority-lint.log",
-      "/tmp/r01-invoice-deadlines-authority-read-format.log",
-      "/tmp/r01-invoice-deadlines-authority-test-format.log",
-      "/tmp/r01-invoice-deadlines-authority-types.log",
-      "/tmp/r01-invoice-deadlines-pr-history.log",
-      "/tmp/r01-invoice-deadlines-form-browser-format.log",
-      "/tmp/r01-invoice-deadlines-form-browser-settled.log",
-      "/tmp/r01-invoice-deadlines-form-browser.log",
-      "/tmp/r01-invoice-deadlines-form-budgets.log",
-      "/tmp/r01-invoice-deadlines-form-final-budgets.log",
-      "/tmp/r01-invoice-deadlines-form-final-build.log",
-      "/tmp/r01-invoice-deadlines-form-final-format.log",
-      "/tmp/r01-invoice-deadlines-form-final-types.log",
-      "/tmp/r01-invoice-deadlines-form-format.log",
-      "/tmp/r01-invoice-deadlines-form-i18n-build.log",
-      "/tmp/r01-invoice-deadlines-form-lint.log",
-      "/tmp/r01-invoice-deadlines-form-response-tests.log",
-      "/tmp/r01-invoice-deadlines-form-tests-format.log",
-      "/tmp/r01-invoice-deadlines-form-types.log",
-      "/tmp/r01-invoice-deadlines-form-unit-final.log",
-      "/tmp/r01-invoice-deadlines-form-unit.log",
-      "/tmp/r01-invoice-deadlines-form-web-build.log",
-      "/tmp/r01-invoice-reminder-deadline-api-baseline.log",
-      "/tmp/r01-invoice-reminder-deadline-api-types.log",
-      "/tmp/r01-invoice-reminder-deadline-api.log",
-      "/tmp/r01-invoice-reminder-deadline-baseline.log",
-      "/tmp/r01-invoice-reminder-deadline-final-test-format.log",
-      "/tmp/r01-invoice-reminder-deadline-format-check.log",
-      "/tmp/r01-invoice-reminder-deadline-format.log",
-      "/tmp/r01-invoice-reminder-deadline-http-final.log",
-      "/tmp/r01-invoice-reminder-deadline-lint.log",
-      "/tmp/r01-invoice-reminder-deadline-test-format.log",
-      "/tmp/r01-invoice-reminder-deadline-worker-final.log",
-      "/tmp/r01-invoice-reminder-deadline-worker-types.log",
-      "/tmp/r01-invoice-reminder-deadline-worker.log",
-      "/tmp/r01-reminder-toggle-session-baseline-corrected.log",
-      "/tmp/r01-reminder-toggle-session-baseline.log",
-      "/tmp/r01-reminder-toggle-session-final.log",
-      "/tmp/r01-reminder-toggle-session-format-check.log",
-      "/tmp/r01-reminder-toggle-session-format.log",
-      "/tmp/r01-reminder-toggle-session-lint.log",
-      "/tmp/r01-reminder-toggle-session-test-format.log",
-      "/tmp/r01-reminder-toggle-session-types.log",
-      "/tmp/r01-invoice-customer-deadline-api-types-final.log",
-      "/tmp/r01-invoice-customer-deadline-api-types.log",
-      "/tmp/r01-invoice-customer-deadline-api.log",
-      "/tmp/r01-invoice-customer-deadline-browser-final.log",
-      "/tmp/r01-invoice-customer-deadline-browser.log",
-      "/tmp/r01-invoice-customer-deadline-budgets.log",
-      "/tmp/r01-invoice-customer-deadline-contract-final.log",
-      "/tmp/r01-invoice-customer-deadline-fixture-format.log",
-      "/tmp/r01-invoice-customer-deadline-format-check.log",
-      "/tmp/r01-invoice-customer-deadline-format.log",
-      "/tmp/r01-invoice-customer-deadline-http-final.log",
-      "/tmp/r01-invoice-customer-deadline-lint.log",
-      "/tmp/r01-invoice-customer-deadline-theme-budgets.log",
-      "/tmp/r01-invoice-customer-deadline-theme-build.log",
-      "/tmp/r01-invoice-customer-deadline-theme-format.log",
-      "/tmp/r01-invoice-customer-deadline-type-format.log",
-      "/tmp/r01-invoice-customer-deadline-web-build.log",
-      "/tmp/r01-invoice-customer-deadline-web-format.log",
-      "/tmp/r01-invoice-customer-deadline-web-types.log",
-      "/tmp/r01-invoice-customer-deadline-web-unit.log",
-      "/tmp/r01-reminder-toggle-response-baseline.log",
-      "/tmp/r01-reminder-toggle-response-final.log",
-      "/tmp/r01-reminder-toggle-response-format.log",
-      "/tmp/r01-reminder-toggle-response-lint.log",
-      "/tmp/r01-reminder-toggle-response-test-format.log",
-      "/tmp/r01-reminder-toggle-response-types.log"
-    ]
+    "next_action": "Read PR247–250 bodies and current correction services/controllers; resolve the two retained snapshot-consumer evidence paths. Fix confirmed gaps and review before advancing."
   },
   "open_domain_reviews": [
     {
@@ -1079,6 +926,24 @@
       "owning_batch": "V01/B01 product prerequisites",
       "remaining": "orderId is a real nullable orders foreign key. contractId and consultationId remain nullable text references because target tables do not exist. Required foreign keys and validated consumer selection remain with the contract/consultation prerequisites in V01/B01.",
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
+      "prs": [
+        243
+      ],
+      "owning_batch": "R02 notification delivery",
+      "remaining": "R02 retains actual versioned FA/EN delivery, recipient/channel/window enforcement and current invoice/deadline revalidation after outbox acceptance. Hourly claiming, current invoice state, atomic outbox insertion and idempotency are verified. A sent schedule row means outbox acceptance, not external delivery.",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
+      "prs": [
+        245
+      ],
+      "owning_batch": "R02 notification delivery",
+      "remaining": "The repaired UI/API stores offset policy safely; scheduler applies it to new/rebuilt plans. A later toggle does not change existing plans, and sender does not recheck it. R02 must enforce current offset policy on already planned/queued reminders. The historical new-plans-only limit is unfinished acceptance, not a requirements waiver.",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
     }
   ]
 }

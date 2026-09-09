@@ -10784,6 +10784,1470 @@
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
       ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 143,
+      "requirement": "| T-04.1.03.01 | Add `service_due_periods` admin config table (service type, default days, active period) | M |",
+      "requirement_sha256": "d280c3f9f6d75687d48c648e9b52667ad7940610ec5ca55cdd63f1d19df6f4e8",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        236
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 144,
+      "requirement": "| T-04.1.03.02 | Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override) | S |",
+      "requirement_sha256": "41aef59a4e09166ffb54f3b72d57271fef3fe37602052bab7461f33cf7f8a56e",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        237
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 145,
+      "requirement": "| T-04.1.03.03 | Build staff override UI/API: override input + reason field, stored in audit + invoice metadata | M |",
+      "requirement_sha256": "f1ee85a4ff8c44a12cb5cea04ceb071dc08a1734a3ea3f32345f27bc8bcedcc0",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        238
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 146,
+      "requirement": "| T-04.1.03.04 | Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded | M |\n\n---",
+      "requirement_sha256": "2de58c15f819e816c762d6ea0b5dc8df2d3ec3970f31164f819b128a44f11c4e",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        239
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 170,
+      "requirement": "| T-04.1.04.01 | Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status` | M |",
+      "requirement_sha256": "08188761a81f0807705c8a8c2bf62c70b3cde750621a89062c4e1adf05cf8b0c",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        240
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 171,
+      "requirement": "| T-04.1.04.02 | Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows | M |",
+      "requirement_sha256": "4689880b18fc021cb74a478d961c8b1d5e3610bacacb79c4df64ca1459c96f96",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        241
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
+      "status": "partial",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 172,
+      "requirement": "| T-04.1.04.03 | Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox | M |",
+      "requirement_sha256": "28813f660d002ab68b5157754a0638623a3a9375aa8993c859c009d0f4b20305",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        243
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "R02 retains actual versioned FA/EN delivery, recipient/channel/window enforcement and current invoice/deadline revalidation after outbox acceptance. Hourly claiming, current invoice state, atomic outbox insertion and idempotency are verified. A sent schedule row means outbox acceptance, not external delivery."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 173,
+      "requirement": "| T-04.1.04.04 | Enforce idempotency: unique index on (invoiceId, offset, channel) | S |",
+      "requirement_sha256": "f8a35bfce044031a36253414bfe84e83cb99d544705290edc1dc627610994ffa",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        244
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
+      "status": "partial",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 174,
+      "requirement": "| T-04.1.04.05 | Admin toggle UI: enable/disable each offset per service type | M |",
+      "requirement_sha256": "9d759f4980d8027eca778803a0d4e559e1332acc77b2e3d55c700ae4803785b6",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        245
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "The repaired UI/API stores offset policy safely; scheduler applies it to new/rebuilt plans. A later toggle does not change existing plans, and sender does not recheck it. R02 must enforce current offset policy on already planned/queued reminders. The historical new-plans-only limit is unfinished acceptance, not a requirements waiver."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 175,
+      "requirement": "| T-04.1.04.06 | Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled | M |\n\n---",
+      "requirement_sha256": "60e8bad3810e9c577e4045100929b20c1eef23b0dac14a0e52a74ac861024a78",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "88757521e010f19513c4813aeaa2b6f0b4fee29fcbf41344c5ed03e18b5f782e"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch."
+      ],
+      "merged_prs": [
+        246
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -10948,16 +12412,6 @@
     "02-auth-users-admin.md#T-09.12.04",
     "02-auth-users-admin.md#T-09.12.06",
     "02-auth-users-admin.md#T-10.01.02",
-    "04-invoices-wallet-contracts.md#T-04.1.03.01",
-    "04-invoices-wallet-contracts.md#T-04.1.03.02",
-    "04-invoices-wallet-contracts.md#T-04.1.03.03",
-    "04-invoices-wallet-contracts.md#T-04.1.03.04",
-    "04-invoices-wallet-contracts.md#T-04.1.04.01",
-    "04-invoices-wallet-contracts.md#T-04.1.04.02",
-    "04-invoices-wallet-contracts.md#T-04.1.04.03",
-    "04-invoices-wallet-contracts.md#T-04.1.04.04",
-    "04-invoices-wallet-contracts.md#T-04.1.04.05",
-    "04-invoices-wallet-contracts.md#T-04.1.04.06",
     "04-invoices-wallet-contracts.md#T-04.1.05.01",
     "04-invoices-wallet-contracts.md#T-04.1.05.02",
     "04-invoices-wallet-contracts.md#T-04.1.05.03",

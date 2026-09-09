@@ -13147,6 +13147,237 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-build.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-build.log.gz",
+      "sha256": "70737bf30eba2ec5861883f51915ce2d0a68833ecf844b70ddd3ca4ac44e2a23",
+      "encoding": "gzip",
+      "stored_sha256": "8c0b89479d9ee32a687d878d9bd7e81e3584aa65b197cb5955830f999a3a6b5b"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-consumer.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-consumer.log.gz",
+      "sha256": "bf4ae39f696685422cfb34bcdcf68a59eb04218ee624aa978b52cfbd90abc9cb",
+      "encoding": "gzip",
+      "stored_sha256": "bbac30feb69f562db2c9a5076a75427abb68ece7ca43d0b9ecb2baeca7a19573"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-contract-check.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-contract-check.log.gz",
+      "sha256": "a6c75f5d661949098cf1dcdff9c23e8b1dbdebfddfb4d4083177531070b8f607",
+      "encoding": "gzip",
+      "stored_sha256": "278e3fa93cfd3ac4089bd5cd14742c6f3a4572b4df1dc2f97138fc7a2f1bc049"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-contract-final.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-contract-final.log.gz",
+      "sha256": "b4d51f5b4b2d9ab3f6067cda0d7b55ada25bdeb1c3c66d13c455e13c29a413e1",
+      "encoding": "gzip",
+      "stored_sha256": "eb152e52605bebd86625758886e28f342fdc35a6746f9d0c0f6e511a890e5814"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-contract-format.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-contract-format.log.gz",
+      "sha256": "828929dc42b59beeb3fdb236aad3e251417bc1d16557a4fae04b44cfe6447b72",
+      "encoding": "gzip",
+      "stored_sha256": "df57db4d90b8b5641d3ee2f69073aefbd686e8f78e5d84ea8d864931b84cdcfc"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-contract-new.log",
+      "path": "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+      "sha256": "b0033c99fdb9671aa92cce17ac7fd7851ff4944686d046198cd83485322b98de",
+      "encoding": "gzip",
+      "stored_sha256": "7780e008e3d2103c805cd25a25716a1aba1b788f8b9623180fae2c2524508f30"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-contract-write.log",
+      "path": "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+      "sha256": "b0033c99fdb9671aa92cce17ac7fd7851ff4944686d046198cd83485322b98de",
+      "encoding": "gzip",
+      "stored_sha256": "7780e008e3d2103c805cd25a25716a1aba1b788f8b9623180fae2c2524508f30"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-format.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-format.log.gz",
+      "sha256": "85bfc258954161592c28a829aee726673544053923a175605867893e88f53768",
+      "encoding": "gzip",
+      "stored_sha256": "89b3f432ef6a7ec431a25fbe846779e0d1b64e1b18017a69efbb37ae8c29eb38"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-lint-final.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-test-format.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-test-format.log.gz",
+      "sha256": "3205de2e7c4540e1d6174c6b58b7b389cddac4a82865d990e52df1dac2f9fd2d",
+      "encoding": "gzip",
+      "stored_sha256": "264d97a15bec31f901001190b2f1b6c8bad4dcca6743d92c3e1023c7d80b1963"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api-types.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-types.log.gz",
+      "sha256": "48728284cd17241187158ceee6fd669274cc96301a4d94eac2dd3d7649655741",
+      "encoding": "gzip",
+      "stored_sha256": "c3bfc64a8d14e3abdf53f8ce78a45ad99ec5ee813505863eef7c60f6a1bedc51"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-api.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api.log.gz",
+      "sha256": "e07fedcb374eb8ae3712feffe183758f88b77b8bed6a1db7162db071f32539c6",
+      "encoding": "gzip",
+      "stored_sha256": "2dfa33fb9e0aa86eaa6c31a808d8436ea2e66feb94e633fccf415cd838bda89f"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-consumer-format.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-api-test-format.log.gz",
+      "sha256": "3205de2e7c4540e1d6174c6b58b7b389cddac4a82865d990e52df1dac2f9fd2d",
+      "encoding": "gzip",
+      "stored_sha256": "264d97a15bec31f901001190b2f1b6c8bad4dcca6743d92c3e1023c7d80b1963"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-browser-final.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-browser-final.log.gz",
+      "sha256": "b8eb116bd686a5bffe70a67bf1d0388b3dada849e2006eef80b5eebaf3c020c0",
+      "encoding": "gzip",
+      "stored_sha256": "9832673c47c490cb588b0a3a8c818b27085cddf797d94f628a5147a61aa6885a"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-browser-first.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-browser-first.log.gz",
+      "sha256": "865d879bb793bd1f95099123df9d612f68f693e23dc680a0cf34c25a929a65e0",
+      "encoding": "gzip",
+      "stored_sha256": "d357ceb42de345b4c7331a143525a819e457c7be450c5302a47d710cf7570709"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-browser-format.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-browser-format.log.gz",
+      "sha256": "cec5f23c9df38d4dc50070f2e627a577b25eb1db1acb3b215f2ffc8efb4c7feb",
+      "encoding": "gzip",
+      "stored_sha256": "eea4b97ae30a7cb7f6336542e8f19b30df5947c9157ea3c1bc86bc6225c733f9"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-budgets.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-budgets.log.gz",
+      "sha256": "521e246806012258aba23982928d76778c72e74ee37c6d3119b1b31db47308dc",
+      "encoding": "gzip",
+      "stored_sha256": "3b5bca720fde374cfe7c1b9b5c95515fea513aded8866e7ee4dfc2ffdbbe05d6"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-build.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-build.log.gz",
+      "sha256": "56fbefa27f2383aa596f67996e1a916eb0312a494aa187e2f43a65b4d6ca016d",
+      "encoding": "gzip",
+      "stored_sha256": "c5e2c298eb94686a623ff291f3a3a1bfdf4fc703391a81fb2e12f410a8b8add4"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-format.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-format.log.gz",
+      "sha256": "1510bb3b960781ae066de28ea480a196ac7cc054d7e4fb81b8a52c8c81409068",
+      "encoding": "gzip",
+      "stored_sha256": "d223a3a5acbd7b1676a3f1481f20274bb481643dbf8a672ae556182726c08115"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-host-tests.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-host-tests.log.gz",
+      "sha256": "3a0bb9fa24e3aed2ebdacd9193b4219c2cc4a7834e7d90235ccbd456ca3318e4",
+      "encoding": "gzip",
+      "stored_sha256": "f0c50c72021c9d86c90ffb16366aee4f5287999d6ec40831a4d19cdf6fb536d4"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-hover-budgets.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-hover-budgets.log.gz",
+      "sha256": "3d9ef570d1645b092c78781acf5b1ce9a20eb950cf7ed285764d2ae92d81ba44",
+      "encoding": "gzip",
+      "stored_sha256": "4fa8ca65a17a2ccdbdb2bb0ee5943189c1ca8ad38d1d9f23bba13f0e466cba6d"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-hover-build.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-hover-build.log.gz",
+      "sha256": "dbd566ebe555e89067e9a2692862f54670a7e4c41abfac5a94f40bff44047dd0",
+      "encoding": "gzip",
+      "stored_sha256": "4ce74d7ed7028f859647552c8a7ef9fa4bdc6c26e1ad80b31dd5dbe0b6cf909e"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-hover-format.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-hover-format.log.gz",
+      "sha256": "af2f9cf58f5a19360ce3c714fd46bf19c5a40078ae324de9d470993283940e00",
+      "encoding": "gzip",
+      "stored_sha256": "3b4e45f048b8f655f116ec93991e52fea590f24b74e09a56ecaf2d7eccd498f8"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-i18n.log",
+      "path": "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+      "sha256": "e96c18cf633b90ecae7f4d8c8fadef8b222995210eddf31da455e2a436493ae6",
+      "encoding": "gzip",
+      "stored_sha256": "efa98b77f7947a1708258290f0d1f9cd008002c7e204044a1c2f8fcc4fb48bd3"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-local-validation-budgets.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-local-validation-budgets.log.gz",
+      "sha256": "ec72423adfa88d03cc012042c0405475967cf0cf8ac7944948d85837de93c743",
+      "encoding": "gzip",
+      "stored_sha256": "acc3cdf1dad79b15de7dd5d2f3b53391462aae8522c2c6a35fa2fa5120f0ecd0"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-local-validation-build.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-local-validation-build.log.gz",
+      "sha256": "0c635348c844a6da4028f0a596bc93de87527a340c4845b44f61bee0ba116f4a",
+      "encoding": "gzip",
+      "stored_sha256": "c1ef960c9a037ee924c9b13fa8b3a2a4ca5378f23ce307849bac215ef0054eef"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-local-validation-format.log",
+      "path": "audit/evidence/6b9831c/r01-due-period-form-local-validation-format.log.gz",
+      "sha256": "b946652e37354c7613dcc905a15a0ad9d47c2c4d0d0b917225a31341efe680f3",
+      "encoding": "gzip",
+      "stored_sha256": "a715436a5b325f287920fa400b61338843dc191e38cd356568980bb89f1e693a"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-types-final.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r01-due-period-form-types.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-deadlines-db-contracts.log",
+      "path": "audit/evidence/6b9831c/r01-invoice-deadlines-db-contracts.log.gz",
+      "sha256": "213d9dd3c9b5c4c9bee078347def4c7702856694e34b0d0f2307f72992442de9",
+      "encoding": "gzip",
+      "stored_sha256": "c5558acf8a1469a67c1b137190936905a3c64df46b1d9cfe14733bdbdfd92dab"
     }
   ]
 }

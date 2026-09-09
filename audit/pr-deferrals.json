@@ -458,7 +458,31 @@
       "- [ ] ReminderSender dispatch via outbox — out of scope (T-04.1.04.03).",
       "- [ ] Cancel future rows on Paid/Cancelled/Refunded — out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned; downstream unfinished delivery retains its own partial records.",
+    "reviewed_source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Unique index/concurrent replanning preserve idempotency. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Admin toggle UI/API and scheduler reads implemented. Current policy on existing plans remains separately partial under T-04.1.04.05 in R02. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Hourly sender atomically dispatches through outbox; actual delivery remains separately partial under T-04.1.04.03 in R02. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      },
+      {
+        "statement_index": 3,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Stop-state trigger and sender catch-up cancel unsent rows and preserve sent history. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      }
+    ]
   },
   {
     "pr": 240,
@@ -469,7 +493,16 @@
     "historical_deferrals": [
       "- Enforces `sent_at` is set exactly when `status = 'sent'`, plus lookup indexes for cancel-by-invoice and due pickup. The `(invoiceId, offset, channel)` unique index is deferred to T-04.1.04.04."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned; downstream unfinished delivery retains its own partial records.",
+    "reviewed_source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Unique index exists in production0080; current schema checks cover it. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      }
+    ]
   },
   {
     "pr": 237,
@@ -480,7 +513,16 @@
     "historical_deferrals": [
       "- [ ] Staff override permission + customer-visible reason in audit/metadata — deferred to T-04.1.03.03."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned; downstream unfinished delivery retains its own partial records.",
+    "reviewed_source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current session-bound override records reason/audit; customer sees the public reason. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      }
+    ]
   },
   {
     "pr": 236,
@@ -493,7 +535,26 @@
       "- [ ] Staff override UI/API — out of scope; owned by T-04.1.03.03.",
       "- [ ] Overdue cron — out of scope; owned by T-04.1.03.04."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned; downstream unfinished delivery retains its own partial records.",
+    "reviewed_source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current calculator and real setting-to-issuance check verify configured days. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Staff override API/form and public customer reason repaired and reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current overdue worker/state/payment evidence reused. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      }
+    ]
   },
   {
     "pr": 232,
