@@ -4464,6 +4464,184 @@
         ]
       }
     },
+    "/api/admin/invoices/{invoiceId}/corrections": {
+      "get": {
+        "operationId": "InvoiceCorrectionsController_context",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current source invoice, profile, state, paid amount, total and source lines. IRR decimal strings."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read an invoice and immutable source lines for staff correction",
+        "tags": [
+          "Admin · Invoice corrections"
+        ]
+      },
+      "post": {
+        "operationId": "InvoiceCorrectionsController_create",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "idempotencyKey": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "kind": {
+                        "enum": [
+                          "replacement"
+                        ],
+                        "type": "string"
+                      },
+                      "lines": {
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "description": {
+                              "maxLength": 1000,
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "isTaxable": {
+                              "type": "boolean"
+                            },
+                            "quantity": {
+                              "maximum": 2147483647,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "unitPrice": {
+                              "description": "Nonnegative int8 IRR",
+                              "pattern": "^\\d{1,19}$",
+                              "type": "string"
+                            },
+                            "vatRate": {
+                              "maximum": 10000,
+                              "minimum": 0,
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "description",
+                            "quantity",
+                            "unitPrice",
+                            "vatRate",
+                            "isTaxable"
+                          ],
+                          "type": "object"
+                        },
+                        "maxItems": 100,
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "idempotencyKey",
+                      "reason",
+                      "lines"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "amount": {
+                        "description": "Nonzero signed IRR; absolute value must fit int8. Positive charge, negative credit note. Does not transfer wallet funds.",
+                        "pattern": "^-?\\d{1,19}$",
+                        "type": "string"
+                      },
+                      "idempotencyKey": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "kind": {
+                        "enum": [
+                          "adjustment"
+                        ],
+                        "type": "string"
+                      },
+                      "reason": {
+                        "maxLength": 1000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "idempotencyKey",
+                      "reason",
+                      "amount"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Linked correction; amounts are decimal strings. Same request key and payload replay the existing correction."
+          },
+          "400": {
+            "description": "Invalid request or unsupported int8 total."
+          },
+          "403": {
+            "description": "Current Finance permission, CSRF and fresh step-up required through commit."
+          },
+          "409": {
+            "description": "Invalid source state, archived profile, or request-key payload conflict."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancel and replace before payment, or create a signed adjustment after payment",
+        "tags": [
+          "Admin · Invoice corrections"
+        ]
+      }
+    },
     "/api/admin/invoices/{invoiceId}/due-at": {
       "get": {
         "description": "Returns issuedAt / dueAt / current override snapshot so staff can review before submitting a customer-visible due-date override.",

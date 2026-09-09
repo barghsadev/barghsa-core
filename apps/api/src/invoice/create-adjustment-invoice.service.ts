@@ -1,3 +1,10 @@
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import {
+  correctionFingerprint,
+  findCorrectionReplay,
+  correctionTransition,
+} from './invoice-correction-request.js';
 import { lockInvoiceProfile } from './invoice-profile-lock.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 /**
@@ -114,6 +121,8 @@ export interface CreateAdjustmentInvoiceCommand {
   reason: string;
   /** Finance staff member performing the action (FK `users.userId`). */
   actorUserId: string;
+  actorSession?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+  idempotencyKey?: string;
   /** Opaque correlation ID for audit linkage. */
   correlationId?: string;
   /** Source IP of the staff member (audited). */
@@ -256,6 +265,8 @@ export class CreateAdjustmentInvoiceService {
     const amount = requireNonZeroAmount(cmd.amount);
     const kind = adjustmentKindForAmount(amount);
     const absAmount = amount < 0n ? -amount : amount;
+    if (absAmount > 9_223_372_036_854_775_807n)
+      throw new BadRequestException('Adjustment exceeds int8 IRR');
     const line = adjustmentLine(reason, absAmount);
     const calculation = calculateManualInvoice([line]);
     const now = cmd.now ?? new Date();
@@ -270,6 +281,11 @@ export class CreateAdjustmentInvoiceService {
       await client.query('BEGIN');
       const profileId = await lockInvoiceProfile(client, 'invoice', cmd.originalInvoiceId);
       await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
+      if (cmd.actorSession) {
+        if (cmd.actorSession.userId !== cmd.actorUserId)
+          throw new BadRequestException('Invoice actor does not match the session');
+        await requireSessionStepUp(client, cmd.actorSession);
+      }
 
       const locked = (await client.query(
         `SELECT id, profile_id, order_id, contract_id, consultation_id, type,
@@ -286,6 +302,36 @@ export class CreateAdjustmentInvoiceService {
 
       if (original.profile_id !== profileId)
         throw new ConflictException('Invoice profile changed; retry');
+      const fingerprint = correctionFingerprint({
+        reason,
+        amount: amount.toString(),
+        dueAt: kind === 'charge' ? (cmd.dueAt?.toISOString() ?? null) : null,
+      });
+      const replay = await findCorrectionReplay(
+        client,
+        cmd.originalInvoiceId,
+        'adjustment',
+        cmd.idempotencyKey,
+        fingerprint
+      );
+      if (replay) {
+        const excerpt = await this.loadAdjustmentExcerpt(client, replay.id);
+        const issueTransition = await correctionTransition(client, replay.id, 'Issue');
+        if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
+        await client.query('COMMIT');
+        return {
+          ...excerpt,
+          originalInvoiceId: cmd.originalInvoiceId,
+          originalState: replay.originalState,
+          adjustmentInvoiceId: replay.id,
+          adjustmentState: excerpt.state,
+          kind,
+          amount,
+          issueAuditId: issueTransition.auditId,
+          issueTransition,
+        };
+      }
+
       const paidAmount = BigInt(original.paid_amount);
       if (paidAmount <= 0n) {
         throw new ConflictException(CREATE_ADJUSTMENT_ERRORS.NO_PAYMENT(cmd.originalInvoiceId));
@@ -319,6 +365,15 @@ export class CreateAdjustmentInvoiceService {
       const calculationSnapshot = buildManualInvoiceCalculationSnapshot([line], calculation);
       const adjustmentMetadata = JSON.stringify({
         source: 'adjustment',
+        ...(cmd.idempotencyKey
+          ? {
+              correctionRequest: {
+                key: cmd.idempotencyKey,
+                fingerprint,
+                originalState: original.state,
+              },
+            }
+          : {}),
         kind,
         generatedBy: cmd.actorUserId,
         adjustmentForInvoiceId: cmd.originalInvoiceId,
@@ -420,6 +475,7 @@ export class CreateAdjustmentInvoiceService {
         throw new Error(`Charge adjustment ${adjustmentId} is missing payable_from`);
       }
 
+      if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
       await client.query('COMMIT');
       return {
         originalInvoiceId: cmd.originalInvoiceId,

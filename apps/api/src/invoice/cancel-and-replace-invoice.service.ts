@@ -1,3 +1,10 @@
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import {
+  correctionFingerprint,
+  findCorrectionReplay,
+  correctionTransition,
+} from './invoice-correction-request.js';
 import { lockInvoiceProfile } from './invoice-profile-lock.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 /**
@@ -96,6 +103,8 @@ export interface CancelAndReplaceInvoiceCommand {
   newLines: ManualInvoiceLineInput[];
   /** Finance staff member performing the action (FK `users.userId`). */
   actorUserId: string;
+  actorSession?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+  idempotencyKey?: string;
   /** Opaque correlation ID for audit linkage. */
   correlationId?: string;
   /** Source IP of the staff member (audited). */
@@ -198,6 +207,8 @@ export class CancelAndReplaceInvoiceService {
     let calculation;
     try {
       calculation = calculateManualInvoice(cmd.newLines);
+      if (calculation.totalAmount > 9_223_372_036_854_775_807n)
+        throw new RangeError('Invoice total exceeds int8 IRR');
     } catch (err: unknown) {
       if (err instanceof RangeError) {
         throw new BadRequestException(err.message);
@@ -216,6 +227,11 @@ export class CancelAndReplaceInvoiceService {
       await client.query('BEGIN');
       const profileId = await lockInvoiceProfile(client, 'invoice', cmd.invoiceId);
       await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
+      if (cmd.actorSession) {
+        if (cmd.actorSession.userId !== cmd.actorUserId)
+          throw new BadRequestException('Invoice actor does not match the session');
+        await requireSessionStepUp(client, cmd.actorSession);
+      }
 
       const locked = (await client.query(
         `SELECT id, profile_id, order_id, contract_id, consultation_id, type,
@@ -232,6 +248,37 @@ export class CancelAndReplaceInvoiceService {
 
       if (original.profile_id !== profileId)
         throw new ConflictException('Invoice profile changed; retry');
+      const fingerprint = correctionFingerprint({
+        reason,
+        lines: calculation.lines,
+        dueAt: cmd.dueAt?.toISOString() ?? null,
+      });
+      const replay = await findCorrectionReplay(
+        client,
+        cmd.invoiceId,
+        'replacement',
+        cmd.idempotencyKey,
+        fingerprint
+      );
+      if (replay) {
+        const excerpt = await this.loadReplacementExcerpt(client, replay.id);
+        const issueTransition = await correctionTransition(client, replay.id, 'Issue');
+        const cancelTransition = await correctionTransition(client, cmd.invoiceId, 'Cancel');
+        if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
+        await client.query('COMMIT');
+        return {
+          ...excerpt,
+          originalInvoiceId: cmd.invoiceId,
+          originalState: 'Cancelled',
+          replacementInvoiceId: replay.id,
+          replacementState: excerpt.state,
+          cancelAuditId: cancelTransition.auditId,
+          issueAuditId: issueTransition.auditId,
+          cancelTransition,
+          issueTransition,
+        };
+      }
+
       const paidAmount = BigInt(original.paid_amount);
       if (paidAmount > 0n) {
         throw new ConflictException(
@@ -270,6 +317,15 @@ export class CancelAndReplaceInvoiceService {
       const calculationSnapshot = buildManualInvoiceCalculationSnapshot(cmd.newLines, calculation);
       const replacementMetadata = JSON.stringify({
         source: 'cancel_and_replace',
+        ...(cmd.idempotencyKey
+          ? {
+              correctionRequest: {
+                key: cmd.idempotencyKey,
+                fingerprint,
+                originalState: original.state,
+              },
+            }
+          : {}),
         generatedBy: cmd.actorUserId,
         replacesInvoiceId: cmd.invoiceId,
         originalType: original.type,
@@ -362,6 +418,7 @@ export class CancelAndReplaceInvoiceService {
 
       const excerpt = await this.loadReplacementExcerpt(client, replacementId);
 
+      if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
       await client.query('COMMIT');
       return {
         originalInvoiceId: cmd.invoiceId,

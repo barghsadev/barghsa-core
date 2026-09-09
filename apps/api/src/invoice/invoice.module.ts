@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { InvoiceCorrectionsController } from './invoice-corrections.controller.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
 import { ManualInvoiceService } from './manual-invoice.service.js';
@@ -19,7 +20,7 @@ import { SessionModule } from '../session/session.module.js';
 
 @Module({
   imports: [SessionModule],
-  controllers: [CustomerInvoiceController, ManualInvoiceController],
+  controllers: [CustomerInvoiceController, ManualInvoiceController, InvoiceCorrectionsController],
   providers: [
     InvoiceStateMachineService,
     InvoiceAuditRepository,
