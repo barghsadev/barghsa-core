@@ -2513,201 +2513,6 @@
       ]
     },
     {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
-      "status": "acceptance_verified",
-      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
-      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
-      "requirement_line": 117,
-      "requirement": "| T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |",
-      "requirement_sha256": "6ec92b767cb174cd0735f2239a23ff949e8cac3ff2296f687c50e5dafd5c08c2",
-      "source_evidence": [
-        {
-          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-          "sha256": "5827b960e7408cc2df27cff3bb1843b21061500a943b94bdc18ea57c4110abf8"
-        },
-        {
-          "path": "apps/api/src/invoice/vat-calculation.service.ts",
-          "sha256": "71bc80ab74c5bfdadc8ae728795c8a001d95fac0e8ee8ad527f8e0194811de58"
-        },
-        {
-          "path": "apps/api/src/invoice/vat-calculation.test.ts",
-          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
-        },
-        {
-          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-          "sha256": "981545cadb8645fb4e55bfaa0124d4b65c40968e0cdaa6a6952aa52ecdbb1adc"
-        },
-        {
-          "path": "apps/api/src/invoice/auto-invoice.service.ts",
-          "sha256": "592c8b2ed1d6bb06516a7a639179d5d5e7c0470c387c984849fc9f8638f0b290"
-        },
-        {
-          "path": "apps/api/src/invoice/invoice.module.ts",
-          "sha256": "bc791df8597276ba7bc5ac6b42b8c1166437278a60ebca2253ee213cb837291a"
-        },
-        {
-          "path": "packages/shared/src/finance/vat-config.ts",
-          "sha256": "d587c5317ca4de0db5bfc9b6f9b8a2b84b48a95a69e6758533d31749ddc67f8f"
-        }
-      ],
-      "checks": [
-        "Real PostgreSQL precedence: active product override, category default and zero fallback; exclusive interval endpoint and caller-owned transaction executor.",
-        "Taxable net-base VAT uses integer half-up rounding; non-taxable lines carry zero.",
-        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
-        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
-      ],
-      "limitations": [
-        "Future commercial order/contract integrations are separate tasks."
-      ],
-      "merged_prs": [
-        226
-      ],
-      "historically_skipped": false
-    },
-    {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
-      "status": "acceptance_verified",
-      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
-      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
-      "requirement_line": 120,
-      "requirement": "| T-04.1.02.07 | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements | M |",
-      "requirement_sha256": "83c0a0012af20a1aa36257231b743c2604a891aa2a09e1605211a99206decf30",
-      "source_evidence": [
-        {
-          "path": "apps/api/src/invoice/rounding.service.ts",
-          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
-        },
-        {
-          "path": "apps/api/src/invoice/rounding.service.test.ts",
-          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
-        },
-        {
-          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
-          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
-        },
-        {
-          "path": "apps/api/src/invoice/invoice.module.ts",
-          "sha256": "bc791df8597276ba7bc5ac6b42b8c1166437278a60ebca2253ee213cb837291a"
-        }
-      ],
-      "checks": [
-        "Table-driven scaled-integer examples include exact half ties, precision bounds, large BigInt values and canonical 55,055 IRR at 10% = 5,506 IRR VAT.",
-        "RoundingService is registered and exported from InvoiceModule; its sole division primitive uses integer arithmetic.",
-        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
-        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
-      ],
-      "limitations": [],
-      "merged_prs": [
-        229
-      ],
-      "historically_skipped": false
-    },
-    {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
-      "status": "acceptance_verified",
-      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
-      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
-      "requirement_line": 121,
-      "requirement": "| T-04.1.02.08 | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility | S |",
-      "requirement_sha256": "2acd410ffd73eabb4adfc4611d0795b00c3f744c80dd43f56dcbca65bab5f7de",
-      "source_evidence": [
-        {
-          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
-          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
-        },
-        {
-          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
-          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
-        },
-        {
-          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
-          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
-        },
-        {
-          "path": "apps/api/src/invoice/manual-invoice.service.ts",
-          "sha256": "135e37e673450ea7a3d4a6f37024b0bc9feeb11ce00ac1b611872cc7ca36bb2b"
-        },
-        {
-          "path": "apps/api/src/invoice/auto-invoice.service.ts",
-          "sha256": "592c8b2ed1d6bb06516a7a639179d5d5e7c0470c387c984849fc9f8638f0b290"
-        },
-        {
-          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-          "sha256": "849c90d23b18a2d09e9fef16c9c25d2aadf977286122904276bbae1302b072ed"
-        },
-        {
-          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-          "sha256": "f9deb1032c938d059b86b9d1df96f4d453163dbddea0de1bb8ee7f6b4b719f46"
-        },
-        {
-          "path": "packages/db/src/schema/invoices.ts",
-          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
-        },
-        {
-          "path": "packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql",
-          "sha256": "49b1be38f5ca3f0ca8632f9e036c839577b5d2d32cfa231a479728056edfafe7"
-        }
-      ],
-      "checks": [
-        "Production migrations add the JSONB column. Manual/automatic invoices persist input strings, line rounding steps and totals with the invoice transaction.",
-        "Replacement and adjustment writers also create calculation snapshots. Header/input validation rejects unsupported formats and unsafe quantities.",
-        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
-        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
-      ],
-      "limitations": [
-        "Existing invoices without a snapshot remain nullable; historical inputs were not invented or reconstructed."
-      ],
-      "merged_prs": [
-        232,
-        231
-      ],
-      "historically_skipped": false
-    },
-    {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.09",
-      "status": "acceptance_verified",
-      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
-      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
-      "requirement_line": 122,
-      "requirement": "| T-04.1.02.09 | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals | M |",
-      "requirement_sha256": "cf573088462298c5554560d1043fd66523e5183ebac42e39aa92ac9984b609cd",
-      "source_evidence": [
-        {
-          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
-          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
-        },
-        {
-          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
-          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
-        },
-        {
-          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
-          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
-        },
-        {
-          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
-          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
-        },
-        {
-          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
-          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
-        }
-      ],
-      "checks": [
-        "Six real PostgreSQL replay scenarios cover manual/automatic invoices, mixed taxability, exact-half and canonical VAT, large int8 amounts, and gift discount before VAT.",
-        "Replay uses stored inputs rather than copying cached totals; unsupported versions/rules/scales and manual discounts reject.",
-        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
-        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
-      ],
-      "limitations": [
-        "This verifies the implemented invoice calculation paths, not future order/refund product flows."
-      ],
-      "merged_prs": [
-        233
-      ],
-      "historically_skipped": false
-    },
-    {
       "task_key": "01-platform-infrastructure.md#T-02.01.01",
       "status": "acceptance_verified",
       "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
@@ -9430,6 +9235,1555 @@
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
       ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 114,
+      "requirement": "| T-04.1.02.01 | Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints | M |",
+      "requirement_sha256": "745461344c15dcbb0ac5447c1d89a05c92d4e3d4fec5095ab3c2f9254bebdc93",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        223
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this specific schema/calculation requirement. Automatic submission, contract/consultation prerequisites and later invoice workflows are separate."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 115,
+      "requirement": "| T-04.1.02.02 | Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice | L |",
+      "requirement_sha256": "c14d0e1b7247a16c5337dfe3a9f07fe3cc02f2465d2d1fabab170678b961a093",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        224
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Manual staff creation requires a selected active profile as the explicit task states. The service/API retains optional contractId; validated contract selection awaits the missing contract table and origin-link task. Safe browser retries preserve one request key while this page remains open; no cross-reload recovery is claimed."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
+      "status": "partial",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 116,
+      "requirement": "| T-04.1.02.03 | Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms | M |",
+      "requirement_sha256": "026c91c55137d575ee1b6e3bd2a3545b9cfee0616400121069963e1d5db6d559",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        225
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "AutoInvoiceService supports a caller-owned transaction and freezes price/VAT/terms/gift inputs, but has no production submission caller. Current OrdersService saves DRAFTs; charging drafts would violate the story. Concrete electricity simple/advanced, savings, consultation and contract submission workflows remain required future prerequisites in V01/B01. No automatic submission acceptance is claimed."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 117,
+      "requirement": "| T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |",
+      "requirement_sha256": "6ec92b767cb174cd0735f2239a23ff949e8cac3ff2296f687c50e5dafd5c08c2",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        226
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this specific schema/calculation requirement. Automatic submission, contract/consultation prerequisites and later invoice workflows are separate."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "status": "partial",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 118,
+      "requirement": "| T-04.1.02.05 | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys | S |",
+      "requirement_sha256": "d779356dc8e708e975e9aaf4a18a02951f6490b33de057e80c43e33fc9e7625b",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        227
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "orderId is a real nullable orders foreign key. contractId and consultationId remain nullable text references because target tables do not exist. Required foreign keys and validated consumer selection remain with the contract/consultation prerequisites in V01/B01."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.06",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 119,
+      "requirement": "| T-04.1.02.06 | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) | M |",
+      "requirement_sha256": "18b905c8294f30cf8d4d1a64541b0cd4f6b9c9aca48dcb967a11c4c17982e290",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        228
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this specific schema/calculation requirement. Automatic submission, contract/consultation prerequisites and later invoice workflows are separate."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 120,
+      "requirement": "| T-04.1.02.07 | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements | M |",
+      "requirement_sha256": "83c0a0012af20a1aa36257231b743c2604a891aa2a09e1605211a99206decf30",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        229
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this specific schema/calculation requirement. Automatic submission, contract/consultation prerequisites and later invoice workflows are separate."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 121,
+      "requirement": "| T-04.1.02.08 | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility | S |",
+      "requirement_sha256": "2acd410ffd73eabb4adfc4611d0795b00c3f744c80dd43f56dcbca65bab5f7de",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        232,
+        231
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Legacy NULL snapshots and metadata.calculation are retained for issued history. New manual/automatic service invoices write the dedicated versioned JSONB snapshot. Missing submission consumers remain under T-04.1.02.03."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.09",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 122,
+      "requirement": "| T-04.1.02.09 | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals | M |\n\n---",
+      "requirement_sha256": "34f20b61b40f652e023ef1c379d97f62c411bfacd3f4780e5da0312fad57e616",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "checks": [
+        "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        233
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Replay verifies manual and current single-product automatic invoices from saved inputs, including gifts and int8 precision. Future composition/submission workflows remain under T-04.1.02.03; they are not claimed built."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -9594,11 +10948,6 @@
     "02-auth-users-admin.md#T-09.12.04",
     "02-auth-users-admin.md#T-09.12.06",
     "02-auth-users-admin.md#T-10.01.02",
-    "04-invoices-wallet-contracts.md#T-04.1.02.01",
-    "04-invoices-wallet-contracts.md#T-04.1.02.02",
-    "04-invoices-wallet-contracts.md#T-04.1.02.03",
-    "04-invoices-wallet-contracts.md#T-04.1.02.05",
-    "04-invoices-wallet-contracts.md#T-04.1.02.06",
     "04-invoices-wallet-contracts.md#T-04.1.03.01",
     "04-invoices-wallet-contracts.md#T-04.1.03.02",
     "04-invoices-wallet-contracts.md#T-04.1.03.03",
@@ -12053,6 +13402,201 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 117,
+      "requirement": "| T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |",
+      "requirement_sha256": "6ec92b767cb174cd0735f2239a23ff949e8cac3ff2296f687c50e5dafd5c08c2",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "5827b960e7408cc2df27cff3bb1843b21061500a943b94bdc18ea57c4110abf8"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.service.ts",
+          "sha256": "71bc80ab74c5bfdadc8ae728795c8a001d95fac0e8ee8ad527f8e0194811de58"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "981545cadb8645fb4e55bfaa0124d4b65c40968e0cdaa6a6952aa52ecdbb1adc"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "592c8b2ed1d6bb06516a7a639179d5d5e7c0470c387c984849fc9f8638f0b290"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice.module.ts",
+          "sha256": "bc791df8597276ba7bc5ac6b42b8c1166437278a60ebca2253ee213cb837291a"
+        },
+        {
+          "path": "packages/shared/src/finance/vat-config.ts",
+          "sha256": "d587c5317ca4de0db5bfc9b6f9b8a2b84b48a95a69e6758533d31749ddc67f8f"
+        }
+      ],
+      "checks": [
+        "Real PostgreSQL precedence: active product override, category default and zero fallback; exclusive interval endpoint and caller-owned transaction executor.",
+        "Taxable net-base VAT uses integer half-up rounding; non-taxable lines carry zero.",
+        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
+        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
+      ],
+      "limitations": [
+        "Future commercial order/contract integrations are separate tasks."
+      ],
+      "merged_prs": [
+        226
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 120,
+      "requirement": "| T-04.1.02.07 | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements | M |",
+      "requirement_sha256": "83c0a0012af20a1aa36257231b743c2604a891aa2a09e1605211a99206decf30",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice.module.ts",
+          "sha256": "bc791df8597276ba7bc5ac6b42b8c1166437278a60ebca2253ee213cb837291a"
+        }
+      ],
+      "checks": [
+        "Table-driven scaled-integer examples include exact half ties, precision bounds, large BigInt values and canonical 55,055 IRR at 10% = 5,506 IRR VAT.",
+        "RoundingService is registered and exported from InvoiceModule; its sole division primitive uses integer arithmetic.",
+        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
+        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        229
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 121,
+      "requirement": "| T-04.1.02.08 | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility | S |",
+      "requirement_sha256": "2acd410ffd73eabb4adfc4611d0795b00c3f744c80dd43f56dcbca65bab5f7de",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "135e37e673450ea7a3d4a6f37024b0bc9feeb11ce00ac1b611872cc7ca36bb2b"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "592c8b2ed1d6bb06516a7a639179d5d5e7c0470c387c984849fc9f8638f0b290"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "849c90d23b18a2d09e9fef16c9c25d2aadf977286122904276bbae1302b072ed"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "f9deb1032c938d059b86b9d1df96f4d453163dbddea0de1bb8ee7f6b4b719f46"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql",
+          "sha256": "49b1be38f5ca3f0ca8632f9e036c839577b5d2d32cfa231a479728056edfafe7"
+        }
+      ],
+      "checks": [
+        "Production migrations add the JSONB column. Manual/automatic invoices persist input strings, line rounding steps and totals with the invoice transaction.",
+        "Replacement and adjustment writers also create calculation snapshots. Header/input validation rejects unsupported formats and unsafe quantities.",
+        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
+        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
+      ],
+      "limitations": [
+        "Existing invoices without a snapshot remain nullable; historical inputs were not invented or reconstructed."
+      ],
+      "merged_prs": [
+        232,
+        231
+      ],
+      "historically_skipped": false
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.09",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f42235b8017ca270544f5e6000bdb6df733c1a1a",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 122,
+      "requirement": "| T-04.1.02.09 | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals | M |",
+      "requirement_sha256": "cf573088462298c5554560d1043fd66523e5183ebac42e39aa92ac9984b609cd",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        }
+      ],
+      "checks": [
+        "Six real PostgreSQL replay scenarios cover manual/automatic invoices, mixed taxability, exact-half and canonical VAT, large int8 amounts, and gift discount before VAT.",
+        "Replay uses stored inputs rather than copying cached totals; unsupported versions/rules/scales and manual discounts reject.",
+        "pnpm --filter @barghsa/api exec vitest run src/invoice: 444 tests / 33 files passed.",
+        "After a fixture-only type correction: all 25 boundary tests, API typecheck and targeted lint passed. Product code matches the full invoice run."
+      ],
+      "limitations": [
+        "This verifies the implemented invoice calculation paths, not future order/refund product flows."
+      ],
+      "merged_prs": [
+        233
+      ],
+      "historically_skipped": false
     }
   ],
   "current_requirements_register": "audit/current-task-requirements.json"

@@ -504,7 +504,16 @@
     "historical_deferrals": [
       "- [ ] Full snapshot replay integration test — owned by T-04.1.02.09, not this task."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferral satisfied by current reviewed implementation.",
+    "reviewed_source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "PR233 and current six real PostgreSQL replay cases reconstruct manual/auto totals from JSONB inputs, including half-up, gift and above-MAX_SAFE_INTEGER amounts. audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+      }
+    ]
   },
   {
     "pr": 227,
@@ -517,7 +526,26 @@
       "- `consultationId` — **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
       "- [x] `contractId` / `consultationId` are deferred nullable refs (target tables TBD, per established pattern)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Required future submission/schema prerequisites remain open.",
+    "reviewed_source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "Contract and consultation target tables/FKs are still missing; nullable references do not satisfy those foreign-key requirements. Retain target schemas and validated consumers in V01/B01. audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "separate_future_dependency",
+        "evidence": "Contract and consultation target tables/FKs are still missing; nullable references do not satisfy those foreign-key requirements. Retain target schemas and validated consumers in V01/B01. audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "separate_future_dependency",
+        "evidence": "Contract and consultation target tables/FKs are still missing; nullable references do not satisfy those foreign-key requirements. Retain target schemas and validated consumers in V01/B01. audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+      }
+    ]
   },
   {
     "pr": 225,
@@ -529,7 +557,21 @@
       "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) — those XL tasks land later in E-03; the service is the seam they will call",
       "- [ ] HTTP controller — pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Required future submission/schema prerequisites remain open.",
+    "reviewed_source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "The automatic service is implemented and locally tested, but concrete submission HTTP workflows are absent. Draft order creation must not issue a bill. Retain all required callers in V01/B01. audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "separate_future_dependency",
+        "evidence": "The automatic service is implemented and locally tested, but concrete submission HTTP workflows are absent. Draft order creation must not issue a bill. Retain all required callers in V01/B01. audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+      }
+    ]
   },
   {
     "pr": 224,
@@ -540,7 +582,16 @@
     "historical_deferrals": [
       "- [ ] No HTTP controller yet — staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferral satisfied by current reviewed implementation.",
+    "reviewed_source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Protected manual creation/profile-search API and reviewed staff UI now exist. Current Finance/session/CSRF/step-up checks and safe retries pass. audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+      }
+    ]
   },
   {
     "pr": 219,

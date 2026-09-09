@@ -10042,6 +10042,439 @@
         "/tmp/r01-invoice-state-stored-amount-lint.log",
         "/tmp/r01-invoice-state-stored-amount-types.log"
       ]
+    },
+    {
+      "id": "R01-invoice-creation-calculation",
+      "date": "2026-09-09",
+      "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+      "base_revision": "dbc3e45",
+      "product_commits": [
+        "f5b743b",
+        "1b1d7d1",
+        "7d4c577"
+      ],
+      "summary": "Seven task acceptances verified, including four preserved earlier acceptances, two partial; eight saved PR reviews closed and two open. VAT validity and unreachable manual creation repaired and reviewed.",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09"
+      ],
+      "review": [
+        "Exact nine task/story requirements and all ten full saved PR descriptions read. Production0080/0081 retain line/item FKs and checks, ordering/indexes/triggers, nullable origins, the initial invoice order/type uniqueness rule and dedicated JSONB snapshots. The36 DB cases separately verify historical expand/reapply behavior; API integration fixtures apply the production journal.",
+        "Manual creation locks the profile and current Finance authority, uses advisory idempotency locking plus payload fingerprint, writes lines/snapshot and issues/audits on one transaction. New browser endpoints recheck current session/step-up before writes and before both replay/new commits. Untrusted caller identity/totals are rejected; IRR stays decimal strings through HTTP and BigInt calculations.",
+        "AutoInvoiceService locks the order, rejects duplicate initial automatic invoices, supports caller rollback and snapshots effective price, product terms/title, VAT and gift discount. Existing OrdersService creates DRAFTs and has no auto-invoice caller. Missing production submissions are explicitly partial, not simulated by charging draft saves.",
+        "VAT applies product override before category default then0. Both assignment and linked rate validity windows now apply. Discounts precede VAT; non-taxable lines carry0. Half-up uses integer division with no floating point. Pure calculations, invalid inputs, int8 values, versioned steps and replay tests pass.",
+        "Snapshot replay uses saved inputs only, ignores stored totals, and reproduces invoice/line/VAT totals after JSONB round trips. PR232 replaces the earlier snapshot implementation; retain legacy metadata and issued rows. No duplicate feature or destructive cleanup is needed.",
+        "Staff browser UI reviewed for current profile selection, exact preview, keyboard labels/RTL/themes, password clearing, preventing concurrent requests, and preserving the same immutable request through step-up/unknown-result retries. Browser fixtures mock transport; real HTTP authorization, concurrency and transaction rollback are independently verified. No live delivery/deployment evidence claimed."
+      ],
+      "repairs": [
+        {
+          "revision": "f5b743b",
+          "summary": "Active product VAT override incorrectly applied future/ended linked rates. Repaired with linked-rate start/end predicates.",
+          "verification": "Two real-DB baseline failures;39 cases across VAT, auto invoice and snapshot replay suites pass. API types/lint/format/diff review pass."
+        },
+        {
+          "revision": "1b1d7d1",
+          "summary": "Manual invoice service was unreachable by staff. Added protected creation and active-profile search routes; current Finance/session/CSRF/step-up authority is checked in the transaction and before commit, with int8 totals and idempotent replies.",
+          "verification": "12 current real HTTP cases pass;29 unchanged manual service/replay cases from initial run reused. Initial failures were test metadata JSON cast, poll timeout and reuse of a deliberately expired session, then fixed. Strict types required explicit optional field mapping and response types; final API types/lint/format/build and OpenAPI contract pass. Only two API paths added; existing path contracts unchanged."
+        },
+        {
+          "revision": "7d4c577",
+          "summary": "Add localized staff manual-invoice form with profile search, exact IRR preview, step-up and a frozen retry request/key after uncertain results. Add reusable Field and NativeSelect primitives without overwriting existing components.",
+          "verification": "Four distinct production Chromium cases pass in FA/EN and light/dark, including accessibility/contrast, localized digits, invalid VAT, step-up and same-key retry after503 or malformed success. UI distribution5, i18n/web builds, web types, scoped lint/format and42 unchanged budgets pass. Early dropdown bundle attempts failed the250KB electricity gate; native selector resolves the introduced shared-chunk overhead. Failed logs retained."
+        }
+      ],
+      "verification": {
+        "api": "122 current pure/service cases across six calculation/rounding/snapshot/input suites. Reuse39 VAT/auto/replay cases from the VAT repair and12 current HTTP cases plus29 unchanged manual service/replay cases from the API repair; counts overlap and must not be added.",
+        "database": "36 cases across line/item constraints, origins, initial invoice uniqueness and snapshot expansion/reapplication.",
+        "browser": "4 distinct current production Chromium cases; earlier reruns overlap. FA/EN, light/dark, axe contrast, localized input, invalid VAT, step-up, uncertain response and same-key retry pass.",
+        "quality": "API types/lint/format/build/OpenAPI evidence remains valid. Latest web types/lint/format/build, UI distribution5, i18n build and all42 unchanged budgets pass. Electricity249.98KB/250KB; registration149.79KB/150KB; estimator837.80KB/900KB."
+      },
+      "historical_dispositions": [
+        {
+          "pr": 232,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/232",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.08"
+          ],
+          "historical_deferrals": [
+            "- [ ] Full snapshot replay integration test — owned by T-04.1.02.09, not this task."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 227,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/227",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.05"
+          ],
+          "historical_deferrals": [
+            "- `contractId` — existing nullable reference column (contracts table TBD); **FK deferred** until that table exists (documented existing pattern).",
+            "- `consultationId` — **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
+            "- [x] `contractId` / `consultationId` are deferred nullable refs (target tables TBD, per established pattern)"
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 225,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/225",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.03"
+          ],
+          "historical_deferrals": [
+            "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) — those XL tasks land later in E-03; the service is the seam they will call",
+            "- [ ] HTTP controller — pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 224,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/224",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.02"
+          ],
+          "historical_deferrals": [
+            "- [ ] No HTTP controller yet — staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        }
+      ],
+      "remaining": [
+        "AutoInvoiceService supports a caller-owned transaction and freezes price/VAT/terms/gift inputs, but has no production submission caller. Current OrdersService saves DRAFTs; charging drafts would violate the story. Concrete electricity simple/advanced, savings, consultation and contract submission workflows remain required future prerequisites in V01/B01. No automatic submission acceptance is claimed.",
+        "orderId is a real nullable orders foreign key. contractId and consultationId remain nullable text references because target tables do not exist. Required foreign keys and validated consumer selection remain with the contract/consultation prerequisites in V01/B01.",
+        "Deadlines/reminders, corrections and refunds remain separate workflow batches. R02 owns actual delivery acceptance."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 223,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.01"
+          ],
+          "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 224,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.02"
+          ],
+          "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 225,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.03"
+          ],
+          "reason": "Submission callers and their product prerequisites remain missing.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 226,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.04"
+          ],
+          "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 227,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.05"
+          ],
+          "reason": "Required contract/consultation foreign keys await missing target schemas.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 228,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.06"
+          ],
+          "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 229,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.07"
+          ],
+          "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 231,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.08"
+          ],
+          "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks. PR232 supplies the dedicated snapshot after PR231; retain legacy metadata and issued records, with no duplicate implementation deletion.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 232,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.08"
+          ],
+          "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks. PR232 supplies the dedicated snapshot after PR231; retain legacy metadata and issued records, with no duplicate implementation deletion.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        },
+        {
+          "pr": 233,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.02.09"
+          ],
+          "reason": "Mapped requirements and historical deferrals are verified locally; preserved future consumer limitations are assigned to their own tasks.",
+          "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+        }
+      ],
+      "pr_counts": {
+        "closed": 8,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoice-lines.ts",
+          "sha256": "19ef5e2bdb5a65ea83ed90071861e8870eb00fe0cdbc247e3e517e6db02f2206"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-items.ts",
+          "sha256": "1b78a22338005acf58fedaf1918b38361284606be61ce81fc2afd7acfe1da60e"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-lines-items.test.ts",
+          "sha256": "91f8cfe81c193fccb605c64a6ddce52ab0ada783f4687745f15a49c506e45a4c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-origin.test.ts",
+          "sha256": "08907c7719e9251c0714e3c7e71290a3f8f8d7e3ae2c306fe15daf933bda43b7"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-idempotency.test.ts",
+          "sha256": "60be7f0e5c95f247b00e883da0a8c85a0630320b53ba56cd497b27b3f6320cce"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-calculation-snapshot.test.ts",
+          "sha256": "37b9816683fd27b10431bf69d46849d9fdd6f1a2e506ef5bae4e94ecfada88f9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "3736dcb959233191a378983f0410a44e06d889adae4c5b7434825518751db18a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "e79a401971bf11eceecf558db3aa1ca0ba39a97dbd3e60efe3fc3bd393b4add9"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "126849b2d7f1d317bcb294f4a846b2c73a461a0061496baa91ac824d10f2d55a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "ef2ddd18bb28b48df22a09951bb66ea8cd968a970a899e93d1efde39f5fb4d1f"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.ts",
+          "sha256": "a10c10456d18509465bbfdd3da6b51fa70e3e3a0e7a226fb23ffdf65644ab9e4"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.calculation.test.ts",
+          "sha256": "a308b995608058aa36e9e570956e52d92f71100a2185bbba9be3f9621c41005a"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.test.ts",
+          "sha256": "ccf029215945cf69c5c81c6670b95e7b1a5f39f57636a20f922519cc7d13fd38"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "7e60154500c0ee7038ce454c31f736d2243047dfd36a7edbff26e6b56471cc87"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
+          "sha256": "89778f2ffe013dbc18c4702c0b9785529e9623f463bd197ce39e9340995206e7"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "b2a1c942d1a4fe8908bab2b4ae2827bf28a2da2f987a60f02482d3956a62c3ce"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "4adee88c5be86092ddc55f6a294cc4198ed645e0b7fb6985d3f3b4636b20bfa9"
+        },
+        {
+          "path": "packages/i18n/src/manual-invoice.ts",
+          "sha256": "89abd08aedb860d3d14a6c4ad361d37e00a36503163eb9670f80abe628e2e069"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-invoice-creation-calculation-checks.log",
+        "/tmp/r01-invoice-creation-manual-http-api.log",
+        "/tmp/r01-invoice-creation-manual-http-build.log",
+        "/tmp/r01-invoice-creation-manual-http-contract-check.log",
+        "/tmp/r01-invoice-creation-manual-http-fixed.log",
+        "/tmp/r01-invoice-creation-manual-http-fixture-format.log",
+        "/tmp/r01-invoice-creation-manual-http-format-check.log",
+        "/tmp/r01-invoice-creation-manual-http-format-final.log",
+        "/tmp/r01-invoice-creation-manual-http-format.log",
+        "/tmp/r01-invoice-creation-manual-http-lint-final.log",
+        "/tmp/r01-invoice-creation-manual-http-lint.log",
+        "/tmp/r01-invoice-creation-manual-http-openapi.log",
+        "/tmp/r01-invoice-creation-manual-http-profiles-format.log",
+        "/tmp/r01-invoice-creation-manual-http-profiles.log",
+        "/tmp/r01-invoice-creation-manual-http-race-format.log",
+        "/tmp/r01-invoice-creation-manual-http-session-fixed.log",
+        "/tmp/r01-invoice-creation-manual-http-test-format.log",
+        "/tmp/r01-invoice-creation-manual-http-types-final.log",
+        "/tmp/r01-invoice-creation-manual-http-types-fixed.log",
+        "/tmp/r01-invoice-creation-manual-http-types-format.log",
+        "/tmp/r01-invoice-creation-manual-http-types.log",
+        "/tmp/r01-invoice-creation-manual-ui-browser-format.log",
+        "/tmp/r01-invoice-creation-manual-ui-browser.log",
+        "/tmp/r01-invoice-creation-manual-ui-budgets.log",
+        "/tmp/r01-invoice-creation-manual-ui-field-pure-build.log",
+        "/tmp/r01-invoice-creation-manual-ui-field-pure-format.log",
+        "/tmp/r01-invoice-creation-manual-ui-field-pure-web-build.log",
+        "/tmp/r01-invoice-creation-manual-ui-final-format.log",
+        "/tmp/r01-invoice-creation-manual-ui-final-lint.log",
+        "/tmp/r01-invoice-creation-manual-ui-final-types.log",
+        "/tmp/r01-invoice-creation-manual-ui-format.log",
+        "/tmp/r01-invoice-creation-manual-ui-i18n-build.log",
+        "/tmp/r01-invoice-creation-manual-ui-lint.log",
+        "/tmp/r01-invoice-creation-manual-ui-native-browser.log",
+        "/tmp/r01-invoice-creation-manual-ui-native-budgets.log",
+        "/tmp/r01-invoice-creation-manual-ui-native-format.log",
+        "/tmp/r01-invoice-creation-manual-ui-native-lint.log",
+        "/tmp/r01-invoice-creation-manual-ui-native-package-build.log",
+        "/tmp/r01-invoice-creation-manual-ui-native-types.log",
+        "/tmp/r01-invoice-creation-manual-ui-native-web-build.log",
+        "/tmp/r01-invoice-creation-manual-ui-package-build.log",
+        "/tmp/r01-invoice-creation-manual-ui-pure-budgets.log",
+        "/tmp/r01-invoice-creation-manual-ui-split-browser.log",
+        "/tmp/r01-invoice-creation-manual-ui-split-budgets.log",
+        "/tmp/r01-invoice-creation-manual-ui-split-format.log",
+        "/tmp/r01-invoice-creation-manual-ui-split-i18n-build.log",
+        "/tmp/r01-invoice-creation-manual-ui-split-web-build.log",
+        "/tmp/r01-invoice-creation-manual-ui-types.log",
+        "/tmp/r01-invoice-creation-manual-ui-web-build.log",
+        "/tmp/r01-invoice-creation-origin-idempotency-checks.log",
+        "/tmp/r01-invoice-creation-requirements-history.log",
+        "/tmp/r01-invoice-creation-schema-checks.log",
+        "/tmp/r01-invoice-creation-ui-budget-baseline-build.log",
+        "/tmp/r01-invoice-creation-ui-component-docs.log",
+        "/tmp/r01-invoice-creation-ui-field-preview.log",
+        "/tmp/r01-invoice-creation-ui-field-source.json",
+        "/tmp/r01-invoice-creation-ui-native-select-source.json",
+        "/tmp/r01-invoice-creation-ui-native-select-source.log",
+        "/tmp/r01-invoice-creation-ui-select-docs.log",
+        "/tmp/r01-invoice-creation-vat-window-api.log",
+        "/tmp/r01-invoice-creation-vat-window-baseline.log",
+        "/tmp/r01-invoice-creation-vat-window-format-check.log",
+        "/tmp/r01-invoice-creation-vat-window-format.log",
+        "/tmp/r01-invoice-creation-vat-window-lint.log",
+        "/tmp/r01-invoice-creation-vat-window-types.log"
+      ]
     }
   ]
 }

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "1b1d7d10f4f69980be6153c75dbacf67e2f3ae05",
+  "source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
   "active_step": "R01",
-  "next_action": "Build the staff manual-invoice form using current endpoints; verify locale/RTL, validation, step-up, duplicate-retry and success behavior. Finish remaining creation/calculation review before consolidating this batch.",
+  "next_action": "Review the current invoice deadlines/reminders workflow and ten saved PR descriptions; reuse state/overdue and creation checks. Repair confirmed gaps, then consolidate task/PR dispositions. Actual notification delivery stays linked to R02.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -603,6 +603,10 @@
     {
       "id": "R01-invoice-state-transitions",
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+    },
+    {
+      "id": "R01-invoice-creation-calculation",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
     }
   ],
   "deferred_improvements": [
@@ -621,9 +625,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 107,
-    "partial": 23,
-    "pending": 192,
+    "acceptance_verified": 110,
+    "partial": 25,
+    "pending": 187,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -697,16 +701,8 @@
       ]
     },
     {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
-      "changed_paths": [
-        "apps/api/src/invoice/auto-invoice.service.ts"
-      ]
-    },
-    {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
       "changed_paths": [
-        "apps/api/src/invoice/manual-invoice.service.ts",
-        "apps/api/src/invoice/auto-invoice.service.ts",
         "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
         "apps/api/src/invoice/create-adjustment-invoice.service.ts"
       ]
@@ -744,140 +740,97 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-invoice-creation-calculation",
-    "name": "Invoice creation, origins, VAT, rounding and reproducible snapshots",
+    "id": "R01-invoice-deadlines-reminders",
+    "name": "Invoice due periods, staff overrides and payment reminder scheduling",
     "status": "in_progress",
     "prs": [
-      223,
-      224,
-      225,
-      226,
-      227,
-      228,
-      229,
-      231,
-      232,
-      233
+      236,
+      237,
+      238,
+      239,
+      240,
+      241,
+      243,
+      244,
+      245,
+      246
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.1.02.01",
-      "04-invoices-wallet-contracts.md#T-04.1.02.02",
-      "04-invoices-wallet-contracts.md#T-04.1.02.03",
-      "04-invoices-wallet-contracts.md#T-04.1.02.04",
-      "04-invoices-wallet-contracts.md#T-04.1.02.05",
-      "04-invoices-wallet-contracts.md#T-04.1.02.06",
-      "04-invoices-wallet-contracts.md#T-04.1.02.07",
-      "04-invoices-wallet-contracts.md#T-04.1.02.08",
-      "04-invoices-wallet-contracts.md#T-04.1.02.09"
+      "04-invoices-wallet-contracts.md#T-04.1.03.01",
+      "04-invoices-wallet-contracts.md#T-04.1.03.02",
+      "04-invoices-wallet-contracts.md#T-04.1.03.03",
+      "04-invoices-wallet-contracts.md#T-04.1.03.04",
+      "04-invoices-wallet-contracts.md#T-04.1.04.01",
+      "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "04-invoices-wallet-contracts.md#T-04.1.04.03",
+      "04-invoices-wallet-contracts.md#T-04.1.04.04",
+      "04-invoices-wallet-contracts.md#T-04.1.04.05",
+      "04-invoices-wallet-contracts.md#T-04.1.04.06"
     ],
     "remaining_checklist": [
-      "Exact story/task requirements and all10 saved PR descriptions read. Continue focused implementation review.",
-      "Review line/item constraints, manual/automatic caller authority and transactions, VAT/rounding, origin links/idempotency and snapshot replay.",
-      "Reuse completed state/receipt/wallet evidence. Keep due-date/reminder and correction workflows separate."
+      "Review exact due-date and reminder requirements, consumer permissions and transaction boundaries.",
+      "Review defaults/override visibility, issue scheduling, offsets/timezones/preferences, outbox dispatch, idempotency and terminal-state cancellation.",
+      "Reuse21 overdue worker cases and state/creation/receipt evidence; no repeat full finance suite. Actual delivery remains R02."
     ],
     "historical_deferrals": [
       {
-        "pr": 232,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/232",
+        "pr": 241,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/241",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.02.08"
+          "04-invoices-wallet-contracts.md#T-04.1.04.02"
         ],
         "historical_deferrals": [
-          "- [ ] Full snapshot replay integration test — owned by T-04.1.02.09, not this task."
+          "- [ ] Unique index on `(invoiceId, offset, channel)` — out of scope (T-04.1.04.04).",
+          "- [ ] Admin per-offset toggle per service type — out of scope (T-04.1.04.05).",
+          "- [ ] ReminderSender dispatch via outbox — out of scope (T-04.1.04.03).",
+          "- [ ] Cancel future rows on Paid/Cancelled/Refunded — out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       },
       {
-        "pr": 227,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/227",
+        "pr": 240,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/240",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.02.05"
+          "04-invoices-wallet-contracts.md#T-04.1.04.01"
         ],
         "historical_deferrals": [
-          "- `contractId` — existing nullable reference column (contracts table TBD); **FK deferred** until that table exists (documented existing pattern).",
-          "- `consultationId` — **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
-          "- [x] `contractId` / `consultationId` are deferred nullable refs (target tables TBD, per established pattern)"
+          "- Enforces `sent_at` is set exactly when `status = 'sent'`, plus lookup indexes for cancel-by-invoice and due pickup. The `(invoiceId, offset, channel)` unique index is deferred to T-04.1.04.04."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       },
       {
-        "pr": 225,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/225",
+        "pr": 237,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/237",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.02.03"
+          "04-invoices-wallet-contracts.md#T-04.1.03.02"
         ],
         "historical_deferrals": [
-          "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) — those XL tasks land later in E-03; the service is the seam they will call",
-          "- [ ] HTTP controller — pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
+          "- [ ] Staff override permission + customer-visible reason in audit/metadata — deferred to T-04.1.03.03."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       },
       {
-        "pr": 224,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/224",
+        "pr": 236,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/236",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.02.02"
+          "04-invoices-wallet-contracts.md#T-04.1.03.01"
         ],
         "historical_deferrals": [
-          "- [ ] No HTTP controller yet — staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
+          "- [ ] `dueAt` calculation (`issuedAt + config_days`) — out of scope; owned by T-04.1.03.02.",
+          "- [ ] Staff override UI/API — out of scope; owned by T-04.1.03.03.",
+          "- [ ] Overdue cron — out of scope; owned by T-04.1.03.04."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
-      "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-      "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+      "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
     ],
-    "confirmed_defects": [
-      {
-        "revision": "f5b743b",
-        "summary": "Active product VAT override incorrectly applied future/ended linked rates. Repaired with linked-rate start/end predicates.",
-        "verification": "Two real-DB baseline failures;39 cases across VAT, auto invoice and snapshot replay suites pass. API types/lint/format/diff review pass."
-      },
-      {
-        "revision": "1b1d7d1",
-        "summary": "Manual invoice service was unreachable by staff. Added protected creation and active-profile search routes; current Finance/session/CSRF/step-up authority is checked in the transaction and before commit, with int8 totals and idempotent replies.",
-        "verification": "12 current real HTTP cases pass;29 unchanged manual service/replay cases from initial run reused. Initial failures were test metadata JSON cast, poll timeout and reuse of a deliberately expired session, then fixed. Strict types required explicit optional field mapping and response types; final API types/lint/format/build and OpenAPI contract pass. Only two API paths added; existing path contracts unchanged.",
-        "remaining": "Staff browser form and end-to-end workflow acceptance still required."
-      }
-    ],
+    "confirmed_defects": [],
     "pr_dispositions": [],
-    "next_action": "Build the staff manual-invoice form using current endpoints; verify locale/RTL, validation, step-up, duplicate-retry and success behavior. Finish remaining creation/calculation review before consolidating this batch.",
-    "integration_findings": [
-      "ManualInvoiceService now has protected staff creation and profile-search HTTP routes at1b1d7d1. Staff form/browser acceptance still required; PR224 remains open until batch consolidation.",
-      "AutoInvoiceService has no production caller. Existing OrdersService creates DRAFT orders; do not charge draft creation. Concrete submission workflows and contract/saving/consultation prerequisites need explicit disposition.",
-      "Contract and consultation origin columns are still text references without target tables/FKs; T-04.1.02.05 remains unmet for these links."
-    ],
-    "new_evidence": [
-      "/tmp/r01-invoice-creation-manual-http-api.log",
-      "/tmp/r01-invoice-creation-manual-http-build.log",
-      "/tmp/r01-invoice-creation-manual-http-contract-check.log",
-      "/tmp/r01-invoice-creation-manual-http-fixed.log",
-      "/tmp/r01-invoice-creation-manual-http-fixture-format.log",
-      "/tmp/r01-invoice-creation-manual-http-format-check.log",
-      "/tmp/r01-invoice-creation-manual-http-format-final.log",
-      "/tmp/r01-invoice-creation-manual-http-format.log",
-      "/tmp/r01-invoice-creation-manual-http-lint-final.log",
-      "/tmp/r01-invoice-creation-manual-http-lint.log",
-      "/tmp/r01-invoice-creation-manual-http-openapi.log",
-      "/tmp/r01-invoice-creation-manual-http-profiles-format.log",
-      "/tmp/r01-invoice-creation-manual-http-profiles.log",
-      "/tmp/r01-invoice-creation-manual-http-race-format.log",
-      "/tmp/r01-invoice-creation-manual-http-session-fixed.log",
-      "/tmp/r01-invoice-creation-manual-http-test-format.log",
-      "/tmp/r01-invoice-creation-manual-http-types-final.log",
-      "/tmp/r01-invoice-creation-manual-http-types-fixed.log",
-      "/tmp/r01-invoice-creation-manual-http-types-format.log",
-      "/tmp/r01-invoice-creation-manual-http-types.log",
-      "/tmp/r01-invoice-creation-requirements-history.log",
-      "/tmp/r01-invoice-creation-vat-window-api.log",
-      "/tmp/r01-invoice-creation-vat-window-baseline.log",
-      "/tmp/r01-invoice-creation-vat-window-format-check.log",
-      "/tmp/r01-invoice-creation-vat-window-format.log",
-      "/tmp/r01-invoice-creation-vat-window-lint.log",
-      "/tmp/r01-invoice-creation-vat-window-types.log"
-    ]
+    "next_action": "Review the current invoice deadlines/reminders workflow and ten saved PR descriptions; reuse state/overdue and creation checks. Repair confirmed gaps, then consolidate task/PR dispositions. Actual notification delivery stays linked to R02."
   },
   "open_domain_reviews": [
     {
@@ -987,6 +940,24 @@
       "remaining": "Actual payment.wallet_topup_failed notification on TTL expiry; scanner/state/audit/reconciliation verified.",
       "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
     },
-    "R02: seed registry check12 pass/1 fail atab17007; auth.refresh_token_reused has no seeded template before or after the chargeback repair. Add/review its intended delivery template in the notification batch; existing/new chargeback templates are valid."
+    "R02: seed registry check12 pass/1 fail atab17007; auth.refresh_token_reused has no seeded template before or after the chargeback repair. Add/review its intended delivery template in the notification batch; existing/new chargeback templates are valid.",
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
+      "prs": [
+        225
+      ],
+      "owning_batch": "V01/B01 product prerequisites",
+      "remaining": "AutoInvoiceService supports a caller-owned transaction and freezes price/VAT/terms/gift inputs, but has no production submission caller. Current OrdersService saves DRAFTs; charging drafts would violate the story. Concrete electricity simple/advanced, savings, consultation and contract submission workflows remain required future prerequisites in V01/B01. No automatic submission acceptance is claimed.",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "prs": [
+        227
+      ],
+      "owning_batch": "V01/B01 product prerequisites",
+      "remaining": "orderId is a real nullable orders foreign key. contractId and consultationId remain nullable text references because target tables do not exist. Required foreign keys and validated consumer selection remain with the contract/consultation prerequisites in V01/B01.",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+    }
   ]
 }
