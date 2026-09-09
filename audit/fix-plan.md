@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `d0d72ec9`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `b27f4258`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,7 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Current batch checkpoint atd0d72ec9 repairs triage session authority, atomic inbox delivery/attempt counting and staff response validation.70 API,8 chargeback,81 worker and10 browser cases pass;42 budgets unchanged. Counts remain unchanged. Next confirmed repairs are per-attempt staff history and accumulation alert rules; then finish the nine-task batch review. Detailed evidence lives in `evidence/step-reviews.json#R02-outbox-delivery-checkpoint`.
+Current batch checkpoint atb27f4258 adds scoped staff delivery history, tested accumulation alerts and accepted-receipt preservation after transient recording failure.56 API,80 worker,12 browser,50 i18n cases and42 unchanged budgets pass;2 rules/15 assertions pass. Counts remain unchanged. Next: durable uncertain-delivery/crash recovery, general admin log lookup, notification-specific shutdown/claim evidence and individual nine-task batch dispositions. SMS request deduplication is not established; do not confuse stable payloads with provider idempotency. See `evidence/step-reviews.json#R02-outbox-delivery-checkpoint`.
 
 Active R02 batch: **notification outbox/delivery and dead-letter triage**, saved PR163–170 and203. All nine exact requirements, saved bodies and deferrals are read. Review transaction/lease/retry/idempotency paths, same-transaction in-app writes, per-attempt safe logs, staff triage authority/UI, metrics and accumulation alerts. The historical PR170 reinterpretation of “same transaction” remains unverified. Keep remaining inbox/classification and event-specific reminder work in subsequent R02 batches. Exact membership and checkpoints are in progress.json.
 

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "d0d72ec94bb02510616001baf310e7707f88deae",
+  "source_revision": "b27f425852a876c736139845201c5206344cbe8a",
   "active_step": "R02",
-  "next_action": "Add and verify per-channel delivery history in the staff dead-letter panel, then accumulation alert rules. Finish the remaining nine-task batch review before assigning PR/task closure. Preserve the verified session, inbox-transaction, counter and UI acknowledgement repairs.",
+  "next_action": "Repair uncertain external-delivery/crash recovery before claiming at-most-once delivery; inspect provider-supported idempotency and add durable reconciliation where needed. SMS currently drops the snapshot key; SMTP Message-ID is not deduplication proof. Then add general admin delivery-log lookup, verify notification-specific shutdown/claim recovery, and finish individual dispositions for the nine-task batch.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -1029,7 +1029,8 @@
       "Review durable business enqueue, schema/interface, claim/renew/release and graceful shutdown, bounded retries/priority and per-channel idempotency.",
       "Verify same-transaction in-app delivery and safe per-attempt delivery/dead-letter history. Resolve PR163/164/170 historical transaction/loop deferrals with real database evidence.",
       "Review both staff dead-letter interfaces, current permissions/session/step-up and masked payloads, retry/resolve/dismiss, metrics and accumulation alerts.",
-      "Keep remaining inbox/notification classification and event-specific reminder acceptance in later R02 batches. Operational rollout/alerts require truthful evidence."
+      "Keep remaining inbox/notification classification and event-specific reminder acceptance in later R02 batches. Operational rollout/alerts require truthful evidence.",
+      "Current same-worker-transaction inbox delivery, triage session/acknowledgment, scoped history and local alert-rule repairs pass. Preserve them. Operational alert delivery remains external. Generic process drain tests do not by themselves prove notification-specific lease release."
     ],
     "confirmed_defects": [
       {
@@ -1054,10 +1055,32 @@
       },
       {
         "defect": "Staff dead-letter panel shows only attempt totals; the required per-attempt delivery history is not displayed.",
-        "status": "open"
+        "status": "fixed_verified",
+        "source_revision": "8349c0153c8596e0a671d7f622b8074f919c7268"
       },
       {
         "defect": "A Grafana count panel exists but no notification dead-letter accumulation alert rule is configured in the repository.",
+        "status": "fixed_verified_locally",
+        "source_revision": "e8e30195fa64c0aad236e09d0ad145843a96bc77",
+        "remaining": "Deployment owner must load rules and verify receiver delivery/resolution; no operational execution is claimed."
+      },
+      {
+        "defect": "After external acceptance, a transient outcome-persistence failure discarded the real receipt and caused an unnecessary resend.",
+        "status": "fixed_verified",
+        "source_revision": "b27f425852a876c736139845201c5206344cbe8a"
+      },
+      {
+        "defect": "SMS.ir delivery stores an idempotency key in its snapshot but never sends it to the provider. SMTP has only a stable Message-ID. Uncertain requests or a process crash after acceptance can be retried without proven provider deduplication.",
+        "status": "open",
+        "source_paths": [
+          "packages/shared/src/notification-delivery/sms.ts",
+          "packages/shared/src/auth-delivery/smsir-client.ts",
+          "packages/shared/src/notification-delivery/email.ts",
+          "apps/worker/src/notifications/outbox-runner.ts"
+        ]
+      },
+      {
+        "defect": "Admin delivery history is now available for dead-letter records, but general lookup for deliveries without a dead-letter entry is still absent under T-05.01.05.",
         "status": "open"
       }
     ],
@@ -1071,7 +1094,7 @@
       "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
     ],
     "pr_dispositions": [],
-    "next_action": "Add and verify per-channel delivery history in the staff dead-letter panel, then accumulation alert rules. Finish the remaining nine-task batch review before assigning PR/task closure. Preserve the verified session, inbox-transaction, counter and UI acknowledgement repairs."
+    "next_action": "Repair uncertain external-delivery/crash recovery before claiming at-most-once delivery; inspect provider-supported idempotency and add durable reconciliation where needed. SMS currently drops the snapshot key; SMTP Message-ID is not deduplication proof. Then add general admin delivery-log lookup, verify notification-specific shutdown/claim recovery, and finish individual dispositions for the nine-task batch."
   },
   "open_domain_reviews": [
     {
