@@ -13286,6 +13286,104 @@
         "/tmp/r02-provider-proof-worker-types.log",
         "/tmp/r02-provider-proof-worker.log"
       ]
+    },
+    {
+      "id": "R02-email-branding-delivery",
+      "date": "2026-09-09",
+      "source_revision": "31585375bb3d2dacf2d8ed136fcc900d65311e82",
+      "base_revision": "10eee5926daca50b51ce4456f7e150d555438e04",
+      "product_commits": [
+        "31585375bb3d2dacf2d8ed136fcc900d65311e82"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "02-auth-users-admin.md#T-09.04.01"
+      ],
+      "summary": "Active branding applied to notification and authentication email delivery; retry identity preserved. Template test-send and service-level saved preview share the renderer. Actual admin preview UI remains open.",
+      "review": [
+        "Confirmed queued email snapshots and template test sends used raw rendered bodies without brand config; auth mail used fixed names. Shared server loader reads only the published brand and normalizes malformed historical fields with defaults. Title/slogan/asset attributes are escaped, colors strictly constrained, controls removed from subject names and credential-bearing/non-HTTPS logos rejected. Owned assets resolve against APP_PUBLIC_URL; no host is invented.",
+        "Renderer applies title, slogan, logo, all three brand colors, FA/EN direction and active darkMode. Colors decorate borders; body/label foreground contrast stays explicit. Already-escaped template content is preserved. No new dependency or public API contract change.",
+        "Notification worker brands the body before persisting its existing delivery_payload. Controlled-provider failure/retry after brand/template/payload changes verifies the exact body and idempotency key remain unchanged and unpublished brands never leak.",
+        "Authentication worker freezes the selected brand inside the existing encrypted payload before first delivery, checks lease ownership/expiry when writing and erases that payload on completion as before. OTP and staff activation emails use the frozen brand and retain plain-text alternatives. Later new messages use the latest published brand. Already-attempted legacy jobs without a snapshot retain their original plain message under the existing idempotency key.",
+        "Template test-send and service.preview use the same branded rendering and recheck step-up after the brand lookup before dispatch. Two FA/EN service tests match preview and dispatched bodies. This does not certify the actual editor preview: the UI currently renders locally and previewFromBody lacks channel/locale context.",
+        "Shared test selection initially included leftover .build-cjs source copies. Retained that failed log, reran excluding **/.build-*/**, and counted only the two real source files. Lint caught the control-character regex; replaced it with the equivalent Unicode control category and added a subject-control regression. Final focused rerun and lint pass."
+      ],
+      "verification": {
+        "focused": "196 distinct checks:84 template API/service cases,41 auth/trusted-device HTTP cases,55 worker cases and16 shared renderer/sender cases.16 new cases:12 branding,2 service-preview/test-send and2 auth snapshot/legacy tests; existing queued delivery case strengthened. Earlier shared15 and the invalid build-copy run are not added.",
+        "quality": "Shared/API/worker typechecks, scoped ESLint and Prettier, diff checks pass. Integration builds cover shared/API/worker output. Final normalization change rechecked with16 shared cases and focused lint; unchanged consumer evidence reused.",
+        "scope": "Real PostgreSQL and controlled providers only. No production-send, browser/budget or whole-repository regression claim. No task or saved PR closed."
+      },
+      "remaining": [
+        "Finish actual AdminNotificationsPage and TemplatePreviewPanel branding/HTML previews. Current editor uses a pre element with rendered source; the API previewFromBody endpoint has no channel/locale context. Service.preview is not the public editor preview route. Use a browser-safe shared renderer and sandbox rendered content; retain allow-list and variable diagnostics.",
+        "Continue delivery preferences/daytime and remaining provider/template UI acceptance. R03 owns broader theme and localized diagnostics.",
+        "Rollout requires coordinated worker version replacement: an older auth worker does not understand the new encrypted branding snapshot. Legacy attempted jobs remain deliberately unbranded. Real delivery and supported email-client display still need operational evidence; owned logos require configured HTTPS APP_PUBLIC_URL."
+      ],
+      "evidence_reuse": [
+        "0 immediate-base acceptance bindings refreshed; prior provider activation/authority and older evidence boundaries retained."
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "d5e4600bd1dd9b04db4333226d84967994c90c1501994e83bf17d0f70599f2e3"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7b6dfc1dc86f2c81bca7a76fd379f71c1e2f958ebb0f3c8605c6074b1464815f"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/providers.ts",
+          "sha256": "fcf54229476f39e5049cee0015fa05baf55fec9ccef2cddb2df856a905f32f80"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "3dc8099be3bd20da94b13945f703cbe9e551a23af8b1351b630b542a5cf4b655"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.ts",
+          "sha256": "485fe6c21375296174544f0798ffd6f64f28294d9314ee3452a16836ada84da1"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+          "sha256": "83e3f65d527163352899c3e2080e29c7770d3f69396af04107245a24a7cd1ef3"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "21ed14b3a73c416d2a4c729b0390801e6639d46ee658b4193fbe1ba8c8002597"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.test.ts",
+          "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.ts",
+          "sha256": "6a7a176fd9de6128593f7486bb4a4093c205eb3c97ec9a46ebbf932156bb04c1"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/index.ts",
+          "sha256": "2c1d13fa2a635553be0a90d2f9df724e05d5bd5d9eed36c79733e9678a31c09a"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-email-brand-api-types.log",
+        "/tmp/r02-email-brand-api.log",
+        "/tmp/r02-email-brand-auth-api.log",
+        "/tmp/r02-email-brand-auth-format.log",
+        "/tmp/r02-email-brand-format-check.log",
+        "/tmp/r02-email-brand-format-control.log",
+        "/tmp/r02-email-brand-format.log",
+        "/tmp/r02-email-brand-lint-final.log",
+        "/tmp/r02-email-brand-lint.log",
+        "/tmp/r02-email-brand-shared-clean.log",
+        "/tmp/r02-email-brand-shared-final.log",
+        "/tmp/r02-email-brand-shared-types.log",
+        "/tmp/r02-email-brand-shared.log",
+        "/tmp/r02-email-brand-worker-types.log",
+        "/tmp/r02-email-brand-worker.log"
+      ]
     }
   ]
 }

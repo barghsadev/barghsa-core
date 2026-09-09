@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "83a27ac8bef59439e99b07b8cbc65395a7f9ca64",
+  "source_revision": "31585375bb3d2dacf2d8ed136fcc900d65311e82",
   "active_step": "R02",
-  "next_action": "Finish R02 active-branding consumption in email/template sends, then delivery preferences/daytime and remaining provider/template UI. Activation proof and all SMS mapping delivery are repaired at83a27ac8; preserve their tests and migration0126.",
+  "next_action": "Finish actual branded admin email previews in AdminNotificationsPage and TemplatePreviewPanel. Current live preview uses pre/rendered source; previewFromBody lacks channel/locale. Service.preview is not the editor route. Share a browser-safe renderer, sandbox HTML and preserve variable diagnostics. Then continue delivery preferences/daytime and remaining provider/template UI.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -662,6 +662,10 @@
     {
       "id": "R02-provider-activation-proof",
       "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
+    },
+    {
+      "id": "R02-email-branding-delivery",
+      "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
     }
   ],
   "deferred_improvements": [
@@ -1009,7 +1013,8 @@
       },
       {
         "defect": "Email worker/template test-send omit active branding.",
-        "status": "remaining"
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
       },
       {
         "defect": "SMTP provider test is handshake-only; required self-send remains.",
@@ -1030,6 +1035,15 @@
         "defect": "One tested SMS mapping can approve other untested mappings.",
         "status": "repaired",
         "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
+      },
+      {
+        "defect": "Authentication email uses hardcoded branding; retries need frozen branding.",
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
+      },
+      {
+        "defect": "Actual admin template preview shows unbranded body/source; service-level saved preview is not wired to that editor.",
+        "status": "remaining"
       }
     ],
     "reused_evidence": [
@@ -1041,10 +1055,11 @@
       "audit/evidence/step-reviews.json#R02-provider-session-authority",
       "audit/evidence/step-reviews.json#R02-template-session-authority",
       "audit/evidence/step-reviews.json#R02-provider-self-tests",
-      "audit/evidence/step-reviews.json#R02-provider-activation-proof"
+      "audit/evidence/step-reviews.json#R02-provider-activation-proof",
+      "audit/evidence/step-reviews.json#R02-email-branding-delivery"
     ],
     "pr_dispositions": [],
-    "next_action": "Finish R02 active-branding consumption in email/template sends, then delivery preferences/daytime and remaining provider/template UI. Activation proof and all SMS mapping delivery are repaired at83a27ac8; preserve their tests and migration0126."
+    "next_action": "Finish actual branded admin email previews in AdminNotificationsPage and TemplatePreviewPanel. Current live preview uses pre/rendered source; previewFromBody lacks channel/locale. Service.preview is not the editor route. Share a browser-safe renderer, sandbox HTML and preserve variable diagnostics. Then continue delivery preferences/daytime and remaining provider/template UI."
   },
   "open_domain_reviews": [
     {

@@ -15723,6 +15723,111 @@
       "sha256": "2fbcd6a28de44cbbee5e18170549310f194d67072aae5cc0eb36cb4499d5c2a7",
       "encoding": "gzip",
       "stored_sha256": "a3a9f17ec41569cb273ae3cd154d6bb878c0d14465cb23bf9adc725e0a674225"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-api-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-api.log",
+      "path": "audit/evidence/r02/r02-email-brand-api.log.gz",
+      "sha256": "038757d15d6aaaa29d48dcc6f5fb9c369963fe6b21a3802a15d13455b43d4d69",
+      "encoding": "gzip",
+      "stored_sha256": "229ac6f5e64b581e8a1e00af99deed2a8f5742364e08a672a0b44013be1783f3"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-auth-api.log",
+      "path": "audit/evidence/r02/r02-email-brand-auth-api.log.gz",
+      "sha256": "91b3b81c34df1aa6b9b64c36912e0062e8dc263d20f9e3522064168b682a5dee",
+      "encoding": "gzip",
+      "stored_sha256": "c312413e2de92e1bb92ab767a13971703fe40cdf9608bbe3cce08540777b0517"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-auth-format.log",
+      "path": "audit/evidence/r02/r02-email-brand-auth-format.log.gz",
+      "sha256": "82c7a7ab745e91782c4a3f4dbed6ca69ced4a6806f4328b708c71cb7285eab2b",
+      "encoding": "gzip",
+      "stored_sha256": "a248f04521b43e4f02023e5112c159ffc540627f6b31ed890379a55d6b180152"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-format-control.log",
+      "path": "audit/evidence/r02/r02-email-brand-format-control.log.gz",
+      "sha256": "a8f2200214f4970b02b115496e79053560816441f39048232e476f8f6b8fd80b",
+      "encoding": "gzip",
+      "stored_sha256": "d82a1e9b4ef00a3aa7f57779bae413cf73400c1df676d75b6f145620cadf377d"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-format.log",
+      "path": "audit/evidence/r02/r02-email-brand-format.log.gz",
+      "sha256": "b9e58ee9ba8f0691c8bb8f4c949228ca21795c2c85cc42e51ab8918b8538584e",
+      "encoding": "gzip",
+      "stored_sha256": "dbc8c42d6a3830b3c88d03674e17878227ddcf92e2179975a27e3ff8ffce6ad4"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-lint-final.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-lint.log",
+      "path": "audit/evidence/r02/r02-email-brand-lint.log.gz",
+      "sha256": "c1a160b3ed9c684da756d9fd4be44fecd9f5c8fc1788651a1928362d425c2c77",
+      "encoding": "gzip",
+      "stored_sha256": "21ee26db96a7c50fd9a42abac9217340eee9f7e4392fe41eec814741cf5ade4e"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-shared-clean.log",
+      "path": "audit/evidence/r02/r02-email-brand-shared-clean.log.gz",
+      "sha256": "d7df7becb65ac556194dfcc5759e82e917411b4651f205bdcda783d2b3fb3e90",
+      "encoding": "gzip",
+      "stored_sha256": "13118888979005588098ed56874a42e36d2c492d78d877cf13d8feedd6f7e906"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-shared-final.log",
+      "path": "audit/evidence/r02/r02-email-brand-shared-final.log.gz",
+      "sha256": "6dd804e322c665f9052b0f823da7a12d671ecbd7dea2e48a881c7fea125b23c7",
+      "encoding": "gzip",
+      "stored_sha256": "50d2774a6c0f3e79bdb3e56afe656e10fc74821a173850a695f53f83b3a36cb4"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-shared-types.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-shared-types.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-shared.log",
+      "path": "audit/evidence/r02/r02-email-brand-shared.log.gz",
+      "sha256": "56473d928962d105c357dc23f0290ec9e22af30bb1406528cb438e59100ce788",
+      "encoding": "gzip",
+      "stored_sha256": "5a10d69b3bc0d372a62b6d388d3153c7d2f91f607b9b91a875ae50709dda7556"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-worker-types.log",
+      "path": "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz",
+      "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
+      "encoding": "gzip",
+      "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r02-email-brand-worker.log",
+      "path": "audit/evidence/r02/r02-email-brand-worker.log.gz",
+      "sha256": "ac6920b938ce25e3fae30d2e345ed8b6ad448c5bda430c1a7f39f999d940f7b9",
+      "encoding": "gzip",
+      "stored_sha256": "5c52071f1b23c180c6598e75d83d65a350e0b71e1629fe9ad2777410c99e2a64"
     }
   ]
 }

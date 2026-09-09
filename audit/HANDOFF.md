@@ -4,17 +4,17 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Product/test HEAD **83a27ac8**. Active R02-notification-delivery-foundation, PR113/156/161/192/193/194. All six requirements, saved bodies and deferrals are read.
+Branch codex/audit-fixes. Product/test HEAD **31585375**. Active R02-notification-delivery-foundation, PR113/156/161/192/193/194. All six requirements, saved bodies and deferrals are read.
 
-Provider activation now requires proof bound to transport, saved configuration and exact database test time. Every SMS mapping must pass; rollback retests legacy settings before replacing the working provider. **330 distinct focused checks**, API/DB/worker types, lint/format, OpenAPI and database snapshot gates pass. [Activation review](evidence/step-reviews.json#R02-provider-activation-proof). Preserve self-tests01f4a856, provider authority2b669c93 and template authorityd1b156ac. Counts overlap; do not add earlier runs indiscriminately.
+Notification and auth emails now use active branding. Notification retries keep stored HTML; auth retries keep a brand snapshot inside encrypted delivery data. Template test-send and service-level saved preview share rendering. **196 distinct focused checks**, shared/API/worker types and lint/format pass. [Email branding review](evidence/step-reviews.json#R02-email-branding-delivery). Actual admin preview remains open. Preserve provider activation83a27ac8 and its330 checks; earlier runs overlap and must not be added indiscriminately.
 
-No task/PR closure is claimed for intermediate R02 repairs. Counts: **131 verified /32 partial /159 pending =322 claims**; **108 closed /23 open /170 unreviewed =301 saved PRs**;58 skips,3 verified/55 pending. Saved GitHub inventory ends September3. **2246 logs indexed.** 18 immediate-base bindings refreshed here;38 older evidence refresh records remain. Full regression/coverage is V02.
+No task/PR closure is claimed for intermediate R02 repairs. Counts: **131 verified /32 partial /159 pending =322 claims**; **108 closed /23 open /170 unreviewed =301 saved PRs**;58 skips,3 verified/55 pending. Saved GitHub inventory ends September3. **2261 logs indexed.** 0 immediate-base bindings refreshed here;38 older evidence refresh records remain. Full regression/coverage is V02.
 
 Completed R01 work and valid tests remain recorded in progress/step reviews. Do not rebuild or repeat those reviews. The earlier wallet-controller fixture failures are fixed; the interrupted broad run is still not regression evidence.
 
 ## Next action
 
-Finish R02 active-branding consumption in email/template sends, then delivery preferences/daytime and remaining provider/template UI. Activation proof and all SMS mapping delivery are repaired at83a27ac8; preserve their tests and migration0126. No blanket acceptance or production-delivery claim.
+Finish actual branded admin email previews in AdminNotificationsPage and TemplatePreviewPanel. Current live preview uses pre/rendered source; previewFromBody lacks channel/locale. Service.preview is not the editor route. Share a browser-safe renderer, sandbox HTML and preserve variable diagnostics. Then continue delivery preferences/daytime and remaining provider/template UI. Activation proof/migration0126 remain complete locally. Auth worker rollout must replace old workers coherently; they do not understand the new encrypted branding snapshot. Already-attempted legacy auth jobs retain their original plain content.
 
 Preserve all verification repairs. Manual notices now identify the profile and explain corrections/support review. The banner reads the latest unread, state-matching notice for the current owner and selected profile; reading it cannot revive an older notice. Actual email/SMS delivery per preferences remainsR02. No production identity adapter exists. Encrypted/redacted credentials, current authority, atomic provider configuration, async verification and staff retry remain explicit prerequisites before enabling API mode. Never simulate approval or ask again for a provider. The framework's formerly permanent OPEN circuit now admits bounded recovery probes.
 
