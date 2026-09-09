@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "e7e34a765f3b5097156cc2c7c04bf220f7335916",
-  "active_step": "R01",
-  "next_action": "Reconcile remaining agent-role and sensitive-action caller evidence once across completed domain batches; fix confirmed gaps in built callers and retain exact future/R02 prerequisites.",
+  "source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
+  "active_step": "R02",
+  "next_action": "Read the six saved PR bodies/deferrals and existing delivery evidence, then review the template/provider/preference/branding workflow once and repair confirmed gaps.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -23,12 +23,13 @@
     {
       "id": "R01",
       "title": "Critical acceptance and repairs",
-      "status": "in_progress"
+      "status": "partial",
+      "remaining": "R02 caller/delivery dependencies; unanswered lost-contact/signed-webhook policy; exact future/operational prerequisites. Confirmed wallet gap repaired and completed domain evidence linked."
     },
     {
       "id": "R02",
       "title": "Required administration consumers",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "R03",
@@ -94,7 +95,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Session creation/revocation locally verified at1695680. Public-auth pre-login CSRF and refresh binding are verified. Finish assigned callback/telemetry CSRF and sensitive-domain audit/UI dispositions; do not rebuild completed session work."
+        "Completed session/refresh/prelogin-CSRF and current sensitive domain evidence retained. R02 provider/storage/price callers, email webhook, R03 telemetry and pending signed-webhook policy remain."
       ]
     },
     {
@@ -104,7 +105,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "partial",
       "remaining": [
-        "Staff creation, role assignment and staff-list tasks are verified locally atab10771. Preserve current authority/race evidence; remaining domain permission reviews follow R01. Deployed administrator-grant inventory remains external."
+        "Staff tasks, role catalogue and audit timeline verified. Completed finance/profile authority linked; remaining administration consumers are R02. Deployed administrator inventory remains external."
       ]
     },
     {
@@ -114,7 +115,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Registration/OTP and forgot/reset locally verified. Finish remaining contact/profile acceptance and saved login/staff PR dispositions using retained evidence. Lost-contact owner policy, execution and complete case audit remain; live provider delivery remains external."
+        "Registration/OTP, forgot/reset and contact/settings repairs locally verified. Lost-contact owner policy, reviewed execution and case audit remain unanswered prerequisites; live provider delivery remains external."
       ]
     },
     {
@@ -124,8 +125,7 @@
       "implementation_status": "safe_unavailable_provider",
       "acceptance_status": "pending",
       "remaining": [
-        "Production has no registered provider and cannot write adapter configuration. Keep automatic verification unavailable; finish manual/disabled task acceptance. Real-provider setup must add its contract, current authorization/step-up, encrypted configuration, audit and atomic version persistence before enabling it.",
-        "Profile/onboarding batch closes7 tasks atab09a87. T-03.01.02 remains partial for actual commercial-order enforcement; no-provider and manual/support behavior are reviewed."
+        "DISABLED/MANUAL mode lifecycle and named manual in-app notices verified. API mode remains unavailable; real-provider prerequisites and R02 external notification delivery retain partial task acceptance."
       ]
     },
     {
@@ -135,8 +135,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "partial",
       "remaining": [
-        "Agent list, invitations, decisions and ownership local requirements are verified. T-05.04.04 remains partial for linked wallet/receipt/payment/refund, invoice, contract/document and order/address role evidence.",
-        "Remaining profile-selection/onboarding acceptance stays in R01."
+        "Membership/ownership and implemented wallet/receipt/payment/invoice/address/electricity role criteria linked. Wallet read/create authority repaired. Refund, contract signing/documents and future product consumers remain prerequisites."
       ]
     },
     {
@@ -206,7 +205,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "pending",
       "remaining": [
-        "Review all remaining finance task requirements with production-migrated tests; reuse 0fcf576 callback recovery. Reconcile PR298 incidental overpayment coverage."
+        "Implemented invoice/ledger/receipt/payment/reversal repairs retained, including reviewed overpayment credit. Remaining actual refund/contract/order integration, notification delivery and operational reconciliation keep group acceptance incomplete."
       ]
     },
     {
@@ -643,6 +642,10 @@
     {
       "id": "R01-staff-role-catalogue",
       "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
+    },
+    {
+      "id": "R01-cross-domain-authorization",
+      "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
     }
   ],
   "deferred_improvements": [
@@ -952,47 +955,55 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-cross-domain-authorization",
-    "name": "Remaining agent-role and sensitive-action caller evidence",
+    "id": "R02-notification-delivery-foundation",
+    "name": "Notification templates, transports, preferences and branding consumers",
     "status": "in_progress",
     "prs": [
-      92,
-      134
+      113,
+      156,
+      161,
+      192,
+      193,
+      194
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-02.02.04",
-      "02-auth-users-admin.md#T-05.04.04"
+      "02-auth-users-admin.md#T-03.03.05",
+      "02-auth-users-admin.md#T-09.01.02",
+      "02-auth-users-admin.md#T-09.04.01",
+      "02-auth-users-admin.md#T-09.06.01",
+      "02-auth-users-admin.md#T-09.06.02",
+      "02-auth-users-admin.md#T-09.06.03"
     ],
     "remaining_checklist": [
-      "Exact requirements, PR92/134 bodies and PR92 deferrals read at the preceding checkpoint. Both tasks already partial; preserve recorded completed domain evidence.",
-      "Link completed invoice/wallet/receipt/payment, staff, profile/ownership and address/order caller reviews to the required matrix. Check only remaining implemented gaps; use progress.open_domain_reviews and the existing route/session caller reviews.",
-      "Explicitly assign storage/provider/price consumers to their owning R02 batches if still unreviewed. Refund/contract cancellation and signing retain exact unbuilt prerequisites; never build those full product flows just to close a review.",
-      "Keep unresolved criteria partial/open with exact ownership. Lost-contact policy and signed-webhook owner questions remain pending; do not ask again."
+      "Exact six requirements read at selection. Read these saved PR bodies/deferrals and existing F09/F10/F11 source-bound evidence before editing. Theme task contributes only notification/email branding here; full UI theme acceptance stays R03.",
+      "Review current SMTP/Resend/SMS.ir configuration lifecycle, encrypted write-only secrets, current authority/step-up/audit, verified self-test destinations, activation/rollback and OTP recovery constraints.",
+      "Trace actual template render/send through preferences, current branding, user timezone/daytime window and immediate bypass. Fix confirmed missing consumers and preserve completed template/provider/retry work.",
+      "Keep notification-event-specific retries/inbox/reminder acceptance in subsequent R02 batches. Do not claim fixture sends prove production delivery."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-session-recovery",
-      "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-      "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
-      "audit/evidence/step-reviews.json#R01-profile-addresses"
+      "audit/evidence/step-reviews.json#R01-account-settings",
+      "audit/evidence/step-reviews.json#R01-verification-policy",
+      "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Reconcile remaining agent-role and sensitive-action caller evidence once across completed domain batches; fix confirmed gaps in built callers and retain exact future/R02 prerequisites."
+    "next_action": "Read the six saved PR bodies/deferrals and existing delivery evidence, then review the template/provider/preference/branding workflow once and repair confirmed gaps."
   },
   "open_domain_reviews": [
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "owner_batch": "wallet/ledger and receipts/approvals/payments",
       "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
-      "status": "Top-up/receipt Finance grants and owner-only wallet invoice settlement are verified through commit. Manager/Legal money denial retained. Refund-specific criteria remain with their workflow.",
-      "evidence": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+      "status": "Implemented customer wallet read/create/charge/receipt and owner settlement reviewed. Refund consumers remain future prerequisites.",
+      "evidence": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "owner_batch": "invoices",
       "criteria": "Finance invoice visibility and additive scope",
-      "status": "pending linked acceptance"
+      "status": "verified for implemented invoice reads; source-bound Finance/removed-member/concurrency evidence linked",
+      "evidence": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
@@ -1028,9 +1039,24 @@
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.04",
-      "owner_batch": "R01 finance and R02 provider/storage administration",
+      "owner_batch": "R02 administration plus V01/B01 future consumers",
       "criteria": "Required sensitive caller authorization through writes, verification audit and UI re-prompt; retain separate refund/contract/no-provider prerequisites",
-      "status": "pending linked acceptance"
+      "status": "Completed staff/profile/session/ownership/finance callers linked; remaining provider/storage/price consumers assigned to R02.",
+      "evidence": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
+      "prerequisite_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.04",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.01.01",
+        "04-invoices-wallet-contracts.md#T-04.5.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.01.03",
+        "04-invoices-wallet-contracts.md#T-04.5.01.05",
+        "04-invoices-wallet-contracts.md#T-04.5.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.04.01",
+        "04-invoices-wallet-contracts.md#T-04.5.04.02"
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-03.01.02",
@@ -1202,6 +1228,26 @@
       "prerequisite_task_keys": [
         "02-auth-users-admin.md#T-07.01.02"
       ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "V01/B01 future refund/contract/document consumers",
+      "remaining": "Integrate the recorded role matrix into actual refund, cancellation, signing and contract-document flows; do not treat shared permission labels as completed consumers.",
+      "prerequisite_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.04",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.01.01",
+        "04-invoices-wallet-contracts.md#T-04.5.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.01.03",
+        "04-invoices-wallet-contracts.md#T-04.5.01.05",
+        "04-invoices-wallet-contracts.md#T-04.5.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.04.01",
+        "04-invoices-wallet-contracts.md#T-04.5.04.02"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
     }
   ]
 }

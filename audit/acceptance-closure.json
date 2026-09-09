@@ -3291,7 +3291,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.02.04",
       "status": "partial",
-      "reviewed_sha": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+      "reviewed_sha": "d59499003a4accdf87b99288480f17437ed8bc50",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 149,
       "requirement": "**T-02.02.04 — Step-up authentication for sensitive actions**\n\n- Description: Sensitive actions require recent step-up authentication (re-enter password or OTP). Actions include: role changes, storage/payment credentials change, payment confirmation, refunds, contract cancellation, price changes, session revocation, profile deletion, ownership transfer.\n- Technical notes: Step-up requirement lasts for a short configured period (default 15 min) after verification. Audit flag: `stepUpVerified: true` with timestamp. If session idle exceeds the step-up window, re-prompt. API returns `requiresStepUp` flag; frontend shows step-up dialog.\n- UI/UX: Modal dialog asking for password or OTP before proceeding. Shows which action requires it.\n- Dependencies: T-02.02.01, T-02.01.02\n- Complexity: L",
@@ -3380,6 +3380,50 @@
         {
           "path": "apps/web/src/routes/_app/settings/security.tsx",
           "sha256": "b2127003434ef04f0f1161cf7211bdb2407c01cf515607494989ef58379a2a9a"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "3cbb0277d2c8a7f4f7f23786c399b248594e0754147083450754bfa8019e50a6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.test.ts",
+          "sha256": "a59c5d8f80f67f5c3f957be9a004bfb3db830b6908809a63cc1d32456b6295d2"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access.ts",
+          "sha256": "896b620ceed66ca78e32091287cd4ec8f4df38bcdce574d4c3628f4cd8ee4518"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access-http.integration.test.ts",
+          "sha256": "f55675524d447b76d6d94df3b567cad662d9cb6aad794694e8144655c6ab3b53"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "sha256": "0181469a609b2b51a141dbd3d4967ebea606ce7c40de9464e50370191e53d204"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "ca74bef2a3d492374e3f7841b2552bf65cb80871787fda00861c6ff4ef06bac5"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/index.ts",
+          "sha256": "4c01ab1707667933320a40788ed26e9487cbfa4f40a7f5e35f74b1c264d762c1"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "9d060d8d745c973f9f4610831a09f4b33bbf36432d998b5932b1b7eeb6907f7a"
         }
       ],
       "checks": [
@@ -3393,11 +3437,12 @@
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
         "At455ed61, reviewed guard validation/security logs and exact step-up error flag;83 API cases and final types/lint/format pass. Complete metadata inventory is in security-route-review.md. Other criteria and older source drift remain. See evidence/step-reviews.json#R01-guard-boundaries.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
-        "audit/evidence/step-reviews.json#R01-session-recovery: Shared step-up rotates session/CSRF, preserves absolute deadline, rejects invalid/future/expired verification and emits requiresStepUp only for the intended403. Current staff, role, ownership, session and trust callers check authority through writes and audit verified timestamp. Password modal/action wording, wrong-password retry and fresh-CSRF retry are already tested. Remaining storage/provider/finance/price/domain consumer criteria are assigned; refunds and contract cancellation remain separate future tasks."
+        "audit/evidence/step-reviews.json#R01-session-recovery: Shared step-up rotates session/CSRF, preserves absolute deadline, rejects invalid/future/expired verification and emits requiresStepUp only for the intended403. Current staff, role, ownership, session and trust callers check authority through writes and audit verified timestamp. Password modal/action wording, wrong-password retry and fresh-CSRF retry are already tested. Remaining storage/provider/finance/price/domain consumer criteria are assigned; refunds and contract cancellation remain separate future tasks.",
+        "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
       ],
       "limitations": [
-        "Remaining built storage/provider/payment/price and other required domain actions need linked authorization/audit/UI evidence from their owning batches.",
-        "Refund and contract-cancellation callers remain future dependencies. No identity adapter may be enabled without the recorded authorization/step-up/configuration/audit prerequisites."
+        "Remaining storage/email/SMS/AI-provider/catalogue-price/VAT caller transaction, audit and action-specific UI acceptance belongs to R02. Existing guard registration alone is not an acceptance pass.",
+        "Refund/contract-cancellation/signing/legal-document and future product consumers remain unbuilt prerequisites. No identity provider exists; retain all recorded prerequisites before enabling one."
       ],
       "merged_prs": [
         92
@@ -3418,7 +3463,7 @@
         "ledger_revision": "a4fe3b5",
         "note": "Original source bindings and assessment remain available in this committed ledger revision; older nested assessments are preserved."
       },
-      "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
+      "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
       "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
     },
     {
@@ -3745,7 +3790,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3900,7 +3945,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -4465,7 +4510,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4610,7 +4655,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -5057,7 +5102,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5589,7 +5634,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -5770,7 +5815,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "status": "partial",
-      "reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+      "reviewed_sha": "d59499003a4accdf87b99288480f17437ed8bc50",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 488,
       "requirement": "**T-05.04.04 — Agent role permissions enforcement**\n\n- Description: At every API call, enforce the agent's role-based permissions on the legal profile's data.\n- Technical notes: Permission matrix:\n  - Owner: full customer-side control, including agents, orders, contracts, invoices, wallet, addresses, cancellation requests. Ownership transfer requires step-up + acceptance.\n  - Manager: operational access (addresses, orders, consultation, documents, comments, inviting/removing non-owner agents). Cannot transfer ownership or change protected identity fields.\n  - Finance: view invoices, wallet, payments, receipts, refunds; charge wallet, submit bank receipts. Cannot accept/sign contracts.\n  - Legal: view, accept, sign, reject, request changes to contracts and legal documents. Cannot move wallet funds.\n  - Permissions additive when agent has multiple roles.\n  - Removing agent immediately revokes new access but preserves historical authorship.\n  - Last owner cannot remove themselves without completing ownership transfer.\n- UI/UX: N/A (backend enforcement + UI conditional rendering based on permissions)\n- Dependencies: T-05.04.02, authorization framework\n- Complexity: XL",
@@ -5811,6 +5856,50 @@
         {
           "path": "apps/api/src/session/session-step-up.ts",
           "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "3cbb0277d2c8a7f4f7f23786c399b248594e0754147083450754bfa8019e50a6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.test.ts",
+          "sha256": "a59c5d8f80f67f5c3f957be9a004bfb3db830b6908809a63cc1d32456b6295d2"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access.ts",
+          "sha256": "896b620ceed66ca78e32091287cd4ec8f4df38bcdce574d4c3628f4cd8ee4518"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access-http.integration.test.ts",
+          "sha256": "f55675524d447b76d6d94df3b567cad662d9cb6aad794694e8144655c6ab3b53"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "sha256": "0181469a609b2b51a141dbd3d4967ebea606ce7c40de9464e50370191e53d204"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "ca74bef2a3d492374e3f7841b2552bf65cb80871787fda00861c6ff4ef06bac5"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/index.ts",
+          "sha256": "4c01ab1707667933320a40788ed26e9487cbfa4f40a7f5e35f74b1c264d762c1"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "9d060d8d745c973f9f4610831a09f4b33bbf36432d998b5932b1b7eeb6907f7a"
         }
       ],
       "checks": [
@@ -5818,11 +5907,12 @@
         "Wallet/receipt/payment/refund, invoice, contract/document and order/address role criteria remain assigned to their owning feature batches. This task and PR134 remain open until linked domain evidence is complete.",
         "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
-        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets"
+        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets",
+        "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
       ],
       "limitations": [
-        "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
-        "Required cross-domain role matrix remains unresolved. See progress.json.open_domain_reviews; no future requirement is counted as passed."
+        "Implemented wallet/receipt/payment/invoice/address/order, membership and ownership role criteria are now linked. Wallet read/create authority and exact history amounts repaired atd594990.",
+        "Contract signing, legal documents, refunds and future operational consumers remain prerequisites; partial status is retained. Earlier stale source bindings are not certified by this reconciliation."
       ],
       "merged_prs": [
         134
@@ -5835,7 +5925,8 @@
           "packages/i18n/src/app.ts"
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-tickets"
-      }
+      },
+      "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.05",
@@ -7168,7 +7259,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7227,7 +7318,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7288,7 +7379,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7349,7 +7440,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7409,7 +7500,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7469,7 +7560,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7528,7 +7619,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7644,7 +7735,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -7917,7 +8008,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.controller.ts",
-          "sha256": "59baebb6e7f95a6dece273043728ffb10cce91c6aa4a10d3530c335381a3257a"
+          "sha256": "3cbb0277d2c8a7f4f7f23786c399b248594e0754147083450754bfa8019e50a6"
         },
         {
           "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -7941,7 +8032,7 @@
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
-          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
         }
       ],
       "checks": [
@@ -8014,7 +8105,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/web/e2e/receipt-emergency.spec.ts",
@@ -8108,7 +8199,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "packages/shared/src/finance/invoice-overpayment.ts",
@@ -8236,7 +8327,7 @@
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
-          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
         }
       ],
       "checks": [
@@ -8321,7 +8412,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
@@ -8532,11 +8623,11 @@
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
-          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
         },
         {
           "path": "apps/api/src/wallet/wallet.controller.ts",
-          "sha256": "59baebb6e7f95a6dece273043728ffb10cce91c6aa4a10d3530c335381a3257a"
+          "sha256": "3cbb0277d2c8a7f4f7f23786c399b248594e0754147083450754bfa8019e50a6"
         },
         {
           "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -8677,7 +8768,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/online-topup.service.ts",
@@ -11200,7 +11291,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11359,7 +11450,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11518,7 +11609,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11677,7 +11768,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11836,7 +11927,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11995,7 +12086,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12154,7 +12245,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12315,7 +12406,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12474,7 +12565,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12635,7 +12726,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12967,7 +13058,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
@@ -12987,11 +13078,11 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "5d8289138f7077d3930108669c7ad6b5b1a5dc25947e3cacbba0b5ac2c49affe"
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
-          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
         },
         {
           "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -13072,7 +13163,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
@@ -13092,7 +13183,7 @@
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
-          "sha256": "cb7a62a195a4715faa57565dedac34a4c57d2fe4eb42bdab15f73e7ed704701f"
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
         },
         {
           "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -13131,7 +13222,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
@@ -13194,7 +13285,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
@@ -13241,7 +13332,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/wallet-reverse.integration.test.ts",
@@ -16960,6 +17051,50 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue",
       "note": "Refresh only immediate-base bindings. Runtime controller change is confined to effective-permission read authority; all other methods and existing dictionary keys remain except truthful wildcard copy. Current boundary/HTTP and browser/i18n checks verify affected behavior. Older stale bindings retained."
+    },
+    {
+      "source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "04-invoices-wallet-contracts.md#T-04.2.01.01",
+        "04-invoices-wallet-contracts.md#T-04.2.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.01.03",
+        "04-invoices-wallet-contracts.md#T-04.2.01.04",
+        "04-invoices-wallet-contracts.md#T-04.2.01.05",
+        "04-invoices-wallet-contracts.md#T-04.2.01.06",
+        "04-invoices-wallet-contracts.md#T-04.2.01.07",
+        "02-auth-users-admin.md#T-08.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.03",
+        "04-invoices-wallet-contracts.md#T-04.2.03.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
+      "note": "Refresh only immediate-base bindings for customer wallet access, optional history query client and exact decimal API response. Ledger settlement methods unchanged; affected service, receipt and owner payment tests pass. Older stale bindings retained."
     }
   ]
 }

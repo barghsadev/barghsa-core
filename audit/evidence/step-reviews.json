@@ -12632,6 +12632,217 @@
         "/tmp/r01-role-catalogue-web-build.log",
         "/tmp/r01-role-catalogue-web-types.log"
       ]
+    },
+    {
+      "id": "R01-cross-domain-authorization",
+      "date": "2026-09-09",
+      "source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
+      "base_revision": "d707884b6fc1ffe6de79262e7b2f2eb39b74b304",
+      "product_commits": [
+        "d59499003a4accdf87b99288480f17437ed8bc50"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.04.04"
+      ],
+      "summary": "Linked completed cross-domain authority evidence and repaired wallet read/create completion and history precision. Both broad tasks remain partial for assigned consumers.",
+      "review": [
+        "Read exact T-02.02.04/T-05.04.04, saved PR92/134 bodies, PR92 deferrals and existing session/route review. Registration evidence alone does not establish runtime authorization. Reuse completed domain checks and explicitly retain future/provider prerequisites.",
+        "Wallet balance/history and empty-wallet creation checked profile access before later database work. Actual HTTP baseline reproduced creation201 after session expiry and rounding9007199254740993 to9007199254740992.",
+        "New withCustomerWalletAccess uses existing financial actor locking and current-session checks around one transaction. Account/session/profile/grants remain valid until read/creation completion. Creation still checks private profile access before the transaction; revoked/expired authority rolls back inserts. No money movement is added.",
+        "History now runs through the same query client and returns signed exact decimal strings. Wallet PK equals profile ID; the earlier suspected identifier mismatch was disproven by schema and required no repair. No web caller currently consumes this history API. Documented response schema is the only changed OpenAPI path.",
+        "Eleven real-HTTP cases verify positive/negative large amounts and isolation, Owner/Finance/Manager/Legal/additive/stale-owner/stranger rights, removed grants, archived profiles, invalid IDs, unauthenticated denial, reader/removal serialization and rollback after expiry. Existing Finance top-up/receipt and owner-only settlement boundaries are preserved.",
+        "The two known wallet-controller mock failures from the earlier interrupted verification run were stale expectations omitting the authenticated actor. Updated exact expected payloads; current controller tests pass. This resolves those named V02 failures only, not the complete broad checkpoint.",
+        "Read current invoice authorization and profile-role selector. Invoice read service and HTTP evidence match the correction-batch source hashes, so reuse valid negative/concurrency cases without rerunning them. Other domain scopes and unbuilt consumers are explicit in the matrix."
+      ],
+      "domain_matrix": [
+        {
+          "family": "Staff/profile roles, self/CRM session revocation and ownership",
+          "status": "implemented_domain_evidence_reused",
+          "evidence": [
+            "R01-session-recovery",
+            "R01-staff-task-acceptance",
+            "R01-staff-role-catalogue",
+            "R01-agents-invitations-ownership"
+          ],
+          "remaining": "Retain earlier method/transaction evidence; this is not a whole-file or broad-regression renewal."
+        },
+        {
+          "family": "Customer wallet read/create/history",
+          "status": "repaired_and_verified",
+          "evidence": [
+            "R01-cross-domain-authorization"
+          ],
+          "remaining": "Creation remains an empty wallet only; no funds moved. History amounts now use exact decimal strings. There is no current web history consumer."
+        },
+        {
+          "family": "Wallet charging, receipt submissions, staff confirmations and owner invoice settlement",
+          "status": "implemented_domain_evidence_linked",
+          "evidence": [
+            "R01-bank-receipts-approval",
+            "R01-online-topups-callbacks",
+            "R01-invoice-adjustment-approval",
+            "R01-wallet-invoice-payments-reversals"
+          ],
+          "remaining": "Current Finance charging/submission grants and owner-only movement preserved. Actual refund consumers remain future dependencies."
+        },
+        {
+          "family": "Invoice visibility and additive profile permissions",
+          "status": "verified",
+          "evidence": [
+            "R01-invoice-corrections",
+            "R01-cross-domain-authorization"
+          ],
+          "remaining": "Current invoice read service/test hashes match0aae9d5. Finance access, stale Owner/removed membership denial and serialized revocation are covered; current shared matrix/profile selector read. Existing Manager read access is preserved; no new money-movement right."
+        },
+        {
+          "family": "Addresses and implemented electricity ordering",
+          "status": "implemented_domain_evidence_linked",
+          "evidence": [
+            "R01-profile-addresses"
+          ],
+          "remaining": "Owner/Manager operations and protected-identity denials verified there; future savings/solar, consultation/comments and contract-document consumers retain their own prerequisites."
+        },
+        {
+          "family": "Storage, email/SMS/AI providers, catalogue prices and VAT",
+          "status": "R02_remaining_caller_acceptance",
+          "evidence": [
+            "audit/security-route-review.md"
+          ],
+          "remaining": "Existing registered step-up guards do not prove each write, audit and retry. Link current transaction/UI evidence in owning R02 administration batches. Real identity provider remains unavailable."
+        },
+        {
+          "family": "Refunds, contract cancellation, signing and legal documents",
+          "status": "future_dependencies",
+          "evidence": [
+            "kanban/epics/04-invoices-wallet-contracts.md"
+          ],
+          "remaining": "No customer production contract/refund flow exists. Exact contract/refund prerequisites below; Legal signing/doc permissions require integration there. Identity/onboarding documents remain separately protected and are not reclassified as contract documents."
+        }
+      ],
+      "verification": {
+        "api": "176 distinct cases across the affected wallet service/controller, new customer access, existing invoice-payment HTTP and receipt-authority files:151 unchanged cases pass in initial affected run, then25 focused cases pass (11 customer access +14 controller). Earlier173 passes overlap; do not add.",
+        "quality": "API typecheck, scoped ESLint/Prettier, generated OpenAPI, semantic single-path comparison and diff check pass.",
+        "scope": "No frontend/source dependency/schema migration changed. Prior web/budget evidence is reused without rerun; no broad/coverage/deployment renewal."
+      },
+      "remaining": [
+        "Remaining storage/email/SMS/AI-provider/catalogue-price/VAT caller transaction, audit and action-specific UI acceptance belongs to R02. Existing guard registration alone is not an acceptance pass.",
+        "Refund/contract-cancellation/signing/legal-document and future product consumers remain unbuilt prerequisites. No identity provider exists; retain all recorded prerequisites before enabling one."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 92,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.02.04"
+          ],
+          "reason": "Remaining storage/email/SMS/AI-provider/catalogue-price/VAT caller transaction, audit and action-specific UI acceptance belongs to R02. Existing guard registration alone is not an acceptance pass. Refund/contract-cancellation/signing/legal-document and future product consumers remain unbuilt prerequisites. No identity provider exists; retain all recorded prerequisites before enabling one.",
+          "source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+          ]
+        },
+        {
+          "pr": 134,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.04.04"
+          ],
+          "reason": "Implemented domains linked; unbuilt contract/refund/legal-document and future product consumers remain required.",
+          "source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+          ]
+        }
+      ],
+      "pr_counts": {
+        "closed": 0,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "Current invoice read service and HTTP source hashes verified against R01-invoice-corrections. 36 immediate-base source bindings refreshed; older stale bindings retained.",
+        "R01-session-recovery",
+        "R01-staff-task-acceptance",
+        "R01-staff-role-catalogue",
+        "R01-agents-invitations-ownership",
+        "R01-cross-domain-authorization",
+        "R01-bank-receipts-approval",
+        "R01-online-topups-callbacks",
+        "R01-invoice-adjustment-approval",
+        "R01-wallet-invoice-payments-reversals",
+        "R01-invoice-corrections",
+        "R01-cross-domain-authorization",
+        "R01-profile-addresses",
+        "audit/security-route-review.md",
+        "kanban/epics/04-invoices-wallet-contracts.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "20303d3e16525dfd6b20e28fc49ba6d08e802e613976a8ff9f8b6e7c6b977a7e"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "3cbb0277d2c8a7f4f7f23786c399b248594e0754147083450754bfa8019e50a6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.test.ts",
+          "sha256": "a59c5d8f80f67f5c3f957be9a004bfb3db830b6908809a63cc1d32456b6295d2"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access.ts",
+          "sha256": "896b620ceed66ca78e32091287cd4ec8f4df38bcdce574d4c3628f4cd8ee4518"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access-http.integration.test.ts",
+          "sha256": "f55675524d447b76d6d94df3b567cad662d9cb6aad794694e8144655c6ab3b53"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "sha256": "0181469a609b2b51a141dbd3d4967ebea606ce7c40de9464e50370191e53d204"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "ca74bef2a3d492374e3f7841b2552bf65cb80871787fda00861c6ff4ef06bac5"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/index.ts",
+          "sha256": "4c01ab1707667933320a40788ed26e9487cbfa4f40a7f5e35f74b1c264d762c1"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "9d060d8d745c973f9f4610831a09f4b33bbf36432d998b5932b1b7eeb6907f7a"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+          "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-wallet-access-before.log",
+        "/tmp/r01-wallet-access-final.log",
+        "/tmp/r01-wallet-access-focused.log",
+        "/tmp/r01-wallet-access-format-check.log",
+        "/tmp/r01-wallet-access-format-final.log",
+        "/tmp/r01-wallet-access-format.log",
+        "/tmp/r01-wallet-access-lint.log",
+        "/tmp/r01-wallet-access-openapi-check.log",
+        "/tmp/r01-wallet-access-openapi-generate.log",
+        "/tmp/r01-wallet-access-types.log"
+      ]
     }
   ]
 }

@@ -1576,14 +1576,14 @@
       "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) — Slice 2 (separate PR)",
       "- [ ] Frontend step-up modal dialog — Slice 2"
     ],
-    "status": "Frontend modal satisfied locally; sensitive-domain wiring acceptance remains open.",
-    "reviewed_source_revision": "169568059f71e16b9f00cd3522a412fdb6b3f375",
-    "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
+    "status": "Completed caller evidence linked; R02 provider/storage/price and future refund/contract callers remain.",
+    "reviewed_source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
+    "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
     "dispositions": [
       {
         "statement_index": 0,
         "disposition": "pending_domain_review",
-        "evidence": "Staff/profile roles, ownership and session/trust callers are verified. Remaining storage/provider/finance/price consumers require linked domain acceptance; refund/contract and real-provider callers remain future prerequisites. audit/evidence/step-reviews.json#R01-session-recovery"
+        "evidence": "Current staff/profile/ownership/session and finance domain evidence linked in audit/evidence/step-reviews.json#R01-cross-domain-authorization. Remaining R02 provider/storage/price consumers and exact future refund/contract prerequisites retain partial acceptance."
       },
       {
         "statement_index": 1,

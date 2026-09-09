@@ -121,7 +121,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#89](https://github.com/barghsadev/barghsa-core/pull/89) | 02-auth-users-admin.md#T-02.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-session-recovery) | 0 |
 | [#90](https://github.com/barghsadev/barghsa-core/pull/90) | 02-auth-users-admin.md#T-02.02.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-session-recovery) | 0 |
 | [#91](https://github.com/barghsadev/barghsa-core/pull/91) | 02-auth-users-admin.md#T-02.02.03 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-session-recovery) | 0 |
-| [#92](https://github.com/barghsadev/barghsa-core/pull/92) | 02-auth-users-admin.md#T-02.02.04 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-session-recovery) | 2 |
+| [#92](https://github.com/barghsadev/barghsa-core/pull/92) | 02-auth-users-admin.md#T-02.02.04 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-cross-domain-authorization) | 2 |
 | [#93](https://github.com/barghsadev/barghsa-core/pull/93) | 02-auth-users-admin.md#T-02.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-session-recovery) | 0 |
 | [#94](https://github.com/barghsadev/barghsa-core/pull/94) | 01-platform-infrastructure.md#T-03.01.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#95](https://github.com/barghsadev/barghsa-core/pull/95) | 01-platform-infrastructure.md#T-03.01.02 (pending) | Task review remains | Not reviewed | 0 |
@@ -163,7 +163,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#131](https://github.com/barghsadev/barghsa-core/pull/131) | 02-auth-users-admin.md#T-05.04.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-agents-invitations-ownership) | 0 |
 | [#132](https://github.com/barghsadev/barghsa-core/pull/132) | 02-auth-users-admin.md#T-05.04.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-agents-invitations-ownership) | 3 |
 | [#133](https://github.com/barghsadev/barghsa-core/pull/133) | 02-auth-users-admin.md#T-05.04.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-agents-invitations-ownership) | 0 |
-| [#134](https://github.com/barghsadev/barghsa-core/pull/134) | 02-auth-users-admin.md#T-05.04.04 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-agents-invitations-ownership) | 0 |
+| [#134](https://github.com/barghsadev/barghsa-core/pull/134) | 02-auth-users-admin.md#T-05.04.04 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-cross-domain-authorization) | 0 |
 | [#135](https://github.com/barghsadev/barghsa-core/pull/135) | 02-auth-users-admin.md#T-05.04.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-agents-invitations-ownership) | 0 |
 | [#136](https://github.com/barghsadev/barghsa-core/pull/136) | 02-auth-users-admin.md#T-05.05.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
 | [#137](https://github.com/barghsadev/barghsa-core/pull/137) | 02-auth-users-admin.md#T-05.05.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invitation-dashboard) | 0 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `d67c6a0fee6625e0bafd5aaf1bb15204d074bc2a4e978bc04f70d3da6ee92e70`
-- `pr-deferrals.json`: `fd57bbaeb4dfd0c3bdb844feda6226bd33e12386c35a849ad4bc85e096329cbb`
-- `evidence/step-reviews.json`: `6fb65bbbb74768c16470e11c9f6102f421f47ab6cdd3bdc872bc08730d17ec8d`
+- `acceptance-closure.json`: `d9bfb848dcd77d26b517cbeeb6e591ce558a508a9c89078ea40f609b6bb9c3ce`
+- `pr-deferrals.json`: `06c0a2ae64a10732df1c2aa9517653adee7d012792e968373afbfc5389f9152c`
+- `evidence/step-reviews.json`: `81a149d72bbf5b3440060eb0a88a64de1e56de3e44a5fc1de4f0e825b47f7c37`
