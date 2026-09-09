@@ -147,6 +147,86 @@ async function blockedOrFinished(blockerPid: number, finished: () => boolean) {
     .toBe(true);
 }
 
+it('returns only scoped customer contacts and current profile metadata to assigned staff', async () => {
+  const customer = await freshActor(false),
+    profileId = randomUUID(),
+    id = await ticket();
+  await http.pool.query('UPDATE users SET email=$2,mobile=$3 WHERE user_id=$1', [
+    customer.userId,
+    'ticket-owner@example.test',
+    '+989121234567',
+  ]);
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,first_name,last_name) VALUES ($1,$2,'Ticket','Owner')",
+    [profileId, customer.userId]
+  );
+  await http.pool.query(
+    "UPDATE tickets SET user_id=$2,profile_id=$3,assigned_to='assigned' WHERE id=$1",
+    [id, customer.userId, profileId]
+  );
+  const response = await fetch(`${http.base}/api/staff/tickets/${id}`, {
+    headers: headers.assigned!,
+  });
+  expect(response.status).toBe(200);
+  const body = (await response.json()) as { customer: unknown };
+  expect(body.customer).toEqual({
+    userId: customer.userId,
+    username: `${customer.userId}@example.test`,
+    email: 'ticket-owner@example.test',
+    mobile: '+989121234567',
+    profile: { id: profileId, title: 'Ticket Owner' },
+  });
+  expect(
+    (await fetch(`${http.base}/api/staff/tickets/${id}`, { headers: headers.customer! })).status
+  ).toBe(403);
+  await http.pool.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1", [id]);
+  const forbidden = await fetch(`${http.base}/api/staff/tickets/${id}`, {
+    headers: headers.assigned!,
+  });
+  expect(forbidden.status).toBe(404);
+  expect(JSON.stringify(await forbidden.json())).not.toContain('ticket-owner@example.test');
+});
+
+it.each(['transferred', 'archived'] as const)(
+  'does not expose a %s profile through a historical ticket',
+  async (state) => {
+    const profileId = randomUUID(),
+      id = await ticket();
+    await http.pool.query(
+      "INSERT INTO profiles(id,user_id,title) VALUES ($1,'customer','Original title')",
+      [profileId]
+    );
+    await http.pool.query('UPDATE tickets SET profile_id=$2 WHERE id=$1', [id, profileId]);
+    if (state === 'transferred')
+      await http.pool.query(
+        "UPDATE profiles SET user_id='staff',title='New owner private title' WHERE id=$1",
+        [profileId]
+      );
+    else await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [profileId]);
+    const response = await fetch(`${http.base}/api/staff/tickets/${id}`, {
+      headers: headers.staff!,
+    });
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as { customer: { profile: unknown } };
+    expect(body.customer.profile).toBeNull();
+    expect(JSON.stringify(body)).not.toContain('New owner private title');
+  }
+);
+
+it('keeps staff customer metadata out of customer list and detail responses', async () => {
+  const id = await ticket();
+  const detail = await fetch(`${http.base}/api/tickets/${id}`, { headers: headers.customer! });
+  expect(detail.status).toBe(200);
+  expect(await detail.json()).not.toHaveProperty('customer');
+  const list = await fetch(`${http.base}/api/tickets`, { headers: headers.customer! });
+  expect(list.status).toBe(200);
+  const body = (await list.json()) as { data: Record<string, unknown>[] };
+  expect(body.data.length).toBeGreaterThan(0);
+  expect(body.data.every((row) => !('customer' in row) && !('customer_username' in row))).toBe(
+    true
+  );
+});
+
 it.each(['general', 'billing', 'orders', undefined])(
   'persists and returns the selected ticket category (%s)',
   async (category) => {

@@ -151,6 +151,134 @@ for (const locale of ['en', 'fa'])
     expect(uploads).toBe(1);
     expect(submits).toBe(2);
   });
+for (const locale of ['en', 'fa'] as const) {
+  test(`customer ticket list and detail link to the related invoice (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const invoiceTicket = { ...item, relatedEntityId: profileId, relatedEntityType: 'invoice' };
+    const orderTicket = {
+      ...item,
+      id: profileId,
+      subject: 'Order question',
+      relatedEntityId: ticketId,
+      relatedEntityType: 'order',
+    };
+    await page.route('**/api/tickets?*', (route) =>
+      route.fulfill({ json: { data: [invoiceTicket, orderTicket], totalPages: 1 } })
+    );
+    await page.route(`**/api/tickets/${ticketId}`, (route) =>
+      route.fulfill({ json: invoiceTicket })
+    );
+    await page.route(`**/api/tickets/${ticketId}/comments`, (route) => route.fulfill({ json: [] }));
+    await page.goto('/tickets');
+    const invoiceLink = page.getByRole('link', {
+      name: `${locale === 'en' ? 'Invoice' : 'صورتحساب'} ${profileId}`,
+      exact: true,
+    });
+    await expect(invoiceLink).toHaveCount(1);
+    await expect(invoiceLink).toHaveAttribute('href', `/invoices/${profileId}`);
+    const orderRow = page
+      .getByRole('row')
+      .filter({ has: page.getByRole('button', { name: 'Order question', exact: true }) });
+    await expect(orderRow.getByRole('link')).toHaveCount(0);
+    await expect(orderRow).toContainText(
+      locale === 'en' ? 'Record view is unavailable.' : 'نمایش این رکورد در دسترس نیست.'
+    );
+    await page.getByRole('button', { name: item.subject, exact: true }).click();
+    await expect(invoiceLink).toHaveCount(2);
+    await expect(invoiceLink.nth(1)).toHaveAttribute('href', `/invoices/${profileId}`);
+    await expect(
+      page.getByRole('region', { name: locale === 'en' ? 'Customer information' : 'اطلاعات مشتری' })
+    ).toHaveCount(0);
+  });
+
+  test(`staff ticket detail shows customer contacts and the current profile (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    if (locale === 'fa') await page.setViewportSize({ width: 390, height: 844 });
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({
+        json: {
+          appTitle: 'Support',
+          slogan: '',
+          primaryColor: '#2563eb',
+          secondaryColor: '#64748b',
+          accentColor: '#f59e0b',
+          logoUrl: null,
+          faviconUrl: null,
+          darkMode: locale === 'fa',
+          numberStyle: locale === 'fa' ? 'persian' : 'western',
+        },
+      })
+    );
+    let currentProfile: { id: string; title: string } | null = {
+      id: profileId,
+      title: 'Customer profile',
+    };
+    await page.route('**/api/staff/tickets?*', (route) =>
+      route.fulfill({
+        json: {
+          data: [item],
+          totalPages: 1,
+          viewer: { userId: 'staff', canWrite: false, canAssignOthers: false },
+        },
+      })
+    );
+    await page.route(`**/api/staff/tickets/${ticketId}`, (route) =>
+      route.fulfill({
+        json: {
+          ...item,
+          relatedEntityType: 'invoice',
+          relatedEntityId: profileId,
+          customer: {
+            userId: 'customer',
+            username: 'customer@example.test',
+            email: 'contact@example.test',
+            mobile: '+989121234567',
+            profile: currentProfile,
+          },
+        },
+      })
+    );
+    await page.route(`**/api/staff/tickets/${ticketId}/comments`, (route) =>
+      route.fulfill({ json: [] })
+    );
+    await page.goto('/admin/tickets');
+    await page.getByRole('button', { name: item.subject, exact: true }).click();
+    const panel = page.getByRole('region', {
+      name: locale === 'en' ? 'Customer information' : 'اطلاعات مشتری',
+    });
+    await expect(panel).toBeVisible();
+    for (const value of [
+      'customer@example.test',
+      'contact@example.test',
+      '+989121234567',
+      'Customer profile',
+    ])
+      await expect(panel.getByText(value, { exact: true })).toBeVisible();
+    await expect(panel.getByRole('link')).toHaveAttribute(
+      'href',
+      `/admin/crm/profiles/${profileId}`
+    );
+      await expect(page.locator('article a[href="/admin/invoices"]')).toHaveCount(0);
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('section.max-w-5xl')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
+    currentProfile = null;
+    await page.getByRole('button', { name: item.subject, exact: true }).click();
+    await expect(panel.getByRole('link')).toHaveCount(0);
+    await expect(panel.getByText('Customer profile', { exact: true })).toHaveCount(0);
+    await expect(panel.getByText('contact@example.test', { exact: true })).toBeVisible();
+  });
+}
+
 test('staff assigns, writes a distinct internal note, resolves and reopens without claiming a failed reply saved', async ({
   page,
 }) => {

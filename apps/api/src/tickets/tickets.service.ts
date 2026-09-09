@@ -53,6 +53,14 @@ export interface CreateTicketDto {
   attachments?: string[] | null;
 }
 
+export interface TicketCustomer {
+  userId: string;
+  username: string;
+  email: string | null;
+  mobile: string | null;
+  profile: { id: string; title: string | null } | null;
+}
+
 export interface TicketCommentRow {
   id: string;
   ticketId: string;
@@ -812,11 +820,18 @@ export class TicketsService {
     ticketId: string,
     assignedTo?: string,
     client?: PoolClient
-  ): Promise<TicketRow> {
+  ): Promise<TicketRow & { customer: TicketCustomer }> {
     const pool = client ?? getDbPool();
 
     const result = await pool.query(
-      `SELECT * FROM tickets WHERE id = $1 AND ($2::text IS NULL OR assigned_to=$2)${client ? ' FOR SHARE' : ''}`,
+      `SELECT t.*,u.username AS customer_username,u.email AS customer_email,u.mobile AS customer_mobile,
+       p.id AS customer_profile_id,
+       COALESCE(NULLIF(p.title,''),CASE WHEN p.profile_type='LEGAL' THEN lp.legal_name
+         ELSE NULLIF(CONCAT_WS(' ',p.first_name,p.last_name),'') END) AS customer_profile_title
+       FROM tickets t JOIN users u ON u.user_id=t.user_id
+       LEFT JOIN profiles p ON p.id=t.profile_id AND p.user_id=t.user_id AND NOT p.archived
+       LEFT JOIN legal_profiles lp ON lp.id=p.id
+       WHERE t.id=$1 AND ($2::text IS NULL OR t.assigned_to=$2)${client ? ' FOR SHARE OF t' : ''}`,
       [ticketId, assignedTo ?? null]
     );
 
@@ -830,6 +845,18 @@ export class TicketsService {
     const ticket = mapRow(result.rows[0]!);
     return {
       ...ticket,
+      customer: {
+        userId: ticket.userId,
+        username: result.rows[0].customer_username as string,
+        email: result.rows[0].customer_email ?? null,
+        mobile: result.rows[0].customer_mobile ?? null,
+        profile: result.rows[0].customer_profile_id
+          ? {
+              id: result.rows[0].customer_profile_id as string,
+              title: result.rows[0].customer_profile_title ?? null,
+            }
+          : null,
+      },
       attachmentDownloadUrls: await this.attachmentService.downloadUrls(ticket.attachments),
     };
   }

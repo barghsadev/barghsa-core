@@ -27,6 +27,13 @@ interface Ticket {
   relatedEntityType: string | null;
   attachments: string[];
   attachmentDownloadUrls?: string[];
+  customer?: {
+    userId: string;
+    username: string;
+    email: string | null;
+    mobile: string | null;
+    profile: { id: string; title: string | null } | null;
+  };
 }
 interface Comment {
   id: string;
@@ -64,6 +71,35 @@ const transitions: Record<Status, Status[]> = {
 };
 export function CustomerTicketsPage() {
   return <Tickets staff={false} />;
+}
+function RelatedTicketRecord({
+  ticket,
+  staff,
+  locale,
+}: {
+  ticket: Ticket;
+  staff: boolean;
+  locale: 'fa' | 'en';
+}) {
+  if (!ticket.relatedEntityId) return <>{t('tickets.none', locale)}</>;
+  const label = `${t(`tickets.${ticket.relatedEntityType ?? 'related'}`, locale)} ${ticket.relatedEntityId}`;
+  if (!staff && ticket.relatedEntityType === 'invoice')
+    return (
+      <a
+        className="text-blue-700 dark:text-blue-300 underline break-all"
+        href={`/invoices/${encodeURIComponent(ticket.relatedEntityId)}`}
+      >
+        {label}
+      </a>
+    );
+  return (
+    <span className="break-all">
+      {label}
+      <span className="block text-sm text-muted-foreground">
+        {t('tickets.recordUnavailable', locale)}
+      </span>
+    </span>
+  );
 }
 export function StaffTicketsPage() {
   return <Tickets staff />;
@@ -587,6 +623,7 @@ function Tickets({ staff }: { staff: boolean }) {
                   'status',
                   'priority',
                   'updated',
+                  'related',
                   ...(staff ? ['customer', 'assignee', 'target'] : []),
                 ].map((key) => (
                   <th key={key} className="p-2 text-start">
@@ -622,6 +659,9 @@ function Tickets({ staff }: { staff: boolean }) {
                     </span>
                   </td>
                   <td className="p-2 whitespace-nowrap">{formatDate(item.updatedAt)}</td>
+                  <td className="p-2">
+                    <RelatedTicketRecord ticket={item} staff={staff} locale={locale} />
+                  </td>
                   {staff && (
                     <>
                       <td className="p-2">{item.userId}</td>
@@ -686,31 +726,67 @@ function Tickets({ staff }: { staff: boolean }) {
               detail.assignedTo ??
               text('unassigned')}
           </p>
-          {staff && detail.profileId && (
-            <a
-              className="block text-blue-700 dark:text-blue-300 underline"
-              href={`/admin/crm/profiles/${encodeURIComponent(detail.profileId)}`}
+          {staff && detail.customer && (
+            <section
+              aria-labelledby="ticket-customer-heading"
+              className="rounded border bg-muted p-3 space-y-2"
             >
-              {text('openProfile')}
-            </a>
+              <h3 id="ticket-customer-heading" className="font-semibold">
+                {text('customerInfo')}
+              </h3>
+              <dl className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <dt className="text-sm text-muted-foreground">{text('account')}</dt>
+                  <dd>
+                    <bdi dir="ltr">{detail.customer.username}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-muted-foreground">{text('email')}</dt>
+                  <dd>
+                    {detail.customer.email ? (
+                      <bdi dir="ltr">{detail.customer.email}</bdi>
+                    ) : (
+                      text('none')
+                    )}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-muted-foreground">{text('mobile')}</dt>
+                  <dd>
+                    {detail.customer.mobile ? (
+                      <bdi dir="ltr">{detail.customer.mobile}</bdi>
+                    ) : (
+                      text('none')
+                    )}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-muted-foreground">{text('profile')}</dt>
+                  <dd>
+                    {detail.customer.profile ? (
+                      <>
+                        <span className="block">
+                          {detail.customer.profile.title ?? text('unnamed')}
+                        </span>
+                        <a
+                          className="text-blue-700 dark:text-blue-300 underline"
+                          href={`/admin/crm/profiles/${encodeURIComponent(detail.customer.profile.id)}`}
+                        >
+                          {text('openProfile')}
+                        </a>
+                      </>
+                    ) : (
+                      text('none')
+                    )}
+                  </dd>
+                </div>
+              </dl>
+            </section>
           )}
           {detail.relatedEntityId && (
             <p>
-              {text(detail.relatedEntityType ?? 'related')}:{' '}
-              {detail.relatedEntityType === 'invoice' ? (
-                <a
-                  className="text-blue-700 dark:text-blue-300 underline"
-                  href={
-                    staff
-                      ? '/admin/invoices'
-                      : `/invoices/${encodeURIComponent(detail.relatedEntityId)}`
-                  }
-                >
-                  {detail.relatedEntityId}
-                </a>
-              ) : (
-                detail.relatedEntityId
-              )}
+              <RelatedTicketRecord ticket={detail} staff={staff} locale={locale} />
             </p>
           )}
           {(detail.attachmentDownloadUrls ?? [])
