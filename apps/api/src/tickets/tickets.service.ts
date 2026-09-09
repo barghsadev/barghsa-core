@@ -1,4 +1,6 @@
 import { ticketPagination } from './ticket-input.js';
+import { authorizeTicketMutation, type TicketActor } from './ticket-actor.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
   toServiceResponseTargets,
@@ -256,7 +258,11 @@ export class TicketsService {
    * and creates the ticket record. Attachments (storage keys) are stored
    * as a JSON array on the ticket for later linking.
    */
-  async createTicket(userId: string, dto: CreateTicketDto): Promise<TicketRow> {
+  async createTicket(
+    userId: string,
+    dto: CreateTicketDto,
+    actor?: TicketActor
+  ): Promise<TicketRow> {
     const parsed = z
       .object({
         subject: z.string().trim().min(1).max(200),
@@ -287,6 +293,7 @@ export class TicketsService {
         );
         if (!profile.rows.length) throw new HttpException('Profile not found', 404);
       }
+      if (actor) await authorizeTicketMutation(client, actor, userId, false);
       if (data.relatedEntityId) {
         // Contracts are not implemented in this schema. Never accept unverifiable links.
         if (data.relatedEntityType === 'contract')
@@ -344,6 +351,7 @@ export class TicketsService {
         ]
       );
       await this.notifyTicket(client, ticket, userId, 'created');
+      if (actor) await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return ticket;
     } catch (error) {
@@ -470,7 +478,8 @@ export class TicketsService {
     ticketId: string,
     userId: string,
     status: string,
-    isAdmin: boolean = false
+    isAdmin: boolean = false,
+    actor?: TicketActor
   ): Promise<TicketRow> {
     if (!isAdmin && status !== 'open') {
       if (
@@ -480,7 +489,7 @@ export class TicketsService {
       }
       throw new HttpException('Only staff can change ticket status', 403);
     }
-    return this.changeStatus(ticketId, status, userId, userId);
+    return this.changeStatus(ticketId, status, userId, userId, undefined, actor);
   }
 
   private async changeStatus(
@@ -488,7 +497,8 @@ export class TicketsService {
     status: string,
     actorId: string,
     ownerId?: string,
-    assignedTo?: string
+    assignedTo?: string,
+    actor?: TicketActor
   ): Promise<TicketRow> {
     const transitions: Record<string, string[]> = {
       open: ['in_progress'],
@@ -502,6 +512,7 @@ export class TicketsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      if (actor) assignedTo = await authorizeTicketMutation(client, actor, actorId, !ownerId);
       const row = (
         await client.query(
           `SELECT * FROM tickets WHERE id=$1
@@ -511,6 +522,7 @@ export class TicketsService {
       ).rows[0];
       if (!row) throw new HttpException('Ticket not found', 404);
       if (row.status === status) {
+        if (actor) await requireCurrentSession(client, actor);
         await client.query('COMMIT');
         return mapRow(row);
       }
@@ -530,6 +542,7 @@ export class TicketsService {
         [randomUUID(), actorId, JSON.stringify({ ticketId, from: row.status, to: status })]
       );
       await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'status');
+      if (actor) await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return mapRow(result.rows[0]);
     } catch (error) {
@@ -579,11 +592,12 @@ export class TicketsService {
     userId: string,
     body: string,
     visibility: 'public' | 'internal' = 'public',
-    isAdmin: boolean = false
+    isAdmin: boolean = false,
+    actor?: TicketActor
   ): Promise<TicketCommentRow> {
     if (!isAdmin && visibility !== 'public')
       throw new HttpException('Only staff can add internal notes', 403);
-    return this.insertComment(ticketId, userId, body, visibility, userId);
+    return this.insertComment(ticketId, userId, body, visibility, userId, undefined, actor);
   }
 
   private async insertComment(
@@ -592,7 +606,8 @@ export class TicketsService {
     body: string,
     visibility: string,
     ownerId?: string,
-    assignedTo?: string
+    assignedTo?: string,
+    actor?: TicketActor
   ): Promise<TicketCommentRow> {
     if (typeof body !== 'string' || !body.trim())
       throw new HttpException('Comment body is required', 400);
@@ -603,6 +618,7 @@ export class TicketsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      if (actor) assignedTo = await authorizeTicketMutation(client, actor, actorId, !ownerId);
       const ticket = (
         await client.query(
           `SELECT * FROM tickets WHERE id=$1
@@ -646,6 +662,7 @@ export class TicketsService {
         actorId,
         visibility === 'internal' ? 'internal' : 'reply'
       );
+      if (actor) await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return mapCommentRow(result.rows[0]);
     } catch (error) {
@@ -781,7 +798,8 @@ export class TicketsService {
     assigneeUserId: string,
     actorId: string,
     assignedTo?: string,
-    teamId?: string
+    teamId?: string,
+    actor?: TicketActor
   ): Promise<TicketRow> {
     if (
       typeof assigneeUserId !== 'string' ||
@@ -806,6 +824,11 @@ export class TicketsService {
         );
         if (!member.rows.length)
           throw new HttpException('Assignee is not a member of this team', 409);
+      }
+      if (actor) {
+        assignedTo = await authorizeTicketMutation(client, actor, actorId, true, assigneeUserId);
+        if (assignedTo && (assigneeUserId !== assignedTo || teamId))
+          throw new HttpException('Assigned-only staff cannot reassign another user', 403);
       }
       // Lock the account before the ticket, matching staff account changes.
       const account = (
@@ -854,6 +877,7 @@ export class TicketsService {
         ]
       );
       await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'assigned');
+      if (actor) await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return mapRow(result.rows[0]);
     } catch (error) {
@@ -872,9 +896,10 @@ export class TicketsService {
     ticketId: string,
     status: string,
     actorId: string,
-    assignedTo?: string
+    assignedTo?: string,
+    actor?: TicketActor
   ): Promise<TicketRow> {
-    return this.changeStatus(ticketId, status, actorId, undefined, assignedTo);
+    return this.changeStatus(ticketId, status, actorId, undefined, assignedTo, actor);
   }
 
   /**
@@ -904,8 +929,17 @@ export class TicketsService {
     staffUserId: string,
     body: string,
     visibility: 'public' | 'internal' = 'public',
-    assignedTo?: string
+    assignedTo?: string,
+    actor?: TicketActor
   ): Promise<TicketCommentRow> {
-    return this.insertComment(ticketId, staffUserId, body, visibility, undefined, assignedTo);
+    return this.insertComment(
+      ticketId,
+      staffUserId,
+      body,
+      visibility,
+      undefined,
+      assignedTo,
+      actor
+    );
   }
 }

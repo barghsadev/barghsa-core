@@ -58,7 +58,7 @@ export class TicketsController {
   ) {
     const userId = req.session.userId;
 
-    const ticket = await this.ticketsService.createTicket(userId, body);
+    const ticket = await this.ticketsService.createTicket(userId, body, req.session);
 
     this.logger.log(`Ticket ${ticket.id} created for user ${userId}`);
     return ticket;
@@ -145,7 +145,13 @@ export class TicketsController {
     @Body() body: { status: string },
     @Req() req: AuthenticatedRequest
   ) {
-    return this.ticketsService.updateTicketStatus(id, req.session.userId, body?.status, false);
+    return this.ticketsService.updateTicketStatus(
+      id,
+      req.session.userId,
+      body?.status,
+      false,
+      req.session
+    );
   }
 
   /**
@@ -197,6 +203,13 @@ export class TicketsController {
         403
       );
     }
-    return this.ticketsService.addComment(id, req.session.userId, body?.body, visibility, false);
+    return this.ticketsService.addComment(
+      id,
+      req.session.userId,
+      body?.body,
+      visibility,
+      false,
+      req.session
+    );
   }
 }

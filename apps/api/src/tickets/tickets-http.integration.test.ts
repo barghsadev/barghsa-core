@@ -1,12 +1,13 @@
 import { createServer, type Server } from 'node:http';
 import { randomUUID } from 'node:crypto';
-import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let storageServer: Server;
 const objects = new Map<string, Buffer>();
 const headers: Record<string, Record<string, string>> = {};
+const transientActors: string[] = [];
 beforeAll(async () => {
   storageServer = createServer(async (req, res) => {
     const key = decodeURIComponent(new URL(req.url!, 'http://localhost').pathname).replace(
@@ -70,7 +71,17 @@ beforeAll(async () => {
 }, 40000);
 // Each scenario has its own rate-limit budget in this disposable database.
 beforeEach(async () => {
-  await http.pool.query('DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security');
+  await http.pool.query(
+    'DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security'
+  );
+});
+afterEach(async () => {
+  if (transientActors.length) {
+    await http.pool.query('UPDATE users SET disabled_at=NOW() WHERE user_id=ANY($1::text[])', [
+      transientActors,
+    ]);
+    transientActors.length = 0;
+  }
 });
 afterAll(async () => {
   await http?.close();
@@ -92,6 +103,312 @@ function assign(id: string, assigneeId: unknown = 'staff', user = 'staff') {
     body: JSON.stringify({ assigneeId }),
   });
 }
+
+async function freshActor(admin: boolean, expiresInSeconds = 3600) {
+  const userId = randomUUID(),
+    sessionId = randomUUID(),
+    csrfToken = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_admin) VALUES ($1,$2,'test-only',$3)",
+    [userId, `${userId}@example.test`, admin]
+  );
+  transientActors.push(userId);
+  const session = await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,$2,$3,$4,clock_timestamp()+$5*INTERVAL '1 second',NOW()+INTERVAL '30 minutes')
+     RETURNING expires_at`,
+    [sessionId, userId, csrfToken, randomUUID(), expiresInSeconds]
+  );
+  return {
+    userId,
+    sessionId,
+    expiresAt: session.rows[0].expires_at as Date,
+    headers: {
+      Cookie: `barghsa_session=${sessionId}`,
+      'X-CSRF-Token': csrfToken,
+      'Content-Type': 'application/json',
+    },
+  };
+}
+
+async function blockedOrFinished(blockerPid: number, finished: () => boolean) {
+  await expect
+    .poll(
+      async () =>
+        finished() ||
+        (
+          await http.pool.query(
+            'SELECT 1 FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+            [blockerPid]
+          )
+        ).rows.length > 0,
+      { timeout: 5000, interval: 20 }
+    )
+    .toBe(true);
+}
+
+it('rejects customer creation after account disablement commits while authorization waits', async () => {
+  const actor = await freshActor(false),
+    client = await http.pool.connect();
+  let response: Promise<Response> | undefined,
+    finished = false;
+  try {
+    await client.query('BEGIN');
+    await client.query('UPDATE users SET disabled_at=NOW() WHERE user_id=$1', [actor.userId]);
+    const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+    response = fetch(`${http.base}/api/tickets`, {
+      method: 'POST',
+      headers: actor.headers,
+      body: JSON.stringify({ subject: 'Revoked request', body: 'Must not create' }),
+    }).finally(() => {
+      finished = true;
+    });
+    await blockedOrFinished(pid, () => finished);
+    await client.query('COMMIT');
+    expect((await response).status).toBe(401);
+    expect(
+      (await http.pool.query('SELECT id FROM tickets WHERE user_id=$1', [actor.userId])).rows
+    ).toHaveLength(0);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE user_id=$1 AND event='ticket_created'",
+          [actor.userId]
+        )
+      ).rows
+    ).toHaveLength(0);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await response;
+  }
+});
+
+it('rejects staff status changes after the current ticket grant is revoked during authorization', async () => {
+  const actor = await freshActor(false),
+    id = await ticket('in_progress');
+  const roleId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO staff_roles(role_id,name,description,permissions)
+     VALUES ($1,$1,'Test ticket writer','["tickets:write"]')`,
+    [roleId]
+  );
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
+    actor.userId,
+    roleId,
+  ]);
+  await http.pool.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1", [id]);
+  const client = await http.pool.connect();
+  let response: Promise<Response> | undefined,
+    finished = false;
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE staff_roles SET permissions='[]' WHERE role_id=$1", [roleId]);
+    await client.query('SELECT id FROM tickets WHERE id=$1 FOR UPDATE', [id]);
+    const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+    response = fetch(`${http.base}/api/staff/tickets/${id}/status`, {
+      method: 'PATCH',
+      headers: actor.headers,
+      body: JSON.stringify({ status: 'resolved' }),
+    }).finally(() => {
+      finished = true;
+    });
+    await blockedOrFinished(pid, () => finished);
+    await client.query('COMMIT');
+    expect((await response).status).toBe(403);
+    expect(
+      (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [id])).rows[0].status
+    ).toBe('in_progress');
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE user_id=$1 AND event='ticket_status_changed'",
+          [actor.userId]
+        )
+      ).rows
+    ).toHaveLength(0);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await response;
+  }
+});
+
+it.each(['status', 'comment', 'assignment'] as const)(
+  'applies a newly assigned-only grant to the staff %s command',
+  async (action) => {
+    const actor = await freshActor(false),
+      id = await ticket('in_progress'),
+      roleId = randomUUID();
+    await http.pool.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1", [id]);
+    await http.pool.query(
+      `INSERT INTO staff_roles(role_id,name,description,permissions)
+       VALUES ($1,$1,'Downgraded ticket writer','["tickets:write"]')`,
+      [roleId]
+    );
+    await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
+      actor.userId,
+      roleId,
+    ]);
+    const client = await http.pool.connect();
+    let response: Promise<Response> | undefined,
+      finished = false;
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        `UPDATE staff_roles SET permissions='["tickets:assigned"]' WHERE role_id=$1`,
+        [roleId]
+      );
+      const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+      const command =
+        action === 'status'
+          ? { path: 'status', method: 'PATCH', body: { status: 'resolved' } }
+          : action === 'comment'
+            ? {
+                path: 'comments',
+                method: 'POST',
+                body: { body: 'No longer permitted', visibility: 'internal' },
+              }
+            : { path: 'assign', method: 'PUT', body: { assigneeId: 'staff' } };
+      response = fetch(`${http.base}/api/staff/tickets/${id}/${command.path}`, {
+        method: command.method,
+        headers: actor.headers,
+        body: JSON.stringify(command.body),
+      }).finally(() => {
+        finished = true;
+      });
+      await blockedOrFinished(pid, () => finished);
+      await client.query('COMMIT');
+      expect((await response).status).toBe(action === 'assignment' ? 403 : 404);
+      expect(
+        (await http.pool.query('SELECT status,assigned_to FROM tickets WHERE id=$1', [id])).rows[0]
+      ).toEqual({ status: 'in_progress', assigned_to: 'staff' });
+      expect(
+        (await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1', [id])).rows
+      ).toHaveLength(0);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM audit_log WHERE user_id=$1 AND event LIKE 'ticket_%'",
+            [actor.userId]
+          )
+        ).rows
+      ).toHaveLength(0);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await response;
+    }
+  }
+);
+
+it.each(['create', 'assign', 'status'] as const)(
+  'rolls back ticket %s and its audit if the session expires before commit',
+  async (action) => {
+    const actor = await freshActor(action !== 'create'),
+      id = await ticket('in_progress');
+    await http.pool.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1", [id]);
+    await http.pool
+      .query(`CREATE FUNCTION expire_ticket_actor() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+      IF NEW.event IN ('ticket_created','ticket_assigned','ticket_status_changed') THEN
+        UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id=NEW.user_id;
+      END IF; RETURN NEW; END $$;
+      CREATE TRIGGER expire_ticket_actor AFTER INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION expire_ticket_actor()`);
+    try {
+      const command =
+        action === 'create'
+          ? {
+              path: '/api/tickets',
+              method: 'POST',
+              body: { subject: 'Expiry', body: 'Must roll back' },
+            }
+          : action === 'assign'
+            ? {
+                path: `/api/staff/tickets/${id}/assign`,
+                method: 'PUT',
+                body: { assigneeId: 'staff' },
+              }
+            : {
+                path: `/api/staff/tickets/${id}/status`,
+                method: 'PATCH',
+                body: { status: 'resolved' },
+              };
+      const response = await fetch(http.base + command.path, {
+        method: command.method,
+        headers: actor.headers,
+        body: JSON.stringify(command.body),
+      });
+      expect(response.status, http.logs()).toBe(401);
+      expect(
+        (await http.pool.query('SELECT status,assigned_to FROM tickets WHERE id=$1', [id])).rows[0]
+      ).toEqual({ status: 'in_progress', assigned_to: 'staff' });
+      expect(
+        (await http.pool.query('SELECT id FROM tickets WHERE user_id=$1', [actor.userId])).rows
+      ).toHaveLength(0);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM audit_log WHERE user_id=$1 AND event LIKE 'ticket_%'",
+            [actor.userId]
+          )
+        ).rows
+      ).toHaveLength(0);
+    } finally {
+      await http.pool.query(
+        'DROP TRIGGER expire_ticket_actor ON audit_log; DROP FUNCTION expire_ticket_actor()'
+      );
+    }
+  }
+);
+
+it('rolls back a customer reply when its session expires while the ticket is locked', async () => {
+  const id = await ticket(),
+    client = await http.pool.connect();
+  let response: Promise<Response> | undefined,
+    finished = false;
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM tickets WHERE id=$1 FOR UPDATE', [id]);
+    const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+    const actor = await freshActor(false, 2);
+    // Ownership belongs to this actor before the request begins.
+    await client.query('UPDATE tickets SET user_id=$1 WHERE id=$2', [actor.userId, id]);
+    // The locked row must already be visible with the current owner.
+    await client.query('COMMIT');
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM tickets WHERE id=$1 FOR UPDATE', [id]);
+    response = fetch(`${http.base}/api/tickets/${id}/comments`, {
+      method: 'POST',
+      headers: actor.headers,
+      body: JSON.stringify({ body: 'Expired reply' }),
+    }).finally(() => {
+      finished = true;
+    });
+    await blockedOrFinished(pid, () => finished);
+    expect(finished).toBe(false);
+    await http.pool.query(
+      'SELECT pg_sleep(GREATEST(0,EXTRACT(EPOCH FROM ($1::timestamptz-clock_timestamp())))+0.05)',
+      [actor.expiresAt]
+    );
+    await client.query('COMMIT');
+    expect((await response).status).toBe(401);
+    expect(
+      (await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1', [id])).rows
+    ).toHaveLength(0);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE user_id=$1 AND event='ticket_comment_added'",
+          [actor.userId]
+        )
+      ).rows
+    ).toHaveLength(0);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await response;
+  }
+});
 it('rejects unknown, customer, disabled and pending-activation assignees without changing the ticket', async () => {
   const id = await ticket();
   for (const target of ['missing', 'customer', 'disabled', 'inactive', '', { bad: true }]) {

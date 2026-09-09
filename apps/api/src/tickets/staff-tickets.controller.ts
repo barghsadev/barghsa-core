@@ -189,7 +189,8 @@ export class StaffTicketsController {
       assigneeId,
       req.session.userId,
       scope,
-      parsed.data.teamId
+      parsed.data.teamId,
+      req.session
     );
   }
 
@@ -223,7 +224,8 @@ export class StaffTicketsController {
       id,
       body?.status,
       req.session.userId,
-      this.assignedScope(req, 'write')
+      this.assignedScope(req, 'write'),
+      req.session
     );
   }
 
@@ -292,7 +294,8 @@ export class StaffTicketsController {
       req.session.userId,
       body?.body,
       visibility,
-      this.assignedScope(req, 'write')
+      this.assignedScope(req, 'write'),
+      req.session
     );
   }
 }
