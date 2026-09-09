@@ -7,7 +7,12 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: {
+    isAdmin: true,
+    userId: 'admin-1',
+    sessionId: '11111111-1111-4111-8111-111111111111',
+    csrfToken: 'triage-unit-csrf',
+  },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -101,10 +106,22 @@ describe('failed-notifications permission gates (T-09.09.03)', () => {
   it('calls retry/resolve/dismiss services for admin with derived ip', async () => {
     const { controller, service } = makeController();
     await controller.retry('dl-1', adminReq);
-    expect(service.retryFailedNotification).toHaveBeenCalledWith('dl-1', 'admin-1', '127.0.0.1');
+    expect(service.retryFailedNotification).toHaveBeenCalledWith(
+      'dl-1',
+      adminReq.session,
+      '127.0.0.1'
+    );
     await controller.resolve('dl-2', adminReq);
-    expect(service.resolveFailedNotification).toHaveBeenCalledWith('dl-2', 'admin-1', '127.0.0.1');
+    expect(service.resolveFailedNotification).toHaveBeenCalledWith(
+      'dl-2',
+      adminReq.session,
+      '127.0.0.1'
+    );
     await controller.dismiss('dl-3', adminReq);
-    expect(service.dismissFailedNotification).toHaveBeenCalledWith('dl-3', 'admin-1', '127.0.0.1');
+    expect(service.dismissFailedNotification).toHaveBeenCalledWith(
+      'dl-3',
+      adminReq.session,
+      '127.0.0.1'
+    );
   });
 });

@@ -1,9 +1,14 @@
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import type { NotificationChannel } from '@barghsa/shared/notifications';
+
+export type FailedNotificationActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /**
  * Dead-letter notification triage (S-09.09, T-09.09.03).
@@ -153,10 +158,10 @@ export class FailedNotificationsService {
    */
   async retryFailedNotification(
     id: string,
-    actorUserId: string,
+    actor: FailedNotificationActor,
     ip: string
   ): Promise<FailedNotificationDto> {
-    return this.transition(id, actorUserId, ip, 'retried', {
+    return this.transition(id, actor, ip, 'retried', {
       description: 'Re-queue a dead-lettered notification for a fresh delivery attempt',
       event: 'notification_retried',
       allowedFrom: ['open'],
@@ -172,10 +177,10 @@ export class FailedNotificationsService {
    */
   async resolveFailedNotification(
     id: string,
-    actorUserId: string,
+    actor: FailedNotificationActor,
     ip: string
   ): Promise<FailedNotificationDto> {
-    return this.transition(id, actorUserId, ip, 'resolved', {
+    return this.transition(id, actor, ip, 'resolved', {
       description: 'Mark a dead-lettered notification as resolved',
       event: 'notification_resolved',
       allowedFrom: ['open'],
@@ -193,10 +198,10 @@ export class FailedNotificationsService {
    */
   async dismissFailedNotification(
     id: string,
-    actorUserId: string,
+    actor: FailedNotificationActor,
     ip: string
   ): Promise<FailedNotificationDto> {
-    return this.transition(id, actorUserId, ip, 'dismissed', {
+    return this.transition(id, actor, ip, 'dismissed', {
       description: 'Dismiss a dead-lettered notification',
       event: 'notification_dismissed',
       allowedFrom: ['open'],
@@ -208,7 +213,7 @@ export class FailedNotificationsService {
 
   private async transition(
     id: string,
-    actorUserId: string,
+    actor: FailedNotificationActor,
     ip: string,
     toStatus: DeadLetterStatus,
     opts: {
@@ -220,6 +225,7 @@ export class FailedNotificationsService {
   ): Promise<FailedNotificationDto> {
     const pool = getDbPool();
     const now = new Date();
+    const actorUserId = actor.userId;
 
     const client = await pool.connect();
     let committed = false;
@@ -229,6 +235,7 @@ export class FailedNotificationsService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:jobs:retry');
+      const stepUpVerifiedAt = await requireSessionStepUp(client, actor);
       // All delivery/recovery paths lock the parent before a channel or triage
       // row. Reversing this order can deadlock with worker finalization.
       await client.query(
@@ -327,6 +334,9 @@ export class FailedNotificationsService {
           actorUserId,
           opts.event,
           JSON.stringify({
+            sessionId: actor.sessionId,
+            stepUpVerified: true,
+            stepUpVerifiedAt: stepUpVerifiedAt.toISOString(),
             deadLetterId: id,
             outboxId: row.outbox_id,
             channel: row.channel,
@@ -334,12 +344,13 @@ export class FailedNotificationsService {
             toStatus,
             eventKey: row.event_key,
           }),
-          uuidv7(),
+          correlationIdStorage.getStore() ?? uuidv7(),
           ip,
           now,
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       committed = true;
 

@@ -12,6 +12,15 @@ vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
 
+const actor = {
+  userId: 'admin-1',
+  sessionId: '11111111-1111-4111-8111-111111111111',
+  csrfToken: 'triage-unit-csrf',
+};
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date('2026-09-09T00:00:00Z')),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
@@ -282,7 +291,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
       }
     );
 
-    await service.retryFailedNotification('dl-1', 'admin-1', '127.0.0.1');
+    await service.retryFailedNotification('dl-1', actor, '127.0.0.1');
 
     // outbox requeued
     const outboxUpdate = mockClientQuery.mock.calls.find(([s]) =>
@@ -323,7 +332,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     ]);
     mockConnect.mockResolvedValue(client);
     const rejection = await service
-      .retryFailedNotification('dl-1', 'admin-1', '127.0.0.1')
+      .retryFailedNotification('dl-1', actor, '127.0.0.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(409);
     expect(mockRelease).toHaveBeenCalled();
@@ -351,7 +360,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
       }
     );
     const rejection = await service
-      .retryFailedNotification('dl-1', 'admin-1', '127.0.0.1')
+      .retryFailedNotification('dl-1', actor, '127.0.0.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(409);
     expect(rejectionBody(rejection)).toMatchObject({
@@ -377,7 +386,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     ]);
     mockConnect.mockResolvedValue(client);
     const rejection = await service
-      .retryFailedNotification('missing', 'admin-1', '127.0.0.1')
+      .retryFailedNotification('missing', actor, '127.0.0.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(404);
   });
@@ -396,7 +405,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     ]);
     mockConnect.mockResolvedValue(client);
     mockQuery.mockResolvedValueOnce(returnRows([DL_ROW]));
-    await service.resolveFailedNotification('dl-1', 'admin-1', '127.0.0.1');
+    await service.resolveFailedNotification('dl-1', actor, '127.0.0.1');
     const calls = mockClientQuery.mock.calls.map(([s]) => String(s));
     expect(calls.some((s) => s.includes('UPDATE notification_outbox'))).toBe(false);
     const audit = mockClientQuery.mock.calls.find(([s]) =>
@@ -419,7 +428,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     ]);
     mockConnect.mockResolvedValue(client);
     mockQuery.mockResolvedValueOnce(returnRows([DL_ROW]));
-    await service.dismissFailedNotification('dl-1', 'admin-1', '127.0.0.1');
+    await service.dismissFailedNotification('dl-1', actor, '127.0.0.1');
     const audit = mockClientQuery.mock.calls.find(([s]) =>
       String(s).includes('INSERT INTO audit_log')
     )! as [string, unknown[]];

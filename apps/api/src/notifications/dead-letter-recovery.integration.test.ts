@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { FailedNotificationsService } from '../admin/failed-notifications.service.js';
@@ -9,6 +9,7 @@ vi.mock('@barghsa/db', async (original) => ({
 }));
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>, profileId: string;
 const headers: Record<string, string> = {};
+let actor: { userId: string; sessionId: string; csrfToken: string };
 let routeIndex = 0;
 const prefixes = ['/api/admin/failed-notifications', '/api/admin/notifications/dead-letters'];
 const service = {
@@ -27,7 +28,12 @@ beforeAll(async () => {
   fixture = await startHttpFixture(process.env.TEST_DATABASE_URL);
   db.pool = fixture.pool;
   await db.pool.query(
-    "INSERT INTO users(user_id,username,password_hash,is_staff,is_admin) VALUES ('triage-staff','triage@example.test','test-only',true,true)"
+    "INSERT INTO users(user_id,username,password_hash,is_staff,is_admin) VALUES ('triage-staff','triage@example.test','test-only',true,false)"
+  );
+  await db.pool.query(`INSERT INTO staff_roles(role_id,name,description,permissions)
+    VALUES ('triage-role','Triage role','Fixture','["admin:jobs:view","admin:jobs:retry"]')`);
+  await db.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES ('triage-staff','triage-role')"
   );
   const session = randomUUID(),
     csrf = randomUUID();
@@ -35,6 +41,7 @@ beforeAll(async () => {
     "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'triage-staff',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
     [session, csrf, randomUUID()]
   );
+  actor = { userId: 'triage-staff', sessionId: session, csrfToken: csrf };
   headers.Cookie = `barghsa_session=${session}`;
   headers['X-CSRF-Token'] = csrf;
   profileId = (
@@ -43,6 +50,18 @@ beforeAll(async () => {
 }, 40000);
 afterAll(async () => {
   await fixture?.close();
+});
+beforeEach(async () => {
+  await db.pool.query("UPDATE users SET is_staff=true,is_admin=false WHERE user_id='triage-staff'");
+  await db.pool.query(
+    `UPDATE sessions SET revoked_at=NULL,csrf_token=$2,
+    expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW()
+    WHERE session_id=$1`,
+    [actor.sessionId, actor.csrfToken]
+  );
+  await db.pool.query(
+    `UPDATE staff_roles SET permissions='["admin:jobs:view","admin:jobs:retry"]' WHERE role_id='triage-role'`
+  );
 });
 async function seed() {
   const outbox = randomUUID(),
@@ -157,9 +176,7 @@ it('admin retry uses the same claim safeguards and preserves cumulative attempts
     [row.outbox]
   );
   const results = await Promise.allSettled(
-    Array.from({ length: 8 }, () =>
-      admin.retryFailedNotification(row.dead, 'triage-staff', '127.0.0.1')
-    )
+    Array.from({ length: 8 }, () => admin.retryFailedNotification(row.dead, actor, '127.0.0.1'))
   );
   expect(results.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
   for (const result of results)
@@ -182,16 +199,16 @@ it('admin retry uses the same claim safeguards and preserves cumulative attempts
     [active.outbox]
   );
   await expect(
-    admin.retryFailedNotification(active.dead, 'triage-staff', '127.0.0.1')
+    admin.retryFailedNotification(active.dead, actor, '127.0.0.1')
   ).rejects.toMatchObject({ status: 409 });
   const done = await seed();
   await db.pool.query(
     "UPDATE notification_job SET status='done',provider_ref='receipt' WHERE id=$1",
     [done.job]
   );
-  await expect(
-    admin.retryFailedNotification(done.dead, 'triage-staff', '127.0.0.1')
-  ).rejects.toMatchObject({ status: 409 });
+  await expect(admin.retryFailedNotification(done.dead, actor, '127.0.0.1')).rejects.toMatchObject({
+    status: 409,
+  });
   expect(
     (await db.pool.query('SELECT status FROM notification_outbox WHERE id=$1', [done.outbox]))
       .rows[0].status
@@ -279,7 +296,9 @@ it('rechecks permission after waiting for the actor lock and rolls back a revoke
   try {
     await client.query('BEGIN');
     await client.query("SELECT user_id FROM users WHERE user_id='triage-staff' FOR UPDATE");
-    pending = service.deadLetterAction(row.dead, 'retry', 'triage-staff').catch((error) => error);
+    pending = new FailedNotificationsService()
+      .retryFailedNotification(row.dead, actor, '127.0.0.1')
+      .catch((error) => error);
     await expect
       .poll(async () =>
         Number(
@@ -291,7 +310,7 @@ it('rechecks permission after waiting for the actor lock and rolls back a revoke
         )
       )
       .toBe(1);
-    await client.query("UPDATE users SET is_admin=false WHERE user_id='triage-staff'");
+    await client.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'");
     await client.query('COMMIT');
     expect(await pending).toMatchObject({ status: 403 });
     expect(
@@ -309,6 +328,119 @@ it('rechecks permission after waiting for the actor lock and rolls back a revoke
     await client.query('ROLLBACK');
     client.release();
     await pending;
-    await db.pool.query("UPDATE users SET is_admin=true WHERE user_id='triage-staff'");
+    await db.pool.query(
+      "UPDATE users SET is_staff=true,is_admin=false WHERE user_id='triage-staff'"
+    );
   }
 });
+
+async function snapshot(row: Awaited<ReturnType<typeof seed>>) {
+  const [outbox, job, dead, audit] = await Promise.all([
+    db.pool.query('SELECT * FROM notification_outbox WHERE id=$1', [row.outbox]),
+    db.pool.query('SELECT * FROM notification_job WHERE id=$1', [row.job]),
+    db.pool.query('SELECT * FROM notification_dead_letter WHERE id=$1', [row.dead]),
+    db.pool.query(
+      "SELECT event,metadata,correlation_id FROM audit_log WHERE metadata::jsonb->>'deadLetterId'=$1 ORDER BY created_at,id",
+      [row.dead]
+    ),
+  ]);
+  return { outbox: outbox.rows[0], job: job.rows[0], dead: dead.rows[0], audits: audit.rows };
+}
+
+for (const prefix of prefixes) {
+  for (const action of ['retry', 'resolve', 'dismiss'] as const) {
+    const request = (id: string) =>
+      fetch(`${fixture.base}${prefix}/${id}/${action}`, { method: 'POST', headers });
+    it(`${prefix} ${action} binds current session and request correlation to its atomic audit`, async () => {
+      const row = await seed();
+      const before = await snapshot(row);
+      const response = await request(row.dead);
+      expect(response.status).toBe(200);
+      const result = await snapshot(row);
+      expect(result.dead.status).toBe(
+        action === 'retry' ? 'retried' : action === 'resolve' ? 'resolved' : 'dismissed'
+      );
+      expect(result.audits).toHaveLength(1);
+      const proof = (
+        await db.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
+          actor.sessionId,
+        ])
+      ).rows[0].step_up_verified_at;
+      expect(JSON.parse(result.audits[0].metadata)).toMatchObject({
+        sessionId: actor.sessionId,
+        stepUpVerified: true,
+        stepUpVerifiedAt: proof.toISOString(),
+        deadLetterId: row.dead,
+      });
+      expect(result.audits[0].correlation_id).toBe(response.headers.get('x-correlation-id'));
+      expect(result.outbox.idempotency_key).toBe(before.outbox.idempotency_key);
+      expect(result.job.delivery_payload).toEqual(before.job.delivery_payload);
+      if (action === 'retry') expect(result.job).toMatchObject({ status: 'queued', attempts: 0 });
+      else expect(result.job).toEqual(before.job);
+    });
+
+    for (const change of ['revoked', 'csrf', 'step-up', 'permission'] as const) {
+      it(`${prefix} ${action} rejects ${change} changed after the request guard`, async () => {
+        const row = await seed(),
+          before = await snapshot(row),
+          blocker = await db.pool.connect();
+        let pending: ReturnType<typeof request> | undefined;
+        try {
+          await blocker.query('BEGIN');
+          await blocker.query(
+            "SELECT role_id FROM staff_roles WHERE role_id='triage-role' FOR UPDATE"
+          );
+          pending = request(row.dead);
+          await expect
+            .poll(
+              async () =>
+                (
+                  await db.pool.query(
+                    "SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FOR SHARE OF ur,r%'"
+                  )
+                ).rows[0].count
+            )
+            .toBe(1);
+          if (change === 'permission')
+            await blocker.query(
+              "UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'"
+            );
+          else {
+            const assignment =
+              change === 'revoked'
+                ? 'revoked_at=clock_timestamp()'
+                : change === 'csrf'
+                  ? "csrf_token='changed-after-guard'"
+                  : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+            await db.pool.query(`UPDATE sessions SET ${assignment} WHERE session_id=$1`, [
+              actor.sessionId,
+            ]);
+          }
+          await blocker.query('COMMIT');
+          expect((await pending).status).toBe(change === 'revoked' ? 401 : 403);
+          expect(await snapshot(row)).toEqual(before);
+        } finally {
+          await blocker.query('ROLLBACK').catch(() => {});
+          blocker.release();
+          await pending;
+        }
+      });
+    }
+
+    it(`${prefix} ${action} rolls back queue, triage and audit when step-up expires before commit`, async () => {
+      const row = await seed(),
+        before = await snapshot(row);
+      await db.pool
+        .query(`CREATE FUNCTION invalidate_triage_session() RETURNS trigger LANGUAGE plpgsql AS $$
+        BEGIN UPDATE sessions SET step_up_verified_at=NULL WHERE session_id='${actor.sessionId}'; RETURN NEW; END $$;
+        CREATE TRIGGER invalidate_triage_session BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.user_id='triage-staff') EXECUTE FUNCTION invalidate_triage_session()`);
+      try {
+        expect((await request(row.dead)).status).toBe(403);
+        expect(await snapshot(row)).toEqual(before);
+      } finally {
+        await db.pool.query('DROP TRIGGER invalidate_triage_session ON audit_log');
+        await db.pool.query('DROP FUNCTION invalidate_triage_session()');
+      }
+    });
+  }
+}

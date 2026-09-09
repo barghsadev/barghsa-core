@@ -183,7 +183,7 @@ export class FailedNotificationsController {
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.failedNotificationsService.retryFailedNotification(id, req.session.userId, ip);
+    return this.failedNotificationsService.retryFailedNotification(id, req.session, ip);
   }
 
   /**
@@ -208,7 +208,7 @@ export class FailedNotificationsController {
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.failedNotificationsService.resolveFailedNotification(id, req.session.userId, ip);
+    return this.failedNotificationsService.resolveFailedNotification(id, req.session, ip);
   }
 
   /**
@@ -233,6 +233,6 @@ export class FailedNotificationsController {
   ): Promise<FailedNotificationDto> {
     this.assertRetryPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.failedNotificationsService.dismissFailedNotification(id, req.session.userId, ip);
+    return this.failedNotificationsService.dismissFailedNotification(id, req.session, ip);
   }
 }
