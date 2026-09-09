@@ -711,8 +711,8 @@ export const fa: I18nDictionary = {
   'admin.notifications.deadLetter.statusDismissed': 'بسته شد',
   'admin.notifications.window.title': 'پنجره ارسال روزانه',
   'admin.notifications.window.description':
-    'پیام‌های روزانه خارج از این پنجره صف می‌مانند و در بازه بعدی ارسال می‌شوند. رویدادهای امنیتی و OTP همیشه فوری ارسال می‌شوند.',
-  'admin.notifications.window.timezone': 'منطقه زمانی',
+    'این بازه در منطقه زمانی هر کاربر اعمال می‌شود. پیام‌های روزانه تا بازه بعدی در صف می‌مانند؛ زمان پیام‌های از قبل زمان‌بندی‌شده تغییر نمی‌کند. رویدادهای امنیتی و OTP همیشه فوری ارسال می‌شوند.',
+  'admin.notifications.window.timezone': 'منطقه زمانی جایگزین',
   'admin.notifications.window.start': 'ساعت شروع',
   'admin.notifications.window.end': 'ساعت پایان',
   'admin.notifications.window.current': 'پیکربندی فعلی',
@@ -1591,8 +1591,8 @@ export const en: I18nDictionary = {
   'admin.notifications.deadLetter.statusDismissed': 'Dismissed',
   'admin.notifications.window.title': 'Daily Delivery Window',
   'admin.notifications.window.description':
-    'Daytime messages outside this window are queued and delivered in the next window. Security and OTP events are always sent immediately.',
-  'admin.notifications.window.timezone': 'Timezone',
+    'This window applies in each user’s timezone. Daytime messages wait until the next window; existing schedules keep their original time. Security and OTP events are always sent immediately.',
+  'admin.notifications.window.timezone': 'Fallback timezone',
   'admin.notifications.window.start': 'Start time',
   'admin.notifications.window.end': 'End time',
   'admin.notifications.window.current': 'Current config',

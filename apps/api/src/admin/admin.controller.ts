@@ -1913,12 +1913,7 @@ export class AdminController {
    * messages keep their original timing (per story T-05.03.03).
    * Permission: `admin:notification-providers:edit` (T-09.06.03).
    *
-   * Step-up on this mutation is deliberately deferred: the delivery-window
-   * admin panel (T-05.03.03, `DeliveryWindowConfigPanel.tsx`) uses a raw fetch
-   * and the web app does not implement the step-up challenge flow yet, so
-   * requiring step-up here would regress the working save path. It must land
-   * together with the client-side step-up flow (same follow-up as the
-   * T-09.06.01/02 provider-config UI).
+   * Current session, CSRF and step-up are checked inside the transaction and before commit.
    */
   @Put('config/delivery-window')
   @ApiOperation({ summary: 'Update the delivery window configuration (admin)' })
@@ -1928,8 +1923,8 @@ export class AdminController {
       required: ['timezone', 'start_hour', 'end_hour'],
       properties: {
         timezone: { type: 'string', example: 'Asia/Tehran' },
-        start_hour: { type: 'number', example: 9, minimum: 0, maximum: 23 },
-        end_hour: { type: 'number', example: 21, minimum: 0, maximum: 23 },
+        start_hour: { type: 'number', example: 9, minimum: 0, maximum: 1439 / 60 },
+        end_hour: { type: 'number', example: 21, minimum: 0, maximum: 1439 / 60 },
       },
     },
   })
@@ -1950,7 +1945,7 @@ export class AdminController {
   async setDeliveryWindow(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertNotificationDeliveryEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.setDeliveryWindowConfig(rawBody, req.session.userId, ip);
+    return this.adminService.setDeliveryWindowConfig(rawBody, req.session, ip);
   }
 
   /**

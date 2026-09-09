@@ -8,6 +8,11 @@ vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn(async () => {}),
 }));
 
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn(async () => new Date()),
+}));
+const actor = { userId: 'admin-1', sessionId: 'session-1', csrfToken: 'csrf-1' };
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
@@ -82,7 +87,7 @@ describe('AdminService.setDeliveryWindowConfig (T-05.03.03)', () => {
     await expect(
       service.setDeliveryWindowConfig(
         { timezone: 'UTC', start_hour: 21, end_hour: 9 },
-        'admin-1',
+        actor,
         '127.0.0.1'
       )
     ).rejects.toMatchObject({ status: 400 });
@@ -94,7 +99,7 @@ describe('AdminService.setDeliveryWindowConfig (T-05.03.03)', () => {
     await expect(
       service.setDeliveryWindowConfig(
         { timezone: 'UTC', start_hour: 9, end_hour: 11 },
-        'admin-1',
+        actor,
         '127.0.0.1'
       )
     ).rejects.toThrowError(HttpException);
@@ -105,7 +110,7 @@ describe('AdminService.setDeliveryWindowConfig (T-05.03.03)', () => {
     await expect(
       service.setDeliveryWindowConfig(
         { timezone: 'Not/AZone', start_hour: 9, end_hour: 20 },
-        'admin-1',
+        actor,
         '127.0.0.1'
       )
     ).rejects.toMatchObject({ status: 400 });
@@ -118,7 +123,7 @@ describe('AdminService.setDeliveryWindowConfig (T-05.03.03)', () => {
 
     await service.setDeliveryWindowConfig(
       { timezone: 'Asia/Tehran', start_hour: 8, end_hour: 20 },
-      'admin-1',
+      actor,
       '127.0.0.1'
     );
 
@@ -147,7 +152,7 @@ describe('AdminService.setDeliveryWindowConfig (T-05.03.03)', () => {
 
     const result = await service.setDeliveryWindowConfig(
       { timezone: 'UTC', start_hour: 6, end_hour: 18 },
-      'admin-1',
+      actor,
       '127.0.0.1'
     );
     expect(result).toEqual({ timezone: 'UTC', startHour: 6, endHour: 18 });

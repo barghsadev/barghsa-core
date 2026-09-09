@@ -88,6 +88,10 @@ describe('delivery-window config permission gate (T-09.06.03)', () => {
     const body = { timezone: 'Asia/Tehran', start_hour: 8, end_hour: 20 };
     const result = await controller.setDeliveryWindow(body, adminReq);
     expect(result).toEqual({ timezone: 'Asia/Tehran', startHour: 8, endHour: 20 });
-    expect(adminService.setDeliveryWindowConfig).toHaveBeenCalledWith(body, 'admin-1', '127.0.0.1');
+    expect(adminService.setDeliveryWindowConfig).toHaveBeenCalledWith(
+      body,
+      adminReq.session,
+      '127.0.0.1'
+    );
   });
 });

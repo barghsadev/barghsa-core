@@ -1057,9 +1057,10 @@ export class AdminService {
    */
   async setDeliveryWindowConfig(
     input: unknown,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<DeliveryWindowConfig> {
+    const actorUserId = actor.userId;
     const validation = validateWindowConfig(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -1092,6 +1093,7 @@ export class AdminService {
         actorUserId,
         'admin:notification-providers:edit'
       );
+      await requireSessionStepUp(client, actor);
 
       await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
@@ -1108,7 +1110,7 @@ export class AdminService {
 
       // Record audit event (T-05.03.03: changes take effect for new schedules).
       const auditId = uuidv7();
-      const correlationId = uuidv7();
+      const correlationId = correlationIdStorage.getStore() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1117,6 +1119,7 @@ export class AdminService {
           actorUserId,
           'config_change',
           JSON.stringify({
+            sessionId: actor.sessionId,
             key: DELIVERY_WINDOW_CONFIG_KEY,
             newValue: stored,
           }),
@@ -1126,10 +1129,11 @@ export class AdminService {
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(
-        `Delivery window set to ${config.timezone} ${config.startHour}:00–${config.endHour}:00 by ${actorUserId}`
+        `Delivery window set to ${config.timezone} ${config.startHour}–${config.endHour} by ${actorUserId}`
       );
       return config;
     } catch (error) {

@@ -12,14 +12,33 @@
  * @module notifications
  */
 
-/** Admin-configurable daily delivery window, expressed in hour-of-day. */
+/** Admin-configurable daily delivery window, expressed as hours with minute precision. */
 export interface DeliveryWindowConfig {
   /** IANA timezone the window is declared in, e.g. `Asia/Tehran`. */
   timezone: string;
-  /** Window open hour (0–23, inclusive start). */
+  /** Window open hour (0–23:59, inclusive start). */
   startHour: number;
-  /** Window close hour (0–23, exclusive end). */
+  /** Window close hour (0–23:59, exclusive end). */
   endHour: number;
+}
+
+/** Numeric hour value with whole-minute precision; legacy whole hours remain valid. */
+export function isWindowHour(value: unknown): value is number {
+  return (
+    typeof value === 'number' &&
+    Number.isFinite(value) &&
+    value >= 0 &&
+    value < 24 &&
+    Math.abs(value * 60 - Math.round(value * 60)) < 1e-7 &&
+    Math.round(value * 60) < 1440
+  );
+}
+
+/** Format a valid window boundary for a native time input. */
+export function formatWindowTime(hour: number): string {
+  if (!isWindowHour(hour)) return '';
+  const minutes = Math.round(hour * 60);
+  return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
 }
 
 /** Default window: 09:00–21:00 in Iran time (story T-05.03 default). */
@@ -70,7 +89,7 @@ export function isValidTimeZone(tz: string): boolean {
  * T-05.03.03: start must be strictly before end, and the length must be at
  * least {@link MIN_WINDOW_HOURS}. A valid IANA timezone is also required.
  *
- * Hours are integers in 0–23 (inclusive start, exclusive end), so "overnight"
+ * Hours have minute precision in 00:00–23:59 (inclusive start, exclusive end), so "overnight"
  * windows (e.g. 22:00→06:00) are intentionally **not** expressible — a daytime
  * delivery window must fall within a single calendar day.
  */
@@ -87,27 +106,27 @@ export function validateWindowConfig(input: unknown): WindowValidationResult {
     issues.push('A valid IANA timezone is required');
   }
 
-  const start = Number(o.start_hour ?? o.startHour);
-  const end = Number(o.end_hour ?? o.endHour);
+  const start = o.start_hour ?? o.startHour;
+  const end = o.end_hour ?? o.endHour;
 
-  if (!Number.isInteger(start) || start < 0 || start > 23) {
-    issues.push('Start hour must be an integer between 0 and 23');
+  if (!isWindowHour(start)) {
+    issues.push('Start time must have minute precision between 00:00 and 23:59');
   }
-  if (!Number.isInteger(end) || end < 0 || end > 23) {
-    issues.push('End hour must be an integer between 0 and 23');
+  if (!isWindowHour(end)) {
+    issues.push('End time must have minute precision between 00:00 and 23:59');
   }
 
   // Only evaluate range rules when both bounds are individually valid so we do
   // not emit misleading extra errors on malformed input.
-  const intStart = Number.isInteger(start) && start >= 0 && start <= 23 ? start : null;
-  const intEnd = Number.isInteger(end) && end >= 0 && end <= 23 ? end : null;
+  const intStart = isWindowHour(start) ? Math.round(start * 60) : null;
+  const intEnd = isWindowHour(end) ? Math.round(end * 60) : null;
 
   if (intStart !== null && intEnd !== null) {
     if (intStart >= intEnd) {
       issues.push('Start time must be before end time');
     }
     const length = intEnd - intStart;
-    if (length < MIN_WINDOW_HOURS) {
+    if (length < MIN_WINDOW_HOURS * 60) {
       issues.push(`Delivery window must be at least ${MIN_WINDOW_HOURS} hours`);
     }
   }
@@ -124,17 +143,14 @@ export function validateWindowConfig(input: unknown): WindowValidationResult {
 export function toDeliveryWindowConfig(input: unknown): DeliveryWindowConfig {
   if (!input || typeof input !== 'object') return { ...DEFAULT_DELIVERY_WINDOW };
   const o = input as Record<string, unknown>;
-  const start = Number(o.start_hour ?? o.startHour);
-  const end = Number(o.end_hour ?? o.endHour);
+  const start = o.start_hour ?? o.startHour;
+  const end = o.end_hour ?? o.endHour;
   return {
     timezone:
       typeof o.timezone === 'string' && isValidTimeZone(o.timezone)
         ? o.timezone
         : DEFAULT_DELIVERY_WINDOW.timezone,
-    startHour:
-      Number.isInteger(start) && start >= 0 && start <= 23
-        ? start
-        : DEFAULT_DELIVERY_WINDOW.startHour,
-    endHour: Number.isInteger(end) && end >= 0 && end <= 23 ? end : DEFAULT_DELIVERY_WINDOW.endHour,
+    startHour: isWindowHour(start) ? start : DEFAULT_DELIVERY_WINDOW.startHour,
+    endHour: isWindowHour(end) ? end : DEFAULT_DELIVERY_WINDOW.endHour,
   };
 }

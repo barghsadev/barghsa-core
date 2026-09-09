@@ -143,12 +143,126 @@ function write(item: (typeof cases)[number], user = 'operator') {
 }
 
 const walletLimit = cases.find((item) => item.path === 'wallet-top-up-limit')!;
+const daytimeWindow = cases.find((item) => item.path === 'delivery-window')!;
 async function resetWalletLimitActor() {
   await http.pool.query(
     "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,expires_at=clock_timestamp()+INTERVAL '1 day',idle_deadline=clock_timestamp()+INTERVAL '30 minutes',step_up_verified_at=clock_timestamp() WHERE user_id='operator'",
     [headers.operator!['X-CSRF-Token']]
   );
 }
+
+for (const change of ['revoke', 'csrf', 'step-up'] as const) {
+  it(`delivery window rejects ${change} changed after the HTTP guard`, async () => {
+    const before = await snapshot();
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query(
+        "SELECT role_id FROM staff_roles WHERE role_id='test-config-editor' FOR UPDATE"
+      );
+      pending = write(daytimeWindow);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FOR SHARE OF ur,r%'"
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await blocker.query(
+        change === 'revoke'
+          ? "UPDATE sessions SET revoked_at=clock_timestamp() WHERE user_id='operator'"
+          : change === 'csrf'
+            ? "UPDATE sessions SET csrf_token='rotated' WHERE user_id='operator'"
+            : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '16 minutes' WHERE user_id='operator'"
+      );
+      await blocker.query('COMMIT');
+      expect((await pending).status).toBe(change === 'revoke' ? 401 : 403);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending;
+      await resetWalletLimitActor();
+    }
+  });
+}
+
+for (const expiry of ['session', 'step-up'] as const) {
+  it(`delivery window rolls back config/version/audit if ${expiry} expires during audit`, async () => {
+    const before = await snapshot();
+    await http.pool.query(
+      'CREATE FUNCTION delay_daytime_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM pg_sleep(1.2); RETURN NEW; END $$'
+    );
+    await http.pool.query(
+      'CREATE TRIGGER delay_daytime_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_daytime_audit()'
+    );
+    try {
+      await http.pool.query(
+        expiry === 'session'
+          ? "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '800 milliseconds' WHERE user_id='operator'"
+          : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='operator'"
+      );
+      expect((await write(daytimeWindow)).status).toBe(expiry === 'session' ? 401 : 403);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await http.pool.query('DROP TRIGGER delay_daytime_audit ON audit_log');
+      await http.pool.query('DROP FUNCTION delay_daytime_audit()');
+      await resetWalletLimitActor();
+    }
+  });
+}
+
+it('persists minute boundaries and binds the delivery-window audit to the current session/correlation', async () => {
+  const correlation = randomUUID();
+  const body = { timezone: 'UTC', start_hour: 9.25, end_hour: 21.75 };
+  const response = await fetch(`${http.base}/api/admin/config/delivery-window`, {
+    method: 'PUT',
+    headers: { ...headers.operator, 'X-Correlation-ID': correlation },
+    body: JSON.stringify(body),
+  });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual({ timezone: 'UTC', startHour: 9.25, endHour: 21.75 });
+  const saved = await fetch(`${http.base}/api/admin/config/delivery-window`, {
+    headers: headers.operator!,
+  });
+  expect(await saved.json()).toEqual({ timezone: 'UTC', startHour: 9.25, endHour: 21.75 });
+  expect((await snapshot()).config).toEqual([{ key: daytimeWindow.key, value: body, version: 1 }]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS metadata,correlation_id FROM audit_log WHERE event='config_change'"
+      )
+    ).rows
+  ).toEqual([
+    {
+      correlation_id: correlation,
+      metadata: {
+        key: daytimeWindow.key,
+        newValue: body,
+        sessionId: headers.operator!.Cookie!.split('=')[1],
+      },
+    },
+  ]);
+});
+
+it.each([9.001, null, false, '9', 24])(
+  'rejects invalid window boundary %s without writes',
+  async (start) => {
+    const before = await snapshot();
+    const response = await fetch(`${http.base}/api/admin/config/delivery-window`, {
+      method: 'PUT',
+      headers: headers.operator!,
+      body: JSON.stringify({ ...daytimeWindow.body, start_hour: start }),
+    });
+    expect(response.status).toBe(400);
+    expect(await snapshot()).toEqual(before);
+  }
+);
 
 for (const change of ['revoke', 'csrf', 'step-up'] as const) {
   it(`wallet limit rejects ${change} changed after the HTTP guard while waiting on policy`, async () => {

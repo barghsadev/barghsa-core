@@ -7,6 +7,8 @@ import {
   toDeliveryWindowConfig,
   validateWindowConfig,
   isValidTimeZone,
+  formatWindowTime,
+  isWindowHour,
 } from './delivery-window-config.js';
 
 describe('delivery-window configuration contract (T-05.03.03)', () => {
@@ -52,8 +54,8 @@ describe('delivery-window configuration contract (T-05.03.03)', () => {
       expect(r.issues.length).toBe(2);
     });
 
-    it('rejects a non-integer hour', () => {
-      const r = validateWindowConfig({ timezone: 'UTC', start_hour: 9.5, end_hour: 20 });
+    it('rejects sub-minute precision', () => {
+      const r = validateWindowConfig({ timezone: 'UTC', start_hour: 9.001, end_hour: 20 });
       expect(r.ok).toBe(false);
     });
 
@@ -111,4 +113,26 @@ describe('delivery-window configuration contract (T-05.03.03)', () => {
       });
     });
   });
+});
+
+it('preserves every minute boundary and exact four-hour validation without floating-point drift', () => {
+  for (let minute = 0; minute < 1440; minute++) {
+    const hour = minute / 60;
+    expect(isWindowHour(hour)).toBe(true);
+    expect(formatWindowTime(hour)).toBe(
+      `${String(Math.floor(minute / 60)).padStart(2, '0')}:${String(minute % 60).padStart(2, '0')}`
+    );
+    if (minute < 1200) {
+      expect(
+        validateWindowConfig({ timezone: 'UTC', start_hour: hour, end_hour: (minute + 240) / 60 })
+          .ok
+      ).toBe(true);
+      expect(
+        validateWindowConfig({ timezone: 'UTC', start_hour: hour, end_hour: (minute + 239) / 60 })
+          .ok
+      ).toBe(false);
+    }
+  }
+  for (const value of ['', null, false, [], '9', NaN, Infinity, 24, -1])
+    expect(isWindowHour(value)).toBe(false);
 });

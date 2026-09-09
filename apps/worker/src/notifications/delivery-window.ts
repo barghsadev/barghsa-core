@@ -30,6 +30,7 @@
  */
 import {
   classifyNotificationType,
+  isWindowHour,
   DEFAULT_DELIVERY_WINDOW,
   DELIVERY_WINDOW_CONFIG_KEY,
   type DeliveryWindowConfig,
@@ -146,7 +147,10 @@ const HOUR_MIN = 60;
 export function isWithinWindow(date: Date, config: DeliveryWindowConfig): boolean {
   const p = tzParts(date, config.timezone);
   const minutes = p.hour * HOUR_MIN + p.minute;
-  return minutes >= config.startHour * HOUR_MIN && minutes < config.endHour * HOUR_MIN;
+  return (
+    minutes >= Math.round(config.startHour * HOUR_MIN) &&
+    minutes < Math.round(config.endHour * HOUR_MIN)
+  );
 }
 
 /**
@@ -155,8 +159,11 @@ export function isWithinWindow(date: Date, config: DeliveryWindowConfig): boolea
  */
 export function nextWindowOpen(date: Date, config: DeliveryWindowConfig): Date {
   const p = tzParts(date, config.timezone);
-  if (p.hour < config.startHour) {
-    return atCalendar(config.timezone, p.year, p.month, p.day, config.startHour);
+  const start = Math.round(config.startHour * HOUR_MIN);
+  const hour = Math.floor(start / HOUR_MIN),
+    minute = start % HOUR_MIN;
+  if (p.hour * HOUR_MIN + p.minute < start) {
+    return atCalendar(config.timezone, p.year, p.month, p.day, hour, minute);
   }
   // Never returns "now / inside the window": when the clock is already at or
   // past startHour the open boundary has passed, so bump to the next calendar
@@ -167,7 +174,8 @@ export function nextWindowOpen(date: Date, config: DeliveryWindowConfig): Date {
     tomorrow.getUTCFullYear(),
     tomorrow.getUTCMonth() + 1,
     tomorrow.getUTCDate(),
-    config.startHour
+    hour,
+    minute
   );
 }
 
@@ -206,10 +214,10 @@ export function decideDeliverySchedule(
 //  Config resolution
 // ───────────────────────────────────────────────────────────────────────────
 
-/** Coerce a stored hour to a valid 0–23 integer, or `fallback`. */
+/** Coerce a stored hour to a valid minute-precision boundary, or `fallback`. */
 function toHour(value: unknown, fallback: number): number {
   const n = typeof value === 'number' ? value : Number(value);
-  return Number.isInteger(n) && n >= 0 && n <= 23 ? n : fallback;
+  return isWindowHour(n) ? n : fallback;
 }
 
 /**

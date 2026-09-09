@@ -1479,13 +1479,13 @@
                 "properties": {
                   "end_hour": {
                     "example": 21,
-                    "maximum": 23,
+                    "maximum": 23.983333333333334,
                     "minimum": 0,
                     "type": "number"
                   },
                   "start_hour": {
                     "example": 9,
-                    "maximum": 23,
+                    "maximum": 23.983333333333334,
                     "minimum": 0,
                     "type": "number"
                   },

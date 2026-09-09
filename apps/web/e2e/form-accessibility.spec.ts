@@ -1083,12 +1083,12 @@ for (const locale of ['en', 'fa']) {
     const windowForm = page
       .locator('form')
       .filter({ has: page.locator('#delivery-window-timezone') });
-    for (const control of await windowForm.locator('select').all()) {
+    for (const control of await windowForm.locator('select, input[type=time]').all()) {
       await expect(control).toHaveAccessibleName(/.+/);
     }
     await page
       .getByLabel(locale === 'fa' ? 'ساعت شروع' : 'Start time', { exact: false })
-      .selectOption('20');
+      .fill('20:00');
     await windowForm
       .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
       .click();
@@ -1098,11 +1098,13 @@ for (const locale of ['en', 'fa']) {
     expect(writes).toBe(0);
     await page
       .getByLabel(locale === 'fa' ? 'ساعت شروع' : 'Start time', { exact: false })
-      .selectOption('9');
+      .fill('09:00');
     await windowForm
       .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
       .click();
-    const error = page.getByRole('alert').filter({ hasText: 'Unavailable' });
+    const error = page
+      .getByRole('alert')
+      .filter({ hasText: locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save' });
     await expect(error).toBeVisible();
     await error
       .getByRole('button', { name: locale === 'fa' ? 'بستن پیام خطا' : 'Dismiss error' })
@@ -1900,7 +1902,7 @@ for (const locale of ['en', 'fa']) {
       .click();
     await expect(panel.locator('#delivery-window-timezone')).toHaveValue('Asia/Tokyo');
     const start = panel.locator('#delivery-window-start');
-    await start.selectOption('8');
+    await start.fill('08:00');
     await save.click();
     await expect.poll(() => writes).toBe(1);
     await expect(start).toBeDisabled();
@@ -1908,7 +1910,7 @@ for (const locale of ['en', 'fa']) {
     await expect(panel.getByRole('alert')).toContainText(
       locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save'
     );
-    await expect(start).toHaveValue('8');
+    await expect(start).toHaveValue('08:00');
     await expect(save).toBeEnabled();
     await save.click();
     await expect.poll(() => writes).toBe(2);
@@ -1917,10 +1919,96 @@ for (const locale of ['en', 'fa']) {
     await save.click();
     await expect(panel.getByRole('status')).toBeVisible();
     await expect(panel.getByRole('alert')).toHaveCount(0);
-    await start.selectOption('7');
+    await start.fill('07:00');
     await expect(panel.getByRole('status')).toHaveCount(0);
     expect(reads).toBe(2);
     expect(writes).toBe(3);
+  });
+}
+
+for (const locale of ['en', 'fa']) {
+  test(`delivery window preserves minute values through cancelled and retried password confirmation (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/admin/notifications/templates*', (route) =>
+      route.fulfill({ json: [] })
+    );
+    let saved = { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 };
+    let verified = false,
+      writes = 0,
+      passwords = 0;
+    await page.route('**/api/admin/config/delivery-window', (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: saved });
+      writes++;
+      expect(route.request().postDataJSON()).toEqual({
+        timezone: 'Asia/Tehran',
+        start_hour: 9.25,
+        end_hour: 21.75,
+      });
+      if (!verified)
+        return route.fulfill({ status: 403, json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } } });
+      expect(route.request().headers()['x-csrf-token']).toBe('daytime-rotated');
+      saved = { timezone: 'Asia/Tehran', startHour: 9.25, endHour: 21.75 };
+      return route.fulfill({ json: saved });
+    });
+    await page.route('**/api/auth/step-up', (route) => {
+      passwords++;
+      if (route.request().postDataJSON().password !== 'right-password')
+        return route.fulfill({ status: 401, json: {} });
+      verified = true;
+      return route.fulfill({
+        headers: { 'set-cookie': 'barghsa_csrf=daytime-rotated; Path=/; SameSite=Strict' },
+        json: {},
+      });
+    });
+    await page.goto('/admin/notifications');
+    const panel = page.getByRole('region', {
+      name: locale === 'fa' ? 'پنجره ارسال روزانه' : 'Daily Delivery Window',
+      exact: true,
+    });
+    const start = panel.locator('#delivery-window-start'),
+      end = panel.locator('#delivery-window-end');
+    const save = panel.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره' : 'Save',
+      exact: true,
+    });
+    await expect(start).toHaveAttribute('type', 'time');
+    await expect(end).toHaveAttribute('step', '60');
+    await expect(panel).toContainText(locale === 'fa' ? 'هر کاربر' : 'each user');
+    await expect(panel).toContainText('OTP');
+    await start.fill('09:15');
+    await end.fill('13:14');
+    await save.click();
+    await expect(panel.getByRole('alert')).toBeVisible();
+    expect(writes).toBe(0);
+    await end.fill('21:45');
+    await save.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    // The modal correctly removes the background region from the accessibility tree.
+    await expect(page.locator('#delivery-window-start')).toBeDisabled();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(start).toHaveValue('09:15');
+    expect(writes).toBe(1);
+    expect(passwords).toBe(0);
+    await save.click();
+    const password = dialog.locator('input[type=password]');
+    await password.fill('wrong-password');
+    await dialog.locator('button[type=submit]').click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(password).toHaveValue('');
+    expect(writes).toBe(2);
+    await password.fill('right-password');
+    await dialog.locator('button[type=submit]').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(panel.getByRole('status')).toBeVisible();
+    expect(writes).toBe(3);
+    expect(passwords).toBe(2);
+    await page.reload();
+    await expect(start).toHaveValue('09:15');
+    await expect(end).toHaveValue('21:45');
   });
 }
 

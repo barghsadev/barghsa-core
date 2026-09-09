@@ -399,7 +399,7 @@ it('delivers mixed-channel inboxes immediately in each recipient timezone and pr
       verifiedPhone: false,
       marketingOptedIn: {},
     }),
-    deliveryWindow: { timezone: 'UTC', startHour: 9, endHour: 21 },
+    deliveryWindow: { timezone: 'UTC', startHour: 9.25, endHour: 21.75 },
   };
   vi.useFakeTimers({ toFake: ['Date'] });
   try {
@@ -420,11 +420,11 @@ it('delivers mixed-channel inboxes immediately in each recipient timezone and pr
         [tehranId]
       )
     ).rows[0];
-    expect(scheduled.run_after.toISOString()).toBe('2026-09-07T05:30:00.000Z');
+    expect(scheduled.run_after.toISOString()).toBe('2026-09-07T05:45:00.000Z');
     expect(scheduled.delivery_window).toEqual({
       timezone: 'Asia/Tehran',
-      startHour: 9,
-      endHour: 21,
+      startHour: 9.25,
+      endHour: 21.75,
     });
     vi.setSystemTime(new Date('2026-09-07T05:00:00Z'));
     const newConfig = {
@@ -432,7 +432,7 @@ it('delivers mixed-channel inboxes immediately in each recipient timezone and pr
       deliveryWindow: { timezone: 'UTC', startHour: 12, endHour: 20 },
     };
     expect((await runOutboxPoll(newConfig)).leased).toBe(0);
-    vi.setSystemTime(new Date('2026-09-07T05:30:00Z'));
+    vi.setSystemTime(new Date('2026-09-07T05:45:00Z'));
     expect(await runOutboxPoll(newConfig)).toMatchObject({ leased: 1, delivered: 1, failed: 0 });
     expect(emailed).toEqual([nyProfile, profileId]);
     expect(

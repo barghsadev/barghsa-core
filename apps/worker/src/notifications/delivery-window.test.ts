@@ -296,3 +296,34 @@ it('uses the first occurrence of a repeated fall boundary', () => {
     }).toISOString()
   ).toBe('2026-10-25T00:00:00.000Z');
 });
+
+it('schedules at exact local minutes today/tomorrow and keeps close exclusive', () => {
+  const config = normalizeWindowConfig({
+    timezone: 'Asia/Tehran',
+    start_hour: 9.25,
+    end_hour: 21.75,
+  });
+  expect(config).toEqual({ timezone: 'Asia/Tehran', startHour: 9.25, endHour: 21.75 });
+  expect(isWithinWindow(new Date('2026-09-09T05:44:59Z'), config)).toBe(false);
+  expect(isWithinWindow(new Date('2026-09-09T05:45:00Z'), config)).toBe(true);
+  expect(isWithinWindow(new Date('2026-09-09T18:15:00Z'), config)).toBe(false);
+  expect(nextWindowOpen(new Date('2026-09-09T05:35:00Z'), config).toISOString()).toBe(
+    '2026-09-09T05:45:00.000Z'
+  );
+  expect(nextWindowOpen(new Date('2026-09-09T18:15:00Z'), config).toISOString()).toBe(
+    '2026-09-10T05:45:00.000Z'
+  );
+  expect(
+    decideDeliverySchedule('auth.otp_sent', ['email'], new Date('2026-09-09T02:00:00Z'), config)
+  ).toEqual({ kind: 'now' });
+});
+
+it('keeps minute precision at repeated and missing daylight-saving boundaries', () => {
+  const config = { timezone: 'America/New_York', startHour: 1.5, endHour: 21.5 };
+  expect(nextWindowOpen(new Date('2026-11-01T04:00:00Z'), config).toISOString()).toBe(
+    '2026-11-01T05:30:00.000Z'
+  );
+  expect(
+    nextWindowOpen(new Date('2026-03-08T05:00:00Z'), { ...config, startHour: 2.5 }).toISOString()
+  ).toBe('2026-03-08T07:00:00.000Z');
+});

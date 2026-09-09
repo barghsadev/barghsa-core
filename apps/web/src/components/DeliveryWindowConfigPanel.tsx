@@ -1,5 +1,6 @@
 import { adminControlsText } from '@barghsa/i18n/admin-controls';
-import { validateWindowConfig } from '@barghsa/shared/notifications';
+import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { validateWindowConfig, formatWindowTime } from '@barghsa/shared/notifications';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useRef } from 'react';
 import type { FormEvent } from 'react';
@@ -10,7 +11,7 @@ import type { Locale } from '@barghsa/i18n/app';
  * Delivery-window configuration panel (E-05, T-05.03.03).
  *
  * Admin section under Notifications settings that lets an admin configure the
- * daily daytime delivery window: a start-hour selector, an end-hour selector,
+ * daily daytime delivery window: a start-time input, an end-time input,
  * and a timezone selector. Rules enforced both client-side and server-side:
  *  - start < end
  *  - window length >= 4 hours
@@ -44,19 +45,6 @@ const TIMEZONE_OPTIONS = [
   'America/New_York',
 ];
 
-/** Generate 0–23 hour options (as integers, formatters render as HH:00). */
-function hourOptions(): number[] {
-  const out: number[] = [];
-  for (let h = 0; h < 24; h++) out.push(h);
-  return out;
-}
-
-/** Render an hour-of-day as an HH:00 clock string (24h). */
-function formatHour(hour: number): string {
-  const hh = String(hour).padStart(2, '0');
-  return `${hh}:00`;
-}
-
 function readWindow(body: unknown, message = 'Invalid delivery window'): DeliveryWindowConfig {
   const value = body as Partial<DeliveryWindowConfig> | null;
   if (
@@ -76,6 +64,10 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
   const [endHour, setEndHour] = useState(DEFAULT_WINDOW.endHour);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [protectedAction, setProtectedAction] = useState<{
+    action: TeamAction;
+    expected: DeliveryWindowConfig;
+  } | null>(null);
   const savingRef = useRef(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [reload, setReload] = useState(0);
@@ -111,14 +103,29 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
 
   /** Client-side validation mirroring the shared rules (T-05.03.03). */
   function validate(start: number, end: number): string | null {
+    if (!Number.isFinite(start) || !Number.isFinite(end))
+      return t('admin.notifications.window.errBeforeEnd', uiLocale);
     if (start >= end) return t('admin.notifications.window.errBeforeEnd', uiLocale);
-    if (end - start < 4) return t('admin.notifications.window.errTooShort', uiLocale);
+    if (Math.round(end * 60) - Math.round(start * 60) < 240)
+      return t('admin.notifications.window.errTooShort', uiLocale);
     return null;
+  }
+
+  function acceptSaved(result: unknown, expected: DeliveryWindowConfig) {
+    const data = readWindow(result, t('admin.notifications.window.saveFailed', uiLocale));
+    if (
+      data.timezone !== expected.timezone ||
+      data.startHour !== expected.startHour ||
+      data.endHour !== expected.endHour
+    )
+      throw new Error(t('admin.notifications.window.saveFailed', uiLocale));
+    setConfig(data);
+    setSaved(true);
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!config || loading || loadFailed || savingRef.current) return;
+    if (!config || loading || loadFailed || savingRef.current || protectedAction) return;
     const issue = validate(startHour, endHour);
     if (issue) {
       setClientIssue(issue);
@@ -139,23 +146,32 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
           end_hour: endHour,
         }),
       });
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        const message = (errData as { message?: unknown }).message;
-        throw new Error(
-          typeof message === 'string'
-            ? message
-            : t('admin.notifications.window.saveFailed', uiLocale)
-        );
+      const result: unknown = await res.json().catch(() => null);
+      const record =
+        result && typeof result === 'object' ? (result as Record<string, unknown>) : null;
+      const code =
+        typeof record?.error === 'string'
+          ? record.error
+          : (record?.error as { code?: unknown } | null)?.code;
+      if (
+        res.status === 403 &&
+        (code === 'AUTHZ:STEP_UP_REQUIRED' || record?.requiresStepUp === true)
+      ) {
+        setProtectedAction({
+          action: {
+            title: t('admin.notifications.window.title', uiLocale),
+            description: t('admin.notifications.confirmAction', uiLocale),
+            path: '/api/admin/config/delivery-window',
+            method: 'PUT',
+            body: { timezone, start_hour: startHour, end_hour: endHour },
+            requiresPassword: true,
+          },
+          expected: { timezone, startHour, endHour },
+        });
+        return;
       }
-      const data = readWindow(
-        await res.json(),
-        t('admin.notifications.window.saveFailed', uiLocale)
-      );
-      if (data.timezone !== timezone || data.startHour !== startHour || data.endHour !== endHour)
-        throw new Error(t('admin.notifications.window.saveFailed', uiLocale));
-      setConfig(data);
-      setSaved(true);
+      if (!res.ok) throw new Error(t('admin.notifications.window.saveFailed', uiLocale));
+      acceptSaved(result, { timezone, startHour, endHour });
     } catch (err) {
       setError(
         err instanceof Error ? err.message : t('admin.notifications.window.saveFailed', uiLocale)
@@ -179,6 +195,13 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
       aria-labelledby="delivery-window-title"
       className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
     >
+      {protectedAction && (
+        <TeamActionDialog
+          action={protectedAction.action}
+          onClose={() => setProtectedAction(null)}
+          onSuccess={async (result) => acceptSaved(result, protectedAction.expected)}
+        />
+      )}
       <div>
         <h2 id="delivery-window-title" className="text-lg font-semibold">
           {t('admin.notifications.window.title', uiLocale)}
@@ -227,7 +250,10 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
         }}
         noValidate
       >
-        <fieldset disabled={!config || loading || saving} className="space-y-4">
+        <fieldset
+          disabled={!config || loading || saving || !!protectedAction}
+          className="space-y-4"
+        >
           <legend className="sr-only">{t('admin.notifications.window.title', uiLocale)}</legend>
           {/* Timezone */}
           <div>
@@ -263,18 +289,21 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
                 {t('admin.notifications.window.start', uiLocale)}{' '}
                 <span className="text-red-500">*</span>
               </label>
-              <select
+              <input
+                type="time"
+                step="60"
+                required
                 id="delivery-window-start"
-                value={startHour}
-                onChange={(e) => setStartHour(Number(e.target.value))}
+                value={formatWindowTime(startHour)}
+                onChange={(e) =>
+                  setStartHour(
+                    e.target.value
+                      ? Number(e.target.value.slice(0, 2)) + Number(e.target.value.slice(3, 5)) / 60
+                      : NaN
+                  )
+                }
                 className="w-full border border-gray-300 rounded px-3 py-2"
-              >
-                {hourOptions().map((h) => (
-                  <option key={h} value={h}>
-                    {formatHour(h)}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
             <div>
               <label
@@ -284,18 +313,21 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
                 {t('admin.notifications.window.end', uiLocale)}{' '}
                 <span className="text-red-500">*</span>
               </label>
-              <select
+              <input
+                type="time"
+                step="60"
+                required
                 id="delivery-window-end"
-                value={endHour}
-                onChange={(e) => setEndHour(Number(e.target.value))}
+                value={formatWindowTime(endHour)}
+                onChange={(e) =>
+                  setEndHour(
+                    e.target.value
+                      ? Number(e.target.value.slice(0, 2)) + Number(e.target.value.slice(3, 5)) / 60
+                      : NaN
+                  )
+                }
                 className="w-full border border-gray-300 rounded px-3 py-2"
-              >
-                {hourOptions().map((h) => (
-                  <option key={h} value={h}>
-                    {formatHour(h)}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
           </div>
 
@@ -309,7 +341,8 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
             <p className="text-xs text-gray-400">
               {t('admin.notifications.window.current', uiLocale)}:{' '}
               <span className="font-mono">
-                {config.timezone} {formatHour(config.startHour)}–{formatHour(config.endHour)}
+                {config.timezone} {formatWindowTime(config.startHour)}–
+                {formatWindowTime(config.endHour)}
               </span>
             </p>
           )}
