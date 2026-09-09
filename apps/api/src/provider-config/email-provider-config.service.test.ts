@@ -10,6 +10,14 @@ import {
 } from './email-provider-config.service';
 import { ProviderSecretsService } from './provider-secrets.service';
 
+function sessionFor(userId: string) {
+  return {
+    userId,
+    sessionId: '00000000-0000-4000-8000-000000000001',
+    csrfToken: 'provider-fixture-csrf',
+  };
+}
+
 /**
  * In-memory mock of the `email_provider_configs` table keyed by id, plus a
  * query-log for asserting transaction boundaries (BEGIN/COMMIT/ROLLBACK).
@@ -21,6 +29,17 @@ function buildHarness() {
   const exec = async (text: string, params?: unknown[]): Promise<any> => {
     queries.push(text);
     const lower = text.toLowerCase();
+    if (lower.includes('from sessions'))
+      return {
+        rows: [
+          {
+            csrf_token: 'provider-fixture-csrf',
+            active: true,
+            fresh: true,
+            step_up_verified_at: new Date('2026-09-09T00:00:00Z'),
+          },
+        ],
+      };
 
     // Transaction control
     if (lower.startsWith('begin')) return { rows: [] };
@@ -216,12 +235,15 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('creates a new draft with status draft', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'Primary SMTP',
-      config: { host: 'example.com' },
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'Primary SMTP',
+        config: { host: 'example.com' },
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     expect(created.status).toBe('draft');
     expect(created.transport).toBe('smtp');
     expect(created.label).toBe('Primary SMTP');
@@ -230,27 +252,35 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('cannot activate a draft before it has passed a test', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'resend',
-      label: 'Resend',
-      config: {},
-      createdBy: 'admin-1',
-    });
-    await expect(service.activate(created.id)).rejects.toMatchObject({ status: 409 });
+    const created = await service.create(
+      {
+        transport: 'resend',
+        label: 'Resend',
+        config: {},
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
+    await expect(
+      service.activate(created.id, 'admin-1', sessionFor('admin-1'))
+    ).rejects.toMatchObject({ status: 409 });
   });
 
   it('records a passing test then activates', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'resend',
-      label: 'Resend',
-      config: {},
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'resend',
+        label: 'Resend',
+        config: {},
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     const tested = await service.recordTest(created.id, { passed: true });
     expect(tested.lastTestStatus).toBe('passed');
 
-    const active = await service.activate(created.id, 'admin-1');
+    const active = await service.activate(created.id, 'admin-1', sessionFor('admin-1'));
     expect(active.status).toBe('active');
     expect(active.activatedAt).not.toBeNull();
     expect(active.activatedBy).toBe('admin-1');
@@ -258,17 +288,25 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('updates a draft by merging config so omitted secrets are preserved', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'SMTP',
-      config: { host: 'smtp.example.com', password: 'super-secret' },
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'SMTP',
+        config: { host: 'smtp.example.com', password: 'super-secret' },
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     // Update changes the host but omits the password (the UI leaves secrets
     // blank when editing since they are never returned by the API).
-    await service.update(created.id, {
-      config: { host: 'smtp.new.example.com' },
-    });
+    await service.update(
+      created.id,
+      {
+        config: { host: 'smtp.new.example.com' },
+      },
+      'admin-1',
+      sessionFor('admin-1')
+    );
     // Service result does not include config, so assert via the stored row.
     const serviceWithReader = service as unknown as {
       readConfig: (id: string) => Promise<Record<string, unknown>>;
@@ -282,14 +320,22 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('encrypts a new password supplied on update and preserves it on later edits', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'SMTP',
-      config: { host: 'smtp.example.com', password: 'first-secret' },
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'SMTP',
+        config: { host: 'smtp.example.com', password: 'first-secret' },
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     // Replace the password with a new one.
-    await service.update(created.id, { config: { password: 'rotated-secret' } });
+    await service.update(
+      created.id,
+      { config: { password: 'rotated-secret' } },
+      'admin-1',
+      sessionFor('admin-1')
+    );
     const serviceWithReader = service as unknown as {
       readConfig: (id: string) => Promise<Record<string, unknown>>;
     };
@@ -297,23 +343,36 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
     expect(afterRotate.password).toBe('rotated-secret');
 
     // Editing non-secret fields must not wipe the (now rotated) secret.
-    await service.update(created.id, { config: { host: 'smtp.other.example.com' } });
+    await service.update(
+      created.id,
+      { config: { host: 'smtp.other.example.com' } },
+      'admin-1',
+      sessionFor('admin-1')
+    );
     const afterEdit = await serviceWithReader.readConfig(created.id);
     expect(afterEdit).toMatchObject({ host: 'smtp.other.example.com', password: 'rotated-secret' });
   });
 
   it('ignores masked placeholder values echoed back on update (no corruption)', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'SMTP',
-      config: { host: 'smtp.example.com', password: 'real-secret' },
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'SMTP',
+        config: { host: 'smtp.example.com', password: 'real-secret' },
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     // UI echoes the masked value back; it must not replace the stored secret.
-    await service.update(created.id, {
-      config: { host: 'smtp.example.com', password: '********cret' },
-    });
+    await service.update(
+      created.id,
+      {
+        config: { host: 'smtp.example.com', password: '********cret' },
+      },
+      'admin-1',
+      sessionFor('admin-1')
+    );
     const serviceWithReader = service as unknown as {
       readConfig: (id: string) => Promise<Record<string, unknown>>;
     };
@@ -323,12 +382,15 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('returns only a masked view of secrets in the API result', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'SMTP',
-      config: { host: 'smtp.example.com', password: 'super-secret' },
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'SMTP',
+        config: { host: 'smtp.example.com', password: 'super-secret' },
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     // Raw/plaintext or encrypted secret must never appear in the result.
     expect(created).not.toHaveProperty('config');
     expect(JSON.stringify(created)).not.toContain('super-secret');
@@ -342,12 +404,15 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('records a failing test and keeps the config in draft', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'resend',
-      label: 'Resend',
-      config: {},
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'resend',
+        label: 'Resend',
+        config: {},
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     const tested = await service.recordTest(created.id, {
       passed: false,
       error: 'Auth failed',
@@ -359,13 +424,19 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('only allows one active config at a time', async () => {
     const { service, rows } = buildHarness();
-    const a = await service.create({ transport: 'resend', label: 'A', config: {}, createdBy: 'a' });
+    const a = await service.create(
+      { transport: 'resend', label: 'A', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(a.id, { passed: true });
-    await service.activate(a.id);
+    await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
 
-    const b = await service.create({ transport: 'resend', label: 'B', config: {}, createdBy: 'a' });
+    const b = await service.create(
+      { transport: 'resend', label: 'B', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(b.id, { passed: true });
-    const active = await service.activate(b.id);
+    const active = await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
 
     expect(active.status).toBe('active');
     const statuses = [...rows.values()].map((r) => r.status);
@@ -374,13 +445,19 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('supersedes the previous active and records supersedes_id', async () => {
     const { service, rows } = buildHarness();
-    const a = await service.create({ transport: 'resend', label: 'A', config: {}, createdBy: 'a' });
+    const a = await service.create(
+      { transport: 'resend', label: 'A', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(a.id, { passed: true });
-    await service.activate(a.id);
+    await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
 
-    const b = await service.create({ transport: 'resend', label: 'B', config: {}, createdBy: 'a' });
+    const b = await service.create(
+      { transport: 'resend', label: 'B', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(b.id, { passed: true });
-    const active = await service.activate(b.id);
+    const active = await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
 
     expect(active.supersedesId).toBe(a.id);
     expect(rows.get(a.id).status).toBe('superseded');
@@ -388,23 +465,34 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('blocks re-activation of a superseded (non-draft) config', async () => {
     const { service } = buildHarness();
-    const a = await service.create({ transport: 'resend', label: 'A', config: {}, createdBy: 'a' });
+    const a = await service.create(
+      { transport: 'resend', label: 'A', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(a.id, { passed: true });
-    await service.activate(a.id);
+    await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
 
-    const b = await service.create({ transport: 'smtp', label: 'B', config: {}, createdBy: 'a' });
+    const b = await service.create(
+      { transport: 'smtp', label: 'B', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(b.id, { passed: true });
-    await service.activate(b.id);
+    await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
     // a is superseded now
-    await expect(service.activate(a.id)).rejects.toMatchObject({ status: 409 });
+    await expect(service.activate(a.id, 'admin-1', sessionFor('admin-1'))).rejects.toMatchObject({
+      status: 409,
+    });
   });
 
   it('blocks disabling the sole active provider (OTP recovery)', async () => {
     const { service } = buildHarness();
-    const a = await service.create({ transport: 'smtp', label: 'A', config: {}, createdBy: 'a' });
+    const a = await service.create(
+      { transport: 'smtp', label: 'A', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(a.id, { passed: true });
-    await service.activate(a.id);
-    await expect(service.disable(a.id)).rejects.toMatchObject({
+    await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
+    await expect(service.disable(a.id, 'admin-1', sessionFor('admin-1'))).rejects.toMatchObject({
       status: 409,
       response: { message: expect.stringContaining('OTP') },
     });
@@ -412,37 +500,51 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('blocks disabling when the other provider is inactive history', async () => {
     const { service } = buildHarness();
-    const a = await service.create({ transport: 'smtp', label: 'A', config: {}, createdBy: 'a' });
+    const a = await service.create(
+      { transport: 'smtp', label: 'A', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(a.id, { passed: true });
-    await service.activate(a.id);
-    const b = await service.create({ transport: 'resend', label: 'B', config: {}, createdBy: 'a' });
+    await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
+    const b = await service.create(
+      { transport: 'resend', label: 'B', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(b.id, { passed: true });
-    const activeB = await service.activate(b.id);
+    const activeB = await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
     // A superseded row cannot deliver an OTP.
-    await expect(service.disable(activeB.id)).rejects.toMatchObject({ status: 409 });
+    await expect(
+      service.disable(activeB.id, 'admin-1', sessionFor('admin-1'))
+    ).rejects.toMatchObject({ status: 409 });
   });
 
   it('rolls back to a superseded version', async () => {
     const { service, rows } = buildHarness();
-    const a = await service.create({
-      transport: 'smtp',
-      label: 'Old SMTP',
-      config: { host: 'old' },
-      createdBy: 'a',
-    });
+    const a = await service.create(
+      {
+        transport: 'smtp',
+        label: 'Old SMTP',
+        config: { host: 'old' },
+        createdBy: 'a',
+      },
+      sessionFor('a')
+    );
     await service.recordTest(a.id, { passed: true });
-    await service.activate(a.id);
+    await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
 
-    const b = await service.create({
-      transport: 'smtp',
-      label: 'New SMTP',
-      config: { host: 'new' },
-      createdBy: 'a',
-    });
+    const b = await service.create(
+      {
+        transport: 'smtp',
+        label: 'New SMTP',
+        config: { host: 'new' },
+        createdBy: 'a',
+      },
+      sessionFor('a')
+    );
     await service.recordTest(b.id, { passed: true });
-    await service.activate(b.id);
+    await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
     // a is superseded
-    const rolled = await service.rollback(a.id, 'admin-1');
+    const rolled = await service.rollback(a.id, 'admin-1', sessionFor('admin-1'));
     expect(rolled.status).toBe('active');
     expect(rolled.label).toContain('rollback');
     const actives = [...rows.values()].filter((r) => r.status === 'active');
@@ -451,9 +553,12 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
 
   it('commits a transaction on activation', async () => {
     const { service, queries } = buildHarness();
-    const a = await service.create({ transport: 'smtp', label: 'A', config: {}, createdBy: 'a' });
+    const a = await service.create(
+      { transport: 'smtp', label: 'A', config: {}, createdBy: 'a' },
+      sessionFor('a')
+    );
     await service.recordTest(a.id, { passed: true });
-    await service.activate(a.id);
+    await service.activate(a.id, 'admin-1', sessionFor('admin-1'));
     expect(queries).toContain('BEGIN');
     expect(queries).toContain('COMMIT');
   });
@@ -467,15 +572,23 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
 
   it('runs the tester and records a passing test for a valid smtp draft', async () => {
     const { service, rows } = buildHarness();
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'SMTP',
-      config: { host: 'smtp.example.com', from_email: 'noreply@example.com' },
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'SMTP',
+        config: { host: 'smtp.example.com', from_email: 'noreply@example.com' },
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
 
     (service as any).smtpTester = fakeTester({ ok: true });
-    const out = await service.testConnection(created.id);
+    const out = await service.testConnection(
+      created.id,
+      undefined,
+      'admin-1',
+      sessionFor('admin-1')
+    );
     expect(out.ok).toBe(true);
     expect(out.result.lastTestStatus).toBe('passed');
     expect(rows.get(created.id).last_test_status).toBe('passed');
@@ -483,15 +596,23 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
 
   it('records a failing test with the tester error message', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'SMTP',
-      config: { host: 'smtp.example.com', from_email: 'noreply@example.com' },
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'SMTP',
+        config: { host: 'smtp.example.com', from_email: 'noreply@example.com' },
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
 
     (service as any).smtpTester = fakeTester({ ok: false, error: 'Connection refused' });
-    const out = await service.testConnection(created.id);
+    const out = await service.testConnection(
+      created.id,
+      undefined,
+      'admin-1',
+      sessionFor('admin-1')
+    );
     expect(out.ok).toBe(false);
     expect(out.error).toBe('Connection refused');
     expect(out.result.lastTestStatus).toBe('failed');
@@ -499,51 +620,74 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
 
   it('rejects a test when recipient is missing for resend (400)', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'resend',
-      label: 'R',
-      config: {},
-      createdBy: 'admin-1',
-    });
-    await expect(service.testConnection(created.id)).rejects.toMatchObject({ status: 400 });
+    const created = await service.create(
+      {
+        transport: 'resend',
+        label: 'R',
+        config: {},
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
+    await expect(
+      service.testConnection(created.id, undefined, 'admin-1', sessionFor('admin-1'))
+    ).rejects.toMatchObject({ status: 400 });
   });
 
   it('validates an invalid recipient email for resend (400)', async () => {
     const { service } = buildHarness();
-    const created = await service.create({
-      transport: 'resend',
-      label: 'R',
-      config: {},
-      createdBy: 'admin-1',
-    });
-    await expect(service.testConnection(created.id, 'not-an-email')).rejects.toMatchObject({
+    const created = await service.create(
+      {
+        transport: 'resend',
+        label: 'R',
+        config: {},
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
+    await expect(
+      service.testConnection(created.id, 'not-an-email', 'admin-1', sessionFor('admin-1'))
+    ).rejects.toMatchObject({
       status: 400,
     });
   });
 
   it('rejects an unsupported transport with 400', async () => {
     const { service, rows } = buildHarness();
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'S',
-      config: {},
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'S',
+        config: {},
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     // Force an unknown transport by patching the stored row directly.
     rows.get(created.id)!.transport = 'carrier';
-    await expect(service.testConnection(created.id)).rejects.toMatchObject({ status: 400 });
+    await expect(
+      service.testConnection(created.id, undefined, 'admin-1', sessionFor('admin-1'))
+    ).rejects.toMatchObject({ status: 400 });
   });
 
   it('records a validation failure when resend config is invalid', async () => {
     const { service } = buildHarness();
     // Missing required api_key + from_email.
-    const created = await service.create({
-      transport: 'resend',
-      label: 'R',
-      config: {},
-      createdBy: 'admin-1',
-    });
-    const out = await service.testConnection(created.id, 'admin@example.com');
+    const created = await service.create(
+      {
+        transport: 'resend',
+        label: 'R',
+        config: {},
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
+    const out = await service.testConnection(
+      created.id,
+      'admin@example.com',
+      'admin-1',
+      sessionFor('admin-1')
+    );
     expect(out.ok).toBe(false);
     expect(out.error).toContain('Invalid Resend configuration');
     expect(out.result.lastTestStatus).toBe('failed');
@@ -552,15 +696,23 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
   it('records a validation failure when config is invalid', async () => {
     const { service } = buildHarness();
     // Missing required host + from_email -> schema failure.
-    const created = await service.create({
-      transport: 'smtp',
-      label: 'SMTP',
-      config: { port: 587 },
-      createdBy: 'admin-1',
-    });
+    const created = await service.create(
+      {
+        transport: 'smtp',
+        label: 'SMTP',
+        config: { port: 587 },
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
 
     (service as any).smtpTester = fakeTester({ ok: false, error: 'unused' });
-    const out = await service.testConnection(created.id);
+    const out = await service.testConnection(
+      created.id,
+      undefined,
+      'admin-1',
+      sessionFor('admin-1')
+    );
     expect(out.ok).toBe(false);
     expect(out.error).toContain('Invalid SMTP configuration');
     expect(out.result.lastTestStatus).toBe('failed');

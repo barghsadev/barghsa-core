@@ -24,7 +24,13 @@ const mockService = {
   availableTemplateEventKeys: mockAvailableEvents,
 } as unknown as SmsProviderConfigService;
 
-const adminReq = { session: { isAdmin: true, userId: 'admin-1' } } as never;
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'provider-session',
+  csrfToken: 'provider-csrf',
+};
+const adminReq = { session: adminSession } as never;
 const nonAdminReq = { session: { isAdmin: false, userId: 'admin-1' } } as never;
 
 function baseResult(over: Partial<Record<string, unknown>> = {}) {
@@ -69,11 +75,14 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
         },
       });
       expect(result.label).toBe('Prod SMS');
-      expect(mockCreate).toHaveBeenCalledWith({
-        label: 'Prod SMS',
-        config: expect.objectContaining({ api_key: 'k', sender: '9830000000' }),
-        createdBy: 'admin-1',
-      });
+      expect(mockCreate).toHaveBeenCalledWith(
+        {
+          label: 'Prod SMS',
+          config: expect.objectContaining({ api_key: 'k', sender: '9830000000' }),
+          createdBy: 'admin-1',
+        },
+        adminSession
+      );
     });
 
     it('rejects a caller without admin with 403', async () => {
@@ -98,7 +107,12 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
       mockUpdate.mockResolvedValue(baseResult({ label: 'Renamed' }));
       const result = await controller.update(adminReq, 'cfg-1', { label: 'Renamed' });
       expect(result.label).toBe('Renamed');
-      expect(mockUpdate).toHaveBeenCalledWith('cfg-1', { label: 'Renamed' }, 'admin-1');
+      expect(mockUpdate).toHaveBeenCalledWith(
+        'cfg-1',
+        { label: 'Renamed' },
+        'admin-1',
+        adminSession
+      );
     });
 
     it('rejects a non-admin with 403', async () => {
@@ -126,7 +140,8 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
         'cfg-1',
         '989121234567',
         'otp:login',
-        'admin-1'
+        'admin-1',
+        adminSession
       );
     });
 
@@ -143,20 +158,20 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
       mockActivate.mockResolvedValue(baseResult({ status: 'active' }));
       const result = await controller.activate(adminReq, 'cfg-1');
       expect(result.status).toBe('active');
-      expect(mockActivate).toHaveBeenCalledWith('cfg-1', 'admin-1');
+      expect(mockActivate).toHaveBeenCalledWith('cfg-1', 'admin-1', adminSession);
     });
 
     it('disables a config for an admin', async () => {
       mockDisable.mockResolvedValue(baseResult({ status: 'disabled' }));
       const result = await controller.disable(adminReq, 'cfg-1');
       expect(result.status).toBe('disabled');
-      expect(mockDisable).toHaveBeenCalledWith('cfg-1', 'admin-1');
+      expect(mockDisable).toHaveBeenCalledWith('cfg-1', 'admin-1', adminSession);
     });
 
     it('rolls back for an admin', async () => {
       mockRollback.mockResolvedValue(baseResult({ status: 'active' }));
       const result = await controller.rollback(adminReq, 'cfg-9');
-      expect(mockRollback).toHaveBeenCalledWith('cfg-9', 'admin-1');
+      expect(mockRollback).toHaveBeenCalledWith('cfg-9', 'admin-1', adminSession);
       expect(result.status).toBe('active');
     });
   });

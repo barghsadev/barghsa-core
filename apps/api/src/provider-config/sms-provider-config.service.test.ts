@@ -10,6 +10,14 @@ import {
 } from './sms-provider-config.service';
 import { ProviderSecretsService } from './provider-secrets.service';
 
+function sessionFor(userId: string) {
+  return {
+    userId,
+    sessionId: '00000000-0000-4000-8000-000000000001',
+    csrfToken: 'provider-fixture-csrf',
+  };
+}
+
 /**
  * In-memory mock of the `sms_provider_configs` table keyed by id, plus a
  * query-log for asserting transaction boundaries (BEGIN/COMMIT/ROLLBACK).
@@ -23,6 +31,17 @@ function buildHarness() {
   const exec = async (text: string, params?: unknown[]): Promise<any> => {
     queries.push(text);
     const lower = text.toLowerCase();
+    if (lower.includes('from sessions'))
+      return {
+        rows: [
+          {
+            csrf_token: 'provider-fixture-csrf',
+            active: true,
+            fresh: true,
+            step_up_verified_at: new Date('2026-09-09T00:00:00Z'),
+          },
+        ],
+      };
 
     if (lower.startsWith('begin')) return { rows: [] };
     if (lower.startsWith('commit')) return { rows: [] };
@@ -185,11 +204,14 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
   });
 
   it('creates a draft and never exposes the plaintext api_key', async () => {
-    const created = await svc.create({
-      label: 'Prod SMS',
-      config: VALID_CONFIG,
-      createdBy: 'admin-1',
-    });
+    const created = await svc.create(
+      {
+        label: 'Prod SMS',
+        config: VALID_CONFIG,
+        createdBy: 'admin-1',
+      },
+      sessionFor('admin-1')
+    );
     expect(created.id).toBeDefined();
     expect(created.status).toBe('draft');
     // maskedConfig may show a masked placeholder, but never the plaintext value.
@@ -202,26 +224,40 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
   });
 
   it('activate fails before a passing test', async () => {
-    const created = await svc.create({ label: 'x', config: VALID_CONFIG, createdBy: 'a1' });
-    await expect(svc.activate(created.id, 'admin-1')).rejects.toBeInstanceOf(HttpException);
+    const created = await svc.create(
+      { label: 'x', config: VALID_CONFIG, createdBy: 'a1' },
+      sessionFor('a1')
+    );
+    await expect(svc.activate(created.id, 'admin-1', sessionFor('admin-1'))).rejects.toBeInstanceOf(
+      HttpException
+    );
   });
 
   it('records a passing test then activates', async () => {
-    const created = await svc.create({ label: 'x', config: VALID_CONFIG, createdBy: 'a1' });
+    const created = await svc.create(
+      { label: 'x', config: VALID_CONFIG, createdBy: 'a1' },
+      sessionFor('a1')
+    );
     await svc.recordTest(created.id, { passed: true });
-    const activated = await svc.activate(created.id, 'admin-1');
+    const activated = await svc.activate(created.id, 'admin-1', sessionFor('admin-1'));
     expect(activated.status).toBe('active');
     expect(activated.activatedBy).toBe('admin-1');
   });
 
   it('supersedes the previous active when a newer config activates', async () => {
-    const c1 = await svc.create({ label: 'one', config: VALID_CONFIG, createdBy: 'a1' });
+    const c1 = await svc.create(
+      { label: 'one', config: VALID_CONFIG, createdBy: 'a1' },
+      sessionFor('a1')
+    );
     await svc.recordTest(c1.id, { passed: true });
-    await svc.activate(c1.id, 'a1');
+    await svc.activate(c1.id, 'a1', sessionFor('a1'));
 
-    const c2 = await svc.create({ label: 'two', config: VALID_CONFIG, createdBy: 'a1' });
+    const c2 = await svc.create(
+      { label: 'two', config: VALID_CONFIG, createdBy: 'a1' },
+      sessionFor('a1')
+    );
     await svc.recordTest(c2.id, { passed: true });
-    const activated = await svc.activate(c2.id, 'a1');
+    const activated = await svc.activate(c2.id, 'a1', sessionFor('a1'));
 
     expect(activated.status).toBe('active');
     const first = await svc.get(c1.id);
@@ -235,9 +271,12 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
         { event_key: 'otp:login', template_id: '2001', variables: { code: 'code' } },
       ],
     };
-    const created = await svc.create({ label: 'x', config: cfg, createdBy: 'a1' });
+    const created = await svc.create(
+      { label: 'x', config: cfg, createdBy: 'a1' },
+      sessionFor('a1')
+    );
     await svc.recordTest(created.id, { passed: true });
-    const activated = await svc.activate(created.id, 'admin-1');
+    const activated = await svc.activate(created.id, 'admin-1', sessionFor('admin-1'));
     expect(activated.status).toBe('active');
   });
 
@@ -248,9 +287,12 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
         { event_key: 'unknown:event', template_id: '9999', variables: { a: 'b' } },
       ],
     };
-    const created = await svc.create({ label: 'x', config: cfg, createdBy: 'a1' });
+    const created = await svc.create(
+      { label: 'x', config: cfg, createdBy: 'a1' },
+      sessionFor('a1')
+    );
     await svc.recordTest(created.id, { passed: true });
-    const err = await svc.activate(created.id, 'admin-1').catch((e) => e);
+    const err = await svc.activate(created.id, 'admin-1', sessionFor('admin-1')).catch((e) => e);
     expect(err).toBeInstanceOf(HttpException);
     expect(err.getResponse().message).toContain('unknown:event');
   });
@@ -262,21 +304,27 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
       ...VALID_CONFIG,
       template_mappings: [{ event_key: 'otp:login', template_id: '2001' }],
     };
-    const source = await svc.create({ label: 'old', config: sourceCfg, createdBy: 'a1' });
+    const source = await svc.create(
+      { label: 'old', config: sourceCfg, createdBy: 'a1' },
+      sessionFor('a1')
+    );
     await svc.recordTest(source.id, { passed: true });
-    await svc.activate(source.id, 'a1');
-    const replacement = await svc.create({
-      label: 'Replacement',
-      config: VALID_CONFIG,
-      createdBy: 'a1',
-    });
+    await svc.activate(source.id, 'a1', sessionFor('a1'));
+    const replacement = await svc.create(
+      {
+        label: 'Replacement',
+        config: VALID_CONFIG,
+        createdBy: 'a1',
+      },
+      sessionFor('a1')
+    );
     await svc.recordTest(replacement.id, { passed: true });
-    await svc.activate(replacement.id, 'a1');
+    await svc.activate(replacement.id, 'a1', sessionFor('a1'));
     h.activeTemplateEvents.delete('otp:login');
 
     // Rollbacks clone the stored config; without validation this would re-activate
     // a config pointing at an event with no live template.
-    const err = await svc.rollback(source.id, 'admin-1').catch((e) => e);
+    const err = await svc.rollback(source.id, 'admin-1', sessionFor('admin-1')).catch((e) => e);
     expect(err).toBeInstanceOf(HttpException);
     expect(err.getResponse().message).toContain('otp:login');
   });
@@ -286,20 +334,26 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
       ...VALID_CONFIG,
       template_mappings: [{ event_key: 'otp:login', template_id: '2001' }],
     };
-    const source = await svc.create({ label: 'old', config: sourceCfg, createdBy: 'a1' });
+    const source = await svc.create(
+      { label: 'old', config: sourceCfg, createdBy: 'a1' },
+      sessionFor('a1')
+    );
     await svc.recordTest(source.id, { passed: true });
-    const activated = await svc.activate(source.id, 'a1');
+    const activated = await svc.activate(source.id, 'a1', sessionFor('a1'));
     expect(activated.status).toBe('active');
 
     // Activate a replacement, then roll back without losing SMS delivery.
-    const replacement = await svc.create({
-      label: 'Replacement',
-      config: VALID_CONFIG,
-      createdBy: 'a1',
-    });
+    const replacement = await svc.create(
+      {
+        label: 'Replacement',
+        config: VALID_CONFIG,
+        createdBy: 'a1',
+      },
+      sessionFor('a1')
+    );
     await svc.recordTest(replacement.id, { passed: true });
-    await svc.activate(replacement.id, 'a1');
-    const rolledBack = await svc.rollback(source.id, 'admin-1');
+    await svc.activate(replacement.id, 'a1', sessionFor('a1'));
+    const rolledBack = await svc.rollback(source.id, 'admin-1', sessionFor('admin-1'));
     expect(rolledBack.status).toBe('active');
   });
 });

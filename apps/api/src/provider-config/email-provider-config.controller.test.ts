@@ -16,8 +16,14 @@ const mockService = {
   list: mockList,
 } as unknown as EmailProviderConfigService;
 
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'provider-session',
+  csrfToken: 'provider-csrf',
+};
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: adminSession,
 } as never;
 
 const nonAdminReq = {
@@ -66,7 +72,8 @@ describe('EmailProviderConfigController', () => {
           label: 'Renamed',
           config: { host: 'smtp.example.com' },
         },
-        'admin-1'
+        'admin-1',
+        adminSession
       );
     });
 
@@ -74,7 +81,12 @@ describe('EmailProviderConfigController', () => {
       mockUpdate.mockResolvedValue(baseResult({ label: 'Only Label' }));
       const result = await controller.update(adminReq, 'cfg-1', { label: 'Only Label' });
       expect(result.label).toBe('Only Label');
-      expect(mockUpdate).toHaveBeenCalledWith('cfg-1', { label: 'Only Label' }, 'admin-1');
+      expect(mockUpdate).toHaveBeenCalledWith(
+        'cfg-1',
+        { label: 'Only Label' },
+        'admin-1',
+        adminSession
+      );
     });
 
     it('rejects a caller without the provider-edit permission with 403', async () => {

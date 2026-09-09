@@ -10,6 +10,9 @@ import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
+const session = randomUUID(),
+  csrf = randomUUID();
+const actor = { userId: 'provider-writer', sessionId: session, csrfToken: csrf };
 const grants = JSON.stringify(['admin:notification-providers:edit']);
 beforeAll(async () => {
   const priorKey = process.env.PROVIDER_CONFIG_ENCRYPTION_KEY;
@@ -30,8 +33,6 @@ beforeAll(async () => {
   await http.pool.query(
     "INSERT INTO user_roles(user_id,role_id) VALUES ('provider-writer','provider-writer')"
   );
-  const session = randomUUID(),
-    csrf = randomUUID();
   await http.pool.query(
     "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'provider-writer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())",
     [session, csrf, randomUUID()]
@@ -46,6 +47,10 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 beforeEach(async () => {
+  await http.pool.query(
+    "UPDATE sessions SET csrf_token=$2,revoked_at=NULL,expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW() WHERE session_id=$1",
+    [session, csrf]
+  );
   await http.pool.query('DELETE FROM email_provider_configs');
   await http.pool.query('DELETE FROM sms_provider_configs');
   await http.pool.query("DELETE FROM audit_log WHERE user_id='provider-writer'");
@@ -148,6 +153,16 @@ for (const channel of ['email', 'sms']) {
       expect(await response.text()).not.toMatch(/fixture-password|fixture-api-key/);
       const state = await snapshot(table);
       expect(state.audits).toHaveLength(1);
+      const metadata = JSON.parse(state.audits[0].metadata);
+      expect(metadata).toMatchObject({ sessionId: session, stepUpVerified: true });
+      expect(metadata.stepUpVerifiedAt).toBe(
+        (
+          await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
+            session,
+          ])
+        ).rows[0].step_up_verified_at.toISOString()
+      );
+      expect(state.audits[0].correlation_id).toBe(response.headers.get('x-correlation-id'));
       expect(state.audits[0].event).toBe(
         `${channel}_provider_${({ create: 'created', update: 'updated', activate: 'activated', disable: 'disabled', rollback: 'rolled_back', 'test-connection': 'tested' } as Record<string, string>)[action]}`
       );
@@ -157,6 +172,72 @@ for (const channel of ['email', 'sms']) {
           /^v1:/
         );
     });
+    for (const change of ['expiry', 'csrf', 'step-up'] as const) {
+      it(`${channel} ${action}: rejects ${change} changed after guards while waiting for the family lock`, async () => {
+        const id = await seed(),
+          before = await snapshot(table);
+        const blocker = await http.pool.connect();
+        let pending: Promise<Response> | undefined;
+        try {
+          await blocker.query('BEGIN');
+          await blocker.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
+            `notification-provider:${channel}`,
+          ]);
+          const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+          pending = write(id);
+          await expect
+            .poll(
+              async () =>
+                Number(
+                  (
+                    await http.pool.query(
+                      "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND $1=ANY(pg_blocking_pids(pid)) AND query LIKE 'SELECT pg_advisory_xact_lock%'",
+                      [pid]
+                    )
+                  ).rows[0].count
+                ),
+              { timeout: 3000 }
+            )
+            .toBe(1);
+          const assignment =
+            change === 'expiry'
+              ? "expires_at=NOW()-INTERVAL '1 second'"
+              : change === 'csrf'
+                ? "csrf_token='changed-after-guard'"
+                : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+          await http.pool.query(`UPDATE sessions SET ${assignment} WHERE session_id=$1`, [session]);
+          await blocker.query('COMMIT');
+          expect((await pending).status).toBe(change === 'expiry' ? 401 : 403);
+          expect(await snapshot(table)).toEqual(before);
+        } finally {
+          await blocker.query('ROLLBACK');
+          blocker.release();
+          await pending;
+        }
+      });
+    }
+    if (action === 'create')
+      for (const change of ['expiry', 'csrf', 'step-up'] as const) {
+        it(`${channel}: rolls back provider and audit when ${change} changes before commit`, async () => {
+          const id = await seed(),
+            before = await snapshot(table);
+          const assignment =
+            change === 'expiry'
+              ? "expires_at=NOW()-INTERVAL '1 second'"
+              : change === 'csrf'
+                ? "csrf_token='changed-at-audit'"
+                : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+          await http.pool.query(
+            `CREATE OR REPLACE FUNCTION invalidate_provider_session() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN UPDATE sessions SET ${assignment} WHERE session_id='${session}'; RETURN NEW; END $$; CREATE TRIGGER invalidate_provider_session BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION invalidate_provider_session()`
+          );
+          try {
+            expect((await write(id)).status).toBe(change === 'expiry' ? 401 : 403);
+            expect(await snapshot(table)).toEqual(before);
+          } finally {
+            await http.pool.query('DROP TRIGGER invalidate_provider_session ON audit_log');
+          }
+        });
+      }
     it(`${channel} ${action}: rolls back when the audit cannot persist`, async () => {
       const id = await seed(),
         before = await snapshot(table);
@@ -373,8 +454,8 @@ for (const channel of ['email', 'sms']) {
         );
       const testing =
         service instanceof EmailProviderConfigService
-          ? service.testConnection(id, undefined, 'provider-writer')
-          : service.testConnection(id, undefined, undefined, 'provider-writer');
+          ? service.testConnection(id, undefined, 'provider-writer', actor)
+          : service.testConnection(id, undefined, undefined, 'provider-writer', actor);
       const observed = testing.then(
         (value) => ({ value, error: undefined }),
         (error) => ({ value: undefined, error })
@@ -389,7 +470,8 @@ for (const channel of ['email', 'sms']) {
               config:
                 channel === 'email' ? { host: 'changed.example.test' } : { sender: '9830000001' },
             },
-            'provider-writer'
+            'provider-writer',
+            actor
           );
         if (concurrent === 'revoke')
           writing = http.pool.query(
@@ -421,7 +503,7 @@ for (const channel of ['email', 'sms']) {
           if (channel === 'email') expect(state.providers[0].consecutive_failures).toBe(0);
           if (concurrent === 'revoke')
             await expect(
-              service.update(id, { label: 'Denied' }, 'provider-writer')
+              service.update(id, { label: 'Denied' }, 'provider-writer', actor)
             ).rejects.toMatchObject({ status: 403 });
         }
       } finally {

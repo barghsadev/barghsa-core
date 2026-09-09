@@ -116,7 +116,7 @@ export class EmailProviderConfigController {
       config: parsed.data.config,
       createdBy: req.session.userId,
     };
-    return this.service.create(input);
+    return this.service.create(input, req.session);
   }
 
   @Put(':id')
@@ -140,7 +140,7 @@ export class EmailProviderConfigController {
     const input: UpdateProviderInput = {};
     if (parsed.data.label !== undefined) input.label = parsed.data.label;
     if (parsed.data.config !== undefined) input.config = parsed.data.config;
-    return this.service.update(id, input, req.session.userId);
+    return this.service.update(id, input, req.session.userId, req.session);
   }
 
   @Post(':id/test')
@@ -201,7 +201,8 @@ export class EmailProviderConfigController {
     const { ok, error, result } = await this.service.testConnection(
       id,
       parsed?.data?.recipient,
-      req.session.userId
+      req.session.userId,
+      req.session
     );
     return { ...result, test: { ok, error } };
   }
@@ -216,7 +217,7 @@ export class EmailProviderConfigController {
     @Param('id') id: string
   ): Promise<EmailProviderConfigResult> {
     this.assertProviderEditPermission(req);
-    return this.service.activate(id, req.session.userId);
+    return this.service.activate(id, req.session.userId, req.session);
   }
 
   @Post(':id/disable')
@@ -229,7 +230,7 @@ export class EmailProviderConfigController {
     @Param('id') id: string
   ): Promise<EmailProviderConfigResult> {
     this.assertProviderEditPermission(req);
-    return this.service.disable(id, req.session.userId);
+    return this.service.disable(id, req.session.userId, req.session);
   }
 
   @Post(':id/rollback')
@@ -242,6 +243,6 @@ export class EmailProviderConfigController {
     @Param('id') id: string
   ): Promise<EmailProviderConfigResult> {
     this.assertProviderEditPermission(req);
-    return this.service.rollback(id, req.session.userId);
+    return this.service.rollback(id, req.session.userId, req.session);
   }
 }

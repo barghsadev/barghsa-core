@@ -1,4 +1,5 @@
-import { mutateProvider, testProvider } from './provider-mutation.js';
+import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -253,8 +254,11 @@ export class EmailProviderConfigService {
   /* ---------------------------- Mutations ------------------------------- */
 
   /** Create a new draft configuration. New rows always start `draft`. Secrets are encrypted at rest. */
-  async create(input: CreateProviderInput): Promise<EmailProviderConfigResult> {
-    return mutateProvider(this.db, input.createdBy, 'email', 'created', async (client) => {
+  async create(
+    input: CreateProviderInput,
+    session: ProviderMutationSession
+  ): Promise<EmailProviderConfigResult> {
+    return mutateProvider(this.db, input.createdBy, session, 'email', 'created', async (client) => {
       const id = uuidv7();
       const config = this.secrets.encryptConfig(input.transport, input.config);
       await client.query(
@@ -273,9 +277,10 @@ export class EmailProviderConfigService {
   async update(
     id: string,
     input: UpdateProviderInput,
-    actorUserId?: string
+    actorUserId: string,
+    session: ProviderMutationSession
   ): Promise<EmailProviderConfigResult> {
-    return mutateProvider(this.db, actorUserId, 'email', 'updated', async (client) => {
+    return mutateProvider(this.db, actorUserId, session, 'email', 'updated', async (client) => {
       const existing = await this.findById(id, client, true);
       if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
       if (existing.status !== 'draft') {
@@ -350,8 +355,12 @@ export class EmailProviderConfigService {
    * `activatedBy` records the admin who performed the activation so the UI can
    * show who promoted this configuration to active (T-05.06.04).
    */
-  async activate(id: string, activatedBy?: string): Promise<EmailProviderConfigResult> {
-    return mutateProvider(this.db, activatedBy, 'email', 'activated', async (client) => {
+  async activate(
+    id: string,
+    activatedBy: string,
+    session: ProviderMutationSession
+  ): Promise<EmailProviderConfigResult> {
+    return mutateProvider(this.db, activatedBy, session, 'email', 'activated', async (client) => {
       const existing = await this.findById(id, client, true);
       if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
       if (existing.status === 'active') return existing;
@@ -387,8 +396,12 @@ export class EmailProviderConfigService {
    * Disable a configuration. Disabling the sole ACTIVE provider is blocked to
    * guarantee an out-of-band OTP recovery path exists.
    */
-  async disable(id: string, actorUserId?: string): Promise<EmailProviderConfigResult> {
-    return mutateProvider(this.db, actorUserId, 'email', 'disabled', async (client) => {
+  async disable(
+    id: string,
+    actorUserId: string,
+    session: ProviderMutationSession
+  ): Promise<EmailProviderConfigResult> {
+    return mutateProvider(this.db, actorUserId, session, 'email', 'disabled', async (client) => {
       const existing = await this.findById(id, client, true);
       if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
       if (existing.status === 'disabled') return existing;
@@ -416,8 +429,12 @@ export class EmailProviderConfigService {
    * a fresh row and activate it. The original row is preserved. This backs the
    * UI's "Rollback to this version" action (T-05.00.04).
    */
-  async rollback(supersededId: string, createdBy: string): Promise<EmailProviderConfigResult> {
-    return mutateProvider(this.db, createdBy, 'email', 'rolled_back', async (client) => {
+  async rollback(
+    supersededId: string,
+    createdBy: string,
+    session: ProviderMutationSession
+  ): Promise<EmailProviderConfigResult> {
+    return mutateProvider(this.db, createdBy, session, 'email', 'rolled_back', async (client) => {
       const source = await this.findById(supersededId, client, true);
       if (!source) throw new HttpException(ProviderErrors.notFound(), 404);
       if (
@@ -501,14 +518,15 @@ export class EmailProviderConfigService {
    */
   async testConnection(
     id: string,
-    recipient?: string,
-    actorUserId?: string
+    recipient: string | undefined,
+    actorUserId: string,
+    session: ProviderMutationSession
   ): Promise<{
     ok: boolean;
     error: string | null;
     result: EmailProviderConfigResult;
   }> {
-    return testProvider(this.db, actorUserId, 'email', async (client) => {
+    return testProvider(this.db, actorUserId, session, 'email', async (client) => {
       const existing = await this.findById(id, client, true);
       if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
       if (existing.status !== 'draft') {
@@ -534,7 +552,7 @@ export class EmailProviderConfigService {
       }
 
       if (existing.transport === 'resend') {
-        const outcome = await this.testResendConnection(existing.id, recipient, client);
+        const outcome = await this.testResendConnection(existing.id, recipient, client, session);
         return this.recordBreakerOutcome(
           existing.id,
           outcome,
@@ -553,7 +571,7 @@ export class EmailProviderConfigService {
           400
         );
       }
-      const outcome = await this.testSmtpConnection(existing.id, client);
+      const outcome = await this.testSmtpConnection(existing.id, client, session);
       return this.recordBreakerOutcome(
         existing.id,
         outcome,
@@ -594,7 +612,8 @@ export class EmailProviderConfigService {
   /** SMTP handshake connection test (T-05.06.02). */
   private async testSmtpConnection(
     id: string,
-    query: Pick<ProviderPool, 'query'> = this.db
+    query: Pick<ProviderPool, 'query'>,
+    session: ProviderMutationSession
   ): Promise<{
     ok: boolean;
     error: string | null;
@@ -625,6 +644,7 @@ export class EmailProviderConfigService {
       );
     }
 
+    await requireSessionStepUp(query, session);
     const outcome = await this.smtpTester.test(parsed.config);
     const recorded = await this.recordTest(
       id,
@@ -640,8 +660,9 @@ export class EmailProviderConfigService {
   /** Resend domain-verification + test-send to the admin's email (T-05.06.03). */
   private async testResendConnection(
     id: string,
-    recipient?: string,
-    query: Pick<ProviderPool, 'query'> = this.db
+    recipient: string | undefined,
+    query: Pick<ProviderPool, 'query'>,
+    session: ProviderMutationSession
   ): Promise<{
     ok: boolean;
     error: string | null;
@@ -698,6 +719,7 @@ export class EmailProviderConfigService {
       );
     }
 
+    await requireSessionStepUp(query, session);
     const outcome = await this.resendTester.test(parsed.config, trimmed);
     const recorded = await this.recordTest(
       id,

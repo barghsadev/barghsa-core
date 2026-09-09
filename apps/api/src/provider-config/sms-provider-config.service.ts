@@ -1,4 +1,5 @@
-import { mutateProvider, testProvider } from './provider-mutation.js';
+import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -249,8 +250,11 @@ export class SmsProviderConfigService {
   /* ---------------------------- Mutations ------------------------------- */
 
   /** Create a new draft configuration. New rows always start `draft`. Secrets are encrypted at rest. */
-  async create(input: CreateSmsProviderInput): Promise<SmsProviderConfigResult> {
-    return mutateProvider(this.db, input.createdBy, 'sms', 'created', async (client) => {
+  async create(
+    input: CreateSmsProviderInput,
+    session: ProviderMutationSession
+  ): Promise<SmsProviderConfigResult> {
+    return mutateProvider(this.db, input.createdBy, session, 'sms', 'created', async (client) => {
       const id = uuidv7();
       const config = this.secrets.encryptConfig(SMS_PROVIDER_TRANSPORT, input.config);
       await client.query(
@@ -276,9 +280,10 @@ export class SmsProviderConfigService {
   async update(
     id: string,
     input: UpdateSmsProviderInput,
-    actorUserId?: string
+    actorUserId: string,
+    session: ProviderMutationSession
   ): Promise<SmsProviderConfigResult> {
-    return mutateProvider(this.db, actorUserId, 'sms', 'updated', async (client) => {
+    return mutateProvider(this.db, actorUserId, session, 'sms', 'updated', async (client) => {
       const existing = await this.findById(id, client, true);
       if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
       if (existing.status !== 'draft') {
@@ -341,8 +346,12 @@ export class SmsProviderConfigService {
    * template (variable availability validation). Passively supersedes the
    * current active config transactionally.
    */
-  async activate(id: string, activatedBy?: string): Promise<SmsProviderConfigResult> {
-    return mutateProvider(this.db, activatedBy, 'sms', 'activated', async (client) => {
+  async activate(
+    id: string,
+    activatedBy: string,
+    session: ProviderMutationSession
+  ): Promise<SmsProviderConfigResult> {
+    return mutateProvider(this.db, activatedBy, session, 'sms', 'activated', async (client) => {
       const existing = await this.findById(id, client, true);
       if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
       if (existing.status === 'active') return existing;
@@ -415,8 +424,12 @@ export class SmsProviderConfigService {
   }
 
   /** Disable a draft while preserving the active SMS OTP delivery channel. */
-  async disable(id: string, actorUserId?: string): Promise<SmsProviderConfigResult> {
-    return mutateProvider(this.db, actorUserId, 'sms', 'disabled', async (client) => {
+  async disable(
+    id: string,
+    actorUserId: string,
+    session: ProviderMutationSession
+  ): Promise<SmsProviderConfigResult> {
+    return mutateProvider(this.db, actorUserId, session, 'sms', 'disabled', async (client) => {
       const existing = await this.findById(id, client, true);
       if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
       if (existing.status === 'disabled') return existing;
@@ -434,8 +447,12 @@ export class SmsProviderConfigService {
   }
 
   /** Rollback to a superseded/disabled version: clone its known-good params and activate it. */
-  async rollback(supersededId: string, createdBy: string): Promise<SmsProviderConfigResult> {
-    return mutateProvider(this.db, createdBy, 'sms', 'rolled_back', async (client) => {
+  async rollback(
+    supersededId: string,
+    createdBy: string,
+    session: ProviderMutationSession
+  ): Promise<SmsProviderConfigResult> {
+    return mutateProvider(this.db, createdBy, session, 'sms', 'rolled_back', async (client) => {
       const source = await this.findById(supersededId, client, true);
       if (!source) throw new HttpException(SmsProviderErrors.notFound(), 404);
       if (
@@ -489,15 +506,16 @@ export class SmsProviderConfigService {
    */
   async testConnection(
     id: string,
-    recipient?: string,
-    eventKey?: string,
-    actorUserId?: string
+    recipient: string | undefined,
+    eventKey: string | undefined,
+    actorUserId: string,
+    session: ProviderMutationSession
   ): Promise<{
     ok: boolean;
     error: string | null;
     result: SmsProviderConfigResult;
   }> {
-    return testProvider(this.db, actorUserId, 'sms', async (client) => {
+    return testProvider(this.db, actorUserId, session, 'sms', async (client) => {
       const existing = await this.findById(id, client, true);
       if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
       if (existing.status !== 'draft') {
@@ -534,6 +552,7 @@ export class SmsProviderConfigService {
         };
       }
 
+      await requireSessionStepUp(client, session);
       const outcome = await this.smsirTester.test(parsed.config, recipient, eventKey);
       const recorded = await this.recordTest(
         id,
