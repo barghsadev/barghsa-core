@@ -448,6 +448,57 @@ it('rejects template tests without current step-up or CSRF proof', async () => {
   }
 });
 
+for (const [kind, channel, destination] of [
+  ['email', 'email', 'secondary-template@example.test'],
+  ['mobile', 'sms', '+989121234567'],
+] as const) {
+  it(`requires current verified ${kind} proof before a template self-test can reach delivery`, async () => {
+    // No active providers: an eligible destination reaches a controlled delivery failure.
+    await http.pool.query('DELETE FROM email_provider_configs');
+    await http.pool.query('DELETE FROM sms_provider_configs');
+    const value = await seed('update');
+    await http.pool.query('UPDATE notification_templates SET channel=$2 WHERE id=$1', [
+      value.id,
+      channel,
+    ]);
+    await http.pool.query(`UPDATE users SET ${kind}=$1 WHERE user_id='template-editor'`, [
+      destination,
+    ]);
+    const send = () =>
+      fetch(`${http.base}/api/admin/notifications/templates/${value.id}/test-send`, {
+        method: 'POST',
+        headers: headers.editor!,
+        body: JSON.stringify({ destination }),
+      });
+    const before = await snapshot();
+    try {
+      expect((await send()).status).toBe(403);
+      expect(await snapshot()).toEqual(before);
+      await http.pool.query(
+        `INSERT INTO account_login_identifiers(user_id,kind,destination,verified_at)
+         VALUES ('template-editor',$1,$2,NOW())`,
+        [kind, destination]
+      );
+      expect((await send()).status).toBe(503);
+      const delivered = await snapshot();
+      expect(delivered.templates[0].last_test_status).toBe('failed');
+      expect(delivered.audits).toHaveLength(1);
+      await http.pool.query(
+        `DELETE FROM account_login_identifiers WHERE user_id='template-editor' AND kind=$1`,
+        [kind]
+      );
+      expect((await send()).status).toBe(403);
+      expect(await snapshot()).toEqual(delivered);
+    } finally {
+      await http.pool.query(`UPDATE users SET ${kind}=NULL WHERE user_id='template-editor'`);
+      await http.pool.query(
+        `DELETE FROM account_login_identifiers WHERE user_id='template-editor' AND kind=$1`,
+        [kind]
+      );
+    }
+  });
+}
+
 for (const field of ['bodyTemplate', 'subject'])
   for (const content of ['{{}}', '}} {{name}} {{', '{{user..name}}', '{{constructor}}']) {
     it(`rejects invalid ${field} before creating a template: ${content}`, async () => {
