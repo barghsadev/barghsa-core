@@ -12843,6 +12843,101 @@
         "/tmp/r01-wallet-access-openapi-generate.log",
         "/tmp/r01-wallet-access-types.log"
       ]
+    },
+    {
+      "id": "R02-provider-session-authority",
+      "date": "2026-09-09",
+      "source_revision": "2b669c93a8dac98895713291f75ab6747de6314a",
+      "base_revision": "b11480ab5fa218f8f4f27807351acc55f056e952",
+      "product_commits": [
+        "2b669c93a8dac98895713291f75ab6747de6314a"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.06.02"
+      ],
+      "summary": "Provider session/CSRF/step-up authority repaired through commit. Intermediate R02 checkpoint; no task or PR closure.",
+      "review": [
+        "All six selected requirements, PR113/156/161/192/193/194 bodies and recorded deferrals read. Preserve existing lifecycle, secrets, circuit breaker and delivery snapshots.",
+        "Actual HTTP baseline reproduced provider creation201 after session expiry during family lock wait; expected401. Added36 expiry/CSRF/step-up race cases across six actions in both channels and6 final rollback cases.",
+        "Controllers now pass the authenticated session explicitly. Shared mutation helper rejects missing/mismatched actor, retains staff locks, checks current session after the family lock, audits verified time/session/correlation and rechecks before commit.",
+        "SMTP/Resend/SMS.ir recheck step-up immediately before invoking their tester, after settings waits. Existing activation/rollback, sole-OTP protection, encrypted secrets and server-only outcomes preserved.",
+        "Reviewed final diff and all service/controller callers. Graph caller search was insufficient; bounded source search found only updated test callers. No public API shape changed.",
+        "Initial affected run167 passes/6 failures: SMS controller fixture omitted session fields. Fixture corrected; its10 cases pass. Other163 cases remain valid at unchanged source.173 distinct total, not177."
+      ],
+      "verification": {
+        "api": "173 distinct cases across six files;109 provider-mutation HTTP cases include42 new race/rollback cases. Remaining64 service/controller/HTTP lifecycle cases pass across initial run and final10-case fixture rerun.",
+        "quality": "API typecheck, scoped ESLint, Prettier and diff checks pass. HTTP setup rebuilt dependencies/API.",
+        "scope": "No frontend, dependency, schema or public API contract changed. No broad/browser/budget renewal claimed."
+      },
+      "remaining": [
+        "Template mutation authority, verified test destinations, actual SMTP self-send, branding/preferences/daytime consumers remain in the batch.",
+        "External test sends cannot roll back after a later database or authority failure. Local rollback proof does not establish external atomicity or production delivery."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
+          "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
+          "sha256": "783732288b4fad3184e5ca2e87d449fc84d8f3318e9b734f2dc9ee32c012214c"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "sha256": "6ea1c250a3bc15db32c45fde99c59f23db03e37b4eea95776c9ed41578db8371"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "bb1c95bdfc52563109e61c0bb48d08067533033030374db84cfe96434b1290f5"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "3dc3f7036b99d08f3e25a9c892d6940ac4f5ad97e0a7a030da5474266ea37dad"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "2049fdf756bedfa70b32df7ab67cfe5f40f537ebb24d318f729e0325992266aa"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
+          "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "38062c7a5ba9ec7b62d60eac9d43c493ad67a482e7eb4166aad5771a27494473"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+          "sha256": "34cae00dc765168924b9bfbc1ba65860d61959196c36675f413e00716466e255"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "a040f6f7568a86b8af29df552b3044db525a690ae2181f75d77f93c9870b6f53"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
+          "sha256": "fbad1f936053c7ff24a14faf20cd88499a494c0045e6f4a470c2f63273094a1e"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-provider-authority-baseline.log",
+        "/tmp/r02-provider-authority-controller-final.log",
+        "/tmp/r02-provider-authority-format-check.log",
+        "/tmp/r02-provider-authority-format-final.log",
+        "/tmp/r02-provider-authority-format.log",
+        "/tmp/r02-provider-authority-lint.log",
+        "/tmp/r02-provider-authority-tests.log",
+        "/tmp/r02-provider-authority-types.log"
+      ]
     }
   ]
 }

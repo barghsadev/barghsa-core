@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
+  "source_revision": "2b669c93a8dac98895713291f75ab6747de6314a",
   "active_step": "R02",
-  "next_action": "Read the six saved PR bodies/deferrals and existing delivery evidence, then review the template/provider/preference/branding workflow once and repair confirmed gaps.",
+  "next_action": "Continue template mutation authority and verified test recipients, then branding/preferences/daytime consumers. Reuse provider authority evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -646,6 +646,10 @@
     {
       "id": "R01-cross-domain-authorization",
       "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+    },
+    {
+      "id": "R02-provider-session-authority",
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-session-authority"
     }
   ],
   "deferred_improvements": [
@@ -975,20 +979,40 @@
       "02-auth-users-admin.md#T-09.06.03"
     ],
     "remaining_checklist": [
-      "Exact six requirements read at selection. Read these saved PR bodies/deferrals and existing F09/F10/F11 source-bound evidence before editing. Theme task contributes only notification/email branding here; full UI theme acceptance stays R03.",
+      "All six exact requirements, saved PR bodies and deferrals read. Full UI theme stays R03; email/notification branding belongs here.",
       "Review current SMTP/Resend/SMS.ir configuration lifecycle, encrypted write-only secrets, current authority/step-up/audit, verified self-test destinations, activation/rollback and OTP recovery constraints.",
       "Trace actual template render/send through preferences, current branding, user timezone/daytime window and immediate bypass. Fix confirmed missing consumers and preserve completed template/provider/retry work.",
       "Keep notification-event-specific retries/inbox/reminder acceptance in subsequent R02 batches. Do not claim fixture sends prove production delivery."
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "defect": "Provider mutations lack current session/CSRF/step-up through commit.",
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-provider-session-authority"
+      },
+      {
+        "defect": "Template mutations check staff permission without current session/step-up.",
+        "status": "remaining"
+      },
+      {
+        "defect": "Email worker/template test-send omit active branding.",
+        "status": "remaining"
+      },
+      {
+        "defect": "SMTP provider test is handshake-only; required self-send remains.",
+        "status": "remaining"
+      }
+    ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#R01-account-settings",
       "audit/evidence/step-reviews.json#R01-verification-policy",
       "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
     ],
-    "new_evidence": [],
+    "new_evidence": [
+      "audit/evidence/step-reviews.json#R02-provider-session-authority"
+    ],
     "pr_dispositions": [],
-    "next_action": "Read the six saved PR bodies/deferrals and existing delivery evidence, then review the template/provider/preference/branding workflow once and repair confirmed gaps."
+    "next_action": "Continue template mutation authority and verified test recipients, then branding/preferences/daytime consumers. Reuse provider authority evidence."
   },
   "open_domain_reviews": [
     {
