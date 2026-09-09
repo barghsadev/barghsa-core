@@ -40,6 +40,37 @@ interface UnresolvedChargebackWarning {
   items: UnresolvedChargebackItem[];
 }
 
+function isChargebackWarning(value: unknown): value is UnresolvedChargebackWarning {
+  if (!value || typeof value !== 'object') return false;
+  const row = value as Record<string, unknown>;
+  const count = (n: unknown): n is number =>
+    typeof n === 'number' && Number.isSafeInteger(n) && n >= 0;
+  return (
+    count(row.count) &&
+    count(row.unmatchedCount) &&
+    count(row.reversalFailedCount) &&
+    row.count === row.unmatchedCount + row.reversalFailedCount &&
+    Array.isArray(row.items) &&
+    row.items.length <= 20 &&
+    row.items.length <= row.count &&
+    row.items.every((item: unknown) => {
+      if (!item || typeof item !== 'object') return false;
+      const entry = item as Record<string, unknown>;
+      return (
+        typeof entry.eventId === 'string' &&
+        entry.eventId.length > 0 &&
+        (entry.status === 'unmatched' || entry.status === 'unresolved') &&
+        (entry.amountIrR === null ||
+          (typeof entry.amountIrR === 'string' && /^\d{1,19}$/.test(entry.amountIrR))) &&
+        ['walletId', 'originalTransactionId', 'reason'].every(
+          (key) => entry[key] === null || typeof entry[key] === 'string'
+        ) &&
+        typeof entry.createdAt === 'string'
+      );
+    })
+  );
+}
+
 export default function AdminDashboard() {
   const [data, setData] = useState<PendingVerificationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,6 +87,7 @@ export default function AdminDashboard() {
     let cancelled = false;
     let intervalId: ReturnType<typeof setInterval> | null = null;
     let pendingRequest = false;
+    let pendingChargebacks = false;
 
     const fetchData = async () => {
       if (pendingRequest) return;
@@ -102,12 +134,23 @@ export default function AdminDashboard() {
     };
 
     const fetchChargebacks = async () => {
+      if (pendingChargebacks) return;
+      pendingChargebacks = true;
       try {
         const res = await fetch('/api/admin/wallet/chargebacks/unresolved-warning', {
           credentials: 'include',
         });
+        if (res.status === 401 || res.status === 403) {
+          if (!cancelled) {
+            setChargebacks(null);
+            setChargebacksLoading(false);
+            setChargebacksError(false);
+          }
+          return;
+        }
         if (!res.ok) throw new Error('Failed to fetch');
-        const json = (await res.json()) as UnresolvedChargebackWarning;
+        const json: unknown = await res.json();
+        if (!isChargebackWarning(json)) throw new Error('Invalid chargeback warning');
         if (!cancelled) {
           setChargebacks(json);
           setChargebacksLoading(false);
@@ -118,6 +161,8 @@ export default function AdminDashboard() {
           setChargebacksLoading(false);
           setChargebacksError(true);
         }
+      } finally {
+        pendingChargebacks = false;
       }
     };
 
@@ -134,8 +179,7 @@ export default function AdminDashboard() {
     };
   }, []);
 
-  const showChargebackWarning =
-    !chargebacksLoading && !chargebacksError && (chargebacks?.count ?? 0) > 0;
+  const showChargebackWarning = !chargebacksLoading && (chargebacks?.count ?? 0) > 0;
 
   return (
     <div dir={isRtl ? 'rtl' : 'ltr'}>
@@ -143,7 +187,7 @@ export default function AdminDashboard() {
       <p className="text-muted-foreground mb-6">{t('dashboard.admin.description', locale)}</p>
 
       {chargebacksError ? (
-        <p className="mb-6 text-sm text-red-600" role="status">
+        <p className="mb-6 text-sm text-red-700 dark:text-red-300" role="status">
           {t('dashboard.admin.chargebackWarning.error', locale)}
         </p>
       ) : null}

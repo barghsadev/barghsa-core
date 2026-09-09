@@ -35,7 +35,9 @@ for (const locale of ['fa', 'en'])
           })
         );
         await page.route('**/api/admin/wallet/chargebacks/unresolved-warning', (route) =>
-          route.fulfill({ json: { count: 0, items: [] } })
+          route.fulfill({
+            json: { count: 0, unmatchedCount: 0, reversalFailedCount: 0, items: [] },
+          })
         );
         let status = 200;
         let body: unknown = { enabled: true, count: 12, profiles: [] };
