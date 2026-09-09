@@ -476,6 +476,65 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
     );
   }
 
+  it.each(['merchantOrderId', 'providerRefId', 'authority'] as const)(
+    'keeps a matching bank receipt unmatched through %s without debiting its wallet',
+    async (locator) => {
+      const profileId = uuidv7();
+      const pending = uuidv7();
+      const reference = `receipt-${uuidv7()}`;
+      await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, 'wallet-test-owner')`, [
+        profileId,
+      ]);
+      await walletService.createWallet(profileId);
+      const receipt = await walletService.credit(
+        profileId,
+        AMOUNT,
+        {
+          type: 'topup',
+          refId: reference,
+          metadata: {
+            channel: 'bank_receipt',
+            pendingTransactionId: pending,
+            authority: reference,
+          },
+        },
+        `bank-receipt:${pending}`
+      );
+      const eventId = `receipt-chargeback-${uuidv7()}`;
+      const request = signed(
+        {
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          amountIrR: AMOUNT.toString(),
+          [locator]: locator === 'merchantOrderId' ? pending : reference,
+        },
+        eventId
+      );
+      const result = await service.handle(request);
+      expect(result).toMatchObject({ status: 'unmatched', mapped: false, reversed: false });
+      expect(await service.handle(request)).toMatchObject({ status: 'unmatched', reversed: false });
+      const wallet = await ctx.pool.query(
+        'SELECT posted_balance::text FROM wallets WHERE profile_id = $1',
+        [profileId]
+      );
+      expect(wallet.rows[0]?.posted_balance).toBe(AMOUNT.toString());
+      const reversals = await ctx.pool.query(
+        'SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1',
+        [receipt.id]
+      );
+      expect(reversals.rows).toHaveLength(0);
+      const event = await ctx.pool.query(
+        'SELECT status, original_transaction_id, wallet_id FROM wallet_chargeback_events WHERE event_id = $1',
+        [eventId]
+      );
+      expect(event.rows[0]).toEqual({
+        status: 'unmatched',
+        original_transaction_id: null,
+        wallet_id: null,
+      });
+    }
+  );
+
   it('resumes a stuck processing claim without rewriting the original credit', async () => {
     const profileId = uuidv7();
     const pending = uuidv7();

@@ -260,7 +260,14 @@ export function matchChargebackToTopUp(
 ): ChargebackTopUpMatch | null {
   if (!hasChargebackLocator(notification)) return null;
 
-  const completed = candidates.filter((row) => row.type === 'topup' && row.state === 'Completed');
+  const completed = candidates.filter(
+    (row) =>
+      row.type === 'topup' &&
+      row.state === 'Completed' &&
+      row.metadata !== null &&
+      typeof row.metadata === 'object' &&
+      (row.metadata as Record<string, unknown>).channel === 'online'
+  );
 
   if (notification.merchantOrderId) {
     const byOrder = uniqueAmountMatched(

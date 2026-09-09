@@ -204,7 +204,7 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
 
   it('uses provider ref, then authority, only when stronger locators are absent', () => {
     const byRef = matchChargebackToTopUp(notification({ merchantOrderId: null, authority: null }), [
-      candidate({ idempotencyKey: 'credit-other', metadata: {} }),
+      candidate({ idempotencyKey: 'credit-other', metadata: { channel: 'online' } }),
     ]);
     expect(byRef?.method).toBe('provider_ref_id');
     expect(byRef?.original.id).toBe(CREDIT_ID);
@@ -218,7 +218,7 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
         candidate({
           refId: null,
           idempotencyKey: 'credit-other',
-          metadata: { gateway: { authority: AUTHORITY } },
+          metadata: { channel: 'online', gateway: { authority: AUTHORITY } },
         }),
       ]
     );
