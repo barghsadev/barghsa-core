@@ -13384,6 +13384,143 @@
         "/tmp/r02-email-brand-worker-types.log",
         "/tmp/r02-email-brand-worker.log"
       ]
+    },
+    {
+      "id": "R02-branded-admin-previews",
+      "date": "2026-09-09",
+      "source_revision": "5dade2d638fbf9ea9258dd918cd8e5cfc4c1c803",
+      "base_revision": "71305861cc6680b1ed86f43de44a7131f6b0764b",
+      "product_commits": [
+        "5dade2d638fbf9ea9258dd918cd8e5cfc4c1c803"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "02-auth-users-admin.md#T-09.04.01"
+      ],
+      "summary": "Actual admin email previews use the same branding and variable renderer as delivery, with sandboxed HTML. Generic preview API accepts channel/locale; dotted sample paths now match real data semantics.",
+      "review": [
+        "Confirmed both AdminNotificationsPage live editing and TemplatePreviewPanel version viewing showed unbranded HTML source in pre elements. Extracted the pure brand formatter into the browser-safe notifications entry point; server loader remains server-only and reexports preserve delivery imports.",
+        "Shared BrandedEmailPreview reads existing active-brand context, uses localized titles and renders inside an empty-sandbox iframe with no-referrer and restrictive inline CSP. Scripts, frames, forms, base URLs and top navigation are blocked. HTML styles may render; labels and variable warnings remain outside the frame. SMS/in-app remain plain text.",
+        "Removed the editor/local preview rendering mirrors in favor of the existing restricted shared renderer. Subjects/plain-text channels avoid HTML entity display. A shared preview/test sample helper creates nested values for dotted names; explicit flat or nested values normalize consistently. Prototype/accessor paths are rejected; caller objects are not mutated. This corrects browser previews claiming sample values that server test sends previously could not resolve.",
+        "The real POST /api/admin/notifications/templates/preview accepts optional channel/locale and returns its documented200 status. Explicit email requests include active branding and direction; plain-text channels stay unbranded. Omitted context retains generic preview compatibility. Six real HTTP cases verify both locales/all three channels, published-only branding and explicit dotted values.",
+        "Browsers verify actual rendered headers/message markup, live updates, brand color/dark background, FA/EN direction, visible undeclared-variable warnings and text channels. Script/child-frame probes cause no request or parent mutation; a target=_top link cannot navigate the application. Chromium and WebKit pass. Viewed a focused screenshot; the earlier whole-form screenshot was clipped by the outer viewport and is not visual proof.",
+        "Types initially found missing assertions in the new HTTP fixture and an impossible email comparison inside the non-email branch. Fixed them; final shared/API/web/worker types pass. The final branch edit is behavior-equivalent; earlier browser evidence remains valid. OpenAPI semantic change is limited to two optional preview fields. All42 budgets remain unchanged."
+      ],
+      "verification": {
+        "unit_integration": "179 cases:138 API controller/template/HTTP,34 shared engine/branding and7 web preview helper cases. Added2 sample-context cases and6 HTTP preview cases.",
+        "browser": "23 checks:17 Chromium (6 new preview scenarios plus11 existing recovery scenarios) and the6 new scenarios on WebKit. One extra visual capture rerun overlaps and is not added. Production web build used.",
+        "quality": "Shared/API/web/worker types, scoped lint/format, production web build, OpenAPI generation/check, all42 unchanged route/interaction gzip budgets and diff checks pass.",
+        "scope": "No production-send, rollout, whole-repository regression, comprehensive theme/contrast or full template-editor acceptance claim. No task or saved PR closed."
+      },
+      "remaining": [
+        "Review/finish delivery preferences and daytime consumers for the active R02 foundation batch, then remaining provider/template UI acceptance, including SMS all-mapping test disclosure and original editor criteria.",
+        "R03 still owns broad theme/contrast/localized diagnostics; preserving authored email HTML does not certify every custom email layout or link color. Operational email-client rendering/delivery and coordinated auth worker rollout remain.",
+        "Preserve repaired provider proof/migration0126, encrypted auth branding snapshots and current authority. No redoing completed R01 or broad regression before V02."
+      ],
+      "evidence_reuse": [
+        "22 immediate-base bindings refreshed; older stale evidence queue retained. Other provider/brand delivery methods unchanged by pure-module extraction."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "bf3eafe007c67293aebf53a85b4ac9af12f0d7ee74db22272d5570da01f826bb"
+        },
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "1814b30f1a373c6465ea87dec8706bc2907833384bdd6ebb28d1667064a69d53"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "61cd606c918c7651ff1c29ed658e9f5fa4e5d65e0e75e36f681cd25b660c23b8"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "apps/web/src/components/BrandedEmailPreview.tsx",
+          "sha256": "5faa869a743e20b91d6e98486f36bbccd1b0cb6ebbc42ee6cc0dc2881e101581"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "9e8c09bd92e5bf9b5259bf1e7f6a7bd09826749b547bc4b0e240ae3993af4f75"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "89ee6041b4a50e1b280b6ae7524156bf6a842f06f02f537ccddb6dafb18d3ec3"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.ts",
+          "sha256": "25fd01bdb03569af6ac6f88842ab07b4af2446a4a847214021659a27a1509aea"
+        },
+        {
+          "path": "packages/shared/src/notifications/email-branding.ts",
+          "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+        },
+        {
+          "path": "packages/shared/src/notifications/index.ts",
+          "sha256": "f399dc3cd4786504db527f9856edb01f8c50eb8fa459492900e741e800dd0ca1"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-brand-preview-api-types-final.log",
+        "/tmp/r02-brand-preview-api-types.log",
+        "/tmp/r02-brand-preview-api.log",
+        "/tmp/r02-brand-preview-browser-format-final.log",
+        "/tmp/r02-brand-preview-browser-format.log",
+        "/tmp/r02-brand-preview-browser.log",
+        "/tmp/r02-brand-preview-budgets.log",
+        "/tmp/r02-brand-preview-final-format.log",
+        "/tmp/r02-brand-preview-format-check.log",
+        "/tmp/r02-brand-preview-format.log",
+        "/tmp/r02-brand-preview-lint-final.log",
+        "/tmp/r02-brand-preview-lint.log",
+        "/tmp/r02-brand-preview-narrowing-format.log",
+        "/tmp/r02-brand-preview-openapi-check.log",
+        "/tmp/r02-brand-preview-openapi-generate.log",
+        "/tmp/r02-brand-preview-openapi-update.log",
+        "/tmp/r02-brand-preview-shared-types.log",
+        "/tmp/r02-brand-preview-shared.log",
+        "/tmp/r02-brand-preview-visual.log",
+        "/tmp/r02-brand-preview-web-build-final.log",
+        "/tmp/r02-brand-preview-web-build.log",
+        "/tmp/r02-brand-preview-web-types-final.log",
+        "/tmp/r02-brand-preview-web-types-fixed.log",
+        "/tmp/r02-brand-preview-web-unit.log",
+        "/tmp/r02-brand-preview-webkit.log",
+        "/tmp/r02-brand-preview-worker-types.log"
+      ],
+      "artifacts": [
+        {
+          "path": "audit/evidence/r02/r02-brand-preview-final.png",
+          "sha256": "88dec183c10b5085e5463cafb9cb02e316294a5eab104622a63244cfb315b58d",
+          "description": "Reviewed Chromium English light-mode live preview, controlled brand and message fixture."
+        }
+      ]
     }
   ]
 }

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "31585375bb3d2dacf2d8ed136fcc900d65311e82",
+  "source_revision": "5dade2d638fbf9ea9258dd918cd8e5cfc4c1c803",
   "active_step": "R02",
-  "next_action": "Finish actual branded admin email previews in AdminNotificationsPage and TemplatePreviewPanel. Current live preview uses pre/rendered source; previewFromBody lacks channel/locale. Service.preview is not the editor route. Share a browser-safe renderer, sandbox HTML and preserve variable diagnostics. Then continue delivery preferences/daytime and remaining provider/template UI.",
+  "next_action": "Review and finish delivery preferences/daytime consumers for the active R02 foundation batch, then remaining provider/template UI acceptance. Preserve branded admin previews5dade2d6, email/auth branding31585375 and provider activation83a27ac8; reuse their valid focused evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -666,6 +666,10 @@
     {
       "id": "R02-email-branding-delivery",
       "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
+    },
+    {
+      "id": "R02-branded-admin-previews",
+      "review_record": "audit/evidence/step-reviews.json#R02-branded-admin-previews"
     }
   ],
   "deferred_improvements": [
@@ -1043,7 +1047,8 @@
       },
       {
         "defect": "Actual admin template preview shows unbranded body/source; service-level saved preview is not wired to that editor.",
-        "status": "remaining"
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-branded-admin-previews"
       }
     ],
     "reused_evidence": [
@@ -1056,10 +1061,11 @@
       "audit/evidence/step-reviews.json#R02-template-session-authority",
       "audit/evidence/step-reviews.json#R02-provider-self-tests",
       "audit/evidence/step-reviews.json#R02-provider-activation-proof",
-      "audit/evidence/step-reviews.json#R02-email-branding-delivery"
+      "audit/evidence/step-reviews.json#R02-email-branding-delivery",
+      "audit/evidence/step-reviews.json#R02-branded-admin-previews"
     ],
     "pr_dispositions": [],
-    "next_action": "Finish actual branded admin email previews in AdminNotificationsPage and TemplatePreviewPanel. Current live preview uses pre/rendered source; previewFromBody lacks channel/locale. Service.preview is not the editor route. Share a browser-safe renderer, sandbox HTML and preserve variable diagnostics. Then continue delivery preferences/daytime and remaining provider/template UI."
+    "next_action": "Review and finish delivery preferences/daytime consumers for the active R02 foundation batch, then remaining provider/template UI acceptance. Preserve branded admin previews5dade2d6, email/auth branding31585375 and provider activation83a27ac8; reuse their valid focused evidence."
   },
   "open_domain_reviews": [
     {

@@ -3790,7 +3790,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3864,7 +3864,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [
         "Large production history-volume performance and legacy immutable-document recovery remain operational prerequisites. The detail session list contains the latest 20 records; active count is computed separately. The written task does not specify session pagination.",
@@ -3946,7 +3947,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -4002,7 +4003,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [],
       "merged_prs": [
@@ -4512,7 +4514,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4552,7 +4554,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [
         "Production-scale search/aggregate performance, deployment and the final global checkpoint remain separate evidence."
@@ -4658,7 +4661,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4692,7 +4695,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [
         "Visibility and local reads are verified. Provider approval, deployed settings and final global regression remain separate evidence."
@@ -5106,7 +5110,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5209,7 +5213,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [
         "Preserved reset transaction and migration evidence is supplemented by current preauth and recovery UI checks. Local fixtures do not prove provider operation or deployment."
@@ -5639,7 +5644,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -5721,7 +5726,8 @@
         "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
@@ -7802,7 +7808,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
+          "sha256": "bf3eafe007c67293aebf53a85b4ac9af12f0d7ee74db22272d5570da01f826bb"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -7873,7 +7879,8 @@
         "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added.",
         "At aeb2d1b, reviewed the complete subsequent admin service/controller diff: only online-limit getter/setter/caller changed. Receipt threshold/configuration methods and their verified behavior are unchanged; retain their API/browser evidence. Fresh receipt request-body OpenAPI comparison is recorded under audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy."
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/src/admin/admin.controller.ts. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         195
@@ -8771,7 +8778,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
+          "sha256": "bf3eafe007c67293aebf53a85b4ac9af12f0d7ee74db22272d5570da01f826bb"
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
@@ -8801,7 +8808,8 @@
       "checks": [
         "Exact story/task criteria and current implementations reviewed together in audit/evidence/step-reviews.json#R01-online-topups-callbacks",
         "Six repairs and focused current/reused checks recorded once in the consolidated review; overlapping counts are not added.",
-        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy."
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/src/admin/admin.controller.ts. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         269,
@@ -11298,7 +11306,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11343,7 +11351,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         236
@@ -11458,7 +11467,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11503,7 +11512,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         237
@@ -11618,7 +11628,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11663,7 +11673,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         238
@@ -11778,7 +11789,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11823,7 +11834,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         239
@@ -11938,7 +11950,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11983,7 +11995,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         240
@@ -12098,7 +12111,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12143,7 +12156,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         241
@@ -12258,7 +12272,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12303,7 +12317,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         243
@@ -12420,7 +12435,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12465,7 +12480,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         244
@@ -12580,7 +12596,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12625,7 +12641,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         245
@@ -12742,7 +12759,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12787,7 +12804,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "merged_prs": [
         246
@@ -13095,7 +13113,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+          "sha256": "e99ecd082d6b10f0843b6ceedc7fb8cc4e531111eef8dc907d1e712b501cc25d"
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -13148,7 +13166,8 @@
         "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved."
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [],
       "merged_prs": [
@@ -13700,7 +13719,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
+          "sha256": "bf3eafe007c67293aebf53a85b4ac9af12f0d7ee74db22272d5570da01f826bb"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -13729,7 +13748,8 @@
       ],
       "checks": [
         "Exact current requirement and saved contributing PR body reviewed; audit/evidence/step-reviews.json#R01-verification-policy",
-        "Implemented behavior, focused checks and unchanged-source reuse are recorded once in the batch review."
+        "Implemented behavior, focused checks and unchanged-source reuse are recorded once in the batch review.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/src/admin/admin.controller.ts. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [
         "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion."
@@ -13934,7 +13954,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
+          "sha256": "bf3eafe007c67293aebf53a85b4ac9af12f0d7ee74db22272d5570da01f826bb"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -13959,7 +13979,8 @@
       ],
       "checks": [
         "Exact requirement and saved PR219 reviewed.",
-        "audit/evidence/step-reviews.json#R01-staff-permission-audit"
+        "audit/evidence/step-reviews.json#R01-staff-permission-audit",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/src/admin/admin.controller.ts. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [],
       "merged_prs": [
@@ -13979,7 +14000,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3ed7e3686217fe8a7a28b1d96524ba0f5124b9dda5ab747006c20ab59fcf61c4"
+          "sha256": "bf3eafe007c67293aebf53a85b4ac9af12f0d7ee74db22272d5570da01f826bb"
         },
         {
           "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
@@ -14020,7 +14041,8 @@
       ],
       "checks": [
         "Exact requirement and saved PR162 reviewed.",
-        "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
+        "audit/evidence/step-reviews.json#R01-staff-role-catalogue",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/src/admin/admin.controller.ts. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews."
       ],
       "limitations": [
         "Predefined roles are read-only as explicitly required initially. Custom-role editing and its role_permission_change audit belong to that future extension; no mutation endpoint or editing acceptance claimed."
@@ -17177,6 +17199,36 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof",
       "note": "Immediate-base hashes only. Activation proof and additive migration reviewed; consumer fixture data updated. One OpenAPI description changed; no request/response change. Older stale bindings retained."
+    },
+    {
+      "source_revision": "5dade2d638fbf9ea9258dd918cd8e5cfc4c1c803",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-09.07.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-10.01.02",
+        "02-auth-users-admin.md#T-09.05.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-branded-admin-previews",
+      "note": "Immediate-base bindings only. Shared preview rendering/sample contexts, one preview endpoint and browser checks reviewed; unrelated methods/authority unchanged. Older stale bindings retained."
     }
   ]
 }
