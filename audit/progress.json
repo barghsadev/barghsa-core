@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "0e370f76f6849d989da5887f5ba98b1b6a903f29",
+  "source_revision": "b6f46be91df29ef8410e996ba451f52331ec95fc",
   "active_step": "R01",
-  "next_action": "Continue reminder deadline-rescheduling review, then implement due-date override step-up/response validation UI. Reuse21 current authority cases and existing overdue checks.",
+  "next_action": "Repair reminder rescheduling after due-date override, preserving sent history and per-offset/channel idempotency. Then review due-period admin configuration and remaining reminder consumers. Reuse reviewed authority/form and prior overdue evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -834,13 +834,19 @@
         "summary": "Bind due-date read/mutation requests to the current session. Keep permission locks, require fresh session/step-up after invoice locking and before commit.",
         "verification": "Two baseline expired-session mutations returned200 and wrote changes. Corrected21 distinct cases pass:5 real HTTP cases plus16 unchanged controller/service/integration cases. The initial baseline also exposed the nested-error fixture mismatch, corrected at03bcf45. API types/lint/format/diff pass.",
         "status": "repaired_and_reviewed"
+      },
+      {
+        "revision": "b6f46be",
+        "summary": "Due-date form lacked step-up and accepted stale/mismatched replies. It now captures and freezes the submitted target/date/reason, uses the existing password dialog, validates replies, rejects late lookups, and renders localized errors/states with theme-aware colors.",
+        "verification": "9 focused web cases and4 distinct production Chromium cases pass, including FA/EN, light/dark, accessibility, exact timezone conversion, focus, canonical step-up and response binding. Initial2 English axe cases sampled CSS animations; waiting for actual animations fixes the fixture. Web types/lint/format/build, i18n build and42 unchanged budgets pass. Final generic error-copy edit is covered by the9 unit cases; existing4 browser behavior checks remain valid.",
+        "status": "repaired_and_reviewed"
       }
     ],
     "pr_dispositions": [],
-    "next_action": "Continue reminder deadline-rescheduling review, then implement due-date override step-up/response validation UI. Reuse21 current authority cases and existing overdue checks.",
+    "next_action": "Repair reminder rescheduling after due-date override, preserving sent history and per-offset/channel idempotency. Then review due-period admin configuration and remaining reminder consumers. Reuse reviewed authority/form and prior overdue evidence.",
     "integration_findings": [
       "ReminderScheduler skips every invoice with any existing schedule row. Due-date override changes only invoice/audit, so existing reminders retain the old deadline. Confirm with a focused workflow regression before repairing.",
-      "Staff due-date override page has no step-up prompt and parses only legacy errors. Review response validation/request races and implement required current-session retry UI."
+      "Service due-period calculation correctly reads active windows and falls back to7 days, but no API production SQL/Drizzle writer configures service_due_periods. PR236 explicitly omitted CRUD; determine its required admin consumer disposition within this story before closing."
     ],
     "new_evidence": [
       "/tmp/r01-invoice-deadlines-authority-api.log",
@@ -852,7 +858,24 @@
       "/tmp/r01-invoice-deadlines-authority-read-format.log",
       "/tmp/r01-invoice-deadlines-authority-test-format.log",
       "/tmp/r01-invoice-deadlines-authority-types.log",
-      "/tmp/r01-invoice-deadlines-pr-history.log"
+      "/tmp/r01-invoice-deadlines-pr-history.log",
+      "/tmp/r01-invoice-deadlines-form-browser-format.log",
+      "/tmp/r01-invoice-deadlines-form-browser-settled.log",
+      "/tmp/r01-invoice-deadlines-form-browser.log",
+      "/tmp/r01-invoice-deadlines-form-budgets.log",
+      "/tmp/r01-invoice-deadlines-form-final-budgets.log",
+      "/tmp/r01-invoice-deadlines-form-final-build.log",
+      "/tmp/r01-invoice-deadlines-form-final-format.log",
+      "/tmp/r01-invoice-deadlines-form-final-types.log",
+      "/tmp/r01-invoice-deadlines-form-format.log",
+      "/tmp/r01-invoice-deadlines-form-i18n-build.log",
+      "/tmp/r01-invoice-deadlines-form-lint.log",
+      "/tmp/r01-invoice-deadlines-form-response-tests.log",
+      "/tmp/r01-invoice-deadlines-form-tests-format.log",
+      "/tmp/r01-invoice-deadlines-form-types.log",
+      "/tmp/r01-invoice-deadlines-form-unit-final.log",
+      "/tmp/r01-invoice-deadlines-form-unit.log",
+      "/tmp/r01-invoice-deadlines-form-web-build.log"
     ]
   },
   "open_domain_reviews": [
