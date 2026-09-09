@@ -70,7 +70,7 @@ export class ReminderOffsetToggleController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async list(@Req() req: AuthenticatedRequest): Promise<ReminderOffsetToggleDto[]> {
     this.assertTogglePermission(req);
-    return this.service.list();
+    return this.service.list(req.session);
   }
 
   @Put()
@@ -108,6 +108,7 @@ export class ReminderOffsetToggleController {
     return this.service.set({
       raw: body,
       actorUserId: req.session.userId,
+      actorSession: req.session,
       ip: requestIp(req),
     });
   }

@@ -70,6 +70,7 @@ describe('reminder offset toggle permission gate (T-04.1.04.05)', () => {
     expect(result).toHaveLength(24);
     expect(result.every((row) => row.enabled)).toBe(true);
     expect(service.list).toHaveBeenCalledTimes(1);
+    expect(service.list).toHaveBeenCalledWith(adminReq.session);
   });
 
   it('allows admin set and delegates actor + ip to the service', async () => {
@@ -81,6 +82,7 @@ describe('reminder offset toggle permission gate (T-04.1.04.05)', () => {
     expect(service.set).toHaveBeenCalledWith({
       raw: BODY,
       actorUserId: 'admin-1',
+      actorSession: adminReq.session,
       ip: '127.0.0.1',
     });
   });

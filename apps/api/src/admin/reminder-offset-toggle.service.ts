@@ -1,4 +1,6 @@
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -29,6 +31,7 @@ const TOGGLE_LOCK_NAMESPACE = 'barghsa.invoice_reminder_offset_toggles';
 export interface SetReminderOffsetToggleInput {
   raw: unknown;
   actorUserId: string;
+  actorSession?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
@@ -51,19 +54,42 @@ export class ReminderOffsetToggleService {
    * Return the full 4×6 matrix. Stored rows overlay the defaults; missing
    * pairs stay enabled so an empty table matches the canonical schedule.
    */
-  async list(): Promise<ReminderOffsetToggleDto[]> {
+  async list(
+    actorSession?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<ReminderOffsetToggleDto[]> {
     const pool = getDbPool();
-    const result = await pool.query<StoredToggleRow>(
-      `SELECT service_type, "offset", enabled
+    const client = actorSession ? await pool.connect() : undefined;
+    try {
+      if (client && actorSession) {
+        await client.query('BEGIN');
+        await requireStaffMutationPermission(
+          client,
+          actorSession.userId,
+          REMINDER_OFFSET_TOGGLE_PERMISSION
+        );
+        await requireCurrentSession(client, actorSession);
+      }
+      const result = await (client ?? pool).query<StoredToggleRow>(
+        `SELECT service_type, "offset", enabled
          FROM invoice_reminder_offset_toggles`
-    );
-    return mergeReminderOffsetToggles(
-      result.rows.map((row) => ({
-        serviceType: row.service_type,
-        offset: Number(row.offset),
-        enabled: row.enabled,
-      }))
-    );
+      );
+      if (client && actorSession) {
+        await requireCurrentSession(client, actorSession);
+        await client.query('COMMIT');
+      }
+      return mergeReminderOffsetToggles(
+        result.rows.map((row) => ({
+          serviceType: row.service_type,
+          offset: Number(row.offset),
+          enabled: row.enabled,
+        }))
+      );
+    } catch (error) {
+      await client?.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client?.release();
+    }
   }
 
   /**
@@ -110,6 +136,12 @@ export class ReminderOffsetToggleService {
         [TOGGLE_LOCK_NAMESPACE, parsed.value.serviceType, parsed.value.offset]
       );
 
+      if (input.actorSession) {
+        if (input.actorSession.userId !== input.actorUserId)
+          throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+        await requireSessionStepUp(client, input.actorSession);
+      }
+
       const previous = await client.query<StoredToggleRow>(
         `SELECT service_type, "offset", enabled
            FROM invoice_reminder_offset_toggles
@@ -152,6 +184,7 @@ export class ReminderOffsetToggleService {
            FROM invoice_reminder_offset_toggles`
       );
 
+      if (input.actorSession) await requireSessionStepUp(client, input.actorSession);
       await client.query('COMMIT');
 
       this.logger.log(
