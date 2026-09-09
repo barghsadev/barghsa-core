@@ -41,8 +41,8 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
   it('enqueues an immediate in-app + email outbox row per finance recipient', async () => {
     const client = {
       query: vi.fn(async (sql: string, _params?: unknown[]) => {
-        if (sql.includes('FROM profiles')) {
-          return { rows: [{ profile_id: PROFILE_ID, user_id: USER_ID }] };
+        if (sql === FIND_FINANCE_ALERT_RECIPIENTS_SQL) {
+          return { rows: [{ user_id: USER_ID, is_admin: true, role_permissions: [] }] };
         }
         if (sql.includes('INSERT INTO notification_outbox')) {
           return { rows: [{ id: 'outbox-1' }], rowCount: 1 };
@@ -59,13 +59,11 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
       originalTransactionId: null,
     });
     expect(result).toEqual({ recipients: 1, inserted: 1 });
-    expect(FIND_FINANCE_ALERT_RECIPIENTS_SQL).toContain('p.is_default = TRUE');
-    expect(FIND_FINANCE_ALERT_RECIPIENTS_SQL).toContain('role_id = $1');
     const outboxCall = client.query.mock.calls.find((call) =>
       String(call[0]).includes('INSERT INTO notification_outbox')
     );
     expect(outboxCall?.[1]).toEqual([
-      PROFILE_ID,
+      null,
       USER_ID,
       'finance.chargeback_unresolved',
       expect.objectContaining({
@@ -76,7 +74,7 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
       }),
       ['in_app', 'email'],
       'queued',
-      `finance.chargeback_unresolved:${EVENT_ID}:${PROFILE_ID}`,
+      `finance.chargeback_unresolved:${EVENT_ID}:${USER_ID}`,
       5,
       null,
     ]);
@@ -130,7 +128,6 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
       }),
     };
     const result = await enqueueFinanceChargebackAlert(client, {
-      profileId: PROFILE_ID,
       userId: USER_ID,
       eventId: EVENT_ID,
       payload: { event_id: EVENT_ID },
@@ -170,7 +167,6 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
       }),
     };
     const input = {
-      profileId: PROFILE_ID,
       userId: USER_ID,
       eventId: EVENT_ID,
       payload: { event_id: EVENT_ID },

@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { classifyNotificationType } from '@barghsa/shared/notifications';
+import { resolveStaffPermissions } from '@barghsa/shared/admin';
 import {
   FINANCE_CHARGEBACK_ALERT_CHANNELS,
   FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
-  FINANCE_CHARGEBACK_ALERT_ROLE_ID,
+  FINANCE_CHARGEBACK_ALERT_PERMISSION,
   FINANCE_CHARGEBACK_WARNING_LIMIT,
   buildFinanceChargebackAlertPayload,
   emptyUnresolvedChargebackWarning,
@@ -21,19 +22,13 @@ import {
 
 const DEFAULT_MAX_ATTEMPTS = 5;
 
-export const FIND_FINANCE_ALERT_RECIPIENTS_SQL = `SELECT DISTINCT p.id AS profile_id, p.user_id
-   FROM profiles p
-   JOIN users u ON u.user_id = p.user_id
-  WHERE p.is_default = TRUE
-    AND (
-      u.is_admin = TRUE
-      OR EXISTS (
-        SELECT 1
-          FROM user_roles ur
-         WHERE ur.user_id = u.user_id
-           AND ur.role_id = $1
-      )
-    )`;
+export const FIND_FINANCE_ALERT_RECIPIENTS_SQL = `SELECT u.user_id, u.is_admin,
+    ARRAY(SELECT r.permissions FROM user_roles ur
+          JOIN staff_roles r ON r.role_id=ur.role_id
+          WHERE ur.user_id=u.user_id) AS role_permissions
+   FROM users u
+  WHERE u.disabled_at IS NULL AND u.activation_token IS NULL
+    AND (u.is_admin=TRUE OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id))`;
 
 export const COUNT_UNRESOLVED_CHARGEBACKS_SQL = `SELECT status, COUNT(*)::int AS n
    FROM wallet_chargeback_events
@@ -48,7 +43,6 @@ export const LIST_UNRESOLVED_CHARGEBACKS_SQL = `SELECT event_id, status, wallet_
   LIMIT $1`;
 
 export interface FinanceAlertRecipient {
-  profileId: string;
   userId: string;
 }
 
@@ -87,7 +81,7 @@ export class ChargebackAlertService {
     const recipients = await this.loadFinanceRecipients(client);
     if (recipients.length === 0) {
       this.logger.warn(
-        `Chargeback ${input.eventId} is ${input.status} but no finance recipient has a default profile`
+        `Chargeback ${input.eventId} is ${input.status} but no active finance recipient has permission`
       );
       return { recipients: 0, inserted: 0 };
     }
@@ -99,7 +93,6 @@ export class ChargebackAlertService {
     let inserted = 0;
     for (const recipient of recipients) {
       const result = await enqueueFinanceChargebackAlert(client, {
-        profileId: recipient.profileId,
         userId: recipient.userId,
         eventId: input.eventId,
         payload,
@@ -132,13 +125,17 @@ export class ChargebackAlertService {
   }
 
   private async loadFinanceRecipients(client: QueryClient): Promise<FinanceAlertRecipient[]> {
-    const result = await client.query(FIND_FINANCE_ALERT_RECIPIENTS_SQL, [
-      FINANCE_CHARGEBACK_ALERT_ROLE_ID,
-    ]);
-    return (result.rows as Array<{ profile_id: string; user_id: string }>).map((row) => ({
-      profileId: row.profile_id,
-      userId: row.user_id,
-    }));
+    const result = await client.query(FIND_FINANCE_ALERT_RECIPIENTS_SQL);
+    return (result.rows as Array<{ user_id: string; is_admin: boolean; role_permissions: unknown }>)
+      .filter((row) => {
+        const permissions = resolveStaffPermissions(row.role_permissions);
+        return (
+          row.is_admin ||
+          permissions.includes('*') ||
+          permissions.includes(FINANCE_CHARGEBACK_ALERT_PERMISSION)
+        );
+      })
+      .map((row) => ({ userId: row.user_id }));
   }
 }
 
@@ -149,20 +146,31 @@ export const SELECT_FINANCE_CHARGEBACK_OUTBOX_ID_SQL = `SELECT id FROM notificat
 export async function enqueueFinanceChargebackAlert(
   client: QueryClient,
   input: {
-    profileId: string;
     userId: string;
     eventId: string;
     payload: FinanceChargebackAlertPayload | Record<string, unknown>;
   }
 ): Promise<{ outboxId: string | null; inserted: boolean }> {
   const channels = [...FINANCE_CHARGEBACK_ALERT_CHANNELS];
-  const idempotencyKey = financeChargebackAlertIdempotencyKey(input.eventId, input.profileId);
+  const idempotencyKey = financeChargebackAlertIdempotencyKey(input.eventId, input.userId);
   const priority =
     classifyNotificationType(FINANCE_CHARGEBACK_ALERT_EVENT_KEY) === 'immediate'
       ? 'urgent'
       : 'normal';
 
   return withLocalTransaction(client, async () => {
+    // Preserve prior profile-scoped deliveries when a provider retries an older event.
+    const legacy = await client.query(
+      `SELECT id FROM notification_outbox
+       WHERE user_id=$1 AND event_key=$2 AND payload->>'event_id'=$3
+       ORDER BY created_at, id LIMIT 1`,
+      [input.userId, FINANCE_CHARGEBACK_ALERT_EVENT_KEY, input.eventId]
+    );
+    const legacyId = (legacy.rows[0] as { id: string } | undefined)?.id;
+    if (legacyId) {
+      await insertFinanceChargebackAlertJobs(client, { outboxId: legacyId, channels, priority });
+      return { outboxId: legacyId, inserted: false };
+    }
     const insertResult = await client.query(
       `INSERT INTO notification_outbox
          (profile_id, user_id, event_key, payload, channels, status,
@@ -171,7 +179,7 @@ export async function enqueueFinanceChargebackAlert(
        ON CONFLICT (idempotency_key) DO NOTHING
        RETURNING id`,
       [
-        input.profileId,
+        null,
         input.userId,
         FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
         input.payload,

@@ -68,8 +68,8 @@ export function needsFinanceChargebackAlert(
 }
 
 /** Outbox idempotency key: one logical alert per (event, recipient). */
-export function financeChargebackAlertIdempotencyKey(eventId: string, profileId: string): string {
-  return `${FINANCE_CHARGEBACK_ALERT_EVENT_KEY}:${eventId}:${profileId}`;
+export function financeChargebackAlertIdempotencyKey(eventId: string, recipientId: string): string {
+  return `${FINANCE_CHARGEBACK_ALERT_EVENT_KEY}:${eventId}:${recipientId}`;
 }
 
 export interface FinanceChargebackAlertInput {
