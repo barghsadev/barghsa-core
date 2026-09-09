@@ -4,7 +4,7 @@ Read [fix-plan.md](fix-plan.md) and [progress.json](progress.json), then selecte
 
 ## Current checkpoint
 
-Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **09aa638**. Receipt/approval batch **R01-bank-receipts-approval** is consolidated: **9 tasks verified /1 partial;14 saved PR reviews closed /2 open**. Detailed repairs, source bindings, check revisions and failures live once in [the batch review](evidence/step-reviews.json#R01-bank-receipts-approval).
+Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **e4d4228**. Receipt/approval batch **R01-bank-receipts-approval** is consolidated: **9 tasks verified /1 partial;14 saved PR reviews closed /2 open**. Detailed repairs, source bindings, check revisions and failures live once in [the batch review](evidence/step-reviews.json#R01-bank-receipts-approval).
 
 Twelve completed repairs include authority through commit, threshold serialization, both approvers' authority, sealed attachment copies, session/correlation audits, per-receipt emergency settlement, required threshold/staff controls and safe customer retries. Do not rebuild them. Latest customer repair b4356e0 retains file/profile upload identity after a lost acknowledgement, shares strict amount/MIME validation, clears native file selection and fixes submit contrast.49 web unit cases and8 distinct production Chromium cases pass, including fa/en retry/axe cases. Initial6 baseline failures and2 later contrast failures are preserved. Counts overlap across earlier repairs; do not add them.
 
@@ -24,13 +24,17 @@ Freshly built OpenAPI exposed two missing receipt emergency request fields. **57
 
 09aa638 preserves the provider reference when TTL expiry races start/recovery, recovers an ambiguous claim first retried after expiry, prevents expired checkout/new provider starts, and rejects bank-receipt idempotency-key collisions.50 distinct current/reused API checks pass, including the real expiry worker and later exactly-once credit. Four failures reproduced before repair; fixture errors and overlapping runs are recorded in progress.json.active_batch.verification. Do not add counts across repairs.
 
-**Next:** browser payment-return GET still mutates intent/event state and can credit without a session CSRF header. Move browser confirmation to an authenticated CSRF-protected POST while keeping GET safe and preserving server-verified payment reconciliation. Signed callback/replay/credit and expiry acceptance, repeated PR history and consolidated batch closure remain. No new task or PR closures are claimed yet.
+**Browser return and callback repairs complete:** aaf669b makes GET read-only and adds explicit Persian/English confirmation with current session/CSRF/profile authorization. Browser status is ignored; provider verification decides credit.54 distinct API,15 wallet unit,4 production Chromium and42 unchanged payload checks pass, plus types/lint/format/build/fresh OpenAPI. Failed payload/type attempts are preserved; messages and query handling now load with the wallet feature. Sign-in opens in a new tab so the return page and retry remain available.
+
+e4d4228 rejects online callbacks aimed at bank-receipt entries, after a real-DB baseline incorrectly credited one.53 overlapping API checks and types/lint/format pass.24 unchanged expiry worker checks also pass; candidate SQL, transaction, audit and scheduler wiring reviewed.
+
+**Next:** finish provider adapter/credit-recovery acceptance and saved repeated limit/expiry PR dispositions, then consolidate the online batch individually. Signed provider callbacks retain their existing independent proof. A narrow CSRF requirements exception was asked once and awaits owner; do not change requirements or ask again. Continue independent reviews. No new task or PR closures yet.
 
 Do not rebuild current limit/version UI, receipts/approvals or pre-login CSRF. Run focused checks for confirmed changes or missing evidence; one consolidated review per feature batch. Current receipt backend evidence remains valid; only unrelated online-limit methods changed afterward.
 
 ## Counts and preserved work
 
-**97 verified /21 partial /204 pending =322 claims.225 unresolved reviews are not a coding-effort estimate.** Saved PR reviews: **56 closed /10 open /235 not reviewed** of301. Mapping counts190 unresolved/107 verified-only/4 unmapped.58 historical skips:3 verified/55 pending. GitHub inventory still ends September3.12 older source-evidence refreshes remain separately queued.1620 logs indexed.
+**97 verified /21 partial /204 pending =322 claims.225 unresolved reviews are not a coding-effort estimate.** Saved PR reviews: **56 closed /10 open /235 not reviewed** of301. Mapping counts190 unresolved/107 verified-only/4 unmapped.58 historical skips:3 verified/55 pending. GitHub inventory still ends September3.12 older source-evidence refreshes remain separately queued.1657 logs indexed.
 
 Preserve registration/OTP, agents/invitations/ownership, session/recovery, profiles/onboarding, account-settings, addresses/current commercial-order, CRM and wallet closures. Address PR115/116 remain open for savings/solar prerequisites in V01/B01. Pre-login CSRFf1b879b and shared CSRF race71f5e49 are complete. No new budget, broad coverage, full-suite, image or deployment result is claimed.
 

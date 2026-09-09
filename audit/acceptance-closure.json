@@ -7939,7 +7939,7 @@
         },
         {
           "path": "apps/web/src/pages/WalletPage.tsx",
-          "sha256": "745cc71eff320cfdd58e1783eb0d6b00ba9e24f34e7d7099b0f66fa0a7dae40c"
+          "sha256": "31ca8b641846903edf480420c895179f9f87f5e29919570cbb3f6e6c8d010fa9"
         },
         {
           "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
@@ -7953,7 +7953,8 @@
       "checks": [
         "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added.",
-        "fc7ee0b source refresh: receipt authority extracted unchanged to financial-submission-actor, with24 receipt authority cases passing. WalletController only adds trusted session to online initiation; other methods unchanged,14 controller cases pass. Existing domain evidence is retained, not rerun or renewed wholesale. See progress.json.active_batch.verification.online_initiation."
+        "fc7ee0b source refresh: receipt authority extracted unchanged to financial-submission-actor, with24 receipt authority cases passing. WalletController only adds trusted session to online initiation; other methods unchanged,14 controller cases pass. Existing domain evidence is retained, not rerun or renewed wholesale. See progress.json.active_batch.verification.online_initiation.",
+        "aaf669b adds an optional payment-return panel and props; existing receipt/initiation handlers are unchanged.15 wallet unit cases pass; prior receipt browser evidence retained.4 new payment-return Chromium cases and42 unchanged budgets pass. Evidence: progress.json.active_batch.verification.browser_return."
       ],
       "merged_prs": [
         266

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "09aa638602c74fd7384b365af8ae70febd698513",
+  "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
   "active_step": "R01",
-  "next_action": "Repair browser payment-return GET/CSRF without disrupting provider reconciliation; then finish signed callback/replay/credit and expiry acceptance and saved PR dispositions. Initiation authority, limit writes and expiry recovery are fixed; preserve their checks.",
+  "next_action": "Complete provider adapter/credit-recovery acceptance and saved repeated limit/expiry PR dispositions, then consolidate the online batch individually. Browser confirmation, initiation authority, limits, expiry recovery and callback channel binding are fixed. Signed-webhook CSRF wording awaits owner; continue independent reviews.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -631,6 +631,13 @@
       "question": "Who may approve lost-contact account recovery, and which identity checks does support use?",
       "status": "awaiting_owner",
       "independent_work": "R01 session/capability callers"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "question": "May signed provider webhooks use their independent HMAC/time/event/merchant proof without a browser session CSRF token, with that narrow exception documented?",
+      "status": "awaiting_owner",
+      "independent_work": "Complete current provider/expiry and saved PR reviews. Browser confirmation already requires session CSRF.",
+      "asked_once": "2026-09-09 via request_user_input_async; do not repeat."
     }
   ],
   "inventory_freshness": {
@@ -805,6 +812,25 @@
           "04-invoices-wallet-contracts.md#T-04.2.02.07"
         ],
         "summary": "Provider results were discarded when TTL expiry won the race; ambiguous claims could not recover after expiry. Pending bank-receipt keys could initialize an online provider. Preserve bound provider references, allow recovery without new starts, require online channel, and recheck Pending under lock before returning checkout."
+      },
+      {
+        "id": "browser-return-csrf",
+        "status": "fixed",
+        "source_revision": "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
+        "tasks": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.02",
+          "02-auth-users-admin.md#T-02.02.03"
+        ],
+        "summary": "GET could fail or credit a payment. It now only redirects to the wallet; explicit Persian/English confirmation uses current session/CSRF and profile access, rechecked after callback-identity waits. Browser status is ignored; provider verification decides credit. Current cookie is reread on retry; failed acknowledgement, unpaid, expired login and malformed results stay recoverable."
+      },
+      {
+        "id": "callback-channel-binding",
+        "status": "fixed",
+        "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
+        "tasks": [
+          "04-invoices-wallet-contracts.md#T-04.2.02.02"
+        ],
+        "summary": "A signed online callback could credit a bank-receipt intent with a matching reference. Callback context now requires the online channel before claiming an event or crediting."
       }
     ],
     "reused_evidence": [
@@ -813,11 +839,13 @@
       "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Repair browser payment-return GET/CSRF without disrupting provider reconciliation; then finish signed callback/replay/credit and expiry acceptance and saved PR dispositions. Initiation authority, limit writes and expiry recovery are fixed; preserve their checks.",
+    "next_action": "Complete provider adapter/credit-recovery acceptance and saved repeated limit/expiry PR dispositions, then consolidate the online batch individually. Browser confirmation, initiation authority, limits, expiry recovery and callback channel binding are fixed. Signed-webhook CSRF wording awaits owner; continue independent reviews.",
     "product_commits": [
       "aeb2d1bf1e7d9630532e89f813002da91302f81a",
       "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778",
-      "09aa638602c74fd7384b365af8ae70febd698513"
+      "09aa638602c74fd7384b365af8ae70febd698513",
+      "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
+      "e4d42282505a9a02e749868c05c42402c6d24fbf"
     ],
     "verification": {
       "online_limit": {
@@ -841,14 +869,37 @@
           "/tmp/r01-online-post-expiry-"
         ],
         "limits": "Four confirmed regressions: expiry during provider start, expiry during recovery, recovery first attempted after expiry, and cross-channel Pending-key reuse. Real expiry worker invoked against the same migrated DB; later provider-verified callbacks credit once after expiry. First expiry baseline also used an incorrect expected reason string, corrected; missing authority/ref was independently observed. First 48-case run passed41 and failed7 because unit query mock lacked the new final-row read. Corrected unit cases pass. Final34 service/authority cases pass; reuse14 real initiation and2 HTTP cases from same repair checkpoint for50 distinct. Types/lint/format pass. No controller/schema change in this second repair; prior fresh contract comparison remains applicable."
+      },
+      "browser_return": {
+        "source_revision": "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
+        "distinct_api_cases": 54,
+        "distinct_web_unit_cases": 15,
+        "distinct_browser_cases": 4,
+        "route_and_interaction_budgets": 42,
+        "logs_prefix": "/tmp/r01-online-browser-return-",
+        "limits": "Real HTTP baseline GET changed Pending to Failed. Five-file53 API pass plus final HTTP5 overlap gives54 distinct. HTTP covers read-only303 GET, auth/CSRF/profile/order negatives, current authority after callback lock wait, positive confirmation and duplicate exactly-once credit using the test-only redirect adapter. Existing signed/callback/recovery tests remain passing.15 unchanged wallet unit cases pass.4 distinct production Chromium cases cover fa/en, RTL, keyboard, axe, explicit action, current CSRF after lost acknowledgement, balance refresh, sign-in/new-tab retry, unpaid and malformed responses. Browser runs overlap and are not added. Initial API/web exact-optional type errors corrected. Two initial electricity payload failures resolved by keeping payment messages and query parsing in wallet chunks; all42 unchanged route/interaction budgets pass. The first message-extraction script aborted before edits on an assertion; its following formatter reported the absent file. Corrected extraction preserves app.ts exactly. Final relevant API/web types, lint, formatting, builds and fresh OpenAPI comparison pass. Only callback GET and new return POST change the public schema. No live payment provider or deployment is claimed."
+      },
+      "callback_channel": {
+        "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
+        "distinct_api_cases": 53,
+        "logs_prefix": "/tmp/r01-online-callback-channel-",
+        "limits": "One real-DB baseline incorrectly credited a bank-receipt intent. Callback/HTTP/recovery/signature-verifier five-file53 pass after the online-channel gate. Types/lint/format pass. This overlaps earlier callback tests; do not add counts. UI and contract are unchanged from aaf669b."
+      },
+      "expiry_worker": {
+        "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
+        "distinct_worker_cases": 24,
+        "log": "/tmp/r01-online-expiry-worker-checkpoint.log",
+        "limits": "Two unchanged expiry worker unit/integration files pass. Current candidate SQL, lock/recheck, JSONB preservation, audit transaction and scheduler/failure recording were read; no worker product change in this batch."
       }
     },
     "historical_review_notes": [
-      "Signed POST checks HMAC/time window/event/merchant and verifyPayment before credit. Browser GET Status=NOK currently changes intent/event state without provider verification; payment-return GET/CSRF disposition remains required. Do not remove durable callback/recovery semantics without reviewing their tests.",
       "PR259/265/269/288/289 descriptions and selected280/281 risks read; remaining bounded repeated history still needs disposition. PR281 says expiry customer notification belongs to notification tasks; preserve that separate R02 requirement even though the historical deferral parser omitted this risk note.",
       "Receipt schema follow-up57d6582: a fresh API build exposed two missing emergencyOverrideReason request-body fields in the committed OpenAPI. These now match verified controller decorators, with no other semantic contract change. Previous receipt OpenAPI-pass notes do not establish fresh generated-contract coverage; this passing build/comparison supersedes them.",
       "Limit policy lock now precedes staff/session locks. Future initiation authority repair must use compatible policy/account/session/profile/wallet ordering and preserve provider idempotency/recovery.",
-      "fc7ee0b and09aa638 complete initiation authority, shared receipt lock extraction, final checkout state and durable expiry/recovery/channel fixes. The receipt wrapper retains identical bank-receipts:submit semantics;24 unchanged receipt authority cases and14 wallet controller cases passed after extraction. No new task/PR acceptance closure until consolidated online batch review."
+      "fc7ee0b and09aa638 complete initiation authority, shared receipt lock extraction, final checkout state and durable expiry/recovery/channel fixes. The receipt wrapper retains identical bank-receipts:submit semantics;24 unchanged receipt authority cases and14 wallet controller cases passed after extraction. No new task/PR acceptance closure until consolidated online batch review.",
+      "aaf669b fixes browser GET/CSRF. Signed machine callbacks retain their existing separate signature proof; an explicit narrow requirements exception was asked once and remains awaiting owner, because T-02.02.03 currently forbids all exemptions. Do not change the requirement or disable callbacks without that decision.",
+      "e4d4228 rejects bank-receipt callbacks; current readStoredAuthority fallback and HMAC time/event/raw-body verification were reviewed. Provider adapter completion and saved repeated-PR disposition remain.",
+      "PR270/280/281 full descriptions read. Expiry notification omission in PR281 remains assigned to R02; authoritative receipt/limit/expiry owners are preserved."
     ]
   },
   "open_domain_reviews": [
