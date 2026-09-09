@@ -1092,7 +1092,16 @@
     "historical_deferrals": [
       "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema — it will be linked when the contracts epic (E-04.5) is implemented."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Optional contractId column verified. Future foreign key retained under the origin-link/contracts requirement.",
+    "reviewed_source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "T-04.1.01.01 requires an optional contractId column, which exists. T-04.1.02.05 explicitly requires origin foreign keys; retain its missing contracts prerequisite in the creation/origin batch. audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+      }
+    ]
   },
   {
     "pr": 146,

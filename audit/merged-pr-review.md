@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 180 have unresolved mapped tasks; 4 have no current task mapping; 117 map only to verified tasks.
+301 merged PRs: 174 have unresolved mapped tasks; 4 have no current task mapping; 123 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **65 closed / 14 open / 0 blocked**; 222 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **71 closed / 14 open / 0 blocked**; 216 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -17,10 +17,10 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 | 01-platform-infrastructure.md | 50 |
 | 02-auth-users-admin.md | 46 |
 | 03-core-business.md | 4 |
-| 04-invoices-wallet-contracts.md | 33 |
+| 04-invoices-wallet-contracts.md | 27 |
 | 05-notifications-documents-ai.md | 29 |
 | 07-ui-ux-design.md | 3 |
-| Total | 165 |
+| Total | 159 |
 
 Also review 56 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
@@ -179,9 +179,9 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#147](https://github.com/barghsadev/barghsa-core/pull/147) | 03-core-business.md#T-03.01.01.03 (pending) | Task review remains | Not reviewed | 0 |
 | [#148](https://github.com/barghsadev/barghsa-core/pull/148) | 03-core-business.md#T-03.01.01.04 (pending) | Task review remains | Not reviewed | 0 |
 | [#149](https://github.com/barghsadev/barghsa-core/pull/149) | 04-invoices-wallet-contracts.md#T-04.2.01.01 (acceptance_verified)<br>04-invoices-wallet-contracts.md#T-04.2.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
-| [#150](https://github.com/barghsadev/barghsa-core/pull/150) | 04-invoices-wallet-contracts.md#T-04.1.01.01 (pending) | Task review remains | Not reviewed | 1 |
-| [#151](https://github.com/barghsadev/barghsa-core/pull/151) | 04-invoices-wallet-contracts.md#T-04.1.01.02 (pending) | Task review remains | Not reviewed | 0 |
-| [#152](https://github.com/barghsadev/barghsa-core/pull/152) | 04-invoices-wallet-contracts.md#T-04.1.01.03 (pending) | Task review remains | Not reviewed | 0 |
+| [#150](https://github.com/barghsadev/barghsa-core/pull/150) | 04-invoices-wallet-contracts.md#T-04.1.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 1 |
+| [#151](https://github.com/barghsadev/barghsa-core/pull/151) | 04-invoices-wallet-contracts.md#T-04.1.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
+| [#152](https://github.com/barghsadev/barghsa-core/pull/152) | 04-invoices-wallet-contracts.md#T-04.1.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
 | [#153](https://github.com/barghsadev/barghsa-core/pull/153) | 02-auth-users-admin.md#T-08.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#154](https://github.com/barghsadev/barghsa-core/pull/154) | 02-auth-users-admin.md#T-08.01.03 (partial) | Task review remains | Not reviewed | 1 |
 | [#155](https://github.com/barghsadev/barghsa-core/pull/155) | 02-auth-users-admin.md#T-09.01.01 (partial) | Task review remains | Not reviewed | 0 |
@@ -249,9 +249,9 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#217](https://github.com/barghsadev/barghsa-core/pull/217) | 02-auth-users-admin.md#T-09.12.06 (pending) | Task review remains | Not reviewed | 2 |
 | [#218](https://github.com/barghsadev/barghsa-core/pull/218) | 02-auth-users-admin.md#T-10.01.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 2 |
 | [#219](https://github.com/barghsadev/barghsa-core/pull/219) | 02-auth-users-admin.md#T-10.01.02 (pending) | Task review remains | Not reviewed | 2 |
-| [#220](https://github.com/barghsadev/barghsa-core/pull/220) | 04-invoices-wallet-contracts.md#T-04.1.01.04 (pending) | Task review remains | Not reviewed | 0 |
-| [#221](https://github.com/barghsadev/barghsa-core/pull/221) | 04-invoices-wallet-contracts.md#T-04.1.01.05 (pending) | Task review remains | Not reviewed | 0 |
-| [#222](https://github.com/barghsadev/barghsa-core/pull/222) | 04-invoices-wallet-contracts.md#T-04.1.01.06 (pending) | Task review remains | Not reviewed | 0 |
+| [#220](https://github.com/barghsadev/barghsa-core/pull/220) | 04-invoices-wallet-contracts.md#T-04.1.01.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
+| [#221](https://github.com/barghsadev/barghsa-core/pull/221) | 04-invoices-wallet-contracts.md#T-04.1.01.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
+| [#222](https://github.com/barghsadev/barghsa-core/pull/222) | 04-invoices-wallet-contracts.md#T-04.1.01.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
 | [#223](https://github.com/barghsadev/barghsa-core/pull/223) | 04-invoices-wallet-contracts.md#T-04.1.02.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#224](https://github.com/barghsadev/barghsa-core/pull/224) | 04-invoices-wallet-contracts.md#T-04.1.02.02 (pending) | Task review remains | Not reviewed | 1 |
 | [#225](https://github.com/barghsadev/barghsa-core/pull/225) | 04-invoices-wallet-contracts.md#T-04.1.02.03 (pending) | Task review remains | Not reviewed | 2 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `1dabeea48fa3c0811ab53251ed25f3874fe108d80a3e11ac9725d9a3bb2f7660`
-- `pr-deferrals.json`: `9a430188d5c6bc4b12d1da60de5e7082f28783da85cc55802ad53d19863020b4`
-- `evidence/step-reviews.json`: `921fdbc056d7744962415fdf0e9903e3ae31c83397004bf19d2116a28d9e229e`
+- `acceptance-closure.json`: `7e15636380ded3142e2c1ddb1f897e22e43ec29cb907cb8f5e625ca105537b8e`
+- `pr-deferrals.json`: `8d4e68d7fe900de08e4772e4c3f44de68fa46a991e1e961022ab786bb2a98c98`
+- `evidence/step-reviews.json`: `1aaa06e2b564ff79294b759c55e71bd67db441ee43ec0a60ce2536fc69756701`

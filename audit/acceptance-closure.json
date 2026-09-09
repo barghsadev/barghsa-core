@@ -8908,6 +8908,528 @@
         "audit/evidence/step-reviews.json#R01-wallet-ledger",
         "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
       ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 86,
+      "requirement": "| T-04.1.01.01 | Define invoice DB table with columns: `id` (UUIDv7), `profileId`, `orderId?`, `contractId?`, `state`, `totalAmount` (int8), `paidAmount` (int8, default 0), `refundedAmount` (int8, default 0), `issuedAt`, `payableFrom`, `dueAt`, `cancelledAt?`, `metadata` (JSONB for snapshots), timestamps | M |",
+      "requirement_sha256": "01cbd431066ff4cbd6427a658eb0476a5acab375c95dd62c2408c03cbb62b6d6",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.test.ts",
+          "sha256": "943142d96ae757126e0794f94f0eaf21ae201ace53588a3eab18ccc5a129cd40"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-constraints.test.ts",
+          "sha256": "c2ecdef7e8926c310b454632d88a797c185732be7b4c66622b71ff3b6a45bbc7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.ts",
+          "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+          "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "ae6c9139138d1a12a9cba02bb692320bb6c3625a17910cbb48ff3aae233c67c2"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.integration.test.ts",
+          "sha256": "eaa0c588b7259332629daeccce78511057f8071f20d7a267d9ac070afd58d1e5"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+          "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.test.ts",
+          "sha256": "8bcc639f661b7632865f5793acf126f42614df58bc5b70a7fede36301df12233"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+          "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+          "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+        }
+      ],
+      "checks": [
+        "Exact task/story criteria and saved PR descriptions reviewed in audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "Two state-guard repairs and focused current/reused evidence recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        150
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this table/enum/state/audit/test task. Creation, notification, reminder, refund and contract-origin consumer requirements remain assigned to their own batches."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 87,
+      "requirement": "| T-04.1.01.02 | Create `invoice_state` enum in DB matching all 9 states | S |",
+      "requirement_sha256": "9bcd3a764492cce7f565dada354f21097897a427c0a62a8228058958ca3d1cfa",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.test.ts",
+          "sha256": "943142d96ae757126e0794f94f0eaf21ae201ace53588a3eab18ccc5a129cd40"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-constraints.test.ts",
+          "sha256": "c2ecdef7e8926c310b454632d88a797c185732be7b4c66622b71ff3b6a45bbc7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.ts",
+          "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+          "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "ae6c9139138d1a12a9cba02bb692320bb6c3625a17910cbb48ff3aae233c67c2"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.integration.test.ts",
+          "sha256": "eaa0c588b7259332629daeccce78511057f8071f20d7a267d9ac070afd58d1e5"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+          "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.test.ts",
+          "sha256": "8bcc639f661b7632865f5793acf126f42614df58bc5b70a7fede36301df12233"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+          "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+          "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+        }
+      ],
+      "checks": [
+        "Exact task/story criteria and saved PR descriptions reviewed in audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "Two state-guard repairs and focused current/reused evidence recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        151
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this table/enum/state/audit/test task. Creation, notification, reminder, refund and contract-origin consumer requirements remain assigned to their own batches."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 88,
+      "requirement": "| T-04.1.01.03 | Implement `InvoiceStateMachine` service with guard methods, transition validation, audit event emission | L |",
+      "requirement_sha256": "9a06a882849180500a550d8b00ff3e5939e5c47f8a046712a705de7b934ca836",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.test.ts",
+          "sha256": "943142d96ae757126e0794f94f0eaf21ae201ace53588a3eab18ccc5a129cd40"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-constraints.test.ts",
+          "sha256": "c2ecdef7e8926c310b454632d88a797c185732be7b4c66622b71ff3b6a45bbc7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.ts",
+          "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+          "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "ae6c9139138d1a12a9cba02bb692320bb6c3625a17910cbb48ff3aae233c67c2"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.integration.test.ts",
+          "sha256": "eaa0c588b7259332629daeccce78511057f8071f20d7a267d9ac070afd58d1e5"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+          "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.test.ts",
+          "sha256": "8bcc639f661b7632865f5793acf126f42614df58bc5b70a7fede36301df12233"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+          "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+          "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+        }
+      ],
+      "checks": [
+        "Exact task/story criteria and saved PR descriptions reviewed in audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "Two state-guard repairs and focused current/reused evidence recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        152
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this table/enum/state/audit/test task. Creation, notification, reminder, refund and contract-origin consumer requirements remain assigned to their own batches."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 89,
+      "requirement": "| T-04.1.01.04 | Add DB constraints: `CHECK (paidAmount <= totalAmount)`, `CHECK (refundedAmount <= paidAmount)` | M |",
+      "requirement_sha256": "834a70f45c074d6ab3d202c54a4de85f613d79ae1580521d1c03f4c1d206810d",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.test.ts",
+          "sha256": "943142d96ae757126e0794f94f0eaf21ae201ace53588a3eab18ccc5a129cd40"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-constraints.test.ts",
+          "sha256": "c2ecdef7e8926c310b454632d88a797c185732be7b4c66622b71ff3b6a45bbc7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.ts",
+          "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+          "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "ae6c9139138d1a12a9cba02bb692320bb6c3625a17910cbb48ff3aae233c67c2"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.integration.test.ts",
+          "sha256": "eaa0c588b7259332629daeccce78511057f8071f20d7a267d9ac070afd58d1e5"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+          "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.test.ts",
+          "sha256": "8bcc639f661b7632865f5793acf126f42614df58bc5b70a7fede36301df12233"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+          "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+          "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+        }
+      ],
+      "checks": [
+        "Exact task/story criteria and saved PR descriptions reviewed in audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "Two state-guard repairs and focused current/reused evidence recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        220
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this table/enum/state/audit/test task. Creation, notification, reminder, refund and contract-origin consumer requirements remain assigned to their own batches."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 90,
+      "requirement": "| T-04.1.01.05 | Write audit repository entry for every invoice state transition | M |",
+      "requirement_sha256": "5d813f90c379ed597df5fc69d49ce4db8f384a7fb2be13a2a2b9599ceca6ee83",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.test.ts",
+          "sha256": "943142d96ae757126e0794f94f0eaf21ae201ace53588a3eab18ccc5a129cd40"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-constraints.test.ts",
+          "sha256": "c2ecdef7e8926c310b454632d88a797c185732be7b4c66622b71ff3b6a45bbc7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.ts",
+          "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+          "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "ae6c9139138d1a12a9cba02bb692320bb6c3625a17910cbb48ff3aae233c67c2"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.integration.test.ts",
+          "sha256": "eaa0c588b7259332629daeccce78511057f8071f20d7a267d9ac070afd58d1e5"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+          "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.test.ts",
+          "sha256": "8bcc639f661b7632865f5793acf126f42614df58bc5b70a7fede36301df12233"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+          "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+          "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+        }
+      ],
+      "checks": [
+        "Exact task/story criteria and saved PR descriptions reviewed in audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "Two state-guard repairs and focused current/reused evidence recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        221
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this table/enum/state/audit/test task. Creation, notification, reminder, refund and contract-origin consumer requirements remain assigned to their own batches."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.06",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 91,
+      "requirement": "| T-04.1.01.06 | Integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection | L |\n\n---",
+      "requirement_sha256": "697b26771d40b974f80cf27ee9df6e7ba1bd7ef2bcd6109dacb7005685699d60",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.test.ts",
+          "sha256": "943142d96ae757126e0794f94f0eaf21ae201ace53588a3eab18ccc5a129cd40"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-constraints.test.ts",
+          "sha256": "c2ecdef7e8926c310b454632d88a797c185732be7b4c66622b71ff3b6a45bbc7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.ts",
+          "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+          "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "ae6c9139138d1a12a9cba02bb692320bb6c3625a17910cbb48ff3aae233c67c2"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.integration.test.ts",
+          "sha256": "eaa0c588b7259332629daeccce78511057f8071f20d7a267d9ac070afd58d1e5"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+          "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.test.ts",
+          "sha256": "8bcc639f661b7632865f5793acf126f42614df58bc5b70a7fede36301df12233"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+          "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+          "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+        }
+      ],
+      "checks": [
+        "Exact task/story criteria and saved PR descriptions reviewed in audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "Two state-guard repairs and focused current/reused evidence recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        222
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verification covers this table/enum/state/audit/test task. Creation, notification, reminder, refund and contract-origin consumer requirements remain assigned to their own batches."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -9072,12 +9594,6 @@
     "02-auth-users-admin.md#T-09.12.04",
     "02-auth-users-admin.md#T-09.12.06",
     "02-auth-users-admin.md#T-10.01.02",
-    "04-invoices-wallet-contracts.md#T-04.1.01.01",
-    "04-invoices-wallet-contracts.md#T-04.1.01.02",
-    "04-invoices-wallet-contracts.md#T-04.1.01.03",
-    "04-invoices-wallet-contracts.md#T-04.1.01.04",
-    "04-invoices-wallet-contracts.md#T-04.1.01.05",
-    "04-invoices-wallet-contracts.md#T-04.1.01.06",
     "04-invoices-wallet-contracts.md#T-04.1.02.01",
     "04-invoices-wallet-contracts.md#T-04.1.02.02",
     "04-invoices-wallet-contracts.md#T-04.1.02.03",

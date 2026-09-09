@@ -9828,6 +9828,220 @@
           "path": "apps/web/src/pages/AdminDashboard.tsx"
         }
       ]
+    },
+    {
+      "id": "R01-invoice-state-transitions",
+      "date": "2026-09-09",
+      "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+      "base_revision": "878c945",
+      "product_commits": [
+        "26de4f2",
+        "7dd8ede"
+      ],
+      "summary": "Six task acceptances verified and six saved PR reviews closed. Two confirmed state-guard repairs verified locally.",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.01.01",
+        "04-invoices-wallet-contracts.md#T-04.1.01.02",
+        "04-invoices-wallet-contracts.md#T-04.1.01.03",
+        "04-invoices-wallet-contracts.md#T-04.1.01.04",
+        "04-invoices-wallet-contracts.md#T-04.1.01.05",
+        "04-invoices-wallet-contracts.md#T-04.1.01.06"
+      ],
+      "review": [
+        "Exact six task/story requirements and all six saved PR descriptions read. Schema and enum are retained; no duplicate implementation removed. Historical timestamp/audit repairs remain intact.",
+        "Production migration folder, not the historical top-level journal, is authoritative. Production0080/0081 declare the nine-state enum, UUIDv7 identifier, profile/order relationships, int8 amounts/defaults, required timestamps and monetary constraints. Real API fixture applies the complete production journal. The35 DB cases separately exercise historical0052 constraints/backfill and current schema declarations.",
+        "Every allowed transition and every forbidden pair is exercised against real PostgreSQL, including terminal states, repeated partial refunds, timestamp/audit writes, state conflicts and audit-failure rollback. Stored amounts are now revalidated under the invoice row lock before money-dependent states.",
+        "Cancellation source states now match Draft/Unpaid/Overdue. PartiallyFunded cancellation introduced by the original builder is rejected without state or audit mutation.",
+        "Current wallet and receipt callers persist paid amounts before the state transition on the same transaction. Receipt review is an intermediate hop inside confirmation transactions; no current receipt-upload consumer durably sets PaymentUnderReview. Retain the required enum for the model/legacy rows, without claiming a standalone review transition is receipt submission.",
+        "All discovered production UPDATE invoices writers reviewed: payment allocation changes amounts, correction changes metadata/payable date, due override changes due date. State changes use the state service or the overdue worker. The worker rechecks a locked row and commits its state/audit together;21 focused worker cases pass.",
+        "The internal state service is called by trusted domain operations. Previously verified wallet/receipt permission and financial evidence is reused. Creation/correction/refund consumer permissions, notifications and reminder workflow acceptance stay with their own task batches; they are not claimed complete here."
+      ],
+      "repairs": [
+        {
+          "revision": "26de4f2",
+          "summary": "Validate Paid/PartiallyFunded/PartiallyRefunded/Refunded against stored total/paid/refunded amounts under row lock; optional caller snapshots cannot authorize unfunded or unrefunded states.",
+          "verification": "Three real-DB baseline failures. Initial state run33 integration cases passed, two old unit fixtures lacked stored amounts; corrected fixtures then120 cases across six affected suites passed. API types/lint/format passed. Counts overlap later checks."
+        },
+        {
+          "revision": "7dd8ede",
+          "summary": "Remove direct PartiallyFunded cancellation from the model, mapping and canCancel helper.",
+          "verification": "Baseline fails on the old canCancel=true result. After repair113 cases across four suites pass, including real-DB state/audit invariance and cancel/replace neighbours. API types/lint/format and diff review pass."
+        }
+      ],
+      "verification": {
+        "api": "113 current cases across state model/unit/integration and cancel-and-replace integration. Earlier120-case caller/audit run retained for unchanged settlement paths; do not add overlapping counts.",
+        "database": "35 cases across invoice schema and real PostgreSQL money constraints, valid/invalid amounts, reapplication and legacy backfill.",
+        "worker": "21 overdue scanner unit/integration cases, including actual enum queries and state/timestamp/audit writes.",
+        "quality": "API types, scoped lint, format and diff checks pass. No HTTP shape, web code, dependency or migration edits; no repeat browser/budget/full regression needed."
+      },
+      "historical_dispositions": [
+        {
+          "pr": 150,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/150",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.01.01"
+          ],
+          "historical_deferrals": [
+            "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema — it will be linked when the contracts epic (E-04.5) is implemented."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        }
+      ],
+      "remaining": [
+        "Invoice creation/VAT/snapshot, deadlines/reminders, correction and refund consumer workflows are separate required batches.",
+        "Contract foreign key awaits its target schema and origin-link task; no live migration/deployment evidence claimed."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 150,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.01.01"
+          ],
+          "reason": "Mapped table/enum/state-service/audit/test criteria verified locally. PR150 deferred contract foreign key is explicitly assigned to the separate origin-link/contracts requirement; this task requires the optional contractId column.",
+          "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+        },
+        {
+          "pr": 151,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.01.02"
+          ],
+          "reason": "Mapped table/enum/state-service/audit/test criteria verified locally. PR150 deferred contract foreign key is explicitly assigned to the separate origin-link/contracts requirement; this task requires the optional contractId column.",
+          "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+        },
+        {
+          "pr": 152,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.01.03"
+          ],
+          "reason": "Mapped table/enum/state-service/audit/test criteria verified locally. PR150 deferred contract foreign key is explicitly assigned to the separate origin-link/contracts requirement; this task requires the optional contractId column.",
+          "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+        },
+        {
+          "pr": 220,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.01.04"
+          ],
+          "reason": "Mapped table/enum/state-service/audit/test criteria verified locally. PR150 deferred contract foreign key is explicitly assigned to the separate origin-link/contracts requirement; this task requires the optional contractId column.",
+          "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+        },
+        {
+          "pr": 221,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.01.05"
+          ],
+          "reason": "Mapped table/enum/state-service/audit/test criteria verified locally. PR150 deferred contract foreign key is explicitly assigned to the separate origin-link/contracts requirement; this task requires the optional contractId column.",
+          "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+        },
+        {
+          "pr": 222,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.01.06"
+          ],
+          "reason": "Mapped table/enum/state-service/audit/test criteria verified locally. PR150 deferred contract foreign key is explicitly assigned to the separate origin-link/contracts requirement; this task requires the optional contractId column.",
+          "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+        }
+      ],
+      "pr_counts": {
+        "closed": 6,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/invoices.ts",
+          "sha256": "7ebedec1c3ece0a646c97251e4c2c97e9a0e92c250da2b1a60bd44cfc096041e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/invoices.test.ts",
+          "sha256": "943142d96ae757126e0794f94f0eaf21ae201ace53588a3eab18ccc5a129cd40"
+        },
+        {
+          "path": "packages/db/src/schema/invoices-constraints.test.ts",
+          "sha256": "c2ecdef7e8926c310b454632d88a797c185732be7b4c66622b71ff3b6a45bbc7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.ts",
+          "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+          "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "ae6c9139138d1a12a9cba02bb692320bb6c3625a17910cbb48ff3aae233c67c2"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "331a63cc2b01ab02b5909e5cdf69333063826718140cf6272f3e2a590d130db4"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.integration.test.ts",
+          "sha256": "eaa0c588b7259332629daeccce78511057f8071f20d7a267d9ac070afd58d1e5"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+          "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.test.ts",
+          "sha256": "8bcc639f661b7632865f5793acf126f42614df58bc5b70a7fede36301df12233"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.test.ts",
+          "sha256": "0dfe49a70746b111d666acb69dbf4f367ed4cedf130cf0622ea7dceb41920db6"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.integration.test.ts",
+          "sha256": "e959e5bf0a558aa4877a57d900b25d862ff99980270edfefb25b07dbded02292"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-invoice-state-cancel-api.log",
+        "/tmp/r01-invoice-state-cancel-baseline.log",
+        "/tmp/r01-invoice-state-cancel-format.log",
+        "/tmp/r01-invoice-state-cancel-history.log",
+        "/tmp/r01-invoice-state-cancel-lint.log",
+        "/tmp/r01-invoice-state-cancel-types.log",
+        "/tmp/r01-invoice-state-db-checks.log",
+        "/tmp/r01-invoice-state-overdue-audit.log",
+        "/tmp/r01-invoice-state-requirements-history.log",
+        "/tmp/r01-invoice-state-stored-amount-api.log",
+        "/tmp/r01-invoice-state-stored-amount-baseline.log",
+        "/tmp/r01-invoice-state-stored-amount-callers.log",
+        "/tmp/r01-invoice-state-stored-amount-fixture-format.log",
+        "/tmp/r01-invoice-state-stored-amount-format.log",
+        "/tmp/r01-invoice-state-stored-amount-lint.log",
+        "/tmp/r01-invoice-state-stored-amount-types.log"
+      ]
     }
   ]
 }

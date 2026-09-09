@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+  "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
   "active_step": "R01",
-  "next_action": "Read bounded invoice-state requirements and historical deferrals, then trace current implementation and fix confirmed gaps.",
+  "next_action": "Read bounded creation/calculation requirements and saved PR descriptions; trace current implementation and fix confirmed gaps.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -599,6 +599,10 @@
     {
       "id": "R01-chargebacks-alerts",
       "review_record": "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+    },
+    {
+      "id": "R01-invoice-state-transitions",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
     }
   ],
   "deferred_improvements": [
@@ -617,9 +621,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 101,
+    "acceptance_verified": 107,
     "partial": 23,
-    "pending": 198,
+    "pending": 192,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -740,50 +744,94 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-invoice-state-transitions",
-    "name": "Invoice states, monetary constraints and audited transitions",
+    "id": "R01-invoice-creation-calculation",
+    "name": "Invoice creation, origins, VAT, rounding and reproducible snapshots",
     "status": "bounded",
     "prs": [
-      150,
-      151,
-      152,
-      220,
-      221,
-      222
+      223,
+      224,
+      225,
+      226,
+      227,
+      228,
+      229,
+      231,
+      232,
+      233
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.1.01.01",
-      "04-invoices-wallet-contracts.md#T-04.1.01.02",
-      "04-invoices-wallet-contracts.md#T-04.1.01.03",
-      "04-invoices-wallet-contracts.md#T-04.1.01.04",
-      "04-invoices-wallet-contracts.md#T-04.1.01.05",
-      "04-invoices-wallet-contracts.md#T-04.1.01.06"
+      "04-invoices-wallet-contracts.md#T-04.1.02.01",
+      "04-invoices-wallet-contracts.md#T-04.1.02.02",
+      "04-invoices-wallet-contracts.md#T-04.1.02.03",
+      "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "04-invoices-wallet-contracts.md#T-04.1.02.06",
+      "04-invoices-wallet-contracts.md#T-04.1.02.07",
+      "04-invoices-wallet-contracts.md#T-04.1.02.08",
+      "04-invoices-wallet-contracts.md#T-04.1.02.09"
     ],
     "remaining_checklist": [
-      "Read exact story/task criteria and six saved PR descriptions before editing.",
-      "Review current state guards, monetary constraints, transition audit/transaction boundaries and caller authority. Reuse receipt settlement and ledger evidence where valid.",
-      "Separate later creation/VAT/snapshots, due dates/reminders and correction workflows. Do not rebuild schema or callers because task review is pending."
+      "Read exact story/task criteria and all10 saved PR descriptions before editing.",
+      "Review line/item constraints, manual/automatic caller authority and transactions, VAT/rounding, origin links/idempotency and snapshot replay.",
+      "Reuse completed state/receipt/wallet evidence. Keep due-date/reminder and correction workflows separate."
     ],
     "historical_deferrals": [
       {
-        "pr": 150,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/150",
+        "pr": 232,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/232",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.01.01"
+          "04-invoices-wallet-contracts.md#T-04.1.02.08"
         ],
         "historical_deferrals": [
-          "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema — it will be linked when the contracts epic (E-04.5) is implemented."
+          "- [ ] Full snapshot replay integration test — owned by T-04.1.02.09, not this task."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 227,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/227",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.1.02.05"
+        ],
+        "historical_deferrals": [
+          "- `contractId` — existing nullable reference column (contracts table TBD); **FK deferred** until that table exists (documented existing pattern).",
+          "- `consultationId` — **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
+          "- [x] `contractId` / `consultationId` are deferred nullable refs (target tables TBD, per established pattern)"
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 225,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/225",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.1.02.03"
+        ],
+        "historical_deferrals": [
+          "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) — those XL tasks land later in E-03; the service is the seam they will call",
+          "- [ ] HTTP controller — pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 224,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/224",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.1.02.02"
+        ],
+        "historical_deferrals": [
+          "- [ ] No HTTP controller yet — staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
     "reused_evidence": [
+      "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
       "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "audit/evidence/step-reviews.json#R01-wallet-ledger"
     ],
     "confirmed_defects": [],
     "pr_dispositions": [],
-    "next_action": "Read bounded invoice-state requirements and historical deferrals, then trace current implementation and fix confirmed gaps."
+    "next_action": "Read bounded creation/calculation requirements and saved PR descriptions; trace current implementation and fix confirmed gaps."
   },
   "open_domain_reviews": [
     {
