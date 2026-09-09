@@ -1,3 +1,7 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -25,6 +29,8 @@ import { notifyApprovalRequested } from './approval-notifications.js';
  * the controller's OpenAPI enum documentation.
  */
 export const DUAL_APPROVAL_ACTION_TYPES = APPROVAL_ACTION_TYPES;
+
+type ApprovalActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /**
  * A dual-approval request as returned by the admin API (S-09.07, T-09.07.02).
@@ -100,9 +106,10 @@ export class DualApprovalService {
    */
   async createApprovalRequest(
     input: unknown,
-    initiatorUserId: string,
+    actor: ApprovalActor,
     ip: string
   ): Promise<ApprovalRequestDto> {
+    const initiatorUserId = actor.userId;
     const validation = validateApprovalRequestInput(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -132,12 +139,14 @@ export class DualApprovalService {
     const pool = getDbPool();
     const id = uuidv7();
     const now = new Date();
-    const correlationId = uuidv7();
+    const correlationId = correlationIdStorage.getStore() ?? uuidv7();
     const details = normalized.details ?? {};
 
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      await requireSessionStepUp(client, actor);
 
       await client.query(
         `INSERT INTO approval_requests
@@ -163,6 +172,7 @@ export class DualApprovalService {
           'approval_request_created',
           JSON.stringify({
             requestId: id,
+            sessionId: actor.sessionId,
             actionType: normalized.actionType,
             amountIrR: String(normalized.amountIrR),
             thresholdIrR: threshold.thresholdIrR,
@@ -174,9 +184,11 @@ export class DualApprovalService {
       );
 
       await this.notifyEligibleStaff(client, id, normalized.amountIrR, initiatorUserId);
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to create approval request: ${String(error)}`);
       throw new HttpException(
         {
@@ -242,10 +254,10 @@ export class DualApprovalService {
    */
   async approveApprovalRequest(
     requestId: string,
-    reviewerUserId: string,
+    actor: ApprovalActor,
     ip: string
   ): Promise<ApprovalRequestDto> {
-    return this.resolveRequest(requestId, reviewerUserId, ip, 'approve', null);
+    return this.resolveRequest(requestId, actor, ip, 'approve', null);
   }
 
   /**
@@ -257,7 +269,7 @@ export class DualApprovalService {
    */
   async rejectApprovalRequest(
     requestId: string,
-    reviewerUserId: string,
+    actor: ApprovalActor,
     ip: string,
     reason: unknown
   ): Promise<ApprovalRequestDto> {
@@ -281,7 +293,7 @@ export class DualApprovalService {
         400
       );
     }
-    return this.resolveRequest(requestId, reviewerUserId, ip, 'reject', reason);
+    return this.resolveRequest(requestId, actor, ip, 'reject', reason);
   }
 
   // ─── Internals ─────────────────────────────────────────────────────────
@@ -303,17 +315,20 @@ export class DualApprovalService {
    */
   private async resolveRequest(
     requestId: string,
-    reviewerUserId: string,
+    actor: ApprovalActor,
     ip: string,
     decision: 'approve' | 'reject',
     reviewReason: string | null
   ): Promise<ApprovalRequestDto> {
+    const reviewerUserId = actor.userId;
     const pool = getDbPool();
     const now = new Date();
 
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      await requireSessionStepUp(client, actor);
 
       const result = await client.query(
         `SELECT ar.*, initiator.username AS initiator_username, reviewer.username AS reviewer_username
@@ -345,6 +360,8 @@ export class DualApprovalService {
         {
           requestId,
           reviewerUserId,
+          sessionId: actor.sessionId,
+          correlationId: correlationIdStorage.getStore() ?? uuidv7(),
           ip,
           decision,
           reviewReason,
@@ -357,6 +374,7 @@ export class DualApprovalService {
         this.notificationsService
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(`Approval request ${requestId} ${decision}d by ${reviewerUserId}`);

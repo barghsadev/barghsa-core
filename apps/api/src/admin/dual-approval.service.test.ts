@@ -1,7 +1,20 @@
+// Authorization is exercised with real sessions/roles in dual-approval-http.integration.test.ts.
+vi.mock('./staff-mutation-permission.js', () => ({ requireStaffMutationPermission: vi.fn() }));
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import type { DualApprovalService as DualApprovalServiceType } from './dual-approval.service.js';
 import { toApprovalRequestDto } from './dual-approval.service.js';
+
+function actor(userId: string) {
+  return {
+    userId,
+    sessionId: 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',
+    csrfToken: 'approval-test-csrf',
+  };
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
@@ -71,7 +84,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
   it('rejects an invalid payload with 400 and the validation contract', async () => {
     const { mockQuery } = await loadService();
     const rejection = await service
-      .createApprovalRequest({ action_type: 'bogus', amount_irr: 10 }, 'user-1', '1.1.1.1')
+      .createApprovalRequest({ action_type: 'bogus', amount_irr: 10 }, actor('user-1'), '1.1.1.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(400);
     expect(rejectionBody(rejection)).toMatchObject({
@@ -86,7 +99,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     mockQuery.mockResolvedValueOnce({ rows: [] }); // app_config empty → disabled default
 
     const rejection = await service
-      .createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1')
+      .createApprovalRequest(VALID_INPUT, actor('user-1'), '1.1.1.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(400);
     expect(String(rejectionBody(rejection).message)).toContain('is below');
@@ -97,7 +110,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     mockQuery.mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS });
 
     const rejection = await service
-      .createApprovalRequest({ ...VALID_INPUT, amount_irr: 99_999_999 }, 'user-1', '1.1.1.1')
+      .createApprovalRequest({ ...VALID_INPUT, amount_irr: 99_999_999 }, actor('user-1'), '1.1.1.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(400);
   });
@@ -135,7 +148,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
         ],
       }); // getRequestDto
 
-    const result = await service.createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1');
+    const result = await service.createApprovalRequest(VALID_INPUT, actor('user-1'), '1.1.1.1');
 
     expect(result).toMatchObject({
       id: 'req-1',
@@ -199,7 +212,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
       ],
     });
 
-    await service.createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1');
+    await service.createApprovalRequest(VALID_INPUT, actor('user-1'), '1.1.1.1');
 
     expect(notificationsService.create).toHaveBeenCalledTimes(2);
     expect(notificationsService.create.mock.calls.every((call) => call[1] === client)).toBe(true);
@@ -219,7 +232,9 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
       if (sql.includes('SELECT u.user_id')) throw new Error('eligibility query down');
       return { rows: [] };
     });
-    await expect(service.createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1')).rejects.toThrow();
+    await expect(
+      service.createApprovalRequest(VALID_INPUT, actor('user-1'), '1.1.1.1')
+    ).rejects.toThrow();
     expect(mockClientQuery.mock.calls.map((call) => call[0])).toContain('ROLLBACK');
     expect(mockClientQuery.mock.calls.map((call) => call[0])).not.toContain('COMMIT');
   });
@@ -315,7 +330,7 @@ describe('DualApprovalService.approveApprovalRequest', () => {
       .mockResolvedValueOnce({ rows: [] }); // SELECT FOR UPDATE → no row
 
     const rejection = await service
-      .approveApprovalRequest('missing', 'user-2', '1.1.1.1')
+      .approveApprovalRequest('missing', actor('user-2'), '1.1.1.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(404);
     expect(rejectionBody(rejection)).toMatchObject({ error: 'NOT_FOUND:RESOURCE' });
@@ -330,7 +345,7 @@ describe('DualApprovalService.approveApprovalRequest', () => {
       .mockResolvedValueOnce({ rows: [{ ...PENDING_ROW, status: 'approved' }] }); // FOR UPDATE
 
     const rejection = await service
-      .approveApprovalRequest('req-1', 'user-2', '1.1.1.1')
+      .approveApprovalRequest('req-1', actor('user-2'), '1.1.1.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(409);
     expect(rejectionBody(rejection)).toMatchObject({ error: 'CONFLICT:INVALID_STATE' });
@@ -345,7 +360,7 @@ describe('DualApprovalService.approveApprovalRequest', () => {
       .mockResolvedValueOnce({ rows: [PENDING_ROW] }); // FOR UPDATE
 
     const rejection = await service
-      .approveApprovalRequest('req-1', 'user-1', '1.1.1.1')
+      .approveApprovalRequest('req-1', actor('user-1'), '1.1.1.1')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(403);
     expect(rejectionBody(rejection)).toMatchObject({ error: 'AUTHZ:FORBIDDEN' });
@@ -374,7 +389,7 @@ describe('DualApprovalService.approveApprovalRequest', () => {
       ],
     });
 
-    const result = await service.approveApprovalRequest('req-1', 'user-2', '1.1.1.1');
+    const result = await service.approveApprovalRequest('req-1', actor('user-2'), '1.1.1.1');
 
     expect(result.status).toBe('approved');
     expect(result.reviewerId).toBe('user-2');
@@ -430,14 +445,14 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
   it('requires a reason (400) and rejects overlong reasons', async () => {
     const { mockConnect } = await loadService();
     const rejection = await service
-      .rejectApprovalRequest('req-1', 'user-2', '1.1.1.1', '')
+      .rejectApprovalRequest('req-1', actor('user-2'), '1.1.1.1', '')
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(400);
     expect(String(rejectionBody(rejection).message)).toContain('reason is required');
     expect(mockConnect).not.toHaveBeenCalled();
 
     const overlong = await service
-      .rejectApprovalRequest('req-1', 'user-2', '1.1.1.1', 'x'.repeat(2001))
+      .rejectApprovalRequest('req-1', actor('user-2'), '1.1.1.1', 'x'.repeat(2001))
       .catch((e: unknown) => e);
     expect(httpStatus(overlong)).toBe(400);
     expect(String(rejectionBody(overlong).message)).toContain('must not exceed');
@@ -469,7 +484,7 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
 
     const result = await service.rejectApprovalRequest(
       'req-1',
-      'user-2',
+      actor('user-2'),
       '1.1.1.1',
       'Duplicate of an earlier refund'
     );
@@ -511,7 +526,7 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
       .mockResolvedValueOnce({ rows: [] })
       .mockResolvedValueOnce({ rows: [PENDING_ROW] }); // initiator === reviewer
     const selfRejection = await service
-      .rejectApprovalRequest('req-1', 'user-1', '1.1.1.1', 'nope')
+      .rejectApprovalRequest('req-1', actor('user-1'), '1.1.1.1', 'nope')
       .catch((e: unknown) => e);
     expect(httpStatus(selfRejection)).toBe(403);
   });

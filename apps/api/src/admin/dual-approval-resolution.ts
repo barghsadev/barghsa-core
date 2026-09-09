@@ -30,6 +30,7 @@ export interface ApplyApprovalRequestResolutionInput {
   actionType: unknown;
   amountIrR: unknown;
   correlationId?: string;
+  sessionId?: string;
 }
 
 /**
@@ -92,6 +93,7 @@ export async function applyApprovalRequestResolutionOnClient(
         amountIrR: String(input.amountIrR),
         initiatorUserId: input.initiatorId,
         reviewerUserId: input.reviewerUserId,
+        ...(input.sessionId ? { sessionId: input.sessionId } : {}),
         ...(input.reviewReason !== null ? { reviewReason: input.reviewReason } : {}),
       }),
       input.correlationId ?? uuidv7(),

@@ -118,7 +118,7 @@ export class DualApprovalController {
   ): Promise<ApprovalRequestDto> {
     this.assertFinancialEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.dualApprovalService.createApprovalRequest(rawBody, req.session.userId, ip);
+    return this.dualApprovalService.createApprovalRequest(rawBody, req.session, ip);
   }
 
   /**
@@ -173,7 +173,7 @@ export class DualApprovalController {
   ): Promise<ApprovalRequestDto> {
     this.assertFinancialEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.dualApprovalService.approveApprovalRequest(id, req.session.userId, ip);
+    return this.dualApprovalService.approveApprovalRequest(id, req.session, ip);
   }
 
   /**
@@ -225,11 +225,6 @@ export class DualApprovalController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.dualApprovalService.rejectApprovalRequest(
-      id,
-      req.session.userId,
-      ip,
-      parsed.data.reason
-    );
+    return this.dualApprovalService.rejectApprovalRequest(id, req.session, ip, parsed.data.reason);
   }
 }

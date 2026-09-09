@@ -46,6 +46,172 @@ async function decide(user: string, id: string, action = 'approve') {
     body: JSON.stringify({ reason: 'Rejected after review' }),
   });
 }
+
+for (const action of ['create', 'approve', 'reject'] as const) {
+  for (const change of ['revoke', 'csrf', 'step-up', 'role'] as const) {
+    it(`approval ${action} holds ${change} authority while its write waits`, async () => {
+      await http.pool.query(
+        "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,step_up_verified_at=NOW(),expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes' WHERE user_id='reviewer'",
+        [headers.reviewer!['X-CSRF-Token']]
+      );
+      await http.pool.query(
+        `INSERT INTO app_config(key,value) VALUES ('finance.dual_approval_threshold','{"threshold_irr":100000}') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
+      );
+      const id = await seed(),
+        reason = randomUUID();
+      const client = await http.pool.connect();
+      let pending: Promise<Response> | undefined, mutation: Promise<unknown> | undefined;
+      try {
+        await client.query('BEGIN');
+        if (action === 'create') await client.query('LOCK TABLE approval_requests IN SHARE MODE');
+        else await client.query('SELECT id FROM approval_requests WHERE id=$1 FOR UPDATE', [id]);
+        pending =
+          action === 'create'
+            ? fetch(`${http.base}/api/admin/approval-requests`, {
+                method: 'POST',
+                headers: headers.reviewer!,
+                body: JSON.stringify({
+                  action_type: 'bank_payment_confirmation',
+                  amount_irr: 100000,
+                  reason,
+                }),
+              })
+            : decide('reviewer', id, action);
+        await expect
+          .poll(async () =>
+            Number(
+              (
+                await http.pool.query(
+                  "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%approval_requests%'"
+                )
+              ).rows[0].count
+            )
+          )
+          .toBe(1);
+        const query =
+          change === 'revoke'
+            ? "UPDATE sessions SET revoked_at=NOW() WHERE user_id='reviewer'"
+            : change === 'csrf'
+              ? "UPDATE sessions SET csrf_token='changed' WHERE user_id='reviewer'"
+              : change === 'step-up'
+                ? "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '16 minutes' WHERE user_id='reviewer'"
+                : "DELETE FROM user_roles WHERE user_id='reviewer'";
+        let changed = false;
+        mutation = http.pool.query(query).then((value) => {
+          changed = true;
+          return value;
+        });
+        await expect
+          .poll(async () =>
+            Number(
+              (
+                await http.pool.query(
+                  "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query=$1",
+                  [query]
+                )
+              ).rows[0].count
+            )
+          )
+          .toBe(1);
+        expect(changed).toBe(false);
+        await client.query('COMMIT');
+        expect((await pending).status).toBe(action === 'create' ? 201 : 200);
+        await mutation;
+        expect(changed).toBe(true);
+        expect(
+          (await http.pool.query('SELECT status FROM approval_requests WHERE id=$1', [id])).rows
+        ).toEqual([
+          {
+            status:
+              action === 'create' ? 'pending' : action === 'approve' ? 'approved' : 'rejected',
+          },
+        ]);
+        if (action === 'create')
+          expect(
+            (await http.pool.query('SELECT id FROM approval_requests WHERE reason=$1', [reason]))
+              .rows
+          ).toHaveLength(1);
+      } finally {
+        await client.query('ROLLBACK');
+        client.release();
+        await pending;
+        await mutation;
+        await http.pool.query(
+          "INSERT INTO user_roles(user_id,role_id) VALUES ('reviewer','role-finance') ON CONFLICT DO NOTHING"
+        );
+        await http.pool.query(
+          "UPDATE sessions SET revoked_at=NULL,csrf_token=$1,step_up_verified_at=NOW() WHERE user_id='reviewer'",
+          [headers.reviewer!['X-CSRF-Token']]
+        );
+      }
+    });
+  }
+  for (const expiry of ['session', 'step-up'] as const) {
+    it(`approval ${action} rolls back if ${expiry} expires during its audit write`, async () => {
+      const id = await seed(),
+        reason = randomUUID();
+      await http.pool.query(
+        `INSERT INTO app_config(key,value) VALUES ('finance.dual_approval_threshold','{"threshold_irr":100000}') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
+      );
+      const before = (await http.pool.query('SELECT count(*) FROM notifications')).rows;
+      const audits = (await http.pool.query('SELECT count(*) FROM audit_log')).rows;
+      await http.pool.query(
+        'CREATE FUNCTION delay_approval_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM pg_sleep(1.2); RETURN NEW; END $$'
+      );
+      await http.pool.query(
+        'CREATE TRIGGER delay_approval_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_approval_audit()'
+      );
+      try {
+        await http.pool.query(
+          "UPDATE sessions SET revoked_at=NULL,expires_at=clock_timestamp()+INTERVAL '1 day',idle_deadline=clock_timestamp()+INTERVAL '30 minutes',step_up_verified_at=clock_timestamp() WHERE user_id='reviewer'"
+        );
+        await http.pool.query(
+          expiry === 'session'
+            ? "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
+            : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
+        );
+        const pending =
+          action === 'create'
+            ? fetch(`${http.base}/api/admin/approval-requests`, {
+                method: 'POST',
+                headers: headers.reviewer!,
+                body: JSON.stringify({
+                  action_type: 'bank_payment_confirmation',
+                  amount_irr: 100000,
+                  reason,
+                }),
+              })
+            : decide('reviewer', id, action);
+        await expect
+          .poll(async () =>
+            Number(
+              (
+                await http.pool.query(
+                  "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event='PgSleep'"
+                )
+              ).rows[0].count
+            )
+          )
+          .toBe(1);
+        expect((await pending).status).toBe(expiry === 'session' ? 401 : 403);
+        expect(
+          (await http.pool.query('SELECT status FROM approval_requests WHERE id=$1', [id])).rows
+        ).toEqual([{ status: 'pending' }]);
+        expect(
+          (await http.pool.query('SELECT id FROM approval_requests WHERE reason=$1', [reason])).rows
+        ).toEqual([]);
+        expect((await http.pool.query('SELECT count(*) FROM notifications')).rows).toEqual(before);
+        expect((await http.pool.query('SELECT count(*) FROM audit_log')).rows).toEqual(audits);
+      } finally {
+        await http.pool.query('DROP TRIGGER delay_approval_audit ON audit_log');
+        await http.pool.query('DROP FUNCTION delay_approval_audit()');
+        await http.pool.query(
+          "UPDATE sessions SET revoked_at=NULL,expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes',step_up_verified_at=NOW() WHERE user_id='reviewer'"
+        );
+      }
+    });
+  }
+}
 it('requires recent step-up for financial approval and rejection, preserving pending requests', async () => {
   for (const action of ['approve', 'reject']) {
     const id = await seed();
@@ -670,7 +836,7 @@ it('rechecks invoice receipt authority after waiting for the actor lock', async 
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND (query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' OR query LIKE 'SELECT u.user_id FROM users u JOIN sessions%')"
               )
             ).rows[0].count
           )
@@ -727,7 +893,7 @@ it('rechecks wallet receipt authority after waiting for the actor lock', async (
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND (query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' OR query LIKE 'SELECT u.user_id FROM users u JOIN sessions%')"
               )
             ).rows[0].count
           )
@@ -789,7 +955,7 @@ it('holds current authority through staff due-date overrides', async () => {
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND (query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' OR query LIKE 'SELECT u.user_id FROM users u JOIN sessions%')"
             )
           ).rows[0].count
         )

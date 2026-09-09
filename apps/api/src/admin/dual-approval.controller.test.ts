@@ -7,7 +7,12 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: {
+    isAdmin: true,
+    userId: 'admin-1',
+    sessionId: 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',
+    csrfToken: 'approval-test-csrf',
+  },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -116,7 +121,7 @@ describe('DualApprovalController delegation', () => {
     const body = { action_type: 'refund', amount_irr: 250_000_000, reason: 'refund' };
     const result = await controller.createApprovalRequest(body, adminReq);
     expect(result.id).toBe('req-1');
-    expect(service.createApprovalRequest).toHaveBeenCalledWith(body, 'admin-1', '127.0.0.1');
+    expect(service.createApprovalRequest).toHaveBeenCalledWith(body, adminReq.session, '127.0.0.1');
   });
 
   it('lists requests with parsed query params', async () => {
@@ -140,7 +145,11 @@ describe('DualApprovalController delegation', () => {
     const { controller, service } = makeController();
     const result = await controller.approveApprovalRequest('req-1', adminReq);
     expect(result.status).toBe('approved');
-    expect(service.approveApprovalRequest).toHaveBeenCalledWith('req-1', 'admin-1', '127.0.0.1');
+    expect(service.approveApprovalRequest).toHaveBeenCalledWith(
+      'req-1',
+      adminReq.session,
+      '127.0.0.1'
+    );
   });
 
   it('rejects with a trimmed reason', async () => {
@@ -153,7 +162,7 @@ describe('DualApprovalController delegation', () => {
     expect(result.status).toBe('rejected');
     expect(service.rejectApprovalRequest).toHaveBeenCalledWith(
       'req-1',
-      'admin-1',
+      adminReq.session,
       '127.0.0.1',
       'duplicate'
     );

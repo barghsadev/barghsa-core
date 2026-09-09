@@ -533,9 +533,16 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     expect(pending[0]!.status).toBe('pending');
 
     const dualApproval = new DualApprovalService(new NotificationsService());
+    const sessionId = uuidv7(),
+      csrfToken = uuidv7();
+    await ctx.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+       VALUES ($1,$2,$3,$1,NOW()+INTERVAL '1 hour',NOW()+INTERVAL '30 minutes',NOW())`,
+      [sessionId, SECOND_STAFF, csrfToken]
+    );
     await dualApproval.rejectApprovalRequest(
       pending[0]!.id,
-      SECOND_STAFF,
+      { userId: SECOND_STAFF, sessionId, csrfToken },
       '10.0.0.9',
       'Payer name does not match'
     );
