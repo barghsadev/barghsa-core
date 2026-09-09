@@ -10,6 +10,19 @@ import { SessionService } from './session.service.js';
 import { SESSION_COOKIE_NAME } from './cookie.helper.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
+function requestCsrfProof(context: ExecutionContext) {
+  const request: Request = context.switchToHttp().getRequest();
+  const method = request.method.toUpperCase();
+  const handler = context.getHandler();
+  if (
+    ['GET', 'HEAD', 'OPTIONS'].includes(method) ||
+    (Reflect.getMetadata('skipCsrf', handler) && !Reflect.getMetadata('preauthCsrf', handler))
+  )
+    return undefined;
+  const token = request.headers['x-csrf-token'];
+  return { token: typeof token === 'string' ? token : '', method };
+}
+
 /**
  * Augmented Express Request with authenticated session data.
  */
@@ -63,7 +76,11 @@ export class SessionAuthGuard implements CanActivate {
       });
     }
 
-    const validated = await this.sessionService.validateSession(sessionId);
+    const validated = await this.sessionService.validateSession(
+      sessionId,
+      true,
+      requestCsrfProof(context)
+    );
 
     if (!validated) {
       this.logger.debug(`Session invalid, expired, or revoked`);
@@ -122,7 +139,11 @@ export class SessionOptionalGuard implements CanActivate {
       return true;
     }
 
-    const validated = await this.sessionService.validateSession(sessionId);
+    const validated = await this.sessionService.validateSession(
+      sessionId,
+      true,
+      requestCsrfProof(context)
+    );
 
     if (validated) {
       (request as AuthenticatedRequest).session = {

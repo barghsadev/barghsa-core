@@ -45,3 +45,62 @@ describe('SessionOptionalGuard', () => {
     });
   });
 });
+
+for (const Guard of [SessionAuthGuard, SessionOptionalGuard]) {
+  describe(`${Guard.name} request proof`, () => {
+    it.each([
+      { method: 'GET', skip: false, preauth: false, token: 'submitted', proof: undefined },
+      {
+        method: 'POST',
+        skip: false,
+        preauth: false,
+        token: 'submitted',
+        proof: { token: 'submitted', method: 'POST' },
+      },
+      {
+        method: 'PUT',
+        skip: false,
+        preauth: false,
+        token: undefined,
+        proof: { token: '', method: 'PUT' },
+      },
+      { method: 'POST', skip: true, preauth: false, token: undefined, proof: undefined },
+      {
+        method: 'POST',
+        skip: true,
+        preauth: true,
+        token: 'submitted',
+        proof: { token: 'submitted', method: 'POST' },
+      },
+    ])(
+      'preserves the request proof for $method skip=$skip preauth=$preauth',
+      async ({ method, skip, preauth, token, proof }) => {
+        const request = {
+          method,
+          headers: { 'x-csrf-token': token },
+          cookies: { barghsa_session: 'session' },
+        };
+        const handler = () => {};
+        Reflect.defineMetadata('skipCsrf', skip, handler);
+        Reflect.defineMetadata('preauthCsrf', preauth, handler);
+        const context = {
+          switchToHttp: () => ({ getRequest: () => request }),
+          getHandler: () => handler,
+        } as unknown as any;
+        const service = {
+          validateSession: vi.fn().mockResolvedValue({
+            sessionId: 'session',
+            userId: 'user',
+            csrfToken: 'current-server-token',
+            isAdmin: false,
+            stepUpVerifiedAt: null,
+          }),
+        };
+        await expect(
+          new Guard(service as unknown as SessionService).canActivate(context)
+        ).resolves.toBe(true);
+        expect(service.validateSession).toHaveBeenCalledWith('session', true, proof);
+      }
+    );
+  });
+}

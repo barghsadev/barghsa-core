@@ -19,6 +19,13 @@ const CSRF_TOKEN_BYTES = 32;
 /** Max sessions per user to prevent resource abuse */
 const MAX_SESSIONS_PER_USER = 50;
 
+/** Internal signal: reject changed request proof without extending the session. */
+class SessionCsrfMismatch extends HttpException {
+  constructor() {
+    super({ error: ErrorCodes.AUTHZ_CSRF_INVALID.code }, 403);
+  }
+}
+
 /** Internal signal: password verification must continue through login OTP. */
 export class DeviceTrustRequired extends UnauthorizedException {
   constructor(readonly isStaff: boolean) {
@@ -249,7 +256,8 @@ export class SessionService {
    */
   async validateSession(
     sessionId: string,
-    touchOnValidate = true
+    touchOnValidate = true,
+    csrfProof?: { token: string; method: string }
   ): Promise<ValidatedSession | null> {
     const pool = getDbPool();
     let client: PoolClient | undefined;
@@ -296,6 +304,13 @@ export class SessionService {
         return null;
       }
 
+      if (csrfProof && row.csrf_token !== csrfProof.token) {
+        this.logger.warn(
+          `CSRF check failed: token changed during authentication | method=${csrfProof.method} | correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        );
+        throw new SessionCsrfMismatch();
+      }
+
       let idleDeadline = row.idle_deadline;
       if (client) {
         idleDeadline = new Date(
@@ -321,8 +336,9 @@ export class SessionService {
         idleDeadline,
         stepUpVerifiedAt: row.step_up_verified_at ?? null,
       };
-    } catch {
+    } catch (error) {
       await client?.query('ROLLBACK').catch(() => {});
+      if (error instanceof SessionCsrfMismatch) throw error;
       this.logger.error(
         `Failed to validate session: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
