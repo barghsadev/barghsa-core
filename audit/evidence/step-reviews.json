@@ -10984,6 +10984,303 @@
         "/tmp/r01-due-period-form-types.log",
         "/tmp/r01-invoice-deadlines-db-contracts.log"
       ]
+    },
+    {
+      "id": "R01-invoice-corrections",
+      "date": "2026-09-09",
+      "source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "base_revision": "7a222b1",
+      "product_commits": [
+        "4e593ee",
+        "5aec6ef",
+        "1fcb5fa",
+        "2143df4",
+        "0aae9d5"
+      ],
+      "summary": "Four invoice-correction task acceptances verified; four saved PR reviews closed. Repairs preserve original lines and link new replacement/charge/credit invoices.",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.05.01",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04"
+      ],
+      "review": [
+        "Read exact S-04.1.05 criteria and all saved PR247–250 bodies. Both services existed without production callers; retain calculations, origin copies, transaction/audit ownership and customer chain assembly.",
+        "Real partial payment can become Overdue. Replacements still reject any payment; adjustments now allow paid Overdue and reject unpaid Overdue. Signed credits retain negative accounting_amount and null due_at/payable_from; no wallet payout is implied.",
+        "Staff GET/POST always passes current session; writes hold current account/grants, check step-up after locks and before commit, reject forged/overflowing payloads, and reuse the original invoice lock to serialize key/fingerprint retries. Audit or authority failure rolls back original cancellation, linked invoice and lines together.",
+        "Customer HTTP list/details use one transaction, lock account/session/profile/grants, recheck active profile and session at completion, reject activation-pending accounts and normalize valid uppercase UUIDs. Existing owner/Finance isolation, draft exclusion and chain explanations remain. Root profile-revision key remounts the invoice page after profile switches; no duplicate UI invalidation added.",
+        "Reviewed nullable self-FKs/RESTRICT/indexes, partial ordinary-invoice uniqueness and signed adjustment backfill/CHECK through production0080/0081. Legacy contract-phase validation is retained separately.",
+        "Staff form reuses manual invoice editor; source/payment state chooses correction kind, positive/negative amounts are exact and localized, current invoice/reason/key/amount must match success, and uncertain outcomes retain captured fields/key through verification and retry."
+      ],
+      "repairs": [
+        {
+          "revision": "4e593ee",
+          "change": "Refresh stale unit state-machine fixtures and use independent archive operator for profile-lock concurrency.",
+          "verification": "65 existing correction/archive cases pass."
+        },
+        {
+          "revision": "5aec6ef",
+          "change": "Allow charge/credit adjustments on partially paid Overdue originals.",
+          "verification": "Two new regression failures reproduced; 23 adjustment cases pass after repair, including unpaid Overdue rejection."
+        },
+        {
+          "revision": "1fcb5fa",
+          "change": "Add authorized staff correction context/commands, int8 validation and durable request fingerprints for safe retries.",
+          "verification": "40 current correction cases plus14 HTTP cases pass; API types/lint/build/OpenAPI pass. Initial step-up timing fixture corrected to use configured15-minute window."
+        },
+        {
+          "revision": "2143df4",
+          "change": "Add localized staff correction form using manual editor and exact response confirmation.",
+          "verification": "12 Chromium cases (8 corrections+4 existing manual),3 page cases, web types/lint/build and42 budgets pass."
+        },
+        {
+          "revision": "0aae9d5",
+          "change": "Bind customer reads to current authority through response preparation; normalize invoice UUIDs.",
+          "verification": "Four baseline HTTP failures reproduced (uppercase,2 expiry paths,activation pending).6 final read HTTP+24 unchanged assembly/service cases pass;5 customer deadline HTTP compatibility cases also pass. Membership revocation waits for the authorized read, then fresh reads fail."
+        }
+      ],
+      "verification": {
+        "commands": "54 distinct current correction service/HTTP cases. Initial65 fixture cases overlap; do not add. No full regression rerun.",
+        "customer": "30 distinct read/assembly cases plus5 existing deadline HTTP compatibility cases. Nine unchanged invoice page unit and four prior customer reason browser cases retained from deadline batch.",
+        "database": "40 cases across8 correction-link/kind/ordinary-uniqueness migration/schema files pass.",
+        "browser": "12 current production Chromium cases cover FA/EN,light/dark,hover accessibility,source lines,signed money,step-up focus,captured requests,unknown/malformed replies,safe retries and unchanged manual flow.",
+        "quality": "API and web types,scoped lint,format,diff,API build/OpenAPI,web build,i18n build and42 unchanged route/interaction budgets pass. Type-only UUID fixture correction completed before final type pass; failed logs retained.",
+        "audit": "Audit population,322 current requirement bindings and1355 generated queue tasks/116 traceability rows validate."
+      },
+      "historical_dispositions": [
+        {
+          "pr": 249,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/249",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.05.03"
+          ],
+          "historical_deferrals": [
+            "- Migration 0067 is expand/migrate: nullable `adjustment_kind` + generated `accounting_amount`, deterministic backfill of existing linked rows (`metadata.kind` when charge/credit, otherwise `charge`), and the kind/link CHECK added as `NOT VALID`. VALIDATE is deferred until old writers are retired.",
+            "- [ ] Customer-facing invoice details page showing the correction chain — out of scope (T-04.1.05.04).",
+            "- [ ] Applying a credit as a wallet refund/payout — out of scope (S-04.4.01).",
+            "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` — deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 248,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/248",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.05.02"
+          ],
+          "historical_deferrals": [
+            "- [ ] Staff HTTP API / UI for this command — not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        }
+      ],
+      "remaining": [
+        "S-04.4.01 owns actual credit wallet refund/payout. This batch issues credit notes only; no external payout/deployment proof.",
+        "V01 retains retirement of old adjustment writers and legacy-data validation of ck_invoices_adjustment_kind_matches_link. NOT VALID continues enforcing new writes; do not claim production validation complete.",
+        "R03 owns remaining number-format consumer details such as raw invoice line quantity. Full V02 regression/coverage and other batches remain."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 247,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.05.01"
+          ],
+          "reason": "Mapped local acceptance verified. Staff/customer deferrals are implemented; wallet payout belongs to S-04.4.01 and old-writer retirement/legacy CHECK validation remains a separate V01 operational gate, not claimed executed.",
+          "source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+        },
+        {
+          "pr": 248,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.05.02"
+          ],
+          "reason": "Mapped local acceptance verified. Staff/customer deferrals are implemented; wallet payout belongs to S-04.4.01 and old-writer retirement/legacy CHECK validation remains a separate V01 operational gate, not claimed executed.",
+          "source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+        },
+        {
+          "pr": 249,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.05.03"
+          ],
+          "reason": "Mapped local acceptance verified. Staff/customer deferrals are implemented; wallet payout belongs to S-04.4.01 and old-writer retirement/legacy CHECK validation remains a separate V01 operational gate, not claimed executed.",
+          "source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+        },
+        {
+          "pr": 250,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.05.04"
+          ],
+          "reason": "Mapped local acceptance verified. Staff/customer deferrals are implemented; wallet payout belongs to S-04.4.01 and old-writer retirement/legacy CHECK validation remains a separate V01 operational gate, not claimed executed.",
+          "source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+          "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+        }
+      ],
+      "pr_counts": {
+        "closed": 4,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "Existing OpenAPI paths and i18n exports unchanged; customer receipt-submission handler unchanged. See evidence-reuse log.",
+        "Existing due/customer reason behavior preserved with five HTTP compatibility cases. Manual editor behavior refreshed with four original browser cases and host tests.",
+        "Snapshot replay verified for actual HTTP-created replacement and credit, alongside current adjustment charge/service snapshot cases; closes retained two correction-consumer refresh paths."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "933abbe9da00c91bb2ad47d5e3394d1199da52cb903e6958e8e8e0962d93807a"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "0376a325a35c96b8e7ccbaabc3471d21cde944434e9b016335cda79668a590fb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-correction-request.ts",
+          "sha256": "a1aa5cecbffc1bdc16ac86fdfa186b205f9614686215e77d3a2883fd746d9f79"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+          "sha256": "3eb522b85e703efb9be25e436ed6c18ee940d8b135be1b53a6dde228b49dc299"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice.module.ts",
+          "sha256": "591ea78572a381a96077cd94a9f442304eb00daf1e14b830f6e5827960776d9c"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+          "sha256": "b35850235c94fa87087efcb41ca584bce80212eb107aa09e885bbdbb8a975dbd"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "5c57837e454b14397b2e12417505e01eae93be6ee7bc76c2196326a1392d598f"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "sha256": "0181469a609b2b51a141dbd3d4967ebea606ce7c40de9464e50370191e53d204"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+          "sha256": "0da19d6ab9fbb135b605a8293ade1083536acba03e57e4e809ea1def918f9a3f"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
+          "sha256": "f75f60f9134a7aac87d545c7604b2bc128c3362ef233efeb5efd4528141f1003"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/e2e/invoice-corrections.spec.ts",
+          "sha256": "e20910edabc97ad0c2e2b94e2c901e4ddeb96cca02486db1a167d9f8d6e6419f"
+        },
+        {
+          "path": "packages/i18n/src/invoice-corrections.ts",
+          "sha256": "edce8a71d65da5e7a141bfab3a9eab545b7ee00dd583d732f52ff445d95c48fb"
+        },
+        {
+          "path": "packages/db/drizzle/0064_add_invoice_correction_self_references.sql",
+          "sha256": "2f51ecf0acc42344207dd9c01fbe572295c720f2098d8cf4474515d3958fa876"
+        },
+        {
+          "path": "packages/db/drizzle/0065_invoice_order_type_unique_exclude_replacements.sql",
+          "sha256": "93008ebbba3fe9ec926d1c4d747a53f901b6749f24d3c3979d15c8fd15ab53ba"
+        },
+        {
+          "path": "packages/db/drizzle/0066_invoice_order_type_unique_exclude_adjustments.sql",
+          "sha256": "751a1a72d79161fb7e91edf79898758d7ab110f4da08c3e9e231d4b0b535628c"
+        },
+        {
+          "path": "packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql",
+          "sha256": "bba10ea9b23aef2ee4e4032fc345633da790422ad03f8eccff0ad5a5cd4f0bab"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-invoice-corrections-api-build.log",
+        "/tmp/r01-invoice-corrections-api-contract-check.log",
+        "/tmp/r01-invoice-corrections-api-contract-write.log",
+        "/tmp/r01-invoice-corrections-api-format.log",
+        "/tmp/r01-invoice-corrections-api-lint.log",
+        "/tmp/r01-invoice-corrections-api-types-final.log",
+        "/tmp/r01-invoice-corrections-api-types-verified.log",
+        "/tmp/r01-invoice-corrections-api-types.log",
+        "/tmp/r01-invoice-corrections-baseline.log",
+        "/tmp/r01-invoice-corrections-browser-first.log",
+        "/tmp/r01-invoice-corrections-budgets.log",
+        "/tmp/r01-invoice-corrections-db-contracts.log",
+        "/tmp/r01-invoice-corrections-evidence-reuse.log",
+        "/tmp/r01-invoice-corrections-fixture-format.log",
+        "/tmp/r01-invoice-corrections-fixtures-final.log",
+        "/tmp/r01-invoice-corrections-host-tests.log",
+        "/tmp/r01-invoice-corrections-http-first.log",
+        "/tmp/r01-invoice-corrections-http-format-final.log",
+        "/tmp/r01-invoice-corrections-http-format.log",
+        "/tmp/r01-invoice-corrections-http-verified.log",
+        "/tmp/r01-invoice-corrections-i18n-build.log",
+        "/tmp/r01-invoice-corrections-overdue-baseline.log",
+        "/tmp/r01-invoice-corrections-overdue-final.log",
+        "/tmp/r01-invoice-corrections-overdue-format.log",
+        "/tmp/r01-invoice-corrections-overdue-verified.log",
+        "/tmp/r01-invoice-corrections-pr-history.log",
+        "/tmp/r01-invoice-corrections-ui-build.log",
+        "/tmp/r01-invoice-corrections-ui-final-format.log",
+        "/tmp/r01-invoice-corrections-ui-format.log",
+        "/tmp/r01-invoice-corrections-ui-lint-verified.log",
+        "/tmp/r01-invoice-corrections-ui-lint.log",
+        "/tmp/r01-invoice-corrections-ui-types-verified.log",
+        "/tmp/r01-invoice-corrections-ui-types.log",
+        "/tmp/r01-invoice-customer-read-baseline.log",
+        "/tmp/r01-invoice-customer-read-final-format.log",
+        "/tmp/r01-invoice-customer-read-first-fix.log",
+        "/tmp/r01-invoice-customer-read-format.log",
+        "/tmp/r01-invoice-customer-read-lint.log",
+        "/tmp/r01-invoice-customer-read-product-format.log",
+        "/tmp/r01-invoice-customer-read-types-final.log",
+        "/tmp/r01-invoice-customer-read-types-verified.log",
+        "/tmp/r01-invoice-customer-read-types.log",
+        "/tmp/r01-invoice-customer-read-verified.log",
+        "/tmp/r01-invoice-corrections-audit-check.log",
+        "/tmp/r01-invoice-corrections-backlog-check.log",
+        "/tmp/r01-invoice-corrections-requirements-check.log"
+      ]
     }
   ]
 }

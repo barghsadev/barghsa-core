@@ -521,7 +521,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 192,
       "requirement": "- **T-01.04.05:** Wire `test` and `test:coverage` tasks in `turbo.json`\n  - **Notes:** `test` depends on `^build` (upstream packages must compile first). `test:coverage` passes `--coverage` flag. CI runs `turbo test` with `--filter` for affected packages on PR, full suite on main.\n  - **Dependencies:** T-01.04.01, T-01.01.02\n  - **Complexity:** S",
@@ -573,7 +573,7 @@
         },
         {
           "path": "packages/i18n/package.json",
-          "sha256": "cfe1a5fe7fa026420046ce942c7657f911a5e765b9a03948f6031cbaca18abe8"
+          "sha256": "f54380ff2fae6dddf9855a9c3b454defe7397af6c55daa2cc5c13bd58fa33fe6"
         }
       ],
       "checks": [
@@ -590,12 +590,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "bf54b8cba0313ee5296d4e0d848eb3cfa341ab88",
         "changed_paths_reviewed": [
           "packages/i18n/package.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       }
     },
     {
@@ -3704,7 +3705,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -3732,7 +3733,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -3813,18 +3814,19 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -3880,7 +3882,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -3940,13 +3942,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx",
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       }
     },
     {
@@ -4217,7 +4219,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -4253,7 +4255,7 @@
         },
         {
           "path": "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
-          "sha256": "2b4ad70cadf700fdf78f8bbe4a10264b24a1efe8ce1bb17279926dc3b97f7baf"
+          "sha256": "53d3ee61b3aa00a54c5dd247adeac12a22832d13628fd91d2c54b7ebc5b10681"
         },
         {
           "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
@@ -4265,19 +4267,19 @@
         },
         {
           "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-          "sha256": "f64ec1fe691203830f20a64b9cb936ae0acca1a07aeac01da7d06eed1055bd39"
+          "sha256": "cf3edfc3bfe14bf9bbcef6eb604a4dac7e17c2a2141e0341cbbec5810250bb44"
         },
         {
           "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-          "sha256": "3b3a4a7fd0dd39c6dcd0a041e838da486497c49dee9862a16d278d8befc73b5c"
+          "sha256": "933abbe9da00c91bb2ad47d5e3394d1199da52cb903e6958e8e8e0962d93807a"
         },
         {
           "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
-          "sha256": "25afdb9f7e5b6f8146e50c99d653810a04a744e511218b52bab19b909cfb8937"
+          "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
         },
         {
           "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-          "sha256": "a70e282c5249a9e66753c8e2d2f729d138995c2065250675400f6b9a66acf226"
+          "sha256": "0376a325a35c96b8e7ccbaabc3471d21cde944434e9b016335cda79668a590fb"
         },
         {
           "path": "apps/api/src/invoice/invoice-profile-lock.ts",
@@ -4389,18 +4391,23 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
         "changed_paths_reviewed": [
-          "apps/web/src/components/TeamActionDialog.tsx"
+          "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
+          "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+          "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+          "apps/api/src/invoice/create-adjustment-invoice.service.ts"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 378,
       "requirement": "**T-05.01.01 — CRM users list page**\n\n- Description: `/app/crm` — list of all registered users. Columns: Username, profiles (legal/individual indicators), registration date, last login, verification status, profile count. Staff and admin only.\n- Technical notes: Backend: GET `/api/crm/users` with pagination, search, sort, filter. Server-side filtering/sorting. Cursor pagination recommended for large datasets. Permission: staff roles `crm:read` or `admin`. Profile type columns: \"Legal\" icon and \"Individual\" icon shown per user if they have that profile type. Search by username (email/mobile).\n- UI/UX: Table with sortable columns. Filter bar: profile type (all/individual/legal), verification status (verified/unverified/pending), registration date range. Search input. Pagination controls. \"Collapse all\" on row expansion.\n- Dependencies: T-03.01.01, authorization framework\n- Complexity: L",
@@ -4428,7 +4435,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -4474,12 +4481,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "53a8bec4bc9f1bfda6e854d25f2e9a752c3f42c0",
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       }
     },
     {
@@ -4546,7 +4554,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.05.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 513,
       "requirement": "**T-05.05.01 — Profiles awaiting verification widget**\n\n- Description: On staff dashboard, widget showing profiles pending verification (if verification is not disabled). Shows count and \"Show all\" link to CRM with verification filter.\n- Technical notes: GET `/api/crm/dashboard/pending-verification` returns count and last 5 entries. Permission: staff with `crm:verify`.\n- UI/UX: Card: icon + count + \"Profiles awaiting verification\" + \"Show all\" link. Click opens CRM with `?verification=PENDING` filter.\n- Dependencies: T-05.01.02, E-07 (verification settings)\n- Complexity: S",
@@ -4566,7 +4574,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -4606,12 +4614,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
+        "date": "2026-09-09",
         "prior_reviewed_sha": "c26aad74cd63a76f8324fdb5dcfd5101c4da0ae1",
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       }
     },
     {
@@ -4998,7 +5007,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 167,
       "requirement": "**T-02.03.02 — OTP verification and password reset**\n\n- Description: POST `/api/auth/reset-password` with `{ challengeId, otp, newPassword }`. Backend verifies OTP, validates new password strength (same policy), hashes new password, updates user record.\n- Technical notes: On success: invalidate ALL existing sessions and refresh tokens for that user. Audit: password_reset event with user ID, timestamp, correlation ID. OTP consumed. Password history check enforced. Rate limit: 5 reset attempts per hour per destination.\n- UI/UX: After OTP verified, show new password form with strength meter and confirm password field. Success: redirect to login page with success toast. \"Your password has been reset. Please log in with your new password.\"\n- Dependencies: T-02.03.01, T-01.02.03\n- Complexity: M",
@@ -5006,7 +5015,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "f337395c8b01a912d5a0cb922ad67de3c157e378a1b90e4422450218886c06c2"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5115,12 +5124,13 @@
       ],
       "historically_skipped": false,
       "evidence_refresh": {
-        "date": "2026-09-08",
-        "prior_reviewed_sha": "93dfc2760fb62b10b407238d317db09af241f190",
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "169568059f71e16b9f00cd3522a412fdb6b3f375",
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       },
       "previous_batch_assessment": {
         "status": "acceptance_verified",
@@ -5510,7 +5520,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.04.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 472,
       "requirement": "**T-05.04.02 — Agent invitation flow**\n\n- Description: Owner/manager invites by email or mobile number. Must select role: Manager, Finance, Legal. If user is registered, send notification. If not registered, they see the invite when they register with that username.\n- Technical notes: POST `/api/profiles/:profileId/invitations` with `{ username, role }`. Constraints: legal profile must have exactly one owner at all times. Owner cannot be removed without ownership transfer. Rate limited: 10 invitations per hour per profile. Audit: invitation_created. When invited user registers, check pending invitations and link automatically. Invitation states: Pending, Accepted, Withdrawn, Declined, Expired (default 7 days).\n- UI/UX: Modal: username field (email/mobile), role dropdown. Preview: \"Invite [username] as [role] to [legal entity name].\" Confirmation. Success: \"Invitation sent. User will be notified when available.\"\n- Dependencies: T-05.04.01\n- Complexity: L",
@@ -5518,7 +5528,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "c6a180a7e3c618fa8c80ad59f8a6dfebeca46b4141715b5f73877011acd034af"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -5604,7 +5614,16 @@
       "merged_prs": [
         132
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "1bf4680cefc77361392ae47addc292d7d90b999e",
+        "changed_paths_reviewed": [
+          "apps/api/openapi.json"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.03",
@@ -7985,7 +8004,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 349,
       "requirement": "| T-04.3.01.02 | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state | M |",
@@ -8009,7 +8028,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice.controller.ts",
-          "sha256": "555d792e6c3ad5ec3be574084b63d38243512f0b68a2af2cf034655202bed3dd"
+          "sha256": "b35850235c94fa87087efcb41ca584bce80212eb107aa09e885bbdbb8a975dbd"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
@@ -8063,7 +8082,16 @@
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice.controller.ts"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.03",
@@ -9239,7 +9267,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 114,
       "requirement": "| T-04.1.02.01 | Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints | M |",
@@ -9367,11 +9395,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -9406,12 +9434,22 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 115,
       "requirement": "| T-04.1.02.02 | Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice | L |",
@@ -9539,11 +9577,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -9578,12 +9616,22 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
       "status": "partial",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 116,
       "requirement": "| T-04.1.02.03 | Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms | M |",
@@ -9711,11 +9759,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -9750,12 +9798,22 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 117,
       "requirement": "| T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |",
@@ -9883,11 +9941,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -9922,12 +9980,22 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
       "status": "partial",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 118,
       "requirement": "| T-04.1.02.05 | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys | S |",
@@ -10055,11 +10123,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -10094,12 +10162,22 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.06",
       "status": "acceptance_verified",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 119,
       "requirement": "| T-04.1.02.06 | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) | M |",
@@ -10227,11 +10305,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -10266,12 +10344,22 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
       "status": "acceptance_verified",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 120,
       "requirement": "| T-04.1.02.07 | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements | M |",
@@ -10399,11 +10487,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -10438,12 +10526,22 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
       "status": "acceptance_verified",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 121,
       "requirement": "| T-04.1.02.08 | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility | S |",
@@ -10571,11 +10669,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -10592,6 +10690,14 @@
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
           "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "933abbe9da00c91bb2ad47d5e3394d1199da52cb903e6958e8e8e0962d93807a"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "0376a325a35c96b8e7ccbaabc3471d21cde944434e9b016335cda79668a590fb"
         }
       ],
       "checks": [
@@ -10611,12 +10717,24 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.09",
       "status": "acceptance_verified",
-      "reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 122,
       "requirement": "| T-04.1.02.09 | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals | M |\n\n---",
@@ -10744,11 +10862,11 @@
         },
         {
           "path": "apps/web/src/components/ManualInvoicePanel.tsx",
-          "sha256": "ac4c83019618c7ef12f60cf3b4722524fd18b21c8a945d5a3477dce1dec28d20"
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "64122ce78d21e722897a21d38dc981fec2e5cfe3335ee65cd25256223469d0cd"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -10783,12 +10901,22 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "03bcf45e459e3bbda89645803127dcf19daf591f",
+        "changed_paths_reviewed": [
+          "apps/web/src/components/ManualInvoicePanel.tsx",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 143,
       "requirement": "| T-04.1.03.01 | Add `service_due_periods` admin config table (service type, default days, active period) | M |",
@@ -10852,7 +10980,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -10876,7 +11004,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -10892,7 +11020,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -10929,12 +11057,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 144,
       "requirement": "| T-04.1.03.02 | Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override) | S |",
@@ -10998,7 +11137,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -11022,7 +11161,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11038,7 +11177,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -11075,12 +11214,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 145,
       "requirement": "| T-04.1.03.03 | Build staff override UI/API: override input + reason field, stored in audit + invoice metadata | M |",
@@ -11144,7 +11294,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -11168,7 +11318,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11184,7 +11334,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -11221,12 +11371,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 146,
       "requirement": "| T-04.1.03.04 | Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded | M |\n\n---",
@@ -11290,7 +11451,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -11314,7 +11475,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11330,7 +11491,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -11367,12 +11528,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 170,
       "requirement": "| T-04.1.04.01 | Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status` | M |",
@@ -11436,7 +11608,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -11460,7 +11632,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11476,7 +11648,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -11513,12 +11685,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 171,
       "requirement": "| T-04.1.04.02 | Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows | M |",
@@ -11582,7 +11765,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -11606,7 +11789,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11622,7 +11805,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -11659,12 +11842,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
       "status": "partial",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 172,
       "requirement": "| T-04.1.04.03 | Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox | M |",
@@ -11728,7 +11922,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -11752,7 +11946,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11768,7 +11962,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -11807,12 +12001,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 173,
       "requirement": "| T-04.1.04.04 | Enforce idempotency: unique index on (invoiceId, offset, channel) | S |",
@@ -11876,7 +12081,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -11900,7 +12105,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -11916,7 +12121,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -11953,12 +12158,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
       "status": "partial",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 174,
       "requirement": "| T-04.1.04.05 | Admin toggle UI: enable/disable each offset per service type | M |",
@@ -12022,7 +12238,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -12046,7 +12262,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12062,7 +12278,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -12101,12 +12317,23 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
       "status": "acceptance_verified",
-      "reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 175,
       "requirement": "| T-04.1.04.06 | Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled | M |\n\n---",
@@ -12170,7 +12397,7 @@
         },
         {
           "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
-          "sha256": "2d57f3386d4e5028e93db122f74079b3eb0716363fa72101b73c586a692d6fb0"
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
         },
         {
           "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
@@ -12194,7 +12421,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "565b488fe01228bd1234b04f7b3f40750faeb86b6a821326c03681df1ca9f1d3"
+          "sha256": "0d35cbd90109f312b4b6a1685887d6fbda221564d2c3891edb60060b0acbbd0f"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12210,7 +12437,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
-          "sha256": "0b0d398d1ed26af2c881236a184be30e8a12c39c997829fc07ac7f93f4e069b4"
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -12247,7 +12474,242 @@
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-      ]
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+        "changed_paths_reviewed": [
+          "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/openapi.json",
+          "apps/web/src/pages/AdminInvoicesPage.tsx"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
+      }
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 196,
+      "requirement": "| T-04.1.05.01 | Add `replacesInvoiceId` and `adjustmentForInvoiceId` nullable self-references on invoice table | S |",
+      "requirement_sha256": "7422e376749e132005c00a00e8a7af2374f7bfed674dace9bdacbbfd2202c616",
+      "source_evidence": [
+        {
+          "path": "packages/db/drizzle/0064_add_invoice_correction_self_references.sql",
+          "sha256": "2f51ecf0acc42344207dd9c01fbe572295c720f2098d8cf4474515d3958fa876"
+        },
+        {
+          "path": "packages/db/drizzle/0065_invoice_order_type_unique_exclude_replacements.sql",
+          "sha256": "93008ebbba3fe9ec926d1c4d747a53f901b6749f24d3c3979d15c8fd15ab53ba"
+        },
+        {
+          "path": "packages/db/drizzle/0066_invoice_order_type_unique_exclude_adjustments.sql",
+          "sha256": "751a1a72d79161fb7e91edf79898758d7ab110f4da08c3e9e231d4b0b535628c"
+        },
+        {
+          "path": "packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql",
+          "sha256": "bba10ea9b23aef2ee4e4032fc345633da790422ad03f8eccff0ad5a5cd4f0bab"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        }
+      ],
+      "checks": [
+        "Exact requirements and saved PR body reviewed. audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "Current focused verification and valid reused evidence recorded once in batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        247
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 197,
+      "requirement": "| T-04.1.05.02 | Build `cancelAndReplaceInvoice(invoiceId, reason, newLines)` — validates no payment, cancels, creates linked replacement | M |",
+      "requirement_sha256": "dd7b51093cf24b70c590ae24d638b25c60e1268a5b822faab596d515cc5dc293",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "933abbe9da00c91bb2ad47d5e3394d1199da52cb903e6958e8e8e0962d93807a"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-correction-request.ts",
+          "sha256": "a1aa5cecbffc1bdc16ac86fdfa186b205f9614686215e77d3a2883fd746d9f79"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+          "sha256": "3eb522b85e703efb9be25e436ed6c18ee940d8b135be1b53a6dde228b49dc299"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice.module.ts",
+          "sha256": "591ea78572a381a96077cd94a9f442304eb00daf1e14b830f6e5827960776d9c"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "5c57837e454b14397b2e12417505e01eae93be6ee7bc76c2196326a1392d598f"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
+          "sha256": "f75f60f9134a7aac87d545c7604b2bc128c3362ef233efeb5efd4528141f1003"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
+        },
+        {
+          "path": "apps/web/e2e/invoice-corrections.spec.ts",
+          "sha256": "e20910edabc97ad0c2e2b94e2c901e4ddeb96cca02486db1a167d9f8d6e6419f"
+        },
+        {
+          "path": "packages/i18n/src/invoice-corrections.ts",
+          "sha256": "edce8a71d65da5e7a141bfab3a9eab545b7ee00dd583d732f52ff445d95c48fb"
+        }
+      ],
+      "checks": [
+        "Exact requirements and saved PR body reviewed. audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "Current focused verification and valid reused evidence recorded once in batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        248
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 198,
+      "requirement": "| T-04.1.05.03 | Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit | M |",
+      "requirement_sha256": "7f306ab0242dc3ec8e53765e475e2c20ce78635996a72a55666fc6b9b45a68a1",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "0376a325a35c96b8e7ccbaabc3471d21cde944434e9b016335cda79668a590fb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-correction-request.ts",
+          "sha256": "a1aa5cecbffc1bdc16ac86fdfa186b205f9614686215e77d3a2883fd746d9f79"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+          "sha256": "3eb522b85e703efb9be25e436ed6c18ee940d8b135be1b53a6dde228b49dc299"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice.module.ts",
+          "sha256": "591ea78572a381a96077cd94a9f442304eb00daf1e14b830f6e5827960776d9c"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
+          "sha256": "46c140a51633590893fad98746cdad124b5aaa60a5be7e618e6b6d894c4a3133"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "5c57837e454b14397b2e12417505e01eae93be6ee7bc76c2196326a1392d598f"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+          "sha256": "0da19d6ab9fbb135b605a8293ade1083536acba03e57e4e809ea1def918f9a3f"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.tsx",
+          "sha256": "c52932e80cbbdd9becb7518bc51668b0dfdf00e4ebfc1b93bb1a98429a4c068a"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
+          "sha256": "f75f60f9134a7aac87d545c7604b2bc128c3362ef233efeb5efd4528141f1003"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
+        },
+        {
+          "path": "apps/web/e2e/invoice-corrections.spec.ts",
+          "sha256": "e20910edabc97ad0c2e2b94e2c901e4ddeb96cca02486db1a167d9f8d6e6419f"
+        },
+        {
+          "path": "packages/i18n/src/invoice-corrections.ts",
+          "sha256": "edce8a71d65da5e7a141bfab3a9eab545b7ee00dd583d732f52ff445d95c48fb"
+        }
+      ],
+      "checks": [
+        "Exact requirements and saved PR body reviewed. audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "Current focused verification and valid reused evidence recorded once in batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        249
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 199,
+      "requirement": "| T-04.1.05.04 | Customer-facing invoice details page shows original + linked corrections/replacements with explanations | M |\n\n---",
+      "requirement_sha256": "1b9207367720ce73f9160ba5342f254fb10c4d39e127f30e70c31154acff56f7",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+          "sha256": "b35850235c94fa87087efcb41ca584bce80212eb107aa09e885bbdbb8a975dbd"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "sha256": "0181469a609b2b51a141dbd3d4967ebea606ce7c40de9464e50370191e53d204"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "c036e9e805ce16877558e6d8ae377730b94faffd18261d82f82bbfcd0f3e7737"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        }
+      ],
+      "checks": [
+        "Exact requirements and saved PR body reviewed. audit/evidence/step-reviews.json#R01-invoice-corrections",
+        "Current focused verification and valid reused evidence recorded once in batch review."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        250
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
     }
   ],
   "pending_task_keys": [
@@ -12412,10 +12874,6 @@
     "02-auth-users-admin.md#T-09.12.04",
     "02-auth-users-admin.md#T-09.12.06",
     "02-auth-users-admin.md#T-10.01.02",
-    "04-invoices-wallet-contracts.md#T-04.1.05.01",
-    "04-invoices-wallet-contracts.md#T-04.1.05.02",
-    "04-invoices-wallet-contracts.md#T-04.1.05.03",
-    "04-invoices-wallet-contracts.md#T-04.1.05.04",
     "04-invoices-wallet-contracts.md#T-04.2.03.01",
     "04-invoices-wallet-contracts.md#T-04.2.03.02",
     "04-invoices-wallet-contracts.md#T-04.2.03.03",
@@ -15053,5 +15511,43 @@
       "historically_skipped": false
     }
   ],
-  "current_requirements_register": "audit/current-task-requirements.json"
+  "current_requirements_register": "audit/current-task-requirements.json",
+  "source_refresh_history": [
+    {
+      "source_revision": "7a222b112e5f6dafa41016f400c435bc5fc58aee",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.05",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.06",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+      "note": "Prior full assessments retained in this immutable Git revision; current status and limitations preserved. Avoid copying28 unchanged assessment bodies."
+    }
+  ]
 }

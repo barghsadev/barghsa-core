@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
+  "source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
   "active_step": "R01",
-  "next_action": "Read PR247–250 bodies and current correction services/controllers; resolve the two retained snapshot-consumer evidence paths. Fix confirmed gaps and review before advancing.",
+  "next_action": "Read saved payment/reversal PR bodies and current callers; preserve valid money/concurrency checks and useful duplicate-PR fixes.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -611,6 +611,10 @@
     {
       "id": "R01-invoice-deadlines-reminders",
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+    },
+    {
+      "id": "R01-invoice-corrections",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
     }
   ],
   "deferred_improvements": [
@@ -629,9 +633,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 118,
+    "acceptance_verified": 122,
     "partial": 27,
-    "pending": 177,
+    "pending": 173,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -705,13 +709,6 @@
       ]
     },
     {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
-      "changed_paths": [
-        "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-        "apps/api/src/invoice/create-adjustment-invoice.service.ts"
-      ]
-    },
-    {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "changed_paths": [
         "apps/api/src/crm/crm-list-http.integration.test.ts"
@@ -744,61 +741,138 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-invoice-corrections",
-    "name": "Invoice cancel-and-replace, post-payment adjustments and customer correction chains",
+    "id": "R01-wallet-invoice-payments-reversals",
+    "name": "Atomic wallet invoice settlement and transaction reversals",
     "status": "in_progress",
     "prs": [
-      247,
-      248,
-      249,
-      250
+      271,
+      272,
+      273,
+      274,
+      275,
+      282,
+      283,
+      284,
+      285,
+      290,
+      291,
+      292,
+      293
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.1.05.01",
-      "04-invoices-wallet-contracts.md#T-04.1.05.02",
-      "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "04-invoices-wallet-contracts.md#T-04.1.05.04"
+      "04-invoices-wallet-contracts.md#T-04.2.03.01",
+      "04-invoices-wallet-contracts.md#T-04.2.03.02",
+      "04-invoices-wallet-contracts.md#T-04.2.03.03",
+      "04-invoices-wallet-contracts.md#T-04.2.03.04",
+      "04-invoices-wallet-contracts.md#T-04.2.04.01"
     ],
     "remaining_checklist": [
-      "Exact story/task criteria read; read the four saved PR bodies before current implementation review.",
-      "Review immutable issued lines, payment/state constraints, staff authority through commit, snapshots and customer profile/agent isolation.",
-      "Resolve retained correction-consumer snapshot refresh; preserve earlier state/creation/customer evidence."
+      "Exact story/task criteria read. Read13 saved PR bodies and compare repeated implementations/deferrals.",
+      "Reuse prior wallet and chargeback authority/money evidence. Check actual payment/reversal callers, current session/agent permissions, exact remaining amounts, idempotency and transaction/audit behavior.",
+      "Fix confirmed gaps, review focused checks, then consolidate this bounded batch."
     ],
     "historical_deferrals": [
       {
-        "pr": 249,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/249",
+        "pr": 291,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/291",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.05.03"
+          "04-invoices-wallet-contracts.md#T-04.2.03.02"
         ],
         "historical_deferrals": [
-          "- Migration 0067 is expand/migrate: nullable `adjustment_kind` + generated `accounting_amount`, deterministic backfill of existing linked rows (`metadata.kind` when charge/credit, otherwise `charge`), and the kind/link CHECK added as `NOT VALID`. VALIDATE is deferred until old writers are retired.",
-          "- [ ] Customer-facing invoice details page showing the correction chain — out of scope (T-04.1.05.04).",
-          "- [ ] Applying a credit as a wallet refund/payout — out of scope (S-04.4.01).",
-          "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` — deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
+          "- [ ] Full concurrent-racer matrix (two payers, one winner) belongs to T-04.2.03.04 — existing concurrency file still passes but is not this task’s scope.",
+          "- [ ] Idempotency cache unique index + retry contract belongs to T-04.2.03.03 — existing path is unchanged, not expanded here."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       },
       {
-        "pr": 248,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/248",
+        "pr": 290,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/290",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.1.05.02"
+          "04-invoices-wallet-contracts.md#T-04.2.03.01"
         ],
         "historical_deferrals": [
-          "- [ ] Staff HTTP API / UI for this command — not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
+          "- [ ] HTTP/controller surface is not added; this task is the service method only.",
+          "- [ ] Concurrent payment integration tests remain T-04.2.03.04 (already on `main`)."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 285,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/285",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.04.01"
+        ],
+        "historical_deferrals": [
+          "- The same migration copies violating rows into `wallet_tx_reversal_check_violations` (idempotent `ON CONFLICT DO NOTHING`) and documents the audited staff reconciliation procedure. VALIDATE is deferred to a later contract-phase migration after operators reconcile those rows. Ledger history is not rewritten automatically."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 282,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/282",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.03.02"
+        ],
+        "historical_deferrals": [
+          "- [ ] Concurrent payment races / duplicate idempotency-key unique index — covered by already-merged T-04.2.03.03 / T-04.2.03.04; not re-scoped here."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 275,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/275",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.04.01"
+        ],
+        "historical_deferrals": [
+          "- [ ] Finance alert on chargeback detection — owned by T-04.2.04.03, not this task.",
+          "- [ ] Provider chargeback inbound mapping — owned by T-04.2.04.02, not this task."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 273,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/273",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.03.03"
+        ],
+        "historical_deferrals": [
+          "- TTL cleanup of stale in-flight rows is not implemented in this task; `expires_at` is written (24h) for a later worker. Successful cached responses are kept so a retry after TTL still cannot debit twice."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 272,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/272",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.03.02"
+        ],
+        "historical_deferrals": [
+          "- [ ] Concurrent payment races / duplicate idempotency-key unique index — deferred to T-04.2.03.03 / T-04.2.03.04."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 271,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/271",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.03.01"
+        ],
+        "historical_deferrals": [
+          "- [ ] T-04.2.03.02-style explicit dual `FOR UPDATE` + audit insert details beyond the current invoice lock + debit client join + state-machine audit — left for the follow-up task that owns that wording.",
+          "- [ ] Concurrent payment integration tests (T-04.2.03.04) not in this PR."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
-      "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
-      "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+      "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+      "audit/evidence/step-reviews.json#R01-invoice-corrections"
     ],
     "confirmed_defects": [],
     "pr_dispositions": [],
-    "next_action": "Read PR247–250 bodies and current correction services/controllers; resolve the two retained snapshot-consumer evidence paths. Fix confirmed gaps and review before advancing."
+    "next_action": "Read saved payment/reversal PR bodies and current callers; preserve valid money/concurrency checks and useful duplicate-PR fixes."
   },
   "open_domain_reviews": [
     {
@@ -944,6 +1018,13 @@
       "owning_batch": "R02 notification delivery",
       "remaining": "The repaired UI/API stores offset policy safely; scheduler applies it to new/rebuilt plans. A later toggle does not change existing plans, and sender does not recheck it. R02 must enforce current offset policy on already planned/queued reminders. The historical new-plans-only limit is unfinished acceptance, not a requirements waiver.",
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
+      "owner_batch": "V01 operational migration validation",
+      "criteria": "Retire old adjustment writers and validate legacy ck_invoices_adjustment_kind_matches_link after reconciliation.",
+      "status": "External operational evidence required; current new writes and backfill tested.",
+      "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections"
     }
   ]
 }

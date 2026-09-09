@@ -1,16 +1,16 @@
 # Remaining fix plan
 
-Current through product/test `6b9831c`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `0aae9d5`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 115 | 27 | 121 | 263 |
+| Tasks with merged PR evidence | 119 | 27 | 117 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 118 | 27 | 177 | 322 |
+| All claims | 122 | 27 | 173 | 322 |
 
-**204 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Eleven verified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
+**200 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Ten retained records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
@@ -40,7 +40,7 @@ Chargeback batch is consolidated at `ab17007`: **1 task verified /1 partial;2 PR
 
 Invoice-state batch is consolidated at `7dd8ede`: **6 tasks verified /6 PR reviews closed**, saved PRs150,151,152,220,221,222. Two repairs validate payment/refund states from locked stored amounts and restrict cancellation to its required source states.113 current API,35 DB and21 worker cases pass. Earlier caller/audit evidence is reused without adding overlapping counts. Production migration path and transaction/audit boundaries are reviewed. PR150 contract-FK deferral remains explicitly assigned to the separate origin-link/contracts requirement. [Consolidated review](evidence/step-reviews.json#R01-invoice-state-transitions).1730 logs indexed.
 
-Invoice creation/calculation is consolidated at `7d4c577`: **7 tasks verified, including4 preserved earlier acceptances /2 partial;8 PR reviews closed /2 open**, saved PRs223–229,231–233. Linked VAT validity and staff manual creation/API/UI are repaired.122 calculation/service cases and36 DB cases pass; earlier39 VAT/auto/replay and12 HTTP plus29 manual/replay cases are reused without adding overlaps. Four distinct production Chromium cases, quality gates and42 unchanged budgets pass. [Consolidated review](evidence/step-reviews.json#R01-invoice-creation-calculation).1795 logs indexed. One VAT evidence refresh closes; snapshot correction-consumer refresh remains with corrections, leaving11 refresh records.
+Invoice creation/calculation is consolidated at `7d4c577`: **7 tasks verified, including4 preserved earlier acceptances /2 partial;8 PR reviews closed /2 open**, saved PRs223–229,231–233. Linked VAT validity and staff manual creation/API/UI are repaired.122 calculation/service cases and36 DB cases pass; earlier39 VAT/auto/replay and12 HTTP plus29 manual/replay cases are reused without adding overlaps. Four distinct production Chromium cases, quality gates and42 unchanged budgets pass. [Consolidated review](evidence/step-reviews.json#R01-invoice-creation-calculation).1795 logs indexed. One VAT evidence refresh closes; the later correction batch closes its snapshot-consumer refresh.
 
 PR225 remains open for missing concrete submission workflows; existing order creation saves DRAFTs and must not issue invoices. PR227 remains open for missing contract/consultation target tables/FKs. Preserve the working automatic service and current snapshot implementation; no duplicate deletion is needed.
 
@@ -48,7 +48,7 @@ Invoice deadlines/reminders consolidated at `6b9831c`: **8 tasks verified /2 par
 
 PR243/245 remain open for R02: actual versioned FA/EN delivery and current invoice/deadline/channel/window/offset policy for already planned or queued reminders. The historical new-plans-only toggle behavior is unfinished acceptance, not an approved exception. Historical overrides without dirty markers require operational reconciliation; updated worker must precede or accompany API rollout. No deployment occurred.
 
-Active **R01-invoice-corrections**:4 tasks T-04.1.05.01–.04, saved PRs247–250. Exact story/task criteria read. Next read the four PR bodies, then review cancel-and-replace, adjustment amounts/credit, immutable lines, staff authority through commit, snapshots and customer profile/agent isolation. Resolve the retained two correction-consumer snapshot paths and preserve valid state/creation/customer evidence.
+Active **R01-wallet-invoice-payments-reversals**:5 tasks T-04.2.03.01–.04 and T-04.2.04.01, saved PRs271–275,282–285,290–293. Exact story/task criteria read. Next read13 saved PR bodies; reuse wallet/chargeback money and authority evidence, compare useful repeated implementations, then review actual payment/reversal callers and repair confirmed gaps.
 
 ## Execution order
 
@@ -61,12 +61,14 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 | R03 / F19, F20 | Localized application errors; correlation through required outbox/worker consumers; remaining accessibility, RTL, themes and failure states. Check the recorded dark-theme terms error banner and shared button/link/alert contrast consumers. | Required screens and consumers pass relevant checks. Scanner warnings require a confirmed defect before becoming work. |
 | R04 / F19 | Eager customer purchase routes within unchanged complete-route budgets. Earlier over-budget attempts were reverted. | Production build, required loading and affected payload budgets pass. Retain Vite SPA. |
 | R05 / F19 | Strict dependency checks in API/web/worker/DB; geoip-country maintenance/data-update disposition. Last strict DB run found 146 declaration errors, 144 Drizzle and 2 Vite. | Compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation pass. No broad suppression or weaker requirement. |
-| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 11 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
+| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 10 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
 | R06 / F19 | Three measured coverage gaps. | Meaningful missing-behavior tests meet unchanged critical floors of 90% lines / 85% branches and general floors of 80% / 75%. |
 | V02 / affected groups | One final regression checkpoint after local repairs. | Required unit/integration/browser/coverage/types/lint/OpenAPI/migrations/snapshots/budgets/loop/image checks pass at recorded revisions. |
 | B01 / F22 | Dependency-ordered handoff of unmet skipped work. | Exact keys, criteria and prerequisites; preserve verified and incidental implementation. Build new features after repair closure. |
 
 Audit cleanup and inventory reconciliation are complete. R01 is active; eight phases are queued. Their sizes differ, so phase counts are not an effort estimate. The original 23 groups and their remaining requirements remain in progress.json.
+
+Invoice corrections consolidated at `0aae9d5`: **4 tasks verified /4 PR reviews closed**, saved PRs247–250. Paid Overdue correction, missing staff API/UI, safe retries and customer read authority are repaired.54 correction service/HTTP,30 customer read/assembly,5 deadline compatibility and40 DB cases support the batch; counts overlap earlier runs.12 current production Chromium cases,3 host cases and42 unchanged budgets pass. [Consolidated review](evidence/step-reviews.json#R01-invoice-corrections) preserves failed logs and valid evidence reuse; one snapshot refresh closes,10 remain. Credit wallet payout belongs to S-04.4.01; old-writer retirement and legacy CHECK validation remain V01 operational work. No external execution claimed. Active next batch: wallet invoice payments and reversals,13 saved PRs for5 tasks.
 
 ## Feature-batch rules
 
@@ -94,7 +96,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 
 - Sessions and permissions: finish activation and remaining manual-verification acceptance; profile/onboarding, contact/address boundaries and current commercial-order verification are consolidated; link the remaining cross-domain agent-role checks. Local agent/invitation/ownership acceptance is recorded above. Reuse [session caller evidence](session-caller-review.md) and [route/CSRF review](security-route-review.md). Guard registration alone does not prove handler, transaction or UI behavior.
 - CSRF boundaries: pre-login tokens for public JSON authentication are implemented and verified at f1b879b. Explicitly disposition refresh, signed-callback requirements and CSP telemetry. Browser payment return GET and explicit session/CSRF confirmation are repaired in the online batch. Current inventory has 347 routes, 205 unsafe-method registrations and 122 guarded step-up routes.
-- Finance and tickets: invoice corrections and their snapshots, remaining refund/order/contract authority, and customer/staff ticket privacy, attachments, assignment and transitions. Wallet, receipt, online-payment and chargeback repairs are consolidated above; preserve their evidence and the pending signed-webhook decision. Keep separate workflows in their assigned feature batches.
+- Finance and tickets: wallet invoice payments/reversals, remaining refund/order/contract authority, and customer/staff ticket privacy, attachments, assignment and transitions. Wallet, receipt, online-payment and chargeback repairs are consolidated above; preserve their evidence and the pending signed-webhook decision. Keep separate workflows in their assigned feature batches.
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
@@ -106,13 +108,13 @@ For all 27 partial records, use the exact limitations in [acceptance](acceptance
 
 | Current mapping | PRs |
 | --- | ---: |
-| At least one unresolved mapped task | 163 |
-| Only recorded verified tasks | 134 |
+| At least one unresolved mapped task | 159 |
+| Only recorded verified tasks | 138 |
 | No current task mapping | 4 |
 
 These are mapping counts, not completed PR-review counts. Even a PR mapped only to verified tasks may have an unresolved deferral or stale source evidence.
 
-Review the combined implementation once per qualified task, then associate every contributing PR. The 148 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 46, core business 4, finance 16, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review the combined implementation once per qualified task, then associate every contributing PR. The 144 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 46, core business 4, finance 12, notifications 29 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
 For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Twelve statements in PR92/106/115/129/132/218/252/254 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
 
@@ -131,7 +133,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Deployment, operations and CI, T-05.* | 20 |
 | Total | 55 |
 
-Task dependencies override batch order. These 55 overlap the 204 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
+Task dependencies override batch order. These 55 overlap the 200 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 

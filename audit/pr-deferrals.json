@@ -433,7 +433,31 @@
       "- [ ] Applying a credit as a wallet refund/payout — out of scope (S-04.4.01).",
       "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` — deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned; separate payout and operational validation remain explicitly assigned.",
+    "reviewed_source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "external_evidence_required",
+        "evidence": "Current backfill and new-write CHECK verified. Old-writer retirement and legacy CHECK validation retained in V01; no production execution claimed. audit/evidence/step-reviews.json#R01-invoice-corrections"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Customer original/correction chain and explanations verified with current profile/session authority. audit/evidence/step-reviews.json#R01-invoice-corrections"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "separate_future_dependency",
+        "evidence": "Actual wallet payout belongs to S-04.4.01; credit note is not a wallet transfer. audit/evidence/step-reviews.json#R01-invoice-corrections"
+      },
+      {
+        "statement_index": 3,
+        "disposition": "external_evidence_required",
+        "evidence": "Contract-phase CHECK validation remains V01 after old writers retire. audit/evidence/step-reviews.json#R01-invoice-corrections"
+      }
+    ]
   },
   {
     "pr": 248,
@@ -444,7 +468,16 @@
     "historical_deferrals": [
       "- [ ] Staff HTTP API / UI for this command — not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements dispositioned; separate payout and operational validation remain explicitly assigned.",
+    "reviewed_source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
+    "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Staff context/command API and replacement/adjustment form implemented and verified. audit/evidence/step-reviews.json#R01-invoice-corrections"
+      }
+    ]
   },
   {
     "pr": 241,
