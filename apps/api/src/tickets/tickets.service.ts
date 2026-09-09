@@ -872,14 +872,17 @@ export class TicketsService {
       // Lock the account before the ticket, matching staff account changes.
       const account = (
         await client.query(
-          `SELECT u.is_admin, u.disabled_at, u.activation_token,
-        ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
-          WHERE ur.user_id=u.user_id) AS role_permissions
+          `SELECT u.is_admin, u.disabled_at, u.activation_token
         FROM users u WHERE u.user_id=$1 FOR NO KEY UPDATE OF u`,
           [assigneeUserId]
         )
       ).rows[0];
-      const permissions = resolveStaffPermissions(account?.role_permissions);
+      const roles = await client.query(
+        `SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
+         WHERE ur.user_id=$1 ORDER BY r.role_id FOR SHARE OF ur,r`,
+        [assigneeUserId]
+      );
+      const permissions = resolveStaffPermissions(roles.rows.map((row) => row.permissions));
       if (
         !account ||
         account.disabled_at ||

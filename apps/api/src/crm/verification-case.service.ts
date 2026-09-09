@@ -123,6 +123,15 @@ export class VerificationCaseService {
         await client.query('ROLLBACK');
         return null;
       }
+      const id = uuidv7();
+      const assignment = await this.assignmentService.choose(
+        client,
+        'verification_case',
+        id,
+        actorUserId,
+        ['identity', profile.profile_type === 'LEGAL' ? 'legal' : 'individual'],
+        [actorUserId]
+      );
       await requireStaffMutationPermission(client, actorUserId, 'crm:edit-identity');
       const allowed =
         profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL;
@@ -147,15 +156,7 @@ export class VerificationCaseService {
         actorUserId,
         profileId
       );
-      const id = uuidv7(),
-        now = new Date().toISOString();
-      const assignment = await this.assignmentService.choose(
-        client,
-        'verification_case',
-        id,
-        actorUserId,
-        ['identity', profile.profile_type === 'LEGAL' ? 'legal' : 'individual']
-      );
+      const now = new Date().toISOString();
       await client.query(
         `INSERT INTO verification_cases(id,profile_id,field_name,current_value,requested_value,evidence_urls,reason,status,created_by,created_at,updated_at,assigned_to,assigned_team_id)
         VALUES ($1,$2,$3,$4,$5,$6,$7,'Open',$8,$9,$9,$10,$11)`,

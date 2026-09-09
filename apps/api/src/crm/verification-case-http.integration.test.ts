@@ -103,6 +103,87 @@ async function review(id: string, decision: string, user = 'reviewer') {
   });
 }
 
+it('creates an identity case alongside ticket assignment to its creator without deadlocking', async () => {
+  const target = await profile(),
+    teamId = randomUUID(),
+    ticketId = randomUUID();
+  await http.pool.query("INSERT INTO staff_teams(id,name) VALUES ($1,'Correction support')", [
+    teamId,
+  ]);
+  for (const user of ['creator', 'reviewer'])
+    await http.pool.query('INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,$2)', [
+      teamId,
+      user,
+    ]);
+  await http.pool.query(
+    "INSERT INTO tickets(id,user_id,subject,body) VALUES ($1,'creator','Support','Help')",
+    [ticketId]
+  );
+  await http.pool.query(
+    "INSERT INTO app_config(key,value) VALUES ('admin.staff_assignment_rules',$1::jsonb)",
+    [JSON.stringify({ verification_case: { teamId, strategy: 'round_robin' } })]
+  );
+  const blocker = await http.pool.connect();
+  let creation: Promise<Response> | undefined, assignment: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+      'admin.staff_assignment_rules',
+    ]);
+    const blockerPid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+    creation = create(target);
+    let creatorPid: number | undefined;
+    await expect
+      .poll(
+        async () => {
+          creatorPid = (
+            await http.pool.query(
+              'SELECT pid FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+              [blockerPid]
+            )
+          ).rows[0]?.pid;
+          return creatorPid;
+        },
+        { timeout: 5000, interval: 20 }
+      )
+      .toBeDefined();
+    let assigned = false;
+    assignment = fetch(`${http.base}/api/staff/tickets/${ticketId}/assign`, {
+      method: 'PUT',
+      headers: headers.reviewer!,
+      body: JSON.stringify({ assigneeId: 'creator', teamId }),
+    }).finally(() => {
+      assigned = true;
+    });
+    await expect
+      .poll(
+        async () =>
+          assigned ||
+          (
+            await http.pool.query(
+              'SELECT 1 FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+              [creatorPid]
+            )
+          ).rows.length > 0,
+        { timeout: 5000, interval: 20 }
+      )
+      .toBe(true);
+    await blocker.query('COMMIT');
+    const [created, reassigned] = await Promise.all([creation, assignment]);
+    expect([created.status, reassigned.status]).toEqual([201, 200]);
+    const result = (await created.json()) as { id: string };
+    expect(
+      (await http.pool.query('SELECT assigned_to FROM verification_cases WHERE id=$1', [result.id]))
+        .rows[0]
+    ).toMatchObject({ assigned_to: 'reviewer' });
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await Promise.allSettled([creation, assignment].filter(Boolean));
+    await http.pool.query("DELETE FROM app_config WHERE key='admin.staff_assignment_rules'");
+  }
+});
+
 for (const action of ['create', 'approve'] as const) {
   it(`rejects identity ${action} after the actor loses permission during a profile lock wait`, async () => {
     const target = await profile();

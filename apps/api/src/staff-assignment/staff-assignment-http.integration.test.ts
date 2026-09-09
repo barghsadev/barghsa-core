@@ -134,6 +134,100 @@ it('allows staff ticket creation alongside manual assignment to that staff membe
   }
 });
 
+it.each(['automatic', 'manual'] as const)(
+  'uses current candidate permissions during role revocation (%s)',
+  async (mode) => {
+    const restrictedTeam = randomUUID(),
+      roleId = randomUUID();
+    await http.pool.query('INSERT INTO staff_teams(id,name) VALUES ($1,$2)', [
+      restrictedTeam,
+      `Role-bound support ${mode}`,
+    ]);
+    await http.pool.query(
+      "INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,'ineligible')",
+      [restrictedTeam]
+    );
+    await http.pool.query(
+      `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,'Support','["tickets:write"]')`,
+      [roleId]
+    );
+    await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ('ineligible',$1)", [
+      roleId,
+    ]);
+    await rule('round_robin', restrictedTeam);
+    const existing = (await (await create('Manual assignment target')).json()) as { id: string };
+    const session = randomUUID(),
+      csrf = randomUUID();
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,'alpha',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      [session, csrf, randomUUID()]
+    );
+    await http.pool.query(
+      "UPDATE tickets SET assigned_to=NULL,assigned_team_id=NULL,status='open' WHERE id=$1",
+      [existing.id]
+    );
+    const blocker = await http.pool.connect();
+    let response: Promise<Response> | undefined,
+      finished = false;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query("UPDATE staff_roles SET permissions='[]' WHERE role_id=$1", [roleId]);
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      response = (
+        mode === 'automatic'
+          ? create('Revoked candidate')
+          : fetch(`${http.base}/api/staff/tickets/${existing.id}/assign`, {
+              method: 'PUT',
+              headers: {
+                Cookie: `barghsa_session=${session}`,
+                'X-CSRF-Token': csrf,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ assigneeId: 'ineligible', teamId: restrictedTeam }),
+            })
+      ).finally(() => {
+        finished = true;
+      });
+      await expect
+        .poll(
+          async () =>
+            finished ||
+            (
+              await http.pool.query(
+                'SELECT 1 FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+                [pid]
+              )
+            ).rows.length > 0,
+          { timeout: 5000, interval: 20 }
+        )
+        .toBe(true);
+      await blocker.query('COMMIT');
+      const result = await response;
+      if (mode === 'automatic') {
+        expect(result.status).toBe(201);
+        expect(await result.json()).toMatchObject({ assignedTo: null, status: 'open' });
+      } else {
+        expect(result.status).toBe(400);
+        expect(
+          (
+            await http.pool.query('SELECT assigned_to,status FROM tickets WHERE id=$1', [
+              existing.id,
+            ])
+          ).rows[0]
+        ).toMatchObject({ assigned_to: null, status: 'open' });
+      }
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await response;
+      await http.pool.query("DELETE FROM user_roles WHERE user_id='ineligible' AND role_id=$1", [
+        roleId,
+      ]);
+    }
+  }
+);
+
 it('keeps work manual by default and assigns eight concurrent new tickets evenly without selecting ineligible members', async () => {
   const manual = await create(),
     old = (await manual.json()) as { id: string; assignedTo: string | null; status: string };

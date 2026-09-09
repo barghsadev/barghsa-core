@@ -71,8 +71,7 @@ export class StaffAssignmentService {
     }
     const rows = (
       await client.query(
-        `SELECT u.user_id,u.is_admin,m.team_id,
-       ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id) AS role_permissions
+        `SELECT u.user_id,u.is_admin,m.team_id
        FROM users u JOIN staff_team_members m ON m.user_id=u.user_id
        WHERE m.team_id=ANY($1::uuid[]) AND u.disabled_at IS NULL AND u.activation_token IS NULL
          AND ($2::text IS NULL OR u.user_id<>$2)
@@ -80,6 +79,17 @@ export class StaffAssignmentService {
         [teams.map((team) => team.id), workType === 'verification_case' ? actorId : null]
       )
     ).rows;
+    const roles = await client.query(
+      `SELECT ur.user_id,r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
+       WHERE ur.user_id=ANY($1::text[]) ORDER BY r.role_id,ur.user_id FOR SHARE OF ur,r`,
+      [[...new Set(rows.map((row) => row.user_id))]]
+    );
+    const permissionsByUser = new Map<string, unknown[]>();
+    for (const role of roles.rows) {
+      const permissions = permissionsByUser.get(role.user_id) ?? [];
+      permissions.push(role.permissions);
+      permissionsByUser.set(role.user_id, permissions);
+    }
     for (const [priorityIndex, rule] of choices.entries()) {
       const team = teams.find((candidate) => candidate.id === rule.teamId);
       if (!team) continue;
@@ -95,7 +105,7 @@ export class StaffAssignmentService {
       const candidates = rows
         .filter((row) => row.team_id === rule.teamId)
         .filter((row) => {
-          const permissions = resolveStaffPermissions(row.role_permissions);
+          const permissions = resolveStaffPermissions(permissionsByUser.get(row.user_id));
           return (
             row.is_admin ||
             permissions.includes('*') ||
