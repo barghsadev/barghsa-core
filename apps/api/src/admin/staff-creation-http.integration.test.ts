@@ -204,3 +204,33 @@ it.each(['step-up expiry', 'session expiry', 'audit failure'] as const)(
   },
   15000
 );
+
+it.each(['email', 'mobile'] as const)(
+  'staff creation initializes available notification defaults for %s',
+  async (kind) => {
+    const current = await actor();
+    const input = staff();
+    input.username = kind === 'email' ? `prefs-${randomUUID()}@example.test` : '+989120004444';
+    const response = await create(current, input);
+    expect(response.status, await response.clone().text()).toBe(201);
+    const body = (await response.json()) as { userId: string };
+    const row = (
+      await http.pool.query(
+        'SELECT email,mobile,notification_preferences FROM users WHERE user_id=$1',
+        [body.userId]
+      )
+    ).rows[0];
+    expect(row).toEqual({
+      email: kind === 'email' ? input.username : null,
+      mobile: kind === 'mobile' ? input.username : null,
+      notification_preferences: kind === 'email' ? 'IN_APP,EMAIL' : 'IN_APP,SMS',
+    });
+    expect(
+      (
+        await http.pool.query('SELECT notification_preferences FROM users WHERE user_id=$1', [
+          current.userId,
+        ])
+      ).rows[0].notification_preferences
+    ).toBe('IN_APP');
+  }
+);

@@ -577,8 +577,12 @@ export class AdminService {
       // ── 3. Create user record ──────────────────────────────────────
       const userResult = await client.query(
         `INSERT INTO users (user_id, username, password_hash, is_admin, is_staff, must_change_password,
-                            activation_token, activation_token_expires_at, created_at, updated_at)
-         VALUES ($1, $2, $3, false, true, $4, $5, $6, $7, $8)
+                            activation_token, activation_token_expires_at, created_at, updated_at,
+                            email, mobile, notification_preferences)
+         VALUES ($1, $2, $3, false, true, $4, $5, $6, $7, $8,
+                 CASE WHEN $2 LIKE '%@%' THEN $2 ELSE NULL END,
+                 CASE WHEN $2 LIKE '%@%' THEN NULL ELSE $2 END,
+                 CASE WHEN $2 LIKE '%@%' THEN 'IN_APP,EMAIL' ELSE 'IN_APP,SMS' END)
          RETURNING user_id, username`,
         [
           userId,

@@ -38,8 +38,7 @@ async function post(path: string, body: unknown, headers: Record<string, string>
   });
 }
 
-async function pendingRegistration() {
-  const username = `atomic-${randomUUID()}@example.test`;
+async function pendingRegistration(username = `atomic-${randomUUID()}@example.test`) {
   const started = await post('auth/register', { username, password, tosVersionId: oldTerms });
   const body = (await started.json()) as { challengeId: string };
   expect(started.status, JSON.stringify(body) + fixture.logs()).toBe(200);
@@ -439,3 +438,52 @@ it('keeps invitations pending after registration until the user explicitly accep
       .rows[0].status
   ).toBe('Accepted');
 }, 15000);
+
+it.each(['email', 'mobile'] as const)(
+  'registration initializes available notification defaults for %s',
+  async (kind) => {
+    const username = kind === 'email' ? `prefs-${randomUUID()}@example.test` : '+989120003333';
+    const pending = await pendingRegistration(username);
+    const response = await post('auth/register/verify', pending.body);
+    expect(response.status, await response.clone().text()).toBe(200);
+    const body = (await response.json()) as { userId: string; csrfToken: string };
+    const headers = {
+      Cookie: response.headers
+        .getSetCookie()
+        .map((value) => value.split(';')[0])
+        .join('; '),
+      'X-CSRF-Token': body.csrfToken,
+      'Content-Type': 'application/json',
+    };
+    const available = kind === 'email' ? 'EMAIL' : 'SMS';
+    const preferences = () => fetch(`${fixture.base}/api/user/settings/notifications`, { headers });
+    const initial = await preferences();
+    expect(initial.status).toBe(200);
+    expect(await initial.json()).toEqual({ channels: ['IN_APP', available] });
+    const user = await fetch(`${fixture.base}/api/auth/user`, { headers });
+    expect(await user.json()).toMatchObject({
+      [kind]: username,
+      [kind + 'Verified']: true,
+      [kind === 'email' ? 'mobile' : 'email']: null,
+    });
+    const save = (channels: string[]) =>
+      fetch(`${fixture.base}/api/user/settings/notifications`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ channels }),
+      });
+    expect((await save(['IN_APP'])).status).toBe(200);
+    expect(await (await preferences()).json()).toEqual({ channels: ['IN_APP'] });
+    expect((await save([available])).status).toBe(200);
+    expect((await save([kind === 'email' ? 'SMS' : 'EMAIL'])).status).toBe(400);
+    expect(
+      (
+        await fixture.pool.query('SELECT notification_preferences FROM users WHERE user_id=$1', [
+          body.userId,
+        ])
+      ).rows[0].notification_preferences
+        .split(',')
+        .sort()
+    ).toEqual(['IN_APP', available].sort());
+  }
+);

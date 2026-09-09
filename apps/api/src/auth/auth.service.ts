@@ -1017,8 +1017,12 @@ export class AuthService {
       // Create user record
       await client.query(
         `INSERT INTO users (user_id, username, password_hash, locale,
-                            last_accepted_tos_version, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $6)`,
+                            last_accepted_tos_version, created_at, updated_at,
+                            email, mobile, notification_preferences)
+         VALUES ($1, $2, $3, $4, $5, $6, $6,
+                 CASE WHEN $2 LIKE '%@%' THEN $2 ELSE NULL END,
+                 CASE WHEN $2 LIKE '%@%' THEN NULL ELSE $2 END,
+                 CASE WHEN $2 LIKE '%@%' THEN 'IN_APP,EMAIL' ELSE 'IN_APP,SMS' END)`,
         [userId, row.destination, row.password_hash, 'fa', row.tos_version_id, now]
       );
 
