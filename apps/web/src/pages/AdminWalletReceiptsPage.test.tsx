@@ -438,6 +438,78 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     expect(container.textContent).toContain('the excess was credited to the wallet');
   });
 
+  it.each(['confirm', 'reject'] as const)(
+    'keeps a delayed %s step-up bound to the receipt originally reviewed',
+    async (decision) => {
+      let release!: (response: Response) => void;
+      const delayed = new Promise<Response>((resolve) => {
+        release = resolve;
+      });
+      const targets: string[] = [];
+      vi.mocked(fetch).mockImplementation(async (input, init) => {
+        const url = String(input);
+        if (init?.method === 'POST' && url.endsWith(`/${decision}`)) {
+          targets.push(url);
+          if (targets.length === 1) return delayed;
+        }
+        if (url.endsWith('/api/auth/step-up')) {
+          return new Response(JSON.stringify({ message: 'ok' }));
+        }
+        return defaultFetch(input, init);
+      });
+      await act(async () => {
+        root.render(<AdminWalletReceiptsPage />);
+      });
+      await flush();
+      if (decision === 'reject') {
+        const reason = container.querySelector('textarea')!;
+        await act(async () => {
+          Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+            reason,
+            'Receipt does not match'
+          );
+          reason.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      }
+      await act(async () => {
+        (
+          container.querySelector(`[data-testid="wallet-receipt-${decision}"]`) as HTMLButtonElement
+        ).click();
+      });
+      await act(async () => {
+        Array.from(container.querySelectorAll('nav button'))
+          .find((button) => button.textContent?.includes('TRK-bbbb'))!
+          .dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+      await flush();
+      await act(async () => {
+        release(stepUpForbidden());
+      });
+      await flush();
+      const password = container.querySelector('[data-testid="wallet-receipt-step-up-password"]')!;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+          password,
+          'secret'
+        );
+        password.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      await act(async () => {
+        (
+          container.querySelector(
+            '[data-testid="wallet-receipt-step-up-submit"]'
+          ) as HTMLButtonElement
+        ).click();
+      });
+      await flush();
+      expect(targets).toEqual([
+        `/api/admin/wallet/bank-receipt-top-ups/${TX_A}/${decision}`,
+        `/api/admin/wallet/bank-receipt-top-ups/${TX_A}/${decision}`,
+      ]);
+      expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+    }
+  );
+
   it('opens a step-up challenge on confirm, then retries after verification', async () => {
     let confirmCalls = 0;
     const fetchMock = vi.mocked(fetch);

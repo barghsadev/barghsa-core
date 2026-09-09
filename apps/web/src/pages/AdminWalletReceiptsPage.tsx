@@ -83,8 +83,9 @@ interface AllocationPreview {
   isOverpayment: boolean;
 }
 
-type PendingAction =
-  { kind: 'confirm'; invoiceId: string | null } | { kind: 'reject'; reason: string };
+type PendingAction = { transactionId: string } & (
+  { kind: 'confirm'; invoiceId: string | null } | { kind: 'reject'; reason: string }
+);
 
 function readErrorCode(data: unknown): string | null {
   if (!data || typeof data !== 'object') return null;
@@ -347,11 +348,10 @@ export default function AdminWalletReceiptsPage() {
   }, [stepUpOpen, selectedId, status]);
 
   async function postDecision(action: PendingAction): Promise<'step_up' | 'ok' | 'error'> {
-    if (!selected) return 'error';
     const path =
       action.kind === 'confirm'
-        ? `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/confirm`
-        : `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/reject`;
+        ? `/api/admin/wallet/bank-receipt-top-ups/${action.transactionId}/confirm`
+        : `/api/admin/wallet/bank-receipt-top-ups/${action.transactionId}/reject`;
     const res = await fetch(path, {
       method: 'POST',
       headers: withCsrf({ 'Content-Type': 'application/json' }),
@@ -418,6 +418,7 @@ export default function AdminWalletReceiptsPage() {
   }
 
   function handleConfirm() {
+    if (!selected || acting || stepUpOpen) return;
     const trimmed = invoiceId.trim();
     if (trimmed && !isTransactionUuid(trimmed)) {
       setReasonInvalid(false);
@@ -436,6 +437,7 @@ export default function AdminWalletReceiptsPage() {
     setReasonInvalid(false);
     setClientIssue(null);
     void runAction({
+      transactionId: selected.transactionId,
       kind: 'confirm',
       invoiceId: isTransactionUuid(trimmed) ? trimmed : null,
     });
@@ -443,6 +445,7 @@ export default function AdminWalletReceiptsPage() {
 
   function handleReject(e: FormEvent) {
     e.preventDefault();
+    if (!selected || acting || stepUpOpen) return;
     const parsed = parseBankReceiptRejectReason({ reason });
     if (!parsed.ok) {
       setReasonInvalid(true);
@@ -451,7 +454,11 @@ export default function AdminWalletReceiptsPage() {
     }
     setReasonInvalid(false);
     setClientIssue(null);
-    void runAction({ kind: 'reject', reason: parsed.reason });
+    void runAction({
+      transactionId: selected.transactionId,
+      kind: 'reject',
+      reason: parsed.reason,
+    });
   }
 
   function cancelStepUp() {
@@ -559,6 +566,7 @@ export default function AdminWalletReceiptsPage() {
                 <button
                   key={row.transactionId}
                   type="button"
+                  disabled={acting || stepUpOpen}
                   onClick={() => {
                     setSelectedId(row.transactionId);
                     setStatus(null);
