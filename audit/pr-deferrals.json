@@ -1183,7 +1183,16 @@
     "historical_deferrals": [
       "- [ ] Full admin UI provider-selector/activation UI covers the remaining XL slice (follow-up)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals satisfied locally; separate remaining task criteria are recorded in the linked review.",
+    "reviewed_source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+    "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "SMTP/Resend drafts retain saved nonsecret transport settings and expose SMTP timeouts while secrets remain write-only. Both test controls show the explicit staff recipient, preserve it through password confirmation and rely on current verified-contact enforcement. Successful edits clear stale test outcomes and require renewed server proof. Version activation/rollback, current permission/session/CSRF, encrypted secrets and OTP recovery gates retain verified backend evidence. Full provider UI deferral closes. audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      }
+    ]
   },
   {
     "pr": 186,
@@ -1358,7 +1367,21 @@
       "- [ ] Frontend editor UI (next tick)",
       "- [ ] Test send / preview functionality (next tick)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals satisfied locally; separate remaining task criteria are recorded in the linked review.",
+    "reviewed_source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+    "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Template authoring supports all event keys with existing/legacy suggestions, required body drag insertion and keyboard/caret insertion, FA/EN drafts, restricted/escaped variables, version publication, actual branded previews and tests to current verified staff contacts. Earlier template authority, engine, delivery and branding repairs remain valid; current authoring/recovery/browser checks close both saved frontend/preview deferrals. audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Template authoring supports all event keys with existing/legacy suggestions, required body drag insertion and keyboard/caret insertion, FA/EN drafts, restricted/escaped variables, version publication, actual branded previews and tests to current verified staff contacts. Earlier template authority, engine, delivery and branding repairs remain valid; current authoring/recovery/browser checks close both saved frontend/preview deferrals. audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      }
+    ]
   },
   {
     "pr": 156,
@@ -1369,7 +1392,16 @@
     "historical_deferrals": [
       "- [ ] Email/notification template branding — follow-up (different PR / modules)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals satisfied locally; separate remaining task criteria are recorded in the linked review.",
+    "reviewed_source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+    "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Email/auth notification branding and actual admin previews are implemented and verified by the linked R02 repairs. Full theme/contrast and instant dashboard consistency across public/auth/admin touchpoints remains assigned to R03; the existing partial task stays partial. audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      }
+    ]
   },
   {
     "pr": 154,

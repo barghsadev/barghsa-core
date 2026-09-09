@@ -1,24 +1,26 @@
 # Remaining fix plan
 
-Current through product/test `58a8df90`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `c6588610`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 131 | 31 | 101 | 263 |
+| Tasks with merged PR evidence | 133 | 31 | 99 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 134 | 31 | 157 | 322 |
+| All claims | 136 | 31 | 155 | 322 |
 
-**188 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**186 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Active R02 batch: notification delivery foundation, PR113/156/161/192/193/194. All six requirements, saved bodies and deferrals read. Provider authority repaired at2b669c93;173 distinct focused cases and types/lint/format pass. Template authority repaired atd1b156ac;300 distinct focused API cases and types/lint/format pass. Provider self-tests repaired at01f4a856;204 distinct focused cases and backend gates pass. Activation proof and all-mapping/rollback tests repaired at83a27ac8;330 distinct focused checks and backend/migration gates pass. Active email/auth branding and retry snapshots repaired at31585375;196 distinct focused checks and backend gates pass. Branded admin previews repaired at5dade2d6;179 unit/integration cases,23 browser checks and42 unchanged size budgets pass. Recipient delivery choices/current verified contacts repaired atdeeb133b;56 distinct focused worker checks and worker quality gates pass. T-03.03.05 verified; saved PR113 review closes locally, reusing unchanged R01 settings evidence. Daytime HH:MM/current session-step-up save repaired at246abe5a;168 focused checks,6 browser cases and42 unchanged budgets pass. T-09.06.03 and both PR194 historical step-up deferrals close locally. SMS configuration UI and provider/template verified-contact proof are repaired at58a8df90;407 focused cases,21 distinct browser checks and42 unchanged budgets pass. T-09.06.02 and both PR193 self-send/UI deferrals close locally.2346 logs indexed. Next: preserve saved nonsecret email draft settings, support all template events and drag-to-insert variables. Deploy minute-aware workers before enabling fractional-hour settings. Migration0126 precedes API rollout; preserve existing active providers. Cross-domain reconciliation atd594990 links completed R01 callers and repairs wallet read/create authorization and history precision;176 API checks and relevant backend gates pass. PR92/134 remain open for R02/future consumers. [Cross-domain review](evidence/step-reviews.json#R01-cross-domain-authorization).
+Active R02 batch: **notification outbox/delivery and dead-letter triage**, saved PR163–170 and203. All nine exact requirements, saved bodies and deferrals are read. Review transaction/lease/retry/idempotency paths, same-transaction in-app writes, per-attempt safe logs, staff triage authority/UI, metrics and accumulation alerts. The historical PR170 reinterpretation of “same transaction” remains unverified. Keep remaining inbox/classification and event-specific reminder work in subsequent R02 batches. Exact membership and checkpoints are in progress.json.
 
-Verification batch consolidated at709d28b:3 task acceptances partial/3 saved PR reviews open. Mode Draft→Active at1858caf passes90 backend/18 browser cases. Named actionable notices/current-owner dashboard/inbox atd74c8f8 pass68 backend/6 browser cases. Circuit recovery at709d28b passes29 distinct provider cases across focused runs. API/web types, lint/format, build, OpenAPI and42 unchanged budgets pass.2154 logs indexed;22 further current bindings refreshed. [Review](evidence/step-reviews.json#R01-verification-policy). Current saved PR totals111 closed/22 open/168 unreviewed.
+Notification delivery foundation completes locally atc6588610: **5 PR reviews closed /1 open**, PR113/156/161/192/193/194. Email drafts preserve saved settings and expose timeouts, tests show the chosen verified recipient, and edits clear stale test outcomes. Template authoring accepts new event keys and native drag/keyboard insertion. T-09.04.01/T-09.06.01 and PR161/192 close; PR156 remains partial/open for R03 themes with its branding deferral satisfied.38 distinct browser cases,50 i18n cases and42 unchanged budgets pass; applicable types/lint/format/build pass. Backend behavior is unchanged this step; prior authority/verification/activation/branding evidence is reused.2373 logs indexed;3 immediate-base bindings refreshed and38 older records retained. [Foundation closure](evidence/step-reviews.json#R02-provider-template-authoring). Saved PR totals **113 closed /23 open /165 unreviewed**. Preserve migrations0123–0126 and coordinated minute-window/auth-branding worker rollout requirements; no operational execution claimed.
+
+Verification batch consolidated at709d28b:3 task acceptances partial/3 saved PR reviews open. Mode Draft→Active at1858caf passes90 backend/18 browser cases. Named actionable notices/current-owner dashboard/inbox atd74c8f8 pass68 backend/6 browser cases. Circuit recovery at709d28b passes29 distinct provider cases across focused runs. API/web types, lint/format, build, OpenAPI and42 unchanged budgets pass.2154 logs indexed;22 further current bindings refreshed. [Review](evidence/step-reviews.json#R01-verification-policy). Current saved PR totals113 closed/23 open/165 unreviewed.
 
 Real-provider API activation/integration remains an external prerequisite; never simulate approval or ask again. Per-user delivery choices are repaired atdeeb133b. Event-specific notification/reminder delivery acceptance remainsR02. No partial criterion counts as passed. The two wallet-controller mock failures from the interrupted, accidentally unfiltered API run are repaired atd594990. That run remains invalid broad-regression evidence; full V02 still required.
 
@@ -145,7 +147,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Deployment, operations and CI, T-05.* | 20 |
 | Total | 55 |
 
-Task dependencies override batch order. These55 overlap the188 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
+Task dependencies override batch order. These55 overlap the186 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 

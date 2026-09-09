@@ -893,16 +893,17 @@
       ],
       "checks": [
         "Seven provider regression tests pass; all four initial cases failed before repair",
-        "Real activation refreshes title and component colors immediately in both languages"
+        "Real activation refreshes title and component colors immediately in both languages",
+        "Email/notification branding and actual previews are now verified through R02-email-branding-delivery, R02-branded-admin-previews and subsequent contact/delivery repairs. audit/evidence/step-reviews.json#R02-provider-template-authoring"
       ],
       "limitations": [
-        "Email and notification renderers do not yet read active branding.",
-        "Full light/dark and contrast acceptance across all pages is not certified."
+        "Full light/dark, contrast and dashboard consistency across all touchpoints remains R03. Earlier auth/public evidence bindings are retained and are not renewed by this frontend authoring checkpoint."
       ],
       "merged_prs": [
         156
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
@@ -14077,7 +14078,7 @@
         },
         {
           "path": "packages/i18n/src/admin-ui.ts",
-          "sha256": "f0c9e7a899917980a40c2c5e98210ee0f55f62c601f340e6db16ee40974af65f"
+          "sha256": "9a3e0293928226b2b2737c8be80e7abe823b6f1a9e81fee5808460384601b69d"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -14101,7 +14102,8 @@
         "audit/evidence/step-reviews.json#R01-staff-role-catalogue",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/src/admin/admin.controller.ts. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Narrow source binding refresh: provider request/helper, SMS navigation/copy or verified template-contact query changed; unrelated methods remain unchanged. audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+        "Narrow source binding refresh: provider request/helper, SMS navigation/copy or verified template-contact query changed; unrelated methods remain unchanged. audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
+        "Narrow authoring/copy or type-only source refresh with scoped browser evidence; unchanged SMS/runtime behavior reused. audit/evidence/step-reviews.json#R02-provider-template-authoring"
       ],
       "limitations": [
         "Predefined roles are read-only as explicitly required initially. Custom-role editing and its role_permission_change audit belong to that future extension; no mutation endpoint or editing acceptance claimed."
@@ -14167,7 +14169,7 @@
         },
         {
           "path": "packages/i18n/src/admin-ui.ts",
-          "sha256": "f0c9e7a899917980a40c2c5e98210ee0f55f62c601f340e6db16ee40974af65f"
+          "sha256": "9a3e0293928226b2b2737c8be80e7abe823b6f1a9e81fee5808460384601b69d"
         },
         {
           "path": "packages/shared/src/notifications/delivery-window-config.test.ts",
@@ -14181,7 +14183,8 @@
       "checks": [
         "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
         "168 focused unit/integration/i18n and6 browser cases pass, with unchanged budgets and scoped quality checks. See audit/evidence/step-reviews.json#R02-daytime-window.",
-        "Narrow source binding refresh: provider request/helper, SMS navigation/copy or verified template-contact query changed; unrelated methods remain unchanged. audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+        "Narrow source binding refresh: provider request/helper, SMS navigation/copy or verified template-contact query changed; unrelated methods remain unchanged. audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
+        "Narrow authoring/copy or type-only source refresh with scoped browser evidence; unchanged SMS/runtime behavior reused. audit/evidence/step-reviews.json#R02-provider-template-authoring"
       ],
       "limitations": [],
       "merged_prs": [
@@ -14253,7 +14256,7 @@
         },
         {
           "path": "apps/web/src/lib/email-providers-api.ts",
-          "sha256": "2eaee8113de4cd31139bc2e82ac77d2acdd361b65de1573c7f68a88a5ed4e27a"
+          "sha256": "5ade542fdd719ddc0f512e1e3261b8fbeefb4c9e63dc65141d92973201ed7fb5"
         },
         {
           "path": "apps/web/src/lib/sms-providers-api.ts",
@@ -14281,11 +14284,11 @@
         },
         {
           "path": "packages/i18n/src/admin-ui.ts",
-          "sha256": "f0c9e7a899917980a40c2c5e98210ee0f55f62c601f340e6db16ee40974af65f"
+          "sha256": "9a3e0293928226b2b2737c8be80e7abe823b6f1a9e81fee5808460384601b69d"
         },
         {
           "path": "packages/i18n/src/providers.ts",
-          "sha256": "d7b5a28081d78e93a77a76fe8cc8e85474f8941ed92a91a458363b01848b7562"
+          "sha256": "98f455c54d024b34f7464bb678e3822cf99a1a187912c885fa2f07d6a31a7da7"
         },
         {
           "path": "packages/shared/src/notifications/index.ts",
@@ -14300,7 +14303,8 @@
         "SMS.ir configuration now has localized draft creation/edit/clone, nonsecret saved fields, write-only credentials, event/TemplateId/variable mapping editing, exact all-mapping sample previews and verified self-tests. Current authority/password confirmation, actual delivery proof, activation, rollback and OTP recovery checks are reviewed. Both PR193 historical self-send/UI deferrals are satisfied by the linked provider repairs and current UI.",
         "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
         "Reuse unchanged provider lifecycle/proof/rollback/recovery evidence in R02-provider-session-authority, R02-provider-self-tests and R02-provider-activation-proof; current recipient proof and shared tester helper are rechecked.",
-        "407 focused cases and21 distinct browser cases pass; scopes and logs in audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+        "407 focused cases and21 distinct browser cases pass; scopes and logs in audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
+        "Narrow authoring/copy or type-only source refresh with scoped browser evidence; unchanged SMS/runtime behavior reused. audit/evidence/step-reviews.json#R02-provider-template-authoring"
       ],
       "limitations": [],
       "merged_prs": [
@@ -14308,6 +14312,256 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.04.01",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 686,
+      "requirement": "**T-09.04.01 — Notification template editor**\n\n- Description: Admin can edit notification templates for all events. Persian and English versions. Template variables are allow-listed and escaped. Preview and test send.\n- Technical notes: Permissions: `admin:notifications:edit`. Template engine: Handlebars/mustache-like with restricted variable access. Versioned. Draft → Active lifecycle. Test send to admin's own verified destination.\n- UI/UX: Template list (event key, current version, status). Editor with variable sidebar (drag-to-insert). Preview pane with sample data. Test send button.\n- Dependencies: admin config framework, notification service\n- Complexity: L",
+      "requirement_sha256": "0be9d7e2509803bb028a803dcbc4c171d8ab51c4bbf2b1479bd7809427c41d63",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "sha256": "e32eacecd13bfb2e44eb3abdaf186cd64831bd5f42f2e6cb904839b7c351a5c4"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "3205a3f591e46d155c31f23ea813ce92e835b06e54c409555d82d22b29ec829d"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "2201400dd7b853e680452a8c139fe4e6fa375a72917d971f285ad565eb3bc31c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-recipient.ts",
+          "sha256": "19d353697c73b9c58f170b11edb3144e8d59476ae33266f91107f599776f01c5"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-recovery.spec.ts",
+          "sha256": "84845b7b4cbd1231cc9108856be3d35b4c6a4622e34f0af1eb98f6da4f9b66ff"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-settings.spec.ts",
+          "sha256": "c8d06b2de6c83b8ecc2546f84b022f25f8adee817f946a6d41eedaebca230c49"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-authoring.spec.ts",
+          "sha256": "6cc69882341f7dea9550a16ddd3a74c052df0fe0c9325c3d00748f4f15ecd6c2"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "5ade542fdd719ddc0f512e1e3261b8fbeefb4c9e63dc65141d92973201ed7fb5"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "packages/db/src/schema/email-provider-configs.ts",
+          "sha256": "02164ec65c34a4204803e1ed3d6b31dfb44a4f4ea9ac52427fcc3dc6eeeee802"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "9a3e0293928226b2b2737c8be80e7abe823b6f1a9e81fee5808460384601b69d"
+        },
+        {
+          "path": "packages/i18n/src/providers.ts",
+          "sha256": "98f455c54d024b34f7464bb678e3822cf99a1a187912c885fa2f07d6a31a7da7"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.test.ts",
+          "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.ts",
+          "sha256": "25fd01bdb03569af6ac6f88842ab07b4af2446a4a847214021659a27a1509aea"
+        },
+        {
+          "path": "packages/shared/src/notifications/email-branding.ts",
+          "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        }
+      ],
+      "checks": [
+        "Template authoring supports all event keys with existing/legacy suggestions, required body drag insertion and keyboard/caret insertion, FA/EN drafts, restricted/escaped variables, version publication, actual branded previews and tests to current verified staff contacts. Earlier template authority, engine, delivery and branding repairs remain valid; current authoring/recovery/browser checks close both saved frontend/preview deferrals.",
+        "Current authoring/lifecycle/browser evidence and exact reuse boundaries: audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        161
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.06.01",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 706,
+      "requirement": "**T-09.06.01 — Email transport configuration**\n\n- Description: Admin configures active email transport: SMTP or Resend. Each has provider-specific fields (host, port, security, credentials, from address, etc.). Test connection before activation. Rollback to previous working version.\n- Technical notes: SMTP fields: host, port, security (TLS/STARTTLS), username, password (encrypted), timeouts. Resend: API key (encrypted), from address, domain. Secrets write-only after entry, encrypted at rest. Versioned config. Permissions: `admin:notification-providers:edit`. Step-up auth required. Cannot leave OTP channel without verified recovery path.\n- UI/UX: Provider selector (SMTP/Resend). Conditional fields. Test button: \"Send test email to [admin email]\". Activation switch. Current active version displayed. Rollback button.\n- Dependencies: admin config framework, notification service\n- Complexity: XL",
+      "requirement_sha256": "c0983e041532fe679f36c569c243debc8fc74a3ed8ba3a01be3833eda8f026f9",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "sha256": "e32eacecd13bfb2e44eb3abdaf186cd64831bd5f42f2e6cb904839b7c351a5c4"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "3205a3f591e46d155c31f23ea813ce92e835b06e54c409555d82d22b29ec829d"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "2201400dd7b853e680452a8c139fe4e6fa375a72917d971f285ad565eb3bc31c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-recipient.ts",
+          "sha256": "19d353697c73b9c58f170b11edb3144e8d59476ae33266f91107f599776f01c5"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-recovery.spec.ts",
+          "sha256": "84845b7b4cbd1231cc9108856be3d35b4c6a4622e34f0af1eb98f6da4f9b66ff"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-settings.spec.ts",
+          "sha256": "c8d06b2de6c83b8ecc2546f84b022f25f8adee817f946a6d41eedaebca230c49"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-authoring.spec.ts",
+          "sha256": "6cc69882341f7dea9550a16ddd3a74c052df0fe0c9325c3d00748f4f15ecd6c2"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "5ade542fdd719ddc0f512e1e3261b8fbeefb4c9e63dc65141d92973201ed7fb5"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "packages/db/src/schema/email-provider-configs.ts",
+          "sha256": "02164ec65c34a4204803e1ed3d6b31dfb44a4f4ea9ac52427fcc3dc6eeeee802"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "9a3e0293928226b2b2737c8be80e7abe823b6f1a9e81fee5808460384601b69d"
+        },
+        {
+          "path": "packages/i18n/src/providers.ts",
+          "sha256": "98f455c54d024b34f7464bb678e3822cf99a1a187912c885fa2f07d6a31a7da7"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.test.ts",
+          "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.ts",
+          "sha256": "25fd01bdb03569af6ac6f88842ab07b4af2446a4a847214021659a27a1509aea"
+        },
+        {
+          "path": "packages/shared/src/notifications/email-branding.ts",
+          "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        }
+      ],
+      "checks": [
+        "SMTP/Resend drafts retain saved nonsecret transport settings and expose SMTP timeouts while secrets remain write-only. Both test controls show the explicit staff recipient, preserve it through password confirmation and rely on current verified-contact enforcement. Successful edits clear stale test outcomes and require renewed server proof. Version activation/rollback, current permission/session/CSRF, encrypted secrets and OTP recovery gates retain verified backend evidence. Full provider UI deferral closes.",
+        "Current authoring/lifecycle/browser evidence and exact reuse boundaries: audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        192
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
     }
   ],
   "pending_task_keys": [
@@ -14411,7 +14665,6 @@
     "01-platform-infrastructure.md#T-07.05.04",
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
-    "02-auth-users-admin.md#T-09.04.01",
     "05-notifications-documents-ai.md#T-05.01.01",
     "05-notifications-documents-ai.md#T-05.01.02",
     "05-notifications-documents-ai.md#T-05.01.03",
@@ -14441,7 +14694,6 @@
     "05-notifications-documents-ai.md#T-05.06.05",
     "05-notifications-documents-ai.md#T-05.06.06",
     "05-notifications-documents-ai.md#T-05.06.07",
-    "02-auth-users-admin.md#T-09.06.01",
     "02-auth-users-admin.md#T-09.08.01",
     "02-auth-users-admin.md#T-09.08.02",
     "02-auth-users-admin.md#T-09.08.03",
@@ -17536,6 +17788,17 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
       "note": "Immediate-base hashes only; bounded shared changes reviewed and relevant checks pass. Older stale bindings retained."
+    },
+    {
+      "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.05.01",
+        "02-auth-users-admin.md#T-09.06.03",
+        "02-auth-users-admin.md#T-09.06.02"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+      "note": "Only immediate-base hashes refreshed. Older source bindings remain assigned to V01/R03."
     }
   ]
 }

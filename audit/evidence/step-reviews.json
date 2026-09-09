@@ -13944,6 +13944,412 @@
         "2 immediate-base ledger bindings refreshed;38 older evidence refresh records remain.",
         "Reuse unchanged provider lifecycle/encryption/activation/recovery proof; SMS tester sample extraction is behavior-preserving and retested."
       ]
+    },
+    {
+      "id": "R02-provider-template-authoring",
+      "date": "2026-09-09",
+      "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+      "base_revision": "5c7c842d3694292563b1cf9a12e677c820fdf599",
+      "product_commits": [
+        "c6588610b2fcd7901f7465ad75e4589cb2d2be70"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "02-auth-users-admin.md#T-09.04.01",
+        "02-auth-users-admin.md#T-09.06.01"
+      ],
+      "summary": "Provider/template authoring repairs complete the local foundation batch. PR161/192 close; PR156 stays open for R03 themes. Foundation totals5 closed/1 open/0 blocked, including preserved PR113/193/194.",
+      "review": [
+        "Reviewed remaining exact requirements and PR156/161/192 deferrals against current source. Email drafts reset nonsecret fields to defaults, SMTP timeout controls were absent, test copy still described a connection-only test, and saved drafts retained stale test-passed text. Template creation used only a legacy event selector and variables lacked drag insertion.",
+        "Email drafts now validate/load saved host, port, security, username, timeouts, sender/reply-to and Resend domain. Missing or malformed saved configuration blocks editing until a successful refresh. API keys/passwords never populate from masked values. Existing omitted-secret merge semantics remain unchanged. Required bounded SMTP timeout controls are added in FA/EN. Cancellation preserves stored values; failed saves preserve entered values; successful direct/step-up saves clear stale test outcomes and refresh server state.",
+        "SMTP and Resend share the existing explicit recipient input and Send test email control. The button displays its target in an isolated LTR span and remains disabled without a recipient or while reads fail. Both direct send and password-confirmed replay retain that target; the current server proof gates from0af048d6 remain unchanged. Reusing this control avoids another API endpoint or a client approximation of verification state.",
+        "Template event input now offers known/saved suggestions while accepting other non-whitespace event keys within the existing API100-character maximum. Existing template identities remain read-only. Native text/plain drag copies the allowlisted sidebar placeholder into the textarea and updates controlled state; keyboard/click insertion still replaces the selected range and restores the caret. Saving a previously unlisted event through both interactions passes in FA/EN. No drag library, API/schema change or dependency added.",
+        "Initial formatter failure was a missing datalist closing tag, fixed before build. Initial browser fixtures used an ambiguous Port substring, omitted the server null subject, and expected an event cell without its version text; these were corrected. Native dragging itself passed. All failed logs retained. No test assertions were weakened on saved values, secret preservation, recipient, variable content or acknowledged state.",
+        "38 distinct production Chromium cases pass:19 email settings/recovery,11 template recovery/lifecycle,6 branded preview and2 template authoring. Focused reruns overlap and are counted once.50 i18n tests and applicable web/i18n types, scoped lint/format, production build and42 unchanged size budgets pass. Final six email settings cases include actual self-test then edit, cancellation/failure, preserved values/secrets, cleared old success and disabled activation.",
+        "Backend code is unchanged this step. Reuse latest verified provider/template-contact evidence at58a8df90, activation/proof/encryption/recovery at83a27ac8, and intervening branding/preview/authority repairs. Changed older step snapshots were compared with those later repairs; no broad regression is implied. Brand theme task already had partial status: remove its now-false missing-email-branding limitation while retaining R03 theme/contrast review and older source evidence bindings."
+      ],
+      "verification": {
+        "browser": "38 distinct Chromium cases;19 email,11 template recovery,6 branded previews,2 template authoring. Final relevant results span browser, browser-reviewed and cache-browser logs; overlaps excluded.",
+        "unit_integration": "50 i18n checks. No backend changes; latest applicable recorded API/worker/engine evidence reused.",
+        "quality": "Web/i18n types, scoped lint/format, production build and42 unchanged route/interaction budgets pass.",
+        "regression": "Full repository regression/coverage and operational delivery evidence remain separate."
+      },
+      "pr_dispositions": [
+        {
+          "pr": 156,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.01.02"
+          ],
+          "reason": "Email/auth notification branding and actual admin previews are implemented and verified by the linked R02 repairs. Full theme/contrast and instant dashboard consistency across public/auth/admin touchpoints remains assigned to R03; the existing partial task stays partial.",
+          "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+          "evidence": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+        },
+        {
+          "pr": 161,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.04.01"
+          ],
+          "reason": "Template authoring supports all event keys with existing/legacy suggestions, required body drag insertion and keyboard/caret insertion, FA/EN drafts, restricted/escaped variables, version publication, actual branded previews and tests to current verified staff contacts. Earlier template authority, engine, delivery and branding repairs remain valid; current authoring/recovery/browser checks close both saved frontend/preview deferrals.",
+          "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+          "evidence": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+        },
+        {
+          "pr": 192,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.06.01"
+          ],
+          "reason": "SMTP/Resend drafts retain saved nonsecret transport settings and expose SMTP timeouts while secrets remain write-only. Both test controls show the explicit staff recipient, preserve it through password confirmation and rely on current verified-contact enforcement. Successful edits clear stale test outcomes and require renewed server proof. Version activation/rollback, current permission/session/CSRF, encrypted secrets and OTP recovery gates retain verified backend evidence. Full provider UI deferral closes.",
+          "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+          "evidence": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+        }
+      ],
+      "pr_counts": {
+        "closed": 2,
+        "open": 1,
+        "blocked": 0
+      },
+      "remaining": [
+        "Review R02 notification outbox/delivery and dead-letter triage, saved PR163–170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches.",
+        "Theme application remains partial under R03. Preserve prior migrations0123–0126 and coordinated worker rollout requirements. No external operations claimed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "sha256": "e32eacecd13bfb2e44eb3abdaf186cd64831bd5f42f2e6cb904839b7c351a5c4"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "3205a3f591e46d155c31f23ea813ce92e835b06e54c409555d82d22b29ec829d"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "2201400dd7b853e680452a8c139fe4e6fa375a72917d971f285ad565eb3bc31c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-recipient.ts",
+          "sha256": "19d353697c73b9c58f170b11edb3144e8d59476ae33266f91107f599776f01c5"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-recovery.spec.ts",
+          "sha256": "84845b7b4cbd1231cc9108856be3d35b4c6a4622e34f0af1eb98f6da4f9b66ff"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-settings.spec.ts",
+          "sha256": "c8d06b2de6c83b8ecc2546f84b022f25f8adee817f946a6d41eedaebca230c49"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-authoring.spec.ts",
+          "sha256": "6cc69882341f7dea9550a16ddd3a74c052df0fe0c9325c3d00748f4f15ecd6c2"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "5ade542fdd719ddc0f512e1e3261b8fbeefb4c9e63dc65141d92973201ed7fb5"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "packages/db/src/schema/email-provider-configs.ts",
+          "sha256": "02164ec65c34a4204803e1ed3d6b31dfb44a4f4ea9ac52427fcc3dc6eeeee802"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "9a3e0293928226b2b2737c8be80e7abe823b6f1a9e81fee5808460384601b69d"
+        },
+        {
+          "path": "packages/i18n/src/providers.ts",
+          "sha256": "98f455c54d024b34f7464bb678e3822cf99a1a187912c885fa2f07d6a31a7da7"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.test.ts",
+          "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.ts",
+          "sha256": "25fd01bdb03569af6ac6f88842ab07b4af2446a4a847214021659a27a1509aea"
+        },
+        {
+          "path": "packages/shared/src/notifications/email-branding.ts",
+          "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-authoring-browser-final.log",
+        "/tmp/r02-authoring-browser-format.log",
+        "/tmp/r02-authoring-browser-reviewed.log",
+        "/tmp/r02-authoring-browser.log",
+        "/tmp/r02-authoring-budgets.log",
+        "/tmp/r02-authoring-cache-browser.log",
+        "/tmp/r02-authoring-cache-build.log",
+        "/tmp/r02-authoring-cache-format.log",
+        "/tmp/r02-authoring-email-format.log",
+        "/tmp/r02-authoring-final-budgets.log",
+        "/tmp/r02-authoring-final-format.log",
+        "/tmp/r02-authoring-final-lint.log",
+        "/tmp/r02-authoring-final-types.log",
+        "/tmp/r02-authoring-format.log",
+        "/tmp/r02-authoring-i18n-build.log",
+        "/tmp/r02-authoring-i18n-final-build.log",
+        "/tmp/r02-authoring-i18n-tests.log",
+        "/tmp/r02-authoring-i18n-types.log",
+        "/tmp/r02-authoring-lint.log",
+        "/tmp/r02-authoring-recipient-test-format.log",
+        "/tmp/r02-authoring-selftest-build.log",
+        "/tmp/r02-authoring-selftest-format.log",
+        "/tmp/r02-authoring-template-format.log",
+        "/tmp/r02-authoring-web-build.log",
+        "/tmp/r02-authoring-web-final-build.log",
+        "/tmp/r02-authoring-web-reviewed-build.log",
+        "/tmp/r02-authoring-web-types.log"
+      ],
+      "completed_batch": {
+        "id": "R02-notification-delivery-foundation",
+        "name": "Notification templates, transports, preferences and branding consumers",
+        "status": "completed",
+        "prs": [
+          113,
+          156,
+          161,
+          192,
+          193,
+          194
+        ],
+        "task_keys": [
+          "02-auth-users-admin.md#T-03.03.05",
+          "02-auth-users-admin.md#T-09.01.02",
+          "02-auth-users-admin.md#T-09.04.01",
+          "02-auth-users-admin.md#T-09.06.01",
+          "02-auth-users-admin.md#T-09.06.02",
+          "02-auth-users-admin.md#T-09.06.03"
+        ],
+        "remaining_checklist": [
+          "Local provider/template/recipient/daytime foundation repairs complete. Full theme remains R03 and event-specific notification delivery remains subsequent R02 batches."
+        ],
+        "confirmed_defects": [
+          {
+            "defect": "SMS.ir admin UI is absent; backend-only PR193 still needs mapping editing and self-test preview/lifecycle controls.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+          },
+          {
+            "defect": "Provider self-test recipient helper trusts nonempty account contact fields without current verification-ledger proof.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+          },
+          {
+            "defect": "Provider mutations lack current session/CSRF/step-up through commit.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-provider-session-authority"
+          },
+          {
+            "defect": "Template mutations check staff permission without current session/step-up.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-template-session-authority"
+          },
+          {
+            "defect": "Email worker/template test-send omit active branding.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
+          },
+          {
+            "defect": "SMTP provider test is handshake-only; required self-send remains.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
+          },
+          {
+            "defect": "Provider testConnection forwards requested recipients without checking the acting staff contact.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
+          },
+          {
+            "defect": "Activation accepts legacy passing results without current verified self-delivery proof.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
+          },
+          {
+            "defect": "One tested SMS mapping can approve other untested mappings.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
+          },
+          {
+            "defect": "Authentication email uses hardcoded branding; retries need frozen branding.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
+          },
+          {
+            "defect": "Actual admin template preview shows unbranded body/source; service-level saved preview is not wired to that editor.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-branded-admin-previews"
+          },
+          {
+            "defect": "Dispatch ignores saved per-user channel choices and trusts nonempty legacy contacts as verified.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+          },
+          {
+            "defect": "Delivery-window UI uses whole-hour selectors rather than required HH:MM time inputs.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
+          },
+          {
+            "defect": "Delivery-window mutation still defers step-up and does not carry current session/CSRF identity through the transaction.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
+          },
+          {
+            "defect": "Template self-test recipient lookup trusts contact fields without current verification-ledger proof.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+          },
+          {
+            "defect": "Email draft editor blanks saved nonsecret configuration and may overwrite stored transport settings with defaults.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+          },
+          {
+            "defect": "Template editor restricts new events to a legacy list and lacks required drag-to-insert variable interaction.",
+            "status": "repaired",
+            "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+          }
+        ],
+        "reused_evidence": [
+          "audit/evidence/step-reviews.json#R01-account-settings",
+          "audit/evidence/step-reviews.json#R01-verification-policy",
+          "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+        ],
+        "new_evidence": [
+          "audit/evidence/step-reviews.json#R02-provider-session-authority",
+          "audit/evidence/step-reviews.json#R02-template-session-authority",
+          "audit/evidence/step-reviews.json#R02-provider-self-tests",
+          "audit/evidence/step-reviews.json#R02-provider-activation-proof",
+          "audit/evidence/step-reviews.json#R02-email-branding-delivery",
+          "audit/evidence/step-reviews.json#R02-branded-admin-previews",
+          "audit/evidence/step-reviews.json#R02-recipient-channel-delivery",
+          "audit/evidence/step-reviews.json#R02-daytime-window",
+          "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
+          "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+        ],
+        "pr_dispositions": [
+          {
+            "pr": 113,
+            "status": "closed",
+            "task_keys": [
+              "02-auth-users-admin.md#T-03.03.05"
+            ],
+            "reason": "Account choices now reach queued email/SMS dispatch and are rechecked after message preparation. Only current primary or verified secondary destinations are eligible. In-app remains enabled; per-profile marketing consent and address suppression remain additional gates. R01 API/UI/default/availability evidence matches unchanged source and is reused. PR113 has no retained historical deferrals; its former unavailable lint is superseded by applicable checked lint evidence.",
+            "source_revision": "deeb133b90321dfb06dbbcb66e0e18eacfe9f749",
+            "evidence": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+          },
+          {
+            "pr": 194,
+            "status": "closed",
+            "task_keys": [
+              "02-auth-users-admin.md#T-09.06.03"
+            ],
+            "reason": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
+            "source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
+            "evidence": "audit/evidence/step-reviews.json#R02-daytime-window"
+          },
+          {
+            "pr": 193,
+            "status": "closed",
+            "task_keys": [
+              "02-auth-users-admin.md#T-09.06.02"
+            ],
+            "reason": "SMS.ir configuration now has localized draft creation/edit/clone, nonsecret saved fields, write-only credentials, event/TemplateId/variable mapping editing, exact all-mapping sample previews and verified self-tests. Current authority/password confirmation, actual delivery proof, activation, rollback and OTP recovery checks are reviewed. Both PR193 historical self-send/UI deferrals are satisfied by the linked provider repairs and current UI.",
+            "source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
+            "evidence": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+          },
+          {
+            "pr": 156,
+            "status": "open",
+            "task_keys": [
+              "02-auth-users-admin.md#T-09.01.02"
+            ],
+            "reason": "Email/auth notification branding and actual admin previews are implemented and verified by the linked R02 repairs. Full theme/contrast and instant dashboard consistency across public/auth/admin touchpoints remains assigned to R03; the existing partial task stays partial.",
+            "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+            "evidence": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+          },
+          {
+            "pr": 161,
+            "status": "closed",
+            "task_keys": [
+              "02-auth-users-admin.md#T-09.04.01"
+            ],
+            "reason": "Template authoring supports all event keys with existing/legacy suggestions, required body drag insertion and keyboard/caret insertion, FA/EN drafts, restricted/escaped variables, version publication, actual branded previews and tests to current verified staff contacts. Earlier template authority, engine, delivery and branding repairs remain valid; current authoring/recovery/browser checks close both saved frontend/preview deferrals.",
+            "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+            "evidence": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+          },
+          {
+            "pr": 192,
+            "status": "closed",
+            "task_keys": [
+              "02-auth-users-admin.md#T-09.06.01"
+            ],
+            "reason": "SMTP/Resend drafts retain saved nonsecret transport settings and expose SMTP timeouts while secrets remain write-only. Both test controls show the explicit staff recipient, preserve it through password confirmation and rely on current verified-contact enforcement. Successful edits clear stale test outcomes and require renewed server proof. Version activation/rollback, current permission/session/CSRF, encrypted secrets and OTP recovery gates retain verified backend evidence. Full provider UI deferral closes.",
+            "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+            "evidence": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+          }
+        ],
+        "next_action": "Review R02 notification outbox/delivery and dead-letter triage, saved PR163–170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches."
+      },
+      "batch_pr_counts": {
+        "closed": 5,
+        "open": 1,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "3 immediate-base source bindings refreshed;38 older refresh records retained.",
+        "Previously partial theme remains partial; no coding percentage inferred from review counts."
+      ]
     }
   ]
 }

@@ -4,17 +4,19 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Product/test HEAD **58a8df90**. Active R02-notification-delivery-foundation, PR113/156/161/192/193/194. All six requirements, saved bodies and deferrals are read.
+Branch codex/audit-fixes. Product/test HEAD **c6588610**. Notification delivery foundation is complete locally: **5 saved PRs closed /1 open**, PR113/156/161/192/193/194. PR156 remains open for R03 theme/contrast consistency; its email-branding deferral is satisfied.
 
-SMS.ir configuration UI is built at47f69fe3. Provider self-test verification proof is repaired at0af048d6; template self-test proof at58a8df90. **407 focused API/web/i18n checks,21 distinct Chromium cases and42 unchanged budgets** pass. Types/lint/format/build pass. SMS T-09.06.02 and both PR193 historical deferrals close locally. [Review](evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests). Preserve closed PR113 recipient delivery and PR194 daytime settings, branding and provider lifecycle evidence.
+Email drafts preserve validated saved settings and write-only credentials; SMTP timeouts are editable. Both email tests show their chosen verified recipient. Successful edits clear stale test success. Template creation accepts new event keys; native drag and keyboard variable insertion pass. **38 distinct Chromium checks,50 i18n cases and42 unchanged budgets** pass, along with applicable types/lint/format/build. Backend source is unchanged in this step; latest authority, contact verification, activation, encryption and branding evidence is reused. [Foundation closure](evidence/step-reviews.json#R02-provider-template-authoring).
 
-R02 foundation remains active. Counts: **134 verified /31 partial /157 pending =322 claims**; **111 closed /22 open /168 unreviewed =301 saved PRs**;58 skips,3 verified/55 pending. Saved GitHub inventory ends September3. **2346 logs indexed.** Two immediate-base bindings refreshed;38 older evidence refresh records remain. Full regression/coverage is V02.
+New active batch: **R02-notification-outbox-delivery**, saved PR163–170 and203. All nine exact requirements, saved bodies and deferrals read; source review is next. Counts: **136 verified /31 partial /155 pending =322 claims**; **113 closed /23 open /165 unreviewed =301 saved PRs**;58 skips,3 verified/55 pending. Saved GitHub inventory ends September3. **2373 logs indexed.** Three immediate-base bindings refreshed;38 older evidence refresh records remain. Full regression/coverage is V02.
 
 Completed R01 work and valid tests remain recorded in progress/step reviews. Do not rebuild or repeat those reviews. The earlier wallet-controller fixture failures are fixed; the interrupted broad run is still not regression evidence.
 
 ## Next action
 
-Finish remaining email/template acceptance in R02 foundation PR156/161/192. Confirmed gaps: email draft editing blanks saved nonsecret fields and can overwrite settings with defaults; new template creation is restricted to a legacy event list; variable sidebar has no required drag-to-insert interaction. Record these as open, preserve completed SMS UI and verified self-test contacts. Full theme remains R03; event-specific producers/reminders/retries remain subsequent R02 batches.
+Review current outbox/delivery and dead-letter implementation for PR163–170 and203. Check transactional business enqueue, schema/interface, worker leases and graceful release, bounded retries/priority, per-channel idempotency, same-transaction in-app writes, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Exact membership and remaining criteria are in progress.json. No new defect is claimed before source review.
+
+Reuse completed producer, recipient, branding and provider evidence where source remains valid. Keep remaining inbox/classification and event-specific reminder work in later R02 batches. PR170's historical reinterpretation of “same transaction” is unresolved; inspect actual transaction boundaries. Operational alerts and deployment must retain truthful evidence.
 
 Deploy minute-aware workers before enabling fractional-hour settings; old workers normalize them to defaults. Existing whole-hour settings remain supported. Auth worker rollout must replace older workers coherently; they do not understand encrypted brand snapshots. Previously attempted legacy auth jobs retain original plain content.
 

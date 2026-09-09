@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
+  "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
   "active_step": "R02",
-  "next_action": "Finish remaining email/template acceptance in R02 foundation PR156/161/192. Prefill email drafts from validated saved nonsecret settings; preserve write-only secrets. Replace the legacy-only new-event selector and implement required template variable drag-to-insert. Preserve closed PR113/193/194 and verified provider/template contact repairs. Full theme remains R03; event-specific delivery remains subsequent R02 batches.",
+  "next_action": "Review R02 notification outbox/delivery and dead-letter triage, saved PR163–170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -682,6 +682,10 @@
     {
       "id": "R02-sms-provider-ui-and-verified-self-tests",
       "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+    },
+    {
+      "id": "R02-provider-template-authoring",
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
     }
   ],
   "deferred_improvements": [
@@ -700,9 +704,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 134,
+    "acceptance_verified": 136,
     "partial": 31,
-    "pending": 157,
+    "pending": 155,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -991,165 +995,48 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-notification-delivery-foundation",
-    "name": "Notification templates, transports, preferences and branding consumers",
-    "status": "in_progress",
+    "id": "R02-notification-outbox-delivery",
+    "name": "Notification outbox, delivery and dead-letter triage",
+    "status": "reviewing",
     "prs": [
-      113,
-      156,
-      161,
-      192,
-      193,
-      194
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      203
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-03.03.05",
-      "02-auth-users-admin.md#T-09.01.02",
-      "02-auth-users-admin.md#T-09.04.01",
-      "02-auth-users-admin.md#T-09.06.01",
-      "02-auth-users-admin.md#T-09.06.02",
-      "02-auth-users-admin.md#T-09.06.03"
+      "05-notifications-documents-ai.md#T-05.01.01",
+      "05-notifications-documents-ai.md#T-05.01.02",
+      "05-notifications-documents-ai.md#T-05.01.03",
+      "05-notifications-documents-ai.md#T-05.01.04",
+      "05-notifications-documents-ai.md#T-05.01.05",
+      "05-notifications-documents-ai.md#T-05.01.06",
+      "05-notifications-documents-ai.md#T-05.01.07",
+      "05-notifications-documents-ai.md#T-05.02.01",
+      "02-auth-users-admin.md#T-09.09.03"
     ],
     "remaining_checklist": [
-      "All six exact requirements, saved PR bodies and deferrals read. Full UI theme stays R03; email/notification branding belongs here.",
-      "Review current SMTP/Resend/SMS.ir configuration lifecycle, encrypted write-only secrets, current authority/step-up/audit, verified self-test destinations, activation/rollback and OTP recovery constraints.",
-      "Recipient choices/verified destinations, active branding, per-user daytime/minute boundaries and immediate bypass are repaired. Preserve recorded checks; finish provider/template UI acceptance.",
-      "Keep notification-event-specific retries/inbox/reminder acceptance in subsequent R02 batches. Do not claim fixture sends prove production delivery."
+      "All nine exact requirements, saved PR bodies and historical deferrals read at this checkpoint.",
+      "Review durable business enqueue, schema/interface, claim/renew/release and graceful shutdown, bounded retries/priority and per-channel idempotency.",
+      "Verify same-transaction in-app delivery and safe per-attempt delivery/dead-letter history. Resolve PR163/164/170 historical transaction/loop deferrals with real database evidence.",
+      "Review both staff dead-letter interfaces, current permissions/session/step-up and masked payloads, retry/resolve/dismiss, metrics and accumulation alerts.",
+      "Keep remaining inbox/notification classification and event-specific reminder acceptance in later R02 batches. Operational rollout/alerts require truthful evidence."
     ],
-    "confirmed_defects": [
-      {
-        "defect": "SMS.ir admin UI is absent; backend-only PR193 still needs mapping editing and self-test preview/lifecycle controls.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
-      },
-      {
-        "defect": "Provider self-test recipient helper trusts nonempty account contact fields without current verification-ledger proof.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
-      },
-      {
-        "defect": "Provider mutations lack current session/CSRF/step-up through commit.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-provider-session-authority"
-      },
-      {
-        "defect": "Template mutations check staff permission without current session/step-up.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-template-session-authority"
-      },
-      {
-        "defect": "Email worker/template test-send omit active branding.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
-      },
-      {
-        "defect": "SMTP provider test is handshake-only; required self-send remains.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
-      },
-      {
-        "defect": "Provider testConnection forwards requested recipients without checking the acting staff contact.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
-      },
-      {
-        "defect": "Activation accepts legacy passing results without current verified self-delivery proof.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
-      },
-      {
-        "defect": "One tested SMS mapping can approve other untested mappings.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
-      },
-      {
-        "defect": "Authentication email uses hardcoded branding; retries need frozen branding.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
-      },
-      {
-        "defect": "Actual admin template preview shows unbranded body/source; service-level saved preview is not wired to that editor.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-branded-admin-previews"
-      },
-      {
-        "defect": "Dispatch ignores saved per-user channel choices and trusts nonempty legacy contacts as verified.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
-      },
-      {
-        "defect": "Delivery-window UI uses whole-hour selectors rather than required HH:MM time inputs.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
-      },
-      {
-        "defect": "Delivery-window mutation still defers step-up and does not carry current session/CSRF identity through the transaction.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
-      },
-      {
-        "defect": "Template self-test recipient lookup trusts contact fields without current verification-ledger proof.",
-        "status": "repaired",
-        "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
-      },
-      {
-        "defect": "Email draft editor blanks saved nonsecret configuration and may overwrite stored transport settings with defaults.",
-        "status": "open"
-      },
-      {
-        "defect": "Template editor restricts new events to a legacy list and lacks required drag-to-insert variable interaction.",
-        "status": "open"
-      }
-    ],
+    "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-account-settings",
-      "audit/evidence/step-reviews.json#R01-verification-policy",
-      "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
-    ],
-    "new_evidence": [
-      "audit/evidence/step-reviews.json#R02-provider-session-authority",
-      "audit/evidence/step-reviews.json#R02-template-session-authority",
-      "audit/evidence/step-reviews.json#R02-provider-self-tests",
-      "audit/evidence/step-reviews.json#R02-provider-activation-proof",
-      "audit/evidence/step-reviews.json#R02-email-branding-delivery",
-      "audit/evidence/step-reviews.json#R02-branded-admin-previews",
+      "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+      "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
       "audit/evidence/step-reviews.json#R02-recipient-channel-delivery",
-      "audit/evidence/step-reviews.json#R02-daytime-window",
-      "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+      "audit/evidence/step-reviews.json#R02-daytime-window"
     ],
-    "pr_dispositions": [
-      {
-        "pr": 113,
-        "status": "closed",
-        "task_keys": [
-          "02-auth-users-admin.md#T-03.03.05"
-        ],
-        "reason": "Account choices now reach queued email/SMS dispatch and are rechecked after message preparation. Only current primary or verified secondary destinations are eligible. In-app remains enabled; per-profile marketing consent and address suppression remain additional gates. R01 API/UI/default/availability evidence matches unchanged source and is reused. PR113 has no retained historical deferrals; its former unavailable lint is superseded by applicable checked lint evidence.",
-        "source_revision": "deeb133b90321dfb06dbbcb66e0e18eacfe9f749",
-        "evidence": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
-      },
-      {
-        "pr": 194,
-        "status": "closed",
-        "task_keys": [
-          "02-auth-users-admin.md#T-09.06.03"
-        ],
-        "reason": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
-        "source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
-        "evidence": "audit/evidence/step-reviews.json#R02-daytime-window"
-      },
-      {
-        "pr": 193,
-        "status": "closed",
-        "task_keys": [
-          "02-auth-users-admin.md#T-09.06.02"
-        ],
-        "reason": "SMS.ir configuration now has localized draft creation/edit/clone, nonsecret saved fields, write-only credentials, event/TemplateId/variable mapping editing, exact all-mapping sample previews and verified self-tests. Current authority/password confirmation, actual delivery proof, activation, rollback and OTP recovery checks are reviewed. Both PR193 historical self-send/UI deferrals are satisfied by the linked provider repairs and current UI.",
-        "source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
-        "evidence": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
-      }
-    ],
-    "next_action": "Finish remaining email/template acceptance in R02 foundation PR156/161/192. Prefill email drafts from validated saved nonsecret settings; preserve write-only secrets. Replace the legacy-only new-event selector and implement required template variable drag-to-insert. Preserve closed PR113/193/194 and verified provider/template contact repairs. Full theme remains R03; event-specific delivery remains subsequent R02 batches."
+    "new_evidence": [],
+    "pr_dispositions": [],
+    "next_action": "Review R02 notification outbox/delivery and dead-letter triage, saved PR163–170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches."
   },
   "open_domain_reviews": [
     {
