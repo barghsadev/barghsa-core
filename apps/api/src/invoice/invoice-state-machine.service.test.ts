@@ -402,7 +402,7 @@ describe('InvoiceStateMachineService', () => {
       expect(service.canCancel('Draft')).toBe(true);
       expect(service.canCancel('Unpaid')).toBe(true);
       expect(service.canCancel('Overdue')).toBe(true);
-      expect(service.canCancel('PartiallyFunded')).toBe(true);
+      expect(service.canCancel('PartiallyFunded')).toBe(false);
       expect(service.canCancel('Paid')).toBe(false);
       expect(service.canCancel('Cancelled')).toBe(false);
     });

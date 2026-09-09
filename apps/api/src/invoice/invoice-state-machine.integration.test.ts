@@ -172,6 +172,16 @@ describe('InvoiceStateMachineService — real PostgreSQL integration (T-04.1.01.
     expect(await auditRows(id)).toHaveLength(0);
   });
 
+  it('rejects cancellation directly from PartiallyFunded as required by the transition table', async () => {
+    const id = await insertInvoice({ state: 'PartiallyFunded', total: TOTAL, paid: TOTAL / 2n });
+    expect(service.canCancel('PartiallyFunded')).toBe(false);
+    await expect(
+      service.transition(id, 'PartiallyFunded', 'Cancelled', transitionOpts())
+    ).rejects.toBeInstanceOf(BadRequestException);
+    expect((await fetchInvoice(id)).state).toBe('PartiallyFunded');
+    expect(await auditRows(id)).toHaveLength(0);
+  });
+
   // ---- Helpers ------------------------------------------------------------
 
   async function insertInvoice(

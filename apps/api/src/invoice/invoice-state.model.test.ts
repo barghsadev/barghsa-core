@@ -75,8 +75,8 @@ describe('canTransition', () => {
     }
   });
 
-  it('PartiallyFunded can go to PaymentUnderReview, Paid, Overdue, Cancelled', () => {
-    const allowed = ['PaymentUnderReview', 'Paid', 'Overdue', 'Cancelled'] as InvoiceState[];
+  it('PartiallyFunded can go to PaymentUnderReview, Paid, Overdue', () => {
+    const allowed = ['PaymentUnderReview', 'Paid', 'Overdue'] as InvoiceState[];
     for (const to of allowed) {
       expect(canTransition('PartiallyFunded', to)).toBe(true);
     }
@@ -311,7 +311,7 @@ describe('transitionName', () => {
     expect(transitionName('PartiallyFunded', 'PaymentUnderReview')).toBe('SubmitBankReceipt');
     expect(transitionName('PartiallyFunded', 'Paid')).toBe('PayFromWallet');
     expect(transitionName('PartiallyFunded', 'Overdue')).toBe('MarkOverdue');
-    expect(transitionName('PartiallyFunded', 'Cancelled')).toBe('Cancel');
+    expect(transitionName('PartiallyFunded', 'Cancelled')).toBeNull();
     expect(transitionName('Paid', 'PartiallyRefunded')).toBe('PartialRefund');
     expect(transitionName('Paid', 'Refunded')).toBe('FullRefund');
     expect(transitionName('Overdue', 'Cancelled')).toBe('Cancel');

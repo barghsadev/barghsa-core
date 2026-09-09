@@ -275,9 +275,7 @@ export class InvoiceStateMachineService {
   }
 
   canCancel(from: InvoiceState): boolean {
-    return (
-      from === 'Draft' || from === 'Unpaid' || from === 'Overdue' || from === 'PartiallyFunded'
-    );
+    return from === 'Draft' || from === 'Unpaid' || from === 'Overdue';
   }
 
   canPartialRefund(from: InvoiceState): boolean {
