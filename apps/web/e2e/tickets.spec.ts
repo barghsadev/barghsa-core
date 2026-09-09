@@ -1,4 +1,5 @@
 import { formatBrowserDate } from './browser-date';
+import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 const profileId = '11111111-1111-4111-8111-111111111111',
   ticketId = '22222222-2222-4222-8222-222222222222';
@@ -217,6 +218,122 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await page.locator('#ticket-next-status').selectOption('in_progress');
   await expect(page.getByRole('button', { name: 'Save status', exact: true })).toBeEnabled();
 });
+test('staff with broad read access only edit tickets assigned to them', async ({ page }) => {
+  await shell(page);
+  let assignedTo = 'another-colleague';
+  await page.route('**/api/staff/tickets?*', (route) =>
+    route.fulfill({
+      json: {
+        data: [{ ...item, assignedTo, status: 'in_progress' }],
+        totalPages: 1,
+        viewer: { userId: 'staff', canWrite: true, canAssignOthers: false },
+      },
+    })
+  );
+  await page.route(`**/api/staff/tickets/${ticketId}`, (route) =>
+    route.fulfill({ json: { ...item, assignedTo, status: 'in_progress' } })
+  );
+  await page.route(`**/api/staff/tickets/${ticketId}/comments`, (route) =>
+    route.fulfill({
+      json: [
+        {
+          id: 'note',
+          body: 'Visible internal history',
+          visibility: 'internal',
+          authorId: 'another-colleague',
+          createdAt: item.updatedAt,
+        },
+      ],
+    })
+  );
+  await page.goto('/admin/tickets');
+  await page.getByRole('button', { name: item.subject, exact: true }).click();
+  await expect(page.getByText('Visible internal history', { exact: true })).toBeVisible();
+  await expect(page.locator('#ticket-reply')).toHaveCount(0);
+  await expect(page.locator('#ticket-next-status')).toHaveCount(0);
+  await expect(page.locator('#ticket-assignee')).toHaveCount(0);
+  assignedTo = 'staff';
+  await page.getByRole('button', { name: item.subject, exact: true }).click();
+  await expect(page.locator('#ticket-reply')).toBeVisible();
+  await expect(page.locator('#ticket-next-status')).toBeVisible();
+});
+
+for (const { locale, darkMode } of [
+  { locale: 'en', darkMode: true },
+  { locale: 'fa', darkMode: true },
+  { locale: 'en', darkMode: false },
+  { locale: 'fa', darkMode: false },
+])
+  test(`ticket form and conversation have readable ${darkMode ? 'dark' : 'light'} colors (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({
+        json: {
+          appTitle: 'Support',
+          slogan: '',
+          primaryColor: '#2563eb',
+          secondaryColor: '#64748b',
+          accentColor: '#f59e0b',
+          logoUrl: null,
+          faviconUrl: null,
+          darkMode,
+          numberStyle: locale === 'fa' ? 'persian' : 'western',
+        },
+      })
+    );
+    await page.route('**/api/tickets?*', (route) =>
+      route.fulfill({ json: { data: [item], totalPages: 1 } })
+    );
+    await page.route('**/api/tickets/options**', (route) =>
+      route.fulfill({ json: { profiles: [], records: [] } })
+    );
+    await page.route(`**/api/tickets/${ticketId}`, (route) => route.fulfill({ json: item }));
+    await page.route(`**/api/tickets/${ticketId}/comments`, (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: 'public',
+            body: 'A support reply',
+            visibility: 'public',
+            authorId: 'staff',
+            createdAt: item.updatedAt,
+          },
+        ],
+      })
+    );
+    await page.goto('/tickets');
+    if (darkMode) await expect(page.locator('html')).toHaveClass(/dark/);
+    else await expect(page.locator('html')).not.toHaveClass(/dark/);
+    await page.getByRole('button', { name: item.subject, exact: true }).click();
+    await expect(page.getByText('A support reply', { exact: true })).toBeVisible();
+    await page
+      .getByRole('button', { name: locale === 'en' ? 'Create ticket' : 'ایجاد تیکت', exact: true })
+      .click();
+    await page.locator('#ticket-subject').fill('A readable subject');
+    await page.locator('#ticket-body').fill('A readable question');
+    const submit = page.getByRole('button', {
+      name: locale === 'en' ? 'Submit ticket' : 'ثبت تیکت',
+      exact: true,
+    });
+    await expect(submit).toBeEnabled();
+    await submit.hover();
+    await submit.evaluate(async (element) => {
+      await Promise.all(
+        element.getAnimations().map((animation) => animation.finished.catch(() => {}))
+      );
+    });
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('section.max-w-5xl')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
+  });
+
 test('assigned-only staff see no reassignment control and stale lists cannot replace newer filters', async ({
   page,
 }) => {

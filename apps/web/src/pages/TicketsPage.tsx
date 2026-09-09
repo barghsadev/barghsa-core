@@ -318,15 +318,22 @@ function Tickets({ staff }: { staff: boolean }) {
       setBusy(false);
     }
   }
-  const canWrite = !staff || queue?.viewer?.canWrite;
+  const canWrite =
+    !staff ||
+    (queue?.viewer?.canWrite &&
+      (queue.viewer.canAssignOthers || detail?.assignedTo === queue.viewer.userId));
   const formatDate = time.format;
   return (
-    <section className="mx-auto max-w-5xl space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <section
+      className="mx-auto max-w-5xl space-y-5 bg-background text-foreground"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       {time.notice}
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">{text(staff ? 'staffTitle' : 'title')}</h1>
         {!staff && (
           <Button
+            className="hover:bg-primary"
             disabled={busy}
             onClick={() => {
               setCreating((value) => !value);
@@ -337,13 +344,16 @@ function Tickets({ staff }: { staff: boolean }) {
           </Button>
         )}
       </header>
-      {staff && <p className="text-sm text-gray-600">{text('targetNote')}</p>}
+      {staff && <p className="text-sm text-muted-foreground">{text('targetNote')}</p>}
       {error && (
         <p role="alert">{text(['conflict', 'forbidden'].includes(error) ? error : 'error')}</p>
       )}
       {saved && <p role="status">{text('saved')}</p>}
       {creating && (
-        <form onSubmit={(event) => void create(event)} className="rounded border bg-white p-4">
+        <form
+          onSubmit={(event) => void create(event)}
+          className="rounded border bg-card text-card-foreground p-4"
+        >
           <fieldset disabled={busy} className="space-y-3">
             <div>
               <Label htmlFor="ticket-subject">{text('subject')}</Label>
@@ -359,7 +369,7 @@ function Tickets({ staff }: { staff: boolean }) {
               <Label htmlFor="ticket-body">{text('body')}</Label>
               <textarea
                 id="ticket-body"
-                className="block w-full rounded border p-2"
+                className="block w-full rounded border border-input bg-background text-foreground p-2"
                 maxLength={10000}
                 required
                 value={body}
@@ -370,7 +380,7 @@ function Tickets({ staff }: { staff: boolean }) {
               <Label htmlFor="ticket-priority">{text('priority')}</Label>
               <select
                 id="ticket-priority"
-                className="block rounded border p-2"
+                className="block rounded border border-input bg-background text-foreground p-2"
                 value={priority}
                 onChange={(event) => setPriority(event.target.value)}
               >
@@ -389,7 +399,7 @@ function Tickets({ staff }: { staff: boolean }) {
                   <Label htmlFor="ticket-profile">{text('profile')}</Label>
                   <select
                     id="ticket-profile"
-                    className="block max-w-full rounded border p-2"
+                    className="block max-w-full rounded border border-input bg-background text-foreground p-2"
                     value={profileId}
                     onChange={(event) => {
                       setProfileId(event.target.value);
@@ -411,7 +421,7 @@ function Tickets({ staff }: { staff: boolean }) {
                     <Label htmlFor="ticket-record">{text('related')}</Label>
                     <select
                       id="ticket-record"
-                      className="block max-w-full rounded border p-2"
+                      className="block max-w-full rounded border border-input bg-background text-foreground p-2"
                       value={record}
                       onChange={(event) => setRecord(event.target.value)}
                     >
@@ -474,6 +484,7 @@ function Tickets({ staff }: { staff: boolean }) {
               )}
             </div>
             <Button
+              className="hover:bg-primary"
               type="submit"
               disabled={
                 !subject.trim() ||
@@ -503,7 +514,7 @@ function Tickets({ staff }: { staff: boolean }) {
           <Label htmlFor="ticket-filter">{text('status')}</Label>
           <select
             id="ticket-filter"
-            className="block rounded border p-2"
+            className="block rounded border border-input bg-background text-foreground p-2"
             value={filter}
             onChange={(event) => {
               setFilter(event.target.value);
@@ -522,7 +533,7 @@ function Tickets({ staff }: { staff: boolean }) {
           <Label htmlFor="ticket-sort">{text('sort')}</Label>
           <select
             id="ticket-sort"
-            className="block rounded border p-2"
+            className="block rounded border border-input bg-background text-foreground p-2"
             value={sort}
             onChange={(event) => {
               setSort(event.target.value);
@@ -570,7 +581,7 @@ function Tickets({ staff }: { staff: boolean }) {
                   <td className="p-2">
                     <button
                       disabled={busy}
-                      className="text-blue-700 underline text-start"
+                      className="text-blue-700 dark:text-blue-300 underline text-start"
                       onClick={() => {
                         setError('');
                         void select(item.id);
@@ -579,8 +590,16 @@ function Tickets({ staff }: { staff: boolean }) {
                       {item.subject}
                     </button>
                   </td>
-                  <td className="p-2">{text(item.status)}</td>
-                  <td className="p-2">{text(item.priority)}</td>
+                  <td className="p-2">
+                    <span className="rounded-full bg-muted px-2 py-1 text-sm font-medium">
+                      {text(item.status)}
+                    </span>
+                  </td>
+                  <td className="p-2">
+                    <span className="rounded-full border px-2 py-1 text-sm">
+                      {text(item.priority)}
+                    </span>
+                  </td>
                   <td className="p-2 whitespace-nowrap">{formatDate(item.updatedAt)}</td>
                   {staff && (
                     <>
@@ -629,7 +648,7 @@ function Tickets({ staff }: { staff: boolean }) {
       </nav>
       {detailLoading && <p role="status">{text('loading')}</p>}
       {detail && (
-        <article className="rounded border bg-white p-4 space-y-4 break-words">
+        <article className="rounded border bg-card text-card-foreground p-4 space-y-4 break-words">
           <h2 ref={heading} tabIndex={-1} className="text-xl font-semibold">
             {detail.subject}
           </h2>
@@ -645,7 +664,7 @@ function Tickets({ staff }: { staff: boolean }) {
           </p>
           {staff && detail.profileId && (
             <a
-              className="block text-blue-700 underline"
+              className="block text-blue-700 dark:text-blue-300 underline"
               href={`/admin/crm/profiles/${encodeURIComponent(detail.profileId)}`}
             >
               {text('openProfile')}
@@ -656,7 +675,7 @@ function Tickets({ staff }: { staff: boolean }) {
               {text(detail.relatedEntityType ?? 'related')}:{' '}
               {detail.relatedEntityType === 'invoice' ? (
                 <a
-                  className="text-blue-700 underline"
+                  className="text-blue-700 dark:text-blue-300 underline"
                   href={
                     staff
                       ? '/admin/invoices'
@@ -678,7 +697,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-700 underline"
+                className="block text-blue-700 dark:text-blue-300 underline"
               >
                 {text('attachment')} {index + 1}
               </a>
@@ -693,7 +712,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 <select
                   id="ticket-team"
                   disabled={busy}
-                  className="block rounded border p-2"
+                  className="block rounded border border-input bg-background text-foreground p-2"
                   value={teamId}
                   onChange={(event) => {
                     setTeamId(event.target.value);
@@ -713,7 +732,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 <select
                   id="ticket-assignee"
                   disabled={busy}
-                  className="block rounded border p-2"
+                  className="block rounded border border-input bg-background text-foreground p-2"
                   value={assignee}
                   onChange={(event) => setAssignee(event.target.value)}
                 >
@@ -732,6 +751,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 </select>
               </div>
               <Button
+                className="hover:bg-primary"
                 disabled={busy || !assignee}
                 onClick={() =>
                   void mutate(
@@ -753,7 +773,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 <select
                   id="ticket-next-status"
                   disabled={busy}
-                  className="block rounded border p-2"
+                  className="block rounded border border-input bg-background text-foreground p-2"
                   value={nextStatus}
                   onChange={(event) => setNextStatus(event.target.value as Status)}
                 >
@@ -768,6 +788,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 </select>
               </div>
               <Button
+                className="hover:bg-primary"
                 disabled={busy || (detail.status === 'open' && !detail.assignedTo)}
                 onClick={() =>
                   void mutate(
@@ -784,6 +805,7 @@ function Tickets({ staff }: { staff: boolean }) {
           )}
           {!staff && detail.status !== 'open' && (
             <Button
+              className="hover:bg-primary"
               disabled={busy}
               onClick={() =>
                 void mutate(`${prefix}/${detail.id}/status`, 'PATCH', { status: 'open' }, detail.id)
@@ -796,7 +818,7 @@ function Tickets({ staff }: { staff: boolean }) {
           {comments.map((item) => (
             <div
               key={item.id}
-              className={`rounded border p-3 ${item.visibility === 'internal' ? 'border-amber-300 bg-amber-50' : 'bg-gray-50'}`}
+              className={`rounded border p-3 ${item.visibility === 'internal' ? 'border-amber-300 bg-amber-50 dark:border-amber-700 dark:bg-amber-950' : 'bg-muted'}`}
             >
               <p className="text-sm">
                 {item.authorId} · {formatDate(item.createdAt)} · {text(item.visibility)}
@@ -824,7 +846,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 disabled={busy}
                 required
                 maxLength={10000}
-                className="block w-full rounded border p-2"
+                className="block w-full rounded border border-input bg-background text-foreground p-2"
                 value={reply}
                 onChange={(event) => setReply(event.target.value)}
               />
@@ -839,7 +861,7 @@ function Tickets({ staff }: { staff: boolean }) {
                   {text('internal')}
                 </Label>
               )}
-              <Button disabled={busy || !reply.trim()} type="submit">
+              <Button className="hover:bg-primary" disabled={busy || !reply.trim()} type="submit">
                 {text(busy ? 'saving' : 'send')}
               </Button>
             </form>
