@@ -3953,7 +3953,25 @@
         "summary": "Confirm an invoice bank receipt",
         "tags": [
           "Admin · Invoice bank receipts"
-        ]
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emergencyOverrideReason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000,
+                    "description": "Confirm one pending receipt approval without a second reviewer. Requires admin:financial:emergency-override and recent step-up. Reason, audit and immediate finance alerts commit atomically with settlement."
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/admin/invoices/bank-receipts/{receiptId}/reject": {
@@ -7989,21 +8007,27 @@
           }
         ],
         "requestBody": {
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
                 "properties": {
+                  "emergencyOverrideReason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000,
+                    "description": "Confirm one pending receipt approval without a second reviewer. Requires admin:financial:emergency-override and recent step-up. Reason, audit and immediate finance alerts commit atomically with settlement."
+                  },
                   "invoiceId": {
-                    "description": "Optional invoice to apply the receipt against. Excess over remaining is credited to the wallet.",
+                    "type": "string",
                     "format": "uuid",
-                    "type": "string"
+                    "description": "Optional invoice to apply the receipt against. Excess over remaining is credited to the wallet."
                   }
-                },
-                "type": "object"
+                }
               }
             }
-          },
-          "required": false
+          }
         },
         "responses": {
           "200": {
