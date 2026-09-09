@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+  "source_revision": "5b637a8ee64a72e2a80042a63ffe97a39c4049ca",
   "active_step": "R01",
-  "next_action": "R01 tickets batch: read exact requirements and saved PR138/139/140 bodies, review current customer/staff workflow and valid prior evidence, then fix confirmed gaps and consolidate once.",
+  "next_action": "R01 tickets: write authority verified at5b637a8. Finish current read/privacy, attachment, assignment and UI requirement review, then repair confirmed gaps and consolidate the three task/PR dispositions.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -763,15 +763,34 @@
       "02-auth-users-admin.md#T-06.01.03"
     ],
     "remaining_checklist": [
-      "Read exact ticket requirements and saved PR bodies.",
+      "Exact ticket requirements and all three saved PR bodies read. PR138 attachment and PR140 team-assignment deferrals remain to be dispositioned against current implementations.",
       "Review current authority, privacy, attachments, assignment and transitions with prior evidence.",
       "Repair confirmed gaps, run focused checks and consolidate individual task/PR dispositions."
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "summary": "A session expiring while a ticket row is locked can still commit a customer reply. A revoked staff role can still commit a status change using the guard's earlier permissions.",
+        "status": "repaired_and_verified_at_5b637a8",
+        "evidence": [
+          "/tmp/r01-tickets-actor-baseline.log",
+          "/tmp/r01-tickets-role-baseline.log"
+        ]
+      }
+    ],
     "reused_evidence": [],
-    "new_evidence": [],
+    "new_evidence": [
+      "5b637a8: current account/role/session checks run inside every HTTP ticket write transaction. Newly assigned-only grants restrict the locked ticket and assignment target. Final session checks roll back ticket/comment/audit/notification effects on expiry.",
+      "30 final HTTP cases pass in /tmp/r01-tickets-actor-http-verified.log.22 unchanged service cases pass in the earlier46-case run; counts overlap. API types, scoped lint, formatting and unchanged OpenAPI pass. All14 ended logs, including baseline failures and the transient-staff fixture correction, are archived through audit/evidence/index.json."
+    ],
     "pr_dispositions": [],
-    "next_action": "R01 tickets batch: read exact requirements and saved PR138/139/140 bodies, review current customer/staff workflow and valid prior evidence, then fix confirmed gaps and consolidate once."
+    "next_action": "Complete read/privacy, attachment and UI acceptance. Writes are verified at5b637a8; reuse unchanged tests and consolidate the three task/PR reviews once the batch is complete.",
+    "product_commits": [
+      {
+        "revision": "5b637a8",
+        "change": "Current ticket write authority through commit",
+        "verification": "30 HTTP and22 reused service cases; API types/lint/format/OpenAPI pass. Existing HTTP fixture rebuilt the product API. No ticket task or PR marked closed yet."
+      }
+    ]
   },
   "open_domain_reviews": [
     {

@@ -12,7 +12,11 @@ Counts: **127 verified /27 partial /168 pending =322 claims**.195 unresolved tas
 
 ## Next action
 
-Active **R01-tickets**, saved PRs138,139,140; `02-auth-users-admin.md#T-06.01.01` through `.03`. Read exact requirements and saved PR bodies, then review current customer/staff authority, privacy, attachments, assignment and transitions. Reuse existing repairs and tests. Fix confirmed gaps, review each meaningful change, then consolidate once. No new ticket acceptance is claimed yet.
+Active **R01-tickets**, saved PRs138,139,140; `02-auth-users-admin.md#T-06.01.01` through `.03`. Exact requirements and all three PR bodies are read. Current product HEAD is **5b637a8**. Ticket write authority is repaired and reviewed: all six HTTP write handlers supply their session actor; current account/role locks and session checks bind writes through commit. A role downgrade recomputes assigned-only scope. Final expiry checks roll back creation, assignment, status, comments, audit and notifications together.
+
+30 final HTTP cases and22 reused service cases pass. API types/lint/format/OpenAPI pass; HTTP setup rebuilt the API.14 ended logs, including two proven baseline defects and one corrected fixture-isolation failure, are archived.2044 logs indexed. No ticket task or PR is closed yet; consolidate once after the remaining review.
+
+Next: review read authority/privacy, attachments and UI against the requirements. Staff reads still use the guard's cached scope; creation-options ownership and related-record queries also need a consistent read review. Current service/UI already implement attachment sealing, assignment, internal notes and transitions; inspect before rebuilding. The first390 of783 lines of the Tickets component were reviewed. Verify staff/customer detail fields, missing category/type requirements, profile/related-record links, accessibility and themes. Contract linking explicitly depends on the unbuilt contract table. Preserve valid existing evidence.
 
 ## Preserve these boundaries
 
