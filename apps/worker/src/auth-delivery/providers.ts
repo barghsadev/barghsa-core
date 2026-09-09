@@ -1,4 +1,11 @@
-import { createEmailSender } from '@barghsa/shared/notification-delivery';
+import {
+  createEmailSender,
+  loadEmailBranding,
+  normalizeEmailBranding,
+  renderBrandedEmail,
+  type EmailBranding,
+} from '@barghsa/shared/notification-delivery';
+import { escapeHtml } from '@barghsa/shared/notifications';
 import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import type { Pool } from 'pg';
 import {
@@ -13,6 +20,8 @@ export interface AuthMessage {
   code: string;
   purpose: string;
   activationUrl?: string;
+  /** Frozen by the durable worker; null preserves already-attempted legacy messages. */
+  emailBranding?: EmailBranding | null;
 }
 
 /** Dependencies are supplied by controlled provider tests, never by request data. */
@@ -27,19 +36,47 @@ export function createAuthSender(pool: Pool, request: typeof fetch = fetch) {
       throw new Error('Invalid auth message');
     const email = message.destination.includes('@');
     if (activation && !email) throw new Error('Activation requires email');
-    const subject = activation
+    let subject = activation
       ? 'فعال‌سازی حساب برق‌آسا / Activate your Barghsa account'
       : 'کد تأیید برق‌آسا / Barghsa verification code';
-    const text = activation
+    let text = activation
       ? `برای فعال‌سازی حساب و تعیین رمز عبور، این پیوند را باز کنید. اعتبار: ۲۴ ساعت.
 Open this link to activate your account and set your password. It expires in 24 hours.
 ${message.activationUrl}`
       : `کد تأیید برق‌آسا: ${message.code}\nBarghsa verification code: ${message.code}\nاین کد را با کسی به اشتراک نگذارید. Do not share this code.`;
-    if (email)
+    if (email) {
+      const brand =
+        message.emailBranding === null
+          ? null
+          : message.emailBranding
+            ? normalizeEmailBranding(message.emailBranding)
+            : await loadEmailBranding(pool);
+      if (brand) {
+        subject = activation
+          ? `فعال‌سازی حساب ${brand.appTitle} / Activate your ${brand.appTitle} account`
+          : `کد تأیید ${brand.appTitle} / ${brand.appTitle} verification code`;
+        if (!activation)
+          text = `کد تأیید ${brand.appTitle}: ${message.code}\n${brand.appTitle} verification code: ${message.code}\nاین کد را با کسی به اشتراک نگذارید. Do not share this code.`;
+      }
       return createEmailSender(
         pool,
         request
-      )({ destination: message.destination, subject, text, idempotencyKey: message.id });
+      )({
+        destination: message.destination,
+        subject,
+        text,
+        ...(brand
+          ? {
+              html: renderBrandedEmail(
+                `<p style="white-space:pre-wrap">${escapeHtml(text)}</p>`,
+                brand,
+                'fa'
+              ),
+            }
+          : {}),
+        idempotencyKey: message.id,
+      });
+    }
     const providers = await pool.query<{ id: string; transport: string; config: unknown }>(
       "SELECT id, transport, config FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'"
     );

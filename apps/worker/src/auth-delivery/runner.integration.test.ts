@@ -3,7 +3,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { Pool } from 'pg';
 import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from 'vitest';
-import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
+import { decryptAuthDelivery, encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { runAuthDelivery } from './runner.js';
 import { createAuthSender, type AuthMessage } from './providers.js';
 
@@ -39,6 +39,7 @@ beforeEach(async () => {
   await pool.query('DELETE FROM sms_provider_configs');
   await pool.query('DELETE FROM email_provider_configs');
   await pool.query('DELETE FROM security_rate_limit_counters');
+  await pool.query('DELETE FROM brand_config');
   await pool.query('DELETE FROM users');
   await pool.query(
     "INSERT INTO users(user_id,username,password_hash) VALUES ('delivery-user','recipient@example.test','fixture-only')"
@@ -74,7 +75,13 @@ it('delivers the bound challenge data, persists receipt and erases payload', asy
   const { id } = await queued({ code, destination, purpose: 'ignored', activationUrl: undefined });
   const send = vi.fn(async () => 'provider-receipt');
   expect(await runAuthDelivery(pool, send)).toBe('sent');
-  expect(send).toHaveBeenCalledWith({ id, code, destination, purpose: 'login' });
+  expect(send).toHaveBeenCalledWith({
+    id,
+    code,
+    destination,
+    purpose: 'login',
+    emailBranding: expect.objectContaining({ appTitle: 'Barghsa' }),
+  });
   expect(await state(id)).toMatchObject({
     status: 'sent',
     provider_ref: 'provider-receipt',
@@ -247,6 +254,7 @@ it('sends a valid staff activation with its encrypted link and cancels a replace
     destination,
     purpose: 'staff_activation',
     activationUrl: link,
+    emailBranding: expect.objectContaining({ appTitle: 'Barghsa' }),
   });
   await pool.query("UPDATE auth_delivery_outbox SET status='pending',encrypted_payload=$1", [
     encryptAuthDelivery(id, { code: token, destination, activationUrl: link }),
@@ -345,12 +353,15 @@ it('normalizes Iranian mobile numbers, sends the exact OTP mapping and enforces 
   await expect(send({ ...message, id: 'message-2' })).rejects.toThrow('SMS provider quota reached');
   expect(request).toHaveBeenCalledOnce();
 });
-it('sends OTP and activation email through the real shared adapter with stable idempotency', async () => {
+async function emailProvider() {
   await pool.query(
     `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
  VALUES ('resend','Fixture','active',$1,'delivery-user','passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
     [{ api_key: 'fixture-mail-key', from_email: 'sender@example.test' }]
   );
+}
+it('sends OTP and activation email through the real shared adapter with stable idempotency', async () => {
+  await emailProvider();
   const request = vi.fn<typeof fetch>(
     async () => new Response(JSON.stringify({ id: 'mail-receipt' }), { status: 200 })
   );
@@ -373,4 +384,58 @@ it('sends OTP and activation email through the real shared adapter with stable i
   const bodies = request.mock.calls.map(([, options]) => JSON.parse(String(options?.body)));
   expect(bodies[0].text).toContain(code);
   expect(bodies[1].text).toContain(link);
+  expect(bodies[0].html).toContain('Barghsa');
+  expect(bodies[1].html).toContain('Barghsa');
+});
+
+it('freezes active auth-email branding in encrypted delivery data across retries', async () => {
+  await emailProvider();
+  await pool.query(`INSERT INTO brand_config(config,version,status,created_by)
+    VALUES ('{"appTitle":"First & Energy","primaryColor":"#123456"}',1,'active','delivery-user'),
+    ('{"appTitle":"Draft name"}',2,'draft','delivery-user')`);
+  const bodies: Record<string, unknown>[] = [];
+  const request = vi.fn<typeof fetch>(async (_url, options) => {
+    bodies.push(JSON.parse(String(options?.body)));
+    return new Response(JSON.stringify({ id: 'branded-mail' }), {
+      status: bodies.length === 1 ? 503 : 200,
+    });
+  });
+  const sender = createAuthSender(pool, request);
+  const { id } = await queued();
+  expect(await runAuthDelivery(pool, sender)).toBe('retry');
+  const saved = await state(id);
+  expect(saved.encrypted_payload).not.toContain('First & Energy');
+  expect(decryptAuthDelivery(id, saved.encrypted_payload)).toMatchObject({
+    emailBranding: { appTitle: 'First & Energy' },
+  });
+  await pool.query(
+    `UPDATE brand_config SET config='{"appTitle":"Later name","primaryColor":"#654321"}' WHERE status='active'`
+  );
+  await pool.query("UPDATE auth_delivery_outbox SET available_at=NOW()-INTERVAL '1 second'");
+  expect(await runAuthDelivery(pool, sender)).toBe('sent');
+  expect(bodies[0]).toEqual(bodies[1]);
+  expect(bodies[1]?.subject).toContain('First & Energy');
+  expect(bodies[1]?.html).toContain('First &amp; Energy');
+  expect(bodies[1]?.html).toContain('#123456');
+  expect(bodies[1]?.html).not.toMatch(/Draft name|Later name/);
+  expect((await state(id)).encrypted_payload).toBeNull();
+  await queued();
+  expect(await runAuthDelivery(pool, sender)).toBe('sent');
+  expect(bodies[2]?.subject).toContain('Later name');
+});
+
+it('retains the original plain email for already-attempted legacy delivery keys', async () => {
+  await emailProvider();
+  await queued();
+  await pool.query('UPDATE auth_delivery_outbox SET attempts=1');
+  const request = vi.fn<typeof fetch>(
+    async () => new Response(JSON.stringify({ id: 'legacy-mail' }), { status: 200 })
+  );
+  expect(await runAuthDelivery(pool, createAuthSender(pool, request))).toBe('sent');
+  const body = JSON.parse(String(request.mock.calls[0]?.[1]?.body));
+  expect(body.subject).toBe('کد تأیید برق‌آسا / Barghsa verification code');
+  expect(body.text).toBe(
+    `کد تأیید برق‌آسا: ${code}\nBarghsa verification code: ${code}\nاین کد را با کسی به اشتراک نگذارید. Do not share this code.`
+  );
+  expect(body.html).toBeUndefined();
 });

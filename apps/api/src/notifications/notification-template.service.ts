@@ -2,6 +2,8 @@ import {
   createEmailSender,
   createSmsSender,
   prepareSmsMessage,
+  loadEmailBranding,
+  renderBrandedEmail,
 } from '@barghsa/shared/notification-delivery';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -460,9 +462,13 @@ export class NotificationTemplateService {
   async preview(id: string, sampleData?: Record<string, string>): Promise<RenderedTemplate> {
     const tpl = await this.getById(id);
     const data = sampleData ?? this.buildSampleData(tpl.variables);
+    const body = this.render(tpl.bodyTemplate, tpl.variables, data, tpl.channel === 'email');
     return {
       subject: tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data, false) : null,
-      body: this.render(tpl.bodyTemplate, tpl.variables, data, tpl.channel === 'email'),
+      body:
+        tpl.channel === 'email'
+          ? renderBrandedEmail(body, await loadEmailBranding(getDbPool()), tpl.locale)
+          : body,
       variables: tpl.variables,
     };
   }
@@ -518,10 +524,16 @@ export class NotificationTemplateService {
           if (!destination)
             throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DESTINATION_REQUIRED' }, 400);
           try {
+            const html = renderBrandedEmail(
+              renderedBody,
+              await loadEmailBranding(pool),
+              tpl.locale
+            );
+            await requireSessionStepUp(client, actor);
             providerRef = await createEmailSender(pool)({
               destination,
               subject: renderedSubject ?? `Test: ${tpl.eventKey}`,
-              html: renderedBody,
+              html,
               idempotencyKey: `template-test:${id}:${uuidv7()}`,
             });
           } catch {

@@ -1,5 +1,10 @@
 import { getDbPool } from '@barghsa/db';
-import { createEmailSender, type DeliveryPool } from '@barghsa/shared/notification-delivery';
+import {
+  createEmailSender,
+  loadEmailBranding,
+  renderBrandedEmail,
+  type DeliveryPool,
+} from '@barghsa/shared/notification-delivery';
 import {
   renderTemplate,
   type INotificationTransport,
@@ -67,6 +72,11 @@ export class EmailNotificationTransport implements INotificationTransport {
         body.unknown.length
       )
         throw new Error('Email template data incomplete');
+      const brandedBody = renderBrandedEmail(
+        body.output,
+        await loadEmailBranding(this.pool),
+        recipient.locale
+      );
       const saved = await this.pool.query(
         `UPDATE notification_job SET delivery_payload=COALESCE(delivery_payload,$2::jsonb)
         WHERE outbox_id=$1 AND channel='email' RETURNING delivery_payload`,
@@ -78,7 +88,7 @@ export class EmailNotificationTransport implements INotificationTransport {
             profileId: recipient.profileId,
             destination: recipient.email,
             subject: subject.output,
-            html: body.output,
+            html: brandedBody,
             providerId: providers.rows[0]!.id,
             templateId: template.id,
             templateVersion: template.version,

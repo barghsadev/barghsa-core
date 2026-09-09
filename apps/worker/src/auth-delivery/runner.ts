@@ -1,6 +1,11 @@
 import { randomUUID, createHash } from 'node:crypto';
 import type { Pool } from 'pg';
-import { decryptAuthDelivery } from '@barghsa/shared/auth-delivery';
+import { decryptAuthDelivery, encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
+import {
+  loadEmailBranding,
+  normalizeEmailBranding,
+  type EmailBranding,
+} from '@barghsa/shared/notification-delivery';
 import { createAuthSender, type AuthMessage } from './providers.js';
 
 interface DeliveryRow {
@@ -72,11 +77,27 @@ export async function runAuthDelivery(
       createHash('sha256').update(payload.code).digest('hex') !== row.code_hash
     )
       throw new Error('Invalid auth delivery payload');
+    let emailBranding: EmailBranding | null | undefined;
+    if (challenge.destination.includes('@')) {
+      if (payload.emailBranding) emailBranding = normalizeEmailBranding(payload.emailBranding);
+      else if (payload.emailBranding === null || row.attempts > 1) {
+        // A previous app version may have sent this idempotency key already.
+        emailBranding = null;
+      } else {
+        emailBranding = await loadEmailBranding(pool);
+        const saved = await pool.query(
+          `UPDATE auth_delivery_outbox SET encrypted_payload=$3 WHERE id=$1 AND lease_token=$2 AND lease_until>clock_timestamp()`,
+          [row.id, token, encryptAuthDelivery(row.id, { ...payload, emailBranding })]
+        );
+        if (saved.rowCount !== 1) throw new Error('Auth delivery lease lost before rendering');
+      }
+    }
     const ref = await send({
       id: row.id,
       code: payload.code,
       destination: challenge.destination,
       purpose: challenge.purpose,
+      ...(emailBranding !== undefined ? { emailBranding } : {}),
       ...(typeof payload.activationUrl === 'string'
         ? { activationUrl: payload.activationUrl }
         : {}),

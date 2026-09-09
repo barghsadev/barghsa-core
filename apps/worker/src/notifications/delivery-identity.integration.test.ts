@@ -734,6 +734,10 @@ it('delivers a queued email with the recipient locale, template and durable rece
   );
   await pool.query(`INSERT INTO notification_templates(event_key,channel,locale,subject,body_template,variables,status,is_active,created_by)
     VALUES ('wallet.topup_completed','email','en','Top-up {{amount}}','<p>{{name}}: {{amount}}</p>','["name","amount"]','active',true,'delivery-owner')`);
+  await pool.query('DELETE FROM brand_config');
+  await pool.query(`INSERT INTO brand_config(config,version,status,created_by)
+    VALUES ('{"appTitle":"Published & Energy","primaryColor":"#123456"}',1,'active','delivery-owner'),
+    ('{"appTitle":"Unpublished brand"}',2,'draft','delivery-owner')`);
   const received: Array<{ key: string; content: Record<string, unknown> }> = [];
   let responseCode = 503;
   const server = createServer(async (req, res) => {
@@ -779,6 +783,9 @@ it('delivers a queued email with the recipient locale, template and durable rece
     expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 });
     responseCode = 200;
     await pool.query(
+      `UPDATE brand_config SET config='{"appTitle":"Later brand","primaryColor":"#654321"}' WHERE status='active'`
+    );
+    await pool.query(
       "UPDATE notification_templates SET body_template='<p>Changed template</p>' WHERE event_key='wallet.topup_completed' AND channel='email'"
     );
     await pool.query(
@@ -799,8 +806,12 @@ it('delivers a queued email with the recipient locale, template and durable rece
     expect(received[1]!.content).toMatchObject({
       to: ['Recipient@example.test'],
       subject: 'Top-up 5000',
-      html: '<p>A&amp;B &lt;customer&gt;: 5000</p>',
+      html: expect.stringContaining('<p>A&amp;B &lt;customer&gt;: 5000</p>'),
     });
+    expect(received[0]!.content).toEqual(received[1]!.content);
+    expect(received[1]!.content.html).toContain('Published &amp; Energy');
+    expect(received[1]!.content.html).toContain('#123456');
+    expect(received[1]!.content.html).not.toMatch(/Later brand|Unpublished brand/);
     expect(
       (
         await pool.query(

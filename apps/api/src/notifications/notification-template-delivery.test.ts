@@ -20,7 +20,8 @@ const { query, send, sms, prepareSms } = vi.hoisted(() => ({
   sms: vi.fn(),
   prepareSms: vi.fn(),
 }));
-vi.mock('@barghsa/shared/notification-delivery', () => ({
+vi.mock('@barghsa/shared/notification-delivery', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@barghsa/shared/notification-delivery')>()),
   createEmailSender: () => send,
   createSmsSender: () => sms,
   prepareSmsMessage: prepareSms,
@@ -176,7 +177,7 @@ it('uses the email provider receipt and never inserts an inbox substitute', asyn
     expect.objectContaining({
       destination: 'staff@example.test',
       subject: 'Invoice',
-      html: 'Test body',
+      html: expect.stringContaining('Test body'),
     })
   );
   expect(create).not.toHaveBeenCalled();
@@ -216,6 +217,38 @@ it('records a mapped SMS receipt without an inbox substitute', async () => {
   const audit = query.mock.calls.find(([sql]) => sql.includes('INSERT INTO audit_log'));
   expect(JSON.parse(audit![1][3])).toMatchObject({ deliveredTo: 'sms', providerRef: '123' });
 });
+
+it.each(['fa', 'en'] as const)(
+  'uses the same active branding in %s saved preview and test delivery',
+  async (locale) => {
+    const { instance, lockTemplate } = service('email');
+    const template = { ...(await lockTemplate()), locale };
+    lockTemplate.mockResolvedValue(template);
+    query.mockImplementation(async (sql: string) => {
+      if (sql.includes('FROM brand_config'))
+        return {
+          rows: [
+            {
+              config: {
+                appTitle: 'Current <brand>',
+                primaryColor: '#123456',
+                slogan: 'Clean power',
+              },
+            },
+          ],
+        };
+      if (sql.includes('FROM notification_templates')) return { rows: [template] };
+      return { rows: [{ ...sessionRow, username: 'staff@example.test' }] };
+    });
+    send.mockResolvedValue('email-receipt');
+    const preview = await instance.preview('template');
+    await instance.testSend('template', actor, { destination: 'staff@example.test' });
+    expect(send).toHaveBeenCalledWith(expect.objectContaining({ html: preview.body }));
+    expect(preview.body).toContain('Current &lt;brand&gt;');
+    expect(preview.body).toContain('#123456');
+    expect(preview.body).toContain(`dir="${locale === 'fa' ? 'rtl' : 'ltr'}"`);
+  }
+);
 
 it('does not relabel a sent email as failed when its audit cannot persist', async () => {
   const { instance } = service('email');
