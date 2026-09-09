@@ -49,7 +49,8 @@ export class OrdersController {
    * copied at order time (not foreign key) so the order remains accurate
    * even if the user updates their saved address later.
    *
-   * Requires: authenticated session, valid profile ownership, active product.
+   * Requires current session, owner/Manager authority on the submitted profile,
+   * commercial verification policy and an active product, held through commit.
    */
   @Post()
   @HttpCode(201)
@@ -71,7 +72,7 @@ export class OrdersController {
       );
     const { giftCode, ...input } = parsed.data;
     const order = await this.ordersService.createOrder(
-      userId,
+      req.session,
       {
         ...input,
         ...(giftCode !== undefined ? { giftCode } : {}),
@@ -147,8 +148,7 @@ export class OrdersController {
     @Param('id', new ParseUUIDPipe()) orderId: string,
     @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId;
-    const order = await this.ordersService.cancelOrder(userId, orderId, req.ip ?? 'unknown');
+    const order = await this.ordersService.cancelOrder(req.session, orderId, req.ip ?? 'unknown');
     if (!order) {
       throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }

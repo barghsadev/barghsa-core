@@ -4,6 +4,11 @@ import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { GiftCodeService } from '../admin/gift-code.service.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+
+type OrderActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 export interface OrderRow {
   id: string;
@@ -76,22 +81,55 @@ export class OrdersService {
   private async mayManageOrders(
     client: PoolClient,
     userId: string,
-    profileId: string
+    profileId: string,
+    commercial = false
   ): Promise<boolean> {
     const profile = (
       await client.query(
-        'SELECT id,user_id,profile_type FROM profiles WHERE id=$1 AND NOT archived FOR SHARE',
+        'SELECT id,user_id,profile_type,status FROM profiles WHERE id=$1 AND NOT archived FOR SHARE',
         [profileId]
       )
     ).rows[0];
     if (!profile) return false;
-    if (profile.user_id === userId) return true;
-    if (profile.profile_type !== 'LEGAL') return false;
-    const agent = await client.query(
-      "SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE",
-      [profileId, userId]
-    );
-    return agent.rows.length > 0;
+    if (profile.user_id !== userId) {
+      if (profile.profile_type !== 'LEGAL') return false;
+      const agent = await client.query(
+        "SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE",
+        [profileId, userId]
+      );
+      if (agent.rows.length === 0) return false;
+    }
+    if (commercial) {
+      // Cover absent configuration keys as well as updates. Keep policy and the
+      // submitted profile stable until commit, without relying on cached context.
+      await client.query('LOCK TABLE app_config IN SHARE MODE');
+      const config = await client.query<{ key: string; value: unknown }>(
+        "SELECT key,value FROM app_config WHERE key IN ('profile_verification_mode','verification.required')"
+      );
+      const mode = config.rows.find((row) => row.key === 'profile_verification_mode')?.value;
+      const required =
+        mode != null
+          ? mode !== 'DISABLED'
+          : config.rows.find((row) => row.key === 'verification.required')?.value === true;
+      if (
+        profile.status === 'DRAFT' ||
+        profile.status === 'SUSPENDED' ||
+        (required && profile.status !== 'VERIFIED')
+      )
+        throw new HttpException({ error: ErrorCodes.AUTHZ_PROFILE_NOT_VERIFIED.code }, 403);
+    }
+    return true;
+  }
+
+  private async lockOrderActor(client: PoolClient, actor: OrderActor): Promise<void> {
+    const account = (
+      await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+        actor.userId,
+      ])
+    ).rows[0];
+    if (!account || account.disabled_at)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    await requireCurrentSession(client, actor);
   }
 
   /**
@@ -107,7 +145,12 @@ export class OrdersService {
    * price is the pre-discount order total used for minimum-order and
    * percentage-capped discount computation (T-09.12.03).
    */
-  async createOrder(userId: string, dto: CreateOrderDto, actorIp = 'unknown'): Promise<OrderRow> {
+  async createOrder(
+    actor: OrderActor,
+    dto: CreateOrderDto,
+    actorIp = 'unknown'
+  ): Promise<OrderRow> {
+    const { userId } = actor;
     // ── Address field validation (fast-path, no DB) ────────────────
     if (!dto.address.provinceId?.trim()) {
       throw new HttpException(
@@ -174,8 +217,9 @@ export class OrdersService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await this.lockOrderActor(client, actor);
 
-      if (!(await this.mayManageOrders(client, userId, dto.profileId)))
+      if (!(await this.mayManageOrders(client, userId, dto.profileId, true)))
         throw new HttpException(
           {
             statusCode: 404,
@@ -268,13 +312,15 @@ export class OrdersService {
 
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
-         VALUES(uuid_generate_v7(),$1,'order_created',$2::jsonb,uuid_generate_v7(),$3)`,
+         VALUES(uuid_generate_v7(),$1,'order_created',$2::jsonb,COALESCE($4::uuid,uuid_generate_v7()),$3)`,
         [
           userId,
           JSON.stringify({ orderId: finalOrder.id, profileId: dto.profileId, status: 'DRAFT' }),
           actorIp,
+          correlationIdStorage.getStore() ?? null,
         ]
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       this.logger.log(`Order ${finalOrder.id} created for user ${userId}, type=${dto.orderType}`);
       return finalOrder;
@@ -332,14 +378,16 @@ export class OrdersService {
    * silently reporting success.
    */
   async cancelOrder(
-    userId: string,
+    actor: OrderActor,
     orderId: string,
     actorIp = 'unknown'
   ): Promise<OrderRow | null> {
+    const { userId } = actor;
     const pool = getDbPool();
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await this.lockOrderActor(client, actor);
       const target = (await client.query('SELECT profile_id FROM orders WHERE id=$1', [orderId]))
         .rows[0];
       if (!target || !(await this.mayManageOrders(client, userId, target.profile_id))) {
@@ -356,6 +404,7 @@ export class OrdersService {
       }
       const current = mapRow(result.rows[0] as Record<string, unknown>);
       if (current.status === 'CANCELLED') {
+        await requireCurrentSession(client, actor);
         await client.query('COMMIT');
         return current;
       }
@@ -379,7 +428,7 @@ export class OrdersService {
       }
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
-         VALUES(uuid_generate_v7(),$1,'order_cancelled',$2::jsonb,uuid_generate_v7(),$3)`,
+         VALUES(uuid_generate_v7(),$1,'order_cancelled',$2::jsonb,COALESCE($4::uuid,uuid_generate_v7()),$3)`,
         [
           userId,
           JSON.stringify({
@@ -389,8 +438,10 @@ export class OrdersService {
             status: 'CANCELLED',
           }),
           actorIp,
+          correlationIdStorage.getStore() ?? null,
         ]
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       this.logger.log(`Order ${order.id} cancelled for user ${userId}`);
       return order;

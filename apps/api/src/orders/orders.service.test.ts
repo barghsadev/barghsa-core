@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OrdersService, type CreateOrderDto } from './orders.service.js';
 
+const orderActor = { userId: 'user-1', sessionId: 'session-1', csrfToken: 'csrf-1' };
+
 const mockClient = {
   query: vi.fn(),
   release: vi.fn(),
@@ -33,6 +35,17 @@ beforeEach(() => {
     if (text === 'BEGIN' || text === 'COMMIT' || text === 'ROLLBACK') {
       return { rows: [], rowCount: 0 };
     }
+    // Current-session/policy behavior is exercised against PostgreSQL in the HTTP suite.
+    if (text.startsWith('SELECT disabled_at FROM users')) return { rows: [{ disabled_at: null }] };
+    if (text.startsWith('SELECT session_id FROM sessions'))
+      return { rows: [{ session_id: orderActor.sessionId }] };
+    if (text.includes('SELECT csrf_token, step_up_verified_at'))
+      return { rows: [{ active: true, csrf_token: orderActor.csrfToken, fresh: true }] };
+    if (
+      text.startsWith('LOCK TABLE app_config') ||
+      text.startsWith('SELECT key,value FROM app_config')
+    )
+      return { rows: [] };
     if (text.includes('FROM provinces p JOIN cities c')) return { rows: [{ id: 'city-1' }] };
     const next = responses.shift() ?? { rows: [], rowCount: 0 };
     return next;
@@ -89,7 +102,7 @@ describe('OrdersService', () => {
       queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: '2000000' }] }); // product
       queueResponse({ rows: [makeRow()] }); // insert order
 
-      const result = await service.createOrder('user-1', validDto);
+      const result = await service.createOrder(orderActor, validDto);
 
       expect(result.id).toBe('ord-001');
       expect(result.status).toBe('DRAFT');
@@ -117,7 +130,7 @@ describe('OrdersService', () => {
       queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
       queueResponse({ rows: [] }); // product missing -> HttpException
 
-      await expect(service.createOrder('user-1', validDto)).rejects.toThrow(
+      await expect(service.createOrder(orderActor, validDto)).rejects.toThrow(
         /Product not found or not active/
       );
 
@@ -142,7 +155,7 @@ describe('OrdersService', () => {
       });
       queueResponse({ rows: [makeRow({ gift_code_id: 'gc-1', gift_discount_amount: '500000' })] }); // update order
 
-      const result = await service.createOrder('user-1', {
+      const result = await service.createOrder(orderActor, {
         ...validDto,
         giftCode: 'sale10',
       });
@@ -171,7 +184,7 @@ describe('OrdersService', () => {
       queueResponse({ rows: [makeRow()] }); // insert order
 
       await expect(
-        service.createOrder('user-1', { ...validDto, giftCode: 'sale10' })
+        service.createOrder(orderActor, { ...validDto, giftCode: 'sale10' })
       ).rejects.toThrow(/without a price/);
 
       expect(mockGiftCodeService.redeem).not.toHaveBeenCalled();
@@ -187,7 +200,7 @@ describe('OrdersService', () => {
       );
 
       await expect(
-        service.createOrder('user-1', { ...validDto, giftCode: 'sale10' })
+        service.createOrder(orderActor, { ...validDto, giftCode: 'sale10' })
       ).rejects.toThrow(/usage limit reached/);
 
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
@@ -197,7 +210,7 @@ describe('OrdersService', () => {
     it('throws 404 when profile does not belong to user', async () => {
       queueResponse({ rows: [] });
 
-      await expect(service.createOrder('user-1', validDto)).rejects.toThrow(/Profile not found/);
+      await expect(service.createOrder(orderActor, validDto)).rejects.toThrow(/Profile not found/);
     });
 
     it('throws 400 when address province is missing', async () => {
@@ -206,7 +219,7 @@ describe('OrdersService', () => {
         address: { ...validDto.address, provinceId: '' },
       };
 
-      await expect(service.createOrder('user-1', dto)).rejects.toThrow(/Province is required/);
+      await expect(service.createOrder(orderActor, dto)).rejects.toThrow(/Province is required/);
       expect(mockPool.connect).not.toHaveBeenCalled();
     });
 
@@ -216,7 +229,7 @@ describe('OrdersService', () => {
         address: { ...validDto.address, cityId: '' },
       };
 
-      await expect(service.createOrder('user-1', dto)).rejects.toThrow(/City is required/);
+      await expect(service.createOrder(orderActor, dto)).rejects.toThrow(/City is required/);
     });
 
     it('throws 400 when address full address is missing', async () => {
@@ -225,7 +238,9 @@ describe('OrdersService', () => {
         address: { ...validDto.address, fullAddress: '' },
       };
 
-      await expect(service.createOrder('user-1', dto)).rejects.toThrow(/Full address is required/);
+      await expect(service.createOrder(orderActor, dto)).rejects.toThrow(
+        /Full address is required/
+      );
     });
 
     it('throws 400 when address postal code is missing', async () => {
@@ -234,7 +249,7 @@ describe('OrdersService', () => {
         address: { ...validDto.address, postalCode: '' },
       };
 
-      await expect(service.createOrder('user-1', dto)).rejects.toThrow(/Postal code is required/);
+      await expect(service.createOrder(orderActor, dto)).rejects.toThrow(/Postal code is required/);
     });
 
     it('throws 400 when full address exceeds 500 characters', async () => {
@@ -246,15 +261,15 @@ describe('OrdersService', () => {
         },
       };
 
-      await expect(service.createOrder('user-1', dto)).rejects.toThrow(
+      await expect(service.createOrder(orderActor, dto)).rejects.toThrow(
         /Full address must be 500 characters or fewer/
       );
     });
 
     it('throws 400 when giftCode is empty', async () => {
-      await expect(service.createOrder('user-1', { ...validDto, giftCode: '   ' })).rejects.toThrow(
-        /Gift code cannot be empty/
-      );
+      await expect(
+        service.createOrder(orderActor, { ...validDto, giftCode: '   ' })
+      ).rejects.toThrow(/Gift code cannot be empty/);
       expect(mockPool.connect).not.toHaveBeenCalled();
     });
   });
@@ -270,7 +285,7 @@ describe('OrdersService', () => {
         queueResponse({ rows: [makeRow({ gift_code_id: gift })] });
         queueResponse({ rows: [makeRow({ status: 'CANCELLED', gift_code_id: gift })] });
         mockGiftCodeService.releaseByOrder.mockResolvedValue({ released: 1 });
-        expect((await service.cancelOrder('user-1', 'ord-001'))?.status).toBe('CANCELLED');
+        expect((await service.cancelOrder(orderActor, 'ord-001'))?.status).toBe('CANCELLED');
         expect(mockGiftCodeService.releaseByOrder).toHaveBeenCalledTimes(gift ? 1 : 0);
         expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
       });
@@ -280,25 +295,27 @@ describe('OrdersService', () => {
       queueResponse({ rows: [makeRow({ gift_code_id: 'gc-1' })] });
       queueResponse({ rows: [makeRow({ status: 'CANCELLED', gift_code_id: 'gc-1' })] });
       mockGiftCodeService.releaseByOrder.mockRejectedValue(new Error('release failed'));
-      await expect(service.cancelOrder('user-1', 'ord-001')).rejects.toThrow('release failed');
+      await expect(service.cancelOrder(orderActor, 'ord-001')).rejects.toThrow('release failed');
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
       expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
     });
     it('does not release a gift again for an already cancelled order', async () => {
       authorize();
       queueResponse({ rows: [makeRow({ status: 'CANCELLED', gift_code_id: 'gc-1' })] });
-      expect((await service.cancelOrder('user-1', 'ord-001'))?.status).toBe('CANCELLED');
+      expect((await service.cancelOrder(orderActor, 'ord-001'))?.status).toBe('CANCELLED');
       expect(mockGiftCodeService.releaseByOrder).not.toHaveBeenCalled();
     });
     it('rejects confirmed orders', async () => {
       authorize();
       queueResponse({ rows: [makeRow({ status: 'CONFIRMED' })] });
-      await expect(service.cancelOrder('user-1', 'ord-001')).rejects.toMatchObject({ status: 409 });
+      await expect(service.cancelOrder(orderActor, 'ord-001')).rejects.toMatchObject({
+        status: 409,
+      });
       expect(mockGiftCodeService.releaseByOrder).not.toHaveBeenCalled();
     });
     it('returns null when the order is absent', async () => {
       queueResponse({ rows: [] });
-      expect(await service.cancelOrder('user-1', 'ord-001')).toBeNull();
+      expect(await service.cancelOrder(orderActor, 'ord-001')).toBeNull();
     });
   });
 
