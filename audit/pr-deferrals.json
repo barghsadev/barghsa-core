@@ -147,7 +147,21 @@
       "- [x] Admin-configurable `onlineTopUpLimit` with default 2,000,000,000 IRR — GET/PUT `/api/admin/config/wallet-top-up-limit`; missing rows serve the default at version `0`. Covered by existing admin/API tests; not re-implemented in this follow-up.",
       "- [x] Versioned config — `app_config.version` increments on write, global `config_version` is bumped, and `ConfigCache.invalidate` runs after commit. Covered by existing admin service tests; not re-implemented in this follow-up."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements satisfied by current online initiation/callback and versioned-limit implementation; separate webhook-policy and delivery limitations retained in the batch review.",
+    "reviewed_source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+    "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+      }
+    ]
   },
   {
     "pr": 286,
@@ -324,7 +338,16 @@
     "historical_deferrals": [
       "- [x] The API returns a gateway `redirectUrl`; the wallet page assigns `window.location` to it only after HTTPS/no-credentials checks. Credit is deferred to the callback handler."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statements satisfied by current online initiation/callback and versioned-limit implementation; separate webhook-policy and delivery limitations retained in the batch review.",
+    "reviewed_source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+    "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+      }
+    ]
   },
   {
     "pr": 254,

@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 190 have unresolved mapped tasks; 4 have no current task mapping; 107 map only to verified tasks.
+301 merged PRs: 182 have unresolved mapped tasks; 4 have no current task mapping; 115 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **56 closed / 10 open / 0 blocked**; 235 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **63 closed / 12 open / 0 blocked**; 226 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -17,10 +17,10 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 | 01-platform-infrastructure.md | 50 |
 | 02-auth-users-admin.md | 46 |
 | 03-core-business.md | 4 |
-| 04-invoices-wallet-contracts.md | 37 |
+| 04-invoices-wallet-contracts.md | 34 |
 | 05-notifications-documents-ai.md | 29 |
 | 07-ui-ux-design.md | 3 |
-| Total | 169 |
+| Total | 166 |
 
 Also review 56 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
@@ -287,17 +287,17 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#256](https://github.com/barghsadev/barghsa-core/pull/256) | 04-invoices-wallet-contracts.md#T-04.2.01.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#257](https://github.com/barghsadev/barghsa-core/pull/257) | 04-invoices-wallet-contracts.md#T-04.2.01.07 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#258](https://github.com/barghsadev/barghsa-core/pull/258) | 04-invoices-wallet-contracts.md#T-04.2.01.08 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
-| [#259](https://github.com/barghsadev/barghsa-core/pull/259) | 04-invoices-wallet-contracts.md#T-04.2.02.01 (pending) | Task review remains | Not reviewed | 1 |
+| [#259](https://github.com/barghsadev/barghsa-core/pull/259) | 04-invoices-wallet-contracts.md#T-04.2.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-online-topups-callbacks) | 1 |
 | [#260](https://github.com/barghsadev/barghsa-core/pull/260) | 04-invoices-wallet-contracts.md#T-04.2.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#261](https://github.com/barghsadev/barghsa-core/pull/261) | 04-invoices-wallet-contracts.md#T-04.2.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#262](https://github.com/barghsadev/barghsa-core/pull/262) | 04-invoices-wallet-contracts.md#T-04.2.01.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#263](https://github.com/barghsadev/barghsa-core/pull/263) | 04-invoices-wallet-contracts.md#T-04.2.01.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
-| [#265](https://github.com/barghsadev/barghsa-core/pull/265) | 04-invoices-wallet-contracts.md#T-04.2.02.02 (pending) | Task review remains | Not reviewed | 0 |
+| [#265](https://github.com/barghsadev/barghsa-core/pull/265) | 04-invoices-wallet-contracts.md#T-04.2.02.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-online-topups-callbacks) | 0 |
 | [#266](https://github.com/barghsadev/barghsa-core/pull/266) | 04-invoices-wallet-contracts.md#T-04.2.02.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 2 |
 | [#267](https://github.com/barghsadev/barghsa-core/pull/267) | 04-invoices-wallet-contracts.md#T-04.2.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 1 |
 | [#268](https://github.com/barghsadev/barghsa-core/pull/268) | 04-invoices-wallet-contracts.md#T-04.2.02.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 0 |
-| [#269](https://github.com/barghsadev/barghsa-core/pull/269) | 04-invoices-wallet-contracts.md#T-04.2.02.06 (pending) | Task review remains | Not reviewed | 0 |
-| [#270](https://github.com/barghsadev/barghsa-core/pull/270) | 04-invoices-wallet-contracts.md#T-04.2.02.07 (pending) | Task review remains | Not reviewed | 0 |
+| [#269](https://github.com/barghsadev/barghsa-core/pull/269) | 04-invoices-wallet-contracts.md#T-04.2.02.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-online-topups-callbacks) | 0 |
+| [#270](https://github.com/barghsadev/barghsa-core/pull/270) | 04-invoices-wallet-contracts.md#T-04.2.02.07 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-online-topups-callbacks) | 0 |
 | [#271](https://github.com/barghsadev/barghsa-core/pull/271) | 04-invoices-wallet-contracts.md#T-04.2.03.01 (pending) | Task review remains | Not reviewed | 2 |
 | [#272](https://github.com/barghsadev/barghsa-core/pull/272) | 04-invoices-wallet-contracts.md#T-04.2.03.02 (pending) | Task review remains | Not reviewed | 1 |
 | [#273](https://github.com/barghsadev/barghsa-core/pull/273) | 04-invoices-wallet-contracts.md#T-04.2.03.03 (pending) | Task review remains | Not reviewed | 1 |
@@ -307,16 +307,16 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#277](https://github.com/barghsadev/barghsa-core/pull/277) | 04-invoices-wallet-contracts.md#T-04.2.04.03 (pending) | Task review remains | Not reviewed | 0 |
 | [#278](https://github.com/barghsadev/barghsa-core/pull/278) | 04-invoices-wallet-contracts.md#T-04.2.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 1 |
 | [#279](https://github.com/barghsadev/barghsa-core/pull/279) | 04-invoices-wallet-contracts.md#T-04.2.02.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 0 |
-| [#280](https://github.com/barghsadev/barghsa-core/pull/280) | 04-invoices-wallet-contracts.md#T-04.2.02.06 (pending) | Task review remains | Not reviewed | 0 |
-| [#281](https://github.com/barghsadev/barghsa-core/pull/281) | 04-invoices-wallet-contracts.md#T-04.2.02.07 (pending) | Task review remains | Not reviewed | 0 |
+| [#280](https://github.com/barghsadev/barghsa-core/pull/280) | 04-invoices-wallet-contracts.md#T-04.2.02.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-online-topups-callbacks) | 0 |
+| [#281](https://github.com/barghsadev/barghsa-core/pull/281) | 04-invoices-wallet-contracts.md#T-04.2.02.07 (acceptance_verified) | Mapped tasks verified | [open](evidence/step-reviews.json#R01-online-topups-callbacks) | 0 |
 | [#282](https://github.com/barghsadev/barghsa-core/pull/282) | 04-invoices-wallet-contracts.md#T-04.2.03.02 (pending) | Task review remains | Not reviewed | 1 |
 | [#283](https://github.com/barghsadev/barghsa-core/pull/283) | 04-invoices-wallet-contracts.md#T-04.2.03.03 (pending) | Task review remains | Not reviewed | 0 |
 | [#284](https://github.com/barghsadev/barghsa-core/pull/284) | 04-invoices-wallet-contracts.md#T-04.2.03.04 (pending) | Task review remains | Not reviewed | 0 |
 | [#285](https://github.com/barghsadev/barghsa-core/pull/285) | 04-invoices-wallet-contracts.md#T-04.2.04.01 (pending) | Task review remains | Not reviewed | 1 |
 | [#286](https://github.com/barghsadev/barghsa-core/pull/286) | 04-invoices-wallet-contracts.md#T-04.2.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 1 |
 | [#287](https://github.com/barghsadev/barghsa-core/pull/287) | 04-invoices-wallet-contracts.md#T-04.2.02.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 0 |
-| [#288](https://github.com/barghsadev/barghsa-core/pull/288) | 04-invoices-wallet-contracts.md#T-04.2.02.06 (pending) | Task review remains | Not reviewed | 2 |
-| [#289](https://github.com/barghsadev/barghsa-core/pull/289) | 04-invoices-wallet-contracts.md#T-04.2.02.07 (pending) | Task review remains | Not reviewed | 0 |
+| [#288](https://github.com/barghsadev/barghsa-core/pull/288) | 04-invoices-wallet-contracts.md#T-04.2.02.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-online-topups-callbacks) | 2 |
+| [#289](https://github.com/barghsadev/barghsa-core/pull/289) | 04-invoices-wallet-contracts.md#T-04.2.02.07 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-online-topups-callbacks) | 0 |
 | [#290](https://github.com/barghsadev/barghsa-core/pull/290) | 04-invoices-wallet-contracts.md#T-04.2.03.01 (pending) | Task review remains | Not reviewed | 2 |
 | [#291](https://github.com/barghsadev/barghsa-core/pull/291) | 04-invoices-wallet-contracts.md#T-04.2.03.02 (pending) | Task review remains | Not reviewed | 2 |
 | [#292](https://github.com/barghsadev/barghsa-core/pull/292) | 04-invoices-wallet-contracts.md#T-04.2.03.03 (pending) | Task review remains | Not reviewed | 0 |
@@ -330,7 +330,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#300](https://github.com/barghsadev/barghsa-core/pull/300) | 04-invoices-wallet-contracts.md#T-04.3.01.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 0 |
 | [#301](https://github.com/barghsadev/barghsa-core/pull/301) | 04-invoices-wallet-contracts.md#T-04.2.02.04 (acceptance_verified) | Mapped tasks verified | [open](evidence/step-reviews.json#R01-bank-receipts-approval) | 1 |
 | [#302](https://github.com/barghsadev/barghsa-core/pull/302) | 04-invoices-wallet-contracts.md#T-04.2.02.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-bank-receipts-approval) | 0 |
-| [#303](https://github.com/barghsadev/barghsa-core/pull/303) | 04-invoices-wallet-contracts.md#T-04.2.02.06 (pending) | Task review remains | Not reviewed | 0 |
+| [#303](https://github.com/barghsadev/barghsa-core/pull/303) | 04-invoices-wallet-contracts.md#T-04.2.02.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-online-topups-callbacks) | 0 |
 
 ## Repeated task groups
 
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `63b2ae5bd554ec10ca2087d6f889fc4e3eb33a765eff7948458c89955f1fef3c`
-- `pr-deferrals.json`: `f1c3157d7815ce8d45cdff9e89474322d6dc955b4292656163b23dc783f65d2d`
-- `evidence/step-reviews.json`: `21bc1848f48b1fd1f72bdc5d2050ee2e08da336fbb8c0afdc76baa9ecde3f83f`
+- `acceptance-closure.json`: `1b099a9a6351d228fbf079aadee3968483989410136d76528e41424cb7f916d0`
+- `pr-deferrals.json`: `3b58fe1f3397e13092e672d0453f203da990db21d716a0edc7a166e279287840`
+- `evidence/step-reviews.json`: `d361cab248199355686a3a18168088d056965f6240cfb60e782b99c1edc7c39d`

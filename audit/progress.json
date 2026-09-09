@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
+  "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
   "active_step": "R01",
-  "next_action": "Complete provider adapter/credit-recovery acceptance and saved repeated limit/expiry PR dispositions, then consolidate the online batch individually. Browser confirmation, initiation authority, limits, expiry recovery and callback channel binding are fixed. Signed-webhook CSRF wording awaits owner; continue independent reviews.",
+  "next_action": "Trace current chargeback detection, reversal and finance alert delivery/access. Keep the existing verified reversal implementation and payment evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -591,6 +591,10 @@
     {
       "id": "R01-bank-receipts-approval",
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+    },
+    {
+      "id": "R01-online-topups-callbacks",
+      "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
     }
   ],
   "deferred_improvements": [
@@ -609,9 +613,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 97,
-    "partial": 21,
-    "pending": 204,
+    "acceptance_verified": 100,
+    "partial": 22,
+    "pending": 200,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -732,183 +736,81 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-online-topups-callbacks",
-    "name": "Online wallet top-ups, provider callbacks and expiry",
+    "id": "R01-chargebacks-alerts",
+    "name": "Provider chargebacks, compensating reversals and finance alerts",
     "status": "reviewing",
     "prs": [
-      259,
-      265,
-      269,
-      270,
-      280,
-      281,
-      288,
-      289,
-      303
+      276,
+      277,
+      294,
+      295
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.2.02.01",
-      "04-invoices-wallet-contracts.md#T-04.2.02.02",
-      "04-invoices-wallet-contracts.md#T-04.2.02.06",
-      "04-invoices-wallet-contracts.md#T-04.2.02.07"
+      "04-invoices-wallet-contracts.md#T-04.2.04.02",
+      "04-invoices-wallet-contracts.md#T-04.2.04.03"
     ],
     "remaining_checklist": [
-      "Review exact four requirements and saved PR deferrals; preserve current online-limit/version UI and wallet receipt evidence.",
-      "Trace initiation/current owner+Finance authority, configured limit, provider authenticated callback/merchant/event/replay binding, atomic credit and expiry races.",
-      "Disposition browser payment-return GET and signed callback against recorded CSRF requirement; link sensitive caller and agent-role acceptance.",
-      "Compare repeated limit269/280/288/303 and expiry270/281/289 diffs only where behavior/provenance needs resolution. Run focused missing evidence after confirmed repairs; consolidate individually."
+      "Requirements and all four saved PR descriptions read. Review current signature/merchant/locator precedence, immutable event replay, same-client reversal and unmatched exception behavior.",
+      "Verify actual immediate Finance in-app notification and dashboard access, recipient authority, retries and fa/en. Outbox enqueue alone is not push delivery. Preserve R02 email delivery ownership.",
+      "Compare repeated276/294 and277/295 only as needed; retain verified WalletService.reverseTransaction and PR275/285 evidence.",
+      "Use the pending signed-provider-webhook CSRF decision when answered; do not ask again. Review each confirmed repair and consolidate this batch individually."
     ],
     "historical_deferrals": [
       {
-        "pr": 288,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/288",
+        "pr": 295,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/295",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.06"
+          "04-invoices-wallet-contracts.md#T-04.2.04.03"
         ],
         "historical_deferrals": [
-          "- [x] Admin-configurable `onlineTopUpLimit` with default 2,000,000,000 IRR — GET/PUT `/api/admin/config/wallet-top-up-limit`; missing rows serve the default at version `0`. Covered by existing admin/API tests; not re-implemented in this follow-up.",
-          "- [x] Versioned config — `app_config.version` increments on write, global `config_version` is bumped, and `ConfigCache.invalidate` runs after commit. Covered by existing admin service tests; not re-implemented in this follow-up."
+          "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff — not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       },
       {
-        "pr": 259,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/259",
+        "pr": 294,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/294",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.01"
+          "04-invoices-wallet-contracts.md#T-04.2.04.02"
         ],
         "historical_deferrals": [
-          "- [x] The API returns a gateway `redirectUrl`; the wallet page assigns `window.location` to it only after HTTPS/no-credentials checks. Credit is deferred to the callback handler."
+          "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 276,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/276",
+        "task_keys": [
+          "04-invoices-wallet-contracts.md#T-04.2.04.02"
+        ],
+        "historical_deferrals": [
+          "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
+          "- Finance alerting and dashboard warnings for unresolved chargebacks are deferred to T-04.2.04.03; this task only persists `unmatched` / `unresolved` events."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
-    "confirmed_defects": [
-      {
-        "id": "online-limit-session",
-        "status": "fixed",
-        "tasks": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.06"
-        ],
-        "summary": "Limit mutation passes userId only, does not recheck session/step-up at commit, and omits request session/correlation in audit. Corrupt admin reads report a false default.",
-        "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a"
-      },
-      {
-        "id": "online-initiation-authority",
-        "status": "fixed",
-        "tasks": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.01"
-        ],
-        "summary": "Initiation service receives no actor/session; controller access check precedes advisory/DB/provider waits and empty-wallet creation happens separately. Need preserve current authority while retaining durable provider recovery semantics.",
-        "source_revision": "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778"
-      },
-      {
-        "id": "online-expiry-recovery-and-channel",
-        "status": "fixed",
-        "source_revision": "09aa638602c74fd7384b365af8ae70febd698513",
-        "tasks": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.01",
-          "04-invoices-wallet-contracts.md#T-04.2.02.02",
-          "04-invoices-wallet-contracts.md#T-04.2.02.07"
-        ],
-        "summary": "Provider results were discarded when TTL expiry won the race; ambiguous claims could not recover after expiry. Pending bank-receipt keys could initialize an online provider. Preserve bound provider references, allow recovery without new starts, require online channel, and recheck Pending under lock before returning checkout."
-      },
-      {
-        "id": "browser-return-csrf",
-        "status": "fixed",
-        "source_revision": "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
-        "tasks": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.02",
-          "02-auth-users-admin.md#T-02.02.03"
-        ],
-        "summary": "GET could fail or credit a payment. It now only redirects to the wallet; explicit Persian/English confirmation uses current session/CSRF and profile access, rechecked after callback-identity waits. Browser status is ignored; provider verification decides credit. Current cookie is reread on retry; failed acknowledgement, unpaid, expired login and malformed results stay recoverable."
-      },
-      {
-        "id": "callback-channel-binding",
-        "status": "fixed",
-        "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
-        "tasks": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.02"
-        ],
-        "summary": "A signed online callback could credit a bank-receipt intent with a matching reference. Callback context now requires the online channel before claiming an event or crediting."
-      }
+    "historical_review_notes": [
+      "PR277/295 recipients include Finance but original warning API was admin-only; permission deferral must be checked against current staff permissions. Immediate outbox classification is not proof of actual in-app push.",
+      "PR294 binds every event status to the canonical notification and uses the callback connection for reversal to avoid pool exhaustion; preserve these guarantees.",
+      "PR277 warns that its alert helper begins/commits on the caller connection; inspect current transaction ownership before modifying it."
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "audit/evidence/step-reviews.json#R01-wallet-ledger",
-      "audit/final-repair-checkpoint.json"
+      "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
     ],
+    "confirmed_defects": [],
     "pr_dispositions": [],
-    "next_action": "Complete provider adapter/credit-recovery acceptance and saved repeated limit/expiry PR dispositions, then consolidate the online batch individually. Browser confirmation, initiation authority, limits, expiry recovery and callback channel binding are fixed. Signed-webhook CSRF wording awaits owner; continue independent reviews.",
-    "product_commits": [
-      "aeb2d1bf1e7d9630532e89f813002da91302f81a",
-      "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778",
-      "09aa638602c74fd7384b365af8ae70febd698513",
-      "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
-      "e4d42282505a9a02e749868c05c42402c6d24fbf"
-    ],
-    "verification": {
-      "online_limit": {
-        "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a",
-        "distinct_api_cases": 70,
-        "logs_prefix": "/tmp/r01-online-limit-",
-        "limits": "Seven valid baseline failures: revoke/CSRF/step-up changed after the HTTP guard while waiting on policy, session/step-up expiry during audit, misleading corrupt read and missing session/correlation audit. Four-file70-case run passed61; two unit audit expectations needed sessionId, and seven old actor-lock fixtures incorrectly waited for a service query while authentication held the request. Those fixtures now explicitly test the authentication boundary, not post-guard service authority. Two-file51-case rerun passes; combined70 distinct cases. Initial type error was a missing non-null fixture header assertion, corrected before final passing types. Lint, formatting, API build and freshly generated OpenAPI comparison pass. No UI change; prior limit-screen browser evidence is retained."
-      },
-      "online_initiation": {
-        "source_revision": "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778",
-        "distinct_api_cases": 94,
-        "logs_prefix": "/tmp/r01-online-authority-",
-        "limits": "13 original failing regressions; 94 distinct final API cases across service, real-DB actor/receipt/archive and HTTP/controller checks. Initial six-file run had 19 outdated actor-fixture failures plus 3 unhandled rejections; corrected four-file54 pass combined with unchanged24 receipt and14 controller cases gives92; two HTTP cases add2. Initial HTTP fixture included a forbidden extra body field and failed400 before reaching service; corrected strict input passes. Duplicate fixture actor fields and unknown JSON response types corrected. Types/lint/format/build/fresh OpenAPI comparison pass. Receipt permission behavior was extracted unchanged to financial-submission-actor; controller change only passes trusted session to online initiation."
-      },
-      "online_expiry_recovery": {
-        "source_revision": "09aa638602c74fd7384b365af8ae70febd698513",
-        "distinct_api_cases_current_or_reused": 50,
-        "logs_prefixes": [
-          "/tmp/r01-online-expiry-",
-          "/tmp/r01-online-channel-",
-          "/tmp/r01-online-post-expiry-"
-        ],
-        "limits": "Four confirmed regressions: expiry during provider start, expiry during recovery, recovery first attempted after expiry, and cross-channel Pending-key reuse. Real expiry worker invoked against the same migrated DB; later provider-verified callbacks credit once after expiry. First expiry baseline also used an incorrect expected reason string, corrected; missing authority/ref was independently observed. First 48-case run passed41 and failed7 because unit query mock lacked the new final-row read. Corrected unit cases pass. Final34 service/authority cases pass; reuse14 real initiation and2 HTTP cases from same repair checkpoint for50 distinct. Types/lint/format pass. No controller/schema change in this second repair; prior fresh contract comparison remains applicable."
-      },
-      "browser_return": {
-        "source_revision": "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
-        "distinct_api_cases": 54,
-        "distinct_web_unit_cases": 15,
-        "distinct_browser_cases": 4,
-        "route_and_interaction_budgets": 42,
-        "logs_prefix": "/tmp/r01-online-browser-return-",
-        "limits": "Real HTTP baseline GET changed Pending to Failed. Five-file53 API pass plus final HTTP5 overlap gives54 distinct. HTTP covers read-only303 GET, auth/CSRF/profile/order negatives, current authority after callback lock wait, positive confirmation and duplicate exactly-once credit using the test-only redirect adapter. Existing signed/callback/recovery tests remain passing.15 unchanged wallet unit cases pass.4 distinct production Chromium cases cover fa/en, RTL, keyboard, axe, explicit action, current CSRF after lost acknowledgement, balance refresh, sign-in/new-tab retry, unpaid and malformed responses. Browser runs overlap and are not added. Initial API/web exact-optional type errors corrected. Two initial electricity payload failures resolved by keeping payment messages and query parsing in wallet chunks; all42 unchanged route/interaction budgets pass. The first message-extraction script aborted before edits on an assertion; its following formatter reported the absent file. Corrected extraction preserves app.ts exactly. Final relevant API/web types, lint, formatting, builds and fresh OpenAPI comparison pass. Only callback GET and new return POST change the public schema. No live payment provider or deployment is claimed."
-      },
-      "callback_channel": {
-        "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
-        "distinct_api_cases": 53,
-        "logs_prefix": "/tmp/r01-online-callback-channel-",
-        "limits": "One real-DB baseline incorrectly credited a bank-receipt intent. Callback/HTTP/recovery/signature-verifier five-file53 pass after the online-channel gate. Types/lint/format pass. This overlaps earlier callback tests; do not add counts. UI and contract are unchanged from aaf669b."
-      },
-      "expiry_worker": {
-        "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
-        "distinct_worker_cases": 24,
-        "log": "/tmp/r01-online-expiry-worker-checkpoint.log",
-        "limits": "Two unchanged expiry worker unit/integration files pass. Current candidate SQL, lock/recheck, JSONB preservation, audit transaction and scheduler/failure recording were read; no worker product change in this batch."
-      }
-    },
-    "historical_review_notes": [
-      "PR259/265/269/288/289 descriptions and selected280/281 risks read; remaining bounded repeated history still needs disposition. PR281 says expiry customer notification belongs to notification tasks; preserve that separate R02 requirement even though the historical deferral parser omitted this risk note.",
-      "Receipt schema follow-up57d6582: a fresh API build exposed two missing emergencyOverrideReason request-body fields in the committed OpenAPI. These now match verified controller decorators, with no other semantic contract change. Previous receipt OpenAPI-pass notes do not establish fresh generated-contract coverage; this passing build/comparison supersedes them.",
-      "Limit policy lock now precedes staff/session locks. Future initiation authority repair must use compatible policy/account/session/profile/wallet ordering and preserve provider idempotency/recovery.",
-      "fc7ee0b and09aa638 complete initiation authority, shared receipt lock extraction, final checkout state and durable expiry/recovery/channel fixes. The receipt wrapper retains identical bank-receipts:submit semantics;24 unchanged receipt authority cases and14 wallet controller cases passed after extraction. No new task/PR acceptance closure until consolidated online batch review.",
-      "aaf669b fixes browser GET/CSRF. Signed machine callbacks retain their existing separate signature proof; an explicit narrow requirements exception was asked once and remains awaiting owner, because T-02.02.03 currently forbids all exemptions. Do not change the requirement or disable callbacks without that decision.",
-      "e4d4228 rejects bank-receipt callbacks; current readStoredAuthority fallback and HMAC time/event/raw-body verification were reviewed. Provider adapter completion and saved repeated-PR disposition remain.",
-      "PR270/280/281 full descriptions read. Expiry notification omission in PR281 remains assigned to R02; authoritative receipt/limit/expiry owners are preserved."
-    ]
+    "next_action": "Trace current chargeback detection, reversal and finance alert delivery/access. Keep the existing verified reversal implementation and payment evidence."
   },
   "open_domain_reviews": [
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "owner_batch": "wallet/ledger and receipts/approvals/payments",
       "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
-      "status": "Wallet/dashboard reads and current receipt submissions/decisions verified, including additive Finance and Manager/Legal denial. Payment/refund mutation acceptance remains.",
-      "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      "status": "Current wallet/receipt/payment authority verified, including additive Finance and Manager/Legal money denial; refund-specific acceptance remains.",
+      "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
@@ -933,7 +835,8 @@
       "task_key": "02-auth-users-admin.md#T-02.02.03",
       "owner_batch": "R01 payments/callbacks",
       "criteria": "Signed callback/chargeback authentication, replay/ledger effects and state-changing payment return GET against literal CSRF requirement",
-      "status": "pending linked acceptance"
+      "status": "Browser return repaired and verified; signed payment-webhook exception awaits owner. Chargeback review follows.",
+      "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.03",
@@ -999,6 +902,15 @@
       "status": "implemented_and_reviewed_incidentally",
       "remaining": "Retain separate overpayment credit implementation fromPR298; link this evidence during full backlog disposition. Outside322 historical claims; not an unbuilt task.",
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.07",
+      "prs": [
+        281
+      ],
+      "owning_batch": "R02 notification delivery",
+      "remaining": "Actual payment.wallet_topup_failed notification on TTL expiry; scanner/state/audit/reconciliation verified.",
+      "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
     }
   ]
 }

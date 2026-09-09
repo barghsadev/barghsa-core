@@ -8558,6 +8558,996 @@
         ],
         "summary": "Only unrelated online-limit methods changed in shared admin source files; preserved receipt threshold implementation and tests."
       }
+    },
+    {
+      "id": "R01-online-topups-callbacks",
+      "date": "2026-09-09",
+      "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+      "base_revision": "57d6582e2789dc5c0234b992f6ba54fdc4d5e42c",
+      "product_commits": [
+        "aeb2d1bf1e7d9630532e89f813002da91302f81a",
+        "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778",
+        "09aa638602c74fd7384b365af8ae70febd698513",
+        "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
+        "e4d42282505a9a02e749868c05c42402c6d24fbf",
+        "a1d995953e6303d7697664de615dfb8a71cc1130"
+      ],
+      "summary": "Online batch consolidated:3 new verified tasks,1 partial;7 saved PR reviews closed,2 open. Six repairs reviewed with focused checks; signed-webhook policy and actual expiry notification delivery remain explicit.",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.2.02.07"
+      ],
+      "review": [
+        "Intent/wallet/audit commit together under current account/session/CSRF/profile and owner or Finance authority. Per-request durable claims prevent a second provider start; no DB account lock spans a provider call. Current authority and Pending state are checked before checkout return.",
+        "Current policy version is enforced on new submissions, including the absent-row first-write race. Existing accepted retries retain their original ceiling; corrupt settings fail closed. Admin writes keep session/step-up through commit and audit the session/correlation.",
+        "Expiry only rejects stale online Pending intents, with a strict cutoff, row lock/recheck, unchanged balances and transactional audit. Reference/claim recovery survives expiry; expired retries may recover an existing provider session but cannot start another or reopen checkout.",
+        "Browser GET performs only a trusted application redirect. Explicit fa/en confirmation requires current session/CSRF/profile authority after callback-identity waits. Browser Status is ignored, and real provider verification remains required. Sign-in/new-tab, lost acknowledgement, unpaid and malformed-result retries are covered.",
+        "Signed POST binds raw payload, timestamp, event and merchant. Callback context requires online channel and amount/authority. Recovery accepts only a Completed matching online credit with the original intent/authority; collisions leave truthful recoverable errors instead of reporting false credit.",
+        "Wallet credit is atomic; callback credit, intent release and event finalization are separate durable steps. Existing fault-injection/replay tests prove recovery across those boundaries. No claim that the whole callback is one database transaction.",
+        "HTTP/ZarinPal providers enforce configured HTTPS origins, redirect safety, bounded requests and stable start/recovery identity.69 adapter cases pass; no live-provider or production validation claimed."
+      ],
+      "repairs": [
+        {
+          "id": "online-limit-session",
+          "status": "fixed",
+          "tasks": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.06"
+          ],
+          "summary": "Limit mutation passes userId only, does not recheck session/step-up at commit, and omits request session/correlation in audit. Corrupt admin reads report a false default.",
+          "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a"
+        },
+        {
+          "id": "online-initiation-authority",
+          "status": "fixed",
+          "tasks": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.01"
+          ],
+          "summary": "Initiation service receives no actor/session; controller access check precedes advisory/DB/provider waits and empty-wallet creation happens separately. Need preserve current authority while retaining durable provider recovery semantics.",
+          "source_revision": "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778"
+        },
+        {
+          "id": "online-expiry-recovery-and-channel",
+          "status": "fixed",
+          "source_revision": "09aa638602c74fd7384b365af8ae70febd698513",
+          "tasks": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.01",
+            "04-invoices-wallet-contracts.md#T-04.2.02.02",
+            "04-invoices-wallet-contracts.md#T-04.2.02.07"
+          ],
+          "summary": "Provider results were discarded when TTL expiry won the race; ambiguous claims could not recover after expiry. Pending bank-receipt keys could initialize an online provider. Preserve bound provider references, allow recovery without new starts, require online channel, and recheck Pending under lock before returning checkout."
+        },
+        {
+          "id": "browser-return-csrf",
+          "status": "fixed",
+          "source_revision": "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
+          "tasks": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.02",
+            "02-auth-users-admin.md#T-02.02.03"
+          ],
+          "summary": "GET could fail or credit a payment. It now only redirects to the wallet; explicit Persian/English confirmation uses current session/CSRF and profile access, rechecked after callback-identity waits. Browser status is ignored; provider verification decides credit. Current cookie is reread on retry; failed acknowledgement, unpaid, expired login and malformed results stay recoverable."
+        },
+        {
+          "id": "callback-channel-binding",
+          "status": "fixed",
+          "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
+          "tasks": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.02"
+          ],
+          "summary": "A signed online callback could credit a bank-receipt intent with a matching reference. Callback context now requires the online channel before claiming an event or crediting."
+        },
+        {
+          "id": "callback-recovered-credit-binding",
+          "status": "fixed",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "tasks": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.02"
+          ],
+          "summary": "Recovery treated any row under the credit idempotency key as credited. Require Completed topup, matching wallet/amount, online channel, original intent and provider authority before reporting credit or releasing the intent."
+        }
+      ],
+      "verification": {
+        "online_limit": {
+          "source_revision": "aeb2d1bf1e7d9630532e89f813002da91302f81a",
+          "distinct_api_cases": 70,
+          "logs_prefix": "/tmp/r01-online-limit-",
+          "limits": "Seven valid baseline failures: revoke/CSRF/step-up changed after the HTTP guard while waiting on policy, session/step-up expiry during audit, misleading corrupt read and missing session/correlation audit. Four-file70-case run passed61; two unit audit expectations needed sessionId, and seven old actor-lock fixtures incorrectly waited for a service query while authentication held the request. Those fixtures now explicitly test the authentication boundary, not post-guard service authority. Two-file51-case rerun passes; combined70 distinct cases. Initial type error was a missing non-null fixture header assertion, corrected before final passing types. Lint, formatting, API build and freshly generated OpenAPI comparison pass. No UI change; prior limit-screen browser evidence is retained."
+        },
+        "online_initiation": {
+          "source_revision": "fc7ee0bca11b4f4c97cf2cd3cdbb883890357778",
+          "distinct_api_cases": 94,
+          "logs_prefix": "/tmp/r01-online-authority-",
+          "limits": "13 original failing regressions; 94 distinct final API cases across service, real-DB actor/receipt/archive and HTTP/controller checks. Initial six-file run had 19 outdated actor-fixture failures plus 3 unhandled rejections; corrected four-file54 pass combined with unchanged24 receipt and14 controller cases gives92; two HTTP cases add2. Initial HTTP fixture included a forbidden extra body field and failed400 before reaching service; corrected strict input passes. Duplicate fixture actor fields and unknown JSON response types corrected. Types/lint/format/build/fresh OpenAPI comparison pass. Receipt permission behavior was extracted unchanged to financial-submission-actor; controller change only passes trusted session to online initiation."
+        },
+        "online_expiry_recovery": {
+          "source_revision": "09aa638602c74fd7384b365af8ae70febd698513",
+          "distinct_api_cases_current_or_reused": 50,
+          "logs_prefixes": [
+            "/tmp/r01-online-expiry-",
+            "/tmp/r01-online-channel-",
+            "/tmp/r01-online-post-expiry-"
+          ],
+          "limits": "Four confirmed regressions: expiry during provider start, expiry during recovery, recovery first attempted after expiry, and cross-channel Pending-key reuse. Real expiry worker invoked against the same migrated DB; later provider-verified callbacks credit once after expiry. First expiry baseline also used an incorrect expected reason string, corrected; missing authority/ref was independently observed. First 48-case run passed41 and failed7 because unit query mock lacked the new final-row read. Corrected unit cases pass. Final34 service/authority cases pass; reuse14 real initiation and2 HTTP cases from same repair checkpoint for50 distinct. Types/lint/format pass. No controller/schema change in this second repair; prior fresh contract comparison remains applicable."
+        },
+        "browser_return": {
+          "source_revision": "aaf669bbc892354f4b5ee33ae8ce441bf734705e",
+          "distinct_api_cases": 54,
+          "distinct_web_unit_cases": 15,
+          "distinct_browser_cases": 4,
+          "route_and_interaction_budgets": 42,
+          "logs_prefix": "/tmp/r01-online-browser-return-",
+          "limits": "Real HTTP baseline GET changed Pending to Failed. Five-file53 API pass plus final HTTP5 overlap gives54 distinct. HTTP covers read-only303 GET, auth/CSRF/profile/order negatives, current authority after callback lock wait, positive confirmation and duplicate exactly-once credit using the test-only redirect adapter. Existing signed/callback/recovery tests remain passing.15 unchanged wallet unit cases pass.4 distinct production Chromium cases cover fa/en, RTL, keyboard, axe, explicit action, current CSRF after lost acknowledgement, balance refresh, sign-in/new-tab retry, unpaid and malformed responses. Browser runs overlap and are not added. Initial API/web exact-optional type errors corrected. Two initial electricity payload failures resolved by keeping payment messages and query parsing in wallet chunks; all42 unchanged route/interaction budgets pass. The first message-extraction script aborted before edits on an assertion; its following formatter reported the absent file. Corrected extraction preserves app.ts exactly. Final relevant API/web types, lint, formatting, builds and fresh OpenAPI comparison pass. Only callback GET and new return POST change the public schema. No live payment provider or deployment is claimed."
+        },
+        "callback_channel": {
+          "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
+          "distinct_api_cases": 53,
+          "logs_prefix": "/tmp/r01-online-callback-channel-",
+          "limits": "One real-DB baseline incorrectly credited a bank-receipt intent. Callback/HTTP/recovery/signature-verifier five-file53 pass after the online-channel gate. Types/lint/format pass. This overlaps earlier callback tests; do not add counts. UI and contract are unchanged from aaf669b."
+        },
+        "expiry_worker": {
+          "source_revision": "e4d42282505a9a02e749868c05c42402c6d24fbf",
+          "distinct_worker_cases": 24,
+          "log": "/tmp/r01-online-expiry-worker-checkpoint.log",
+          "limits": "Two unchanged expiry worker unit/integration files pass. Current candidate SQL, lock/recheck, JSONB preservation, audit transaction and scheduler/failure recording were read; no worker product change in this batch."
+        },
+        "credit_binding": {
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "distinct_api_cases": 54,
+          "logs_prefix": "/tmp/r01-online-callback-credit-binding-",
+          "limits": "Five real-DB baseline false-success cases: Pending row, wrong wallet, amount, original intent or authority. Four-file54 run passed52; two old unit duplicate-credit fixtures lacked actual credit provenance metadata. Corrected19-case unit file passes; combined54 distinct cases. Types/lint/format pass. Mismatched rows return409 without release/finalization; their durable processing event remains recoverable after explicit repair. No automatic deletion or mutation of the conflicting financial record."
+        },
+        "provider_adapter": {
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "distinct_api_cases": 69,
+          "log": "/tmp/r01-online-provider-checkpoint.log",
+          "limits": "Unchanged provider adapter tests pass. Current HTTP/ZarinPal/redirect implementations were read: HTTPS/configured origins, safe redirect, bounded requests, idempotent start/recovery, unique inquiry match and provider verification before credit. Test-only redirect adapter is not production payment proof; no live provider or deployment validation claimed."
+        }
+      },
+      "historical_dispositions": [
+        "PR269 adds the versioned limit;280 closes missing/invalid client-cap handling;288 returns the enforced snapshot for reduced retries;303 adds corrupt-config fail-closed behavior and version CAS. Current single config/WalletService/UI owners retain all corrections. Current admin corrupt-read behavior is repaired beyond PR303 by aeb2d1b.",
+        "PR270 adds expiry;281 adds transactional audit and candidate index;289 tightens the compare-and-set channel predicate under concurrency. One scanner remains. No competing implementation should be deleted.",
+        "All9 saved descriptions read; selected289 scanner,288 limit/filter/client and303 admin/wallet/panel diffs inspected for provenance. Existing receipt/wallet evidence preserved. Current over-limit API intentionally retains its raw explanatory message; when R03 localizes it, the wallet error classifier must use the already-returned structured limit snapshot rather than English wording.",
+        "PR259 credit handoff is implemented by the current verified callback path. PR288 existing-config/version statements are satisfied. PR281 actual customer notification delivery remains R02; enqueue/expiry state is not delivery evidence."
+      ],
+      "remaining": [
+        "Implemented signature/replay/merchant binding, current browser session/CSRF, credit idempotency and recovery are verified. Literal no-exemption CSRF wording conflicts with existing signed machine callbacks; a narrow exception is awaiting owner. Task stays partial until that decision is dispositioned.",
+        "R02: actual expiry customer failure notification delivery from PR281."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 259,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.01"
+          ],
+          "reason": "Current mapped requirements and historical statements have supported dispositions; corrective implementations retained.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        },
+        {
+          "pr": 265,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.02"
+          ],
+          "reason": "Financial callback behavior is verified; explicit signed-machine-webhook CSRF requirements disposition awaits owner.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        },
+        {
+          "pr": 269,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.06"
+          ],
+          "reason": "Current mapped requirements and historical statements have supported dispositions; corrective implementations retained.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        },
+        {
+          "pr": 270,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.07"
+          ],
+          "reason": "Current mapped requirements and historical statements have supported dispositions; corrective implementations retained.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        },
+        {
+          "pr": 280,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.06"
+          ],
+          "reason": "Current mapped requirements and historical statements have supported dispositions; corrective implementations retained.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        },
+        {
+          "pr": 281,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.07"
+          ],
+          "reason": "Expiry, audit, index and reconciliation verified. Historical customer payment.wallet_topup_failed delivery deferral remains R02.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        },
+        {
+          "pr": 288,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.06"
+          ],
+          "reason": "Current mapped requirements and historical statements have supported dispositions; corrective implementations retained.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        },
+        {
+          "pr": 289,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.07"
+          ],
+          "reason": "Current mapped requirements and historical statements have supported dispositions; corrective implementations retained.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        },
+        {
+          "pr": 303,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.06"
+          ],
+          "reason": "Current mapped requirements and historical statements have supported dispositions; corrective implementations retained.",
+          "source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
+          "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+        }
+      ],
+      "pr_counts": {
+        "closed": 7,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/final-repair-checkpoint.json"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "ff9f3829bb6f76a2020b7f85eed8e3789bfb4b73026c4cb7540ff1c3ed11fffc"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "64b13d9aa83966b558f2f993bc2877e5456856e2aa697a2fc1929a56cb7dce8b"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "931d6fdf0ebb811e6a822755d1b51690dad8d60555af4c31f632cb1721fec198"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-authority.integration.test.ts",
+          "sha256": "a3f7cfcf9c73462673474e04d9a060c64bc067c9e5187fa6a821e6acad22f00e"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
+          "sha256": "3444386194784e0983f7f658d97885796dae6fcaddcf25828d500d189e0288ff"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
+          "sha256": "86bcd985f89f752ac881e69f93e9c359233cf93e8ad8cad2e385b5ac7da5245f"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+          "sha256": "60f7b3d3403b0d0dfe58c5a1e7b2f74787f3965af702b2d69d44a624c9133d82"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "3dc86ff965ca1f0a3c3fe8552675073720fe2100fe2313454e121b1ca71e975e"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+          "sha256": "eee8cd4f0fd00f3c934a973657d435eba559dfa8b3dce404ddf52f60d57d72e9"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.integration.test.ts",
+          "sha256": "e6f2e4e9c291452813914a6d1442fe476cddba5a585f98a390909e5d9712c009"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "36f2a34085333da44c7b8071b27b61f59d6dcef76806d6c2472945fa3b5d472e"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+          "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "59baebb6e7f95a6dece273043728ffb10cce91c6aa4a10d3530c335381a3257a"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "apps/web/e2e/online-payment-return.spec.ts",
+          "sha256": "3ee6e3740e18da042da084891c23dad9ea57a57623976653febae3b0bb0acb23"
+        },
+        {
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "6bfa65952d07da075e5a6bde09711622e9e0bfe92f51de3462fe1352971677e3"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "1c951d2e67bc689e4fdb4f4a669ffb1143952fe330cf3bd402e2c33e59652b5a"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "31ca8b641846903edf480420c895179f9f87f5e29919570cbb3f6e6c8d010fa9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/wallet.tsx",
+          "sha256": "b2e6be33609bc1f709f88e3dfb56564ddcf20638caa9f517b9c040c4f5211e34"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "d485a28edf1db7d2288d30b1e7e5f9923c1d612421bc44d46a634fbe2bcad560"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+          "sha256": "751a02942d9bea3626d016f737b962fba7a94222fadb20cd66c7d9e2f4c702e1"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+          "sha256": "63945a422bb3511cfb41fd44cd39c3b8541bf52c7d47f0ab70799507b1957ce3"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "sha256": "04c8f156751bffa4ac790c4143dd2ef1f28910042dd5fdb84e795f38cd9f0f3c"
+        },
+        {
+          "path": "packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql",
+          "sha256": "f4de404ae7c395f4e7e1aa7b58c1c75f133aad3402270b4ee8a710b28263b73d"
+        },
+        {
+          "path": "packages/i18n/src/wallet-payment-return.ts",
+          "sha256": "89cde148eff2e6f04c52da36381226705de38f1e0b41a7f58ba55d481603058f"
+        },
+        {
+          "path": "packages/shared/src/finance/online-topup-expiry.ts",
+          "sha256": "17976e309024b7181519cfec79f826d083f5412d0ae16d3e0b50857489c5ea71"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-topup-config.ts",
+          "sha256": "df5d087fe56cdff57619ee1902a59d8d76e31743120d0b8a2327b92e6fddd7e7"
+        }
+      ],
+      "logs": [
+        {
+          "original_path": "/tmp/r01-online-limit-api-final.log",
+          "path": "audit/evidence/aeb2d1b/r01-online-limit-api-final.log.gz",
+          "sha256": "030cb4d02e4dff019c39a2e87913a7116fd31f56292f6d27300cefd001b7da5c",
+          "encoding": "gzip",
+          "stored_sha256": "b9bddac45bf30b07eb72fc761bd49690e124ef1d9a571911887794fc09a40479"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-api.log",
+          "path": "audit/evidence/aeb2d1b/r01-online-limit-api.log.gz",
+          "sha256": "d12cc63056e7d8da4dee24abef9d051ede9faef8f98753b2913cd5de4aae0e9b",
+          "encoding": "gzip",
+          "stored_sha256": "9c8261249ae3ec2aa61d835e34c3ae9a33b343f4a3a5eae24f95f53b31813f9f"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-baseline.log",
+          "path": "audit/evidence/aeb2d1b/r01-online-limit-baseline.log.gz",
+          "sha256": "85db47d1bde67039987e6c9c0b42db7590d0df9b1197df3396beaf8469bfaf34",
+          "encoding": "gzip",
+          "stored_sha256": "8f989a00a9e3efd10f4e55fc724328c217beefca7779e21f54166c61e0074e85"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-build.log",
+          "path": "audit/evidence/aeb2d1b/r01-online-limit-build.log.gz",
+          "sha256": "193b242c6880ef7e82726887a2df11ac57e5efc2fafdd53d5434b4fff6d2bc1b",
+          "encoding": "gzip",
+          "stored_sha256": "432f85ed09e58ee5ed3e9df93037d843bf807ddb23a31e52b6a206ec5011cccf"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-contract-final.log",
+          "path": "audit/evidence/aeb2d1b/r01-online-limit-contract-final.log.gz",
+          "sha256": "b11323b6739558e6ca730ca2bbac7bad8dfbfb9e04ec1816a0b863fc45891cea",
+          "encoding": "gzip",
+          "stored_sha256": "bc43af87438edc056d27aa0bb3987f1e3c4cf3edd36d17c4364a5ad6465745dd"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-contract-preserved-order.log",
+          "path": "audit/evidence/aeb2d1b/r01-online-limit-contract-preserved-order.log.gz",
+          "sha256": "f77143f78f5c9d7807688cc22f07a08f138bcdcf945659c02a5cacb67e54b9f7",
+          "encoding": "gzip",
+          "stored_sha256": "e1a5453c264c1cf7fb0003be413464e21a60c9dd46891512d64d7978fe76a397"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-contract.log",
+          "path": "audit/evidence/aeb2d1b/r01-online-limit-contract.log.gz",
+          "sha256": "077fd35bdc9001dfb389b3eb342c5f70568563357d9e0bf4d7e0735b3791ba7d",
+          "encoding": "gzip",
+          "stored_sha256": "a9c6d435a35f9fda322547ee9d3faf3c7e02c3addf71eca507212d54ad017943"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-format.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+          "encoding": "gzip",
+          "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-lint-final.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-lint.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-types-final.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+          "encoding": "gzip",
+          "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+        },
+        {
+          "original_path": "/tmp/r01-online-limit-types.log",
+          "path": "audit/evidence/aeb2d1b/r01-online-limit-types.log.gz",
+          "sha256": "3721210d35a089fd89f33ae201ec9e92dd284c0a4a04f75e838e9f642037aa9b",
+          "encoding": "gzip",
+          "stored_sha256": "4c40e0e1e7062447e4a875b10fde76fe10a5f347e1c46ad816d5a15b9d6114d6"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-api-fixed-fixtures.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-api-fixed-fixtures.log.gz",
+          "sha256": "a34e4ee6fa4a417c5da56c168572bae8c9ccb96538eada4e347496500bbd5c40",
+          "encoding": "gzip",
+          "stored_sha256": "e7b9d9dfd7a8168dfc16c2b1c2209d21030b5f053ed8545f5438f025e9344bc5"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-api.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-api.log.gz",
+          "sha256": "620dbe65631a0a2ffc142a66d50df06ec8579dd55f702fd6e6b35b320c2503b2",
+          "encoding": "gzip",
+          "stored_sha256": "0c362871f28757b5fe37edf6fe0c852cfe53000dabc711fdd4b6f8c0c8fdc738"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-baseline.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-baseline.log.gz",
+          "sha256": "8f1b60fffcffae950d6fe941d7179ecf3e2deb79ad5b2f72897d96107999a516",
+          "encoding": "gzip",
+          "stored_sha256": "bc8c5354ccce3f1dd49c483a51b4889838093f8b1ab9ccbace940f66922b905c"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-build.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-build.log.gz",
+          "sha256": "f2e58d13e68298b3d2e4b0034e1a615d938675b0b6fae6d159d8a1e507ffe5cf",
+          "encoding": "gzip",
+          "stored_sha256": "5b5b83f0e615d10f9ac70cb1bab8358ee5280e7c753d310d0148ac29bfb31493"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-contract.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-contract.log.gz",
+          "sha256": "e3010fab9ed1165f21d19dcfeb1d9e7e9e79acf3925de9a19aadb766cd9c6810",
+          "encoding": "gzip",
+          "stored_sha256": "fcc544280534ce75d6d809d5192fd964f1b991e3e5dec62122bb47c3bf6ca0b2"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-format-check.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+          "encoding": "gzip",
+          "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-format-final.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-format-final.log.gz",
+          "sha256": "2abba2bad1ede23943a60c53a998b52e9df4c06e6372edbaec5b79cfc64819a2",
+          "encoding": "gzip",
+          "stored_sha256": "348b8df2266151bf4f6a6963c4d3e9e35efe479807287cd946adaeeafe1f07ff"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-http-fixed-fixture.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-http-fixed-fixture.log.gz",
+          "sha256": "63bdc431f860226aac9e33030a9273a48f3ed93c384cc1767fed6ad5da7df395",
+          "encoding": "gzip",
+          "stored_sha256": "1e5ed2ac6ac129f933b60e93e8b9b4b7e71755dafa00a7144c5c61787ed8f290"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-http.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-http.log.gz",
+          "sha256": "9afd0f618fb0004172361cd0ea3229962669dd4a2ec0e797fdccb48ba1bf98aa",
+          "encoding": "gzip",
+          "stored_sha256": "1155f611d4c94650ba3a0e55f9fd6b400e518ca18d5bbd6996fbec03ea5da738"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-lint-final.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-lint.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-types-final.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-types-final.log.gz",
+          "sha256": "5da2cf7c610d6bb34a8aad00be55b72bdbbc6ac42d0c647bb5df54ae4a2d96d5",
+          "encoding": "gzip",
+          "stored_sha256": "c8208930a63db0304e4d61970486b7327d93162c32577d79088067be5eb910d7"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-types-fixed-fixtures.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+          "encoding": "gzip",
+          "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-types-http-fixed.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+          "encoding": "gzip",
+          "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+        },
+        {
+          "original_path": "/tmp/r01-online-authority-types.log",
+          "path": "audit/evidence/09aa638/r01-online-authority-types.log.gz",
+          "sha256": "875f420b0d695718b18b66905e129b26d5ce848b19300a30642edc9d600ad58b",
+          "encoding": "gzip",
+          "stored_sha256": "3720ee8f498ea8bf3aabf86954e10e46909b12cf69dc5a7f0061ed8d7a0639b6"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-channel-api.log",
+          "path": "audit/evidence/09aa638/r01-online-expiry-channel-api.log.gz",
+          "sha256": "b08669f2b7bfcc09b5b58da99b2b14e58c8bed3f5ba01ee51c48d76b96ad6aab",
+          "encoding": "gzip",
+          "stored_sha256": "0f2de48dabdb6b587aefd8888762a1100570f5b349102cfffc7bf995d79e6531"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-race-api.log",
+          "path": "audit/evidence/09aa638/r01-online-expiry-race-api.log.gz",
+          "sha256": "9f76fa93f59b46b4b237fd061cce9d6066f5a1bfb7da24b3bf225057a0b68d65",
+          "encoding": "gzip",
+          "stored_sha256": "fc66fb0151bc8133561bb1cd7a86b3c34ce7a4cdc027a247aa4d8ce3314db7cc"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-race-baseline.log",
+          "path": "audit/evidence/09aa638/r01-online-expiry-race-baseline.log.gz",
+          "sha256": "3b5caa78ad4f49bc8d6caca580ca39295bfe1728bea23bfda7a2547620a24780",
+          "encoding": "gzip",
+          "stored_sha256": "fe4ac9b60cb358caf3574e28c37bcfaa1173ba26d8a1dcca172437180c05e6df"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-race-format.log",
+          "path": "audit/evidence/09aa638/r01-online-expiry-race-format.log.gz",
+          "sha256": "a60363c407b132ebd6879124a689009761d59519a30d16b542927d6f4856dcad",
+          "encoding": "gzip",
+          "stored_sha256": "35df561bb02e76d62958a4e4f433882530d8f216b9f6722f65e03af9a43fb2a5"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-race-lint.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-race-types.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+          "encoding": "gzip",
+          "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-race-unit-fixed.log",
+          "path": "audit/evidence/09aa638/r01-online-expiry-race-unit-fixed.log.gz",
+          "sha256": "86d34cce244dd5c1285df9aad799a80fbad4f4c5d6173af646094839246effd1",
+          "encoding": "gzip",
+          "stored_sha256": "a5a8c0bb36129e05c0b7537fe07a00c67f14680d6da2abae52e6a1f556e6890d"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-recovery-api.log",
+          "path": "audit/evidence/09aa638/r01-online-expiry-recovery-api.log.gz",
+          "sha256": "93a32008fcf36bf4b658fc6c618b6ab55999816fa577b87a9bf4bd262d8522f4",
+          "encoding": "gzip",
+          "stored_sha256": "13630e0bd5a9f80814ab4848fce4719010fd1bfb01bc261e4328f4985e86e111"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-recovery-lint.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-recovery-types.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+          "encoding": "gzip",
+          "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+        },
+        {
+          "original_path": "/tmp/r01-online-channel-baseline.log",
+          "path": "audit/evidence/09aa638/r01-online-channel-baseline.log.gz",
+          "sha256": "e9a98728098e34ba4d3902d4ef9b69615a6ac956eefdf449006f826b975cb88b",
+          "encoding": "gzip",
+          "stored_sha256": "b995e3ae03cc7e2d992406543b0b32ec4e5600f3c1fdb1a48d690d3d53d895c6"
+        },
+        {
+          "original_path": "/tmp/r01-online-channel-format.log",
+          "path": "audit/evidence/09aa638/r01-online-channel-format.log.gz",
+          "sha256": "a81bf5c1d8498c6325db9a506849d138e7f423816223aa1df087c41505b79367",
+          "encoding": "gzip",
+          "stored_sha256": "31f8176ed30bd5f2d42c31d4fad76ba0c5f37ff4a46a10095f1f560ea12b1cb9"
+        },
+        {
+          "original_path": "/tmp/r01-online-post-expiry-baseline.log",
+          "path": "audit/evidence/09aa638/r01-online-post-expiry-baseline.log.gz",
+          "sha256": "f8994b6d32a223e45f00c634ea0db0bae56cde66740c36047a101dd11d70e081",
+          "encoding": "gzip",
+          "stored_sha256": "316c60129d3974c709a94a952b5e43c324676ab1a4711f9c1e499563b711fed0"
+        },
+        {
+          "original_path": "/tmp/r01-online-post-expiry-format.log",
+          "path": "audit/evidence/09aa638/r01-online-post-expiry-format.log.gz",
+          "sha256": "cd16400d5a293bd01921a06de23f69ec5d5f7368be37d334b413180626f8bfdb",
+          "encoding": "gzip",
+          "stored_sha256": "1f8964b35c4063cbb6e7e27e4e1a7d36963842cae2ff06a03d43070a0748e8bc"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-api-build.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-api-build.log.gz",
+          "sha256": "fb2b6b3b202fecb4a6521f30bf8f0800b2a00396b25f45d3448ba7e63f6c1152",
+          "encoding": "gzip",
+          "stored_sha256": "bde42ad9d7e3f725c40aac8752bbf2cbda9471b5bd4ac120e28943b891bdeedf"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-api-format.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-api-format.log.gz",
+          "sha256": "bef56fdae685c25c66c17d68b01ec1b0ad7005a246963908c0349f0d7d91279e",
+          "encoding": "gzip",
+          "stored_sha256": "68725f0475934aa39ba469538aff9baff626cbc0ef0f04fd1c471bd9df772c55"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-api-types-fixed.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+          "encoding": "gzip",
+          "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-api-types.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-api-types.log.gz",
+          "sha256": "c0a5f37390dc1c98b72992f78e1c1140f10233c26433cf15938a87740cfa733e",
+          "encoding": "gzip",
+          "stored_sha256": "62dce41e49752504194babb92efe53b2376c08d3f537a75f887bdd2a2bd24361"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-api.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-api.log.gz",
+          "sha256": "53b3eca5af424320ffe2e83b980b6c6d3c55e3d341ac8850ece53ba6738d3ba9",
+          "encoding": "gzip",
+          "stored_sha256": "3c65ec34c7f876c41334036aa97fd80363a980c72f863b0456308c2c0a86cf10"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-baseline.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-baseline.log.gz",
+          "sha256": "e1367e8c919209ed894e59fa353dd38ad9cf7a8beb0a230bd8ccf5533fa31604",
+          "encoding": "gzip",
+          "stored_sha256": "b716a8bb0c1aa447a78f88f35f410666d5216e0d4eb73f66561c050f04b67e43"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-browser-final.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-browser-final.log.gz",
+          "sha256": "a8338635ae8b633c0c128772a2ada818df4b15c6444a257c390618df9241c58b",
+          "encoding": "gzip",
+          "stored_sha256": "431417a97c04b6000c67bdf676d8a2642f68b48c92252c60930f1c4479438e23"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-browser-split.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-browser-split.log.gz",
+          "sha256": "56f0b4546f587f5a9c5963ec2ae731cb849241bbbfd5efd5c874413b06ce25ac",
+          "encoding": "gzip",
+          "stored_sha256": "eedbdf819f9801cf1b42c9b1a2aad428a24a88083563a369ef434620e202749c"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-browser.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-browser.log.gz",
+          "sha256": "df5501bf80bddb25e4c5b894e9948398cb1afd436930fa3d5e8cfa03e0c3aa8f",
+          "encoding": "gzip",
+          "stored_sha256": "540c9d1d0a4f2e0fde933ca745d01e1c644cf045bc6e3cbadcdd8337d68a62ad"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-budgets-final.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-budgets-final.log.gz",
+          "sha256": "3bf7d730eacf3d69ac7cd9623a5495ce064babf30b52b0c1130b169051f1eed2",
+          "encoding": "gzip",
+          "stored_sha256": "83119e321054160646372156b8ce0043cfe918c003d1e1dc4e46ca0fc560aa38"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-budgets-split.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-budgets-split.log.gz",
+          "sha256": "b49ded2785b2dc4391559a05bee08dd1b644eb261b232b269264ff69f0dfe8c2",
+          "encoding": "gzip",
+          "stored_sha256": "cf256e16866fde9cdbb6fcc0b73a432334692c8318300e97a80f39a7356502fa"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-budgets.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-budgets.log.gz",
+          "sha256": "162a5ece7ff95ca1accd20e4603a243222bf76f5974ab4084f7b0dc6cbc131d5",
+          "encoding": "gzip",
+          "stored_sha256": "094c4c0f9b0519586f7ebfe5839f3d8daa5e9cfbdeb7ea9dd731e36d832410c8"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-contract.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-contract.log.gz",
+          "sha256": "829c450f14d31e7719f47a67a80c00da82c048d0905a15024a628ba1987d7a45",
+          "encoding": "gzip",
+          "stored_sha256": "524272e7570d24ee70bcc8cf3a682831d2125d5e9e506e7c90a8a2d5e2e2cb48"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-e2e-format.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-e2e-format.log.gz",
+          "sha256": "fda1315752a153ab38416a282cefe0938125392a66d393124d395f553b823117",
+          "encoding": "gzip",
+          "stored_sha256": "6ed24d8cf816305dbb9a9437bbfdb02d0fbffa73eed96240ee545ed99df59f17"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-format-check.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+          "encoding": "gzip",
+          "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-format.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-format.log.gz",
+          "sha256": "92c8b19f6cee17ddf68b67121b01ca88a4afaa9741b7f5f9d67d6d38fb95fb09",
+          "encoding": "gzip",
+          "stored_sha256": "1121911426778e9aed6c9b098b7aa1ee4644fb4206fda002f404653749a95d8f"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-http-final.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-http-final.log.gz",
+          "sha256": "b84ff290ab286ffa653e6eddd53aa5bac62db9ac0ad6b260055af32a4f1ec957",
+          "encoding": "gzip",
+          "stored_sha256": "0d3d659098ed78b1e1c96c4f7aff6b842aef5645f9253e5c9c3f316f9f3e0b92"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-i18n-build.log",
+          "path": "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+          "sha256": "e96c18cf633b90ecae7f4d8c8fadef8b222995210eddf31da455e2a436493ae6",
+          "encoding": "gzip",
+          "stored_sha256": "efa98b77f7947a1708258290f0d1f9cd008002c7e204044a1c2f8fcc4fb48bd3"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-i18n-split-build.log",
+          "path": "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+          "sha256": "e96c18cf633b90ecae7f4d8c8fadef8b222995210eddf31da455e2a436493ae6",
+          "encoding": "gzip",
+          "stored_sha256": "efa98b77f7947a1708258290f0d1f9cd008002c7e204044a1c2f8fcc4fb48bd3"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-lint-final.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-lint.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-route-format.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-route-format.log.gz",
+          "sha256": "1695ee5558eb67b58d191bb46592ebb184faefce05bd412c5d893acdd973264b",
+          "encoding": "gzip",
+          "stored_sha256": "982fbb90779238f3a36da925aac72e20da720db6b3f20223896f937b2e3ba07f"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-split-format-fixed.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-split-format-fixed.log.gz",
+          "sha256": "46d497c5afa1f04a9e5dd4d74f389d74046772a0284dba9f92dd320bf642760f",
+          "encoding": "gzip",
+          "stored_sha256": "af21485301065407eb742c5827fda954c6eb2df858c98a5eb8fa866182aea1be"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-split-format.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-split-format.log.gz",
+          "sha256": "c8e69f0414bdf03aa092b7bca0d36de23deffe4d8f42a6f6ff7aa4565af47147",
+          "encoding": "gzip",
+          "stored_sha256": "cd1bda03af529a63aab8d02d1fad59be8721583207b7f88bf84d056d83227101"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-web-build.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-web-build.log.gz",
+          "sha256": "83b34525e83ac6460fc55ba6b556a569e7e2e4118b62cb44c4a4080677de01d7",
+          "encoding": "gzip",
+          "stored_sha256": "35e10607d3624c3535797965da0736f5be91cdfddb3ec7fdddacb052e7f68efc"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-web-final-build.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-web-final-build.log.gz",
+          "sha256": "98dd216267dbc96cff460a652413f1d4d18075efe6bb014367ee2b5f81ae0afd",
+          "encoding": "gzip",
+          "stored_sha256": "2c1ba899d153146f41dcfd88b268a2b7edaa016cd80cc7f6a49ce99ea5d4e65d"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-web-split-build.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-web-split-build.log.gz",
+          "sha256": "f7a6a975861728068f437604668ccf19c1bed95a14fcb53b7fc24e43c6dfc4d1",
+          "encoding": "gzip",
+          "stored_sha256": "e455c7d26f0668716c231540a1d2921931034b8ea00b6d2ac5889db512669abc"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-web-types-final.log",
+          "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+          "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+          "encoding": "gzip",
+          "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-web-types-fixed.log",
+          "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+          "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+          "encoding": "gzip",
+          "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-web-types.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-web-types.log.gz",
+          "sha256": "618b1c0daa0d53ef116d02043eba041d43eae9d08018c8a3df3e932c769f2c8b",
+          "encoding": "gzip",
+          "stored_sha256": "a331f79f5a18615af8ffabc655c805a0b82b2d38967218e8ecb75bd09cefe639"
+        },
+        {
+          "original_path": "/tmp/r01-online-browser-return-web-unit.log",
+          "path": "audit/evidence/e4d4228/r01-online-browser-return-web-unit.log.gz",
+          "sha256": "fb7c6f54d6b20f5fbbaa8df3a1cfef528ce65f114956f949129f78926eed4823",
+          "encoding": "gzip",
+          "stored_sha256": "d3efe4ae6986e43accab334a186304352c43ee082e272d90954ec9a7b893533d"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-channel-api.log",
+          "path": "audit/evidence/e4d4228/r01-online-callback-channel-api.log.gz",
+          "sha256": "7a7f8c532d3a820e6cf7b59c172ce6f9b0b5617a9560436af98a14e5e79d00db",
+          "encoding": "gzip",
+          "stored_sha256": "8e56a89623c33abf1bda5628eb0f547befc9e7a016638931541a7d34e00a7685"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-channel-baseline.log",
+          "path": "audit/evidence/e4d4228/r01-online-callback-channel-baseline.log.gz",
+          "sha256": "7a1cb7cad7cf3b735bcf31ab013a6c54c0ebb8703e4d9a0513ecbf8dc65c7110",
+          "encoding": "gzip",
+          "stored_sha256": "6660c48e2d49e433758f23f517a49349e8811114441d69780ddc9d597b21776e"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-channel-format.log",
+          "path": "audit/evidence/e4d4228/r01-online-callback-channel-format.log.gz",
+          "sha256": "611bfa8d621f4973a673524bb10be349642cb842fd2a0ed481ac7cd516e253bd",
+          "encoding": "gzip",
+          "stored_sha256": "5f8d223226fd51aa85e814189eb72a4027587d43d5169569989e120b32d00581"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-channel-lint.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-channel-types.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+          "encoding": "gzip",
+          "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+        },
+        {
+          "original_path": "/tmp/r01-online-expiry-worker-checkpoint.log",
+          "path": "audit/evidence/e4d4228/r01-online-expiry-worker-checkpoint.log.gz",
+          "sha256": "f099cfacc4770c91a4821aac4787554c1313a4e0a8f7d873d140993e59b137ea",
+          "encoding": "gzip",
+          "stored_sha256": "c664b2db136813ce5e6b41b7c728c0392fc964df843a8c249210188d91d7ef0d"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-credit-binding-api.log",
+          "path": "audit/evidence/a1d9959/r01-online-callback-credit-binding-api.log.gz",
+          "sha256": "4c65cbdccd66eb4ac076abd116a204162a21da7d5cc1ac8e3af014c556c0a01b",
+          "encoding": "gzip",
+          "stored_sha256": "688480951e7700d51c613bd2ba88e5e4df69f92d8d1aaa33d9f81dd95eea8074"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-credit-binding-baseline.log",
+          "path": "audit/evidence/a1d9959/r01-online-callback-credit-binding-baseline.log.gz",
+          "sha256": "5adc48e498dd6b700edb2fe0a972bec024eadea21884c45e82a650b817888b18",
+          "encoding": "gzip",
+          "stored_sha256": "50120d2e7c316295d457cf9e2d8924d31e6aaad826ce16c043c666b188749130"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-credit-binding-fixture-format.log",
+          "path": "audit/evidence/a1d9959/r01-online-callback-credit-binding-fixture-format.log.gz",
+          "sha256": "e5e135e7c867d5ffb667aa7c63fc33a14090c235a40e07148133709aced6aab8",
+          "encoding": "gzip",
+          "stored_sha256": "20b55cf063c068ca75f8b604dd64f922cb92824d168136e4895c3c9c81f69a11"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-credit-binding-format.log",
+          "path": "audit/evidence/a1d9959/r01-online-callback-credit-binding-format.log.gz",
+          "sha256": "3f814df64a1e2c60edaef0c24cd6b6404d46e2d2ea602e92f69775746158697c",
+          "encoding": "gzip",
+          "stored_sha256": "c0bf1091b49e62d91066cd8ae2b18585c7d66e1e8c92db9ee5def2e6d83f51de"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-credit-binding-lint.log",
+          "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encoding": "gzip",
+          "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-credit-binding-types.log",
+          "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+          "encoding": "gzip",
+          "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+        },
+        {
+          "original_path": "/tmp/r01-online-callback-credit-binding-unit-fixed.log",
+          "path": "audit/evidence/a1d9959/r01-online-callback-credit-binding-unit-fixed.log.gz",
+          "sha256": "3601a3628ddbc0cd79771a792b3f899cefbfa0a8efd8a6d36c41aa4c6ac956f3",
+          "encoding": "gzip",
+          "stored_sha256": "c6cf5ed0a8bab1e50e195eb54cf1a204a19aea19fa8e970b77996be5e3c82a80"
+        },
+        {
+          "original_path": "/tmp/r01-online-provider-checkpoint.log",
+          "path": "audit/evidence/a1d9959/r01-online-provider-checkpoint.log.gz",
+          "sha256": "39159da783bd7e45053c5e768eba22d9a226abbce371b1948e0b6bc795a772e5",
+          "encoding": "gzip",
+          "stored_sha256": "dde27d5f84c469357439db4b1ea95ff83b5240f189dc5549014b543ea004b5a8"
+        },
+        {
+          "original_path": "/tmp/r01-online-pr303-selected-history.log",
+          "path": "audit/evidence/a1d9959/r01-online-pr303-selected-history.log.gz",
+          "sha256": "66cd4060b2e5101d20ef24355ebbb85e1b78ed81a9bc8b2728d0a456b492a96a",
+          "encoding": "gzip",
+          "stored_sha256": "10e61325b5bc4e8c33549e3752f9a965b6ec7d73fe331ecdf9a75393df6defd0"
+        },
+        {
+          "original_path": "/tmp/r01-online-selected-history.log",
+          "path": "audit/evidence/a1d9959/r01-online-selected-history.log.gz",
+          "sha256": "51acdefd2039211ada6e357e22b62eeb48d8371597a051f0df7e1b3cd35e345a",
+          "encoding": "gzip",
+          "stored_sha256": "673fc3e122de6d59d2c873ff15610b96c291ba2e7aeff2c776bf0cbce2e4156b"
+        }
+      ]
     }
   ]
 }
