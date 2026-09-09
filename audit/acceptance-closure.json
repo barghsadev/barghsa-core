@@ -3816,7 +3816,7 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "limitations": [
         "Large production history-volume performance and legacy immutable-document recovery remain operational prerequisites. The detail session list contains the latest 20 records; active count is computed separately. The written task does not specify session pagination.",
@@ -3832,7 +3832,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -3951,7 +3951,7 @@
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "limitations": [],
       "merged_prs": [
@@ -3965,7 +3965,7 @@
           "apps/api/openapi.json",
           "kanban/epics/02-auth-users-admin.md"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -4219,7 +4219,7 @@
         "API/web typechecks, explicit changed-file lint, formatting, production build and all41 complete-route budgets pass. Backend product sources remain unchanged; prior transaction/evidence/permission regressions remain applicable.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "limitations": [
         "This verifies the local correction workflow and its five canonical protected identity fields. Legacy unsealed evidence requires resubmission; no live storage-provider recovery or production reconciliation is certified.",
@@ -4237,7 +4237,7 @@
           "apps/api/src/crm/verification-case-http.integration.test.ts",
           "kanban/epics/02-auth-users-admin.md"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -4405,7 +4405,7 @@
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "limitations": [
         "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
@@ -4421,7 +4421,7 @@
         "changed_paths_reviewed": [
           "apps/api/src/crm/verification-case-http.integration.test.ts"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -4496,7 +4496,7 @@
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "limitations": [
         "Production-scale search/aggregate performance, deployment and the final global checkpoint remain separate evidence."
@@ -4511,7 +4511,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -4633,7 +4633,7 @@
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "Chargeback-only additions and neighbouring CRM behavior reviewed atab17007; prior valid behavior evidence preserved. audit/evidence/step-reviews.json#R01-chargebacks-alerts",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "limitations": [
         "Visibility and local reads are verified. Provider approval, deployed settings and final global regression remain separate evidence."
@@ -4648,7 +4648,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -5147,7 +5147,7 @@
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "audit/evidence/step-reviews.json#R01-session-recovery: Preserve verified OTP-first reset: limited one-use verification grant, server password strength/history, atomic password/OTP/audit/session/refresh invalidation and return-to-login acknowledgement. New preauth transport and shared recovery OTP are verified by current217 API and31 recovery/rate-limit browser cases. Existing reset transaction/migration evidence remains valid; no reset service logic changed beyond safe logging.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "limitations": [
         "Preserved reset transaction and migration evidence is supplemented by current preauth and recovery UI checks. Local fixtures do not prove provider operation or deployment."
@@ -5162,7 +5162,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       },
       "previous_batch_assessment": {
         "status": "acceptance_verified",
@@ -5525,7 +5525,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
         },
         {
           "path": "packages/i18n/src/team.ts",
@@ -5544,7 +5544,8 @@
         "Current owner/Manager list authorization, legal-profile scope and invited-account privacy pass actual HTTP checks. Expired Pending rows are excluded without exposing registration status.",
         "Native table contains username/name, role badges, Active/Pending, joined date and Remove/Withdraw. Empty state and active-legal/permission branches were reviewed. Browser cases cover table, localized dates, invitations, withdrawal/removal and owner-only transfer controls. Existing e48bf58/417ab33 transaction evidence is retained.",
         "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets"
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
@@ -5559,7 +5560,7 @@
         "changed_paths_reviewed": [
           "packages/i18n/src/app.ts"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -5621,7 +5622,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
         },
         {
           "path": "packages/i18n/src/team.ts",
@@ -5651,7 +5652,8 @@
         "HTTP checks prove ten successful invitations per profile/hour, rejection of the eleventh without writes, exact seven-day default, duplicate rejection and current authorization. Existing ownership/removal evidence preserves the single owner.",
         "The compiled worker polls invitation expiry, records failure/recovery and drains on shutdown. Real migrated PostgreSQL proves bounded expiry, concurrent SKIP LOCKED decisions, idempotent correlated audit and rollback/retry. All three PR132 deferrals have explicit supported dispositions.",
         "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets"
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
@@ -5665,10 +5667,9 @@
         "date": "2026-09-09",
         "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
         "changed_paths_reviewed": [
-          "apps/api/openapi.json",
           "packages/i18n/src/app.ts"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
@@ -5706,7 +5707,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
         },
         {
           "path": "apps/api/src/profiles/invitations.controller.ts",
@@ -5730,7 +5731,8 @@
         "Dashboard banner exposes View details, Accept and Decline. Native details disclosure shows entity identifiers, inviter, localized role description, account-local dates and expiry. Keyboard expansion/collapse, fa/en/RTL, mobile fit and stable light/dark contrast pass.",
         "The existing acceptance transaction alone grants the selected role and rotates credentials atomically. Failed accept/decline remains retryable; successful decisions refresh profiles and subsequent selection uses rotated CSRF. Direct banner decisions satisfy the canonical requirement; it does not require an extra confirmation dialog.",
         "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets"
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
@@ -5745,7 +5747,7 @@
         "changed_paths_reviewed": [
           "packages/i18n/src/app.ts"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -5775,7 +5777,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
         },
         {
           "path": "packages/i18n/src/team.ts",
@@ -5798,7 +5800,8 @@
         "Local owner/Manager controls and additive agent grants are reviewed. Existing 417ab33 mutation evidence proves current authorization, owner protection, immediate credential/access revocation and preserved history. The batch preserves unchanged domain implementations.",
         "Wallet/receipt/payment/refund, invoice, contract/document and order/address role criteria remain assigned to their owning feature batches. This task and PR134 remain open until linked domain evidence is complete.",
         "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets"
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate.",
@@ -5814,7 +5817,7 @@
         "changed_paths_reviewed": [
           "packages/i18n/src/app.ts"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -5844,7 +5847,7 @@
         },
         {
           "path": "packages/i18n/src/app.ts",
-          "sha256": "c3569388343e33955058f98ed754b4aa2358741c40b552755f9350993ecfd9d2"
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
         },
         {
           "path": "packages/i18n/src/team.ts",
@@ -5876,7 +5879,8 @@
         "No ownership API method body changed from the immediate batch base. Reuse b4a0c83 authority/expiry/audit and earlier credential evidence: current owner retains control until acceptance, recipient must be an existing agent, decline/expiry cancel, audit is atomic and successful acceptance invalidates both owners credentials.",
         "Incoming banner, exact transfer decisions, expired/conflicting response without false success, localized recipient-name fallback, fa/en/RTL, light/dark and keyboard/focus checks pass. Final review restricted automatic confirmation focus to the ownership flow, preserving existing shared-dialog behavior.",
         "Consolidated evidence: audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped reuse atd776019: only ticket customer-context/record-availability translations were added to the previously current app dictionary. Existing strings and consumer behavior are unchanged. audit/evidence/step-reviews.json#R01-tickets"
       ],
       "limitations": [
         "Local acceptance uses real PostgreSQL/compiled HTTP and worker fixtures plus production-built browser tests with API fixtures. Live deployment, provider operation and broad V02/coverage evidence are separate."
@@ -5891,7 +5895,7 @@
         "changed_paths_reviewed": [
           "packages/i18n/src/app.ts"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -7006,7 +7010,7 @@
       ],
       "checks": [
         "Exact behavior, current/reused checks and limits are recorded once in audit/evidence/step-reviews.json#R01-profile-addresses",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         115
@@ -7029,7 +7033,7 @@
           "packages/db/src/migrate.baseline.test.ts",
           "packages/db/drizzle/production/meta/_journal.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -11176,7 +11180,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         236
@@ -11197,7 +11201,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -11333,7 +11337,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         237
@@ -11354,7 +11358,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -11490,7 +11494,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         238
@@ -11511,7 +11515,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -11647,7 +11651,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         239
@@ -11668,7 +11672,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -11804,7 +11808,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         240
@@ -11825,7 +11829,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -11961,7 +11965,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         241
@@ -11982,7 +11986,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -12118,7 +12122,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         243
@@ -12141,7 +12145,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -12277,7 +12281,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         244
@@ -12298,7 +12302,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -12434,7 +12438,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         245
@@ -12457,7 +12461,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -12593,7 +12597,7 @@
       "checks": [
         "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
         "Focused checks and reused evidence recorded in the consolidated batch.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "merged_prs": [
         246
@@ -12614,7 +12618,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -12951,7 +12955,7 @@
       "checks": [
         "Exact requirements and all contributing saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
         "Current focused checks and unchanged reversal evidence are recorded once in the batch review.",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/progress.json active R01-tickets batch."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
       ],
       "limitations": [],
       "merged_prs": [
@@ -12966,7 +12970,7 @@
         "changed_paths_reviewed": [
           "apps/api/openapi.json"
         ],
-        "evidence": "audit/progress.json#active_batch"
+        "evidence": "audit/evidence/step-reviews.json#R01-tickets"
       }
     },
     {
@@ -13183,6 +13187,306 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.01",
+      "status": "partial",
+      "reviewed_sha": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 535,
+      "requirement": "**T-06.01.01 — Ticket creation**\n\n- Description: User can create a support ticket. Subject, body (rich text optional), related profile, related entity type/ID (order, contract, invoice), priority, optional file attachments. All users can access.\n- Technical notes: POST `/api/tickets` with `{ subject, body, category, profileId, relatedEntityType, relatedEntityId, priority, attachments[] }`. Categories are `general`, `billing`, and `orders`; omitted category and existing tickets default to `general`. Permissions: authenticated user, scoped to own profiles. Files uploaded then linked (document storage integration).\n- UI/UX: \"Contact Support\" / \"Create Ticket\" button. Form with: subject, category selector (General, Billing, Orders; approved September 9), priority (normal/high), body textarea, attachment upload, related entity selector (optional). Show the saved category in list and detail. Persian/EN labels.\n- Dependencies: documents module\n- Complexity: M",
+      "requirement_sha256": "cc57783b6ae550896a127b920030ff1e750bbaef0426963dadd9ee0718e536d7",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tickets/ticket-actor.ts",
+          "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-input.ts",
+          "sha256": "049a9a011047737f5e2700a659c0dc9400a623031eb0113f1a217d2c63ae70d5"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "097583643cd0f632744af615d803ece97df1414d849414d70cb793f2bd7508ed"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.controller.ts",
+          "sha256": "569699d76ad165f2730a903cec1569c1e873022c61e18fc9113ffcbdc7015650"
+        },
+        {
+          "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+          "sha256": "7b3a26e9840efa0f0151bae6fd5547eb43eb3ac2542177dca89df94dc9ed7d92"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "sha256": "8f4cae2149a7220b6cc6fa94429c59b41435f3462c59b2c00485e60a2a98b822"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.test.ts",
+          "sha256": "dad8ad466be68f6e113269d5ad4642fa247caf69301f42f4c8fab55e4779c00d"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+          "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+        },
+        {
+          "path": "apps/api/src/staff-assignment/staff-assignment.service.ts",
+          "sha256": "588e6885c3b03bf67128ef8d8f636e887f51666de220f5e094ab2ef90fb0b889"
+        },
+        {
+          "path": "apps/api/src/staff-assignment/staff-assignment-http.integration.test.ts",
+          "sha256": "c31f90542ca26e822a4c6fbc4402d77630d57fa41240829e4714ca326a491993"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "3703441c432991b83cbe6e7065108529097cf29a51675627b63610a60acadd76"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "7f352d4b3fb574731039905c16a7c64cb2098b55e0e60b38acf0de3eb0772263"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
+        },
+        {
+          "path": "packages/db/src/schema/tickets.ts",
+          "sha256": "8caea6dcc2c5a397b2a19ad83f2c16ee4eeb8bb5276a06b7b93193b0fb1073f8"
+        },
+        {
+          "path": "packages/db/drizzle/production/0125_ticket_category.sql",
+          "sha256": "64f77e550878013b291b1de82ce5fe77d5376ff67ee46c76eb4128d90bc9b421"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "4e46c8443c4271ff716d58e30777770f8eb7c6b4850cb0ce85f6817383542c56"
+        },
+        {
+          "path": "packages/db/src/migrate.preauth-sessions.test.ts",
+          "sha256": "ea8f89d21b9f38ae928af86d142c2728d1b5467d332a5e37588204fec6d1dff6"
+        }
+      ],
+      "checks": [
+        "Exact requirement and contributing PR body reviewed; see audit/evidence/step-reviews.json#R01-tickets",
+        "Current checks and reused evidence are recorded once in the batch review.",
+        "Creation fields, approved categories, current ownership, invoice/order links, fixed attachments and retry-safe FA/EN UI verified."
+      ],
+      "limitations": [
+        "T-06.01.01: contract linking remains unavailable409 until the contract table and creation workflow exist. Preserve the explicit V01/B01 dependency; current invoice/order linking and optional general support are verified."
+      ],
+      "merged_prs": [
+        138
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.02",
+      "status": "partial",
+      "reviewed_sha": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 543,
+      "requirement": "**T-06.01.02 — Ticket list and detail view**\n\n- Description: User can view their tickets (scoped to their profiles). List with search, filter (open/closed), sort. Detail view shows full conversation, status, assigned staff.\n- Technical notes: GET `/api/tickets` with pagination, status filter. GET `/api/tickets/:id` for detail. Comments: GET/POST `/api/tickets/:id/comments`. Each comment has author, timestamp, visibility (public/internal). Customer sees only public comments. Staff can add internal notes.\n- UI/UX: Ticket list: table with subject, status badge, priority indicator, last update date, related entity link. Detail: conversation view (chat-like), status dropdown (staff), internal notes section (staff only). Statuses: Open, In Progress, Waiting on Customer, Waiting on Staff, Resolved, Closed.\n- Dependencies: T-06.01.01\n- Complexity: L",
+      "requirement_sha256": "6c034905b28348254ab00db39ad47248572f31714c42177fcdfeec4852958fab",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tickets/ticket-actor.ts",
+          "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-input.ts",
+          "sha256": "049a9a011047737f5e2700a659c0dc9400a623031eb0113f1a217d2c63ae70d5"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "097583643cd0f632744af615d803ece97df1414d849414d70cb793f2bd7508ed"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.controller.ts",
+          "sha256": "569699d76ad165f2730a903cec1569c1e873022c61e18fc9113ffcbdc7015650"
+        },
+        {
+          "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+          "sha256": "7b3a26e9840efa0f0151bae6fd5547eb43eb3ac2542177dca89df94dc9ed7d92"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "sha256": "8f4cae2149a7220b6cc6fa94429c59b41435f3462c59b2c00485e60a2a98b822"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.test.ts",
+          "sha256": "dad8ad466be68f6e113269d5ad4642fa247caf69301f42f4c8fab55e4779c00d"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+          "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+        },
+        {
+          "path": "apps/api/src/staff-assignment/staff-assignment.service.ts",
+          "sha256": "588e6885c3b03bf67128ef8d8f636e887f51666de220f5e094ab2ef90fb0b889"
+        },
+        {
+          "path": "apps/api/src/staff-assignment/staff-assignment-http.integration.test.ts",
+          "sha256": "c31f90542ca26e822a4c6fbc4402d77630d57fa41240829e4714ca326a491993"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "3703441c432991b83cbe6e7065108529097cf29a51675627b63610a60acadd76"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "7f352d4b3fb574731039905c16a7c64cb2098b55e0e60b38acf0de3eb0772263"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
+        },
+        {
+          "path": "packages/db/src/schema/tickets.ts",
+          "sha256": "8caea6dcc2c5a397b2a19ad83f2c16ee4eeb8bb5276a06b7b93193b0fb1073f8"
+        },
+        {
+          "path": "packages/db/drizzle/production/0125_ticket_category.sql",
+          "sha256": "64f77e550878013b291b1de82ce5fe77d5376ff67ee46c76eb4128d90bc9b421"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "4e46c8443c4271ff716d58e30777770f8eb7c6b4850cb0ce85f6817383542c56"
+        },
+        {
+          "path": "packages/db/src/migrate.preauth-sessions.test.ts",
+          "sha256": "ea8f89d21b9f38ae928af86d142c2728d1b5467d332a5e37588204fec6d1dff6"
+        }
+      ],
+      "checks": [
+        "Exact requirement and contributing PR body reviewed; see audit/evidence/step-reviews.json#R01-tickets",
+        "Current checks and reused evidence are recorded once in the batch review.",
+        "Customer-owned list/detail, public conversation, filtering/sort/pagination, six states, assigned staff and invoice links verified."
+      ],
+      "limitations": [
+        "T-06.01.02: customer invoice links work in list and detail; dedicated order/contract record views remain unbuilt. Unsupported links are labeled unavailable. Staff invoice detail is also absent; /admin/invoices is a collection of forms and is not treated as a record destination."
+      ],
+      "merged_prs": [
+        139
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 551,
+      "requirement": "**T-06.01.03 — Staff ticket management**\n\n- Description: Staff can view all tickets, assign to themselves or team, change status, add internal notes, add customer-visible comments. Configurable assignment rules and teams (admin config).\n- Technical notes: Permissions: `tickets:*` (all) or `tickets:assigned` (own). Put `/api/tickets/:id/assign` to self. Team assignment via admin config. Status transitions:\n  - Open → In Progress (assignment)\n  - In Progress → Waiting on Customer (requires customer action)\n  - Waiting on Customer → In Progress (customer replied)\n  - In Progress → Waiting on Staff (staff awaiting info)\n  - In Progress → Resolved (staff solution)\n  - Resolved → Closed (timeout or staff action)\n  - Any → Open (reopen)\n- UI/UX: Staff ticket list: more columns (assigned to, customer, SLA target). Assignment dropdown. Internal notes toggle. Ticket detail with customer info panel + profile quick-links. Internal note styling distinct from public comments.\n- Dependencies: T-06.01.02, T-09.08.02 (teams and assignment)\n- Complexity: L\n\n---",
+      "requirement_sha256": "5a2e9e3be37bd45eedbc43d4870f0c20d3d490efb179e953e65204bdcff95ec9",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tickets/ticket-actor.ts",
+          "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-input.ts",
+          "sha256": "049a9a011047737f5e2700a659c0dc9400a623031eb0113f1a217d2c63ae70d5"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "097583643cd0f632744af615d803ece97df1414d849414d70cb793f2bd7508ed"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.controller.ts",
+          "sha256": "569699d76ad165f2730a903cec1569c1e873022c61e18fc9113ffcbdc7015650"
+        },
+        {
+          "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+          "sha256": "7b3a26e9840efa0f0151bae6fd5547eb43eb3ac2542177dca89df94dc9ed7d92"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "sha256": "8f4cae2149a7220b6cc6fa94429c59b41435f3462c59b2c00485e60a2a98b822"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.test.ts",
+          "sha256": "dad8ad466be68f6e113269d5ad4642fa247caf69301f42f4c8fab55e4779c00d"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+          "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+        },
+        {
+          "path": "apps/api/src/staff-assignment/staff-assignment.service.ts",
+          "sha256": "588e6885c3b03bf67128ef8d8f636e887f51666de220f5e094ab2ef90fb0b889"
+        },
+        {
+          "path": "apps/api/src/staff-assignment/staff-assignment-http.integration.test.ts",
+          "sha256": "c31f90542ca26e822a4c6fbc4402d77630d57fa41240829e4714ca326a491993"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "3703441c432991b83cbe6e7065108529097cf29a51675627b63610a60acadd76"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "7f352d4b3fb574731039905c16a7c64cb2098b55e0e60b38acf0de3eb0772263"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
+        },
+        {
+          "path": "packages/db/src/schema/tickets.ts",
+          "sha256": "8caea6dcc2c5a397b2a19ad83f2c16ee4eeb8bb5276a06b7b93193b0fb1073f8"
+        },
+        {
+          "path": "packages/db/drizzle/production/0125_ticket_category.sql",
+          "sha256": "64f77e550878013b291b1de82ce5fe77d5376ff67ee46c76eb4128d90bc9b421"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "4e46c8443c4271ff716d58e30777770f8eb7c6b4850cb0ce85f6817383542c56"
+        },
+        {
+          "path": "packages/db/src/migrate.preauth-sessions.test.ts",
+          "sha256": "ea8f89d21b9f38ae928af86d142c2728d1b5467d332a5e37588204fec6d1dff6"
+        }
+      ],
+      "checks": [
+        "Exact requirement and contributing PR body reviewed; see audit/evidence/step-reviews.json#R01-tickets",
+        "Current checks and reused evidence are recorded once in the batch review.",
+        "Current broad/assigned authority, team/automatic assignment, transitions, internal/public notes, customer panel and profile quick-links verified."
+      ],
+      "limitations": [
+        "Local source, database/HTTP fixtures and production-built browser acceptance. Provider delivery and live rollout remain separately assigned."
+      ],
+      "merged_prs": [
+        140
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets"
     }
   ],
   "pending_task_keys": [
@@ -13285,9 +13589,6 @@
     "01-platform-infrastructure.md#T-07.05.03",
     "01-platform-infrastructure.md#T-07.05.04",
     "02-auth-users-admin.md#T-05.05.02",
-    "02-auth-users-admin.md#T-06.01.01",
-    "02-auth-users-admin.md#T-06.01.02",
-    "02-auth-users-admin.md#T-06.01.03",
     "02-auth-users-admin.md#T-07.01.01",
     "02-auth-users-admin.md#T-07.01.02",
     "02-auth-users-admin.md#T-07.01.03",
@@ -16122,8 +16423,21 @@
         "04-invoices-wallet-contracts.md#T-04.1.04.06",
         "04-invoices-wallet-contracts.md#T-04.2.03.01"
       ],
-      "review_record": "audit/progress.json#active_batch",
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets",
       "note": "Prior full assessments retained in Git. Refresh only previously current bindings for the reviewed assignment/category repairs. Unrelated stale evidence remains pending."
+    },
+    {
+      "source_revision": "0c10846",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.04.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.04.03",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-05.04.05"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets",
+      "note": "Prior full assessments remain in Git; only current additive dictionary bindings refreshed. Unrelated stale evidence remains pending."
     }
   ]
 }

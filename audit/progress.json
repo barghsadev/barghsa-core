@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "0ad07601407c4249db92b7e65496c6f548c33a81",
+  "source_revision": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
   "active_step": "R01",
-  "next_action": "Finish ticket list related links and staff customer information using current authorized fields/routes. Categories and assignment repairs are verified; reuse their evidence. Record unbuilt order/contract dependencies without inventing routes. Consolidate individual task/PR acceptance once the remaining criteria have supported dispositions.",
+  "next_action": "Read the exact verification-policy requirements and saved PR141/142/146 bodies, then compare existing configuration/API/worker/UI behavior before editing.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -623,6 +623,10 @@
     {
       "id": "R01-wallet-invoice-payments-reversals",
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "id": "R01-tickets",
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets"
     }
   ],
   "deferred_improvements": [
@@ -641,9 +645,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 127,
-    "partial": 27,
-    "pending": 168,
+    "acceptance_verified": 128,
+    "partial": 29,
+    "pending": 165,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -763,137 +767,31 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-tickets",
-    "name": "Customer and staff ticket workflow",
+    "id": "R01-verification-policy",
+    "name": "Verification mode, unavailable provider and user notification",
     "status": "in_progress",
     "prs": [
-      138,
-      139,
-      140
+      141,
+      142,
+      146
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-06.01.01",
-      "02-auth-users-admin.md#T-06.01.02",
-      "02-auth-users-admin.md#T-06.01.03"
+      "02-auth-users-admin.md#T-07.01.01",
+      "02-auth-users-admin.md#T-07.01.02",
+      "02-auth-users-admin.md#T-07.01.03"
     ],
     "remaining_checklist": [
-      "Requirements, PR138/139/140 bodies, ticket component, attachment service and assignment consumers already reviewed. Do not repeat their full discovery.",
-      "Remaining UI gaps: related-record link in the ticket list and staff customer-information panel. Current staff detail has userId/profileId and profile quick-link, but no customer display metadata.",
-      "Only customer invoice detail is available as a true existing record route. AdminInvoicesPage is a collection of manual/correction/deadline forms, not an invoice queue. Its deadline lookup starts with a blank invoiceId and supports no search/deep-link input. Add a real supported link path if needed; do not label the current /admin/invoices link a specific record link.",
-      "No order detail route exists in the current route inventory; /electricity/order is order creation. Contract linking deliberately returns409 because its table/workflow is unbuilt. Preserve V01/B01 dependencies and disposition unavailable related-record targets explicitly.",
-      "Shared assignment lock and current-role defects now verified atb5c4e87; ticket categories now verified at0ad0760. Both create callers use the additional ordered actor lock set. Creation remains atomic on later validation/evidence/auth failures.",
-      "Complete remaining ticket UI review, resolve PR138 attachment and PR140 assignment deferrals using existing implementation evidence, then consolidate individual task/PR dispositions once. No task/PR closed at this checkpoint."
+      "Read these exact current requirements and three saved PR bodies. Provider absence is an accepted user decision; do not ask again or simulate success.",
+      "Review existing mode/configuration, guarded manual/automatic flows, worker behavior and notification consumer once. Preserve prior identity/CRM/assignment repairs.",
+      "Repair confirmed defects with focused checks and explicitly disposition unavailable provider and R02 delivery prerequisites. Consolidate task/PR outcomes once."
     ],
-    "confirmed_defects": [
-      {
-        "summary": "A session expiring while a ticket row is locked can still commit a customer reply. A revoked staff role can still commit a status change using the guard's earlier permissions.",
-        "status": "repaired_and_verified_at_5b637a8",
-        "evidence": [
-          "/tmp/r01-tickets-actor-baseline.log",
-          "/tmp/r01-tickets-role-baseline.log"
-        ]
-      },
-      {
-        "summary": "Staff ticket reads could use revoked broad-read grants or stale assigned scope after waiting; customer reads could finish after session expiry.",
-        "status": "repaired_and_verified_at_fa60a45",
-        "evidence": [
-          "/tmp/r01-tickets-read-baseline.log",
-          "/tmp/r01-tickets-read-http-final.log"
-        ]
-      },
-      {
-        "summary": "Mixed broad-read/assigned-only-write staff saw editor controls for other staff tickets; dark ticket fields, notes and list controls had unreadable contrast.",
-        "status": "repaired_and_verified_at_368c080",
-        "evidence": [
-          "/tmp/r01-tickets-ui-baseline.log",
-          "/tmp/r01-tickets-ui-browser.log",
-          "/tmp/r01-tickets-ui-browser-final.log"
-        ]
-      },
-      {
-        "summary": "Staff ticket creation locked its actor before auto-assignment teams, reversing manual-assignment lock order and causing a concurrent request to fail500.",
-        "status": "repaired_and_verified_at_948a216",
-        "evidence": [
-          "/tmp/r01-tickets-assignment-race-baseline.log",
-          "/tmp/r01-tickets-assignment-check.log"
-        ]
-      },
-      {
-        "summary": "Identity correction creation inverted account/team locks against manual ticket assignment.",
-        "status": "repaired_and_verified_at_b5c4e87",
-        "evidence": [
-          "/tmp/r01-tickets-shared-assignment-baseline.log",
-          "/tmp/r01-tickets-assignment-authority-check.log"
-        ]
-      },
-      {
-        "summary": "Automatic and manual assignment could choose staff using a role being revoked concurrently.",
-        "status": "repaired_and_verified_at_b5c4e87",
-        "evidence": [
-          "/tmp/r01-tickets-candidate-role-baseline.log",
-          "/tmp/r01-tickets-manual-role-baseline.log",
-          "/tmp/r01-tickets-assignment-authority-routing-final.log"
-        ]
-      },
-      {
-        "summary": "Ticket category selector and category persistence were missing. User approved General, Billing, Orders.",
-        "status": "implemented_and_verified_at_0ad0760",
-        "evidence": [
-          "/tmp/r01-tickets-category-http-final.log",
-          "/tmp/r01-tickets-category-browser.log",
-          "/tmp/r01-tickets-category-baseline-verified.log"
-        ]
-      }
-    ],
+    "confirmed_defects": [],
     "reused_evidence": [
-      "22 unchanged ticket service cases rerun in70-case checkpoint; existing private attachment/transition coverage retained. No aggregate count across overlapping runs."
+      "audit/evidence/step-reviews.json#R01-tickets:19 current correction HTTP and9 assignment cases cover the shared assignment repair. No identity provider exists."
     ],
-    "new_evidence": [
-      "5b637a8: current account/role/session checks run inside every HTTP ticket write transaction. Newly assigned-only grants restrict the locked ticket and assignment target. Final session checks roll back ticket/comment/audit/notification effects on expiry.",
-      "30 final HTTP cases pass in /tmp/r01-tickets-actor-http-verified.log.22 unchanged service cases pass in the earlier46-case run; counts overlap. API types, scoped lint, formatting and unchanged OpenAPI pass. All14 ended logs, including baseline failures and the transient-staff fixture correction, are archived through audit/evidence/index.json.",
-      "fa60a45: 41 HTTP cases pass, including revoked/downgraded roles and expiry on customer reads. API types/lint/format/OpenAPI pass. Superseded by the overlapping70-case run at948a216; do not add the counts.",
-      "368c080: 10 production Chromium cases pass, including mixed full-read/assigned-only-write scope and FA/EN light/dark axe checks. Web build/types/lint/format and42 unchanged route/interaction budgets pass.",
-      "948a216: Concurrent staff ticket creation/manual assignment previously returned500; the regression now passes.70 cases pass across tickets HTTP41, service22 and assignment HTTP7. API types/lint/format/OpenAPI pass; HTTP setup rebuilt API. Test-only non-null annotations followed the runtime run and passed typecheck.",
-      "34 newly archived read/UI/assignment logs, including baseline failures and intermediate type/contrast failures. 2078 total indexed logs.",
-      "b5c4e87:91 distinct API/service cases pass across focused runs; source review keeps profile-first, team-before-users ordering and locks candidate role membership/permissions through commit. No schema, UI or provider changes in this repair.",
-      "0ad0760:57 HTTP +22 service +10 browser cases pass. Migration0125 adds only a constrained defaulted category field; generated snapshot differs only in public.tickets. Generated timestamp was corrected to follow the existing future-dated journal. Three migration cases pass; initial timestamp and legacy-fixture failures are retained.",
-      "30 new ended logs archived; 2108 logs indexed. Numeric budgets and coverage floors unchanged; full regression remainsV02.",
-      "24 previously current task source bindings refreshed with scoped evidence. 12 retained/identified refresh records remain; no acceptance counts changed."
-    ],
+    "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Finish ticket list related links and staff customer information using current authorized fields/routes. Categories and assignment repairs are verified; reuse their evidence. Record unbuilt order/contract dependencies without inventing routes. Consolidate individual task/PR acceptance once the remaining criteria have supported dispositions.",
-    "product_commits": [
-      {
-        "revision": "5b637a8",
-        "change": "Current ticket write authority through commit",
-        "verification": "30 HTTP and22 reused service cases; API types/lint/format/OpenAPI pass. Existing HTTP fixture rebuilt the product API. No ticket task or PR marked closed yet."
-      },
-      {
-        "revision": "fa60a45",
-        "change": "Current ticket read authority through response assembly",
-        "verification": "41 HTTP cases pass, including revoked/downgraded roles and expiry on customer reads. API types/lint/format/OpenAPI pass. Superseded by the overlapping70-case run at948a216; do not add the counts."
-      },
-      {
-        "revision": "368c080",
-        "change": "Ticket editor permissions and light/dark contrast",
-        "verification": "10 production Chromium cases pass, including mixed full-read/assigned-only-write scope and FA/EN light/dark axe checks. Web build/types/lint/format and42 unchanged route/interaction budgets pass."
-      },
-      {
-        "revision": "948a216",
-        "change": "Consistent account/team lock order for automatic ticket assignment",
-        "verification": "Concurrent staff ticket creation/manual assignment previously returned500; the regression now passes.70 cases pass across tickets HTTP41, service22 and assignment HTTP7. API types/lint/format/OpenAPI pass; HTTP setup rebuilt API. Test-only non-null annotations followed the runtime run and passed typecheck."
-      },
-      {
-        "revision": "b5c4e87",
-        "change": "Shared creation lock order and current automatic/manual assignment grants",
-        "verification": "Identity-correction creation/manual ticket assignment race reproduced and repaired. Both automatic/manual assignment role-revocation races reproduced and repaired.91 distinct cases pass:82 unchanged after the combined run plus9 routing cases after correcting duplicate test team names. API types/lint/format/OpenAPI pass."
-      },
-      {
-        "revision": "0ad0760",
-        "change": "Approved ticket categories across migration, API, audit and UI",
-        "verification": "57 HTTP cases,22 unchanged service cases,10 production Chromium cases and42 unchanged budgets pass. Three migration cases pass across focused runs, covering old populated data, legacy recovery, fresh schema/seed and preauth preservation. API/web/DB types, lint, format, web build, OpenAPI and backlog/requirements checks pass."
-      }
-    ]
+    "next_action": "Read the exact verification-policy requirements and saved PR141/142/146 bodies, then compare existing configuration/API/worker/UI behavior before editing."
   },
   "open_domain_reviews": [
     {
@@ -1055,6 +953,34 @@
       "owner_batch": "V01 operational migration validation",
       "remaining": "Reconcile reported legacy reversal rows and validate chk_wallet_tx_reversal_original. Current new-write constraints and reversal service are verified; no operator execution claimed.",
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.01",
+      "prs": [
+        138
+      ],
+      "owner_batch": "V01/B01 unmet product dependencies",
+      "remaining": "T-06.01.01: contract linking remains unavailable409 until the contract table and creation workflow exist. Preserve the explicit V01/B01 dependency; current invoice/order linking and optional general support are verified.",
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets",
+      "prerequisite_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.5.01.01",
+        "04-invoices-wallet-contracts.md#T-04.5.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.01.03"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.02",
+      "prs": [
+        139
+      ],
+      "owner_batch": "V01/B01 unmet product dependencies",
+      "remaining": "T-06.01.02: customer invoice links work in list and detail; dedicated order/contract record views remain unbuilt. Unsupported links are labeled unavailable. Staff invoice detail is also absent; /admin/invoices is a collection of forms and is not treated as a record destination.",
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets",
+      "prerequisite_task_keys": [
+        "03-core-business.md#T-03.07.04.02",
+        "03-core-business.md#T-03.09.04.04",
+        "04-invoices-wallet-contracts.md#T-04.5.03.03"
+      ]
     }
   ]
 }

@@ -1367,7 +1367,21 @@
       "- Staff ticket management endpoints (prerequisite slice, teams/auto-assignment deferred to T-09.08.02)",
       "- [ ] Team assignment and auto-assignment rules (deferred to T-09.08.02)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals satisfied by later implementation; see current task/PR disposition for remaining independent criteria.",
+    "reviewed_source_revision": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+    "review_record": "audit/evidence/step-reviews.json#R01-tickets",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current team selection, automatic strategy/fallback and transaction/current-role checks pass HTTP/browser evidence. audit/evidence/step-reviews.json#R01-tickets"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current team selection, automatic strategy/fallback and transaction/current-role checks pass HTTP/browser evidence. audit/evidence/step-reviews.json#R01-tickets"
+      }
+    ]
   },
   {
     "pr": 138,
@@ -1379,7 +1393,21 @@
       "- [ ] File attachments (document storage integration) — dependency on documents module, deferred to that integration (attachments field accepted in DTO, not yet persisted)",
       "Task dependency is `documents module` — actual file-attachment persistence is deferred until the documents/storage link is implemented as documented."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals satisfied by later implementation; see current task/PR disposition for remaining independent criteria.",
+    "reviewed_source_revision": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+    "review_record": "audit/evidence/step-reviews.json#R01-tickets",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Verified fixed-copy attachment persistence, ownership/profile binding and authorized downloads pass current ticket HTTP/browser checks. audit/evidence/step-reviews.json#R01-tickets"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Verified fixed-copy attachment persistence, ownership/profile binding and authorized downloads pass current ticket HTTP/browser checks. audit/evidence/step-reviews.json#R01-tickets"
+      }
+    ]
   },
   {
     "pr": 132,

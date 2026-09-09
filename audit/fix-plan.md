@@ -1,22 +1,24 @@
 # Remaining fix plan
 
-Current through product/test `cb7ac5b`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `d776019`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 124 | 27 | 112 | 263 |
+| Tasks with merged PR evidence | 125 | 29 | 109 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 127 | 27 | 168 | 322 |
+| All claims | 128 | 29 | 165 | 322 |
 
-**195 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Ten retained records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
+**194 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed. Twelve retained/identified records need evidence refreshed for later source changes. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Active R01 batch: customer/staff tickets, saved PRs138–140 and tasks `02-auth-users-admin.md#T-06.01.01` through `.03`. Review current requirements and existing implementation before fixing confirmed gaps. Preserve the completed batches below.
+Active R01 batch: verification mode, unavailable provider and user notification. Saved PRs141,142,146; tasks `02-auth-users-admin.md#T-07.01.01` through `.03`. Read these exact requirements and PR bodies, then compare current configuration/API/worker/UI behavior before editing. No identity provider exists; do not ask again or simulate success. Preserve completed ticket/CRM/assignment work.
+
+Ticket batch consolidated at `d776019`: **1 task verified /2 partial;1 saved PR review closed /2 open**. PR140 staff management and both historical team/assignment deferrals are verified. PR138 attachments are complete; contract linking remains an unbuilt dependency. PR139 customer invoice links are complete; order/contract detail destinations remain dependencies. Current authority, sealed attachments, assignment, categories, customer context and FA/EN UI are reviewed.74 final ticket API/service cases and14 distinct browser cases pass;9 assignment and19 correction cases are reused.3 migration cases and42 unchanged budgets pass. [Batch review](evidence/step-reviews.json#R01-tickets).2117 logs indexed. Saved PR totals:105 closed/20 open/176 unreviewed.
 
 First feature batch completed locally at `1bf4680`: agents, invitations and ownership, saved PRs #131–#135. **4 PR reviews closed / 1 open / 0 blocked**. Tasks T-05.04.01, .02, .03 and .05 are verified; T-05.04.04 remains partial until wallet/invoice/contract/order role evidence is linked from its assigned batches. All three PR132 deferrals are satisfied locally. [Consolidated batch review](evidence/step-reviews.json#R01-agents-invitations-ownership).
 
@@ -63,7 +65,7 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 | R03 / F19, F20 | Localized application errors; correlation through required outbox/worker consumers; remaining accessibility, RTL, themes and failure states. Check the recorded dark-theme terms error banner and shared button/link/alert contrast consumers. | Required screens and consumers pass relevant checks. Scanner warnings require a confirmed defect before becoming work. |
 | R04 / F19 | Eager customer purchase routes within unchanged complete-route budgets. Earlier over-budget attempts were reverted. | Production build, required loading and affected payload budgets pass. Retain Vite SPA. |
 | R05 / F19 | Strict dependency checks in API/web/worker/DB; geoip-country maintenance/data-update disposition. Last strict DB run found 146 declaration errors, 144 Drizzle and 2 Vite. | Compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation pass. No broad suppression or weaker requirement. |
-| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 10 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
+| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 12 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
 | R06 / F19 | Three measured coverage gaps. | Meaningful missing-behavior tests meet unchanged critical floors of 90% lines / 85% branches and general floors of 80% / 75%. |
 | V02 / affected groups | One final regression checkpoint after local repairs. | Required unit/integration/browser/coverage/types/lint/OpenAPI/migrations/snapshots/budgets/loop/image checks pass at recorded revisions. |
 | B01 / F22 | Dependency-ordered handoff of unmet skipped work. | Exact keys, criteria and prerequisites; preserve verified and incidental implementation. Build new features after repair closure. |
@@ -102,11 +104,11 @@ Then form bounded batches within the existing phase order, such as remaining acc
 
 - Sessions and permissions: finish activation and remaining manual-verification acceptance; profile/onboarding, contact/address boundaries and current commercial-order verification are consolidated; link the remaining cross-domain agent-role checks. Local agent/invitation/ownership acceptance is recorded above. Reuse [session caller evidence](session-caller-review.md) and [route/CSRF review](security-route-review.md). Guard registration alone does not prove handler, transaction or UI behavior.
 - CSRF boundaries: pre-login tokens for public JSON authentication are implemented and verified at f1b879b. Explicitly disposition refresh, signed-callback requirements and CSP telemetry. Browser payment return GET and explicit session/CSRF confirmation are repaired in the online batch. Current inventory has 347 routes, 205 unsafe-method registrations and 122 guarded step-up routes.
-- Finance and tickets: remaining refund/order/contract authority, and customer/staff ticket privacy, attachments, assignment and transitions. Wallet settlement/reversal, receipt, online-payment and chargeback repairs are consolidated above; preserve their evidence and the pending signed-webhook decision. Keep separate workflows in their assigned feature batches.
+- Finance: remaining refund/order/contract authority. Ticket repairs are consolidated; contract linking and unavailable order/contract/staff-invoice destinations are recorded under V01/B01, with prerequisite task keys in `progress.json.open_domain_reviews`. Wallet settlement/reversal, receipt, online-payment and chargeback repairs are consolidated above; preserve their evidence and the pending signed-webhook decision. Keep separate workflows in their assigned feature batches.
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all 27 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM contract/summary/count partials map to V01/B01. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all 29 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 

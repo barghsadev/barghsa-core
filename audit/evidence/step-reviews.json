@@ -11826,6 +11826,265 @@
         "/tmp/r01-wallet-batch-requirements-check.log",
         "/tmp/r01-wallet-batch-backlog-check.log"
       ]
+    },
+    {
+      "id": "R01-tickets",
+      "date": "2026-09-09",
+      "source_revision": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+      "base_revision": "6f03ee84e4f18d5f953b38249322f82effe334fa",
+      "product_commits": [
+        "5b637a8ee64a72e2a80042a63ffe97a39c4049ca",
+        "fa60a45ffedc4d9519a09d22efdbd560c0e613a5",
+        "368c080032e87b6ff5b7cf619bf525c77d71d253",
+        "948a216b9800a9e29f8c86d529884f25eb55b069",
+        "b5c4e870e79ece250238f53273f5744c0b4e440d",
+        "0ad07601407c4249db92b7e65496c6f548c33a81",
+        "d776019d8b3c609bdb52e4c9038d9be58702d12b"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03"
+      ],
+      "summary": "Ticket authority, private attachments, assignment, categories and customer/staff UI repaired. One task verified, two partial with explicit unbuilt dependencies. Saved PR140 review closed;138/139 remain open.",
+      "review": [
+        "Exact current requirements and saved PR138/139/140 bodies were reviewed once. Staff management covers broad/assigned reads, self/team assignment, public/internal notes, the required status transitions, customer and assignment/SLA columns, distinct internal styling and customer profile links. No duplicate ticket service needs deletion; successive PRs are complementary workflow slices.",
+        "All six HTTP writers bind current account, role, session and CSRF authority inside their transactions. Scope downgrades take effect after lock waits; final expiry checks roll back ticket, comment, assignment, audit and notification effects. Reads recompute current scope and verify the session through response assembly; customer/public and staff/internal data remain separate.",
+        "Attachments use verified uploader/profile/purpose binding, fixed byte copies and private short-lived downloads. Ticket creation preserves uploads on failed retries; invalid ownership, forged links and failed audit roll back. PR138 statements that attachments were not persisted are satisfied by this later implementation.",
+        "Both automatic-work callers lock profile, teams and account sets in consistent order. Automatic/manual assignment locks current candidate roles through commit. Regressions reproduced concurrent creation/assignment500 failures and assignments using revoked grants. Team priority, fallback, expertise/load/round-robin, disabled eligibility and audit/cursor rollback retain current tests. Both PR140 assignment deferrals are satisfied.",
+        "User-approved General/Billing/Orders categories are persisted, validated, audited and localized in creation/list/detail. Migration0125 defaults existing rows to General and preserves old values/history. Only public.tickets differs in the generated snapshot. Journal ordering and legacy migration fixture corrections are tested; no live migration was run.",
+        "Mixed broad-read/assigned-only-write staff get editor controls only for their assigned ticket. Scoped staff detail adds only account username/email/mobile and a currently owned active profile label; SQL projects these fields explicitly. Customer responses omit that metadata, assigned staff cannot read another ticket and moved/archived profiles are excluded. Profile quick-links retain CRM route access controls.",
+        "FA/EN screens cover category retry/persistence, readable light/dark fields and primary-button hover, status/priority badges, stale-response protection, private notes, attachment links and current customer context. Customer invoice links now appear in list and detail. Unknown/unbuilt order/contract/staff-invoice destinations are visibly unavailable rather than mapped to unrelated pages."
+      ],
+      "verification": {
+        "backend": "74 final ticket cases pass:52 real HTTP/PostgreSQL and22 service.9 unchanged assignment cases and19 identity-correction HTTP cases remain applicable from the prior shared repair. Earlier70/91/57 totals overlap and are not added.",
+        "browser": "14 distinct production Chromium cases pass:12 in the main run and2 staff-context cases after scoping an assertion away from the legitimate global invoice navigation link. FA/EN, customer links, read-only staff context, mobile/dark configuration, axe and profile removal are covered. Earlier10-case runs overlap.",
+        "migration": "Three category-era upgrade/baseline/preauth cases pass across focused runs, covering populated old rows, constrained defaults, idempotency, legacy adoption and fresh schema/seed.",
+        "quality": "API/web typechecks, scoped lint, formatting, production web build, unchanged generated OpenAPI and all42 numeric route/interaction budgets pass. Latest kanban and current requirement checks pass. API HTTP setup rebuilt shared/i18n/DB/worker/API.",
+        "failures": "Retained baseline permission/expiry, read-scope, contrast, lock-order and candidate-role failures. Intermediate duplicate fixture names, strict optional typing, generated journal timestamp, legacy fixture reconstruction and global-nav locator failures were corrected and relevant checks rerun.",
+        "reuse": "No source or requirement rewrites outside confirmed batch defects. Existing storage, transition, assignment and identity evidence is reused when source remains unchanged. Full regression and coverage stayV02."
+      },
+      "remaining": [
+        "T-06.01.01: contract linking remains unavailable409 until the contract table and creation workflow exist. Preserve the explicit V01/B01 dependency; current invoice/order linking and optional general support are verified.",
+        "T-06.01.02: customer invoice links work in list and detail; dedicated order/contract record views remain unbuilt. Unsupported links are labeled unavailable. Staff invoice detail is also absent; /admin/invoices is a collection of forms and is not treated as a record destination.",
+        "R02 retains actual notification delivery. Ticket mutation/enqueue atomicity is covered; no provider delivery is claimed by this batch.",
+        "Migration0125 must precede API rollout. Full regression/coverage and production operational evidence remain V02/V01."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 138,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-06.01.01"
+          ],
+          "reason": "File-attachment deferrals are satisfied. Contract linking still has an unmet schema/workflow dependency; task remains partial.",
+          "source_revision": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-tickets"
+          ]
+        },
+        {
+          "pr": 139,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-06.01.02"
+          ],
+          "reason": "Customer list/detail, privacy, state handling and invoice links are verified. Order/contract record destinations remain unbuilt; task remains partial.",
+          "source_revision": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-tickets"
+          ]
+        },
+        {
+          "pr": 140,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-06.01.03"
+          ],
+          "reason": "All mapped staff ticket criteria verified; both historical team/automatic-assignment deferrals are satisfied by current implementation and focused evidence.",
+          "source_revision": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-tickets"
+          ]
+        }
+      ],
+      "pr_counts": {
+        "closed": 1,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "Generic verified/sealed storage behavior was reviewed through its shared implementation; ticket integration has current HTTP evidence.",
+        "Related customer invoice route/API retain the previously verified invoice batch; this batch verifies the exact generated link.",
+        "No external provider, rollout, scheduler or GitHub mutation claimed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/tickets/ticket-actor.ts",
+          "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-input.ts",
+          "sha256": "049a9a011047737f5e2700a659c0dc9400a623031eb0113f1a217d2c63ae70d5"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "097583643cd0f632744af615d803ece97df1414d849414d70cb793f2bd7508ed"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.controller.ts",
+          "sha256": "569699d76ad165f2730a903cec1569c1e873022c61e18fc9113ffcbdc7015650"
+        },
+        {
+          "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+          "sha256": "7b3a26e9840efa0f0151bae6fd5547eb43eb3ac2542177dca89df94dc9ed7d92"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "sha256": "8f4cae2149a7220b6cc6fa94429c59b41435f3462c59b2c00485e60a2a98b822"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.test.ts",
+          "sha256": "dad8ad466be68f6e113269d5ad4642fa247caf69301f42f4c8fab55e4779c00d"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-attachments.service.ts",
+          "sha256": "8a64db9f202356007e3442066da2b2c4fd03e8afd2ff73153a48b05cd283faa4"
+        },
+        {
+          "path": "apps/api/src/staff-assignment/staff-assignment.service.ts",
+          "sha256": "588e6885c3b03bf67128ef8d8f636e887f51666de220f5e094ab2ef90fb0b889"
+        },
+        {
+          "path": "apps/api/src/staff-assignment/staff-assignment-http.integration.test.ts",
+          "sha256": "c31f90542ca26e822a4c6fbc4402d77630d57fa41240829e4714ca326a491993"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "3703441c432991b83cbe6e7065108529097cf29a51675627b63610a60acadd76"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "7f352d4b3fb574731039905c16a7c64cb2098b55e0e60b38acf0de3eb0772263"
+        },
+        {
+          "path": "packages/i18n/src/app.ts",
+          "sha256": "56754d3bd990879e6f58afd63896c1f7e0d237d03afa5c3de2b6b6d1e453d9f2"
+        },
+        {
+          "path": "packages/db/src/schema/tickets.ts",
+          "sha256": "8caea6dcc2c5a397b2a19ad83f2c16ee4eeb8bb5276a06b7b93193b0fb1073f8"
+        },
+        {
+          "path": "packages/db/drizzle/production/0125_ticket_category.sql",
+          "sha256": "64f77e550878013b291b1de82ce5fe77d5376ff67ee46c76eb4128d90bc9b421"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "4e46c8443c4271ff716d58e30777770f8eb7c6b4850cb0ce85f6817383542c56"
+        },
+        {
+          "path": "packages/db/src/migrate.preauth-sessions.test.ts",
+          "sha256": "ea8f89d21b9f38ae928af86d142c2728d1b5467d332a5e37588204fec6d1dff6"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-tickets-actor-baseline.log",
+        "/tmp/r01-tickets-actor-check.log",
+        "/tmp/r01-tickets-actor-expanded-format.log",
+        "/tmp/r01-tickets-actor-fixtures-format.log",
+        "/tmp/r01-tickets-actor-format-check.log",
+        "/tmp/r01-tickets-actor-format.log",
+        "/tmp/r01-tickets-actor-http-final.log",
+        "/tmp/r01-tickets-actor-http-verified.log",
+        "/tmp/r01-tickets-actor-lint.log",
+        "/tmp/r01-tickets-actor-openapi.log",
+        "/tmp/r01-tickets-actor-test-format.log",
+        "/tmp/r01-tickets-actor-types.log",
+        "/tmp/r01-tickets-role-baseline.log",
+        "/tmp/r01-tickets-role-test-format.log",
+        "/tmp/r01-tickets-assignment-check.log",
+        "/tmp/r01-tickets-assignment-fix-format.log",
+        "/tmp/r01-tickets-assignment-format-final.log",
+        "/tmp/r01-tickets-assignment-lint.log",
+        "/tmp/r01-tickets-assignment-openapi.log",
+        "/tmp/r01-tickets-assignment-race-baseline.log",
+        "/tmp/r01-tickets-assignment-race-format.log",
+        "/tmp/r01-tickets-assignment-types-final.log",
+        "/tmp/r01-tickets-assignment-types.log",
+        "/tmp/r01-tickets-read-baseline.log",
+        "/tmp/r01-tickets-read-check.log",
+        "/tmp/r01-tickets-read-expanded-format.log",
+        "/tmp/r01-tickets-read-format-check.log",
+        "/tmp/r01-tickets-read-format.log",
+        "/tmp/r01-tickets-read-http-final.log",
+        "/tmp/r01-tickets-read-lint.log",
+        "/tmp/r01-tickets-read-openapi.log",
+        "/tmp/r01-tickets-read-test-format.log",
+        "/tmp/r01-tickets-read-type-format.log",
+        "/tmp/r01-tickets-read-types-final.log",
+        "/tmp/r01-tickets-read-types.log",
+        "/tmp/r01-tickets-ui-baseline.log",
+        "/tmp/r01-tickets-ui-browser-final.log",
+        "/tmp/r01-tickets-ui-browser.log",
+        "/tmp/r01-tickets-ui-budgets-final.log",
+        "/tmp/r01-tickets-ui-budgets.log",
+        "/tmp/r01-tickets-ui-build-final.log",
+        "/tmp/r01-tickets-ui-build.log",
+        "/tmp/r01-tickets-ui-format-final.log",
+        "/tmp/r01-tickets-ui-format.log",
+        "/tmp/r01-tickets-ui-lint.log",
+        "/tmp/r01-tickets-ui-test-format-final.log",
+        "/tmp/r01-tickets-ui-test-format.log",
+        "/tmp/r01-tickets-ui-types.log",
+        "/tmp/r01-tickets-assignment-authority-check.log",
+        "/tmp/r01-tickets-assignment-authority-format-check.log",
+        "/tmp/r01-tickets-assignment-authority-format.log",
+        "/tmp/r01-tickets-assignment-authority-lint.log",
+        "/tmp/r01-tickets-assignment-authority-openapi.log",
+        "/tmp/r01-tickets-assignment-authority-routing-final.log",
+        "/tmp/r01-tickets-assignment-authority-types.log",
+        "/tmp/r01-tickets-candidate-role-baseline.log",
+        "/tmp/r01-tickets-candidate-role-test-format.log",
+        "/tmp/r01-tickets-category-api.log",
+        "/tmp/r01-tickets-category-baseline-verified.log",
+        "/tmp/r01-tickets-category-browser.log",
+        "/tmp/r01-tickets-category-budgets.log",
+        "/tmp/r01-tickets-category-contract-format.log",
+        "/tmp/r01-tickets-category-contract-write.log",
+        "/tmp/r01-tickets-category-format.log",
+        "/tmp/r01-tickets-category-generate.log",
+        "/tmp/r01-tickets-category-http-final.log",
+        "/tmp/r01-tickets-category-lint.log",
+        "/tmp/r01-tickets-category-migration-final.log",
+        "/tmp/r01-tickets-category-migration.log",
+        "/tmp/r01-tickets-category-openapi-check.log",
+        "/tmp/r01-tickets-category-openapi-generate.log",
+        "/tmp/r01-tickets-category-types.log",
+        "/tmp/r01-tickets-category-upgrade-fixture-format.log",
+        "/tmp/r01-tickets-category-web-build.log",
+        "/tmp/r01-tickets-manual-role-baseline.log",
+        "/tmp/r01-tickets-manual-role-test-format.log",
+        "/tmp/r01-tickets-shared-assignment-baseline.log",
+        "/tmp/r01-tickets-shared-assignment-test-format.log",
+        "/tmp/r01-tickets-context-api.log",
+        "/tmp/r01-tickets-context-browser-staff-final.log",
+        "/tmp/r01-tickets-context-browser.log",
+        "/tmp/r01-tickets-context-budgets.log",
+        "/tmp/r01-tickets-context-format.log",
+        "/tmp/r01-tickets-context-lint.log",
+        "/tmp/r01-tickets-context-openapi.log",
+        "/tmp/r01-tickets-context-types.log",
+        "/tmp/r01-tickets-context-web-build.log"
+      ]
     }
   ]
 }
