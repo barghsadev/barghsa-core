@@ -2,6 +2,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NotificationTemplateService } from './notification-template.service.js';
 import type { NotificationsService } from './notifications.service.js';
 
+const actor = {
+  userId: 'staff',
+  sessionId: '00000000-0000-4000-8000-000000000001',
+  csrfToken: 'template-fixture-csrf',
+};
+const sessionRow = {
+  active: true,
+  fresh: true,
+  csrf_token: actor.csrfToken,
+  step_up_verified_at: new Date('2026-09-09T00:00:00Z'),
+};
+
 const { query, send, sms, prepareSms } = vi.hoisted(() => ({
   query: vi.fn(),
   send: vi.fn(),
@@ -22,7 +34,7 @@ vi.mock('../admin/staff-mutation-permission.js', () => ({
 
 beforeEach(() => {
   query.mockReset();
-  query.mockResolvedValue({ rows: [{ username: 'staff@example.test' }] });
+  query.mockResolvedValue({ rows: [{ ...sessionRow, username: 'staff@example.test' }] });
   send.mockReset();
   send.mockRejectedValue(new Error('unavailable'));
   sms.mockReset();
@@ -33,26 +45,57 @@ beforeEach(() => {
 function service(channel: 'email' | 'sms' | 'in_app') {
   const create = vi.fn().mockResolvedValue({ id: 'inbox-test' });
   const instance = new NotificationTemplateService({ create } as unknown as NotificationsService);
-  vi.spyOn(
-    instance as unknown as { lockTemplate: () => Promise<Record<string, unknown>> },
-    'lockTemplate'
-  ).mockResolvedValue({
-    id: 'template',
-    event_key: 'invoice.created',
-    channel,
-    locale: 'en',
-    subject: 'Invoice',
-    body_template: 'Test body',
-    variables: [],
-    status: 'draft',
-    is_active: false,
-    version: 1,
-    published_at: null,
-    created_at: new Date(),
-    updated_at: new Date(),
-  });
-  return { instance, create };
+  const lockTemplate = vi
+    .spyOn(
+      instance as unknown as { lockTemplate: () => Promise<Record<string, unknown>> },
+      'lockTemplate'
+    )
+    .mockResolvedValue({
+      id: 'template',
+      event_key: 'invoice.created',
+      channel,
+      locale: 'en',
+      subject: 'Invoice',
+      body_template: 'Test body',
+      variables: [],
+      status: 'draft',
+      is_active: false,
+      version: 1,
+      published_at: null,
+      created_at: new Date(),
+      updated_at: new Date(),
+    });
+  return { instance, create, lockTemplate };
 }
+
+it.each(['email', 'sms', 'in_app'] as const)(
+  'does not dispatch %s after the session expires while template settings are locked',
+  async (channel) => {
+    const { instance, create, lockTemplate } = service(channel);
+    const template = await lockTemplate();
+    lockTemplate.mockImplementation(async () => {
+      query.mockResolvedValue({
+        rows: [{ ...sessionRow, active: false, username: 'staff@example.test' }],
+      });
+      return template;
+    });
+    await expect(
+      instance.testSend(
+        'template',
+        actor,
+        channel === 'in_app' ? undefined : { destination: 'staff@example.test' }
+      )
+    ).rejects.toMatchObject({ status: 401 });
+    expect(send).not.toHaveBeenCalled();
+    expect(sms).not.toHaveBeenCalled();
+    expect(prepareSms).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+    expect(
+      query.mock.calls.some(([sql]) => sql.includes('INSERT INTO audit_log') || sql === 'COMMIT')
+    ).toBe(false);
+    expect(query.mock.calls.some(([sql]) => sql === 'ROLLBACK')).toBe(true);
+  }
+);
 
 describe('truthful notification template tests', () => {
   it.each(['email', 'sms'] as const)(
@@ -60,7 +103,7 @@ describe('truthful notification template tests', () => {
     async (channel) => {
       const { instance, create } = service(channel);
       await expect(
-        instance.testSend('template', 'staff', { destination: 'staff@example.test' })
+        instance.testSend('template', actor, { destination: 'staff@example.test' })
       ).rejects.toMatchObject({ status: 503 });
       expect(create).not.toHaveBeenCalled();
       expect(
@@ -84,7 +127,7 @@ describe('truthful notification template tests', () => {
   );
   it('still delivers an in-app test to the acting staff inbox', async () => {
     const { instance, create } = service('in_app');
-    expect(await instance.testSend('template', 'staff')).toEqual({
+    expect(await instance.testSend('template', actor)).toEqual({
       ok: true,
       destination: 'in_app',
       lastTestStatus: 'delivered',
@@ -126,9 +169,9 @@ describe('truthful notification template tests', () => {
 it('uses the email provider receipt and never inserts an inbox substitute', async () => {
   const { instance, create } = service('email');
   send.mockResolvedValue('email-receipt');
-  expect(
-    await instance.testSend('template', 'staff', { destination: 'staff@example.test' })
-  ).toEqual({ ok: true, destination: 'email', lastTestStatus: 'delivered' });
+  expect(await instance.testSend('template', actor, { destination: 'staff@example.test' })).toEqual(
+    { ok: true, destination: 'email', lastTestStatus: 'delivered' }
+  );
   expect(send).toHaveBeenCalledWith(
     expect.objectContaining({
       destination: 'staff@example.test',
@@ -147,13 +190,13 @@ it('uses the email provider receipt and never inserts an inbox substitute', asyn
 it('rejects an arbitrary third-party destination before contacting the provider', async () => {
   const { instance } = service('email');
   await expect(
-    instance.testSend('template', 'staff', { destination: 'stranger@example.test' })
+    instance.testSend('template', actor, { destination: 'stranger@example.test' })
   ).rejects.toMatchObject({ status: 403 });
   expect(send).not.toHaveBeenCalled();
 });
 
 it('records a mapped SMS receipt without an inbox substitute', async () => {
-  query.mockResolvedValue({ rows: [{ username: '+989121234567' }] });
+  query.mockResolvedValue({ rows: [{ ...sessionRow, username: '+989121234567' }] });
   const { instance, create } = service('sms');
   const message = {
     providerId: 'sms-provider',
@@ -163,7 +206,7 @@ it('records a mapped SMS receipt without an inbox substitute', async () => {
   };
   prepareSms.mockResolvedValue(message);
   sms.mockResolvedValue('123');
-  expect(await instance.testSend('template', 'staff', { destination: '+989121234567' })).toEqual({
+  expect(await instance.testSend('template', actor, { destination: '+989121234567' })).toEqual({
     ok: true,
     destination: 'sms',
     lastTestStatus: 'delivered',
@@ -179,10 +222,10 @@ it('does not relabel a sent email as failed when its audit cannot persist', asyn
   send.mockResolvedValue('email-receipt');
   query.mockImplementation(async (sql: string) => {
     if (sql.includes('INSERT INTO audit_log')) throw new Error('audit unavailable');
-    return { rows: [{ username: 'staff@example.test' }] };
+    return { rows: [{ ...sessionRow, username: 'staff@example.test' }] };
   });
   await expect(
-    instance.testSend('template', 'staff', { destination: 'staff@example.test' })
+    instance.testSend('template', actor, { destination: 'staff@example.test' })
   ).rejects.toThrow('audit unavailable');
   expect(send).toHaveBeenCalledOnce();
   expect(

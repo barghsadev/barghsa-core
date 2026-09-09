@@ -1474,7 +1474,7 @@ export class AdminController {
       variables: parsed.data.variables,
     };
 
-    return this.notificationTemplateService.create(input, req.session.userId);
+    return this.notificationTemplateService.create(input, req.session);
   }
 
   /**
@@ -1573,7 +1573,7 @@ export class AdminController {
     if (parsed.data.bodyTemplate !== undefined) input.bodyTemplate = parsed.data.bodyTemplate;
     if (parsed.data.variables !== undefined) input.variables = parsed.data.variables;
 
-    return this.notificationTemplateService.update(id, input, req.session.userId);
+    return this.notificationTemplateService.update(id, input, req.session);
   }
 
   /**
@@ -1596,7 +1596,7 @@ export class AdminController {
     @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult> {
     this.assertNotificationPermission(req);
-    return this.notificationTemplateService.publish(id, req.session.userId);
+    return this.notificationTemplateService.publish(id, req.session);
   }
 
   /**
@@ -1618,7 +1618,7 @@ export class AdminController {
     @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult> {
     this.assertNotificationPermission(req);
-    return this.notificationTemplateService.unpublish(id, req.session.userId);
+    return this.notificationTemplateService.unpublish(id, req.session);
   }
 
   /**
@@ -1641,7 +1641,7 @@ export class AdminController {
     @Req() req: AuthenticatedRequest
   ): Promise<void> {
     this.assertNotificationPermission(req);
-    await this.notificationTemplateService.delete(id, req.session.userId);
+    await this.notificationTemplateService.delete(id, req.session);
   }
 
   /**
@@ -1793,7 +1793,7 @@ export class AdminController {
     const destination = parsed.data.destination;
     return this.notificationTemplateService.testSend(
       id,
-      req.session.userId,
+      req.session,
       destination !== undefined ? { destination } : undefined
     );
   }

@@ -5,6 +5,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
+const sessions: Record<string, { sessionId: string; csrfToken: string; userId: string }> = {};
 const grant = JSON.stringify(['admin:notifications:edit']);
 const actions = ['create', 'update', 'publish', 'unpublish', 'delete', 'test-send'] as const;
 type Action = (typeof actions)[number];
@@ -29,6 +30,7 @@ beforeAll(async () => {
     ]);
     const session = randomUUID(),
       csrf = randomUUID();
+    sessions[user] = { sessionId: session, csrfToken: csrf, userId: id };
     await http.pool.query(
       `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
        VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())`,
@@ -45,6 +47,12 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 beforeEach(async () => {
+  for (const actor of Object.values(sessions)) {
+    await http.pool.query(
+      "UPDATE sessions SET csrf_token=$2,expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),revoked_at=NULL WHERE session_id=$1",
+      [actor.sessionId, actor.csrfToken]
+    );
+  }
   await http.pool.query("DELETE FROM notification_templates WHERE event_key LIKE 'fix.template.%'");
   await http.pool.query(
     "DELETE FROM in_app_notifications WHERE recipient_user_id LIKE 'template-%'"
@@ -134,16 +142,94 @@ for (const action of actions) {
   });
   it(`${action}: persists a mutation audit in the same transaction`, async () => {
     const value = await seed(action);
-    expect((await write(action, value)).status).toBe(
-      action === 'create' ? 201 : action === 'delete' ? 204 : 200
-    );
+    const response = await write(action, value);
+    expect(response.status).toBe(action === 'create' ? 201 : action === 'delete' ? 204 : 200);
     const state = await snapshot();
     expect(state.audits).toHaveLength(1);
     expect(state.audits[0].user_id).toBe('template-editor');
+    const metadata = JSON.parse(state.audits[0].metadata);
+    expect(metadata).toMatchObject({ sessionId: sessions.editor!.sessionId, stepUpVerified: true });
+    expect(metadata.stepUpVerifiedAt).toBe(
+      (
+        await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
+          sessions.editor!.sessionId,
+        ])
+      ).rows[0].step_up_verified_at.toISOString()
+    );
+    expect(state.audits[0].correlation_id).toBe(response.headers.get('x-correlation-id'));
+    expect(state.audits[0].metadata).not.toContain(sessions.editor!.csrfToken);
     expect(state.audits[0].event).toBe(
       `notification_template_${{ create: 'created', update: 'updated', publish: 'published', unpublish: 'unpublished', delete: 'deleted', 'test-send': 'test_sent' }[action]}`
     );
   });
+  for (const change of ['expiry', 'csrf', 'step-up'] as const) {
+    it(`${action}: rejects ${change} changed after guards while waiting for staff grants`, async () => {
+      const value = await seed(action),
+        before = await snapshot();
+      const blocker = await http.pool.connect();
+      let pending: Promise<Response> | undefined;
+      try {
+        await blocker.query('BEGIN');
+        await blocker.query(
+          "UPDATE staff_roles SET permissions=permissions WHERE role_id='template-editor'"
+        );
+        const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+        pending = write(action, value);
+        await expect
+          .poll(
+            async () =>
+              Number(
+                (
+                  await http.pool.query(
+                    "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND $1=ANY(pg_blocking_pids(pid)) AND query LIKE '%FOR SHARE OF ur,r%'",
+                    [pid]
+                  )
+                ).rows[0].count
+              ),
+            { timeout: 3000 }
+          )
+          .toBe(1);
+        const assignment =
+          change === 'expiry'
+            ? "expires_at=NOW()-INTERVAL '1 second'"
+            : change === 'csrf'
+              ? "csrf_token='changed-after-guard'"
+              : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+        await http.pool.query(`UPDATE sessions SET ${assignment} WHERE session_id=$1`, [
+          sessions.editor!.sessionId,
+        ]);
+        await blocker.query('COMMIT');
+        expect((await pending).status).toBe(change === 'expiry' ? 401 : 403);
+        expect(await snapshot()).toEqual(before);
+      } finally {
+        await blocker.query('ROLLBACK');
+        blocker.release();
+        await pending;
+      }
+    });
+  }
+  if (action === 'create' || action === 'test-send')
+    for (const change of ['expiry', 'csrf', 'step-up'] as const) {
+      it(`${action}: rolls back template, inbox and audit when ${change} changes before commit`, async () => {
+        const value = await seed(action),
+          before = await snapshot();
+        const assignment =
+          change === 'expiry'
+            ? "expires_at=NOW()-INTERVAL '1 second'"
+            : change === 'csrf'
+              ? "csrf_token='changed-at-audit'"
+              : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+        await http.pool.query(
+          `CREATE OR REPLACE FUNCTION invalidate_template_session() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN UPDATE sessions SET ${assignment} WHERE session_id='${sessions.editor!.sessionId}'; RETURN NEW; END $$; CREATE TRIGGER invalidate_template_session BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION invalidate_template_session()`
+        );
+        try {
+          expect((await write(action, value)).status).toBe(change === 'expiry' ? 401 : 403);
+          expect(await snapshot()).toEqual(before);
+        } finally {
+          await http.pool.query('DROP TRIGGER invalidate_template_session ON audit_log');
+        }
+      });
+    }
   it(`${action}: rolls back state when its audit fails`, async () => {
     const value = await seed(action),
       before = await snapshot();

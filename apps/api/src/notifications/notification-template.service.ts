@@ -8,8 +8,14 @@ import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { NotificationsService } from './notifications.service.js';
 import { escapeHtml, renderTemplate, validateTemplate } from './template-engine.js';
+
+export type TemplateMutationActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 export type TemplateChannel = 'email' | 'sms' | 'in_app';
 export type TemplateLocale = 'fa' | 'en';
@@ -97,14 +103,17 @@ export class NotificationTemplateService {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   private async mutate<T>(
-    actorUserId: string,
+    actor: TemplateMutationActor,
     work: (client: PoolClient) => Promise<T>
   ): Promise<T> {
+    if (!actor) throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:notifications:edit');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:notifications:edit');
+      await requireSessionStepUp(client, actor);
       const result = await work(client);
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       return result;
     } catch (error) {
@@ -140,7 +149,7 @@ export class NotificationTemplateService {
 
   private async auditMutation(
     client: PoolClient,
-    actorUserId: string,
+    actor: TemplateMutationActor,
     event: string,
     row: Record<string, unknown>
   ) {
@@ -149,9 +158,12 @@ export class NotificationTemplateService {
        VALUES($1,$2,$3,$4::jsonb,$5,NOW())`,
       [
         uuidv7(),
-        actorUserId,
+        actor.userId,
         event,
         JSON.stringify({
+          sessionId: actor.sessionId,
+          stepUpVerified: true,
+          stepUpVerifiedAt: (await requireSessionStepUp(client, actor)).toISOString(),
           templateId: row.id,
           eventKey: row.event_key,
           channel: row.channel,
@@ -159,7 +171,7 @@ export class NotificationTemplateService {
           version: row.version,
           status: row.status,
         }),
-        uuidv7(),
+        correlationIdStorage.getStore() ?? uuidv7(),
       ]
     );
   }
@@ -355,9 +367,9 @@ export class NotificationTemplateService {
    */
   async create(
     input: CreateNotificationTemplateInput,
-    actorUserId: string
+    actor: TemplateMutationActor
   ): Promise<NotificationTemplateResult> {
-    return this.mutate(actorUserId, async (client) => {
+    return this.mutate(actor, async (client) => {
       this.validateVariables(input.bodyTemplate, input.variables ?? []);
       this.validateVariables(input.subject ?? '', input.variables ?? []);
       const variables = NotificationTemplateService.normalizeVariables(input.variables);
@@ -387,12 +399,12 @@ export class NotificationTemplateService {
           input.subject ?? null,
           input.bodyTemplate,
           JSON.stringify(variables),
-          actorUserId,
+          actor.userId,
           nextVersion.rows[0]!.version,
         ]
       );
       const row = result.rows[0]!;
-      await this.auditMutation(client, actorUserId, 'notification_template_created', row);
+      await this.auditMutation(client, actor, 'notification_template_created', row);
       return this.mapRow(row);
     });
   }
@@ -404,9 +416,9 @@ export class NotificationTemplateService {
   async update(
     id: string,
     input: UpdateNotificationTemplateInput,
-    actorUserId: string
+    actor: TemplateMutationActor
   ): Promise<NotificationTemplateResult> {
-    return this.mutate(actorUserId, async (client) => {
+    return this.mutate(actor, async (client) => {
       const template = await this.lockTemplate(client, id);
       if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
@@ -437,7 +449,7 @@ export class NotificationTemplateService {
         params
       );
       const row = result.rows[0]!;
-      await this.auditMutation(client, actorUserId, 'notification_template_updated', row);
+      await this.auditMutation(client, actor, 'notification_template_updated', row);
       return this.mapRow(row);
     });
   }
@@ -477,14 +489,14 @@ export class NotificationTemplateService {
   /** Test the selected channel; never substitute inbox delivery for email/SMS. */
   async testSend(
     id: string,
-    actorUserId: string,
+    actor: TemplateMutationActor,
     options?: { destination?: string }
   ): Promise<{
     ok: boolean;
     destination: TemplateChannel;
     lastTestStatus: 'delivered' | 'failed';
   }> {
-    const outcome = await this.mutate(actorUserId, async (client) => {
+    const outcome = await this.mutate(actor, async (client) => {
       const tpl = this.mapRow(await this.lockTemplate(client, id));
       const data = this.buildSampleData(tpl.variables);
       const renderedBody = this.render(
@@ -496,7 +508,8 @@ export class NotificationTemplateService {
       const renderedSubject =
         tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data, false) : null;
       const destination = options?.destination?.trim() || null;
-      await this.assertAllowedTestDestination(client, actorUserId, destination);
+      await this.assertAllowedTestDestination(client, actor, destination);
+      await requireSessionStepUp(client, actor);
       let providerRef: string | undefined;
       let deliveryError: { cause: unknown } | undefined;
       try {
@@ -525,6 +538,7 @@ export class NotificationTemplateService {
               tpl.variables.map((item) => item.name),
               data
             );
+            await requireSessionStepUp(client, actor);
             providerRef = await createSmsSender(pool)(message);
           } catch {
             throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DELIVERY_FAILED' }, 503);
@@ -534,7 +548,7 @@ export class NotificationTemplateService {
             throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_CHANNEL_MISMATCH' }, 400);
           await this.notificationsService.create(
             {
-              userId: actorUserId,
+              userId: actor.userId,
               type: 'general',
               title: renderedSubject ?? `Test: ${tpl.eventKey}`,
               body: renderedBody,
@@ -550,11 +564,11 @@ export class NotificationTemplateService {
         `UPDATE notification_templates SET last_test_sent_at=NOW(),last_test_status=$2,updated_at=NOW() WHERE id=$1`,
         [id, status]
       );
-      await this.writeTestAudit(client, tpl, actorUserId, status, providerRef);
+      await this.writeTestAudit(client, tpl, actor, status, providerRef);
       return { deliveryError, channel: tpl.channel };
     });
     if (outcome.deliveryError) throw outcome.deliveryError.cause;
-    this.logger.log(`Notification template test-sent: id=${id} by ${actorUserId}`);
+    this.logger.log(`Notification template test-sent: id=${id} by ${actor.userId}`);
     return { ok: true, destination: outcome.channel, lastTestStatus: 'delivered' };
   }
 
@@ -599,7 +613,7 @@ export class NotificationTemplateService {
    */
   private async assertAllowedTestDestination(
     client: PoolClient,
-    actorUserId: string,
+    actor: TemplateMutationActor,
     destination: string | null
   ): Promise<void> {
     if (!destination) return;
@@ -610,11 +624,11 @@ export class NotificationTemplateService {
       mobile: string | null;
     }>(
       `SELECT username, email, mobile FROM users WHERE user_id = $1 AND disabled_at IS NULL AND activation_token IS NULL`,
-      [actorUserId]
+      [actor.userId]
     );
-    const actor = user.rows[0];
+    const account = user.rows[0];
 
-    const contacts = actor ? [actor.username, actor.email, actor.mobile] : [];
+    const contacts = account ? [account.username, account.email, account.mobile] : [];
     const env: { NODE_ENV?: string; TEST_SEND_ALLOWLIST?: string } = {};
     if (process.env['NODE_ENV'] !== undefined) env.NODE_ENV = process.env['NODE_ENV'];
     if (process.env['TEST_SEND_ALLOWLIST'] !== undefined) {
@@ -639,7 +653,7 @@ export class NotificationTemplateService {
   private async writeTestAudit(
     client: PoolClient,
     template: NotificationTemplateResult,
-    actorUserId: string,
+    actor: TemplateMutationActor,
     status: 'delivered' | 'failed',
     providerRef?: string
   ): Promise<void> {
@@ -648,9 +662,12 @@ export class NotificationTemplateService {
        VALUES ($1,$2,$3,$4::jsonb,$5,NOW())`,
       [
         uuidv7(),
-        actorUserId,
+        actor.userId,
         'notification_template_test_sent',
         JSON.stringify({
+          sessionId: actor.sessionId,
+          stepUpVerified: true,
+          stepUpVerifiedAt: (await requireSessionStepUp(client, actor)).toISOString(),
           templateId: template.id,
           eventKey: template.eventKey,
           version: template.version,
@@ -661,7 +678,7 @@ export class NotificationTemplateService {
           status,
           isTest: true,
         }),
-        uuidv7(),
+        correlationIdStorage.getStore() ?? uuidv7(),
       ]
     );
   }
@@ -674,8 +691,8 @@ export class NotificationTemplateService {
    * this template becomes the new active version. Legacy drafts with a reused
    * version number advance beyond existing history before their first publish.
    */
-  async publish(id: string, actorUserId: string): Promise<NotificationTemplateResult> {
-    return this.mutate(actorUserId, async (client) => {
+  async publish(id: string, actor: TemplateMutationActor): Promise<NotificationTemplateResult> {
+    return this.mutate(actor, async (client) => {
       const template = await this.lockTemplate(client, id);
       if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
@@ -707,7 +724,7 @@ export class NotificationTemplateService {
         ]
       );
       const row = result.rows[0]!;
-      await this.auditMutation(client, actorUserId, 'notification_template_published', row);
+      await this.auditMutation(client, actor, 'notification_template_published', row);
       return this.mapRow(row);
     });
   }
@@ -715,8 +732,8 @@ export class NotificationTemplateService {
   /**
    * Unpublish an active template while retaining its immutable published content.
    */
-  async unpublish(id: string, actorUserId: string): Promise<NotificationTemplateResult> {
-    return this.mutate(actorUserId, async (client) => {
+  async unpublish(id: string, actor: TemplateMutationActor): Promise<NotificationTemplateResult> {
+    return this.mutate(actor, async (client) => {
       const template = await this.lockTemplate(client, id);
       if (template.status !== 'active')
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_ACTIVE' }, 400);
@@ -726,7 +743,7 @@ export class NotificationTemplateService {
         [id]
       );
       const row = result.rows[0]!;
-      await this.auditMutation(client, actorUserId, 'notification_template_unpublished', row);
+      await this.auditMutation(client, actor, 'notification_template_unpublished', row);
       return this.mapRow(row);
     });
   }
@@ -734,13 +751,13 @@ export class NotificationTemplateService {
   /**
    * Delete a draft notification template.
    */
-  async delete(id: string, actorUserId: string): Promise<void> {
-    return this.mutate(actorUserId, async (client) => {
+  async delete(id: string, actor: TemplateMutationActor): Promise<void> {
+    return this.mutate(actor, async (client) => {
       const template = await this.lockTemplate(client, id);
       if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_ACTIVE' }, 400);
       await client.query('DELETE FROM notification_templates WHERE id=$1', [id]);
-      await this.auditMutation(client, actorUserId, 'notification_template_deleted', template);
+      await this.auditMutation(client, actor, 'notification_template_deleted', template);
     });
   }
 }

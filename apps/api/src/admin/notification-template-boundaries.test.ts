@@ -11,7 +11,13 @@ const template = {
 };
 function request(permissions = [permission], isAdmin = false): AuthenticatedRequest {
   return {
-    session: { userId: 'trusted-actor', permissions, isAdmin },
+    session: {
+      userId: 'trusted-actor',
+      sessionId: 'trusted-session',
+      csrfToken: 'trusted-csrf',
+      permissions,
+      isAdmin,
+    },
     ip: '127.0.0.1',
   } as AuthenticatedRequest;
 }
@@ -138,7 +144,7 @@ describe('notification template input boundaries', () => {
     );
     expect(call).toHaveBeenCalledWith(
       { ...template, subject: null, variables: [] },
-      'trusted-actor'
+      request().session
     );
   });
   it.each([
@@ -157,7 +163,7 @@ describe('notification template input boundaries', () => {
       { ...body, actor: 'forged', status: 'active' },
       request()
     );
-    expect(call).toHaveBeenCalledWith('template', body, 'trusted-actor');
+    expect(call).toHaveBeenCalledWith('template', body, request().session);
   });
   it('keeps preview sample data separate from delivery', async () => {
     const { controller, call } = fixture();
@@ -174,13 +180,13 @@ describe('notification template input boundaries', () => {
       { destination: ' test@example.test ', userId: 'forged' },
       request()
     );
-    expect(call).toHaveBeenCalledWith('template', 'trusted-actor', {
+    expect(call).toHaveBeenCalledWith('template', request().session, {
       destination: 'test@example.test',
     });
   });
   it('uses configured delivery when no override is supplied', async () => {
     const { controller, call } = fixture();
     await controller.testSendNotificationTemplate('template', undefined, request());
-    expect(call).toHaveBeenCalledWith('template', 'trusted-actor', undefined);
+    expect(call).toHaveBeenCalledWith('template', request().session, undefined);
   });
 });
