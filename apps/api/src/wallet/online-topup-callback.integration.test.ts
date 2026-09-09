@@ -169,6 +169,100 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     await ctx.pool.query('DELETE FROM wallet_transactions WHERE id=$1', [row.id]);
   });
 
+  for (const collision of [
+    'pending',
+    'wrong-wallet',
+    'wrong-amount',
+    'wrong-origin',
+    'wrong-authority',
+  ]) {
+    it(`does not report credit or release an online intent when its credit key points to ${collision}`, async () => {
+      const profileId = randomUUID();
+      await ctx.pool.query("INSERT INTO profiles(id,user_id) VALUES($1,'wallet-test-owner')", [
+        profileId,
+      ]);
+      await walletService.createWallet(profileId);
+      const pending = (
+        await ctx.pool.query<{ id: string }>(
+          "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,ref_id,metadata) VALUES($1,'topup',$2,'Pending',$3,$4,$5::jsonb) RETURNING id",
+          [
+            profileId,
+            AMOUNT.toString(),
+            randomUUID(),
+            AUTHORITY,
+            JSON.stringify({ channel: 'online', gateway: { authority: AUTHORITY } }),
+          ]
+        )
+      ).rows[0]!;
+      const creditKey = onlineTopUpCreditIdempotencyKey(pending.id);
+      if (collision === 'pending') {
+        await ctx.pool.query(
+          "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,metadata) VALUES($1,'topup',$2,'Pending',$3,'{\"channel\":\"bank_receipt\"}'::jsonb)",
+          [profileId, AMOUNT.toString(), creditKey]
+        );
+      } else {
+        let creditedWallet = profileId;
+        if (collision === 'wrong-wallet') {
+          creditedWallet = randomUUID();
+          await ctx.pool.query("INSERT INTO profiles(id,user_id) VALUES($1,'wallet-test-owner')", [
+            creditedWallet,
+          ]);
+          await walletService.createWallet(creditedWallet);
+        }
+        await walletService.credit(
+          creditedWallet,
+          collision === 'wrong-amount' ? AMOUNT + 1n : AMOUNT,
+          {
+            type: 'topup',
+            metadata: {
+              channel: 'online',
+              pendingTransactionId: collision === 'wrong-origin' ? randomUUID() : pending.id,
+              authority: collision === 'wrong-authority' ? 'another-payment' : AUTHORITY,
+            },
+          },
+          creditKey
+        );
+      }
+      const before = (
+        await ctx.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [profileId])
+      ).rows[0];
+      const eventId = randomUUID();
+      await expect(
+        service.handle(
+          signed(
+            {
+              merchantOrderId: pending.id,
+              merchantId: MERCHANT,
+              authority: AUTHORITY,
+              amountIrR: AMOUNT.toString(),
+              status: 'paid',
+            },
+            eventId
+          )
+        )
+      ).rejects.toMatchObject({ status: 409 });
+      expect(
+        (
+          await ctx.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [
+            profileId,
+          ])
+        ).rows[0]
+      ).toEqual(before);
+      expect(
+        (await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [pending.id]))
+          .rows[0]
+      ).toEqual({ state: 'Pending' });
+      expect(
+        (
+          await ctx.pool.query(
+            'SELECT status FROM wallet_topup_callback_events WHERE event_id=$1',
+            [eventId]
+          )
+        ).rows[0]
+      ).toEqual({ status: 'processing' });
+    });
+  }
+
   it('credits the wallet once from a signed callback and releases the Pending intent', async () => {
     const result = await service.handle(
       signed(

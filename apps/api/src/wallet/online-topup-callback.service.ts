@@ -317,7 +317,7 @@ export class OnlineTopUpCallbackService {
           }
         }
 
-        const alreadyCredited = await this.findExistingCredit(client, pending.id);
+        const alreadyCredited = await this.findExistingCredit(client, pending);
         if (alreadyCredited) {
           if (isOnlineTopUpIntentReleasable(pending.state)) {
             await this.releasePendingIntent(client, pending.id, alreadyCredited.id, input.eventId);
@@ -538,7 +538,7 @@ export class OnlineTopUpCallbackService {
         creditTransactionId: null,
       };
     }
-    const credit = await this.findExistingCredit(client, existing.pendingTransactionId);
+    const credit = await this.findExistingCredit(client, pending);
     if (!credit)
       httpError(ErrorCodes.INTERNAL_DATABASE, 'Payment callback credit could not be confirmed');
     if (isOnlineTopUpIntentReleasable(pending.state)) {
@@ -555,14 +555,33 @@ export class OnlineTopUpCallbackService {
 
   private async findExistingCredit(
     client: QueryClient,
-    pendingId: string
+    pending: TransactionRow
   ): Promise<TransactionRow | null> {
     const result = await client.query(
       `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-      [onlineTopUpCreditIdempotencyKey(pendingId)]
+      [onlineTopUpCreditIdempotencyKey(pending.id)]
     );
     if (result.rows.length === 0) return null;
-    return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0]);
+    const credit = mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0]);
+    const metadata = credit.metadata as {
+      pendingTransactionId?: unknown;
+      authority?: unknown;
+    } | null;
+    if (
+      credit.state !== 'Completed' ||
+      credit.type !== 'topup' ||
+      credit.walletId !== pending.walletId ||
+      credit.amount !== pending.amount ||
+      readOnlineTopUpChannel(metadata) !== 'online' ||
+      metadata?.pendingTransactionId !== pending.id ||
+      metadata.authority !== readStoredAuthority(pending)
+    ) {
+      httpError(
+        ErrorCodes.CONFLICT_STATE,
+        'Existing online top-up credit does not match this payment'
+      );
+    }
+    return credit;
   }
 
   private async releasePendingIntent(

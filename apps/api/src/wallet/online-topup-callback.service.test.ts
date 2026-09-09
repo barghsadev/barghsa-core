@@ -140,6 +140,11 @@ function scriptClient(opts: {
               makePendingRow({
                 id: opts.existingCredit.id,
                 state: 'Completed',
+                metadata: {
+                  channel: 'online',
+                  pendingTransactionId: opts.pending?.id ?? TX_ID,
+                  authority: AUTHORITY,
+                },
                 idempotency_key: onlineTopUpCreditIdempotencyKey(
                   opts.pending?.id ? String(opts.pending.id) : TX_ID
                 ),
@@ -406,7 +411,15 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
         started();
         await pending;
-        return { rows: [makePendingRow({ id: CREDIT_ID, state: 'Completed' })] };
+        return {
+          rows: [
+            makePendingRow({
+              id: CREDIT_ID,
+              state: 'Completed',
+              metadata: { channel: 'online', pendingTransactionId: TX_ID, authority: AUTHORITY },
+            }),
+          ],
+        };
       }
       return query(sql, params);
     });
