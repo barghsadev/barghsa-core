@@ -84,6 +84,48 @@ async function seed() {
   );
   return { outbox, job, dead };
 }
+
+it('serves scoped stable delivery-history pages and honors revoked read permission', async () => {
+  const row = await seed();
+  const ids = Array.from({ length: 30 }, () => randomUUID())
+    .sort()
+    .reverse();
+  await db.pool.query(
+    `INSERT INTO notification_delivery_log(id,notification_id,channel,status,attempt_number,error_detail,created_at)
+    SELECT value,$1,'email','failed',1,'token=***','2026-09-09T01:00:00Z' FROM unnest($2::uuid[]) AS value`,
+    [row.outbox, ids]
+  );
+  await db.pool.query(
+    `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number)
+    VALUES ($1,'sms','delivered',1)`,
+    [row.outbox]
+  );
+  const read = (offset: number) =>
+    fetch(
+      `${fixture.base}/api/admin/notifications/delivery-logs?notificationId=${row.outbox}&channel=email&limit=25&offset=${offset}`,
+      { headers }
+    );
+  const first = await read(0),
+    second = await read(25);
+  expect(first.status).toBe(200);
+  expect(second.status).toBe(200);
+  const firstPage: unknown = await first.json(),
+    secondPage: unknown = await second.json();
+  if (!Array.isArray(firstPage) || !Array.isArray(secondPage))
+    throw new Error('Invalid history page');
+  const entries = [...firstPage, ...secondPage];
+  expect(entries.map((entry) => entry.id)).toEqual(ids);
+  for (const entry of entries)
+    expect(entry).toMatchObject({
+      notificationId: row.outbox,
+      channel: 'email',
+      status: 'failed',
+      attemptNumber: 1,
+      errorDetail: 'token=***',
+    });
+  await db.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'");
+  expect((await read(0)).status).toBe(403);
+});
 it('requeues once under concurrent actions and keeps the snapshot and audit evidence', async () => {
   const row = await seed();
   const results = await Promise.allSettled(

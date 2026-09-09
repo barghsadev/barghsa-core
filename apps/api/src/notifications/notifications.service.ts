@@ -219,7 +219,7 @@ export class NotificationsService {
               created_at AS "createdAt"
        FROM notification_delivery_log
        ${where}
-       ORDER BY created_at DESC
+       ORDER BY created_at DESC, id DESC
        LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
       [...params, limit, offset]
     );

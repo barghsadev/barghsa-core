@@ -83,7 +83,7 @@ for (const locale of ['en', 'fa'])
         rows[0]!.createdAt
       )
     );
-    await expect(page.locator('tbody button')).toHaveCount(0);
+    await expect(page.locator('tbody button:visible')).toHaveCount(0);
     await page.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect(page.locator('tbody tr')).toHaveCount(0);
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
@@ -115,7 +115,7 @@ for (const locale of ['en', 'fa'])
     await expect(dialog).toHaveCount(0);
     expect(attempts).toHaveLength(3);
     expect(new Set(attempts).size).toBe(1);
-    await expect(page.locator('tbody button')).toHaveCount(0);
+    await expect(page.locator('tbody button:visible')).toHaveCount(0);
     await expect(page.locator('#admin-content').getByRole('status')).toContainText(
       fa ? 'تحویل هنوز' : 'Delivery is not yet confirmed'
     );

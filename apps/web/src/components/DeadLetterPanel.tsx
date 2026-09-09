@@ -5,6 +5,7 @@ import { t } from '@barghsa/i18n/admin-ui';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { Button } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
+import { NotificationDeliveryHistory } from './NotificationDeliveryHistory.js';
 
 /**
  * Admin dead-letter queue panel (E-05, T-05.01.06).
@@ -105,6 +106,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
   const [offset, setOffset] = useState(0);
   const [revision, setRevision] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const [history, setHistory] = useState<DeadLetterRow | null>(null);
   const [access, setAccess] = useState<{ canView: boolean; canRetry: boolean } | null>(null);
   const [action, setAction] = useState<
     | (TeamAction & {
@@ -346,6 +348,9 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                       >
                         {JSON.stringify(row.data, null, 2)}
                       </pre>
+                      <Button variant="outline" onClick={() => setHistory(row)}>
+                        {t('admin.notifications.history.title', uiLocale)}
+                      </Button>
                     </details>
                   </td>
                   <td className="px-4 py-3">
@@ -408,6 +413,14 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
             {t('admin.jobs.next', uiLocale)}
           </Button>
         </nav>
+      )}
+      {history && (
+        <NotificationDeliveryHistory
+          key={history.id}
+          target={history}
+          locale={uiLocale}
+          onClose={() => setHistory(null)}
+        />
       )}
       {action && (
         <TeamActionDialog
