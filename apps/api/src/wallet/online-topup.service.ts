@@ -6,6 +6,8 @@ import {
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import {
+  ONLINE_TOPUP_EXPIRY_REASON,
+  readOnlineTopUpChannel,
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
   WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
 } from '@barghsa/shared/finance';
@@ -126,9 +128,7 @@ export class OnlineTopUpService {
 
         const existing = readGatewaySession(pending.metadata);
         if (existing) {
-          return await this.withCurrentActor(client, input, async () =>
-            toResult(pending, existing.redirectUrl)
-          );
+          return await this.checkoutResult(client, input, pending, existing.redirectUrl);
         }
 
         const callbackUrl = paymentCallbackUrlForOrder(
@@ -142,6 +142,8 @@ export class OnlineTopUpService {
         if (recovered) {
           claimId = recovered.claimId;
         } else {
+          if (pending.state !== 'Pending')
+            throw new ConflictException('Expired online top-up cannot start another payment');
           claimId = randomUUID();
           // Committing this current-authority claim authorizes one provider start.
           const claimed = await this.withCurrentActor(client, input, () =>
@@ -158,9 +160,7 @@ export class OnlineTopUpService {
           } else {
             const stored = await this.loadStoredSession(client, pending.id);
             if (stored)
-              return await this.withCurrentActor(client, input, async () =>
-                toResult(pending, stored.redirectUrl)
-              );
+              return await this.checkoutResult(client, input, pending, stored.redirectUrl);
             recovered = await this.loadInitializingClaim(client, pending.id, callbackUrl);
             if (!recovered) {
               throw httpError(
@@ -244,16 +244,11 @@ export class OnlineTopUpService {
           );
         }
         if (persisted) {
-          return await this.withCurrentActor(client, input, async () =>
-            toResult(pending, persisted.redirectUrl)
-          );
+          return await this.checkoutResult(client, input, pending, persisted.redirectUrl);
         }
 
         const stored = await this.loadStoredSession(client, pending.id);
-        if (stored)
-          return await this.withCurrentActor(client, input, async () =>
-            toResult(pending, stored.redirectUrl)
-          );
+        if (stored) return await this.checkoutResult(client, input, pending, stored.redirectUrl);
         throw httpError(
           ErrorCodes.PROVIDER_DOWNSTREAM,
           'Payment gateway session could not be stored',
@@ -265,6 +260,25 @@ export class OnlineTopUpService {
     } finally {
       client.release();
     }
+  }
+
+  /** Authorize checkout and recheck the intent under lock after provider/DB waits. */
+  private async checkoutResult(
+    client: QueryClient,
+    input: InitiateOnlineTopUpInput,
+    pending: TransactionRow,
+    redirectUrl: string
+  ): Promise<InitiateOnlineTopUpResult> {
+    return this.withCurrentActor(client, input, async () => {
+      const result = await client.query(
+        'SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE',
+        [pending.id]
+      );
+      const row = result.rows[0] as Parameters<typeof assertMatchingPendingTopUp>[0] | undefined;
+      if (!row) throw new ConflictException('Online top-up no longer exists');
+      assertMatchingPendingTopUp(row, pending.walletId, input.amountIrR);
+      return toResult(mapTransaction(row as Parameters<typeof mapTransaction>[0]), redirectUrl);
+    });
   }
 
   private async withCurrentActor<T>(
@@ -322,7 +336,8 @@ export class OnlineTopUpService {
           assertMatchingPendingTopUp(
             row as Parameters<typeof assertMatchingPendingTopUp>[0],
             canonicalWalletId,
-            amountIrR
+            amountIrR,
+            true
           );
           return mapTransaction(row as Parameters<typeof mapTransaction>[0]);
         }
@@ -376,7 +391,8 @@ export class OnlineTopUpService {
           assertMatchingPendingTopUp(
             row as Parameters<typeof assertMatchingPendingTopUp>[0],
             canonicalWalletId,
-            amountIrR
+            amountIrR,
+            true
           );
           return mapTransaction(row as Parameters<typeof mapTransaction>[0]);
         });
@@ -428,7 +444,8 @@ export class OnlineTopUpService {
        SET metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb,
            ref_id = $3
        WHERE id = $1
-         AND state = 'Pending'
+         AND type = 'topup' AND metadata->>'channel' = 'online'
+         AND (state = 'Pending' OR (state = 'Rejected' AND metadata #>> '{expiry,reason}' = $5))
          AND metadata #>> '{gateway,claimId}' = $4
          AND ref_id IS NULL
          AND COALESCE(metadata #>> '{gateway,authority}', '') = ''
@@ -445,6 +462,7 @@ export class OnlineTopUpService {
         }),
         session.authority,
         claimId,
+        ONLINE_TOPUP_EXPIRY_REASON,
       ]
     );
     if (result.rows.length === 0) return null;
@@ -563,16 +581,24 @@ function assertMatchingPendingTopUp(
     type: string;
     amount: string | number | bigint;
     state: string;
+    metadata: unknown;
   },
   canonicalWalletId: string,
-  amountIrR: bigint
+  amountIrR: bigint,
+  allowExpiredRecovery = false
 ): void {
   if (existing.wallet_id !== canonicalWalletId) {
     throw new ConflictException('Idempotency key already used for a different wallet');
   }
+  const expired =
+    allowExpiredRecovery &&
+    existing.state === 'Rejected' &&
+    (existing.metadata as { expiry?: { reason?: unknown } } | null)?.expiry?.reason ===
+      ONLINE_TOPUP_EXPIRY_REASON;
   const isSamePending =
-    existing.state === 'Pending' &&
+    (existing.state === 'Pending' || expired) &&
     existing.type === 'topup' &&
+    readOnlineTopUpChannel(existing.metadata) === 'online' &&
     BigInt(existing.amount) === amountIrR;
   if (!isSamePending) {
     throw new ConflictException('Idempotency key already used for a different wallet operation');

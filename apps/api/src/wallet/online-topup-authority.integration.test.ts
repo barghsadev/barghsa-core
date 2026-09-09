@@ -1,4 +1,7 @@
 import { randomUUID } from 'node:crypto';
+import { pathToFileURL } from 'node:url';
+import { resolve } from 'node:path';
+import { OnlineTopUpCallbackService } from './online-topup-callback.service.js';
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { WalletService } from './wallet.service.js';
@@ -306,3 +309,154 @@ for (const change of ['revoke', 'csrf', 'role', 'disabled'] as const) {
     }
   });
 }
+
+for (const phase of ['start', 'recover'] as const) {
+  it(`expiry during gateway ${phase} preserves the provider reference for later confirmed credit without returning checkout`, async () => {
+    const input = await seed(),
+      client = gateway();
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const providerResult = async (request: Parameters<PaymentGateway['startPayment']>[0]) => {
+      await gate;
+      return {
+        authority: `auth-${request.merchantOrderId}`,
+        redirectUrl: `https://pay.test/${request.merchantOrderId}`,
+      };
+    };
+    if (phase === 'recover') {
+      client.startPayment.mockRejectedValueOnce(new Error('provider response lost'));
+      await expect(client.service.initiate(input)).rejects.toMatchObject({ status: 502 });
+      client.recoverPayment.mockImplementation(providerResult);
+    } else client.startPayment.mockImplementation(providerResult);
+    const pending = client.service.initiate(input).then(
+      (value) => ({ value }),
+      (error) => ({ error })
+    );
+    try {
+      await expect
+        .poll(() =>
+          phase === 'start'
+            ? client.startPayment.mock.calls.length
+            : client.recoverPayment.mock.calls.length
+        )
+        .toBe(1);
+      const row = (
+        await db.pool.query('SELECT id FROM wallet_transactions WHERE wallet_id=$1', [
+          input.profileId,
+        ])
+      ).rows[0];
+      await db.pool.query(
+        "UPDATE wallet_transactions SET created_at=NOW()-INTERVAL '1 hour' WHERE id=$1",
+        [row.id]
+      );
+      const workerUrl = pathToFileURL(
+        resolve(process.cwd(), '../worker/dist/wallet/online-topup-expiry-scanner.js')
+      ).href;
+      const { expireStaleOnlineTopUps } = await import(workerUrl);
+      expect(
+        await expireStaleOnlineTopUps({ pool: db.pool, actorUserId: input.actor.userId })
+      ).toMatchObject({ rejected: 1, errors: [] });
+      release();
+      const outcome = await pending;
+      expect(
+        (
+          await db.pool.query('SELECT state,ref_id,metadata FROM wallet_transactions WHERE id=$1', [
+            row.id,
+          ])
+        ).rows[0]
+      ).toMatchObject({
+        state: 'Rejected',
+        ref_id: `auth-${row.id}`,
+        metadata: {
+          gateway: { authority: `auth-${row.id}` },
+          expiry: { reason: 'Pending online top-up expired beyond TTL' },
+        },
+      });
+      expect(outcome).toMatchObject({ error: { status: 409 } });
+      await expect(client.service.initiate(input)).rejects.toMatchObject({ status: 409 });
+      expect(client.startPayment).toHaveBeenCalledTimes(1);
+      const verifyPayment = vi.fn<PaymentGateway['verifyPayment']>(async () => ({
+        paid: true,
+        providerRefId: 'expiry-reconciled',
+      }));
+      const callback = new OnlineTopUpCallbackService(new WalletService(), {
+        startPayment: client.startPayment,
+        recoverPayment: client.recoverPayment,
+        verifyPayment,
+      });
+      const returned = { orderId: row.id, authority: `auth-${row.id}`, status: 'OK' };
+      await expect(callback.handleZarinpalReturn(returned)).resolves.toMatchObject({
+        credited: true,
+      });
+      await expect(callback.handleZarinpalReturn(returned)).resolves.toMatchObject({
+        credited: true,
+      });
+      expect(
+        (
+          await db.pool.query(
+            'SELECT posted_balance,reserved_balance FROM wallets WHERE profile_id=$1',
+            [input.profileId]
+          )
+        ).rows[0]
+      ).toEqual({ posted_balance: '1000', reserved_balance: '0' });
+      expect(verifyPayment).toHaveBeenCalledTimes(1);
+    } finally {
+      release();
+      await pending;
+    }
+  });
+}
+
+it('online initiation rejects a Pending bank-receipt idempotency key before contacting the gateway', async () => {
+  const input = await seed(),
+    client = gateway();
+  await new WalletService().createWallet(input.profileId);
+  await db.pool.query(
+    "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,metadata) VALUES($1,'topup',1000,'Pending',$2,'{\"channel\":\"bank_receipt\"}'::jsonb)",
+    [input.profileId, input.idempotencyKey]
+  );
+  await expect(client.service.initiate(input)).rejects.toMatchObject({ status: 409 });
+  expect(client.startPayment).not.toHaveBeenCalled();
+  expect(
+    (
+      await db.pool.query('SELECT ref_id,metadata FROM wallet_transactions WHERE wallet_id=$1', [
+        input.profileId,
+      ])
+    ).rows
+  ).toEqual([{ ref_id: null, metadata: { channel: 'bank_receipt' } }]);
+});
+
+it('an ambiguous provider start can be recovered after TTL expiry without reopening checkout or starting again', async () => {
+  const input = await seed(),
+    client = gateway();
+  client.startPayment.mockRejectedValueOnce(new Error('provider response lost'));
+  await expect(client.service.initiate(input)).rejects.toMatchObject({ status: 502 });
+  const row = (
+    await db.pool.query('SELECT id FROM wallet_transactions WHERE wallet_id=$1', [input.profileId])
+  ).rows[0];
+  await db.pool.query(
+    "UPDATE wallet_transactions SET created_at=NOW()-INTERVAL '1 hour' WHERE id=$1",
+    [row.id]
+  );
+  const workerUrl = pathToFileURL(
+    resolve(process.cwd(), '../worker/dist/wallet/online-topup-expiry-scanner.js')
+  ).href;
+  const { expireStaleOnlineTopUps } = await import(workerUrl);
+  expect(
+    await expireStaleOnlineTopUps({ pool: db.pool, actorUserId: input.actor.userId })
+  ).toMatchObject({ rejected: 1, errors: [] });
+  client.recoverPayment.mockResolvedValue({
+    authority: `auth-${row.id}`,
+    redirectUrl: `https://pay.test/${row.id}`,
+  });
+  await expect(client.service.initiate(input)).rejects.toMatchObject({ status: 409 });
+  expect(
+    (await db.pool.query('SELECT state,ref_id FROM wallet_transactions WHERE id=$1', [row.id]))
+      .rows[0]
+  ).toEqual({ state: 'Rejected', ref_id: `auth-${row.id}` });
+  await expect(client.service.initiate(input)).rejects.toMatchObject({ status: 409 });
+  expect(client.startPayment).toHaveBeenCalledTimes(1);
+  expect(client.recoverPayment).toHaveBeenCalledTimes(1);
+});

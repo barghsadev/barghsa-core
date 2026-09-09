@@ -105,6 +105,14 @@ function scriptClient(opts: ScriptOptions = {}) {
       }
       return { rows: opts.existing ? [opts.existing] : [] };
     }
+    if (sql.includes('SELECT * FROM wallet_transactions WHERE id =')) {
+      return {
+        rows: [
+          opts.existing ??
+            (opts.insert instanceof Error ? makePendingRow() : (opts.insert ?? makePendingRow())),
+        ],
+      };
+    }
     if (sql.includes('INSERT INTO wallet_transactions')) {
       if (opts.insert instanceof Error) throw opts.insert;
       return { rows: [opts.insert ?? makePendingRow()] };
