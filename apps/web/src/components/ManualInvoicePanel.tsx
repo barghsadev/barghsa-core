@@ -1,3 +1,4 @@
+import { tInvoiceCorrections as tc } from '@barghsa/i18n/invoice-corrections';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -38,7 +39,21 @@ interface Profile {
   title: string;
   profileType: string;
 }
+export interface InvoiceCorrectionSource {
+  invoiceId: string;
+  profileId: string;
+  state: string;
+  paidAmount: string;
+  totalAmount: string;
+  lines: InvoiceRequest['lines'];
+}
 interface InvoiceRequest {
+  correction?: {
+    kind: 'replacement' | 'adjustment';
+    invoiceId: string;
+    reason: string;
+    amount: string;
+  };
   profileId: string;
   idempotencyKey: string;
   lines: Array<{
@@ -125,19 +140,48 @@ export default function ManualInvoicePanel() {
   );
 }
 
-function ManualInvoiceForm() {
+export function ManualInvoiceForm({
+  correction,
+}: {
+  correction?: InvoiceCorrectionSource & {
+    kind: 'replacement' | 'adjustment';
+    onLocked: (value: boolean) => void;
+  };
+}) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
-  const text = (key: string) => t(`admin.manualInvoice.${key}`, locale);
+  const text = (key: string) =>
+    (correction
+      ? tc(
+          key === 'title'
+            ? `${correction.kind}Title`
+            : key === 'issue'
+              ? `${correction.kind}Issue`
+              : key,
+          locale
+        )
+      : undefined) ?? t(`admin.manualInvoice.${key}`, locale);
+  const [reason, setReason] = useState(''),
+    [amount, setAmount] = useState('');
   const [search, setSearch] = useState(''),
     [query, setQuery] = useState('');
   const [revision, setRevision] = useState(0),
     [profiles, setProfiles] = useState<Profile[]>([]);
-  const [profileId, setProfileId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true),
-    [ready, setReady] = useState(false);
+  const [profileId, setProfileId] = useState<string | null>(correction?.profileId ?? null);
+  const [loading, setLoading] = useState(!correction),
+    [ready, setReady] = useState(Boolean(correction));
   const [lookupError, setLookupError] = useState<string | null>(null);
-  const [lines, setLines] = useState<DraftLine[]>(() => [blankLine()]);
+  const [lines, setLines] = useState<DraftLine[]>(() =>
+    correction?.lines.length
+      ? correction.lines.map((line) => ({
+          id: crypto.randomUUID(),
+          description: line.description,
+          quantity: String(line.quantity),
+          unitPrice: line.unitPrice,
+          vat: line.isTaxable ? String(line.vatRate / 100) : '0',
+        }))
+      : [blankLine()]
+  );
   const [error, setError] = useState<string | null>(null),
     [acting, setActing] = useState(false);
   const busy = useRef(false),
@@ -149,9 +193,22 @@ function ManualInvoiceForm() {
     [stepError, setStepError] = useState<string | null>(null);
   const [result, setResult] = useState<{ invoiceId: string; totalAmount: string } | null>(null);
   const submitButton = useRef<HTMLButtonElement>(null);
-  const calculation = calculate(lines);
+  const signed = /^-?\d{1,19}$/.test(digits(amount)) ? BigInt(digits(amount)) : 0n;
+  const validAdjustment =
+    signed !== 0n && signed >= -maxIrr && signed <= maxIrr && Boolean(reason.trim());
+  const calculation =
+    correction?.kind === 'adjustment'
+      ? validAdjustment
+        ? { lines: [], total: signed < 0n ? -signed : signed }
+        : null
+      : calculate(lines);
 
   useEffect(() => {
+    correction?.onLocked(locked);
+  }, [locked, correction]);
+
+  useEffect(() => {
+    if (correction) return;
     const abort = new AbortController();
     setLoading(true);
     setReady(false);
@@ -184,7 +241,7 @@ function ManualInvoiceForm() {
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [query, revision]);
+  }, [query, revision, correction]);
 
   useEffect(() => {
     if (!locked) return;
@@ -205,10 +262,23 @@ function ManualInvoiceForm() {
     const submitted = request.current;
     if (!submitted) return 'error';
     try {
-      const response = await fetch('/api/admin/invoices/manual', {
+      const path = submitted.correction
+        ? `/api/admin/invoices/${submitted.correction.invoiceId}/corrections`
+        : '/api/admin/invoices/manual';
+      const body = submitted.correction
+        ? {
+            kind: submitted.correction.kind,
+            reason: submitted.correction.reason,
+            idempotencyKey: submitted.idempotencyKey,
+            ...(submitted.correction.kind === 'replacement'
+              ? { lines: submitted.lines }
+              : { amount: submitted.correction.amount }),
+          }
+        : submitted;
+      const response = await fetch(path, {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(submitted),
+        body: JSON.stringify(body),
       });
       const data = (await response.json()) as {
         error?: string;
@@ -216,6 +286,11 @@ function ManualInvoiceForm() {
         profileId?: string;
         totalAmount?: string;
         state?: string;
+        originalInvoiceId?: string;
+        kind?: string;
+        amount?: string;
+        idempotencyKey?: string;
+        reason?: string;
       };
       if (response.status === 403 && authErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code)
         return 'step-up';
@@ -240,10 +315,24 @@ function ManualInvoiceForm() {
         typeof data.totalAmount !== 'string' ||
         !/^\d{1,19}$/.test(data.totalAmount) ||
         BigInt(data.totalAmount) <= 0n ||
-        BigInt(data.totalAmount) > maxIrr
+        BigInt(data.totalAmount) > maxIrr ||
+        (submitted.correction &&
+          (data.invoiceId === submitted.correction.invoiceId ||
+            data.originalInvoiceId !== submitted.correction.invoiceId ||
+            data.kind !== submitted.correction.kind ||
+            data.idempotencyKey !== submitted.idempotencyKey ||
+            data.reason !== submitted.correction.reason ||
+            data.amount !== submitted.correction.amount ||
+            BigInt(data.totalAmount) !==
+              (BigInt(submitted.correction.amount) < 0n
+                ? -BigInt(submitted.correction.amount)
+                : BigInt(submitted.correction.amount))))
       )
         throw new Error('Invalid response');
-      setResult({ invoiceId: data.invoiceId, totalAmount: data.totalAmount });
+      setResult({
+        invoiceId: data.invoiceId,
+        totalAmount: submitted.correction ? submitted.correction.amount : data.totalAmount,
+      });
       setError(null);
       unlock();
       return 'done';
@@ -257,7 +346,7 @@ function ManualInvoiceForm() {
     event.preventDefault();
     if (busy.current || result) return;
     if (!request.current) {
-      if (!profileId || !calculation || !ready) {
+      if (!profileId || !calculation || !ready || (correction && !reason.trim())) {
         setError('invalid');
         return;
       }
@@ -265,6 +354,19 @@ function ManualInvoiceForm() {
         profileId,
         lines: calculation.lines,
         idempotencyKey: crypto.randomUUID(),
+        ...(correction
+          ? {
+              correction: {
+                kind: correction.kind,
+                invoiceId: correction.invoiceId,
+                reason: reason.trim(),
+                amount:
+                  correction.kind === 'adjustment'
+                    ? signed.toString()
+                    : calculation.total.toString(),
+              },
+            }
+          : {}),
       };
       setLocked(true);
     }
@@ -339,47 +441,51 @@ function ManualInvoiceForm() {
         <p>
           {text('reference')} <bdi>{result.invoiceId}</bdi>
         </p>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => {
-            setResult(null);
-            setLines([blankLine()]);
-            setProfileId(null);
-          }}
-        >
-          {text('another')}
-        </Button>
+        {!correction && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setResult(null);
+              setLines([blankLine()]);
+              setProfileId(null);
+            }}
+          >
+            {text('another')}
+          </Button>
+        )}
       </div>
     );
 
   return (
     <div className="mt-6 flex flex-col gap-6">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (!locked) {
-            setQuery(search.trim());
-            setRevision((value) => value + 1);
-          }
-        }}
-      >
-        <FieldGroup>
-          <Field data-disabled={locked}>
-            <FieldLabel htmlFor="manual-profile-search">{text('searchProfiles')}</FieldLabel>
-            <Input
-              id="manual-profile-search"
-              maxLength={100}
-              value={search}
-              disabled={locked}
-              onChange={(event) => setSearch(event.target.value)}
-            />
-          </Field>
-          <Button type="submit" variant="outline" disabled={locked || loading}>
-            {loading ? text('loading') : text('search')}
-          </Button>
-        </FieldGroup>
-      </form>
+      {!correction && (
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!locked) {
+              setQuery(search.trim());
+              setRevision((value) => value + 1);
+            }
+          }}
+        >
+          <FieldGroup>
+            <Field data-disabled={locked}>
+              <FieldLabel htmlFor="manual-profile-search">{text('searchProfiles')}</FieldLabel>
+              <Input
+                id="manual-profile-search"
+                maxLength={100}
+                value={search}
+                disabled={locked}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </Field>
+            <Button type="submit" variant="outline" disabled={locked || loading}>
+              {loading ? text('loading') : text('search')}
+            </Button>
+          </FieldGroup>
+        </form>
+      )}
       {lookupError && (
         <Alert variant="destructive">
           <AlertDescription>
@@ -389,110 +495,156 @@ function ManualInvoiceForm() {
       )}
       <form onSubmit={submit} className="flex flex-col gap-6" aria-label={text('title')}>
         <FieldGroup>
-          <Field data-disabled={locked || !ready} data-invalid={error === 'invalid' && !profileId}>
-            <FieldLabel htmlFor="manual-profile">{text('profile')}</FieldLabel>
-            <NativeSelect
-              id="manual-profile"
-              value={profileId ?? ''}
-              onChange={(event) => setProfileId(event.target.value || null)}
-              disabled={locked || !ready}
-              className="w-full"
-              aria-invalid={error === 'invalid' && !profileId}
-              required
+          {!correction && (
+            <Field
+              data-disabled={locked || !ready}
+              data-invalid={error === 'invalid' && !profileId}
             >
-              <NativeSelectOption value="" disabled>
-                {text('chooseProfile')}
-              </NativeSelectOption>
-              {profiles.map((profile) => (
-                <NativeSelectOption key={profile.id} value={profile.id}>
-                  {profile.title || text('untitled')}
+              <FieldLabel htmlFor="manual-profile">{text('profile')}</FieldLabel>
+              <NativeSelect
+                id="manual-profile"
+                value={profileId ?? ''}
+                onChange={(event) => setProfileId(event.target.value || null)}
+                disabled={locked || !ready}
+                className="w-full"
+                aria-invalid={error === 'invalid' && !profileId}
+                required
+              >
+                <NativeSelectOption value="" disabled>
+                  {text('chooseProfile')}
                 </NativeSelectOption>
-              ))}
-            </NativeSelect>
-            {ready && profiles.length === 0 && (
-              <p className="text-sm text-muted-foreground">{text('noProfiles')}</p>
-            )}
-          </Field>
-          {lines.map((line, index) => (
-            <FieldSet key={line.id} disabled={locked} className="rounded-md border p-4">
-              <FieldLegend>
-                {text('line')} {numbers.number(index + 1)}
-              </FieldLegend>
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor={`manual-description-${line.id}`}>
-                    {text('lineDescription')}
-                  </FieldLabel>
-                  <Input
-                    id={`manual-description-${line.id}`}
-                    required
-                    maxLength={1000}
-                    value={line.description}
-                    onChange={(event) => updateLine(line.id, 'description', event.target.value)}
-                  />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor={`manual-quantity-${line.id}`}>{text('quantity')}</FieldLabel>
-                  <Input
-                    id={`manual-quantity-${line.id}`}
-                    required
-                    inputMode="numeric"
-                    dir="ltr"
-                    maxLength={10}
-                    value={line.quantity}
-                    onChange={(event) => updateLine(line.id, 'quantity', event.target.value)}
-                  />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor={`manual-price-${line.id}`}>{text('unitPrice')}</FieldLabel>
-                  <Input
-                    id={`manual-price-${line.id}`}
-                    required
-                    inputMode="numeric"
-                    dir="ltr"
-                    maxLength={19}
-                    value={line.unitPrice}
-                    onChange={(event) => updateLine(line.id, 'unitPrice', event.target.value)}
-                  />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor={`manual-vat-${line.id}`}>{text('vat')}</FieldLabel>
-                  <Input
-                    id={`manual-vat-${line.id}`}
-                    required
-                    inputMode="decimal"
-                    dir="ltr"
-                    maxLength={6}
-                    value={line.vat}
-                    onChange={(event) => updateLine(line.id, 'vat', event.target.value)}
-                  />
-                </Field>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={locked || lines.length === 1}
-                  onClick={() =>
-                    setLines((current) => current.filter((item) => item.id !== line.id))
-                  }
-                  aria-label={`${text('removeLine')} ${numbers.number(index + 1)}`}
-                >
-                  {text('removeLine')}
-                </Button>
-              </FieldGroup>
-            </FieldSet>
-          ))}
+                {profiles.map((profile) => (
+                  <NativeSelectOption key={profile.id} value={profile.id}>
+                    {profile.title || text('untitled')}
+                  </NativeSelectOption>
+                ))}
+              </NativeSelect>
+              {ready && profiles.length === 0 && (
+                <p className="text-sm text-muted-foreground">{text('noProfiles')}</p>
+              )}
+            </Field>
+          )}
+          {correction && (
+            <Field data-disabled={locked}>
+              <FieldLabel htmlFor="correction-reason">{text('reason')}</FieldLabel>
+              <Input
+                id="correction-reason"
+                required
+                maxLength={1000}
+                disabled={locked}
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+              />
+            </Field>
+          )}
+          {correction?.kind === 'adjustment' && (
+            <Field data-disabled={locked}>
+              <FieldLabel htmlFor="correction-amount">{text('amount')}</FieldLabel>
+              <Input
+                id="correction-amount"
+                required
+                dir="ltr"
+                inputMode="text"
+                maxLength={20}
+                disabled={locked}
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                aria-describedby="correction-amount-hint"
+              />
+              <p id="correction-amount-hint" className="text-sm text-muted-foreground">
+                {text('amountHint')}
+              </p>
+            </Field>
+          )}
+          {correction?.kind !== 'adjustment' &&
+            lines.map((line, index) => (
+              <FieldSet key={line.id} disabled={locked} className="rounded-md border p-4">
+                <FieldLegend>
+                  {text('line')} {numbers.number(index + 1)}
+                </FieldLegend>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel htmlFor={`manual-description-${line.id}`}>
+                      {text('lineDescription')}
+                    </FieldLabel>
+                    <Input
+                      id={`manual-description-${line.id}`}
+                      required
+                      maxLength={1000}
+                      value={line.description}
+                      onChange={(event) => updateLine(line.id, 'description', event.target.value)}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor={`manual-quantity-${line.id}`}>
+                      {text('quantity')}
+                    </FieldLabel>
+                    <Input
+                      id={`manual-quantity-${line.id}`}
+                      required
+                      inputMode="numeric"
+                      dir="ltr"
+                      maxLength={10}
+                      value={line.quantity}
+                      onChange={(event) => updateLine(line.id, 'quantity', event.target.value)}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor={`manual-price-${line.id}`}>{text('unitPrice')}</FieldLabel>
+                    <Input
+                      id={`manual-price-${line.id}`}
+                      required
+                      inputMode="numeric"
+                      dir="ltr"
+                      maxLength={19}
+                      value={line.unitPrice}
+                      onChange={(event) => updateLine(line.id, 'unitPrice', event.target.value)}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor={`manual-vat-${line.id}`}>{text('vat')}</FieldLabel>
+                    <Input
+                      id={`manual-vat-${line.id}`}
+                      required
+                      inputMode="decimal"
+                      dir="ltr"
+                      maxLength={6}
+                      value={line.vat}
+                      onChange={(event) => updateLine(line.id, 'vat', event.target.value)}
+                    />
+                  </Field>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={locked || lines.length === 1}
+                    onClick={() =>
+                      setLines((current) => current.filter((item) => item.id !== line.id))
+                    }
+                    aria-label={`${text('removeLine')} ${numbers.number(index + 1)}`}
+                  >
+                    {text('removeLine')}
+                  </Button>
+                </FieldGroup>
+              </FieldSet>
+            ))}
         </FieldGroup>
-        <Button
-          type="button"
-          variant="outline"
-          disabled={locked || lines.length >= 100}
-          onClick={() => setLines((current) => [...current, blankLine()])}
-        >
-          {text('addLine')}
-        </Button>
+        {correction?.kind !== 'adjustment' && (
+          <Button
+            type="button"
+            variant="outline"
+            disabled={locked || lines.length >= 100}
+            onClick={() => setLines((current) => [...current, blankLine()])}
+          >
+            {text('addLine')}
+          </Button>
+        )}
         <p aria-live="polite">
           {text('total')}{' '}
-          <strong>{calculation ? numbers.money(calculation.total) : text('incomplete')}</strong>
+          <strong>
+            {calculation
+              ? numbers.money(correction?.kind === 'adjustment' ? signed : calculation.total)
+              : text('incomplete')}
+          </strong>
         </p>
         {error && (
           <Alert variant="destructive">
@@ -502,7 +654,13 @@ function ManualInvoiceForm() {
         <Button
           ref={submitButton}
           type="submit"
-          disabled={acting || stepUp || (!locked && (!ready || !profileId || !calculation))}
+          className={correction ? 'hover:bg-primary' : undefined}
+          disabled={
+            acting ||
+            stepUp ||
+            (!locked &&
+              (!ready || !profileId || !calculation || Boolean(correction && !reason.trim())))
+          }
         >
           {acting ? text('issuing') : locked ? text('retry') : text('issue')}
         </Button>

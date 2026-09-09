@@ -1,3 +1,4 @@
+import InvoiceCorrectionsPanel from '../components/InvoiceCorrectionsPanel.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
@@ -231,6 +232,7 @@ export default function AdminInvoicesPage() {
     <div className="max-w-4xl space-y-8">
       <h1 className="text-2xl font-bold">{t('admin.invoices.nav', locale)}</h1>
       <ManualInvoicePanel />
+      <InvoiceCorrectionsPanel />
       {pendingAction && (
         <TeamActionDialog
           action={pendingAction}
