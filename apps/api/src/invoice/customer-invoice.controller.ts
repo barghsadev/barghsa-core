@@ -93,7 +93,7 @@ export class CustomerInvoiceController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'No active profile' })
   async list(@Req() req: AuthenticatedRequest): Promise<CustomerInvoiceListDto> {
-    return this.service.listForUser(req.session.userId);
+    return this.service.listForUser(req.session.userId, req.session);
   }
 
   @Get(':invoiceId')
@@ -114,7 +114,7 @@ export class CustomerInvoiceController {
     @Param('invoiceId') invoiceId: string
   ): Promise<CustomerInvoiceDetailsDto> {
     assertUuid(invoiceId);
-    return this.service.getForUser(req.session.userId, invoiceId);
+    return this.service.getForUser(req.session.userId, invoiceId, req.session);
   }
 
   /**

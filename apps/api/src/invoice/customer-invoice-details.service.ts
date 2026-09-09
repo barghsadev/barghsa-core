@@ -1,3 +1,8 @@
+import type { Pool, PoolClient } from 'pg';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
+type InvoiceReadActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+type InvoiceReadClient = Pool | PoolClient;
 import type { AgentPermission } from '@barghsa/shared/agent-permissions';
 import { activeProfileSql } from '../profiles/profile-context.js';
 /**
@@ -400,37 +405,90 @@ export class CustomerInvoiceDetailsService {
     return result.rows[0]?.id ?? null;
   }
 
-  async listForUser(userId: string): Promise<CustomerInvoiceListDto> {
-    const profileId = await this.requireActiveProfile(userId);
-    const pool = getDbPool();
-    const result = await pool.query<InvoiceFamilyRow>(
-      `SELECT ${INVOICE_SELECT}
-         FROM invoices
-        WHERE profile_id = $1
-          AND ${CUSTOMER_VISIBLE_STATE_SQL}
-        ORDER BY created_at DESC`,
-      [profileId]
-    );
-    return { invoices: result.rows.map(toListItem) };
+  async listForUser(userId: string, actor?: InvoiceReadActor): Promise<CustomerInvoiceListDto> {
+    return this.authorizedRead(userId, actor, async (profileId, client) => {
+      const result = await client.query<InvoiceFamilyRow>(
+        `SELECT ${INVOICE_SELECT} FROM invoices WHERE profile_id = $1
+         AND ${CUSTOMER_VISIBLE_STATE_SQL} ORDER BY created_at DESC`,
+        [profileId]
+      );
+      return { invoices: result.rows.map(toListItem) };
+    });
   }
 
-  async getForUser(userId: string, invoiceId: string): Promise<CustomerInvoiceDetailsDto> {
-    const profileId = await this.requireActiveProfile(userId);
-    const viewed = await this.loadInvoice(invoiceId, profileId);
-    if (!viewed) {
-      httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${invoiceId}`, 404);
-    }
-
-    const { rows: family, truncated } = await this.loadFamily(viewed.id, profileId);
-    const original = assertCompleteInvoiceFamily(family, truncated);
-    const linesByInvoiceId = await this.loadLines(family.map((row) => row.id));
-
-    return assembleCustomerInvoiceDetails({
-      viewedInvoiceId: invoiceId,
-      originalInvoiceId: original.id,
-      rows: family,
-      linesByInvoiceId,
+  async getForUser(
+    userId: string,
+    invoiceId: string,
+    actor?: InvoiceReadActor
+  ): Promise<CustomerInvoiceDetailsDto> {
+    invoiceId = invoiceId.toLowerCase();
+    return this.authorizedRead(userId, actor, async (profileId, client) => {
+      const viewed = await this.loadInvoice(invoiceId, profileId, client);
+      if (!viewed)
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${invoiceId}`, 404);
+      const { rows: family, truncated } = await this.loadFamily(viewed.id, profileId, client);
+      const original = assertCompleteInvoiceFamily(family, truncated);
+      const linesByInvoiceId = await this.loadLines(
+        family.map((row) => row.id),
+        client
+      );
+      return assembleCustomerInvoiceDetails({
+        viewedInvoiceId: invoiceId,
+        originalInvoiceId: original.id,
+        rows: family,
+        linesByInvoiceId,
+      });
     });
+  }
+
+  private async authorizedRead<T>(
+    userId: string,
+    actor: InvoiceReadActor | undefined,
+    read: (profileId: string, client: InvoiceReadClient) => Promise<T>
+  ): Promise<T> {
+    // Internal callers retain the profile-scoped read; HTTP always supplies its session.
+    if (!actor) return read(await this.requireActiveProfile(userId), getDbPool());
+    if (actor.userId !== userId)
+      httpError(ErrorCodes.AUTH_UNAUTHENTICATED.code, 'Session actor mismatch', 401);
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const account = (
+        await client.query(
+          'SELECT disabled_at,activation_token FROM users WHERE user_id=$1 FOR UPDATE',
+          [userId]
+        )
+      ).rows[0];
+      if (!account || account.disabled_at || account.activation_token)
+        httpError(ErrorCodes.AUTH_UNAUTHENTICATED.code, 'Account unavailable', 401);
+      await requireCurrentSession(client, actor);
+      const profileId = (
+        await client.query<{ id: string }>(activeProfileSql('invoices:view') + ' FOR SHARE OF p', [
+          userId,
+        ])
+      ).rows[0]?.id;
+      if (!profileId) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'No active profile', 404);
+      await client.query(
+        'SELECT role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 FOR SHARE',
+        [profileId, userId]
+      );
+      const currentProfile = async () =>
+        (await client.query<{ id: string }>(activeProfileSql('invoices:view'), [userId])).rows[0]
+          ?.id;
+      if ((await currentProfile()) !== profileId)
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'No active profile', 404);
+      const result = await read(profileId, client);
+      if ((await currentProfile()) !== profileId)
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Profile access changed', 404);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   private async requireActiveProfile(userId: string): Promise<string> {
@@ -443,10 +501,10 @@ export class CustomerInvoiceDetailsService {
 
   private async loadInvoice(
     invoiceId: string,
-    profileId: string
+    profileId: string,
+    client: InvoiceReadClient = getDbPool()
   ): Promise<InvoiceFamilyRow | null> {
-    const pool = getDbPool();
-    const result = await pool.query<InvoiceFamilyRow>(
+    const result = await client.query<InvoiceFamilyRow>(
       `SELECT ${INVOICE_SELECT}
          FROM invoices
         WHERE id = $1 AND profile_id = $2
@@ -464,10 +522,10 @@ export class CustomerInvoiceDetailsService {
    */
   private async loadFamily(
     seedId: string,
-    profileId: string
+    profileId: string,
+    client: InvoiceReadClient = getDbPool()
   ): Promise<{ rows: InvoiceFamilyRow[]; truncated: boolean }> {
-    const pool = getDbPool();
-    const result = await pool.query<InvoiceFamilyRow & { family_truncated: unknown }>(
+    const result = await client.query<InvoiceFamilyRow & { family_truncated: unknown }>(
       `-- ${CUSTOMER_INVOICE_FAMILY_CTE_MARKER}
        WITH RECURSIVE family AS (
          SELECT ${INVOICE_SELECT},
@@ -533,11 +591,13 @@ export class CustomerInvoiceDetailsService {
     return { rows, truncated };
   }
 
-  private async loadLines(invoiceIds: string[]): Promise<Map<string, InvoiceLineRow[]>> {
+  private async loadLines(
+    invoiceIds: string[],
+    client: InvoiceReadClient = getDbPool()
+  ): Promise<Map<string, InvoiceLineRow[]>> {
     const map = new Map<string, InvoiceLineRow[]>();
     if (invoiceIds.length === 0) return map;
-    const pool = getDbPool();
-    const result = await pool.query<InvoiceLineRow>(
+    const result = await client.query<InvoiceLineRow>(
       `SELECT invoice_id, description, quantity, unit_price, line_total,
               vat_rate, vat_amount, is_taxable, position
          FROM invoice_lines
