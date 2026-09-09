@@ -6,6 +6,11 @@ import { requireCurrentSession } from '../session/session-step-up.js';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 
 export type TicketActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+export type TicketAccess = {
+  scope?: string | undefined;
+  canWrite: boolean;
+  canAssignOthers: boolean;
+};
 
 /** Hold current authority until the caller's ticket transaction commits. */
 export async function authorizeTicketMutation(
@@ -15,6 +20,24 @@ export async function authorizeTicketMutation(
   staff: boolean,
   targetUserId?: string
 ): Promise<string | undefined> {
+  return (
+    await authorizeTicketAccess(
+      client,
+      actor,
+      expectedUserId,
+      staff ? 'write' : false,
+      targetUserId
+    )
+  ).scope;
+}
+
+export async function authorizeTicketAccess(
+  client: PoolClient,
+  actor: TicketActor,
+  expectedUserId: string,
+  staff: false | 'read' | 'write',
+  targetUserId?: string
+): Promise<TicketAccess> {
   if (actor.userId !== expectedUserId)
     throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
   const accounts = await client.query(
@@ -27,7 +50,7 @@ export async function authorizeTicketMutation(
     throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
   if (!staff || account.is_admin) {
     await requireCurrentSession(client, actor);
-    return;
+    return { canWrite: true, canAssignOthers: !!staff };
   }
   const roles = await client.query(
     `SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
@@ -35,11 +58,20 @@ export async function authorizeTicketMutation(
     [actor.userId]
   );
   const grants = resolveStaffPermissions(roles.rows.map((row) => row.permissions));
-  const fullAccess = grants.some((permission) =>
+  const canAssignOthers = grants.some((permission) =>
     ['*', 'tickets:*', 'tickets:write'].includes(permission)
   );
-  if (!fullAccess && !grants.includes('tickets:assigned'))
+  const fullAccess =
+    staff === 'write'
+      ? canAssignOthers
+      : grants.some((permission) => ['*', 'tickets:*', 'tickets:read'].includes(permission));
+  const assigned = grants.includes('tickets:assigned');
+  if (!fullAccess && !assigned)
     throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
   await requireCurrentSession(client, actor);
-  return fullAccess ? undefined : actor.userId;
+  return {
+    scope: fullAccess ? undefined : actor.userId,
+    canWrite: canAssignOthers || assigned,
+    canAssignOthers,
+  };
 }

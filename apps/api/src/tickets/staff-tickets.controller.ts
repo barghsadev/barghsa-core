@@ -89,20 +89,18 @@ export class StaffTicketsController {
     }
 
     const options = ticketListQuery({ page, limit, status, search, sortBy, sortOrder, assignedTo });
-    const scope = this.assignedScope(req, 'read');
-    if (scope) options.assignedTo = scope;
-    return {
-      ...(await this.ticketsService.staffListTickets(options)),
-      responseTargetHours: await this.ticketsService.responseTargetHours(),
+    return this.ticketsService.readAs(req.session, 'read', async (client, access) => ({
+      ...(await this.ticketsService.staffListTickets(
+        { ...options, ...(access.scope ? { assignedTo: access.scope } : {}) },
+        client
+      )),
+      responseTargetHours: await this.ticketsService.responseTargetHours(client),
       viewer: {
         userId: req.session.userId,
-        canWrite:
-          hasStaffPermission(req, 'tickets:write') ||
-          hasStaffPermission(req, 'tickets:*') ||
-          hasStaffPermission(req, 'tickets:assigned'),
-        canAssignOthers: this.assignedScope(req, 'write') === undefined,
+        canWrite: access.canWrite,
+        canAssignOthers: access.canAssignOthers,
       },
-    };
+    }));
   }
 
   /**
@@ -114,14 +112,22 @@ export class StaffTicketsController {
   async teams(@Req() req: AuthenticatedRequest) {
     if (this.assignedScope(req, 'write') !== undefined)
       throw new HttpException('Only full ticket managers can choose teams', 403);
-    return this.ticketsService.assignmentTeams();
+    return this.ticketsService.readAs(req.session, 'write', (client, access) => {
+      if (!access.canAssignOthers)
+        throw new HttpException('Only full ticket managers can choose teams', 403);
+      return this.ticketsService.assignmentTeams(client);
+    });
   }
 
   @Get('assignees')
   async assignees(@Req() req: AuthenticatedRequest) {
     if (this.assignedScope(req, 'write') !== undefined)
       throw new HttpException('Only full ticket managers can choose other assignees', 403);
-    return this.ticketsService.eligibleAssignees();
+    return this.ticketsService.readAs(req.session, 'write', (client, access) => {
+      if (!access.canAssignOthers)
+        throw new HttpException('Only full ticket managers can choose other assignees', 403);
+      return this.ticketsService.eligibleAssignees(client);
+    });
   }
 
   @Get(':id')
@@ -140,7 +146,9 @@ export class StaffTicketsController {
         403
       );
     }
-    return this.ticketsService.staffGetTicket(id, this.assignedScope(req, 'read'));
+    return this.ticketsService.readAs(req.session, 'read', (client, access) =>
+      this.ticketsService.staffGetTicket(id, access.scope, client)
+    );
   }
 
   /**
@@ -253,7 +261,9 @@ export class StaffTicketsController {
         403
       );
     }
-    return this.ticketsService.staffListComments(id, this.assignedScope(req, 'read'));
+    return this.ticketsService.readAs(req.session, 'read', (client, access) =>
+      this.ticketsService.staffListComments(id, access.scope, client)
+    );
   }
 
   /**

@@ -147,6 +147,194 @@ async function blockedOrFinished(blockerPid: number, finished: () => boolean) {
     .toBe(true);
 }
 
+it.each(['', '/detail', '/comments'] as const)(
+  'denies a staff ticket read after its grant is revoked while waiting (%s)',
+  async (view) => {
+    const actor = await freshActor(false),
+      id = await ticket(),
+      roleId = randomUUID();
+    await http.pool.query(
+      `INSERT INTO staff_roles(role_id,name,description,permissions)
+       VALUES ($1,$1,'Ticket reader','["tickets:read"]')`,
+      [roleId]
+    );
+    await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
+      actor.userId,
+      roleId,
+    ]);
+    await http.pool.query(
+      "INSERT INTO ticket_comments(ticket_id,author_id,body,visibility) VALUES ($1,'staff','Private note','internal')",
+      [id]
+    );
+    const client = await http.pool.connect();
+    let response: Promise<Response> | undefined,
+      finished = false;
+    try {
+      await client.query('BEGIN');
+      await client.query("UPDATE staff_roles SET permissions='[]' WHERE role_id=$1", [roleId]);
+      await client.query('LOCK TABLE tickets IN ACCESS EXCLUSIVE MODE');
+      const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+      const suffix = view === '/detail' ? `/${id}` : view === '/comments' ? `/${id}/comments` : '';
+      response = fetch(`${http.base}/api/staff/tickets${suffix}`, {
+        headers: actor.headers,
+      }).finally(() => {
+        finished = true;
+      });
+      await blockedOrFinished(pid, () => finished);
+      await client.query('COMMIT');
+      const result = await response;
+      expect(result.status).toBe(403);
+      expect(await result.text()).not.toContain('Private note');
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await response;
+    }
+  }
+);
+
+it.each(['', '/detail', '/comments'] as const)(
+  'uses the current assigned-only scope for a staff ticket read (%s)',
+  async (view) => {
+    const actor = await freshActor(false),
+      own = await ticket(),
+      other = await ticket(),
+      roleId = randomUUID();
+    await http.pool.query('UPDATE tickets SET assigned_to=$1 WHERE id=$2', [actor.userId, own]);
+    await http.pool.query(
+      `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,'Ticket reader','["tickets:read"]')`,
+      [roleId]
+    );
+    await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
+      actor.userId,
+      roleId,
+    ]);
+    const client = await http.pool.connect();
+    let response: Promise<Response> | undefined,
+      finished = false;
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        `UPDATE staff_roles SET permissions='["tickets:assigned"]' WHERE role_id=$1`,
+        [roleId]
+      );
+      await client.query('LOCK TABLE tickets IN ACCESS EXCLUSIVE MODE');
+      const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+      const suffix =
+        view === '/detail' ? `/${other}` : view === '/comments' ? `/${other}/comments` : '';
+      response = fetch(`${http.base}/api/staff/tickets${suffix}`, {
+        headers: actor.headers,
+      }).finally(() => {
+        finished = true;
+      });
+      await blockedOrFinished(pid, () => finished);
+      await client.query('COMMIT');
+      const result = await response;
+      expect(result.status).toBe(view ? 404 : 200);
+      if (!view) {
+        const queue = (await result.json()) as {
+          data: { id: string }[];
+          viewer: { canWrite: boolean; canAssignOthers: boolean };
+        };
+        expect(queue.data.map((row) => row.id)).toEqual([own]);
+        expect(queue.viewer).toMatchObject({ canWrite: true, canAssignOthers: false });
+      }
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await response;
+    }
+  }
+);
+
+it('reports current read-only capabilities after a staff permission change', async () => {
+  const actor = await freshActor(false),
+    roleId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,'Ticket reader','["tickets:read","tickets:write"]')`,
+    [roleId]
+  );
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
+    actor.userId,
+    roleId,
+  ]);
+  const client = await http.pool.connect();
+  let response: Promise<Response> | undefined,
+    finished = false;
+  try {
+    await client.query('BEGIN');
+    await client.query(`UPDATE staff_roles SET permissions='["tickets:read"]' WHERE role_id=$1`, [
+      roleId,
+    ]);
+    await client.query('LOCK TABLE tickets IN ACCESS EXCLUSIVE MODE');
+    const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+    response = fetch(`${http.base}/api/staff/tickets`, { headers: actor.headers }).finally(() => {
+      finished = true;
+    });
+    await blockedOrFinished(pid, () => finished);
+    await client.query('COMMIT');
+    const result = await response;
+    expect(result.status).toBe(200);
+    expect(((await result.json()) as { viewer: unknown }).viewer).toEqual({
+      userId: actor.userId,
+      canWrite: false,
+      canAssignOthers: false,
+    });
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await response;
+  }
+});
+
+it.each(['list', 'detail', 'comments', 'options'] as const)(
+  'does not return a customer ticket %s read after its session expires',
+  async (view) => {
+    const id = await ticket(),
+      actor = await freshActor(false, 2);
+    await http.pool.query('UPDATE tickets SET user_id=$1 WHERE id=$2', [actor.userId, id]);
+    const client = await http.pool.connect();
+    let response: Promise<Response> | undefined,
+      finished = false;
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        view === 'options'
+          ? 'LOCK TABLE profiles IN ACCESS EXCLUSIVE MODE'
+          : 'LOCK TABLE tickets IN ACCESS EXCLUSIVE MODE'
+      );
+      const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+      const suffix =
+        view === 'detail'
+          ? `/${id}`
+          : view === 'comments'
+            ? `/${id}/comments`
+            : view === 'options'
+              ? '/options'
+              : '';
+      response = fetch(`${http.base}/api/tickets${suffix}`, { headers: actor.headers }).finally(
+        () => {
+          finished = true;
+        }
+      );
+      await blockedOrFinished(pid, () => finished);
+      expect(finished).toBe(false);
+      await http.pool.query(
+        'SELECT pg_sleep(GREATEST(0,EXTRACT(EPOCH FROM ($1::timestamptz-clock_timestamp())))+0.05)',
+        [actor.expiresAt]
+      );
+      await client.query('COMMIT');
+      const result = await response;
+      expect(result.status).toBe(401);
+      expect(await result.text()).not.toContain('A question');
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await response;
+    }
+  }
+);
+
 it('rejects customer creation after account disablement commits while authorization waits', async () => {
   const actor = await freshActor(false),
     client = await http.pool.connect();

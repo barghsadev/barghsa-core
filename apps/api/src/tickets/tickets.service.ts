@@ -1,5 +1,10 @@
 import { ticketPagination } from './ticket-input.js';
-import { authorizeTicketMutation, type TicketActor } from './ticket-actor.js';
+import {
+  authorizeTicketAccess,
+  authorizeTicketMutation,
+  type TicketActor,
+  type TicketAccess,
+} from './ticket-actor.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
@@ -117,6 +122,27 @@ export class TicketsService {
 
   private readonly logger = new Logger(TicketsService.name);
 
+  async readAs<T>(
+    actor: TicketActor,
+    permission: false | 'read' | 'write',
+    read: (client: PoolClient, access: TicketAccess) => Promise<T>
+  ): Promise<T> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const access = await authorizeTicketAccess(client, actor, actor.userId, permission);
+      const result = await read(client, access);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   private async notifyTicket(
     client: PoolClient,
     ticket: TicketRow,
@@ -188,29 +214,29 @@ export class TicketsService {
     }
   }
 
-  async responseTargetHours(): Promise<number | null> {
+  async responseTargetHours(client?: PoolClient): Promise<number | null> {
     const row = (
-      await getDbPool().query('SELECT value FROM app_config WHERE key=$1', [
+      await (client ?? getDbPool()).query('SELECT value FROM app_config WHERE key=$1', [
         SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
       ])
     ).rows[0];
     return toServiceResponseTargets(row?.value).ticket;
   }
 
-  async assignmentTeams() {
+  async assignmentTeams(client?: PoolClient) {
     return (
-      await getDbPool()
+      await (client ?? getDbPool())
         .query(`SELECT t.id,t.name,ARRAY(SELECT m.user_id FROM staff_team_members m WHERE m.team_id=t.id ORDER BY m.user_id) AS members
       FROM staff_teams t WHERE is_active ORDER BY name,id`)
     ).rows;
   }
 
-  async creationOptions(userId: string, profileId?: string, recordPage = 1) {
+  async creationOptions(userId: string, profileId?: string, recordPage = 1, client?: PoolClient) {
     if (!Number.isSafeInteger(recordPage) || recordPage < 1 || recordPage > 100000)
       throw new HttpException('Invalid record page', 400);
     if (profileId && !z.uuid().safeParse(profileId).success)
       throw new HttpException('Invalid profile', 400);
-    const pool = getDbPool();
+    const pool = client ?? getDbPool();
     const profiles = (
       await pool.query(
         `SELECT id,COALESCE(NULLIF(title,''),NULLIF(concat_ws(' ',first_name,last_name),'')) AS title
@@ -226,16 +252,17 @@ export class TicketsService {
         `SELECT * FROM (
       SELECT id,'order' AS type,created_at FROM orders WHERE profile_id=$1
       UNION ALL SELECT id,'invoice' AS type,created_at FROM invoices WHERE profile_id=$1
-      ) records ORDER BY created_at DESC,id DESC LIMIT 21 OFFSET $2`,
-        [profileId, (recordPage - 1) * 20]
+      ) records WHERE EXISTS (SELECT 1 FROM profiles WHERE id=$1 AND user_id=$3 AND NOT archived)
+      ORDER BY created_at DESC,id DESC LIMIT 21 OFFSET $2`,
+        [profileId, (recordPage - 1) * 20, userId]
       )
     ).rows;
     return { profiles, records: records.slice(0, 20), hasMoreRecords: records.length > 20 };
   }
 
-  async eligibleAssignees() {
+  async eligibleAssignees(client?: PoolClient) {
     const users = (
-      await getDbPool().query(`SELECT u.user_id AS id,u.username AS name,u.is_admin,
+      await (client ?? getDbPool()).query(`SELECT u.user_id AS id,u.username AS name,u.is_admin,
       ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id) AS role_permissions
       FROM users u WHERE u.disabled_at IS NULL AND u.activation_token IS NULL
         AND (u.is_admin OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id)) ORDER BY u.username,u.user_id`)
@@ -370,9 +397,10 @@ export class TicketsService {
    */
   async listTickets(
     userId: string,
-    options: Partial<ListTicketsOptions> = {}
+    options: Partial<ListTicketsOptions> = {},
+    client?: PoolClient
   ): Promise<PaginatedResult<TicketRow>> {
-    const pool = getDbPool();
+    const pool = client ?? getDbPool();
     const { page, limit, offset } = ticketPagination(options.page, options.limit);
 
     // Build WHERE clause
@@ -448,13 +476,13 @@ export class TicketsService {
   /**
    * Get a single ticket by ID, scoped to the authenticated user.
    */
-  async getTicket(ticketId: string, userId: string): Promise<TicketRow> {
-    const pool = getDbPool();
+  async getTicket(ticketId: string, userId: string, client?: PoolClient): Promise<TicketRow> {
+    const pool = client ?? getDbPool();
 
-    const result = await pool.query(`SELECT * FROM tickets WHERE id = $1 AND user_id = $2`, [
-      ticketId,
-      userId,
-    ]);
+    const result = await pool.query(
+      `SELECT * FROM tickets WHERE id = $1 AND user_id = $2${client ? ' FOR SHARE' : ''}`,
+      [ticketId, userId]
+    );
 
     if (result.rows.length === 0) {
       throw new HttpException(
@@ -560,12 +588,13 @@ export class TicketsService {
   async listComments(
     ticketId: string,
     userId: string,
-    isAdmin: boolean = false
+    isAdmin: boolean = false,
+    client?: PoolClient
   ): Promise<TicketCommentRow[]> {
     // Verify the ticket exists and belongs to the user
-    await this.getTicket(ticketId, userId);
+    await this.getTicket(ticketId, userId, client);
 
-    const pool = getDbPool();
+    const pool = client ?? getDbPool();
 
     let result;
     if (isAdmin) {
@@ -683,9 +712,10 @@ export class TicketsService {
    * Supports additional filter: assignedTo (staff user ID).
    */
   async staffListTickets(
-    options: Partial<ListTicketsOptions & { assignedTo?: string }> = {}
+    options: Partial<ListTicketsOptions & { assignedTo?: string }> = {},
+    client?: PoolClient
   ): Promise<PaginatedResult<TicketRow>> {
-    const pool = getDbPool();
+    const pool = client ?? getDbPool();
     const { page, limit, offset } = ticketPagination(options.page, options.limit);
 
     const conditions: string[] = [];
@@ -767,11 +797,15 @@ export class TicketsService {
   /**
    * Staff get any ticket by ID (no user_id scoping).
    */
-  async staffGetTicket(ticketId: string, assignedTo?: string): Promise<TicketRow> {
-    const pool = getDbPool();
+  async staffGetTicket(
+    ticketId: string,
+    assignedTo?: string,
+    client?: PoolClient
+  ): Promise<TicketRow> {
+    const pool = client ?? getDbPool();
 
     const result = await pool.query(
-      `SELECT * FROM tickets WHERE id = $1 AND ($2::text IS NULL OR assigned_to=$2)`,
+      `SELECT * FROM tickets WHERE id = $1 AND ($2::text IS NULL OR assigned_to=$2)${client ? ' FOR SHARE' : ''}`,
       [ticketId, assignedTo ?? null]
     );
 
@@ -906,11 +940,15 @@ export class TicketsService {
    * Staff list comments on any ticket (all visibility levels).
    * No user_id scoping — staff can see all comments including internal.
    */
-  async staffListComments(ticketId: string, assignedTo?: string): Promise<TicketCommentRow[]> {
+  async staffListComments(
+    ticketId: string,
+    assignedTo?: string,
+    client?: PoolClient
+  ): Promise<TicketCommentRow[]> {
     // Verify the ticket exists
-    await this.staffGetTicket(ticketId, assignedTo);
+    await this.staffGetTicket(ticketId, assignedTo, client);
 
-    const pool = getDbPool();
+    const pool = client ?? getDbPool();
 
     const result = await pool.query(
       `SELECT * FROM ticket_comments WHERE ticket_id = $1 AND EXISTS (SELECT 1 FROM tickets t WHERE t.id=ticket_id AND ($2::text IS NULL OR t.assigned_to=$2)) ORDER BY created_at ASC, id ASC`,

@@ -99,7 +99,9 @@ export class TicketsController {
     @Req() req?: AuthenticatedRequest
   ) {
     const options = ticketListQuery({ page, limit, status, search, sortBy, sortOrder });
-    return this.ticketsService.listTickets(req!.session.userId, options);
+    return this.ticketsService.readAs(req!.session, false, (client) =>
+      this.ticketsService.listTickets(req!.session.userId, options, client)
+    );
   }
 
   /**
@@ -113,10 +115,13 @@ export class TicketsController {
     @Query('profileId') profileId?: string,
     @Query('recordPage') recordPage?: string
   ) {
-    return this.ticketsService.creationOptions(
-      req.session.userId,
-      profileId,
-      recordPage === undefined ? 1 : Number(recordPage)
+    return this.ticketsService.readAs(req.session, false, (client) =>
+      this.ticketsService.creationOptions(
+        req.session.userId,
+        profileId,
+        recordPage === undefined ? 1 : Number(recordPage),
+        client
+      )
     );
   }
 
@@ -126,7 +131,9 @@ export class TicketsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async getTicket(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
-    return this.ticketsService.getTicket(id, req.session.userId);
+    return this.ticketsService.readAs(req.session, false, (client) =>
+      this.ticketsService.getTicket(id, req.session.userId, client)
+    );
   }
 
   /**
@@ -168,7 +175,9 @@ export class TicketsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.ticketsService.listComments(id, req.session.userId, false);
+    return this.ticketsService.readAs(req.session, false, (client) =>
+      this.ticketsService.listComments(id, req.session.userId, false, client)
+    );
   }
 
   /**
