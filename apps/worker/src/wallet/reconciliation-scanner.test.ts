@@ -128,7 +128,6 @@ describe('reconcileWalletBalances (T-04.2.01.08)', () => {
   it('selects wallets whose posted or reserved cache disagrees with the ledger', () => {
     expect(FIND_WALLET_MISMATCH_CANDIDATES_SQL).toContain("tx.state = 'Completed'");
     expect(FIND_WALLET_MISMATCH_CANDIDATES_SQL).toContain("tx.state = 'Reserved'");
-    expect(FIND_WALLET_MISMATCH_CANDIDATES_SQL).toContain('::bigint');
     expect(FIND_WALLET_MISMATCH_CANDIDATES_SQL).toContain('HAVING');
     expect(FIND_WALLET_MISMATCH_CANDIDATES_SQL).toContain("exception_type = 'wallet_mismatch'");
     expect(FIND_WALLET_MISMATCH_CANDIDATES_SQL).toContain("status IN ('open', 'investigating')");

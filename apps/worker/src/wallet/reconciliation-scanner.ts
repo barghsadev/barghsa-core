@@ -84,17 +84,19 @@ const defaultLogger = {
 };
 
 /**
- * Set-based mismatch selector. SUM(bigint) is numeric in PostgreSQL, so
- * both sides are cast to bigint. Already-queued wallets are excluded via
+ * Set-based mismatch selector. Keep PostgreSQL numeric SUMs unbounded: a
+ * corrupt ledger can exceed int8 even when each row and wallet fit. The
+ * driver returns exact decimal strings for the BigInt comparison below.
+ * Already-queued wallets are excluded via
  * `details.walletId` so a repeating tick cannot starve new mismatches.
  */
 export const FIND_WALLET_MISMATCH_CANDIDATES_SQL = `SELECT
           w.profile_id,
           w.posted_balance,
           w.reserved_balance,
-          COALESCE(SUM(tx.amount) FILTER (WHERE tx.state = '${WALLET_LEDGER_POSTED_STATE}'), 0)::bigint
+          COALESCE(SUM(tx.amount) FILTER (WHERE tx.state = '${WALLET_LEDGER_POSTED_STATE}'), 0)
             AS ledger_posted,
-          COALESCE(SUM(tx.amount) FILTER (WHERE tx.state = '${WALLET_LEDGER_RESERVED_STATE}'), 0)::bigint
+          COALESCE(SUM(tx.amount) FILTER (WHERE tx.state = '${WALLET_LEDGER_RESERVED_STATE}'), 0)
             AS ledger_reserved
         FROM wallets w
         LEFT JOIN wallet_transactions tx ON tx.wallet_id = w.profile_id
@@ -107,9 +109,9 @@ export const FIND_WALLET_MISMATCH_CANDIDATES_SQL = `SELECT
         )
         GROUP BY w.profile_id, w.posted_balance, w.reserved_balance
         HAVING w.posted_balance
-             <> COALESCE(SUM(tx.amount) FILTER (WHERE tx.state = '${WALLET_LEDGER_POSTED_STATE}'), 0)::bigint
+             <> COALESCE(SUM(tx.amount) FILTER (WHERE tx.state = '${WALLET_LEDGER_POSTED_STATE}'), 0)
             OR w.reserved_balance
-             <> COALESCE(SUM(tx.amount) FILTER (WHERE tx.state = '${WALLET_LEDGER_RESERVED_STATE}'), 0)::bigint
+             <> COALESCE(SUM(tx.amount) FILTER (WHERE tx.state = '${WALLET_LEDGER_RESERVED_STATE}'), 0)
         ORDER BY w.profile_id ASC
         LIMIT $1`;
 
@@ -119,9 +121,9 @@ const LOCK_WALLET_SQL = `SELECT profile_id, posted_balance, reserved_balance
         FOR UPDATE SKIP LOCKED`;
 
 const SUM_LEDGER_SQL = `SELECT
-          COALESCE(SUM(amount) FILTER (WHERE state = '${WALLET_LEDGER_POSTED_STATE}'), 0)::bigint
+          COALESCE(SUM(amount) FILTER (WHERE state = '${WALLET_LEDGER_POSTED_STATE}'), 0)
             AS ledger_posted,
-          COALESCE(SUM(amount) FILTER (WHERE state = '${WALLET_LEDGER_RESERVED_STATE}'), 0)::bigint
+          COALESCE(SUM(amount) FILTER (WHERE state = '${WALLET_LEDGER_RESERVED_STATE}'), 0)
             AS ledger_reserved
         FROM wallet_transactions
         WHERE wallet_id = $1`;

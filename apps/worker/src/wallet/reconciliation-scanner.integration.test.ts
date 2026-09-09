@@ -4,30 +4,14 @@
  *
  * Fake-pool unit tests cannot prove FILTER/HAVING bigint comparison or
  * the finance-queue insert against `reconciliation_exceptions`. This
- * suite applies the migrated wallet + exception schema and runs a full
+ * suite applies the complete production migration journal and runs a full
  * `reconcileWalletBalances` pass against Testcontainers PostgreSQL 17.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { WALLET_MISMATCH_EXCEPTION_TYPE } from '@barghsa/shared/finance';
 import { reconcileWalletBalances } from './reconciliation-scanner.js';
-
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
-);
-const WALLET_CHECK_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0069_wallet_available_balance_check.sql'
-);
 
 const WALLET_OK = '11111111-1111-7111-8111-111111111111';
 const WALLET_POSTED_DRIFT = '22222222-2222-7222-8222-222222222222';
@@ -35,53 +19,21 @@ const WALLET_RESERVED_DRIFT = '33333333-3333-7333-8333-333333333333';
 const WALLET_PENDING_ONLY = '44444444-4444-7444-8444-444444444444';
 
 describe('wallet reconciliation — real PostgreSQL (T-04.2.01.08)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 2);
-
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS profiles (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`);
-    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (
-      user_id TEXT PRIMARY KEY
-    )`);
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(WALLET_CHECK_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS reconciliation_exceptions (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-        exception_type TEXT NOT NULL,
-        severity TEXT NOT NULL DEFAULT 'medium',
-        status TEXT NOT NULL DEFAULT 'open',
-        description TEXT NOT NULL,
-        details JSONB NOT NULL DEFAULT '{}'::jsonb,
-        assigned_to_id TEXT,
-        resolved_by_id TEXT,
-        resolution_note TEXT,
-        resolved_at TIMESTAMPTZ,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        CONSTRAINT chk_rex_type
-          CHECK (exception_type IN ('wallet_mismatch', 'payment_mismatch')),
-        CONSTRAINT chk_rex_severity
-          CHECK (severity IN ('low', 'medium', 'high', 'critical')),
-        CONSTRAINT chk_rex_status
-          CHECK (status IN ('open', 'investigating', 'resolved', 'closed'))
-      )
-    `);
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2), ($3), ($4)`, [
-      WALLET_OK,
-      WALLET_POSTED_DRIFT,
-      WALLET_RESERVED_DRIFT,
-      WALLET_PENDING_ONLY,
-    ]);
+    ctx = await createMigratedTestDb();
+    await ctx.pool.query(
+      "INSERT INTO users(user_id,username,password_hash) VALUES ('reconciliation-owner','reconciliation@example.test','fixture')"
+    );
+    await ctx.pool.query(
+      `INSERT INTO profiles (id,user_id) VALUES ($1,'reconciliation-owner'), ($2,'reconciliation-owner'), ($3,'reconciliation-owner'), ($4,'reconciliation-owner')`,
+      [WALLET_OK, WALLET_POSTED_DRIFT, WALLET_RESERVED_DRIFT, WALLET_PENDING_ONLY]
+    );
   }, 60_000);
 
   afterAll(async () => {
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   beforeEach(async () => {
@@ -152,6 +104,47 @@ describe('wallet reconciliation — real PostgreSQL (T-04.2.01.08)', () => {
     expect(rows.some((r) => r.details.walletId === WALLET_OK)).toBe(false);
     expect(rows.some((r) => r.details.walletId === WALLET_PENDING_ONLY)).toBe(false);
   });
+
+  it.each([
+    ['Completed', 'topup', '9223372036854775807', '-18446744073709551614'],
+    ['Reserved', 'reservation', '9223372036854775807', '-18446744073709551614'],
+    ['Completed', 'payment', '-9223372036854775807', '18446744073709551614'],
+  ])(
+    'reports an oversized %s/%s ledger sum without losing other mismatches',
+    async (state, type, amount, delta) => {
+      await ctx.pool.query(
+        `INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key)
+      VALUES ($1,$2,$3::bigint,$4,'oversized-one'),($1,$2,$3::bigint,$4,'oversized-two')`,
+        [WALLET_PENDING_ONLY, type, amount, state]
+      );
+      const before = (await ctx.pool.query('SELECT * FROM wallets ORDER BY profile_id')).rows;
+      const ledgerBefore = (await ctx.pool.query('SELECT * FROM wallet_transactions ORDER BY id'))
+        .rows;
+      const result = await reconcileWalletBalances({ pool: ctx.pool, batchSize: 50 });
+      expect(result).toMatchObject({ scanned: 3, reported: 3, errors: [] });
+      const rows = await exceptions();
+      expect(rows).toHaveLength(3);
+      expect(rows.find((row) => row.details.walletId === WALLET_PENDING_ONLY)).toMatchObject({
+        severity: 'critical',
+        status: 'open',
+        details:
+          state === 'Completed'
+            ? { postedDelta: delta, reservedDelta: '0' }
+            : { postedDelta: '0', reservedDelta: delta },
+      });
+      expect((await ctx.pool.query('SELECT * FROM wallets ORDER BY profile_id')).rows).toEqual(
+        before
+      );
+      expect((await ctx.pool.query('SELECT * FROM wallet_transactions ORDER BY id')).rows).toEqual(
+        ledgerBefore
+      );
+      expect(await reconcileWalletBalances({ pool: ctx.pool, batchSize: 50 })).toMatchObject({
+        scanned: 0,
+        reported: 0,
+        errors: [],
+      });
+    }
+  );
 
   it('does not duplicate an open finance-queue row on a second tick', async () => {
     const first = await reconcileWalletBalances({ pool: ctx.pool, batchSize: 50 });
