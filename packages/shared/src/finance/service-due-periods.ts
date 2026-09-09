@@ -35,6 +35,15 @@ export type ServiceDuePeriodType = (typeof SERVICE_DUE_PERIOD_TYPES)[number];
 /** Fallback used by invoice issuance when no active period row exists. */
 export const DEFAULT_SERVICE_DUE_DAYS = 7;
 
+/** Current setting, including the fallback when no version is active. */
+export interface ServiceDuePeriodSetting {
+  serviceType: ServiceDuePeriodType;
+  defaultDays: number;
+  periodId: string | null;
+  effectiveFrom: string | null;
+  effectiveUntil: string | null;
+}
+
 /** Minimum configurable due period in days (due the next calendar day). */
 export const MIN_SERVICE_DUE_DAYS = 1;
 

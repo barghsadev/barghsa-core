@@ -2051,6 +2051,200 @@
         ]
       }
     },
+    "/api/admin/config/invoice-due-periods": {
+      "get": {
+        "operationId": "ServiceDuePeriodController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "defaultDays": {
+                        "maximum": 365,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "effectiveFrom": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "effectiveUntil": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "periodId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "serviceType": {
+                        "enum": [
+                          "electricity",
+                          "saving_plan",
+                          "consultation",
+                          "manual"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "serviceType",
+                      "defaultDays",
+                      "periodId",
+                      "effectiveFrom",
+                      "effectiveUntil"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 4,
+                  "minItems": 4,
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Four current settings; missing periods use seven days."
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Finance configuration permission required"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read current default invoice due days by service type",
+        "tags": [
+          "Admin · Invoice due periods"
+        ]
+      },
+      "put": {
+        "description": "Takes effect now. Existing invoices and future configured periods keep their values. Requires current finance configuration permission and recent step-up.",
+        "operationId": "ServiceDuePeriodController_set",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "defaultDays": {
+                    "maximum": 365,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "expectedPeriodId": {
+                    "format": "uuid",
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "serviceType": {
+                    "enum": [
+                      "electricity",
+                      "saving_plan",
+                      "consultation",
+                      "manual"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "serviceType",
+                  "defaultDays",
+                  "expectedPeriodId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "defaultDays": {
+                        "maximum": 365,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "effectiveFrom": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "effectiveUntil": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "periodId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "serviceType": {
+                        "enum": [
+                          "electricity",
+                          "saving_plan",
+                          "consultation",
+                          "manual"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "serviceType",
+                      "defaultDays",
+                      "periodId",
+                      "effectiveFrom",
+                      "effectiveUntil"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 4,
+                  "minItems": 4,
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Four current settings; missing periods use seven days."
+          },
+          "400": {
+            "description": "Invalid service type, days or version."
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Missing finance configuration permission, CSRF or step-up."
+          },
+          "409": {
+            "description": "The current period changed. Reload before saving."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Version a default invoice due period",
+        "tags": [
+          "Admin · Invoice due periods"
+        ]
+      }
+    },
     "/api/admin/config/invoice-reminder-offsets": {
       "get": {
         "operationId": "ReminderOffsetToggleController_list",

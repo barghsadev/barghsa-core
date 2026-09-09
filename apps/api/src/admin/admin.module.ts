@@ -36,6 +36,8 @@ import { BankReceiptConfirmationController } from './bank-receipt-confirmation.c
 import { InvoiceBankReceiptConfirmationController } from './invoice-bank-receipt-confirmation.controller.js';
 import { InvoiceBankReceiptConfirmationService } from '../invoice/invoice-bank-receipt-confirmation.service.js';
 import { ChargebackAlertController } from './chargeback-alert.controller.js';
+import { ServiceDuePeriodController } from './service-due-period.controller.js';
+import { ServiceDuePeriodService } from './service-due-period.service.js';
 
 @Module({
   imports: [
@@ -62,6 +64,7 @@ import { ChargebackAlertController } from './chargeback-alert.controller.js';
     BankReceiptConfirmationController,
     InvoiceBankReceiptConfirmationController,
     ChargebackAlertController,
+    ServiceDuePeriodController,
   ],
   providers: [
     VerifiedAttachmentsService,
@@ -80,6 +83,7 @@ import { ChargebackAlertController } from './chargeback-alert.controller.js';
     ContractElectricityLimitsService,
     CorrelationIdProvider,
     ReminderOffsetToggleService,
+    ServiceDuePeriodService,
   ],
   exports: [
     BrandAssetService,
