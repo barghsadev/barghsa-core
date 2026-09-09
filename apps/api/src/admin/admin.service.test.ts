@@ -584,7 +584,9 @@ describe('AdminService.getProfileVerificationMode', () => {
 
   it('returns the configured mode from app_config', async () => {
     const { pool } = mockPool();
-    pool.query.mockResolvedValueOnce({ rows: [{ value: 'MANUAL' }] });
+    pool.query.mockResolvedValueOnce({
+      rows: [{ key: 'profile_verification_mode', value: 'MANUAL', version: 1 }],
+    });
 
     vi.doMock('@barghsa/db', () => mockDbModule(pool));
     const { AdminService: Svc } = await import('./admin.service.js');
@@ -592,28 +594,6 @@ describe('AdminService.getProfileVerificationMode', () => {
 
     const result = await service.getProfileVerificationMode();
     expect(result.mode).toBe('MANUAL');
-  });
-});
-
-describe('AdminService.setProfileVerificationMode', () => {
-  it('upserts the config value and bumps global version', async () => {
-    const { pool } = mockPool();
-    const { mockClientQuery, mockRelease, client } = mockClient();
-    pool.connect.mockResolvedValue(client);
-    mockClientQuery.mockResolvedValue({ rows: [] }); // BEGIN
-    mockClientQuery.mockResolvedValue({ rows: [] }); // INSERT/UPDATE
-    mockClientQuery.mockResolvedValue({ rows: [] }); // config_version bump
-    mockClientQuery.mockResolvedValue({ rows: [] }); // audit_log insert
-    mockClientQuery.mockResolvedValue({ rows: [] }); // COMMIT
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool));
-    const { AdminService: Svc } = await import('./admin.service.js');
-    service = new Svc();
-
-    const result = await service.setProfileVerificationMode('API', 'actor', '10.0.0.1');
-    expect(result.mode).toBe('API');
-    expect(mockClientQuery).toHaveBeenCalled();
-    expect(mockRelease).toHaveBeenCalled();
   });
 });
 

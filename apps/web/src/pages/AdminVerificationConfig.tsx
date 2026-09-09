@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { lazy, Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -6,18 +6,36 @@ import { OtpConfigPanel } from '../components/OtpConfigPanel.js';
 
 const MODES = ['DISABLED', 'MANUAL', 'API'] as const;
 type VerificationMode = (typeof MODES)[number];
+interface Config {
+  mode: VerificationMode;
+  draft: VerificationMode | null;
+  version: number;
+}
+const TeamActionDialog = lazy(() =>
+  import('../components/TeamActionDialog.js').then((module) => ({
+    default: module.TeamActionDialog,
+  }))
+);
 
-function readMode(body: unknown): VerificationMode {
-  const mode = (body as { mode?: unknown } | null)?.mode;
-  if (!MODES.some((value) => value === mode)) throw new Error('Invalid verification mode');
-  return mode as VerificationMode;
+function readConfig(body: unknown): Config {
+  const config = body as Config | null;
+  if (
+    !config ||
+    !MODES.includes(config.mode) ||
+    (config.draft !== null && !MODES.includes(config.draft)) ||
+    !Number.isSafeInteger(config.version) ||
+    config.version < 0
+  )
+    throw new Error('Invalid verification configuration');
+  return config;
 }
 
 export default function AdminVerificationConfig() {
   const locale = useLocale();
   const text = (key: Parameters<typeof verificationConfigText>[0]) =>
     verificationConfigText(key, locale);
-  const [currentMode, setCurrentMode] = useState<VerificationMode | null>(null);
+  const [current, setCurrent] = useState<Config | null>(null);
+  const currentMode = current?.mode ?? null;
   const [selectedMode, setSelectedMode] = useState<VerificationMode>('MANUAL');
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -26,6 +44,13 @@ export default function AdminVerificationConfig() {
   const savingRef = useRef(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [activated, setActivated] = useState(false);
+  const [proposal, setProposal] = useState<{
+    mode: VerificationMode;
+    expectedVersion: number;
+    action: 'activate';
+  } | null>(null);
+  const activateRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -37,13 +62,16 @@ export default function AdminVerificationConfig() {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error('Read failed');
-        const mode = readMode(await response.json());
+        const config = readConfig(await response.json());
         if (controller.signal.aborted) return;
-        setCurrentMode(mode);
-        setSelectedMode(mode);
+        setCurrent(config);
+        setSelectedMode(config.draft ?? config.mode);
+        setSaved(false);
+        setActivated(false);
+        setSaveFailed(false);
       } catch {
         if (!controller.signal.aborted) {
-          setCurrentMode(null);
+          setCurrent(null);
           setLoadFailed(true);
         }
       } finally {
@@ -57,8 +85,8 @@ export default function AdminVerificationConfig() {
     if (
       loading ||
       loadFailed ||
-      currentMode === null ||
-      selectedMode === currentMode ||
+      current === null ||
+      selectedMode === (current.draft ?? current.mode) ||
       selectedMode === 'API' ||
       savingRef.current
     )
@@ -66,17 +94,27 @@ export default function AdminVerificationConfig() {
     savingRef.current = true;
     setSaving(true);
     setSaved(false);
+    setActivated(false);
     setSaveFailed(false);
     try {
       const response = await fetch('/api/admin/config/profile-verification-mode', {
         method: 'PUT',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ mode: selectedMode }),
+        body: JSON.stringify({
+          mode: selectedMode,
+          expectedVersion: current.version,
+          action: 'draft',
+        }),
       });
       if (!response.ok) throw new Error('Save failed');
-      const confirmed = readMode(await response.json());
-      if (confirmed !== selectedMode) throw new Error('Mismatched verification mode');
-      setCurrentMode(confirmed);
+      const confirmed = readConfig(await response.json());
+      if (
+        confirmed.draft !== selectedMode ||
+        confirmed.mode !== current.mode ||
+        confirmed.version !== current.version + 1
+      )
+        throw new Error('Mismatched verification draft');
+      setCurrent(confirmed);
       setSaved(true);
     } catch {
       setSaveFailed(true);
@@ -84,7 +122,7 @@ export default function AdminVerificationConfig() {
       savingRef.current = false;
       setSaving(false);
     }
-  }, [currentMode, selectedMode, loading, loadFailed]);
+  }, [current, selectedMode, loading, loadFailed]);
 
   return (
     <div
@@ -93,6 +131,12 @@ export default function AdminVerificationConfig() {
     >
       <h1 className="text-2xl font-bold mb-6">{text('title')}</h1>
       <p className="text-sm text-muted-foreground mb-6">{text('description')}</p>
+      <p className="mb-4 text-sm">{text('warning')}</p>
+      {current && (
+        <p className="mb-4 text-sm">
+          {text('activeMode')}: {text(current.mode)}
+        </p>
+      )}
       {loading && <p role="status">{text('loading')}</p>}
       {loadFailed && (
         <div
@@ -120,7 +164,15 @@ export default function AdminVerificationConfig() {
           {text('saved')}
         </p>
       )}
-      <fieldset disabled={loading || currentMode === null || saving} className="space-y-4 max-w-xl">
+      {activated && (
+        <p role="status" className="mb-4">
+          {text('activated')}
+        </p>
+      )}
+      <fieldset
+        disabled={loading || currentMode === null || saving || proposal !== null}
+        className="space-y-4 max-w-xl"
+      >
         <legend className="sr-only">{text('title')}</legend>
         {MODES.map((mode) => (
           <label
@@ -140,6 +192,7 @@ export default function AdminVerificationConfig() {
                 onChange={() => {
                   setSaveFailed(false);
                   setSaved(false);
+                  setActivated(false);
                   setSelectedMode(mode);
                 }}
                 className="accent-primary focus-visible:outline-2 focus-visible:outline-ring"
@@ -159,12 +212,73 @@ export default function AdminVerificationConfig() {
         <button
           type="button"
           onClick={handleSave}
-          disabled={selectedMode === currentMode || selectedMode === 'API'}
+          disabled={selectedMode === (current?.draft ?? currentMode) || selectedMode === 'API'}
           className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? text('saving') : text('save')}
         </button>
+        {current?.draft && (
+          <div className="space-y-3 border-t border-border pt-4">
+            <p>
+              {text('draftMode')}: {text(current.draft)}
+            </p>
+            <button
+              ref={activateRef}
+              type="button"
+              disabled={selectedMode !== current.draft || current.draft === 'API'}
+              onClick={() => {
+                setSaved(false);
+                setActivated(false);
+                setProposal({
+                  mode: current.draft!,
+                  expectedVersion: current.version,
+                  action: 'activate',
+                });
+              }}
+              className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md disabled:opacity-50"
+            >
+              {text('activate')}
+            </button>
+          </div>
+        )}
       </fieldset>
+      <button
+        type="button"
+        disabled={loading || saving || proposal !== null}
+        onClick={() => setReload((value) => value + 1)}
+        className="mt-4 text-sm underline disabled:opacity-50"
+      >
+        {text('reload')}
+      </button>
+      {proposal && (
+        <Suspense fallback={<p role="status">{text('loading')}</p>}>
+          <TeamActionDialog
+            finalFocus={activateRef}
+            action={{
+              title: text('activate'),
+              description: `${text('warning')} ${text('draftMode')}: ${text(proposal.mode)}`,
+              path: '/api/admin/config/profile-verification-mode',
+              method: 'PUT',
+              body: proposal,
+              requiresPassword: true,
+              conflictMessage: text('conflict'),
+            }}
+            onClose={() => setProposal(null)}
+            onSuccess={async (raw) => {
+              const confirmed = readConfig(raw);
+              if (
+                confirmed.mode !== proposal.mode ||
+                confirmed.draft !== null ||
+                confirmed.version !== proposal.expectedVersion + 1
+              )
+                throw new Error('Mismatched verification activation');
+              setCurrent(confirmed);
+              setSelectedMode(confirmed.mode);
+              setActivated(true);
+            }}
+          />
+        </Suspense>
+      )}
       <OtpConfigPanel />
     </div>
   );

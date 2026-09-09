@@ -1715,10 +1715,13 @@ for (const locale of ['en', 'fa']) {
       );
       let writes = 0;
       await page.route('**/api/admin/config/profile-verification-mode', (route) => {
-        if (route.request().method() === 'GET') return route.fulfill({ json: { mode: 'MANUAL' } });
+        if (route.request().method() === 'GET')
+          return route.fulfill({ json: { mode: 'MANUAL', draft: null, version: 0 } });
         writes++;
         return route.fulfill(
-          writes === 1 ? { status: 503, json: {} } : { json: { mode: 'DISABLED' } }
+          writes === 1
+            ? { status: 503, json: {} }
+            : { json: { mode: 'MANUAL', draft: 'DISABLED', version: 1 } }
         );
       });
       await page.goto('/admin/verification');
@@ -1747,7 +1750,7 @@ for (const locale of ['en', 'fa']) {
       await checkContrast();
       await page.locator('#verification-mode-DISABLED').check();
       const save = page.getByRole('button', {
-        name: locale === 'fa' ? 'ذخیره تنظیمات' : 'Save Configuration',
+        name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save draft',
         exact: true,
       });
       await save.hover();
@@ -1769,7 +1772,9 @@ for (const locale of ['en', 'fa']) {
     await shell(page, locale);
     let reads = 0;
     let writes = 0;
-    let mode = locale === 'en' ? 'API' : 'DISABLED';
+    const mode = locale === 'en' ? 'API' : 'DISABLED';
+    let draft: string | null = null;
+    let version = 0;
     let finish: (() => void) | undefined;
     await page.route('**/api/admin/config/profile-verification-mode', async (route) => {
       if (route.request().method() === 'GET') {
@@ -1777,24 +1782,29 @@ for (const locale of ['en', 'fa']) {
         return route.fulfill(
           reads === 1
             ? { status: locale === 'en' ? 503 : 200, json: { mode: 'unknown' } }
-            : { json: { mode } }
+            : { json: { mode, draft, version } }
         );
       }
       writes++;
-      expect(route.request().postDataJSON()).toEqual({ mode: 'MANUAL' });
+      expect(route.request().postDataJSON()).toEqual({
+        mode: 'MANUAL',
+        expectedVersion: 0,
+        action: 'draft',
+      });
       if (writes === 1) {
         await new Promise<void>((resolve) => {
           finish = resolve;
         });
         return route.fulfill({ status: 503, json: {} });
       }
-      if (writes === 2) return route.fulfill({ json: { mode } });
-      mode = 'MANUAL';
-      return route.fulfill({ json: { mode } });
+      if (writes === 2) return route.fulfill({ json: { mode, draft, version } });
+      draft = 'MANUAL';
+      version = 1;
+      return route.fulfill({ json: { mode, draft, version } });
     });
     await page.goto('/admin/verification');
     const save = page.getByRole('button', {
-      name: locale === 'fa' ? 'ذخیره تنظیمات' : 'Save Configuration',
+      name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save draft',
       exact: true,
     });
     await expect(page.getByRole('alert')).toBeVisible();
@@ -1823,7 +1833,7 @@ for (const locale of ['en', 'fa']) {
     await expect(page.locator('#admin-content').getByRole('status')).toHaveCount(0);
     await save.click();
     await expect(page.locator('#admin-content').getByRole('status')).toContainText(
-      locale === 'fa' ? 'به‌روزرسانی شد' : 'updated'
+      locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft saved'
     );
     await expect(save).toBeDisabled();
     await page.reload();

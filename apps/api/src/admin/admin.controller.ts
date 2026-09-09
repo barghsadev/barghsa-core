@@ -1,4 +1,5 @@
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import type { VerificationModeConfig } from './verification-mode-config.js';
 import {
   Body,
   BadRequestException,
@@ -133,6 +134,8 @@ export interface BrandConfigDto {
  */
 export const SetProfileVerificationModeSchema = z.object({
   mode: z.enum(['DISABLED', 'MANUAL', 'API']),
+  expectedVersion: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+  action: z.enum(['draft', 'activate']),
 });
 
 export type SetProfileVerificationModeDto = z.infer<typeof SetProfileVerificationModeSchema>;
@@ -750,16 +753,21 @@ export class AdminController {
   @ApiOperation({ summary: 'Get profile verification mode' })
   @ApiResponse({
     status: 200,
-    description: 'Current verification mode.',
+    description: 'Active verification mode and the saved draft revision.',
     schema: {
       type: 'object',
-      properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } },
+      required: ['mode', 'version', 'draft'],
+      properties: {
+        mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] },
+        version: { type: 'integer', minimum: 0 },
+        draft: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'], nullable: true },
+      },
     },
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getProfileVerificationMode(
     @Req() req: AuthenticatedRequest
-  ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
+  ): Promise<VerificationModeConfig> {
     const isAdmin = hasStaffPermission(req, 'admin:config:read');
     if (!isAdmin) {
       this.logger.warn(
@@ -780,28 +788,39 @@ export class AdminController {
    * Values: 'DISABLED' | 'MANUAL' | 'API'
    */
   @Put('config/profile-verification-mode')
-  @ApiOperation({ summary: 'Set profile verification mode' })
+  @ApiOperation({ summary: 'Save or activate a versioned profile verification draft' })
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['mode'],
-      properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } },
+      required: ['mode', 'expectedVersion', 'action'],
+      properties: {
+        mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] },
+        expectedVersion: { type: 'integer', minimum: 0 },
+        action: { type: 'string', enum: ['draft', 'activate'] },
+      },
     },
   })
   @ApiResponse({
     status: 200,
-    description: 'Verification mode updated.',
+    description: 'Draft saved or activated at the returned revision.',
     schema: {
       type: 'object',
-      properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } },
+      required: ['mode', 'version', 'draft'],
+      properties: {
+        mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] },
+        version: { type: 'integer', minimum: 0 },
+        draft: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'], nullable: true },
+      },
     },
   })
-  @ApiResponse({ status: 400, description: 'Invalid mode' })
+  @ApiResponse({ status: 400, description: 'Invalid mode, action or revision' })
+  @ApiResponse({ status: 409, description: 'Settings changed or the selected draft is stale' })
+  @ApiResponse({ status: 503, description: 'Automatic verification has no configured provider' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setProfileVerificationMode(
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest
-  ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
+  ): Promise<VerificationModeConfig> {
     const isAdmin = hasStaffPermission(req, 'admin:config:write');
     if (!isAdmin) {
       this.logger.warn(
@@ -819,14 +838,14 @@ export class AdminController {
         {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Mode must be one of: DISABLED, MANUAL, API',
+          message: 'A valid mode, action and expectedVersion are required',
         },
         400
       );
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.setProfileVerificationMode(parsed.data.mode, req.session.userId, ip);
+    return this.adminService.setProfileVerificationMode(parsed.data, req.session, ip);
   }
 
   // ───────────────────────────────────────────────────────────────────────

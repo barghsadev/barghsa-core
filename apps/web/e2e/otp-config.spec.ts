@@ -13,7 +13,7 @@ async function shell(page: Page, locale: string) {
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/admin/config/profile-verification-mode', (route) =>
-    route.fulfill({ json: { mode: 'MANUAL' } })
+    route.fulfill({ json: { mode: 'MANUAL', draft: null, version: 0 } })
   );
   await page.route('**/api/auth/step-up', (route) => {
     expect(route.request().postDataJSON()).toEqual({ password: 'Settings-password-123!' });

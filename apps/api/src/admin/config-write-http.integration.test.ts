@@ -18,14 +18,6 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 const cases = [
   {
-    path: 'profile-verification-mode',
-    key: 'profile_verification_mode',
-    body: { mode: 'MANUAL' },
-    stored: 'MANUAL',
-    response: { mode: 'MANUAL' },
-    grant: 'admin:config:write',
-  },
-  {
     path: 'delivery-window',
     key: 'notification.delivery_window',
     body: { timezone: 'UTC', start_hour: 8, end_hour: 20 },

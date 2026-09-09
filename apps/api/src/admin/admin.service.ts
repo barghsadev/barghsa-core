@@ -1,4 +1,10 @@
 import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
+import {
+  changeVerificationMode,
+  readVerificationModeConfig,
+  type VerificationModeConfig,
+  type VerificationModeChange,
+} from './verification-mode-config.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission, requireStaffStepUp } from './staff-mutation-permission.js';
@@ -1005,98 +1011,20 @@ export class AdminService {
    * Get the current profile verification mode from app_config.
    * Defaults to 'DISABLED' if the key is not set.
    */
-  async getProfileVerificationMode(): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
-    const pool = getDbPool();
-    const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = 'profile_verification_mode'`
-    );
-
-    if (result.rows.length === 0) {
-      return { mode: 'DISABLED' };
-    }
-
-    const mode = result.rows[0]!.value as 'DISABLED' | 'MANUAL' | 'API';
-    return { mode };
+  async getProfileVerificationMode(): Promise<VerificationModeConfig> {
+    return readVerificationModeConfig();
   }
-
-  /**
-   * Set the profile verification mode.
-   * Bumps the global config version for cache invalidation.
-   */
+  /** Save or activate the exact reviewed verification policy revision. */
   async setProfileVerificationMode(
-    mode: 'DISABLED' | 'MANUAL' | 'API',
-    actorUserId: string,
+    change: VerificationModeChange,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
-  ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
-    const pool = getDbPool();
-    const now = new Date();
-
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:config:write');
-
-      // Upsert the config value
-      await client.query(
-        `INSERT INTO app_config (key, value, version, updated_at)
-         VALUES ('profile_verification_mode', $1::jsonb, 1, $2)
-         ON CONFLICT (key) DO UPDATE SET value = $1::jsonb, version = app_config.version + 1, updated_at = $2`,
-        [JSON.stringify(mode), now]
-      );
-
-      // Bump global config version for cache invalidation
-      await client.query(
-        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now]
-      );
-
-      // Record audit event
-      const auditId = uuidv7();
-      const correlationId = uuidv7();
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [
-          auditId,
-          actorUserId,
-          'config_change',
-          JSON.stringify({
-            key: 'profile_verification_mode',
-            newValue: mode,
-          }),
-          correlationId,
-          ip,
-          now,
-        ]
-      );
-
-      await client.query('COMMIT');
-
-      this.logger.log(`Profile verification mode set to ${mode} by ${actorUserId}`);
-      return { mode };
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set profile verification mode: ${String(error)}`);
-      throw new HttpException(
-        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500
-      );
-    } finally {
-      client.release();
-    }
+  ): Promise<VerificationModeConfig> {
+    return changeVerificationMode(change, actor, ip);
   }
 
-  // ───────────────────────────────────────────────────────────────────────
-  // Delivery-window config (E-05, T-05.03.03)
-  // ───────────────────────────────────────────────────────────────────────
-
   /**
-   * Get the current admin-configurable delivery window from `app_config`.
-   *
-   * Returns the default 09:00–21:00 Asia/Tehran window when no admin value has
-   * been persisted yet. Does **not** validate/normalize the stored value here —
-   * the worker's `normalizeWindowConfig` applies a safe per-field fallback at
+   * Get the notification delivery window. Stored values are validated at
    * read time, so a corrupt value can never break delivery.
    *
    * The response uses the camelCase shape the UI form consumes

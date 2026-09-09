@@ -2442,6 +2442,15 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "draft": {
+                      "enum": [
+                        "DISABLED",
+                        "MANUAL",
+                        "API"
+                      ],
+                      "nullable": true,
+                      "type": "string"
+                    },
                     "mode": {
                       "enum": [
                         "DISABLED",
@@ -2449,13 +2458,22 @@
                         "API"
                       ],
                       "type": "string"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
                     }
                   },
+                  "required": [
+                    "mode",
+                    "version",
+                    "draft"
+                  ],
                   "type": "object"
                 }
               }
             },
-            "description": "Current verification mode."
+            "description": "Active verification mode and the saved draft revision."
           },
           "403": {
             "description": "Admin role required"
@@ -2474,6 +2492,17 @@
             "application/json": {
               "schema": {
                 "properties": {
+                  "action": {
+                    "enum": [
+                      "draft",
+                      "activate"
+                    ],
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
                   "mode": {
                     "enum": [
                       "DISABLED",
@@ -2484,7 +2513,9 @@
                   }
                 },
                 "required": [
-                  "mode"
+                  "mode",
+                  "expectedVersion",
+                  "action"
                 ],
                 "type": "object"
               }
@@ -2498,6 +2529,15 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "draft": {
+                      "enum": [
+                        "DISABLED",
+                        "MANUAL",
+                        "API"
+                      ],
+                      "nullable": true,
+                      "type": "string"
+                    },
                     "mode": {
                       "enum": [
                         "DISABLED",
@@ -2505,22 +2545,37 @@
                         "API"
                       ],
                       "type": "string"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
                     }
                   },
+                  "required": [
+                    "mode",
+                    "version",
+                    "draft"
+                  ],
                   "type": "object"
                 }
               }
             },
-            "description": "Verification mode updated."
+            "description": "Draft saved or activated at the returned revision."
           },
           "400": {
-            "description": "Invalid mode"
+            "description": "Invalid mode, action or revision"
           },
           "403": {
             "description": "Admin role required"
+          },
+          "409": {
+            "description": "Settings changed or the selected draft is stale"
+          },
+          "503": {
+            "description": "Automatic verification has no configured provider"
           }
         },
-        "summary": "Set profile verification mode",
+        "summary": "Save or activate a versioned profile verification draft",
         "tags": [
           "Admin"
         ]
