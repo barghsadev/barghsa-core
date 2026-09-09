@@ -11866,6 +11866,139 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversal-evidence-reuse.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversal-evidence-reuse.log.gz",
+      "sha256": "0bccd7275ec546a78116ba5bb3833af89d0e3a661159c0784e6c5be0be9705bc",
+      "encoding": "gzip",
+      "stored_sha256": "c95a1e9657dec0395d5a8934b5ba8a7a8897d1a4c98e09d4fa1cee6b80aac902"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversal-method-reuse.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversal-method-reuse.log.gz",
+      "sha256": "b3ff98f12d0415583c0b20a1332ea226fab083254803bfaec95634129f31b358",
+      "encoding": "gzip",
+      "stored_sha256": "51b15b488c26417752347a21c27bda9dd59e105d9ebdf2a9aa964a86094bf7b1"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-api-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-api.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-api.log.gz",
+      "sha256": "5f2fe26b7195d7f28f24a0eb151e3c4a0c7c44f8d26e94b5f15263c8dcaa7fdb",
+      "encoding": "gzip",
+      "stored_sha256": "0f7a28256c797e619cc61f018408dceb813c9d48ff2d6bc5015cb19f756427c0"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-baseline.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-baseline.log.gz",
+      "sha256": "ecb964eafe02bda878ebbda3bff26db11b1ddde45871142d305cc31f06565a6c",
+      "encoding": "gzip",
+      "stored_sha256": "6545ed930c76a66756973bdaafbf8256fdab65f92d911440ff67ba622141f85e"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-budgets.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-budgets.log.gz",
+      "sha256": "0dc8b55056116351867f54d691d916887460997a142bc0ff03618b6ff3f57943",
+      "encoding": "gzip",
+      "stored_sha256": "576bdf12cb348e08834f3a504bec3d2cfc6f667475c7e374b371859869759ed0"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-db-types.log",
+      "path": "audit/evidence/r01/barghsa-device-trust-ip-db-types.log.gz",
+      "sha256": "dc2e083d18e7e4da7a7d19e11fe20a9e11c86eb0b5cee66cd14af018180de630",
+      "encoding": "gzip",
+      "stored_sha256": "9eab10816753ec2e6cb86fbb7a5e991e2fe84788f02415548e0273cd7d09a5f2"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-fixture-format.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-fixture-format.log.gz",
+      "sha256": "1376a249c0f75ffc85e6d9c645915a6460b77043b8c789a4d7488be0240a0e5d",
+      "encoding": "gzip",
+      "stored_sha256": "502455b9c06330dff99d56eb68f00bbcca238b1d3e12c67f7004aaea855b3efa"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-format.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-format.log.gz",
+      "sha256": "5cf94b518d537c03950301e09f277f3d018cd8dbb515e5f1fa7933636a3aa45f",
+      "encoding": "gzip",
+      "stored_sha256": "82f9f3f5d3da1154e54a6e2f4f931778dc1486f70d63819be91b0b4791e05fa0"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-seed.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-seed.log.gz",
+      "sha256": "e9c76fd44ee6e073fa36267959962989d2ca071aad575e26c63be71d25f6a149",
+      "encoding": "gzip",
+      "stored_sha256": "de7c5b036d1bbf18303c6c684209b799a992fc66e7e4171e5652a7e11a230dec"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-shared-types.log",
+      "path": "audit/evidence/r01/barghsa-password-policy-shared-types.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-shared.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-shared.log.gz",
+      "sha256": "bd78e01446aa64846e221400167eeebda3aa67249708bd130d60d19026961a03",
+      "encoding": "gzip",
+      "stored_sha256": "40bb12419655004aa9f3baa2e49268fdc8a585b645f9f0bdb953f94abda81a57"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-unit-fixed.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-unit-fixed.log.gz",
+      "sha256": "17a71763da2f062c32257976322076c84a72e97851671bb3b666b8ff530756ae",
+      "encoding": "gzip",
+      "stored_sha256": "9e6d54e2bfe7f4a9c44f99fa892a2e72307f84c3bad75d251cdee477f642e977"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-alert-web-build.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-alert-web-build.log.gz",
+      "sha256": "9544657dd2e968e373b484924476dbfd0904f5fa42beb99b7fee007b47891437",
+      "encoding": "gzip",
+      "stored_sha256": "f0de65aa6d35656c5a20797388a41d496385811dcc1ca8a3dcaddd3be412c118"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-reversed-template-review.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-reversed-template-review.log.gz",
+      "sha256": "030c84726ca7fc2e5cfdc62fe0cccb3faf34630903ed76f722c005ac41575ac4",
+      "encoding": "gzip",
+      "stored_sha256": "c77342bc5c4a7dffbee2f57f0b8a998cf558fc805384c435fd0b72f363f5c479"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-warning-http-format.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-warning-http-format.log.gz",
+      "sha256": "79c2310376e0dd5f45c05ceae35c220fd0c3b4ce66306981b703345d6069e68c",
+      "encoding": "gzip",
+      "stored_sha256": "c4e6a056bf0edd05f0c50156e9dbab83f3e9372605027c1b9e8dc3150a2a0a64"
+    },
+    {
+      "original_path": "/tmp/r01-chargeback-warning-http.log",
+      "path": "audit/evidence/ab17007/r01-chargeback-warning-http.log.gz",
+      "sha256": "44d85e5a7e2cc184473cda0d5427e7e78881efbf24f04d7731344a258fdf6ef7",
+      "encoding": "gzip",
+      "stored_sha256": "2cff5e5fcad4a07b14b57007e61c1493585c0f5647210693b886535e39359f4a"
     }
   ]
 }

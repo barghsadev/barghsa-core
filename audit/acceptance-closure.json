@@ -4765,7 +4765,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
-          "sha256": "44dee1d738e5393fb8d57fbc35a8268dbe39fcaf3a557b6daae71b71349db826"
+          "sha256": "6f9cdd8d1e0d2e86d6f0c9b84360cc4738b57bd13b5872f09171329f02bcd471"
         },
         {
           "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -4790,7 +4790,8 @@
         "API/web typechecks, focused lint, final formatting, production web build, all 41 complete-route budgets and OpenAPI generation/drift pass. Served-index equality and manifest hashes bind browser evidence to the build. No global coverage or production image checkpoint is renewed.",
         "At c26aad7, reviewed the bounded session-country/list change and focused evidence; see audit/evidence/step-reviews.json#R01-session-location. Prior dependency/image evidence is not renewed.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Chargeback-only additions and neighbouring CRM behavior reviewed atab17007; prior valid behavior evidence preserved. audit/evidence/step-reviews.json#R01-chargebacks-alerts"
       ],
       "limitations": [
         "Visibility and local reads are verified. Provider approval, deployed settings and final global regression remain separate evidence."
@@ -8775,6 +8776,138 @@
         "audit/evidence/step-reviews.json#R01-wallet-ledger",
         "audit/final-repair-checkpoint.json"
       ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.04.02",
+      "status": "partial",
+      "reviewed_sha": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 317,
+      "requirement": "| T-04.2.04.02 | Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up | M |",
+      "requirement_sha256": "c0336553c0993283c39abe30c4e68a8da27d143286008a180448ecc69f567824",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "0e08eb3b922c54b7fd42d730ab819a95f596142c55d656c63616d15f0ade1599"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.controller.ts",
+          "sha256": "6f80f5a1c28580efd603bf99769648114f72b3c91900eb0733e28332dcb57684"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+          "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-chargeback.ts",
+          "sha256": "93ecf76298df81953aae7cd2a5a0c91312d620e08e139c881b7453ac7cc96753"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+          "sha256": "db2b4b9de37eeae18ce1c55aca185b51715ed16f7e1d5107f1e3b0dafa4572b7"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
+          "sha256": "77b0d88d2a2cfb52b50eb1ba8ae64fe01f6e4cfd31b512a2530008493f09cc46"
+        }
+      ],
+      "checks": [
+        "Exact story/task criteria and current implementation reviewed in audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+        "Four confirmed repairs and focused current/reused evidence recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        276,
+        294
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Signed machine-webhook CSRF wording requires the already-asked owner decision; no exemption requirement was changed."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.04.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 318,
+      "requirement": "| T-04.2.04.03 | Finance alert: push notification + dashboard warning for unresolved chargeback | M |\n\n---",
+      "requirement_sha256": "7c8844fbcc250cd7ca5347fe0258aa6a27b27d29b1de336d1fe1477ae2a668a5",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+          "sha256": "14d8d5d0c919d8e5f0fd799a68b9f2b2bdf745b86aa9c48bf4cbd3f2f2cabf3e"
+        },
+        {
+          "path": "apps/api/src/admin/chargeback-alert.controller.ts",
+          "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-chargeback-alert.ts",
+          "sha256": "097c62cd1af496d062552a095a41ead559e2b7beaa3a932694789253b7b9279f"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-registry.ts",
+          "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+        },
+        {
+          "path": "packages/shared/src/notifications/inbox-content.ts",
+          "sha256": "872793652a8330792dd1715517e62195691feeba8f254fc8b3a71a94e74e24d1"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "344c799548e71e3586cfd1e8fd310b650362d234ed3e6d6836f997cf28f8d6d4"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+          "sha256": "61bcb800241a7a3191dfc39039a774bac0511d50fa592047fcd72e0f4b2a9010"
+        },
+        {
+          "path": "apps/worker/src/notifications/in-app-transport.ts",
+          "sha256": "0fb6477fbe839c70ca6e80d4cfb5bd81db9d7126bffcdd7ef30616ac227d14a2"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "512b6a285dc63636b48114de9acf547309232a964339f512bfa553985caf8882"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-center.service.ts",
+          "sha256": "d3d54a910f15f1ab44396872aeda84bcf04d9398ff089515ba02d36da43efeee"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "6f9cdd8d1e0d2e86d6f0c9b84360cc4738b57bd13b5872f09171329f02bcd471"
+        },
+        {
+          "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+          "sha256": "bf43bf46844bfe5671dad870e208e57b0f357fe3733a79918912579e8ba07994"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "fe57ed39f0b3efdcc34415bc08ebe9c8866ff71b9e968423f3c3a19ad0d8c3e0"
+        }
+      ],
+      "checks": [
+        "Exact story/task criteria and current implementation reviewed in audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+        "Four confirmed repairs and focused current/reused evidence recorded once in the consolidated batch."
+      ],
+      "merged_prs": [
+        277,
+        295
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Required immediate in-app push and dashboard are locally verified. External email/deployment evidence remains R02; it is not claimed here."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -8969,8 +9102,6 @@
     "04-invoices-wallet-contracts.md#T-04.2.03.03",
     "04-invoices-wallet-contracts.md#T-04.2.03.04",
     "04-invoices-wallet-contracts.md#T-04.2.04.01",
-    "04-invoices-wallet-contracts.md#T-04.2.04.02",
-    "04-invoices-wallet-contracts.md#T-04.2.04.03",
     "03-core-business.md#T-03.01.01.01",
     "03-core-business.md#T-03.01.01.02",
     "03-core-business.md#T-03.01.01.03",

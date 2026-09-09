@@ -100,7 +100,16 @@
     "historical_deferrals": [
       "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff — not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical alert and Finance permission deferrals are satisfied by current implementation and actual local delivery/API/browser evidence.",
+    "reviewed_source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+    "review_record": "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Immediate Finance push and dashboard are implemented; non-admin capability/current session are verified through the real API. audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+      }
+    ]
   },
   {
     "pr": 294,
@@ -111,7 +120,16 @@
     "historical_deferrals": [
       "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical alert and Finance permission deferrals are satisfied by current implementation and actual local delivery/API/browser evidence.",
+    "reviewed_source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+    "review_record": "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Immediate Finance push and dashboard are implemented; non-admin capability/current session are verified through the real API. audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+      }
+    ]
   },
   {
     "pr": 291,
@@ -235,7 +253,21 @@
       "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
       "- Finance alerting and dashboard warnings for unresolved chargebacks are deferred to T-04.2.04.03; this task only persists `unmatched` / `unresolved` events."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical alert and Finance permission deferrals are satisfied by current implementation and actual local delivery/API/browser evidence.",
+    "reviewed_source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+    "review_record": "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Immediate Finance push and dashboard are implemented; non-admin capability/current session are verified through the real API. audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Immediate Finance push and dashboard are implemented; non-admin capability/current session are verified through the real API. audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+      }
+    ]
   },
   {
     "pr": 275,

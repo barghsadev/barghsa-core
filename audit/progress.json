@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "a08d5d46014976fb2c3374f575609ef4a95c5998",
+  "source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
   "active_step": "R01",
-  "next_action": "Verify real warning API permissions and complete reversal recovery/alert coverage; retain current valid checks.",
+  "next_action": "Read bounded invoice-state requirements and historical deferrals, then trace current implementation and fix confirmed gaps.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -595,6 +595,10 @@
     {
       "id": "R01-online-topups-callbacks",
       "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+    },
+    {
+      "id": "R01-chargebacks-alerts",
+      "review_record": "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
     }
   ],
   "deferred_improvements": [
@@ -613,9 +617,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 100,
-    "partial": 22,
-    "pending": 200,
+    "acceptance_verified": 101,
+    "partial": 23,
+    "pending": 198,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -736,120 +740,50 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-chargebacks-alerts",
-    "name": "Provider chargebacks, compensating reversals and finance alerts",
-    "status": "building_and_reviewing",
+    "id": "R01-invoice-state-transitions",
+    "name": "Invoice states, monetary constraints and audited transitions",
+    "status": "bounded",
     "prs": [
-      276,
-      277,
-      294,
-      295
+      150,
+      151,
+      152,
+      220,
+      221,
+      222
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.2.04.02",
-      "04-invoices-wallet-contracts.md#T-04.2.04.03"
+      "04-invoices-wallet-contracts.md#T-04.1.01.01",
+      "04-invoices-wallet-contracts.md#T-04.1.01.02",
+      "04-invoices-wallet-contracts.md#T-04.1.01.03",
+      "04-invoices-wallet-contracts.md#T-04.1.01.04",
+      "04-invoices-wallet-contracts.md#T-04.1.01.05",
+      "04-invoices-wallet-contracts.md#T-04.1.01.06"
     ],
     "remaining_checklist": [
-      "Finish actual HTTP Finance permission/revocation evidence. Current controller uses the capability; original PR277/295 admin-only deferral is implemented but needs this consumer proof.",
-      "Finish detection/reversal recovery review and signature/locator/event binding. Preserve75a4282 and existing reversal implementation; investigate only confirmed failures.",
-      "Reconcile story-wide immediate alert wording with current unresolved-only alerts before marking acceptance. Actual unresolved in-app delivery is now proved; email remains R02.",
-      "Consolidate once with individual task/PR/deferral dispositions after remaining checks. Signed-webhook CSRF wording awaits the already-asked owner decision."
+      "Read exact story/task criteria and six saved PR descriptions before editing.",
+      "Review current state guards, monetary constraints, transition audit/transaction boundaries and caller authority. Reuse receipt settlement and ledger evidence where valid.",
+      "Separate later creation/VAT/snapshots, due dates/reminders and correction workflows. Do not rebuild schema or callers because task review is pending."
     ],
     "historical_deferrals": [
       {
-        "pr": 295,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/295",
+        "pr": 150,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/150",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.04.03"
+          "04-invoices-wallet-contracts.md#T-04.1.01.01"
         ],
         "historical_deferrals": [
-          "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff — not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 294,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/294",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.04.02"
-        ],
-        "historical_deferrals": [
-          "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 276,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/276",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.04.02"
-        ],
-        "historical_deferrals": [
-          "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
-          "- Finance alerting and dashboard warnings for unresolved chargebacks are deferred to T-04.2.04.03; this task only persists `unmatched` / `unresolved` events."
+          "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema — it will be linked when the contracts epic (E-04.5) is implemented."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
-    "historical_review_notes": [
-      "PR277/295 recipients include Finance but original warning API was admin-only; permission deferral must be checked against current staff permissions. Immediate outbox classification is not proof of actual in-app push.",
-      "PR294 binds every event status to the canonical notification and uses the callback connection for reversal to avoid pool exhaustion; preserve these guarantees.",
-      "PR277 warns that its alert helper begins/commits on the caller connection; inspect current transaction ownership before modifying it."
-    ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-wallet-ledger",
-      "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+      "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "audit/evidence/step-reviews.json#R01-wallet-ledger"
     ],
     "confirmed_defects": [],
     "pr_dispositions": [],
-    "next_action": "Verify real warning API permissions and complete reversal recovery/alert coverage; retain current valid checks.",
-    "repairs": [
-      {
-        "revision": "75a4282",
-        "summary": "Require online-channel credits before any provider chargeback locator can reverse funds. Bank receipts remain unmatched and balances/history remain unchanged.",
-        "verification": "3 real-DB baseline failures;48 API and12 shared checks pass; API/shared types,lint,format pass."
-      },
-      {
-        "revision": "a93933b",
-        "summary": "Select active recipients by current Finance permission; send private account alerts without requiring a default customer profile. Preserve legacy profile-scoped event deliveries on retry.",
-        "verification": "Baseline fixture description corrected, then reproduced2 recipients instead of5.12 distinct API and5 shared cases pass, including real worker/in-app/inbox delivery to5 recipients, private fa/en content and legacy reuse. API/shared types,lint,format pass. Email delivery not claimed."
-      },
-      {
-        "revision": "a08d5d4",
-        "summary": "Preserve unresolved warnings on failed/malformed refresh; serialize polls; clear warnings on401/403. Validate response before rendering. Correct neighbouring CRM response fixture.",
-        "verification": "Production baseline reproduces hidden warning after503.3 unit,4 chargeback Chromium and4 neighbouring CRM Chromium cases pass;42 unchanged payload budgets,web types/lint/build pass. Formatter corrected the CRM fixture after its check flagged wrapping; no semantic retest needed."
-      }
-    ],
-    "logs": [
-      "/tmp/r01-chargeback-account-api-types.log",
-      "/tmp/r01-chargeback-account-api.log",
-      "/tmp/r01-chargeback-account-baseline-fixed.log",
-      "/tmp/r01-chargeback-account-baseline.log",
-      "/tmp/r01-chargeback-account-format.log",
-      "/tmp/r01-chargeback-account-legacy-format.log",
-      "/tmp/r01-chargeback-account-legacy.log",
-      "/tmp/r01-chargeback-account-lint.log",
-      "/tmp/r01-chargeback-account-shared-types.log",
-      "/tmp/r01-chargeback-account-shared.log",
-      "/tmp/r01-chargeback-channel-api-types.log",
-      "/tmp/r01-chargeback-channel-api.log",
-      "/tmp/r01-chargeback-channel-baseline.log",
-      "/tmp/r01-chargeback-channel-format.log",
-      "/tmp/r01-chargeback-channel-lint.log",
-      "/tmp/r01-chargeback-channel-shared-types.log",
-      "/tmp/r01-chargeback-channel-shared.log",
-      "/tmp/r01-chargeback-dashboard-baseline.log",
-      "/tmp/r01-chargeback-dashboard-browser.log",
-      "/tmp/r01-chargeback-dashboard-budgets.log",
-      "/tmp/r01-chargeback-dashboard-build.log",
-      "/tmp/r01-chargeback-dashboard-crm-format.log",
-      "/tmp/r01-chargeback-dashboard-crm.log",
-      "/tmp/r01-chargeback-dashboard-format-check.log",
-      "/tmp/r01-chargeback-dashboard-format.log",
-      "/tmp/r01-chargeback-dashboard-lint.log",
-      "/tmp/r01-chargeback-dashboard-unit.log",
-      "/tmp/r01-chargeback-dashboard-web-types.log"
-    ]
+    "next_action": "Read bounded invoice-state requirements and historical deferrals, then trace current implementation and fix confirmed gaps."
   },
   "open_domain_reviews": [
     {
@@ -958,6 +892,7 @@
       "owning_batch": "R02 notification delivery",
       "remaining": "Actual payment.wallet_topup_failed notification on TTL expiry; scanner/state/audit/reconciliation verified.",
       "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
-    }
+    },
+    "R02: seed registry check12 pass/1 fail atab17007; auth.refresh_token_reused has no seeded template before or after the chargeback repair. Add/review its intended delivery template in the notification batch; existing/new chargeback templates are valid."
   ]
 }

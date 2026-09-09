@@ -9548,6 +9548,286 @@
           "stored_sha256": "673fc3e122de6d59d2c873ff15610b96c291ba2e7aeff2c776bf0cbce2e4156b"
         }
       ]
+    },
+    {
+      "id": "R01-chargebacks-alerts",
+      "date": "2026-09-09",
+      "source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+      "base_revision": "7de417b",
+      "product_commits": [
+        "75a4282",
+        "a93933b",
+        "a08d5d4",
+        "ab17007"
+      ],
+      "summary": "One task verified, one partial; two PR reviews closed and two open. Four confirmed chargeback repairs are locally verified.",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.04.02",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03"
+      ],
+      "review": [
+        "Exact task/story requirements and all4 saved PR descriptions reviewed. Original276/294 detection and277/295 alert implementations are successive corrections, not competing code to remove.",
+        "Signature/time/event/merchant proof and canonical payload replay remain intact. Locator precedence does not fall through; only a unique Completed online credit of matching amount can reverse. Unmatched events persist without unknown-wallet debits.",
+        "Compensating ledger writes and event reversal finalize atomically on the same advisory-lock client. Unresolved/archived events alert Finance. Verified reversal implementation is reused; only unrelated optional-client getWallet/createWallet changes occurred since48ac9d7.",
+        "Recipients use active accounts and the existing current permission resolver. Default customer profiles are unnecessary. New account alerts are private across selected profiles; retries preserve legacy scoped deliveries.",
+        "Real HTTP read allows non-admin Finance, denies missing permission and revoked/absent sessions. Production browser checks cover retained warnings, malformed/failed refresh, overlapping polls, access loss, fa/en, RTL, light/dark, accessibility and resolution.",
+        "Successful reversals now also alert Finance. Delivery failure after a committed reversal reuses durable event/ledger state. Notification enqueue transactions start after detection releases its transaction/connection; no nested transaction or second checkout while holding the event lock."
+      ],
+      "repairs": [
+        {
+          "revision": "75a4282",
+          "summary": "Require online-channel credits before any provider chargeback locator can reverse funds. Bank receipts remain unmatched and balances/history remain unchanged.",
+          "verification": "3 real-DB baseline failures;48 API and12 shared checks pass; API/shared types,lint,format pass."
+        },
+        {
+          "revision": "a93933b",
+          "summary": "Select active recipients by current Finance permission; send private account alerts without requiring a default customer profile. Preserve legacy profile-scoped event deliveries on retry.",
+          "verification": "Baseline fixture description corrected, then reproduced2 recipients instead of5.12 distinct API and5 shared cases pass, including real worker/in-app/inbox delivery to5 recipients, private fa/en content and legacy reuse. API/shared types,lint,format pass. Email delivery not claimed."
+        },
+        {
+          "revision": "a08d5d4",
+          "summary": "Preserve unresolved warnings on failed/malformed refresh; serialize polls; clear warnings on401/403. Validate response before rendering. Correct neighbouring CRM response fixture.",
+          "verification": "Production baseline reproduces hidden warning after503.3 unit,4 chargeback Chromium and4 neighbouring CRM Chromium cases pass;42 unchanged payload budgets,web types/lint/build pass. Formatter corrected the CRM fixture after its check flagged wrapping; no semantic retest needed."
+        },
+        {
+          "revision": "ab17007",
+          "summary": "Alert Finance after every completed detection outcome, including successful reversals, with distinct reversed copy. Alert work follows release of the event lock/connection; enqueue failure is retried from the durable result without a second reversal. Add fa/en in-app/email seed templates.",
+          "verification": "2 real-DB baseline failures;63 distinct affected API cases pass after correcting one old no-alert assertion,17 shared cases pass. Seed12 pass/1 pre-existing registry failure; new template variables/locales/channels and unchanged existing templates independently checked. API/shared/DB types, lint/format and42 unchanged payload budgets pass."
+        }
+      ],
+      "verification": {
+        "api": "63 distinct cases across6 affected suites. Initial62/63 followed by corrected27-case unit suite; counts overlap. Includes real warning HTTP authorization and actual worker/inbox delivery. Earlier48 channel and12 account cases are subsets.",
+        "shared": "17 final alert/registry/inbox cases;12 unchanged chargeback matching cases reused from75a4282.",
+        "browser": "4 chargeback and4 neighbouring CRM production Chromium cases at a08d5d4;3 dashboard unit cases. Relevant UI unchanged by ab17007.",
+        "budgets": "42 unchanged route/interaction limits pass after final shared additions. No budget weakened.",
+        "quality": "API/shared/DB types, lint,format and web build pass. API fixtures rebuilt product/shared/worker; API response contract unchanged, previous fresh OpenAPI evidence reused.",
+        "seed": "12 pass /1 existing failure: auth.refresh_token_reused has no seeded template before or after this repair. New reversed template matches both locales/channels and all variables; all existing template definitions unchanged. Retained R02 repair, not a pass."
+      },
+      "historical_dispositions": [
+        {
+          "pr": 295,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/295",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.03"
+          ],
+          "historical_deferrals": [
+            "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff — not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 294,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/294",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.02"
+          ],
+          "historical_deferrals": [
+            "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 276,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/276",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.02"
+          ],
+          "historical_deferrals": [
+            "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
+            "- Finance alerting and dashboard warnings for unresolved chargebacks are deferred to T-04.2.04.03; this task only persists `unmatched` / `unresolved` events."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        }
+      ],
+      "remaining": [
+        "Signed machine-webhook CSRF wording requires the already-asked owner decision; no exemption requirement was changed.",
+        "R02 retains actual email delivery and pre-existing auth.refresh_token_reused seed gap. No live PSP, deployment or external delivery evidence claimed."
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 276,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.02"
+          ],
+          "reason": "Functional detection and replay criteria are verified; shared no-CSRF-exemption wording awaits the already-asked owner decision.",
+          "source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+          "evidence": "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+        },
+        {
+          "pr": 277,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.03"
+          ],
+          "reason": "Required immediate Finance push, dashboard warning, current permission and historical deferrals have current local evidence. External email delivery remains separately assigned to R02.",
+          "source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+          "evidence": "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+        },
+        {
+          "pr": 294,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.02"
+          ],
+          "reason": "Functional detection and replay criteria are verified; shared no-CSRF-exemption wording awaits the already-asked owner decision.",
+          "source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+          "evidence": "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+        },
+        {
+          "pr": 295,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.04.03"
+          ],
+          "reason": "Required immediate Finance push, dashboard warning, current permission and historical deferrals have current local evidence. External email delivery remains separately assigned to R02.",
+          "source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
+          "evidence": "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+        }
+      ],
+      "pr_counts": {
+        "closed": 2,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-online-topups-callbacks",
+        "Original reverseTransaction and every other wallet method except getWallet/createWallet match48ac9d7; current diff and AST comparison recorded. No broad money suite rerun."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "0e08eb3b922c54b7fd42d730ab819a95f596142c55d656c63616d15f0ade1599"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.controller.ts",
+          "sha256": "6f80f5a1c28580efd603bf99769648114f72b3c91900eb0733e28332dcb57684"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+          "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-chargeback.ts",
+          "sha256": "93ecf76298df81953aae7cd2a5a0c91312d620e08e139c881b7453ac7cc96753"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+          "sha256": "db2b4b9de37eeae18ce1c55aca185b51715ed16f7e1d5107f1e3b0dafa4572b7"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
+          "sha256": "77b0d88d2a2cfb52b50eb1ba8ae64fe01f6e4cfd31b512a2530008493f09cc46"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+          "sha256": "14d8d5d0c919d8e5f0fd799a68b9f2b2bdf745b86aa9c48bf4cbd3f2f2cabf3e"
+        },
+        {
+          "path": "apps/api/src/admin/chargeback-alert.controller.ts",
+          "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-chargeback-alert.ts",
+          "sha256": "097c62cd1af496d062552a095a41ead559e2b7beaa3a932694789253b7b9279f"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-registry.ts",
+          "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+        },
+        {
+          "path": "packages/shared/src/notifications/inbox-content.ts",
+          "sha256": "872793652a8330792dd1715517e62195691feeba8f254fc8b3a71a94e74e24d1"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "344c799548e71e3586cfd1e8fd310b650362d234ed3e6d6836f997cf28f8d6d4"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+          "sha256": "61bcb800241a7a3191dfc39039a774bac0511d50fa592047fcd72e0f4b2a9010"
+        },
+        {
+          "path": "apps/worker/src/notifications/in-app-transport.ts",
+          "sha256": "0fb6477fbe839c70ca6e80d4cfb5bd81db9d7126bffcdd7ef30616ac227d14a2"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "512b6a285dc63636b48114de9acf547309232a964339f512bfa553985caf8882"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-center.service.ts",
+          "sha256": "d3d54a910f15f1ab44396872aeda84bcf04d9398ff089515ba02d36da43efeee"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "6f9cdd8d1e0d2e86d6f0c9b84360cc4738b57bd13b5872f09171329f02bcd471"
+        },
+        {
+          "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+          "sha256": "bf43bf46844bfe5671dad870e208e57b0f357fe3733a79918912579e8ba07994"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "fe57ed39f0b3efdcc34415bc08ebe9c8866ff71b9e968423f3c3a19ad0d8c3e0"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-chargeback-account-api-types.log",
+        "/tmp/r01-chargeback-account-api.log",
+        "/tmp/r01-chargeback-account-baseline-fixed.log",
+        "/tmp/r01-chargeback-account-baseline.log",
+        "/tmp/r01-chargeback-account-format.log",
+        "/tmp/r01-chargeback-account-legacy-format.log",
+        "/tmp/r01-chargeback-account-legacy.log",
+        "/tmp/r01-chargeback-account-lint.log",
+        "/tmp/r01-chargeback-account-shared-types.log",
+        "/tmp/r01-chargeback-account-shared.log",
+        "/tmp/r01-chargeback-channel-api-types.log",
+        "/tmp/r01-chargeback-channel-api.log",
+        "/tmp/r01-chargeback-channel-baseline.log",
+        "/tmp/r01-chargeback-channel-format.log",
+        "/tmp/r01-chargeback-channel-lint.log",
+        "/tmp/r01-chargeback-channel-shared-types.log",
+        "/tmp/r01-chargeback-channel-shared.log",
+        "/tmp/r01-chargeback-dashboard-baseline.log",
+        "/tmp/r01-chargeback-dashboard-browser.log",
+        "/tmp/r01-chargeback-dashboard-budgets.log",
+        "/tmp/r01-chargeback-dashboard-build.log",
+        "/tmp/r01-chargeback-dashboard-crm-format.log",
+        "/tmp/r01-chargeback-dashboard-crm.log",
+        "/tmp/r01-chargeback-dashboard-format-check.log",
+        "/tmp/r01-chargeback-dashboard-format.log",
+        "/tmp/r01-chargeback-dashboard-lint.log",
+        "/tmp/r01-chargeback-dashboard-unit.log",
+        "/tmp/r01-chargeback-dashboard-web-types.log",
+        "/tmp/r01-chargeback-reversal-evidence-reuse.log",
+        "/tmp/r01-chargeback-reversal-method-reuse.log",
+        "/tmp/r01-chargeback-reversed-alert-api-types.log",
+        "/tmp/r01-chargeback-reversed-alert-api.log",
+        "/tmp/r01-chargeback-reversed-alert-baseline.log",
+        "/tmp/r01-chargeback-reversed-alert-budgets.log",
+        "/tmp/r01-chargeback-reversed-alert-db-types.log",
+        "/tmp/r01-chargeback-reversed-alert-fixture-format.log",
+        "/tmp/r01-chargeback-reversed-alert-format-check.log",
+        "/tmp/r01-chargeback-reversed-alert-format.log",
+        "/tmp/r01-chargeback-reversed-alert-lint.log",
+        "/tmp/r01-chargeback-reversed-alert-seed.log",
+        "/tmp/r01-chargeback-reversed-alert-shared-types.log",
+        "/tmp/r01-chargeback-reversed-alert-shared.log",
+        "/tmp/r01-chargeback-reversed-alert-unit-fixed.log",
+        "/tmp/r01-chargeback-reversed-alert-web-build.log",
+        "/tmp/r01-chargeback-reversed-template-review.log",
+        "/tmp/r01-chargeback-warning-http-format.log",
+        "/tmp/r01-chargeback-warning-http.log"
+      ],
+      "refreshed_current_bindings": [
+        {
+          "task_key": "02-auth-users-admin.md#T-05.05.01",
+          "path": "apps/web/src/pages/AdminDashboard.tsx"
+        }
+      ]
     }
   ]
 }
