@@ -1,5 +1,7 @@
 import { lockInvoiceProfile } from './invoice-profile-lock.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 /**
  * ManualInvoiceService — staff-created custom invoices (T-04.1.02.02).
  *
@@ -69,6 +71,8 @@ export interface CreateManualInvoiceCommand {
   lines: ManualInvoiceLineInput[];
   /** The finance staff member performing the action (FK `users.userId`). */
   actorUserId: string;
+  /** Browser callers must bind their current session to the write transaction. */
+  actorSession?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   /** Opaque correlation ID for audit linkage. */
   correlationId?: string;
   /** Human-readable reason (audited). */
@@ -145,6 +149,34 @@ export class ManualInvoiceService {
     private readonly dueAtCalculation: DueAtCalculationService
   ) {}
 
+  async profileOptions(
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    search: string
+  ): Promise<{ items: Array<{ id: string; title: string; profileType: string }> }> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+      await requireCurrentSession(client, actor);
+      const result = await client.query<{ id: string; title: string; profileType: string }>(
+        `SELECT id, COALESCE(NULLIF(title, ''), NULLIF(concat_ws(' ', first_name, last_name), ''), '') AS title,
+                profile_type AS "profileType"
+         FROM profiles WHERE NOT archived
+           AND strpos(lower(concat_ws(' ', title, first_name, last_name)), lower($1)) > 0
+         ORDER BY created_at DESC, id LIMIT 50`,
+        [search]
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { items: result.rows };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   /**
    * Create a manual invoice and issue it atomically.
    *
@@ -159,6 +191,8 @@ export class ManualInvoiceService {
     let calculation;
     try {
       calculation = calculateManualInvoice(cmd.lines);
+      if (calculation.totalAmount > 9_223_372_036_854_775_807n)
+        throw new RangeError('Invoice total exceeds the supported int8 IRR amount');
     } catch (err: unknown) {
       if (err instanceof RangeError) {
         throw new BadRequestException(err.message);
@@ -177,6 +211,11 @@ export class ManualInvoiceService {
       await client.query('BEGIN');
       await lockInvoiceProfile(client, 'profile', cmd.profileId);
       await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
+      if (cmd.actorSession) {
+        if (cmd.actorSession.userId !== cmd.actorUserId)
+          throw new BadRequestException('Invoice actor does not match the session');
+        await requireSessionStepUp(client, cmd.actorSession);
+      }
 
       // --- 3. Idempotency replay (same key + same payload → same invoice) ---
       if (cmd.idempotencyKey) {
@@ -216,6 +255,7 @@ export class ManualInvoiceService {
           const replayed = await this.loadInvoiceExcerpt(client, existingId);
           const auditId = await this.findIssueAuditId(client, existingId);
 
+          if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
           await client.query('COMMIT');
           return {
             ...replayed,
@@ -324,6 +364,7 @@ export class ManualInvoiceService {
       //      reported as a create failure for a committed invoice. ---
       const excerpt = await this.loadInvoiceExcerpt(client, invoiceId);
 
+      if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
       await client.query('COMMIT');
       return { ...excerpt, auditId: transition.auditId, transition };
     } catch (error) {

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
 import { ManualInvoiceService } from './manual-invoice.service.js';
+import { ManualInvoiceController } from './manual-invoice.controller.js';
 import { AutoInvoiceService } from './auto-invoice.service.js';
 import { VatCalculationRepository } from './vat-calculation.repository.js';
 import { VatCalculationService } from './vat-calculation.service.js';
@@ -18,7 +19,7 @@ import { SessionModule } from '../session/session.module.js';
 
 @Module({
   imports: [SessionModule],
-  controllers: [CustomerInvoiceController],
+  controllers: [CustomerInvoiceController, ManualInvoiceController],
   providers: [
     InvoiceStateMachineService,
     InvoiceAuditRepository,

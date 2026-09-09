@@ -2139,6 +2139,105 @@
         ]
       }
     },
+    "/api/admin/config/otp": {
+      "get": {
+        "operationId": "OtpConfigController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "ttlSeconds": {
+                      "maximum": 900,
+                      "minimum": 60,
+                      "type": "integer"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "ttlSeconds",
+                    "version"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read the OTP lifetime and settings version",
+        "tags": [
+          "Admin · Authentication"
+        ]
+      },
+      "put": {
+        "operationId": "OtpConfigController_update",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483646,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "ttlSeconds": {
+                    "maximum": 900,
+                    "minimum": 60,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "ttlSeconds",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "ttlSeconds": {
+                      "maximum": 900,
+                      "minimum": 60,
+                      "type": "integer"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "ttlSeconds",
+                    "version"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Set the lifetime for newly sent OTP codes",
+        "tags": [
+          "Admin · Authentication"
+        ]
+      }
+    },
     "/api/admin/config/profile-verification-mode": {
       "get": {
         "operationId": "AdminController_getProfileVerificationMode",
@@ -3931,6 +4030,24 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "emergencyOverrideReason": {
+                    "description": "Confirm one pending receipt approval without a second reviewer. Requires admin:financial:emergency-override and recent step-up. Reason, audit and immediate finance alerts commit atomically with settlement.",
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Receipt confirmed, or parked in UnderReview awaiting a second finance staff confirmation."
@@ -3953,25 +4070,7 @@
         "summary": "Confirm an invoice bank receipt",
         "tags": [
           "Admin · Invoice bank receipts"
-        ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "emergencyOverrideReason": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 2000,
-                    "description": "Confirm one pending receipt approval without a second reviewer. Requires admin:financial:emergency-override and recent step-up. Reason, audit and immediate finance alerts commit atomically with settlement."
-                  }
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/api/admin/invoices/bank-receipts/{receiptId}/reject": {
@@ -4036,6 +4135,138 @@
         "summary": "Reject an invoice bank receipt with a customer-visible reason",
         "tags": [
           "Admin · Invoice bank receipts"
+        ]
+      }
+    },
+    "/api/admin/invoices/manual": {
+      "post": {
+        "operationId": "ManualInvoiceController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "contractId": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "lines": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "description": {
+                          "maxLength": 1000,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "isTaxable": {
+                          "type": "boolean"
+                        },
+                        "quantity": {
+                          "maximum": 2147483647,
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "unitPrice": {
+                          "description": "Nonnegative int8 IRR, encoded as a decimal string.",
+                          "pattern": "^\\d{1,19}$",
+                          "type": "string"
+                        },
+                        "vatRate": {
+                          "description": "VAT rate in basis points.",
+                          "maximum": 10000,
+                          "minimum": 0,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "description",
+                        "quantity",
+                        "unitPrice",
+                        "vatRate",
+                        "isTaxable"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 100,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "idempotencyKey",
+                  "lines"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Issued invoice. All IRR amounts are decimal strings. Identical retries return the same invoice."
+          },
+          "400": {
+            "description": "Invalid invoice lines or amounts."
+          },
+          "403": {
+            "description": "Current invoice-write permission, CSRF and step-up required."
+          },
+          "409": {
+            "description": "Archived profile or request key reused for another payload."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create and issue a manual invoice for a customer profile",
+        "tags": [
+          "Admin · Manual invoices"
+        ]
+      }
+    },
+    "/api/admin/invoices/manual/profiles": {
+      "get": {
+        "operationId": "ManualInvoiceController_profiles",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Up to 50 active profile names and identifiers."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Find customer profiles eligible for a manual invoice",
+        "tags": [
+          "Admin · Manual invoices"
         ]
       }
     },
@@ -6424,6 +6655,47 @@
         ]
       }
     },
+    "/api/admin/staff-role-options": {
+      "get": {
+        "operationId": "AdminController_staffRoleOptions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "description": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "roleId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "roleId",
+                      "name",
+                      "description"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read assignable staff role names and descriptions",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/staff-teams": {
       "get": {
         "operationId": "AdminController_listStaffTeams",
@@ -8007,27 +8279,27 @@
           }
         ],
         "requestBody": {
-          "required": false,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
                 "properties": {
                   "emergencyOverrideReason": {
-                    "type": "string",
-                    "minLength": 1,
+                    "description": "Confirm one pending receipt approval without a second reviewer. Requires admin:financial:emergency-override and recent step-up. Reason, audit and immediate finance alerts commit atomically with settlement.",
                     "maxLength": 2000,
-                    "description": "Confirm one pending receipt approval without a second reviewer. Requires admin:financial:emergency-override and recent step-up. Reason, audit and immediate finance alerts commit atomically with settlement."
+                    "minLength": 1,
+                    "type": "string"
                   },
                   "invoiceId": {
-                    "type": "string",
+                    "description": "Optional invoice to apply the receipt against. Excess over remaining is credited to the wallet.",
                     "format": "uuid",
-                    "description": "Optional invoice to apply the receipt against. Excess over remaining is credited to the wallet."
+                    "type": "string"
                   }
-                }
+                },
+                "type": "object"
               }
             }
-          }
+          },
+          "required": false
         },
         "responses": {
           "200": {
@@ -8381,6 +8653,37 @@
           }
         },
         "summary": "Send OTP to initiate username change",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/csrf": {
+      "get": {
+        "operationId": "PreauthCsrfController_token",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "csrfToken": {
+                      "pattern": "^[a-f0-9]{64}$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "csrfToken"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Current session token, or a short-lived anonymous token for one auth request."
+          }
+        },
+        "summary": "Get a browser-bound CSRF token before an authentication request",
         "tags": [
           "Auth"
         ]
@@ -8917,43 +9220,42 @@
         "operationId": "AuthController_resetPassword",
         "parameters": [],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "anyOf": [
                   {
-                    "type": "object",
+                    "additionalProperties": false,
                     "properties": {
                       "challengeId": {
-                        "type": "string",
                         "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
                       },
                       "newPassword": {
-                        "type": "string",
-                        "minLength": 8,
-                        "maxLength": 128,
                         "allOf": [
                           {
-                            "type": "string",
-                            "pattern": "[A-Z]"
+                            "pattern": "[A-Z]",
+                            "type": "string"
                           },
                           {
-                            "type": "string",
-                            "pattern": "[a-z]"
+                            "pattern": "[a-z]",
+                            "type": "string"
                           },
                           {
-                            "type": "string",
-                            "pattern": "[0-9]"
+                            "pattern": "[0-9]",
+                            "type": "string"
                           }
-                        ]
+                        ],
+                        "maxLength": 128,
+                        "minLength": 8,
+                        "type": "string"
                       },
                       "otp": {
-                        "type": "string",
-                        "minLength": 6,
                         "maxLength": 6,
-                        "pattern": "^\\d{6}$"
+                        "minLength": 6,
+                        "pattern": "^\\d{6}$",
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -8961,38 +9263,38 @@
                       "newPassword",
                       "otp"
                     ],
-                    "additionalProperties": false
+                    "type": "object"
                   },
                   {
-                    "type": "object",
+                    "additionalProperties": false,
                     "properties": {
                       "challengeId": {
-                        "type": "string",
                         "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
                       },
                       "newPassword": {
-                        "type": "string",
-                        "minLength": 8,
-                        "maxLength": 128,
                         "allOf": [
                           {
-                            "type": "string",
-                            "pattern": "[A-Z]"
+                            "pattern": "[A-Z]",
+                            "type": "string"
                           },
                           {
-                            "type": "string",
-                            "pattern": "[a-z]"
+                            "pattern": "[a-z]",
+                            "type": "string"
                           },
                           {
-                            "type": "string",
-                            "pattern": "[0-9]"
+                            "pattern": "[0-9]",
+                            "type": "string"
                           }
-                        ]
+                        ],
+                        "maxLength": 128,
+                        "minLength": 8,
+                        "type": "string"
                       },
                       "resetToken": {
-                        "type": "string",
-                        "pattern": "^[a-f0-9]{64}$"
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -9000,29 +9302,30 @@
                       "newPassword",
                       "resetToken"
                     ],
-                    "additionalProperties": false
+                    "type": "object"
                   }
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "Password reset successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string",
-                      "description": "Success message for the frontend toast."
+                      "description": "Success message for the frontend toast.",
+                      "type": "string"
                     }
-                  }
+                  },
+                  "type": "object"
                 }
               }
-            }
+            },
+            "description": "Password reset successfully."
           },
           "400": {
             "description": "Invalid input"
@@ -9041,6 +9344,82 @@
           }
         },
         "summary": "Reset password after OTP verification",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/reset-password/verify": {
+      "post": {
+        "operationId": "AuthController_verifyResetOtp",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "challengeId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "otp": {
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "pattern": "^\\d{6}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "challengeId",
+                  "otp"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "challengeId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "resetToken": {
+                      "pattern": "^[a-f0-9]{64}$",
+                      "type": "string"
+                    },
+                    "verified": {
+                      "enum": [
+                        true
+                      ],
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "verified",
+                    "challengeId",
+                    "resetToken",
+                    "expiresAt"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Consume reset OTP and issue a single-use password-reset authorization",
         "tags": [
           "Auth"
         ]
@@ -9084,18 +9463,18 @@
                         "type": "boolean"
                       },
                       "location": {
-                        "type": "object",
+                        "description": "Approximate IP country; null for unknown or non-public addresses.",
                         "nullable": true,
+                        "properties": {
+                          "countryCode": {
+                            "pattern": "^[A-Z]{2}$",
+                            "type": "string"
+                          }
+                        },
                         "required": [
                           "countryCode"
                         ],
-                        "properties": {
-                          "countryCode": {
-                            "type": "string",
-                            "pattern": "^[A-Z]{2}$"
-                          }
-                        },
-                        "description": "Approximate IP country; null for unknown or non-public addresses."
+                        "type": "object"
                       },
                       "sessionId": {
                         "type": "string"
@@ -9195,6 +9574,117 @@
         "summary": "Perform step-up authentication for sensitive actions",
         "tags": [
           "Auth"
+        ]
+      }
+    },
+    "/api/auth/trusted-devices": {
+      "get": {
+        "operationId": "TrustedDevicesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "expiresAt": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "ip": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "isCurrentDevice": {
+                        "type": "boolean"
+                      },
+                      "trustedAt": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "userAgent": {
+                        "nullable": true,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "userAgent",
+                      "ip",
+                      "trustedAt",
+                      "expiresAt",
+                      "isCurrentDevice"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        },
+        "summary": "List unexpired device trust for current user",
+        "tags": [
+          "Sessions"
+        ]
+      }
+    },
+    "/api/auth/trusted-devices/{id}": {
+      "delete": {
+        "operationId": "TrustedDevicesController_revoke",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "revoked": {
+                      "enum": [
+                        true
+                      ],
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "revoked"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "description": "Session is no longer active"
+          },
+          "403": {
+            "description": "CSRF or recent step-up required"
+          },
+          "404": {
+            "description": "Device trust not found for this user"
+          }
+        },
+        "summary": "Remove own device trust after step-up; existing sessions remain active",
+        "tags": [
+          "Sessions"
         ]
       }
     },
@@ -11642,6 +12132,51 @@
         ]
       }
     },
+    "/api/profiles/default/{profileId}": {
+      "post": {
+        "operationId": "ProfilesController_chooseDefaultProfile",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "activeProfileId": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Default profile saved for the authenticated user."
+          },
+          "400": {
+            "description": "Invalid profile identifier."
+          },
+          "401": {
+            "description": "Not authenticated."
+          },
+          "404": {
+            "description": "Profile is unavailable to this user."
+          }
+        },
+        "summary": "Choose a default from accessible profiles",
+        "tags": [
+          "Profiles"
+        ]
+      }
+    },
     "/api/profiles/ownership-transfers": {
       "get": {
         "operationId": "ProfilesController_listOwnershipTransfers",
@@ -13052,10 +13587,10 @@
         "operationId": "TosController_getCurrent",
         "parameters": [
           {
+            "description": "Content locale (default: fa)",
+            "in": "query",
             "name": "locale",
             "required": false,
-            "in": "query",
-            "description": "Content locale (default: fa)",
             "schema": {
               "enum": [
                 "fa",
@@ -13065,10 +13600,10 @@
             }
           },
           {
+            "description": "Immutable published version UUID. Omit to read current terms. Drafts are never public.",
+            "in": "query",
             "name": "versionId",
             "required": false,
-            "in": "query",
-            "description": "Immutable published version UUID. Omit to read current terms. Drafts are never public.",
             "schema": {
               "format": "uuid",
               "type": "string"
@@ -13077,36 +13612,36 @@
         ],
         "responses": {
           "200": {
-            "description": "Current TOS version",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "Immutable UUID used to record acceptance"
-                    },
                     "content": {
-                      "type": "string",
-                      "description": "TOS content in the requested locale"
+                      "description": "TOS content in the requested locale",
+                      "type": "string"
                     },
-                    "versionId": {
-                      "type": "string",
-                      "description": "Version identifier, e.g. \"v1\""
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time"
+                    "id": {
+                      "description": "Immutable UUID used to record acceptance",
+                      "type": "string"
                     },
                     "publishedAt": {
-                      "type": "string",
-                      "format": "date-time"
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "versionId": {
+                      "description": "Version identifier, e.g. \"v1\"",
+                      "type": "string"
                     }
-                  }
+                  },
+                  "type": "object"
                 }
               }
-            }
+            },
+            "description": "Current TOS version"
           },
           "400": {
             "description": "Invalid version UUID"
@@ -13273,7 +13808,7 @@
               "application/json": {
                 "schema": {
                   "properties": {
-                    "channels": {
+                    "availableChannels": {
                       "items": {
                         "enum": [
                           "SMS",
@@ -13284,16 +13819,16 @@
                       },
                       "type": "array"
                     },
-                    "availableChannels": {
-                      "type": "array",
+                    "channels": {
                       "items": {
-                        "type": "string",
                         "enum": [
                           "SMS",
                           "EMAIL",
                           "IN_APP"
-                        ]
-                      }
+                        ],
+                        "type": "string"
+                      },
+                      "type": "array"
                     }
                   },
                   "type": "object"
@@ -13320,7 +13855,7 @@
               "application/json": {
                 "schema": {
                   "properties": {
-                    "channels": {
+                    "availableChannels": {
                       "items": {
                         "enum": [
                           "SMS",
@@ -13331,16 +13866,16 @@
                       },
                       "type": "array"
                     },
-                    "availableChannels": {
-                      "type": "array",
+                    "channels": {
                       "items": {
-                        "type": "string",
                         "enum": [
                           "SMS",
                           "EMAIL",
                           "IN_APP"
-                        ]
-                      }
+                        ],
+                        "type": "string"
+                      },
+                      "type": "array"
                     }
                   },
                   "type": "object"
@@ -13613,6 +14148,53 @@
         ]
       }
     },
+    "/api/wallet/top-ups/return": {
+      "post": {
+        "operationId": "OnlineTopUpCallbackController_confirmReturn",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "authority": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "orderId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "orderId",
+                  "authority"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Server-verified payment result."
+          },
+          "401": {
+            "description": "Authentication or payment context invalid."
+          },
+          "403": {
+            "description": "Invalid CSRF token."
+          }
+        },
+        "summary": "Check a returned payment using the current session and CSRF token",
+        "tags": [
+          "Wallet"
+        ]
+      }
+    },
     "/api/wallet/{profileId}": {
       "get": {
         "operationId": "WalletController_getWallet",
@@ -13823,456 +14405,6 @@
         },
         "tags": [
           "Metrics"
-        ]
-      }
-    },
-    "/api/auth/trusted-devices": {
-      "get": {
-        "operationId": "TrustedDevicesController_list",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "id",
-                      "userAgent",
-                      "ip",
-                      "trustedAt",
-                      "expiresAt",
-                      "isCurrentDevice"
-                    ],
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "userAgent": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "ip": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "trustedAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "expiresAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "isCurrentDevice": {
-                        "type": "boolean"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not authenticated"
-          }
-        },
-        "summary": "List unexpired device trust for current user",
-        "tags": [
-          "Sessions"
-        ]
-      }
-    },
-    "/api/auth/trusted-devices/{id}": {
-      "delete": {
-        "operationId": "TrustedDevicesController_revoke",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "revoked"
-                  ],
-                  "properties": {
-                    "revoked": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Session is no longer active"
-          },
-          "403": {
-            "description": "CSRF or recent step-up required"
-          },
-          "404": {
-            "description": "Device trust not found for this user"
-          }
-        },
-        "summary": "Remove own device trust after step-up; existing sessions remain active",
-        "tags": [
-          "Sessions"
-        ]
-      }
-    },
-    "/api/auth/reset-password/verify": {
-      "post": {
-        "operationId": "AuthController_verifyResetOtp",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "challengeId": {
-                    "type": "string",
-                    "format": "uuid",
-                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                  },
-                  "otp": {
-                    "type": "string",
-                    "minLength": 6,
-                    "maxLength": 6,
-                    "pattern": "^\\d{6}$"
-                  }
-                },
-                "required": [
-                  "challengeId",
-                  "otp"
-                ],
-                "additionalProperties": false
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "verified",
-                    "challengeId",
-                    "resetToken",
-                    "expiresAt"
-                  ],
-                  "properties": {
-                    "verified": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "challengeId": {
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "resetToken": {
-                      "type": "string",
-                      "pattern": "^[a-f0-9]{64}$"
-                    },
-                    "expiresAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "summary": "Consume reset OTP and issue a single-use password-reset authorization",
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/api/admin/staff-role-options": {
-      "get": {
-        "operationId": "AdminController_staffRoleOptions",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "properties": {
-                      "description": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "roleId": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "roleId",
-                      "name",
-                      "description"
-                    ],
-                    "type": "object"
-                  },
-                  "type": "array"
-                }
-              }
-            },
-            "description": ""
-          }
-        },
-        "summary": "Read assignable staff role names and descriptions",
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/api/admin/config/otp": {
-      "get": {
-        "operationId": "OtpConfigController_get",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "ttlSeconds",
-                    "version"
-                  ],
-                  "properties": {
-                    "ttlSeconds": {
-                      "type": "integer",
-                      "minimum": 60,
-                      "maximum": 900
-                    },
-                    "version": {
-                      "type": "integer",
-                      "minimum": 0
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "summary": "Read the OTP lifetime and settings version",
-        "tags": [
-          "Admin · Authentication"
-        ]
-      },
-      "put": {
-        "operationId": "OtpConfigController_update",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "ttlSeconds": {
-                    "type": "integer",
-                    "minimum": 60,
-                    "maximum": 900
-                  },
-                  "expectedVersion": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 2147483646
-                  }
-                },
-                "required": [
-                  "ttlSeconds",
-                  "expectedVersion"
-                ],
-                "additionalProperties": false
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "ttlSeconds",
-                    "version"
-                  ],
-                  "properties": {
-                    "ttlSeconds": {
-                      "type": "integer",
-                      "minimum": 60,
-                      "maximum": 900
-                    },
-                    "version": {
-                      "type": "integer",
-                      "minimum": 0
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "summary": "Set the lifetime for newly sent OTP codes",
-        "tags": [
-          "Admin · Authentication"
-        ]
-      }
-    },
-    "/api/auth/csrf": {
-      "get": {
-        "operationId": "PreauthCsrfController_token",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "csrfToken": {
-                      "pattern": "^[a-f0-9]{64}$",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "csrfToken"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Current session token, or a short-lived anonymous token for one auth request."
-          }
-        },
-        "summary": "Get a browser-bound CSRF token before an authentication request",
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/api/profiles/default/{profileId}": {
-      "post": {
-        "operationId": "ProfilesController_chooseDefaultProfile",
-        "parameters": [
-          {
-            "name": "profileId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Default profile saved for the authenticated user.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "activeProfileId": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid profile identifier."
-          },
-          "401": {
-            "description": "Not authenticated."
-          },
-          "404": {
-            "description": "Profile is unavailable to this user."
-          }
-        },
-        "summary": "Choose a default from accessible profiles",
-        "tags": [
-          "Profiles"
-        ]
-      }
-    },
-    "/api/wallet/top-ups/return": {
-      "post": {
-        "operationId": "OnlineTopUpCallbackController_confirmReturn",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "orderId",
-                  "authority"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "orderId": {
-                    "type": "string",
-                    "format": "uuid"
-                  },
-                  "authority": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 512
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Server-verified payment result."
-          },
-          "401": {
-            "description": "Authentication or payment context invalid."
-          },
-          "403": {
-            "description": "Invalid CSRF token."
-          }
-        },
-        "summary": "Check a returned payment using the current session and CSRF token",
-        "tags": [
-          "Wallet"
         ]
       }
     }
