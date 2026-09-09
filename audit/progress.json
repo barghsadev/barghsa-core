@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
+  "source_revision": "9fc1da71ba1fc43c591f83a11929a019e888306a",
   "active_step": "R01",
-  "next_action": "Read existing address/ordering implementation once and compare exact PR115/116 requirements. Preserve repaired geography/history/ordering form evidence; reproduce only confirmed remaining defects before editing.",
+  "next_action": "Finish actual order submission review: enforce verification on the submitted profile and current session through create/cancel transactions. Verify copied address snapshots via the order API. Then consolidate PR115/116 with incomplete savings/solar flows explicitly open.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -715,7 +715,7 @@
   "active_batch": {
     "id": "R01-profile-addresses",
     "name": "Current-profile addresses and ordering address selection",
-    "status": "selected",
+    "status": "in_progress",
     "prs": [
       115,
       116
@@ -742,7 +742,36 @@
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "task_keys": [
+          "02-auth-users-admin.md#T-03.04.01"
+        ],
+        "summary": "Four address mutations now bind current enabled account/session and submitted CSRF through commit; four deadline failures reproduced, then 50 service/HTTP cases passed.",
+        "status": "repaired_and_verified",
+        "commit": "47bdfc2"
+      },
+      {
+        "task_keys": [
+          "02-auth-users-admin.md#T-03.04.01",
+          "02-auth-users-admin.md#T-03.04.02"
+        ],
+        "summary": "Removed saved addresses retain deleted_at history; active customer/CRM lists and mutations exclude them. Main constraint and copied order snapshots remain intact. Persian/English confirmation explains retention, protects pending requests, restores focus, and binds writes to the displayed profile.",
+        "status": "repaired_and_verified",
+        "commits": [
+          "e8f9007",
+          "9fc1da7"
+        ]
+      },
+      {
+        "task_keys": [
+          "02-auth-users-admin.md#T-03.04.02",
+          "02-auth-users-admin.md#T-03.01.02"
+        ],
+        "status": "confirmed_in_source",
+        "summary": "OrdersController uses SessionAuthGuard only. createOrder does not enforce target-profile verification and create/cancel receive only userId without final session checks. Savings is a placeholder; no solar route exists. Commercial-order prerequisites remain open."
+      }
+    ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#R01-account-settings",
       "audit/evidence/step-reviews.json#R01-profiles-onboarding",
@@ -750,7 +779,69 @@
       "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Read existing address/ordering implementation once and compare exact PR115/116 requirements. Preserve repaired geography/history/ordering form evidence; reproduce only confirmed remaining defects before editing."
+    "next_action": "Finish actual order submission review: enforce verification on the submitted profile and current session through create/cancel transactions. Verify copied address snapshots via the order API. Then consolidate PR115/116 with incomplete savings/solar flows explicitly open.",
+    "checkpoint": {
+      "source_revision": "9fc1da71ba1fc43c591f83a11929a019e888306a",
+      "product_commits": [
+        "47bdfc2",
+        "e8f9007",
+        "9fc1da7"
+      ],
+      "checks": [
+        "59 API cases across address/service/CRM suites pass, including 4 deadline rollbacks and removal visibility/edit denial.",
+        "2 production migration cases pass: populated0123 upgrade and fresh/legacy baseline. Fixture downgrade corrected to remove new0123/0124 fields; initial failure retained. DB/API types, focused lint and generated snapshot consistency pass.",
+        "8 distinct Chromium browser cases pass across focused runs: fa/en dialog/geography/removal/read-retry/profile-binding. Initial fixture failures retained: unscoped alert, wrong title, and keyboard focus before enabled. Later checks reuse unchanged cases. Web/i18n build, web types, lint and42 unchanged budgets pass."
+      ],
+      "logs": [
+        "/tmp/r01-address-confirm-browser-v2.log",
+        "/tmp/r01-address-confirm-browser-v3.log",
+        "/tmp/r01-address-confirm-browser-v4.log",
+        "/tmp/r01-address-confirm-browser.log",
+        "/tmp/r01-address-confirm-budgets-v3.log",
+        "/tmp/r01-address-confirm-budgets.log",
+        "/tmp/r01-address-confirm-build-v2.log",
+        "/tmp/r01-address-confirm-build-v3.log",
+        "/tmp/r01-address-confirm-build.log",
+        "/tmp/r01-address-confirm-format-v2.log",
+        "/tmp/r01-address-confirm-format-v3.log",
+        "/tmp/r01-address-confirm-format.log",
+        "/tmp/r01-address-confirm-i18n-build.log",
+        "/tmp/r01-address-confirm-lint-v2.log",
+        "/tmp/r01-address-confirm-lint-v3.log",
+        "/tmp/r01-address-confirm-lint.log",
+        "/tmp/r01-address-confirm-test-format-v4.log",
+        "/tmp/r01-address-confirm-test-format.log",
+        "/tmp/r01-address-confirm-types-v2.log",
+        "/tmp/r01-address-confirm-types-v3.log",
+        "/tmp/r01-address-confirm-types.log",
+        "/tmp/r01-address-history-api-types.log",
+        "/tmp/r01-address-history-api.log",
+        "/tmp/r01-address-history-before.log",
+        "/tmp/r01-address-history-db-types.log",
+        "/tmp/r01-address-history-format.log",
+        "/tmp/r01-address-history-generate.log",
+        "/tmp/r01-address-history-lint.log",
+        "/tmp/r01-address-history-migration-format.log",
+        "/tmp/r01-address-history-migrations-v2.log",
+        "/tmp/r01-address-history-migrations.log",
+        "/tmp/r01-address-history-schema-format.log",
+        "/tmp/r01-address-history-snapshot.log",
+        "/tmp/r01-address-history-test-format.log",
+        "/tmp/r01-address-session-api.log",
+        "/tmp/r01-address-session-before.log",
+        "/tmp/r01-address-session-format-write.log",
+        "/tmp/r01-address-session-format.log",
+        "/tmp/r01-address-session-lint.log",
+        "/tmp/r01-address-session-openapi-generate.log",
+        "/tmp/r01-address-session-openapi.log",
+        "/tmp/r01-address-session-test-format.log",
+        "/tmp/r01-address-session-types.log"
+      ],
+      "limitations": [
+        "No new historical task or PR disposition yet; counts unchanged. Actual order submission review remains in progress.",
+        "0124 must precede API rollout; only disposable fixture databases migrated."
+      ]
+    }
   },
   "open_domain_reviews": [
     {
