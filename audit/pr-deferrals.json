@@ -1132,7 +1132,21 @@
       "- **Step-up on the PUT is deliberately deferred.** `DeliveryWindowConfigPanel.tsx` (T-05.03.03) saves via raw `fetch` and the web app has no step-up challenge flow anywhere yet; requiring step-up server-side would regress the working admin save path. It will land together with the client-side step-up flow (same follow-up as the provider-config UI).",
       "- [ ] Step-up on PUT — deferred (web app step-up flow does not exist; forcing it would break the existing T-05.03.03 panel)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Both historical step-up deferrals satisfied by current transactional authority and browser password-confirmation flow.",
+    "reviewed_source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
+    "review_record": "audit/evidence/step-reviews.json#R02-daytime-window",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied. audit/evidence/step-reviews.json#R02-daytime-window"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied. audit/evidence/step-reviews.json#R02-daytime-window"
+      }
+    ]
   },
   {
     "pr": 193,

@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 141 have unresolved mapped tasks; 4 have no current task mapping; 156 map only to verified tasks.
+301 merged PRs: 140 have unresolved mapped tasks; 4 have no current task mapping; 157 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **109 closed / 22 open / 0 blocked**; 170 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **110 closed / 22 open / 0 blocked**; 169 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -15,12 +15,12 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 | Canonical epic | PR-backed tasks unresolved |
 | --- | ---: |
 | 01-platform-infrastructure.md | 50 |
-| 02-auth-users-admin.md | 41 |
+| 02-auth-users-admin.md | 40 |
 | 03-core-business.md | 4 |
 | 04-invoices-wallet-contracts.md | 7 |
 | 05-notifications-documents-ai.md | 29 |
 | 07-ui-ux-design.md | 3 |
-| Total | 134 |
+| Total | 133 |
 
 Also review 56 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
@@ -223,7 +223,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#191](https://github.com/barghsadev/barghsa-core/pull/191) | 05-notifications-documents-ai.md#T-05.06.07 (pending) | Task review remains | Not reviewed | 0 |
 | [#192](https://github.com/barghsadev/barghsa-core/pull/192) | 02-auth-users-admin.md#T-09.06.01 (pending) | Task review remains | Not reviewed | 1 |
 | [#193](https://github.com/barghsadev/barghsa-core/pull/193) | 02-auth-users-admin.md#T-09.06.02 (pending) | Task review remains | Not reviewed | 2 |
-| [#194](https://github.com/barghsadev/barghsa-core/pull/194) | 02-auth-users-admin.md#T-09.06.03 (pending) | Task review remains | Not reviewed | 2 |
+| [#194](https://github.com/barghsadev/barghsa-core/pull/194) | 02-auth-users-admin.md#T-09.06.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-daytime-window) | 2 |
 | [#195](https://github.com/barghsadev/barghsa-core/pull/195) | 02-auth-users-admin.md#T-09.07.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-adjustment-approval) | 3 |
 | [#196](https://github.com/barghsadev/barghsa-core/pull/196) | 02-auth-users-admin.md#T-09.07.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-adjustment-approval) | 4 |
 | [#197](https://github.com/barghsadev/barghsa-core/pull/197) | 02-auth-users-admin.md#T-09.08.01 (pending) | Task review remains | Not reviewed | 2 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `172ba2f381b7909e04d592df6dfb64145d6858b28ed5cae6b644e018156b40fd`
-- `pr-deferrals.json`: `06c0a2ae64a10732df1c2aa9517653adee7d012792e968373afbfc5389f9152c`
-- `evidence/step-reviews.json`: `818922603f3bf80aa560c617a0cd794e10106e892410c786d41a99fde00ecd9c`
+- `acceptance-closure.json`: `fd566f220bbfa753dfc807368cff3df1e01d12b30e487135b5ebd8a879e121fd`
+- `pr-deferrals.json`: `b99aedd15c6e3cffd86bb6ca07eac62e7d8c2f289990f05c778226db28aab406`
+- `evidence/step-reviews.json`: `2dcf13a2d256a841205c371d6e01f8f77012c7231801514b17efc8339d3873ed`

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "deeb133b90321dfb06dbbcb66e0e18eacfe9f749",
+  "source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
   "active_step": "R02",
-  "next_action": "Finish daytime-window configuration/consumers and remaining provider/template UI in the active R02 foundation batch. Daytime UI currently accepts whole-hour selects rather than required HH:MM inputs; save still deliberately defers step-up and passes only actor userId. Reuse existing per-user timezone, immediate bypass, DST and scheduled-snapshot evidence; repair only confirmed gaps. Preserve recipient choices/verified contacts atdeeb133b and earlier brand/provider repairs.",
+  "next_action": "Finish remaining provider/template UI acceptance for active R02 foundation PR156/161/192/193. Preserve closed PR113 recipient choices/verified contacts and PR194 minute-precision daytime settings/current session-step-up saves. Check SMS self-test disclosure for all mappings and original template editor criteria; reuse completed provider activation/rollback, self-send, branding, authority and delivery evidence. Keep event-specific producers/reminders/retries in subsequent R02 batches.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -674,6 +674,10 @@
     {
       "id": "R02-recipient-channel-delivery",
       "review_record": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+    },
+    {
+      "id": "R02-daytime-window",
+      "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
     }
   ],
   "deferred_improvements": [
@@ -692,9 +696,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 132,
+    "acceptance_verified": 133,
     "partial": 31,
-    "pending": 159,
+    "pending": 158,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1005,7 +1009,7 @@
     "remaining_checklist": [
       "All six exact requirements, saved PR bodies and deferrals read. Full UI theme stays R03; email/notification branding belongs here.",
       "Review current SMTP/Resend/SMS.ir configuration lifecycle, encrypted write-only secrets, current authority/step-up/audit, verified self-test destinations, activation/rollback and OTP recovery constraints.",
-      "Trace actual template render/send through preferences, current branding, user timezone/daytime window and immediate bypass. Fix confirmed missing consumers and preserve completed template/provider/retry work.",
+      "Recipient choices/verified destinations, active branding, per-user daytime/minute boundaries and immediate bypass are repaired. Preserve recorded checks; finish provider/template UI acceptance.",
       "Keep notification-event-specific retries/inbox/reminder acceptance in subsequent R02 batches. Do not claim fixture sends prove production delivery."
     ],
     "confirmed_defects": [
@@ -1061,11 +1065,13 @@
       },
       {
         "defect": "Delivery-window UI uses whole-hour selectors rather than required HH:MM time inputs.",
-        "status": "open"
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
       },
       {
         "defect": "Delivery-window mutation still defers step-up and does not carry current session/CSRF identity through the transaction.",
-        "status": "open"
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
       }
     ],
     "reused_evidence": [
@@ -1080,7 +1086,8 @@
       "audit/evidence/step-reviews.json#R02-provider-activation-proof",
       "audit/evidence/step-reviews.json#R02-email-branding-delivery",
       "audit/evidence/step-reviews.json#R02-branded-admin-previews",
-      "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+      "audit/evidence/step-reviews.json#R02-recipient-channel-delivery",
+      "audit/evidence/step-reviews.json#R02-daytime-window"
     ],
     "pr_dispositions": [
       {
@@ -1092,9 +1099,19 @@
         "reason": "Account choices now reach queued email/SMS dispatch and are rechecked after message preparation. Only current primary or verified secondary destinations are eligible. In-app remains enabled; per-profile marketing consent and address suppression remain additional gates. R01 API/UI/default/availability evidence matches unchanged source and is reused. PR113 has no retained historical deferrals; its former unavailable lint is superseded by applicable checked lint evidence.",
         "source_revision": "deeb133b90321dfb06dbbcb66e0e18eacfe9f749",
         "evidence": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+      },
+      {
+        "pr": 194,
+        "status": "closed",
+        "task_keys": [
+          "02-auth-users-admin.md#T-09.06.03"
+        ],
+        "reason": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
+        "source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
+        "evidence": "audit/evidence/step-reviews.json#R02-daytime-window"
       }
     ],
-    "next_action": "Finish daytime-window configuration/consumers and remaining provider/template UI in the active R02 foundation batch. Daytime UI currently accepts whole-hour selects rather than required HH:MM inputs; save still deliberately defers step-up and passes only actor userId. Reuse existing per-user timezone, immediate bypass, DST and scheduled-snapshot evidence; repair only confirmed gaps. Preserve recipient choices/verified contacts atdeeb133b and earlier brand/provider repairs."
+    "next_action": "Finish remaining provider/template UI acceptance for active R02 foundation PR156/161/192/193. Preserve closed PR113 recipient choices/verified contacts and PR194 minute-precision daytime settings/current session-step-up saves. Check SMS self-test disclosure for all mappings and original template editor criteria; reuse completed provider activation/rollback, self-send, branding, authority and delivery evidence. Keep event-specific producers/reminders/retries in subsequent R02 batches."
   },
   "open_domain_reviews": [
     {
