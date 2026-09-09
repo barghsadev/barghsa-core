@@ -15079,6 +15079,20 @@
       "sha256": "4db18f12c3bbe7ec93bccc664422e869c8ac333dba09548019e049c13d1a5b93",
       "encoding": "gzip",
       "stored_sha256": "2afeecbc650c494976faca2d9159e444970a3548e4973632b9a6d1ffc2e29f75"
+    },
+    {
+      "original_path": "/tmp/r01-invitation-dashboard-browser.log",
+      "path": "audit/evidence/69b9e1a/r01-invitation-dashboard-browser.log.gz",
+      "sha256": "466226af9cfab6f6078d45644e09641a917f6282b1cd001e0caffecdea5e1918",
+      "encoding": "gzip",
+      "stored_sha256": "60e1f84a029a4629352d1a184b3fa84ea2cc232f0585df0807ac09f887d450bb"
+    },
+    {
+      "original_path": "/tmp/r01-invitation-dashboard-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
     }
   ]
 }

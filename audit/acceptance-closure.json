@@ -13764,6 +13764,42 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.05.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "69b9e1a0d46fb426e40f23b4a72137d97907b95a",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement": "**T-05.05.02 — Agent invitation dashboard widget**\n\n- Description: On customer dashboard, if the active profile has been invited by a legal entity, show banner with details and accept/decline actions.\n- Technical notes: Wrapper around T-05.04.03 but surfaced on dashboard.\n- UI/UX: Prominent card at top of dashboard, not dismissible until action taken.\n- Dependencies: T-05.04.03\n- Complexity: S\n\n---",
+      "requirement_sha256": "4d3df71c7c1aa68cff00999609e53803cf7b78bd6772feb5a3295ccd38612464",
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "c11f2ad47268bcad9999a23a8a8cf011bc6b34fd8f6bd2df4b0561983b75b9eb"
+        },
+        {
+          "path": "apps/web/src/components/InvitationDetails.tsx",
+          "sha256": "002a1451c50bed83653d6f2efceb82436f079f4720596eb19ca560dd06e06dd1"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "6c1f40a11ce19dc4bdfa59696c7d4c8b2aef3eefbc1f3fe255245708d076a214"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "3d4ca8cceabbfcd65985d82bc8590420ae13d05335abc1cb2fa29494cbe20ccf"
+        }
+      ],
+      "checks": [
+        "Exact requirement and saved PR137 reviewed.",
+        "audit/evidence/step-reviews.json#R01-invitation-dashboard"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        137
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-invitation-dashboard"
     }
   ],
   "pending_task_keys": [
@@ -13865,7 +13901,6 @@
     "01-platform-infrastructure.md#T-07.05.02",
     "01-platform-infrastructure.md#T-07.05.03",
     "01-platform-infrastructure.md#T-07.05.04",
-    "02-auth-users-admin.md#T-05.05.02",
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
     "02-auth-users-admin.md#T-09.04.01",

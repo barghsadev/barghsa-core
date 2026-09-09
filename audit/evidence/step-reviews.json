@@ -12346,6 +12346,75 @@
         "/tmp/r01-verification-notices-web-types.log",
         "/tmp/r01-verification-provider-review.log"
       ]
+    },
+    {
+      "id": "R01-invitation-dashboard",
+      "date": "2026-09-09",
+      "source_revision": "69b9e1a0d46fb426e40f23b4a72137d97907b95a",
+      "base_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
+      "product_commits": [
+        "69b9e1a0d46fb426e40f23b4a72137d97907b95a"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.05.02"
+      ],
+      "summary": "Dashboard invitation placement and non-dismissal verified; no product repair needed.",
+      "review": [
+        "Read the exact canonical widget criterion and saved PR137 body. InvitationBanner is mounted before the dashboard header; native details expose the entity, inviter, translated role and dates. The only decision controls are Accept and Decline; no dismissal exists.",
+        "Two production Chromium cases cover Persian decline and English accept on /dashboard, card-before-header layout, Escape preserving the invitation, both controls disabled during the pending decision and removal after successful response.",
+        "InvitationBanner, InvitationDetails and DashboardLayout are unchanged from the consolidated agents batch at1bf4680. Preserve its private invitation, failed-decision retry, credential rotation, keyboard, RTL/mobile and theme evidence. PR137 is a presentation slice over the same workflow, not a duplicate service to delete."
+      ],
+      "verification": {
+        "browser": "2 production Chromium cases pass",
+        "lint": "Scoped ESLint passes",
+        "diff": "git diff --check passes"
+      },
+      "remaining": [],
+      "pr_dispositions": [
+        {
+          "pr": 137,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.05.02"
+          ],
+          "reason": "All widget criteria verified in current combined implementation; saved PR137 has no historical deferrals.",
+          "source_revision": "69b9e1a0d46fb426e40f23b4a72137d97907b95a",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-invitation-dashboard"
+          ]
+        }
+      ],
+      "pr_counts": {
+        "closed": 1,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-agents-invitations-ownership: relevant invitation source is unchanged; reuse its workflow checks without adding its80 cases as new widget tests.",
+        "Unchanged web build and42 route budgets fromd74c8f8 remain valid; this commit adds browser tests only."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "c11f2ad47268bcad9999a23a8a8cf011bc6b34fd8f6bd2df4b0561983b75b9eb"
+        },
+        {
+          "path": "apps/web/src/components/InvitationDetails.tsx",
+          "sha256": "002a1451c50bed83653d6f2efceb82436f079f4720596eb19ca560dd06e06dd1"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "6c1f40a11ce19dc4bdfa59696c7d4c8b2aef3eefbc1f3fe255245708d076a214"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "3d4ca8cceabbfcd65985d82bc8590420ae13d05335abc1cb2fa29494cbe20ccf"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-invitation-dashboard-browser.log",
+        "/tmp/r01-invitation-dashboard-lint.log"
+      ]
     }
   ]
 }

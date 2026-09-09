@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
+  "source_revision": "69b9e1a0d46fb426e40f23b4a72137d97907b95a",
   "active_step": "R01",
-  "next_action": "Read saved PR137 body and compare the current dashboard InvitationBanner with T-05.05.02. Preserve the reviewed invitation decision/permission workflow; use focused widget checks and consolidate its acceptance.",
+  "next_action": "Compare staff history UI/API and focused tests; repair confirmed gaps and explicitly disposition PR219 timeline deferrals.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -631,6 +631,10 @@
     {
       "id": "R01-verification-policy",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy"
+    },
+    {
+      "id": "R01-invitation-dashboard",
+      "review_record": "audit/evidence/step-reviews.json#R01-invitation-dashboard"
     }
   ],
   "deferred_improvements": [
@@ -649,9 +653,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 128,
+    "acceptance_verified": 129,
     "partial": 32,
-    "pending": 162,
+    "pending": 161,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -940,27 +944,27 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-invitation-dashboard",
-    "name": "Customer dashboard agent invitation widget",
+    "id": "R01-staff-permission-audit",
+    "name": "Staff permission audit timeline",
     "status": "in_progress",
     "prs": [
-      137
+      219
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-05.05.02"
+      "02-auth-users-admin.md#T-10.01.02"
     ],
     "remaining_checklist": [
-      "Exact widget requirement was read while selecting this batch. Read saved PR137 body, then compare InvitationBanner and its dashboard integration to that requirement.",
-      "Reuse the consolidated agents/invitations/ownership implementation and valid tests. Review the widget once; repair only confirmed remaining gaps.",
-      "Record the single task/PR disposition with evidence. Then review staff permission audit presentation T-10.01.02/PR219 separately."
+      "Exact requirement and saved PR219 body read. Review role addition/removal, target-user/date filters and current authorization.",
+      "Resolve both historical timeline/UI deferrals against StaffPermissionHistory and its staff-page integration. Reuse valid staff authority and role-change evidence.",
+      "Run focused checks for confirmed gaps, then consolidate task/PR disposition."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+      "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Read saved PR137 body and compare the current dashboard InvitationBanner with T-05.05.02. Preserve the reviewed invitation decision/permission workflow; use focused widget checks and consolidate its acceptance."
+    "next_action": "Compare staff history UI/API and focused tests; repair confirmed gaps and explicitly disposition PR219 timeline deferrals."
   },
   "open_domain_reviews": [
     {
