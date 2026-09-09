@@ -7198,7 +7198,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 228,
       "requirement": "| T-04.2.01.01 | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` | M |",
@@ -7210,7 +7210,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7238,7 +7238,8 @@
         }
       ],
       "checks": [
-        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "Receipt-batch source comparison confirms only optional transaction-client routing/type assertions changed in getWallet/createWallet. Default reads and all ledger mutations remain unchanged; affected wallet unit/controller checks passed in the222-case receipt submission regression. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         149
@@ -7249,13 +7250,14 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 229,
       "requirement": "| T-04.2.01.02 | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps | L |",
@@ -7267,7 +7269,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7295,7 +7297,8 @@
         }
       ],
       "checks": [
-        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "Receipt-batch source comparison confirms only optional transaction-client routing/type assertions changed in getWallet/createWallet. Default reads and all ledger mutations remain unchanged; affected wallet unit/controller checks passed in the222-case receipt submission regression. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         149,
@@ -7308,13 +7311,14 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 230,
       "requirement": "| T-04.2.01.03 | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` | M |",
@@ -7326,7 +7330,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7354,7 +7358,8 @@
         }
       ],
       "checks": [
-        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "Receipt-batch source comparison confirms only optional transaction-client routing/type assertions changed in getWallet/createWallet. Default reads and all ledger mutations remain unchanged; affected wallet unit/controller checks passed in the222-case receipt submission regression. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         252,
@@ -7367,13 +7372,14 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 231,
       "requirement": "| T-04.2.01.04 | Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes | L |",
@@ -7385,7 +7391,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7413,7 +7419,8 @@
         }
       ],
       "checks": [
-        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "Receipt-batch source comparison confirms only optional transaction-client routing/type assertions changed in getWallet/createWallet. Default reads and all ledger mutations remain unchanged; affected wallet unit/controller checks passed in the222-case receipt submission regression. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         253,
@@ -7425,13 +7432,14 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 232,
       "requirement": "| T-04.2.01.05 | Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow | M |",
@@ -7443,7 +7451,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7471,7 +7479,8 @@
         }
       ],
       "checks": [
-        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "Receipt-batch source comparison confirms only optional transaction-client routing/type assertions changed in getWallet/createWallet. Default reads and all ledger mutations remain unchanged; affected wallet unit/controller checks passed in the222-case receipt submission regression. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         255,
@@ -7483,13 +7492,14 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.06",
       "status": "acceptance_verified",
-      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 233,
       "requirement": "| T-04.2.01.06 | Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion` | M |",
@@ -7501,7 +7511,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7529,7 +7539,8 @@
         }
       ],
       "checks": [
-        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "Receipt-batch source comparison confirms only optional transaction-client routing/type assertions changed in getWallet/createWallet. Default reads and all ledger mutations remain unchanged; affected wallet unit/controller checks passed in the222-case receipt submission regression. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         256
@@ -7540,13 +7551,14 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.07",
       "status": "acceptance_verified",
-      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 234,
       "requirement": "| T-04.2.01.07 | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column | M |",
@@ -7558,7 +7570,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -7586,7 +7598,8 @@
         }
       ],
       "checks": [
-        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "Receipt-batch source comparison confirms only optional transaction-client routing/type assertions changed in getWallet/createWallet. Default reads and all ledger mutations remain unchanged; affected wallet unit/controller checks passed in the222-case receipt submission regression. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         257
@@ -7597,7 +7610,8 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     },
     {
@@ -7652,7 +7666,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-08.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 610,
       "requirement": "**T-08.01.02 — Wallet balance card**\n\n- Description: Shows available wallet balance in IRR and toman. Link to wallet page. Alert if balance is low relative to pending invoices.\n- Technical notes: Calls wallet service for balance. Format IRR with locale-aware number formatting.\n- UI/UX: Card with balance prominently displayed. Currency label (IRR/تومان). Button: \"Charge wallet\". Warning banner if low balance for due invoices.\n- Dependencies: wallet module\n- Complexity: S",
@@ -7672,7 +7686,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
         },
         {
           "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -7705,7 +7719,8 @@
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
         "At 7af0a76, reviewed wallet archival changes. getWallet remains identical to 9635e76; every other recorded source hash still matches. Preserve existing balance-card browser evidence; this step does not claim a new browser run.",
         "At 5543cc2, reviewed atomic invitation credential rotation and focused evidence; see audit/evidence/step-reviews.json#R01-invitation-credentials. Other methods/criteria and older drift remain unchanged.",
-        "Current bounded source comparison and consolidated wallet review: audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "Current bounded source comparison and consolidated wallet review: audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "Receipt-batch source comparison confirms only optional transaction-client routing/type assertions changed in getWallet/createWallet. Default reads and all ledger mutations remain unchanged; affected wallet unit/controller checks passed in the222-case receipt submission regression. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ],
       "merged_prs": [
         153
@@ -7716,7 +7731,768 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.07.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 732,
+      "requirement": "**T-09.07.01 — Dual-approval threshold configuration**\n\n- Description: Admin configures the IRR threshold at or above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.\n- Technical notes: Value stored, requires step-up auth to change. Versioned config. Emergency override available (requires reason + elevated permission + immediate alert + audit).\n- UI/UX: Number input with large IRR display. Description of which actions are affected. \"Changes require step-up authentication.\"\n- Dependencies: admin config framework, finance module\n- Complexity: M",
+      "requirement_sha256": "9cc3475379fdebddc5c870029de1b6dd3c5e4a879f968b6bb4d78185ed9e1d7b",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "f2776f33750cc09e84a69546a0eb823dc3be8bafae58ff8ec570254711bcb6ab"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "4990c7501440a9486d0a402754f3359a4372ac4dac2b371b1c53600797fe4a85"
+        },
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-config.controller.test.ts",
+          "sha256": "d93b8d6bec2a89b7fced0b9f8db97ab6005f8fe201b03b45c31280159ecc1c2f"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-config.service.test.ts",
+          "sha256": "0daa6509546fde364379a09069ae7b2747893a6843c6b7e05591fc19af55f708"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/web/e2e/approval-threshold.spec.ts",
+          "sha256": "9ca79471c6bfb3250041bb925714dfb4652bb68f5100a3e04fdf10ec1247d9ca"
+        },
+        {
+          "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
+          "sha256": "a3875484bdd9d4f0c99d9acfc3e5331ee9bf197a17846a874ff206ad3b7bcf4d"
+        },
+        {
+          "path": "packages/shared/src/finance/dual-approval-config.ts",
+          "sha256": "0dfb04655f65d8eaa5995900bd564c92750164966e7a048174db60a9af7ef3a7"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        195
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Verified stored configuration, current receipt consumers and per-receipt emergency exception. Refund/manual-adjustment module integration belongs to its separate future service tasks; those consumers are not claimed implemented."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.07.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 740,
+      "requirement": "**T-09.07.02 — Dual-approval workflow**\n\n- Description: When a financial action meets or exceeds the positive threshold, it enters Pending Approval state. Second authorized user (different from initiator) must approve or reject. Audit trail of both actions.\n- Technical notes: Initiation creates approval request with transaction details. Notification to approval-eligible staff. Second user reviews and approves/rejects. Cannot approve own requests. Queue view for pending approvals.\n- UI/UX: \"Pending approvals\" section in finance dashboard. Each: amount, initiator, reason, details. Approve/Reject buttons with reason (reason required for reject).\n- Dependencies: T-09.07.01\n- Complexity: L",
+      "requirement_sha256": "d2d28c392af752701d3ea2a6efe8e380c0c974d90b0ba0289d69dbd95b63c1de",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "sha256": "52b54228fbbb9ff3342d7669f2f90282b412a939a9ac7a70878bf03a412f09c8"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.ts",
+          "sha256": "def2762f46bd997fa95372db712109c512744c182ab57ddc629285d8241b0082"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/web/e2e/approval-queue.spec.ts",
+          "sha256": "9963d9f860a27b51bcf7ee0b78cf6c93be485522a1bb3581c14381042bfa16ef"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "ea696cdd58457868954328d1aba3f2b671ef6edd6345fbe530bdab509948c1dc"
+        },
+        {
+          "path": "packages/db/src/schema/approval-requests.ts",
+          "sha256": "17f5315c1cd2b678325c9e38b10e43badd83376923c0ba0dec3bb126d29caeaf"
+        },
+        {
+          "path": "packages/shared/src/finance/approval-request.ts",
+          "sha256": "a0557fbe4c9dca79487d40c0b602fba8eaa578689fa9cf1915bfbf7585ec189e"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        196
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Current receipt workflow and generic queue verified. Future refund/manual-adjustment consumers require their own integration acceptance. Immediate eligible-staff alerts are in-app; no email/SMS delivery claim."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 265,
+      "requirement": "| T-04.2.02.03 | Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state | M |",
+      "requirement_sha256": "e23ee87169032d5217aad11c6130872597f2f6522a9a97ff87e1fe6395e9f98e",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+          "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-actor.ts",
+          "sha256": "be0b893055b67f214f05d0cc60602804609a95b17e01f50809967cdf0e3005f8"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+          "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+        },
+        {
+          "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+          "sha256": "2401f88002bde001a366c719f30140f6e48d8e4a7b0bfe55dd113e8267779153"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.integration.test.ts",
+          "sha256": "7f9ad2aa5117ddb8bdc1dbb922416ad681c2650705643d081e77e3930ef99c01"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+          "sha256": "5abf5dafd96cdbe4fa73a2a6bc623bcb12494591d1754426bca7833e6133257d"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "014123670b2a6a9f4b77e749dbb653ea551fd96d707a2c57e40db7e58a37e2cd"
+        },
+        {
+          "path": "apps/web/e2e/customer-receipts.spec.ts",
+          "sha256": "e0a048cc4fecc4ca4bfac7cfb7abf52902d88275ee0d93acf6e3bc32521b68cd"
+        },
+        {
+          "path": "apps/web/src/hooks/useReceiptAttachmentUpload.ts",
+          "sha256": "b80d71914029aff742429c7af39682091c0c6977d178332c59fd047e55c885ed"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "e37dd9130f8c9391acce37caa6beefce98fd273574c202b334085e21d4ae8f8b"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "745cc71eff320cfdd58e1783eb0d6b00ba9e24f34e7d7099b0f66fa0a7dae40c"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
+          "sha256": "b519660905ec9505441cb39a2b24ad45ceddc7481fe09e6b2484a98024b2b78c"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        266
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Existing receipt evidence is preserved; bytes overwritten before server sealing cannot be reconstructed locally. Retry identity is preserved while the form remains mounted. Choosing a new file creates a new upload; backend provenance/ownership checks remain authoritative."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 266,
+      "requirement": "| T-04.2.02.04 | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` | M |",
+      "requirement_sha256": "d6c34da3e66520fe9ada651a0f357c3debc251c2b70924077bb0ce7b6a7571cc",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+          "sha256": "3ac6a8b5f14411896520960a95e666ba67eca90fa2b551b26e797bb4d13cfe60"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+          "sha256": "f99964244fe55bf2937ddb5177a5c054ffb1fba7ccfa6c0d4091295565614930"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "6b80643c19106ae0ffd34ab08efa268fd667ad9e81588ee35ee8dd58b419f848"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "fa06908b9c86b30a6573c5a7fb77a7291d8e0cf6d0da5ed9a72af948d83a9671"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "apps/web/e2e/receipt-emergency.spec.ts",
+          "sha256": "68201ad8640e1682d5e7496550cac5019e9e82fa3ed8694f753b4c69375ded3f"
+        },
+        {
+          "path": "apps/web/src/lib/bank-receipt-confirmation.ts",
+          "sha256": "1572ee12f4defc1166bd5aaca35d6e8d8916f57403495d7bdf6859887a15d97d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+          "sha256": "b9d4dc43aa87ae39f67523646dae0b3bcaf2273838738d85391afc8bc3e62eb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "2880b44433f5e65cbeef53e625f3d634d0201ec487d4fb6abf67ca3fdb8ce223"
+        },
+        {
+          "path": "packages/i18n/src/wallet-receipts.ts",
+          "sha256": "937678c5b44fa691fb2ddc5c5407105ad34c832a1d0cddb22a2db3922a609bcb"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        267,
+        278,
+        286,
+        301
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Staff UI, settlement, rejection and dual approval verified. PR301 customer-notice delivery remains separately open in R02; transactional enqueue alone is not delivery proof."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 267,
+      "requirement": "| T-04.2.02.05 | Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet | M |",
+      "requirement_sha256": "1915c150e5b5ef0213361f300eb2525dca24f52c03e8e86544272c7a452fc96e",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+          "sha256": "3ac6a8b5f14411896520960a95e666ba67eca90fa2b551b26e797bb4d13cfe60"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+          "sha256": "f99964244fe55bf2937ddb5177a5c054ffb1fba7ccfa6c0d4091295565614930"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "6b80643c19106ae0ffd34ab08efa268fd667ad9e81588ee35ee8dd58b419f848"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "fa06908b9c86b30a6573c5a7fb77a7291d8e0cf6d0da5ed9a72af948d83a9671"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-overpayment.ts",
+          "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        268,
+        279,
+        287,
+        302
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 348,
+      "requirement": "| T-04.3.01.01 | Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps | M |",
+      "requirement_sha256": "e9dfe7a283c7ca71ecfa12bcdc28825c0811d6ab35717ebe4b4c5758b6739b9d",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+          "sha256": "910aa8bb7eb554a3b9d12934629d63aeed12f02edd506a33bb9a5e6c8ce48f57"
+        },
+        {
+          "path": "packages/db/drizzle/0078_create_bank_receipts.sql",
+          "sha256": "d674c22ca6d7166fefc5be65b885f572228eef69163726d62509a9de78dbe44d"
+        },
+        {
+          "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+          "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+        },
+        {
+          "path": "packages/db/src/schema/bank-receipts.ts",
+          "sha256": "2987f0045e0f652e9ab3f5ec3862d09a7af40ee9ee8d0c20c268e106849a8a6d"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        296
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 349,
+      "requirement": "| T-04.3.01.02 | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state | M |",
+      "requirement_sha256": "2426ad628e091b42ebaa32d782a4c2509ff4de991abe38be323619d94ac3f5f4",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+          "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-actor.ts",
+          "sha256": "be0b893055b67f214f05d0cc60602804609a95b17e01f50809967cdf0e3005f8"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+          "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+        },
+        {
+          "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+          "sha256": "2401f88002bde001a366c719f30140f6e48d8e4a7b0bfe55dd113e8267779153"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+          "sha256": "555d792e6c3ad5ec3be574084b63d38243512f0b68a2af2cf034655202bed3dd"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+          "sha256": "910aa8bb7eb554a3b9d12934629d63aeed12f02edd506a33bb9a5e6c8ce48f57"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "sha256": "2088520e837e2377a005940b69e8c344b8a47e223b1c382f6ba20a2325b6866e"
+        },
+        {
+          "path": "apps/web/e2e/customer-receipts.spec.ts",
+          "sha256": "e0a048cc4fecc4ca4bfac7cfb7abf52902d88275ee0d93acf6e3bc32521b68cd"
+        },
+        {
+          "path": "apps/web/src/hooks/useReceiptAttachmentUpload.ts",
+          "sha256": "b80d71914029aff742429c7af39682091c0c6977d178332c59fd047e55c885ed"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "e37dd9130f8c9391acce37caa6beefce98fd273574c202b334085e21d4ae8f8b"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "55ae7eb54a2c332aef35405a68de215be2cfbaf8122cd1246d271ea36dababa7"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "6746f1736433005e6a03ef16d39c007cfa79ca2d035e3c4aa72f1fa64c3020d6"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
+          "sha256": "d0a0015a576246312a7a7988c262bedda8091f4e70758e02c4348c22f4f6c878"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        297
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Existing receipt evidence is preserved; bytes overwritten before server sealing cannot be reconstructed locally. Retry identity is preserved while the form remains mounted. Choosing a new file creates a new upload; backend provenance/ownership checks remain authoritative."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 350,
+      "requirement": "| T-04.3.01.03 | Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed | L |",
+      "requirement_sha256": "2a05256cce60aab6af28035f52e3d0ea141d51f099585d56e132c9c0a044a35b",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "006e38eae0ae4dced1a66aa532c4747568f50b94735d0f96b74cffdfae01b61f"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "d663139ddae3acb837a4e7029b3dcb64f5946d536ea2dc24c12d7cd43645490e"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "09e9540500f64a15ba640c7e84fefb04195a6a547765a8b671e19396882c720b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "1dbc127d1794c0edcfdf0e02f30d66efa91300b2105591c0962df5019c9f18eb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+          "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+          "sha256": "3647ec9f359bac9f73b351d160199142811688bd0e08903606e4af78b2ce2a78"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+          "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-overpayment.ts",
+          "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        298
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "This task requires the confirmation API. A staff invoice confirmation screen is a separate UI scope. No invoice over-settlement; independent excess wallet credit is verified incidentally for T-04.3.01.06."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.04",
+      "status": "partial",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 351,
+      "requirement": "| T-04.3.01.04 | Staff rejection API: mark receipt Rejected, store reason, notify customer | M |",
+      "requirement_sha256": "5eaa39188c4c429d606d0aac2acc33bb2e7f5ece21694c77b0608b43acb76e61",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "006e38eae0ae4dced1a66aa532c4747568f50b94735d0f96b74cffdfae01b61f"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "d663139ddae3acb837a4e7029b3dcb64f5946d536ea2dc24c12d7cd43645490e"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "09e9540500f64a15ba640c7e84fefb04195a6a547765a8b671e19396882c720b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "1dbc127d1794c0edcfdf0e02f30d66efa91300b2105591c0962df5019c9f18eb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+          "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+          "sha256": "3647ec9f359bac9f73b351d160199142811688bd0e08903606e4af78b2ce2a78"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+          "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-overpayment.ts",
+          "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        299
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Rejection state/reason/current authority, audit and atomic customer-notice enqueue are verified. Required actual customer delivery, preferences, retries and templates remain R02; task stays partial."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 352,
+      "requirement": "| T-04.3.01.05 | Dual-approval check: if receipt amount ≥ admin-configured threshold, require second finance staff confirmation | L |",
+      "requirement_sha256": "481a2500fcc1695491673a2ec4b1acd9fe63db77061ba43ffb45e84424c39cfc",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "006e38eae0ae4dced1a66aa532c4747568f50b94735d0f96b74cffdfae01b61f"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "d663139ddae3acb837a4e7029b3dcb64f5946d536ea2dc24c12d7cd43645490e"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "09e9540500f64a15ba640c7e84fefb04195a6a547765a8b671e19396882c720b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "1dbc127d1794c0edcfdf0e02f30d66efa91300b2105591c0962df5019c9f18eb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+          "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+          "sha256": "3647ec9f359bac9f73b351d160199142811688bd0e08903606e4af78b2ce2a78"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+          "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-overpayment.ts",
+          "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        300
+      ],
+      "historically_skipped": false,
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
       ]
     }
   ],
@@ -7862,8 +8638,6 @@
     "02-auth-users-admin.md#T-09.06.01",
     "02-auth-users-admin.md#T-09.06.02",
     "02-auth-users-admin.md#T-09.06.03",
-    "02-auth-users-admin.md#T-09.07.01",
-    "02-auth-users-admin.md#T-09.07.02",
     "02-auth-users-admin.md#T-09.08.01",
     "02-auth-users-admin.md#T-09.08.02",
     "02-auth-users-admin.md#T-09.08.03",
@@ -7911,9 +8685,6 @@
     "04-invoices-wallet-contracts.md#T-04.1.05.04",
     "04-invoices-wallet-contracts.md#T-04.2.02.01",
     "04-invoices-wallet-contracts.md#T-04.2.02.02",
-    "04-invoices-wallet-contracts.md#T-04.2.02.03",
-    "04-invoices-wallet-contracts.md#T-04.2.02.04",
-    "04-invoices-wallet-contracts.md#T-04.2.02.05",
     "04-invoices-wallet-contracts.md#T-04.2.02.06",
     "04-invoices-wallet-contracts.md#T-04.2.02.07",
     "04-invoices-wallet-contracts.md#T-04.2.03.01",
@@ -7923,11 +8694,6 @@
     "04-invoices-wallet-contracts.md#T-04.2.04.01",
     "04-invoices-wallet-contracts.md#T-04.2.04.02",
     "04-invoices-wallet-contracts.md#T-04.2.04.03",
-    "04-invoices-wallet-contracts.md#T-04.3.01.01",
-    "04-invoices-wallet-contracts.md#T-04.3.01.02",
-    "04-invoices-wallet-contracts.md#T-04.3.01.03",
-    "04-invoices-wallet-contracts.md#T-04.3.01.04",
-    "04-invoices-wallet-contracts.md#T-04.3.01.05",
     "03-core-business.md#T-03.01.01.01",
     "03-core-business.md#T-03.01.01.02",
     "03-core-business.md#T-03.01.01.03",
@@ -9810,6 +10576,481 @@
         "review": "Unchanged wallet reads and other recorded sources; archival changes affect mutations only.",
         "record": "audit/evidence/step-reviews.json#R01-archive-wallet-writers"
       }
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 228,
+      "requirement": "| T-04.2.01.01 | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` | M |",
+      "requirement_sha256": "871fe0f0c807a52bf3a1601c49d98ddfe2904178211ae88141f20c0e07805572",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        149
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 229,
+      "requirement": "| T-04.2.01.02 | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps | L |",
+      "requirement_sha256": "ff470f5cd09d63e459ceeb7282f0448853c218779d4f6435e238d327ef7e1de2",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        149,
+        251,
+        260
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 230,
+      "requirement": "| T-04.2.01.03 | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` | M |",
+      "requirement_sha256": "767cb12016acf034cfc1c5c12aa35ec0ab2db8a613ffa56da99d9a25f5d0dd39",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        252,
+        254,
+        261
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 231,
+      "requirement": "| T-04.2.01.04 | Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes | L |",
+      "requirement_sha256": "e858207e76ad03f0889eafaef718069e0b48165762eefe36425bc052bc18e680",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        253,
+        262
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 232,
+      "requirement": "| T-04.2.01.05 | Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow | M |",
+      "requirement_sha256": "157ef01cd6bc1a9c943bc80ae489ee78a140bb828a72732fb85e5103bd02abfa",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        255,
+        263
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.06",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 233,
+      "requirement": "| T-04.2.01.06 | Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion` | M |",
+      "requirement_sha256": "58f3ff2b362e3a2e0c0d3ed0d46e4629925c6c36cbf5ab3826624fed8ff54427",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        256
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.07",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 234,
+      "requirement": "| T-04.2.01.07 | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column | M |",
+      "requirement_sha256": "d1ce1b93936733c5096227e8b578e7807d770ea3da411abcc690bd6d5201e2dd",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/wallets.ts",
+          "sha256": "e6d3c553bf283fe3a928930a03798a4660091ed2027af43da230ee6b2cb6b7b6"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-credit.integration.test.ts",
+          "sha256": "b089896532efe210a9887dd4aba02b5b1aee551b803423a5013e58b59e75bbdf"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-debit.integration.test.ts",
+          "sha256": "6662461b35cf11006dcab80587e1d88b230951ae11b20490cf3f9e23aba2d410"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-reserve.integration.test.ts",
+          "sha256": "20d622ede084714b18ffceb290fcd0914059a53699294522fb116f884172edae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
+          "sha256": "c3f64a805d2da578a1d0fc42084baecfcd6f45e7f2584062fece2d9dc2d8109a"
+        }
+      ],
+      "checks": [
+        "Task-specific source, focused scanner checks and preserved ledger/dashboard evidence recorded once in audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        257
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Local source and production-schema fixture acceptance; no deployed operations or separate payment/refund caller acceptance."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 610,
+      "requirement": "**T-08.01.02 — Wallet balance card**\n\n- Description: Shows available wallet balance in IRR and toman. Link to wallet page. Alert if balance is low relative to pending invoices.\n- Technical notes: Calls wallet service for balance. Format IRR with locale-aware number formatting.\n- UI/UX: Card with balance prominently displayed. Currency label (IRR/تومان). Button: \"Charge wallet\". Warning banner if low balance for due invoices.\n- Dependencies: wallet module\n- Complexity: S",
+      "requirement_sha256": "0ae7ccd5841717e0263307f72c0a84b6845cf7f43a07f8c068b3bb06dcf45bb2",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "ae8d15ee7a3470b6aef7475907393102300d3fa2ce4305a501967f2bda5bc584"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.service.ts",
+          "sha256": "4e17fafcdea722cbd3ae22dd8e359ef1e3de6de66493baf6414d6ebedbbc17d7"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.module.ts",
+          "sha256": "94a10a3ecfff82439ba4b504e477e92e22e58c44719048eb1ff56908caccd2c9"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+        },
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "29a1a05d9edd3f9a5ad2aee201b78736d7cb72b12d605dbc75764daae32a8bf6"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "3ed84578f7406c59455c1b7eac5b70c96fa29ef027dc6e4631af7e43b5396b60"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "1dd94195b50ad7ab1cab11ca96d65bd5fe459dd8832af7320c28dd0da249a590"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "ffd7cc7fbbf0727e71ce3067d6a261dc77ba431b1e004a552850b1cbe1388853"
+        }
+      ],
+      "checks": [
+        "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
+        "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "At 7af0a76, reviewed wallet archival changes. getWallet remains identical to 9635e76; every other recorded source hash still matches. Preserve existing balance-card browser evidence; this step does not claim a new browser run.",
+        "At 5543cc2, reviewed atomic invitation credential rotation and focused evidence; see audit/evidence/step-reviews.json#R01-invitation-credentials. Other methods/criteria and older drift remain unchanged.",
+        "Current bounded source comparison and consolidated wallet review: audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ],
+      "merged_prs": [
+        153
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Dashboard reads are informational snapshots, not payment authorization. External wallet HTTP consumers must accept decimal-string money."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      ]
     }
   ],
   "current_requirements_register": "audit/current-task-requirements.json"

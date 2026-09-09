@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
+  "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
   "active_step": "R01",
-  "next_action": "Finish bounded receipt acceptance: customer upload UI/evidence and remaining repeated PR product diffs, incidental T-04.3.01.06 coverage, narrow wallet/card source refresh, then one consolidated task/PR batch closure. Threshold UI and corrupt-read handling are now complete; do not rebuild them.",
+  "next_action": "Read current initiation/callback/expiry owners and exact requirements; do not rebuild verified receipt or approval paths.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -587,6 +587,10 @@
     {
       "id": "R01-wallet-ledger",
       "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+    },
+    {
+      "id": "R01-bank-receipts-approval",
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
     }
   ],
   "deferred_improvements": [
@@ -605,9 +609,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 88,
-    "partial": 20,
-    "pending": 214,
+    "acceptance_verified": 97,
+    "partial": 21,
+    "pending": 204,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -721,318 +725,73 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-bank-receipts-approval",
-    "name": "Bank receipt submission, settlement and independent approval",
-    "status": "in_progress",
+    "id": "R01-online-topups-callbacks",
+    "name": "Online wallet top-ups, provider callbacks and expiry",
+    "status": "reviewing",
     "prs": [
-      195,
-      196,
-      266,
-      267,
-      268,
-      278,
-      279,
-      286,
-      287,
-      296,
-      297,
-      298,
-      299,
-      300,
-      301,
-      302
+      259,
+      265,
+      269,
+      270,
+      280,
+      281,
+      288,
+      289,
+      303
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-09.07.01",
-      "02-auth-users-admin.md#T-09.07.02",
-      "04-invoices-wallet-contracts.md#T-04.2.02.03",
-      "04-invoices-wallet-contracts.md#T-04.2.02.04",
-      "04-invoices-wallet-contracts.md#T-04.2.02.05",
-      "04-invoices-wallet-contracts.md#T-04.3.01.01",
-      "04-invoices-wallet-contracts.md#T-04.3.01.02",
-      "04-invoices-wallet-contracts.md#T-04.3.01.03",
-      "04-invoices-wallet-contracts.md#T-04.3.01.04",
-      "04-invoices-wallet-contracts.md#T-04.3.01.05"
+      "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "04-invoices-wallet-contracts.md#T-04.2.02.06",
+      "04-invoices-wallet-contracts.md#T-04.2.02.07"
     ],
     "remaining_checklist": [
-      "Read exact10 mapped requirements, their story context, PR deferrals and existing receipt/approval evidence.",
-      "Review both wallet and invoice receipt transaction owners, current authorization/step-up, attachment binding, amount/threshold policy, independent approval/rejection, excess credit and customer/staff UI.",
-      "Compare repeated confirmation/overpayment PRs once. Trace PR298 incidental T-04.3.01.06 notification before treating it as unbuilt; notification delivery remains R02 where necessary."
+      "Review exact four requirements and saved PR deferrals; preserve current online-limit/version UI and wallet receipt evidence.",
+      "Trace initiation/current owner+Finance authority, configured limit, provider authenticated callback/merchant/event/replay binding, atomic credit and expiry races.",
+      "Disposition browser payment-return GET and signed callback against recorded CSRF requirement; link sensitive caller and agent-role acceptance.",
+      "Compare repeated limit269/280/288/303 and expiry270/281/289 diffs only where behavior/provenance needs resolution. Run focused missing evidence after confirmed repairs; consolidate individually."
     ],
     "historical_deferrals": [
       {
-        "pr": 301,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/301",
+        "pr": 288,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/288",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          "04-invoices-wallet-contracts.md#T-04.2.02.06"
         ],
         "historical_deferrals": [
-          "- [ ] Dual-approval for high-value wallet top-ups is out of this task (owned by T-04.3.01.05 / C-04.CC.02 for invoice receipts)."
+          "- [x] Admin-configurable `onlineTopUpLimit` with default 2,000,000,000 IRR — GET/PUT `/api/admin/config/wallet-top-up-limit`; missing rows serve the default at version `0`. Covered by existing admin/API tests; not re-implemented in this follow-up.",
+          "- [x] Versioned config — `app_config.version` increments on write, global `config_version` is bumped, and `ConfigCache.invalidate` runs after commit. Covered by existing admin service tests; not re-implemented in this follow-up."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       },
       {
-        "pr": 298,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/298",
+        "pr": 259,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/259",
         "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.3.01.03"
+          "04-invoices-wallet-contracts.md#T-04.2.02.01"
         ],
         "historical_deferrals": [
-          "- [ ] Dual-approval for amounts ≥ admin threshold — deferred to T-04.3.01.05.",
-          "- [ ] Staff rejection API — deferred to T-04.3.01.04.",
-          "- [ ] Staff confirmation UI — not in this API-only task."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 297,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/297",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.3.01.02"
-        ],
-        "historical_deferrals": [
-          "- Remaining-balance / overpayment checks are deferred to staff confirmation (T-04.3.01.03)."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 296,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/296",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.3.01.01"
-        ],
-        "historical_deferrals": [
-          "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid → Partially funded → Paid tracking are intentionally deferred to T-04.3.01.02–07."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 286,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/286",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.04"
-        ],
-        "historical_deferrals": [
-          "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 278,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/278",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.04"
-        ],
-        "historical_deferrals": [
-          "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 267,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/267",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.04"
-        ],
-        "historical_deferrals": [
-          "- Dual-approval thresholds for bank-payment confirmation are owned by T-04.3.01.05 / C-04.CC.02 and are not implemented here."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 266,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/266",
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.03"
-        ],
-        "historical_deferrals": [
-          "- Posted and reserved balances are unchanged. Credit is deferred to staff confirmation (`T-04.2.02.04`). Idempotent retries reuse the matching Pending row.",
-          "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) — this task only creates the Pending submission."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 196,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/196",
-        "task_keys": [
-          "02-auth-users-admin.md#T-09.07.02"
-        ],
-        "historical_deferrals": [
-          "- [ ] UI: \"Pending approvals\" in finance dashboard — deferred (finance module & dashboard do not exist yet; web surface will consume these endpoints when the finance module lands)",
-          "- [ ] Step-up auth on resolve — deferred (step-up flow design pending; noted in epic S-09.07)",
-          "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) — deferred (sessions expose only `isAdmin`; documented in the service and gate)",
-          "Deferred from this slice and tracked in PR description: UI, step-up on resolution, role-based eligibility, and the finance-module threshold consumer (its own epic tasks)."
-        ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
-      },
-      {
-        "pr": 195,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/195",
-        "task_keys": [
-          "02-auth-users-admin.md#T-09.07.01"
-        ],
-        "historical_deferrals": [
-          "- [x] Step-up auth on the mutation: deferred — the web app has no step-up challenge flow yet and admin config panels use raw fetch; requiring it would regress the working save path (follow-up with T-09.06.01/02/03 step-up UI)",
-          "- [ ] Emergency override (reason + elevated permission + immediate alert + audit): deferred until the step-up flow and alert pipeline exist",
-          "- [ ] T-09.07.02 workflow consumption: not part of this task (finance module doesn't exist yet; the config contract documents the `> threshold && threshold > 0` semantics it must use)"
+          "- [x] The API returns a gateway `redirectUrl`; the wallet page assigns `window.location` to it only after HTTPS/no-credentials checks. Credit is deferred to the callback handler."
         ],
         "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
       }
     ],
-    "confirmed_defects": [
-      {
-        "task_keys": [
-          "04-invoices-wallet-contracts.md#T-04.2.02.03",
-          "04-invoices-wallet-contracts.md#T-04.3.01.02"
-        ],
-        "status": "fixed_and_verified",
-        "summary": "Customer receipt submissions now lock the account, current session and owner/Finance profile permission through commit, then recheck session expiry and CSRF. Missing wallet creation and submission audit are atomic.222 distinct affected API cases pass; API types/lint/build/OpenAPI pass.",
-        "commit": "0d75b640e7ef2bea4be352de70c4577ebb97147e"
-      },
-      {
-        "status": "fixed_and_verified",
-        "commit": "397d8fd6080a4b617224d757c56b3642d1795833",
-        "summary": "Generic approval creation and resolution retain current account, role, session and step-up through commit.64 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
-      },
-      {
-        "status": "fixed_and_verified",
-        "commit": "d646396a854c9ba77cfb40b88696ee9de67c7120",
-        "summary": "Wallet/invoice receipt confirmations and rejections retain current session and step-up inside the transaction and before every commit, including replay and approval parking.202 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
-      },
-      {
-        "status": "fixed_and_verified",
-        "commit": "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
-        "summary": "Threshold config requires current session/step-up through commit, serializes missing-row creation with complete previous-value/version audit, and retains the threshold used by receipt/generic approval transactions.215 distinct affected API cases pass. Policy locks precede staff/session locks after review caught notification foreign-key deadlocks. Types/lint/format/OpenAPI pass."
-      },
-      {
-        "status": "fixed_and_verified",
-        "commit": "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
-        "summary": "Wallet receipts now seal validated bytes under server-only keys using extracted invoice sealing code. Both flows journal copy cleanup outside the business transaction, keep the journal locked until commit, preserve matching retries, and refuse to recreate a copy whose cleanup already finished.90 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
-      },
-      {
-        "status": "fixed_and_verified",
-        "summary": "341246f/1bb1556: emergency confirmation applies only to one already-pending receipt approval, requires the separate admin:financial:emergency-override permission plus current step-up, preserves evidence binding, and commits settlement, explicit override audit and immediate private bilingual in-app alerts together. Ordinary self-approval remains forbidden. Wallet UI advertises server permission, requires a reason, captures target/reason through step-up and restores focus.168 distinct affected API cases,17 web unit and9 Chromium checks pass; types/lint/build/OpenAPI pass. No external-channel or deployment claim.",
-        "commit": "1bb15560a1cd8648090e47258e5c5e1261e420bc"
-      },
-      {
-        "status": "fixed_and_verified",
-        "commit": "f7efbb90f856a50944191301afac64042d172303",
-        "summary": "Staff receipt confirm/reject retries capture the original receipt through step-up and prevent queue selection during actions. Both wrong-target races reproduced;15 web unit cases, web types and lint pass."
-      },
-      {
-        "status": "fixed_and_verified",
-        "commit": "c9567b9f58fc42deb63e7905000592ecdd54b508",
-        "summary": "Both approvers retain account and role authority through settlement. NOWAIT avoids opposite-actor deadlocks and yields retryable409. Eight authority-retention baseline failures;143 affected API cases and API types/lint pass."
-      },
-      {
-        "status": "fixed_and_verified",
-        "commit": "6ed170354768de1304c9596cb501c85410504583",
-        "summary": "Wallet/invoice approval initiation, resolution and rejection synchronization retain current session/correlation audit context.122 affected API cases and types/lint pass. Initial audit test used a uuid[] against text IDs; corrected before four valid baseline failures."
-      },
-      {
-        "status": "fixed_and_verified",
-        "commit": "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
-        "summary": "Threshold configuration had no staff UI. Added a bilingual panel to the approval queue using captured TeamActionDialog password verification, strict localized money validation, exact display, explicit zero semantics and failure/permission states. Corrupt stored config now returns503 instead of falsely reporting disabled.14 API and9 distinct Chromium cases, both package types, lint and web build pass."
-      }
-    ],
+    "confirmed_defects": [],
     "reused_evidence": [
+      "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "audit/evidence/step-reviews.json#R01-wallet-ledger",
-      "audit/evidence/step-reviews.json#R01-archive-wallet-writers",
       "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Finish bounded receipt acceptance: customer upload UI/evidence and remaining repeated PR product diffs, incidental T-04.3.01.06 coverage, narrow wallet/card source refresh, then one consolidated task/PR batch closure. Threshold UI and corrupt-read handling are now complete; do not rebuild them.",
-    "product_commits": [
-      "0d75b640e7ef2bea4be352de70c4577ebb97147e",
-      "397d8fd6080a4b617224d757c56b3642d1795833",
-      "d646396a854c9ba77cfb40b88696ee9de67c7120",
-      "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
-      "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
-      "f7efbb90f856a50944191301afac64042d172303",
-      "c9567b9f58fc42deb63e7905000592ecdd54b508",
-      "6ed170354768de1304c9596cb501c85410504583",
-      "341246f326849b43acd8148f502012eb0b05ee6b",
-      "1bb15560a1cd8648090e47258e5c5e1261e420bc",
-      "3b67bbcb25c254b5824a01ce4de6d57d3b189417"
-    ],
-    "verification": {
-      "receipt_submission": {
-        "source_revision": "0d75b640e7ef2bea4be352de70c4577ebb97147e",
-        "distinct_api_cases": 222,
-        "logs_prefix": "/tmp/r01-receipt-submission-",
-        "limits": "218-case affected run plus4 new cases; focused runs overlap. First fixtures incorrectly queried audit session_id/text metadata and were corrected. A type-check overlapped fixture rebuilding and passed after serialized retry. No browser/budget/full-suite claim."
-      },
-      "generic_approval": {
-        "source_revision": "397d8fd6080a4b617224d757c56b3642d1795833",
-        "distinct_api_cases": 64,
-        "logs_prefix": "/tmp/r01-approval-",
-        "limits": "28 unit,35 HTTP and1 invoice caller case. Initial user-lock reproduction was an invalid fixture because SessionAuthGuard already locks users. Later fixture fixes restore idle_deadline after expiry. No valid 12-case baseline reproduction claimed; current tests verify held authority and late expiry rollback. One outdated direct caller found by types was repaired before final passing typecheck."
-      },
-      "receipt_decisions": {
-        "source_revision": "d646396a854c9ba77cfb40b88696ee9de67c7120",
-        "distinct_api_cases": 202,
-        "logs_prefix": "/tmp/r01-receipt-decision-",
-        "limits": "All20 added HTTP cases reproduced success after stale authority before the fix.10-file202-case run then a79-case rerun of2 files; counts deduplicated. Corrected CSRF expectation to403 and a pre-existing invoice unit profile-lock fixture. Real integration confirms rollback of money, receipt, approval/outbox/audit. No new browser/budget/broad coverage claim."
-      },
-      "threshold_transactions": {
-        "source_revision": "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
-        "distinct_api_cases": 215,
-        "logs_prefix": "/tmp/r01-threshold-",
-        "limits": "Six baseline HTTP failures reproduced expiry, missing previous audit and mid-decision policy change.177-case affected run plus38 archive cases;99-case HTTP/archive rerun overlaps. Initial lock order caused2 config500s through notification recipient FK waits and was corrected before commit. No new browser/budget/full suite claim."
-      },
-      "receipt_sealing": {
-        "source_revision": "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
-        "distinct_api_cases": 90,
-        "logs_prefix": "/tmp/r01-receipt-sealing-",
-        "limits": "Wallet overwrite baseline failed; invoice baseline passed.88-case run,41-case fixture rerun and24 authority/overwrite/copy cases total90 after deduplication.4 failed-copy cases rerun against the built production worker. Older fixture expectations changed from uploaded keys to sealed keys; archive fixture now supplies real bytes. Initial extraction typo and cross-project source import type failures fixed. Existing receipts are preserved; historical bytes changed before this fix cannot be reconstructed locally. No new browser/budget/full suite claim."
-      },
-      "receipt_ui_target": {
-        "source_revision": "f7efbb90f856a50944191301afac64042d172303",
-        "distinct_web_unit_cases": 15,
-        "logs_prefix": "/tmp/r01-receipt-ui-target-",
-        "limits": "Two valid wrong-target baseline failures. The requested AdminApprovalRequestsPage.test.tsx file does not exist; only the wallet page unit file ran. Shared approval UI was read and later tested by existing approval-queue browser checks."
-      },
-      "receipt_approver_locks": {
-        "source_revision": "c9567b9f58fc42deb63e7905000592ecdd54b508",
-        "distinct_api_cases": 143,
-        "logs_prefix": "/tmp/r01-receipt-approver-lock-",
-        "limits": "Eight baseline failures establish that other-approver role/account changes did not wait for settlement. Two added busy-reviewer cases prove409, no side effects and successful retry. Initial types failed on unknown query/JSON values; corrected assertions and passing final types are bound to the amended c9567b9, not transient af3f57a."
-      },
-      "receipt_approval_audit": {
-        "source_revision": "6ed170354768de1304c9596cb501c85410504583",
-        "distinct_api_cases": 122,
-        "logs_prefix": "/tmp/r01-receipt-approval-audit-",
-        "limits": "Four initial fixtures failed on text=uuid; corrected baseline showed missing session/correlation. Four-file122-case regression passes. Session IDs remain audit metadata only, never approval details exposed in the queue."
-      },
-      "receipt_emergency": {
-        "source_revision": "1bb15560a1cd8648090e47258e5c5e1261e420bc",
-        "api_revision": "341246f326849b43acd8148f502012eb0b05ee6b",
-        "distinct_api_cases": 168,
-        "distinct_web_unit_cases": 17,
-        "chromium_cases": 9,
-        "logs_prefix": "/tmp/r01-receipt-emergency-",
-        "limits": "166-case affected API run plus two explicit-grant cases;28-case emergency rerun and10-case controller rerun overlap.17 wallet UI cases and9 production-build Chromium cases include two new bilingual emergency/axe/focus cases, five existing approval queue cases and two receipt-time cases. Initial type mismatch in the SQL-client contract fixed before passing types/build. Existing nonblocking pg/color/bundle warnings preserved. Immediate alerts are in-app; no email/SMS delivery claim. No new full-suite, global coverage, budget, image or deployed-system claim."
-      },
-      "threshold_screen": {
-        "source_revision": "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
-        "distinct_api_cases": 14,
-        "chromium_cases": 9,
-        "logs_prefix": "/tmp/r01-threshold-screen-",
-        "limits": "API unit/controller checks cover valid/missing/corrupt reads and writes. Four new browser cases plus five existing queue cases. First browser run passed7/9; two test locators could not see the correctly inert page behind the password dialog. DOM-state assertion corrected; the two targeted reruns pass, with prior seven preserved. Both locale cases include axe. No new whole-suite, coverage, budget, image or deployment claim."
-      }
-    },
-    "historical_review_notes": [
-      "Two repeated receipt groups: confirmation/UI267/278/286/301 and overpayment268/279/287/302. Later PRs add focus/reject/RTL, wallet-before-invoice lock order, payable-state restrictions and accurate excess-credit notice payloads. They modify one service/page rather than create parallel implementations. Actual279/287/302 product diffs and286 UI diff read;278/301 full product diff review and final dispositions remain. Saved stat inventory: /tmp/r01-receipt-pr-repeat-review.log.",
-      "PR298 incidental T-04.3.01.06 is separate wallet overpayment credit, not notification. Current invoice confirm uses its distinct idempotency key; final acceptance mapping still pending."
-    ]
+    "next_action": "Read current initiation/callback/expiry owners and exact requirements; do not rebuild verified receipt or approval paths."
   },
   "open_domain_reviews": [
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "owner_batch": "wallet/ledger and receipts/approvals/payments",
       "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
-      "status": "Wallet/dashboard read evidence linked; receipt/payment/refund mutation acceptance remains.",
-      "evidence": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+      "status": "Wallet/dashboard reads and current receipt submissions/decisions verified, including additive Finance and Manager/Legal denial. Payment/refund mutation acceptance remains.",
+      "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
@@ -1098,6 +857,31 @@
       "owning_batch": "R03 timestamp consumers",
       "remaining": "R03: link complete timestamp-consumer coverage to the account timezone while calendar selection remains locale-based.",
       "review_record": "audit/evidence/step-reviews.json#R01-account-settings"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.04",
+      "prs": [
+        299
+      ],
+      "owning_batch": "R02 notification delivery",
+      "remaining": "Actual customer rejection delivery, preferences, templates and retries. State/reason/audit/enqueue verified.",
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
+      "prs": [
+        301
+      ],
+      "owning_batch": "R02 notification delivery",
+      "remaining": "Actual customer wallet confirmation/rejection notice delivery. Staff decision acceptance verified.",
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.06",
+      "owning_batch": "V01/B01 incidental implementation",
+      "status": "implemented_and_reviewed_incidentally",
+      "remaining": "Retain separate overpayment credit implementation fromPR298; link this evidence during full backlog disposition. Outside322 historical claims; not an unbuilt task.",
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
     }
   ]
 }

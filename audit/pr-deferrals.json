@@ -8,7 +8,16 @@
     "historical_deferrals": [
       "- [ ] Dual-approval for high-value wallet top-ups is out of this task (owned by T-04.3.01.05 / C-04.CC.02 for invoice receipts)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current wallet high-value confirmation is bound to distinct current finance approval and threshold policy. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 298,
@@ -21,7 +30,26 @@
       "- [ ] Staff rejection API — deferred to T-04.3.01.04.",
       "- [ ] Staff confirmation UI — not in this API-only task."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current invoice threshold gate and independent approval verified. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current rejection API implemented; actual notice delivery remains separately assigned to R02 under T-04.3.01.04. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "separate_future_dependency",
+        "evidence": "The mapped task explicitly requires an API; staff invoice UI belongs to separate UI requirements. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 297,
@@ -32,7 +60,16 @@
     "historical_deferrals": [
       "- Remaining-balance / overpayment checks are deferred to staff confirmation (T-04.3.01.03)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Remaining balance and independent excess credit are checked atomically at confirmation. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 296,
@@ -43,7 +80,16 @@
     "historical_deferrals": [
       "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid → Partially funded → Paid tracking are intentionally deferred to T-04.3.01.02–07."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Later upload/confirmation/rejection/dual-approval and invoice state allocation implementations exist. Separate excess credit is linked incidentally to T-04.3.01.06; actual rejection delivery remains R02 under its own task. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 295,
@@ -112,7 +158,16 @@
     "historical_deferrals": [
       "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current wallet dual-approval gate is implemented and verified. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 285,
@@ -145,7 +200,16 @@
     "historical_deferrals": [
       "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current wallet dual-approval gate is implemented and verified. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 276,
@@ -214,7 +278,16 @@
     "historical_deferrals": [
       "- Dual-approval thresholds for bank-payment confirmation are owned by T-04.3.01.05 / C-04.CC.02 and are not implemented here."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current wallet dual-approval gate is implemented and verified. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 266,
@@ -226,7 +299,21 @@
       "- Posted and reserved balances are unchanged. Credit is deferred to staff confirmation (`T-04.2.02.04`). Idempotent retries reuse the matching Pending row.",
       "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) — this task only creates the Pending submission."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Staff confirmation now calls WalletService.credit atomically; Pending submission preserves balances and replay identity. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current staff confirm/reject UI and step-up target binding verified. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 259,
@@ -665,7 +752,31 @@
       "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) — deferred (sessions expose only `isAdmin`; documented in the service and gate)",
       "Deferred from this slice and tracked in PR description: UI, step-up on resolution, role-based eligibility, and the finance-module threshold consumer (its own epic tasks)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current pending queue with details, amount, initiator, reason and independent approval/rejection is verified in fa/en. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current session step-up is checked through approval commit. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current isAdmin/role eligibility is verified and held through decisions. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      },
+      {
+        "statement_index": 3,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current bank-receipt consumers use the positive >= threshold contract. Future refund/manual-adjustment consumers belong to separate service tasks. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 195,
@@ -678,7 +789,26 @@
       "- [ ] Emergency override (reason + elevated permission + immediate alert + audit): deferred until the step-up flow and alert pipeline exist",
       "- [ ] T-09.07.02 workflow consumption: not part of this task (finance module doesn't exist yet; the config contract documents the `> threshold && threshold > 0` semantics it must use)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
+    "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+    "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Configuration mutation now requires current session/password step-up through commit; UI captures exact localized amount. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "One pending receipt can be settled via separate elevated permission, required reason, atomic audit and immediate in-app alert; threshold remains unchanged. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current receipt workflow consumes >= positive threshold; historical > wording was incorrect. Refund/manual-adjustment consumers remain their separate future module work. audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+      }
+    ]
   },
   {
     "pr": 194,

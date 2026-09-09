@@ -7579,6 +7579,969 @@
         "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
         "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz"
       ]
+    },
+    {
+      "id": "R01-bank-receipts-approval",
+      "date": "2026-09-09",
+      "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "base_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
+      "product_commits": [
+        "0d75b640e7ef2bea4be352de70c4577ebb97147e",
+        "397d8fd6080a4b617224d757c56b3642d1795833",
+        "d646396a854c9ba77cfb40b88696ee9de67c7120",
+        "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
+        "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
+        "f7efbb90f856a50944191301afac64042d172303",
+        "c9567b9f58fc42deb63e7905000592ecdd54b508",
+        "6ed170354768de1304c9596cb501c85410504583",
+        "341246f326849b43acd8148f502012eb0b05ee6b",
+        "1bb15560a1cd8648090e47258e5c5e1261e420bc",
+        "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
+        "b4356e03514ce16507f87ca49fad515e8802dd96"
+      ],
+      "summary": "Receipt/approval batch consolidated:9 new verified tasks,1 partial;14 saved PR reviews closed,2 open for customer delivery. Twelve cohesive repairs verified; existing wallet evidence preserved.",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05"
+      ],
+      "review": [
+        "Customer wallet/invoice submissions validate positive int8 money, dates/references and server-owned sealed attachments. Current session, active profile, owner/Finance authority and provenance remain valid through commit. Submission/audit/wallet creation are atomic; Pending/Submitted does not credit money.",
+        "Confirmation/rejection and approval initiation/resolution hold current session/step-up and both approvers account/role authority through settlement. Normal self-approval is forbidden. Busy conflicting authority locks return retryable409 rather than using stale permission.",
+        "Positive threshold is inclusive and held through decisions. Missing config means disabled for new actions; corrupt persisted config is unavailable. Serialized first write retains actual previous value/version audit. Existing pending approval bindings survive threshold changes. Required localized configuration and queue screens are present and verified.",
+        "Emergency confirmation is a single pending receipt settlement with separately authorized current actor, fresh step-up, required reason, immutable evidence binding, explicit audit and immediate private in-app alerts in the same transaction. No global policy bypass or reusable override grant is issued.",
+        "Wallet-before-invoice locking and allocation prevent over-settlement. Confirmed excess uses separate WalletService.credit with its own idempotency key. Replay/concurrency and audit failures preserve atomic money/receipt/invoice outcomes. Rejected receipts never credit balance; reject reason and audit are retained.",
+        "Customer form retries preserve the uploaded attachment identity and wallet request key after a lost acknowledgement. Strict shared localized amount parsing rejects signs/decimals/exponents/malformed grouping. File MIME/size and acknowledgement validation are shared. New-file submission remains possible after success; native file selection clears.",
+        "Staff wallet actions retain the selected receipt/reason through password prompts. Queue selection is disabled while acting; focus restores safely. Production browser evidence covers fa/en, RTL, accessible errors, paired button contrast and relevant axe scans.",
+        "The two repeated groups267/278/286/301 and268/279/287/302 modify one page/service, adding focus/RTL, lock order, invoice-state checks and accurate excess notices. No competing implementation needs deletion. Current Overdue receipt settlement follows the current payable-state contract, superseding older overly restrictive behavior.",
+        "Invoice rejection/customer wallet notices are transactionally enqueued, but enqueue does not prove customer delivery. PR299 and301 remain open in R02. Configuration/workflow future refund/manual-adjustment consumers and invoice staff UI remain separate requirements; no unbuilt future feature is counted as passed."
+      ],
+      "checks": [
+        "Per-repair checks/revisions/failures are preserved under verification; counts overlap across repairs and are not summed. Latest customer repair:49 web unit cases and8 distinct production Chromium cases, including4 fa/en retry/axe checks. Types/lint/format/build pass.",
+        "Existing migrated PostgreSQL integration evidence verifies receipt schema, ownership, race/expiry/rollback, threshold, independent approvers, byte sealing/cleanup and excess-credit idempotency. No backend change follows the latest threshold/emergency evidence.",
+        "Narrow wallet/card source refresh affects8 existing records: only optional transaction-client routing and type assertions changed. Other bound source hashes are unchanged. Existing money/dashboard checks remain valid; no rerun or renewal of all648 historical finance cases claimed.",
+        "No full repository regression, coverage, budget, image, deployment or fresh GitHub inventory claim. Broad checkpoint remains V02."
+      ],
+      "repairs": [
+        {
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.03",
+            "04-invoices-wallet-contracts.md#T-04.3.01.02"
+          ],
+          "status": "fixed_and_verified",
+          "summary": "Customer receipt submissions now lock the account, current session and owner/Finance profile permission through commit, then recheck session expiry and CSRF. Missing wallet creation and submission audit are atomic.222 distinct affected API cases pass; API types/lint/build/OpenAPI pass.",
+          "commit": "0d75b640e7ef2bea4be352de70c4577ebb97147e"
+        },
+        {
+          "status": "fixed_and_verified",
+          "commit": "397d8fd6080a4b617224d757c56b3642d1795833",
+          "summary": "Generic approval creation and resolution retain current account, role, session and step-up through commit.64 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
+        },
+        {
+          "status": "fixed_and_verified",
+          "commit": "d646396a854c9ba77cfb40b88696ee9de67c7120",
+          "summary": "Wallet/invoice receipt confirmations and rejections retain current session and step-up inside the transaction and before every commit, including replay and approval parking.202 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
+        },
+        {
+          "status": "fixed_and_verified",
+          "commit": "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
+          "summary": "Threshold config requires current session/step-up through commit, serializes missing-row creation with complete previous-value/version audit, and retains the threshold used by receipt/generic approval transactions.215 distinct affected API cases pass. Policy locks precede staff/session locks after review caught notification foreign-key deadlocks. Types/lint/format/OpenAPI pass."
+        },
+        {
+          "status": "fixed_and_verified",
+          "commit": "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
+          "summary": "Wallet receipts now seal validated bytes under server-only keys using extracted invoice sealing code. Both flows journal copy cleanup outside the business transaction, keep the journal locked until commit, preserve matching retries, and refuse to recreate a copy whose cleanup already finished.90 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
+        },
+        {
+          "status": "fixed_and_verified",
+          "summary": "341246f/1bb1556: emergency confirmation applies only to one already-pending receipt approval, requires the separate admin:financial:emergency-override permission plus current step-up, preserves evidence binding, and commits settlement, explicit override audit and immediate private bilingual in-app alerts together. Ordinary self-approval remains forbidden. Wallet UI advertises server permission, requires a reason, captures target/reason through step-up and restores focus.168 distinct affected API cases,17 web unit and9 Chromium checks pass; types/lint/build/OpenAPI pass. No external-channel or deployment claim.",
+          "commit": "1bb15560a1cd8648090e47258e5c5e1261e420bc"
+        },
+        {
+          "status": "fixed_and_verified",
+          "commit": "f7efbb90f856a50944191301afac64042d172303",
+          "summary": "Staff receipt confirm/reject retries capture the original receipt through step-up and prevent queue selection during actions. Both wrong-target races reproduced;15 web unit cases, web types and lint pass."
+        },
+        {
+          "status": "fixed_and_verified",
+          "commit": "c9567b9f58fc42deb63e7905000592ecdd54b508",
+          "summary": "Both approvers retain account and role authority through settlement. NOWAIT avoids opposite-actor deadlocks and yields retryable409. Eight authority-retention baseline failures;143 affected API cases and API types/lint pass."
+        },
+        {
+          "status": "fixed_and_verified",
+          "commit": "6ed170354768de1304c9596cb501c85410504583",
+          "summary": "Wallet/invoice approval initiation, resolution and rejection synchronization retain current session/correlation audit context.122 affected API cases and types/lint pass. Initial audit test used a uuid[] against text IDs; corrected before four valid baseline failures."
+        },
+        {
+          "status": "fixed_and_verified",
+          "commit": "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
+          "summary": "Threshold configuration had no staff UI. Added a bilingual panel to the approval queue using captured TeamActionDialog password verification, strict localized money validation, exact display, explicit zero semantics and failure/permission states. Corrupt stored config now returns503 instead of falsely reporting disabled.14 API and9 distinct Chromium cases, both package types, lint and web build pass."
+        },
+        {
+          "id": "customer-receipt-retry-and-validation",
+          "status": "fixed",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "summary": "Retry preserves uploaded attachment identity; wallet no longer strips signs/decimal/exponent characters into a different amount. Shared MIME validation, native file reset and submit contrast verified."
+        }
+      ],
+      "verification": {
+        "receipt_submission": {
+          "source_revision": "0d75b640e7ef2bea4be352de70c4577ebb97147e",
+          "distinct_api_cases": 222,
+          "logs_prefix": "/tmp/r01-receipt-submission-",
+          "limits": "218-case affected run plus4 new cases; focused runs overlap. First fixtures incorrectly queried audit session_id/text metadata and were corrected. A type-check overlapped fixture rebuilding and passed after serialized retry. No browser/budget/full-suite claim."
+        },
+        "generic_approval": {
+          "source_revision": "397d8fd6080a4b617224d757c56b3642d1795833",
+          "distinct_api_cases": 64,
+          "logs_prefix": "/tmp/r01-approval-",
+          "limits": "28 unit,35 HTTP and1 invoice caller case. Initial user-lock reproduction was an invalid fixture because SessionAuthGuard already locks users. Later fixture fixes restore idle_deadline after expiry. No valid 12-case baseline reproduction claimed; current tests verify held authority and late expiry rollback. One outdated direct caller found by types was repaired before final passing typecheck."
+        },
+        "receipt_decisions": {
+          "source_revision": "d646396a854c9ba77cfb40b88696ee9de67c7120",
+          "distinct_api_cases": 202,
+          "logs_prefix": "/tmp/r01-receipt-decision-",
+          "limits": "All20 added HTTP cases reproduced success after stale authority before the fix.10-file202-case run then a79-case rerun of2 files; counts deduplicated. Corrected CSRF expectation to403 and a pre-existing invoice unit profile-lock fixture. Real integration confirms rollback of money, receipt, approval/outbox/audit. No new browser/budget/broad coverage claim."
+        },
+        "threshold_transactions": {
+          "source_revision": "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
+          "distinct_api_cases": 215,
+          "logs_prefix": "/tmp/r01-threshold-",
+          "limits": "Six baseline HTTP failures reproduced expiry, missing previous audit and mid-decision policy change.177-case affected run plus38 archive cases;99-case HTTP/archive rerun overlaps. Initial lock order caused2 config500s through notification recipient FK waits and was corrected before commit. No new browser/budget/full suite claim."
+        },
+        "receipt_sealing": {
+          "source_revision": "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
+          "distinct_api_cases": 90,
+          "logs_prefix": "/tmp/r01-receipt-sealing-",
+          "limits": "Wallet overwrite baseline failed; invoice baseline passed.88-case run,41-case fixture rerun and24 authority/overwrite/copy cases total90 after deduplication.4 failed-copy cases rerun against the built production worker. Older fixture expectations changed from uploaded keys to sealed keys; archive fixture now supplies real bytes. Initial extraction typo and cross-project source import type failures fixed. Existing receipts are preserved; historical bytes changed before this fix cannot be reconstructed locally. No new browser/budget/full suite claim."
+        },
+        "receipt_ui_target": {
+          "source_revision": "f7efbb90f856a50944191301afac64042d172303",
+          "distinct_web_unit_cases": 15,
+          "logs_prefix": "/tmp/r01-receipt-ui-target-",
+          "limits": "Two valid wrong-target baseline failures. The requested AdminApprovalRequestsPage.test.tsx file does not exist; only the wallet page unit file ran. Shared approval UI was read and later tested by existing approval-queue browser checks."
+        },
+        "receipt_approver_locks": {
+          "source_revision": "c9567b9f58fc42deb63e7905000592ecdd54b508",
+          "distinct_api_cases": 143,
+          "logs_prefix": "/tmp/r01-receipt-approver-lock-",
+          "limits": "Eight baseline failures establish that other-approver role/account changes did not wait for settlement. Two added busy-reviewer cases prove409, no side effects and successful retry. Initial types failed on unknown query/JSON values; corrected assertions and passing final types are bound to the amended c9567b9, not transient af3f57a."
+        },
+        "receipt_approval_audit": {
+          "source_revision": "6ed170354768de1304c9596cb501c85410504583",
+          "distinct_api_cases": 122,
+          "logs_prefix": "/tmp/r01-receipt-approval-audit-",
+          "limits": "Four initial fixtures failed on text=uuid; corrected baseline showed missing session/correlation. Four-file122-case regression passes. Session IDs remain audit metadata only, never approval details exposed in the queue."
+        },
+        "receipt_emergency": {
+          "source_revision": "1bb15560a1cd8648090e47258e5c5e1261e420bc",
+          "api_revision": "341246f326849b43acd8148f502012eb0b05ee6b",
+          "distinct_api_cases": 168,
+          "distinct_web_unit_cases": 17,
+          "chromium_cases": 9,
+          "logs_prefix": "/tmp/r01-receipt-emergency-",
+          "limits": "166-case affected API run plus two explicit-grant cases;28-case emergency rerun and10-case controller rerun overlap.17 wallet UI cases and9 production-build Chromium cases include two new bilingual emergency/axe/focus cases, five existing approval queue cases and two receipt-time cases. Initial type mismatch in the SQL-client contract fixed before passing types/build. Existing nonblocking pg/color/bundle warnings preserved. Immediate alerts are in-app; no email/SMS delivery claim. No new full-suite, global coverage, budget, image or deployed-system claim."
+        },
+        "threshold_screen": {
+          "source_revision": "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
+          "distinct_api_cases": 14,
+          "chromium_cases": 9,
+          "logs_prefix": "/tmp/r01-threshold-screen-",
+          "limits": "API unit/controller checks cover valid/missing/corrupt reads and writes. Four new browser cases plus five existing queue cases. First browser run passed7/9; two test locators could not see the correctly inert page behind the password dialog. DOM-state assertion corrected; the two targeted reruns pass, with prior seven preserved. Both locale cases include axe. No new whole-suite, coverage, budget, image or deployment claim."
+        },
+        "customer_receipts": {
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "distinct_web_unit_cases": 49,
+          "chromium_cases": 8,
+          "logs_prefix": "/tmp/r01-customer-receipts-",
+          "limits": "Six valid baseline failures: four changed-upload retries and two wallet negative amounts silently made positive. Shared strict amount/MIME/upload validation is reused by both forms; a form-local file/profile cache preserves attachment identity after a lost acknowledgement. Native file inputs clear on success. First repaired browser run passed6/8; two English submit buttons failed actual contrast. Both buttons now use the paired primary foreground token. Four targeted retry/axe cases pass; the four earlier validation cases are unchanged. Eight distinct browser cases total, with overlap excluded.49 helper/wallet unit cases, web types, focused lint, formatting and production build pass. API code unchanged in this repair; no broad suite/budget/coverage claim."
+        }
+      },
+      "historical_dispositions": [
+        {
+          "pr": 301,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/301",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "historical_deferrals": [
+            "- [ ] Dual-approval for high-value wallet top-ups is out of this task (owned by T-04.3.01.05 / C-04.CC.02 for invoice receipts)."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 298,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/298",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.03"
+          ],
+          "historical_deferrals": [
+            "- [ ] Dual-approval for amounts ≥ admin threshold — deferred to T-04.3.01.05.",
+            "- [ ] Staff rejection API — deferred to T-04.3.01.04.",
+            "- [ ] Staff confirmation UI — not in this API-only task."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 297,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/297",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.02"
+          ],
+          "historical_deferrals": [
+            "- Remaining-balance / overpayment checks are deferred to staff confirmation (T-04.3.01.03)."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 296,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/296",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.01"
+          ],
+          "historical_deferrals": [
+            "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid → Partially funded → Paid tracking are intentionally deferred to T-04.3.01.02–07."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 286,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/286",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "historical_deferrals": [
+            "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 278,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/278",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "historical_deferrals": [
+            "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 267,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/267",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "historical_deferrals": [
+            "- Dual-approval thresholds for bank-payment confirmation are owned by T-04.3.01.05 / C-04.CC.02 and are not implemented here."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 266,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/266",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.03"
+          ],
+          "historical_deferrals": [
+            "- Posted and reserved balances are unchanged. Credit is deferred to staff confirmation (`T-04.2.02.04`). Idempotent retries reuse the matching Pending row.",
+            "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) — this task only creates the Pending submission."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 196,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/196",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.07.02"
+          ],
+          "historical_deferrals": [
+            "- [ ] UI: \"Pending approvals\" in finance dashboard — deferred (finance module & dashboard do not exist yet; web surface will consume these endpoints when the finance module lands)",
+            "- [ ] Step-up auth on resolve — deferred (step-up flow design pending; noted in epic S-09.07)",
+            "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) — deferred (sessions expose only `isAdmin`; documented in the service and gate)",
+            "Deferred from this slice and tracked in PR description: UI, step-up on resolution, role-based eligibility, and the finance-module threshold consumer (its own epic tasks)."
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        },
+        {
+          "pr": 195,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/195",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.07.01"
+          ],
+          "historical_deferrals": [
+            "- [x] Step-up auth on the mutation: deferred — the web app has no step-up challenge flow yet and admin config panels use raw fetch; requiring it would regress the working save path (follow-up with T-09.06.01/02/03 step-up UI)",
+            "- [ ] Emergency override (reason + elevated permission + immediate alert + audit): deferred until the step-up flow and alert pipeline exist",
+            "- [ ] T-09.07.02 workflow consumption: not part of this task (finance module doesn't exist yet; the config contract documents the `> threshold && threshold > 0` semantics it must use)"
+          ],
+          "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        }
+      ],
+      "incidental_implementation": [
+        {
+          "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.06",
+          "requirement": "Overpayment wallet credit: separate WalletService.credit() with its own idempotency key",
+          "source_pr": 298,
+          "status": "implemented_and_reviewed_incidentally",
+          "evidence": "invoice-bank-receipt-confirmation.service.ts uses invoiceBankReceiptOverpaymentCreditIdempotencyKey; migrated integration cases cover excess/equal/paid/partial/concurrent allocation and rollback. This task is outside the322 historical claim register; do not count it as a new historical acceptance or rebuild it in B01."
+        }
+      ],
+      "remaining": [
+        {
+          "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.04",
+          "phase": "R02",
+          "prs": [
+            299
+          ],
+          "work": "Verify actual customer rejection delivery with preferences/templates/retries."
+        },
+        {
+          "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
+          "phase": "R02",
+          "prs": [
+            301
+          ],
+          "work": "Verify wallet completion/rejection notice delivery; decision task itself is verified."
+        }
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 195,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.07.01"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 196,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.07.02"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 266,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.03"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 267,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 268,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.05"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 278,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 279,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.05"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 286,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 287,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.05"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 296,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.01"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 297,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.02"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 298,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.03"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 299,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.04"
+          ],
+          "reason": "Rejection API/state/reason/audit and atomic enqueue verified; required actual customer notification delivery remains R02.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 300,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.05"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 301,
+          "status": "open",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "reason": "Wallet decision UI/API and recorded dual-approval deferral verified; this PR added customer notices, whose actual delivery remains R02.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        },
+        {
+          "pr": 302,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.05"
+          ],
+          "reason": "Mapped receipt/configuration requirements and historical deferrals have supported current dispositions. Corrective implementations retained.",
+          "source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
+          "evidence": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+        }
+      ],
+      "pr_counts": {
+        "closed": 14,
+        "open": 2,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/evidence/step-reviews.json#R01-archive-wallet-writers",
+        "audit/final-repair-checkpoint.json"
+      ],
+      "refreshed_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.01.01",
+        "04-invoices-wallet-contracts.md#T-04.2.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.01.03",
+        "04-invoices-wallet-contracts.md#T-04.2.01.04",
+        "04-invoices-wallet-contracts.md#T-04.2.01.05",
+        "04-invoices-wallet-contracts.md#T-04.2.01.06",
+        "04-invoices-wallet-contracts.md#T-04.2.01.07",
+        "02-auth-users-admin.md#T-08.01.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "f2776f33750cc09e84a69546a0eb823dc3be8bafae58ff8ec570254711bcb6ab"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "4990c7501440a9486d0a402754f3359a4372ac4dac2b371b1c53600797fe4a85"
+        },
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+          "sha256": "3ac6a8b5f14411896520960a95e666ba67eca90fa2b551b26e797bb4d13cfe60"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "sha256": "52b54228fbbb9ff3342d7669f2f90282b412a939a9ac7a70878bf03a412f09c8"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-config.controller.test.ts",
+          "sha256": "d93b8d6bec2a89b7fced0b9f8db97ab6005f8fe201b03b45c31280159ecc1c2f"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-config.service.test.ts",
+          "sha256": "0daa6509546fde364379a09069ae7b2747893a6843c6b7e05591fc19af55f708"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.ts",
+          "sha256": "def2762f46bd997fa95372db712109c512744c182ab57ddc629285d8241b0082"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "668cff7ac71c9e689b283f89e4a018e8ec3db037c31991a79edde6ed05eeef8d"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "006e38eae0ae4dced1a66aa532c4747568f50b94735d0f96b74cffdfae01b61f"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+          "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-actor.ts",
+          "sha256": "be0b893055b67f214f05d0cc60602804609a95b17e01f50809967cdf0e3005f8"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+          "sha256": "6a89291527871da77392ed5d2a5482b149b0c5d91fc74a619acb313233522674"
+        },
+        {
+          "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+          "sha256": "2401f88002bde001a366c719f30140f6e48d8e4a7b0bfe55dd113e8267779153"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+          "sha256": "555d792e6c3ad5ec3be574084b63d38243512f0b68a2af2cf034655202bed3dd"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "d663139ddae3acb837a4e7029b3dcb64f5946d536ea2dc24c12d7cd43645490e"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "09e9540500f64a15ba640c7e84fefb04195a6a547765a8b671e19396882c720b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "1dbc127d1794c0edcfdf0e02f30d66efa91300b2105591c0962df5019c9f18eb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+          "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+          "sha256": "910aa8bb7eb554a3b9d12934629d63aeed12f02edd506a33bb9a5e6c8ce48f57"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "sha256": "2088520e837e2377a005940b69e8c344b8a47e223b1c382f6ba20a2325b6866e"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+          "sha256": "f99964244fe55bf2937ddb5177a5c054ffb1fba7ccfa6c0d4091295565614930"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "6b80643c19106ae0ffd34ab08efa268fd667ad9e81588ee35ee8dd58b419f848"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "fa06908b9c86b30a6573c5a7fb77a7291d8e0cf6d0da5ed9a72af948d83a9671"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.integration.test.ts",
+          "sha256": "7f9ad2aa5117ddb8bdc1dbb922416ad681c2650705643d081e77e3930ef99c01"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+          "sha256": "5abf5dafd96cdbe4fa73a2a6bc623bcb12494591d1754426bca7833e6133257d"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "014123670b2a6a9f4b77e749dbb653ea551fd96d707a2c57e40db7e58a37e2cd"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "2744a89ab4f69437deafc78ad539b8274c7e97d95ba3fbfd2f936132a111ca37"
+        },
+        {
+          "path": "apps/web/e2e/approval-queue.spec.ts",
+          "sha256": "9963d9f860a27b51bcf7ee0b78cf6c93be485522a1bb3581c14381042bfa16ef"
+        },
+        {
+          "path": "apps/web/e2e/approval-threshold.spec.ts",
+          "sha256": "9ca79471c6bfb3250041bb925714dfb4652bb68f5100a3e04fdf10ec1247d9ca"
+        },
+        {
+          "path": "apps/web/e2e/customer-receipts.spec.ts",
+          "sha256": "e0a048cc4fecc4ca4bfac7cfb7abf52902d88275ee0d93acf6e3bc32521b68cd"
+        },
+        {
+          "path": "apps/web/e2e/receipt-emergency.spec.ts",
+          "sha256": "68201ad8640e1682d5e7496550cac5019e9e82fa3ed8694f753b4c69375ded3f"
+        },
+        {
+          "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
+          "sha256": "a3875484bdd9d4f0c99d9acfc3e5331ee9bf197a17846a874ff206ad3b7bcf4d"
+        },
+        {
+          "path": "apps/web/src/hooks/useReceiptAttachmentUpload.ts",
+          "sha256": "b80d71914029aff742429c7af39682091c0c6977d178332c59fd047e55c885ed"
+        },
+        {
+          "path": "apps/web/src/lib/bank-receipt-confirmation.ts",
+          "sha256": "1572ee12f4defc1166bd5aaca35d6e8d8916f57403495d7bdf6859887a15d97d"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "e37dd9130f8c9391acce37caa6beefce98fd273574c202b334085e21d4ae8f8b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "ea696cdd58457868954328d1aba3f2b671ef6edd6345fbe530bdab509948c1dc"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+          "sha256": "b9d4dc43aa87ae39f67523646dae0b3bcaf2273838738d85391afc8bc3e62eb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "2880b44433f5e65cbeef53e625f3d634d0201ec487d4fb6abf67ca3fdb8ce223"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "55ae7eb54a2c332aef35405a68de215be2cfbaf8122cd1246d271ea36dababa7"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "6746f1736433005e6a03ef16d39c007cfa79ca2d035e3c4aa72f1fa64c3020d6"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "745cc71eff320cfdd58e1783eb0d6b00ba9e24f34e7d7099b0f66fa0a7dae40c"
+        },
+        {
+          "path": "packages/db/drizzle/0078_create_bank_receipts.sql",
+          "sha256": "d674c22ca6d7166fefc5be65b885f572228eef69163726d62509a9de78dbe44d"
+        },
+        {
+          "path": "packages/db/src/schema/approval-requests.ts",
+          "sha256": "17f5315c1cd2b678325c9e38b10e43badd83376923c0ba0dec3bb126d29caeaf"
+        },
+        {
+          "path": "packages/db/src/schema/bank-receipt-attachment-claims.ts",
+          "sha256": "afc20ffb679d86067d6503a86c143784b4976b07e8b646fb4e6b3ca0271f1efd"
+        },
+        {
+          "path": "packages/db/src/schema/bank-receipts.ts",
+          "sha256": "2987f0045e0f652e9ab3f5ec3862d09a7af40ee9ee8d0c20c268e106849a8a6d"
+        },
+        {
+          "path": "packages/i18n/src/wallet-receipts.ts",
+          "sha256": "937678c5b44fa691fb2ddc5c5407105ad34c832a1d0cddb22a2db3922a609bcb"
+        },
+        {
+          "path": "packages/shared/src/finance/approval-request.ts",
+          "sha256": "a0557fbe4c9dca79487d40c0b602fba8eaa578689fa9cf1915bfbf7585ec189e"
+        },
+        {
+          "path": "packages/shared/src/finance/dual-approval-config.ts",
+          "sha256": "0dfb04655f65d8eaa5995900bd564c92750164966e7a048174db60a9af7ef3a7"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+          "sha256": "3647ec9f359bac9f73b351d160199142811688bd0e08903606e4af78b2ce2a78"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+          "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
+          "sha256": "d0a0015a576246312a7a7988c262bedda8091f4e70758e02c4348c22f4f6c878"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-overpayment.ts",
+          "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
+          "sha256": "b519660905ec9505441cb39a2b24ad45ceddc7481fe09e6b2484a98024b2b78c"
+        }
+      ],
+      "evidence": [
+        "audit/evidence/18ee061/r01-threshold-before.log.gz",
+        "audit/evidence/18ee061/r01-threshold-contract.log.gz",
+        "audit/evidence/18ee061/r01-threshold-format.log.gz",
+        "audit/evidence/18ee061/r01-threshold-lock-format.log.gz",
+        "audit/evidence/18ee061/r01-threshold-lock-order.log.gz",
+        "audit/evidence/18ee061/r01-threshold-openapi.log.gz",
+        "audit/evidence/18ee061/r01-threshold-regression.log.gz",
+        "audit/evidence/18ee061/r01-threshold-types-first.log.gz",
+        "audit/evidence/1bb1556/r01-receipt-emergency-browser.log.gz",
+        "audit/evidence/1bb1556/r01-receipt-emergency-preview.log.gz",
+        "audit/evidence/1bb1556/r01-receipt-emergency-web-build.log.gz",
+        "audit/evidence/1bb1556/r01-receipt-emergency-web-unit.log.gz",
+        "audit/evidence/341246f/r01-receipt-emergency-build-openapi.log.gz",
+        "audit/evidence/341246f/r01-receipt-emergency-controller.log.gz",
+        "audit/evidence/341246f/r01-receipt-emergency-final.log.gz",
+        "audit/evidence/341246f/r01-receipt-emergency-focused.log.gz",
+        "audit/evidence/341246f/r01-receipt-emergency-regression.log.gz",
+        "audit/evidence/341246f/r01-receipt-emergency-types-first.log.gz",
+        "audit/evidence/397d8fd/r01-approval-boundaries-format.log.gz",
+        "audit/evidence/397d8fd/r01-approval-caller-format.log.gz",
+        "audit/evidence/397d8fd/r01-approval-lock-diagnostic.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-api.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-before.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-caller.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-contract.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-format.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-http-v2.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-http-v3.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-openapi-generate.log.gz",
+        "audit/evidence/397d8fd/r01-approval-session-types.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-authority.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-before-boundaries.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-before.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-boundaries-format.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-build.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-contract.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-extra-boundaries.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-format.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-regression.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-types-first.log.gz",
+        "audit/evidence/397d8fd/r01-receipt-submission-types-v2.log.gz",
+        "audit/evidence/3b67bbc/r01-threshold-screen-api.log.gz",
+        "audit/evidence/3b67bbc/r01-threshold-screen-browser-final.log.gz",
+        "audit/evidence/3b67bbc/r01-threshold-screen-browser.log.gz",
+        "audit/evidence/3b67bbc/r01-threshold-screen-web-build.log.gz",
+        "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+        "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+        "audit/evidence/6ed1703/r01-receipt-approval-audit-baseline-corrected.log.gz",
+        "audit/evidence/6ed1703/r01-receipt-approval-audit-baseline.log.gz",
+        "audit/evidence/6ed1703/r01-receipt-approval-audit-regression.log.gz",
+        "audit/evidence/b4356e0/r01-customer-receipts-baseline.log.gz",
+        "audit/evidence/b4356e0/r01-customer-receipts-browser-final.log.gz",
+        "audit/evidence/b4356e0/r01-customer-receipts-browser.log.gz",
+        "audit/evidence/b4356e0/r01-customer-receipts-build-final.log.gz",
+        "audit/evidence/b4356e0/r01-customer-receipts-build.log.gz",
+        "audit/evidence/b4356e0/r01-customer-receipts-unit.log.gz",
+        "audit/evidence/b4356e0/r01-receipt-batch-source-review.log.gz",
+        "audit/evidence/b4356e0/r01-receipt-pr-repeat-review.log.gz",
+        "audit/evidence/c9567b9/r01-receipt-approver-lock-baseline.log.gz",
+        "audit/evidence/c9567b9/r01-receipt-approver-lock-regression.log.gz",
+        "audit/evidence/c9567b9/r01-receipt-approver-lock-typecheck.log.gz",
+        "audit/evidence/d646396/r01-receipt-decision-before.log.gz",
+        "audit/evidence/d646396/r01-receipt-decision-contract.log.gz",
+        "audit/evidence/d646396/r01-receipt-decision-format.log.gz",
+        "audit/evidence/d646396/r01-receipt-decision-helper-format.log.gz",
+        "audit/evidence/d646396/r01-receipt-decision-openapi.log.gz",
+        "audit/evidence/d646396/r01-receipt-decision-regression-v2.log.gz",
+        "audit/evidence/d646396/r01-receipt-decision-regression.log.gz",
+        "audit/evidence/d646396/r01-receipt-decision-types-first.log.gz",
+        "audit/evidence/f7efbb9/r01-receipt-ui-target-baseline.log.gz",
+        "audit/evidence/f7efbb9/r01-receipt-ui-target-regression.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-before.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-cleanup.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-contract.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-format-final.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-format.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-new-format.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-openapi.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-regression-v2.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-regression.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-types-final.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-types-first.log.gz",
+        "audit/evidence/ff75281/r01-receipt-sealing-worker-cleanup.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+        "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+        "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz"
+      ],
+      "logs": [
+        "/tmp/r01-approval-boundaries-format.log",
+        "/tmp/r01-approval-caller-format.log",
+        "/tmp/r01-approval-caller-lint.log",
+        "/tmp/r01-approval-lock-diagnostic.log",
+        "/tmp/r01-approval-session-api.log",
+        "/tmp/r01-approval-session-before.log",
+        "/tmp/r01-approval-session-caller.log",
+        "/tmp/r01-approval-session-contract.log",
+        "/tmp/r01-approval-session-format-check.log",
+        "/tmp/r01-approval-session-format.log",
+        "/tmp/r01-approval-session-http-lint.log",
+        "/tmp/r01-approval-session-http-v2.log",
+        "/tmp/r01-approval-session-http-v3.log",
+        "/tmp/r01-approval-session-lint.log",
+        "/tmp/r01-approval-session-openapi-generate.log",
+        "/tmp/r01-approval-session-types-final.log",
+        "/tmp/r01-approval-session-types.log",
+        "/tmp/r01-receipt-submission-authority.log",
+        "/tmp/r01-receipt-submission-before-boundaries.log",
+        "/tmp/r01-receipt-submission-before.log",
+        "/tmp/r01-receipt-submission-boundaries-format.log",
+        "/tmp/r01-receipt-submission-build.log",
+        "/tmp/r01-receipt-submission-contract.log",
+        "/tmp/r01-receipt-submission-extra-boundaries.log",
+        "/tmp/r01-receipt-submission-format.log",
+        "/tmp/r01-receipt-submission-lint.log",
+        "/tmp/r01-receipt-submission-regression.log",
+        "/tmp/r01-receipt-submission-types-final.log",
+        "/tmp/r01-receipt-submission-types-first.log",
+        "/tmp/r01-receipt-submission-types-v2.log",
+        "/tmp/r01-receipt-decision-before.log",
+        "/tmp/r01-receipt-decision-contract.log",
+        "/tmp/r01-receipt-decision-format-check.log",
+        "/tmp/r01-receipt-decision-format.log",
+        "/tmp/r01-receipt-decision-helper-format.log",
+        "/tmp/r01-receipt-decision-lint-final.log",
+        "/tmp/r01-receipt-decision-lint.log",
+        "/tmp/r01-receipt-decision-openapi.log",
+        "/tmp/r01-receipt-decision-regression-v2.log",
+        "/tmp/r01-receipt-decision-regression.log",
+        "/tmp/r01-receipt-decision-types-final.log",
+        "/tmp/r01-receipt-decision-types-first.log",
+        "/tmp/r01-receipt-decision-types-v2.log",
+        "/tmp/r01-threshold-before.log",
+        "/tmp/r01-threshold-contract.log",
+        "/tmp/r01-threshold-format-check.log",
+        "/tmp/r01-threshold-format.log",
+        "/tmp/r01-threshold-lint-final.log",
+        "/tmp/r01-threshold-lint.log",
+        "/tmp/r01-threshold-lock-format.log",
+        "/tmp/r01-threshold-lock-lint.log",
+        "/tmp/r01-threshold-lock-order.log",
+        "/tmp/r01-threshold-openapi.log",
+        "/tmp/r01-threshold-regression.log",
+        "/tmp/r01-threshold-types-final.log",
+        "/tmp/r01-threshold-types-first.log",
+        "/tmp/r01-receipt-sealing-before.log",
+        "/tmp/r01-receipt-sealing-cleanup.log",
+        "/tmp/r01-receipt-sealing-contract.log",
+        "/tmp/r01-receipt-sealing-fixture-lint.log",
+        "/tmp/r01-receipt-sealing-format-final.log",
+        "/tmp/r01-receipt-sealing-format.log",
+        "/tmp/r01-receipt-sealing-lint-final.log",
+        "/tmp/r01-receipt-sealing-lint.log",
+        "/tmp/r01-receipt-sealing-new-format-check.log",
+        "/tmp/r01-receipt-sealing-new-format.log",
+        "/tmp/r01-receipt-sealing-new-lint.log",
+        "/tmp/r01-receipt-sealing-openapi.log",
+        "/tmp/r01-receipt-sealing-regression-v2.log",
+        "/tmp/r01-receipt-sealing-regression.log",
+        "/tmp/r01-receipt-sealing-types-complete.log",
+        "/tmp/r01-receipt-sealing-types-final.log",
+        "/tmp/r01-receipt-sealing-types-first.log",
+        "/tmp/r01-receipt-sealing-types-v2.log",
+        "/tmp/r01-receipt-sealing-worker-cleanup.log",
+        "/tmp/r01-receipt-ui-target-baseline.log",
+        "/tmp/r01-receipt-ui-target-eslint.log",
+        "/tmp/r01-receipt-ui-target-regression.log",
+        "/tmp/r01-receipt-ui-target-typecheck.log",
+        "/tmp/r01-receipt-approver-lock-baseline.log",
+        "/tmp/r01-receipt-approver-lock-eslint.log",
+        "/tmp/r01-receipt-approver-lock-regression.log",
+        "/tmp/r01-receipt-approver-lock-typecheck-final.log",
+        "/tmp/r01-receipt-approver-lock-typecheck.log",
+        "/tmp/r01-receipt-approval-audit-baseline-corrected.log",
+        "/tmp/r01-receipt-approval-audit-baseline.log",
+        "/tmp/r01-receipt-approval-audit-eslint.log",
+        "/tmp/r01-receipt-approval-audit-regression.log",
+        "/tmp/r01-receipt-approval-audit-typecheck.log",
+        "/tmp/r01-receipt-emergency-browser-eslint.log",
+        "/tmp/r01-receipt-emergency-browser.log",
+        "/tmp/r01-receipt-emergency-build-openapi.log",
+        "/tmp/r01-receipt-emergency-controller.log",
+        "/tmp/r01-receipt-emergency-eslint.log",
+        "/tmp/r01-receipt-emergency-final.log",
+        "/tmp/r01-receipt-emergency-focused.log",
+        "/tmp/r01-receipt-emergency-i18n-build.log",
+        "/tmp/r01-receipt-emergency-preview.log",
+        "/tmp/r01-receipt-emergency-regression.log",
+        "/tmp/r01-receipt-emergency-typecheck.log",
+        "/tmp/r01-receipt-emergency-types-first.log",
+        "/tmp/r01-receipt-emergency-web-build.log",
+        "/tmp/r01-receipt-emergency-web-eslint.log",
+        "/tmp/r01-receipt-emergency-web-types.log",
+        "/tmp/r01-receipt-emergency-web-unit.log",
+        "/tmp/r01-threshold-screen-api-types.log",
+        "/tmp/r01-threshold-screen-api.log",
+        "/tmp/r01-threshold-screen-browser-eslint.log",
+        "/tmp/r01-threshold-screen-browser-final.log",
+        "/tmp/r01-threshold-screen-browser.log",
+        "/tmp/r01-threshold-screen-eslint.log",
+        "/tmp/r01-threshold-screen-i18n.log",
+        "/tmp/r01-threshold-screen-preview.log",
+        "/tmp/r01-threshold-screen-web-build.log",
+        "/tmp/r01-threshold-screen-web-types.log",
+        "/tmp/r01-customer-receipts-baseline.log",
+        "/tmp/r01-customer-receipts-browser-final.log",
+        "/tmp/r01-customer-receipts-browser.log",
+        "/tmp/r01-customer-receipts-build-final.log",
+        "/tmp/r01-customer-receipts-build.log",
+        "/tmp/r01-customer-receipts-lint.log",
+        "/tmp/r01-customer-receipts-types.log",
+        "/tmp/r01-customer-receipts-unit.log",
+        "/tmp/r01-receipt-batch-source-review.log",
+        "/tmp/r01-receipt-pr-repeat-review.log"
+      ]
     }
   ]
 }
