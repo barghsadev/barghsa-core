@@ -14,6 +14,7 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string, attachmentKey: string, headers: Record<string, string>;
 let online: OnlineTopUpService, bank: BankReceiptTopUpService;
 let gatewayStarts = 0;
+let ownerSession: { sessionId: string; csrfToken: string };
 beforeEach(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   holder.pool = http.pool;
@@ -25,6 +26,11 @@ beforeEach(async () => {
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
     VALUES ($1,'archive-staff',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
     [session, csrf, randomUUID()]
+  );
+  ownerSession = { sessionId: randomUUID(), csrfToken: randomUUID() };
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES ($1,'archive-owner',$2,$1,NOW()+INTERVAL '1 hour',NOW()+INTERVAL '30 minutes')",
+    [ownerSession.sessionId, ownerSession.csrfToken]
   );
   headers = {
     Cookie: `barghsa_session=${session}`,
@@ -87,6 +93,7 @@ function topup(channel: 'online' | 'bank') {
         attachmentKey,
         idempotencyKey: randomUUID(),
         actorId: 'archive-owner',
+        ...ownerSession,
       });
 }
 for (const channel of ['online', 'bank'] as const) {
@@ -121,7 +128,7 @@ for (const channel of ['online', 'bank'] as const) {
           Number(
             (
               await http.pool.query(`SELECT count(*) AS count FROM pg_stat_activity
-        WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%WITH active_profile%'`)
+        WHERE datname=current_database() AND wait_event_type='Lock' AND (query LIKE '%WITH active_profile%' OR query LIKE 'SELECT user_id,profile_type,archived FROM profiles%')`)
             ).rows[0].count
           )
         )

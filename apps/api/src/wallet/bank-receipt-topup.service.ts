@@ -1,4 +1,9 @@
-import { lockActiveTopUpProfile } from './active-profile.js';
+import {
+  auditReceiptSubmission,
+  lockReceiptSubmissionActor,
+  type ReceiptSubmissionActor,
+} from '../finance/receipt-submission-actor.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
 import { createHash } from 'node:crypto';
 import {
   ConflictException,
@@ -35,7 +40,7 @@ const STORAGE_REJECTION_MESSAGE: Record<BankReceiptStorageRejection, string> = {
   wrong_purpose: 'Bank receipt attachment was not uploaded as a bank receipt',
 };
 
-export interface SubmitBankReceiptTopUpInput {
+export interface SubmitBankReceiptTopUpInput extends Omit<ReceiptSubmissionActor, 'userId'> {
   profileId: string;
   amount: unknown;
   paymentDate: unknown;
@@ -59,7 +64,7 @@ interface QueryClient {
   query: (
     text: string,
     params?: unknown[]
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
+  ) => Promise<{ rows: Record<string, unknown>[]; rowCount?: number | null }>;
 }
 
 /**
@@ -68,7 +73,8 @@ interface QueryClient {
  * Order of operations:
  *   1. Validate amount, payment date, payer reference, attachment key,
  *      and optional note. Amount has **no configured maximum**.
- *   2. Ensure the profile wallet exists.
+ *   2. Lock the current account/session/profile authority and create any
+ *      missing wallet inside the receipt transaction.
  *   3. Lock the `storage_records` row in the same DB transaction
  *      (shared attachment lock with invoice upload), require a
  *      verified receipt owned by the actor (or bound to the
@@ -106,8 +112,6 @@ export class BankReceiptTopUpService {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);
     }
 
-    await this.walletService.createWallet(input.profileId);
-
     const pool = getDbPool();
     const attachmentLockKeys = bankReceiptAttachmentAdvisoryLockKeys(parsed.receipt.attachmentKey);
     const idempotencyLockKeys = bankReceiptTopUpAdvisoryLockKeys(idempotencyKey);
@@ -125,7 +129,12 @@ export class BankReceiptTopUpService {
             parsed.amountIrR,
             idempotencyKey,
             parsed.receipt,
-            input.actorId
+            {
+              userId: input.actorId,
+              sessionId: input.sessionId,
+              csrfToken: input.csrfToken,
+              ...(input.correlationId ? { correlationId: input.correlationId } : {}),
+            }
           );
           this.logger.log(
             `Bank receipt top-up ${pending.id} pending for wallet ${pending.walletId}`
@@ -221,12 +230,13 @@ export class BankReceiptTopUpService {
     amountIrR: bigint,
     idempotencyKey: string,
     receipt: BankReceiptTopUpDetails,
-    actorId: string
+    actor: ReceiptSubmissionActor
   ): Promise<TransactionRow> {
     let canonicalWalletId: string | undefined;
     try {
       await client.query('BEGIN');
-      await lockActiveTopUpProfile(client, profileId);
+      await lockReceiptSubmissionActor(client, actor, profileId);
+      await this.walletService.createWallet(profileId, client);
 
       const walletResult = await client.query(
         `SELECT profile_id FROM wallets WHERE profile_id = $1 FOR UPDATE`,
@@ -237,7 +247,7 @@ export class BankReceiptTopUpService {
       }
       canonicalWalletId = (walletResult.rows[0] as { profile_id: string }).profile_id;
 
-      await this.lockAndProtectAttachment(client, receipt.attachmentKey, actorId, profileId);
+      await this.lockAndProtectAttachment(client, receipt.attachmentKey, actor.userId, profileId);
       await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup');
 
       const idemResult = await client.query(
@@ -252,6 +262,7 @@ export class BankReceiptTopUpService {
           amountIrR,
           receipt
         );
+        await requireCurrentSession(client, actor);
         await client.query('COMMIT');
         return mapTransaction(existing as Parameters<typeof mapTransaction>[0]);
       }
@@ -279,6 +290,14 @@ export class BankReceiptTopUpService {
         ]
       );
 
+      await auditReceiptSubmission(
+        client,
+        actor,
+        profileId,
+        String(txResult.rows[0]!.id),
+        'wallet'
+      );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return mapTransaction(txResult.rows[0] as Parameters<typeof mapTransaction>[0]);
     } catch (error) {
@@ -300,8 +319,15 @@ export class BankReceiptTopUpService {
         );
         await client.query('BEGIN');
         try {
-          await this.lockAndProtectAttachment(client, receipt.attachmentKey, actorId, profileId);
+          await lockReceiptSubmissionActor(client, actor, profileId);
+          await this.lockAndProtectAttachment(
+            client,
+            receipt.attachmentKey,
+            actor.userId,
+            profileId
+          );
           await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup');
+          await requireCurrentSession(client, actor);
           await client.query('COMMIT');
         } catch (protectError) {
           await client.query('ROLLBACK');

@@ -51,6 +51,8 @@ const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 const INVOICE_A = '11111111-1111-7111-8111-111111111111';
 const INVOICE_B = '22222222-2222-7222-8222-222222222222';
 const ACTOR_ID = 'user-customer-1';
+const SESSION_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+const CSRF_TOKEN = 'receipt-test-csrf';
 const OTHER_ACTOR = 'user-customer-2';
 
 function receiptKey(suffix: string): string {
@@ -126,6 +128,10 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
       `INSERT INTO profiles (id, user_id, is_default) VALUES ($1, $2, true), ($3, $4, true)`,
       [PROFILE_A, ACTOR_ID, PROFILE_B, OTHER_ACTOR]
     );
+    await ctx.pool.query(
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES ($1,$2,$3,$1,NOW()+INTERVAL '1 hour',NOW()+INTERVAL '30 minutes')",
+      [SESSION_ID, ACTOR_ID, CSRF_TOKEN]
+    );
   }, 60_000);
 
   afterAll(async () => {
@@ -186,6 +192,8 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
   function payload(overrides: Record<string, unknown> = {}) {
     return {
       userId: ACTOR_ID,
+      sessionId: SESSION_ID,
+      csrfToken: CSRF_TOKEN,
       invoiceId: INVOICE_A,
       amount: 250_000,
       paymentDate: '2026-08-15',

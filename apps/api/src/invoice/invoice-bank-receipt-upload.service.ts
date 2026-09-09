@@ -1,5 +1,11 @@
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
 import {
+  auditReceiptSubmission,
+  lockReceiptSubmissionActor,
+  type ReceiptSubmissionActor,
+} from '../finance/receipt-submission-actor.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import {
   ConflictException,
   HttpException,
   Inject,
@@ -55,8 +61,7 @@ const FILE_REJECTION_MESSAGE = {
   size_mismatch: 'Bank receipt file size does not match the uploaded object',
 } as const;
 
-export interface SubmitInvoiceBankReceiptInput {
-  userId: string;
+export interface SubmitInvoiceBankReceiptInput extends ReceiptSubmissionActor {
   invoiceId: string;
   amount: unknown;
   paymentDate: unknown;
@@ -81,7 +86,7 @@ interface QueryClient {
   query: (
     text: string,
     params?: unknown[]
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
+  ) => Promise<{ rows: Record<string, unknown>[]; rowCount?: number | null }>;
 }
 
 interface BankReceiptRow {
@@ -180,7 +185,7 @@ export class InvoiceBankReceiptUploadService {
       try {
         const row = await this.insertOrReuseSubmitted(
           client,
-          input.userId,
+          input,
           profileId,
           input.invoiceId,
           parsed.amountIrR,
@@ -198,7 +203,7 @@ export class InvoiceBankReceiptUploadService {
 
   private async insertOrReuseSubmitted(
     client: QueryClient,
-    actorId: string,
+    actor: ReceiptSubmissionActor,
     profileId: string,
     invoiceId: string,
     amountIrR: bigint,
@@ -207,12 +212,12 @@ export class InvoiceBankReceiptUploadService {
     const lookupKeys = invoiceBankReceiptLookupKeys(receipt.attachmentKey);
     try {
       await client.query('BEGIN');
-
+      await lockReceiptSubmissionActor(client, actor, profileId);
       const invoice = await this.lockInvoice(client, invoiceId, profileId);
       const storageRow = await this.lockAttachmentProvenance(
         client,
         receipt.attachmentKey,
-        actorId,
+        actor.userId,
         profileId
       );
       await claimBankReceiptAttachment(client, receipt.attachmentKey, 'invoice_receipt');
@@ -220,6 +225,7 @@ export class InvoiceBankReceiptUploadService {
       const existing = await this.findReceiptByKeys(client, lookupKeys);
       if (existing) {
         assertReusableSubmitted(existing, invoiceId, profileId, amountIrR, receipt);
+        await requireCurrentSession(client, actor);
         await client.query('COMMIT');
         return existing;
       }
@@ -227,7 +233,7 @@ export class InvoiceBankReceiptUploadService {
       const sealed = await this.sealAttachmentBytes(receipt.attachmentKey, storageRow);
       await this.persistSealedStorageRecords(
         client,
-        actorId,
+        actor.userId,
         receipt.attachmentKey,
         storageRow,
         sealed
@@ -252,17 +258,34 @@ export class InvoiceBankReceiptUploadService {
         ]
       );
 
+      await auditReceiptSubmission(
+        client,
+        actor,
+        profileId,
+        String(inserted.rows[0]!.id),
+        'invoice'
+      );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return inserted.rows[0] as BankReceiptRow;
+      return inserted.rows[0] as unknown as BankReceiptRow;
     } catch (error) {
       await client.query('ROLLBACK');
       if (isPgUniqueViolation(error, BANK_RECEIPTS_ATTACHMENT_CONSTRAINT)) {
-        const committed = await this.findReceiptByKeys(client, lookupKeys, false);
-        if (!committed) {
-          throw new ConflictException('This bank receipt attachment has already been submitted');
+        await client.query('BEGIN');
+        try {
+          await lockReceiptSubmissionActor(client, actor, profileId);
+          await this.lockInvoice(client, invoiceId, profileId);
+          const committed = await this.findReceiptByKeys(client, lookupKeys);
+          if (!committed)
+            throw new ConflictException('This bank receipt attachment has already been submitted');
+          assertReusableSubmitted(committed, invoiceId, profileId, amountIrR, receipt);
+          await requireCurrentSession(client, actor);
+          await client.query('COMMIT');
+          return committed;
+        } catch (retryError) {
+          await client.query('ROLLBACK');
+          throw retryError;
         }
-        assertReusableSubmitted(committed, invoiceId, profileId, amountIrR, receipt);
-        return committed;
       }
       throw error;
     }
@@ -280,7 +303,7 @@ export class InvoiceBankReceiptUploadService {
         WHERE attachment_key = ANY($1::text[])${forUpdate ? ' FOR UPDATE' : ''}`,
       [lookupKeys]
     );
-    return result.rows.length > 0 ? (result.rows[0] as BankReceiptRow) : null;
+    return result.rows.length > 0 ? (result.rows[0] as unknown as BankReceiptRow) : null;
   }
 
   private async lockInvoice(
@@ -298,7 +321,7 @@ export class InvoiceBankReceiptUploadService {
     if (result.rows.length === 0) {
       throw httpError(ErrorCodes.NOT_FOUND_RESOURCE, `Invoice not found: ${invoiceId}`, 404);
     }
-    const invoice = result.rows[0] as InvoiceLockRow;
+    const invoice = result.rows[0] as unknown as InvoiceLockRow;
     if (
       !canCustomerSubmitInvoiceBankReceipt({
         state: invoice.state,
@@ -335,7 +358,7 @@ export class InvoiceBankReceiptUploadService {
         'Bank receipt attachment has not been uploaded and recorded'
       );
     }
-    const row = result.rows[0] as StorageLockRow;
+    const row = result.rows[0] as unknown as StorageLockRow;
     if (row.status === 'removed') {
       throw httpError(
         ErrorCodes.VALIDATION_INPUT_INVALID,

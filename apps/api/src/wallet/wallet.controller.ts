@@ -252,6 +252,8 @@ export class WalletController {
       customerNote: parsed.data.customerNote,
       idempotencyKey,
       actorId: req.session.userId,
+      sessionId: req.session.sessionId,
+      csrfToken: req.session.csrfToken,
     });
 
     this.logger.log(

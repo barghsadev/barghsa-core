@@ -156,6 +156,8 @@ export class CustomerInvoiceController {
 
     const result = await this.bankReceiptUpload.submit({
       userId: req.session.userId,
+      sessionId: req.session.sessionId,
+      csrfToken: req.session.csrfToken,
       invoiceId,
       amount: parsed.data.amount,
       paymentDate: parsed.data.paymentDate,

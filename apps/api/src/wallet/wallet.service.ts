@@ -132,8 +132,8 @@ export class WalletService {
   /**
    * Get a wallet by profile ID. Returns null if no wallet exists yet.
    */
-  async getWallet(profileId: string): Promise<WalletRow | null> {
-    const pool = getDbPool();
+  async getWallet(profileId: string, client?: WalletQueryClient): Promise<WalletRow | null> {
+    const pool = client ?? getDbPool();
     const result = await pool.query(
       `SELECT *, (posted_balance - reserved_balance) AS available_balance
        FROM wallets WHERE profile_id = $1`,
@@ -141,14 +141,14 @@ export class WalletService {
     );
 
     if (result.rows.length === 0) return null;
-    return mapWallet(result.rows[0]);
+    return mapWallet(result.rows[0] as Parameters<typeof mapWallet>[0]);
   }
 
   /**
    * Create a wallet for a profile. Idempotent — returns existing if present.
    */
-  async createWallet(profileId: string): Promise<WalletRow> {
-    const pool = getDbPool();
+  async createWallet(profileId: string, client?: WalletQueryClient): Promise<WalletRow> {
+    const pool = client ?? getDbPool();
 
     // Lock an active profile before inserting. Existing wallets remain readable
     // after archival; a no-op retry must not create or alter financial records.
@@ -164,12 +164,12 @@ export class WalletService {
 
     if (result.rows.length === 0) {
       // Return the existing wallet, including after archival.
-      const existing = await this.getWallet(profileId);
+      const existing = await this.getWallet(profileId, client);
       if (!existing) throw new NotFoundException('Wallet creation failed despite insert attempt');
       return existing;
     }
 
-    return mapWallet(result.rows[0]);
+    return mapWallet(result.rows[0] as Parameters<typeof mapWallet>[0]);
   }
 
   /**

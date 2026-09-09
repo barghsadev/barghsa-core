@@ -24,6 +24,8 @@ const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
 const RECEIPT_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
 const ACTOR_ID = 'user-1';
+const SESSION_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+const CSRF_TOKEN = 'receipt-test-csrf';
 const AMOUNT = 250_000n;
 const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf';
 const SEALED = 'receipts/submitted/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf';
@@ -83,6 +85,8 @@ function scriptClient(opts: ScriptOptions = {}) {
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
       return { rows: [] };
     }
+    if (sql.includes('FROM profiles'))
+      return { rows: [{ user_id: ACTOR_ID, profile_type: 'INDIVIDUAL', archived: false }] };
     if (sql.includes('FROM invoices')) {
       if (opts.invoice === null) return { rows: [] };
       return {
@@ -96,6 +100,10 @@ function scriptClient(opts: ScriptOptions = {}) {
         ],
       };
     }
+    if (sql.includes('FROM users'))
+      return { rows: [{ disabled_at: null, activation_token: null }] };
+    if (sql.includes('FROM sessions'))
+      return { rows: [{ active: true, fresh: true, csrf_token: CSRF_TOKEN }] };
     if (sql.includes('FROM storage_records')) {
       if (opts.storageStatus === null) return { rows: [] };
       return {
@@ -136,6 +144,8 @@ function scriptClient(opts: ScriptOptions = {}) {
 function submitInput(overrides: Record<string, unknown> = {}) {
   return {
     userId: ACTOR_ID,
+    sessionId: SESSION_ID,
+    csrfToken: CSRF_TOKEN,
     invoiceId: INVOICE_ID,
     amount: Number(AMOUNT),
     paymentDate: RECEIPT.paymentDate,

@@ -23,6 +23,8 @@ const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
 const IDEM = 'idem-bank-receipt-1';
 const ACTOR_ID = 'user-1';
+const SESSION_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+const CSRF_TOKEN = 'receipt-test-csrf';
 const AMOUNT = 250_000n;
 const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf';
 
@@ -85,6 +87,10 @@ function scriptClient(opts: ScriptOptions = {}) {
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
       return { rows: [] };
     }
+    if (sql.includes('FROM users'))
+      return { rows: [{ disabled_at: null, activation_token: null }] };
+    if (sql.includes('FROM sessions'))
+      return { rows: [{ active: true, fresh: true, csrf_token: CSRF_TOKEN }] };
     if (sql.includes('FROM storage_records')) {
       if (opts.storageStatus === null) return { rows: [] };
       return {
@@ -105,7 +111,8 @@ function scriptClient(opts: ScriptOptions = {}) {
       if (opts.claimType === null) return { rows: [] };
       return { rows: [{ claim_type: opts.claimType ?? 'wallet_topup' }] };
     }
-    if (sql.includes('FROM profiles')) return { rows: [{ archived: false }] };
+    if (sql.includes('FROM profiles'))
+      return { rows: [{ user_id: ACTOR_ID, profile_type: 'INDIVIDUAL', archived: false }] };
     if (sql.includes('FROM wallets')) {
       if (opts.wallet === null) return { rows: [] };
       return { rows: [opts.wallet ?? { profile_id: PROFILE_ID }] };
@@ -134,6 +141,8 @@ function submitInput(overrides: Record<string, unknown> = {}) {
     customerNote: RECEIPT.customerNote,
     idempotencyKey: IDEM,
     actorId: ACTOR_ID,
+    sessionId: SESSION_ID,
+    csrfToken: CSRF_TOKEN,
     ...overrides,
   };
 }
