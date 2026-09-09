@@ -12111,6 +12111,195 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-api.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-api.log.gz",
+      "sha256": "be5ea669c74a55a2b21ff69bfd5fbc4caa3cec23ddcf9c3f4ace9643b1180972",
+      "encoding": "gzip",
+      "stored_sha256": "a4b39890b51e1dcf821824f25557e9fc5a8d6b0813c6b2165274936dcfbf5af8"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-build.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-build.log.gz",
+      "sha256": "3e069ef1f471ca20d51fff5b4d01a41bcd519bc12a2e76bc2e16ebd9bcb67f4c",
+      "encoding": "gzip",
+      "stored_sha256": "58f0cb8b603d463ae4706573427ef328080ce3807a0afb80970991f5fc706c51"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-contract-check.log",
+      "path": "audit/evidence/r01/barghsa-crm-records-contract-verified.log.gz",
+      "sha256": "135329686d2878faa2e19fe4a091501fbc48ad6c6463fb6530841b5e33657567",
+      "encoding": "gzip",
+      "stored_sha256": "c694a0d88e6bea88c484ed9dba8a4c032dfac224c3193ce3a97d61879e8b9b7a"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-fixed.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-fixed.log.gz",
+      "sha256": "c415af5379883cdd50e1adea082afb7027d6e857beac5561491538a2c4cadad9",
+      "encoding": "gzip",
+      "stored_sha256": "87d7e185e0363d4779a74f3892a3c5f912144a859343224e1982d4e9ee4c31e2"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-fixture-format.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-fixture-format.log.gz",
+      "sha256": "c8b36b9d3be75985f603950f84aac67e646c38d1bf64417d6f7b38b5ca5f9f5a",
+      "encoding": "gzip",
+      "stored_sha256": "114c3df8952095a47a62139fde6599e23f1d9cbcd55708679836097075112711"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-format-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-format.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-format.log.gz",
+      "sha256": "d9c23db0ffcc5a08a6d2922d953cf4d6a67a03b8e22e7179d0b8a71b045e47c0",
+      "encoding": "gzip",
+      "stored_sha256": "d936b33060c7f946449b0d806abd4fdecd0c57ff4bffdf8d74313809186ea220"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-lint-final.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-openapi.log",
+      "path": "audit/evidence/r01/barghsa-crm-documents-openapi-update.log.gz",
+      "sha256": "b0033c99fdb9671aa92cce17ac7fd7851ff4944686d046198cd83485322b98de",
+      "encoding": "gzip",
+      "stored_sha256": "7780e008e3d2103c805cd25a25716a1aba1b788f8b9623180fae2c2524508f30"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-profiles-format.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-profiles-format.log.gz",
+      "sha256": "cb6d4088709f746c4bb7d1b0211321b2d13e7c75fc51cf54be7ebdc3e97ba204",
+      "encoding": "gzip",
+      "stored_sha256": "b6b2565c3249cd48e161e391d47101de6a8bc89671a817bd8b96bf82f9682a4c"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-profiles.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-profiles.log.gz",
+      "sha256": "7c3395d577f5e0a798d9c32652496cc3b80fa5f6dfb7e97c2da98c17cf2c58c3",
+      "encoding": "gzip",
+      "stored_sha256": "e8f5d0bbc344035cd4fd8632207a86c03aabb9b8e5baf2153c08bfebfcbea090"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-race-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-session-fixed.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-session-fixed.log.gz",
+      "sha256": "ab4f96304d9c99c1e104802da6325d35b4a27ea9320d6a184ad68f61b73d3823",
+      "encoding": "gzip",
+      "stored_sha256": "2ab548dd0990d25dc4a77d352dfe59b5987e2265d395c930690f39890f4c9498"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-test-format.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-test-format.log.gz",
+      "sha256": "bcbae331d20586e0e73859cbe2b726ddf12ce3e28881ae0d2849e66ec62fc318",
+      "encoding": "gzip",
+      "stored_sha256": "029c73033483541319dba27cf79265e386ecfd5b69d009923fa1acb1be92e03e"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-types-final.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-types-fixed.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-types-fixed.log.gz",
+      "sha256": "a962a0b05b37d08749aeb572a90b91ee746dfceeb50574dc46b051f603cce34a",
+      "encoding": "gzip",
+      "stored_sha256": "4ed6dda36a7a77fb7c4799f59a12dae3d935591e2271063b013f3ec00fff3d21"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-types-format.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-types-format.log.gz",
+      "sha256": "452c343554bdccf0e6ec5e867ba6522c9b160a1a1d97d717f2d55ad883470e9f",
+      "encoding": "gzip",
+      "stored_sha256": "26eed6321cc627401c30a5978d9e5570f77a2b63c45b46943a5990fb4d87f1f4"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-manual-http-types.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-manual-http-types.log.gz",
+      "sha256": "bb0d9e9b11bb21227b8c0939ee2fb0bab2d45c2ac96e9cdc4f0a8d3ec07ef77a",
+      "encoding": "gzip",
+      "stored_sha256": "6997b7af5d8c4cd282b3907c7023f7e33bf98583197e43f3beb645d79c74b808"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-requirements-history.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-requirements-history.log.gz",
+      "sha256": "7571e3a1ae2b9b2f8de7dc76a87a2e2362b255521a4156328c8718960087218e",
+      "encoding": "gzip",
+      "stored_sha256": "b0234186a31a82de9352b0dcb24746905a3e957a33bb533a5172cda156fbf379"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-vat-window-api.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-vat-window-api.log.gz",
+      "sha256": "222648c3a0967b1a97b1a17b531c6d6adeb849f270a866fdc524d254c2b5c36b",
+      "encoding": "gzip",
+      "stored_sha256": "919bc8bce2cbb49de58d71b87dcfbcfff774f09d0dbd2f75f5a427816183dc01"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-vat-window-baseline.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-vat-window-baseline.log.gz",
+      "sha256": "36e094457ba643db61cdb03463c2fff5a8931e7fce686918829e172f4ad24cf8",
+      "encoding": "gzip",
+      "stored_sha256": "394e6bcf142481b0db0831f192ea872b5ef7a46b9c65fee9a82a77387da04716"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-vat-window-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-vat-window-format.log",
+      "path": "audit/evidence/1b1d7d1/r01-invoice-creation-vat-window-format.log.gz",
+      "sha256": "400f919b395f6942a4e62265f74983546615f5d49289bafaa93d42456f12abe4",
+      "encoding": "gzip",
+      "stored_sha256": "7ab1199b77aa44a2de896816be3bc005f4ccb538dcb010ab1cef058fd402d638"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-vat-window-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r01-invoice-creation-vat-window-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
     }
   ]
 }

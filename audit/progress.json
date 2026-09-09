@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
+  "source_revision": "1b1d7d10f4f69980be6153c75dbacf67e2f3ae05",
   "active_step": "R01",
-  "next_action": "Read bounded creation/calculation requirements and saved PR descriptions; trace current implementation and fix confirmed gaps.",
+  "next_action": "Build the staff manual-invoice form using current endpoints; verify locale/RTL, validation, step-up, duplicate-retry and success behavior. Finish remaining creation/calculation review before consolidating this batch.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -746,7 +746,7 @@
   "active_batch": {
     "id": "R01-invoice-creation-calculation",
     "name": "Invoice creation, origins, VAT, rounding and reproducible snapshots",
-    "status": "bounded",
+    "status": "in_progress",
     "prs": [
       223,
       224,
@@ -771,7 +771,7 @@
       "04-invoices-wallet-contracts.md#T-04.1.02.09"
     ],
     "remaining_checklist": [
-      "Read exact story/task criteria and all10 saved PR descriptions before editing.",
+      "Exact story/task requirements and all10 saved PR descriptions read. Continue focused implementation review.",
       "Review line/item constraints, manual/automatic caller authority and transactions, VAT/rounding, origin links/idempotency and snapshot replay.",
       "Reuse completed state/receipt/wallet evidence. Keep due-date/reminder and correction workflows separate."
     ],
@@ -829,9 +829,55 @@
       "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
       "audit/evidence/step-reviews.json#R01-wallet-ledger"
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "revision": "f5b743b",
+        "summary": "Active product VAT override incorrectly applied future/ended linked rates. Repaired with linked-rate start/end predicates.",
+        "verification": "Two real-DB baseline failures;39 cases across VAT, auto invoice and snapshot replay suites pass. API types/lint/format/diff review pass."
+      },
+      {
+        "revision": "1b1d7d1",
+        "summary": "Manual invoice service was unreachable by staff. Added protected creation and active-profile search routes; current Finance/session/CSRF/step-up authority is checked in the transaction and before commit, with int8 totals and idempotent replies.",
+        "verification": "12 current real HTTP cases pass;29 unchanged manual service/replay cases from initial run reused. Initial failures were test metadata JSON cast, poll timeout and reuse of a deliberately expired session, then fixed. Strict types required explicit optional field mapping and response types; final API types/lint/format/build and OpenAPI contract pass. Only two API paths added; existing path contracts unchanged.",
+        "remaining": "Staff browser form and end-to-end workflow acceptance still required."
+      }
+    ],
     "pr_dispositions": [],
-    "next_action": "Read bounded creation/calculation requirements and saved PR descriptions; trace current implementation and fix confirmed gaps."
+    "next_action": "Build the staff manual-invoice form using current endpoints; verify locale/RTL, validation, step-up, duplicate-retry and success behavior. Finish remaining creation/calculation review before consolidating this batch.",
+    "integration_findings": [
+      "ManualInvoiceService now has protected staff creation and profile-search HTTP routes at1b1d7d1. Staff form/browser acceptance still required; PR224 remains open until batch consolidation.",
+      "AutoInvoiceService has no production caller. Existing OrdersService creates DRAFT orders; do not charge draft creation. Concrete submission workflows and contract/saving/consultation prerequisites need explicit disposition.",
+      "Contract and consultation origin columns are still text references without target tables/FKs; T-04.1.02.05 remains unmet for these links."
+    ],
+    "new_evidence": [
+      "/tmp/r01-invoice-creation-manual-http-api.log",
+      "/tmp/r01-invoice-creation-manual-http-build.log",
+      "/tmp/r01-invoice-creation-manual-http-contract-check.log",
+      "/tmp/r01-invoice-creation-manual-http-fixed.log",
+      "/tmp/r01-invoice-creation-manual-http-fixture-format.log",
+      "/tmp/r01-invoice-creation-manual-http-format-check.log",
+      "/tmp/r01-invoice-creation-manual-http-format-final.log",
+      "/tmp/r01-invoice-creation-manual-http-format.log",
+      "/tmp/r01-invoice-creation-manual-http-lint-final.log",
+      "/tmp/r01-invoice-creation-manual-http-lint.log",
+      "/tmp/r01-invoice-creation-manual-http-openapi.log",
+      "/tmp/r01-invoice-creation-manual-http-profiles-format.log",
+      "/tmp/r01-invoice-creation-manual-http-profiles.log",
+      "/tmp/r01-invoice-creation-manual-http-race-format.log",
+      "/tmp/r01-invoice-creation-manual-http-session-fixed.log",
+      "/tmp/r01-invoice-creation-manual-http-test-format.log",
+      "/tmp/r01-invoice-creation-manual-http-types-final.log",
+      "/tmp/r01-invoice-creation-manual-http-types-fixed.log",
+      "/tmp/r01-invoice-creation-manual-http-types-format.log",
+      "/tmp/r01-invoice-creation-manual-http-types.log",
+      "/tmp/r01-invoice-creation-requirements-history.log",
+      "/tmp/r01-invoice-creation-vat-window-api.log",
+      "/tmp/r01-invoice-creation-vat-window-baseline.log",
+      "/tmp/r01-invoice-creation-vat-window-format-check.log",
+      "/tmp/r01-invoice-creation-vat-window-format.log",
+      "/tmp/r01-invoice-creation-vat-window-lint.log",
+      "/tmp/r01-invoice-creation-vat-window-types.log"
+    ]
   },
   "open_domain_reviews": [
     {

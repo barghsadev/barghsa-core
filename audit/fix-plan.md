@@ -42,6 +42,8 @@ Invoice-state batch is consolidated at `7dd8ede`: **6 tasks verified /6 PR revie
 
 Active **R01-invoice-creation-calculation**:10 saved PRs223–229,231–233;9 qualified tasks T-04.1.02.01 through .09. Review line/item constraints, manual/automatic invoice creation, authority/transactions, VAT/rounding, origins/idempotency and snapshot replay. Keep deadlines/reminders and corrections in later batches. Exact membership and existing evidence are in progress.json.active_batch.
 
+Active-batch checkpoint at `1b1d7d1`: VAT linked-rate window repair passes39 cases. Staff manual creation/profile-search API passes12 HTTP cases plus29 unchanged service/replay cases, types/lint/format/build and OpenAPI. Staff form/browser acceptance and remaining creation review are next. No task/PR closed early; missing submission and contract/consultation prerequisites remain explicit.
+
 ## Execution order
 
 Fix confirmed defects in feature batches. Review each meaningful change with focused checks, then record one consolidated batch checkpoint. An unresolved review does not authorize rebuilding an implementation.
