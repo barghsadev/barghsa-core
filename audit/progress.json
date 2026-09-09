@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
+  "source_revision": "1bb15560a1cd8648090e47258e5c5e1261e420bc",
   "active_step": "R01",
-  "next_action": "Review receipt/customer/staff UI and shared approval criteria; implement the required emergency override and repair any confirmed current dual-approver permission/notification binding gaps. Compare repeated PRs and consolidate this batch individually.",
+  "next_action": "Reconcile receipt requirements and repeated PRs into one batch review. Emergency override, both-approver authority, audit context and wallet step-up target fixes are complete locally. Compare saved duplicate PR diffs, inspect incidental T-04.3.01.06 overpayment coverage, verify remaining customer upload/config UI evidence, refresh narrow wallet/card source bindings, then close tasks and PRs individually.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -910,8 +910,24 @@
         "summary": "Wallet receipts now seal validated bytes under server-only keys using extracted invoice sealing code. Both flows journal copy cleanup outside the business transaction, keep the journal locked until commit, preserve matching retries, and refuse to recreate a copy whose cleanup already finished.90 distinct affected API cases pass; API types/lint/format/OpenAPI pass."
       },
       {
-        "status": "confirmed_missing_requirement",
-        "summary": "T-09.07.01 emergency override with required reason, elevated permission, immediate alert and audit has no current implementation. Keep within this batch and do not close threshold acceptance prematurely."
+        "status": "fixed_and_verified",
+        "summary": "341246f/1bb1556: emergency confirmation applies only to one already-pending receipt approval, requires the separate admin:financial:emergency-override permission plus current step-up, preserves evidence binding, and commits settlement, explicit override audit and immediate private bilingual in-app alerts together. Ordinary self-approval remains forbidden. Wallet UI advertises server permission, requires a reason, captures target/reason through step-up and restores focus.168 distinct affected API cases,17 web unit and9 Chromium checks pass; types/lint/build/OpenAPI pass. No external-channel or deployment claim.",
+        "commit": "1bb15560a1cd8648090e47258e5c5e1261e420bc"
+      },
+      {
+        "status": "fixed_and_verified",
+        "commit": "f7efbb90f856a50944191301afac64042d172303",
+        "summary": "Staff receipt confirm/reject retries capture the original receipt through step-up and prevent queue selection during actions. Both wrong-target races reproduced;15 web unit cases, web types and lint pass."
+      },
+      {
+        "status": "fixed_and_verified",
+        "commit": "c9567b9f58fc42deb63e7905000592ecdd54b508",
+        "summary": "Both approvers retain account and role authority through settlement. NOWAIT avoids opposite-actor deadlocks and yields retryable409. Eight authority-retention baseline failures;143 affected API cases and API types/lint pass."
+      },
+      {
+        "status": "fixed_and_verified",
+        "commit": "6ed170354768de1304c9596cb501c85410504583",
+        "summary": "Wallet/invoice approval initiation, resolution and rejection synchronization retain current session/correlation audit context.122 affected API cases and types/lint pass. Initial audit test used a uuid[] against text IDs; corrected before four valid baseline failures."
       }
     ],
     "reused_evidence": [
@@ -920,13 +936,18 @@
       "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Review receipt/customer/staff UI and shared approval criteria; implement the required emergency override and repair any confirmed current dual-approver permission/notification binding gaps. Compare repeated PRs and consolidate this batch individually.",
+    "next_action": "Reconcile receipt requirements and repeated PRs into one batch review. Emergency override, both-approver authority, audit context and wallet step-up target fixes are complete locally. Compare saved duplicate PR diffs, inspect incidental T-04.3.01.06 overpayment coverage, verify remaining customer upload/config UI evidence, refresh narrow wallet/card source bindings, then close tasks and PRs individually.",
     "product_commits": [
       "0d75b640e7ef2bea4be352de70c4577ebb97147e",
       "397d8fd6080a4b617224d757c56b3642d1795833",
       "d646396a854c9ba77cfb40b88696ee9de67c7120",
       "18ee061a0db9a28bcfc5bf25fd6edb9f3516e383",
-      "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9"
+      "ff7528188d9236e824b32ae51c3ad4e2f0b7cce9",
+      "f7efbb90f856a50944191301afac64042d172303",
+      "c9567b9f58fc42deb63e7905000592ecdd54b508",
+      "6ed170354768de1304c9596cb501c85410504583",
+      "341246f326849b43acd8148f502012eb0b05ee6b",
+      "1bb15560a1cd8648090e47258e5c5e1261e420bc"
     ],
     "verification": {
       "receipt_submission": {
@@ -958,6 +979,33 @@
         "distinct_api_cases": 90,
         "logs_prefix": "/tmp/r01-receipt-sealing-",
         "limits": "Wallet overwrite baseline failed; invoice baseline passed.88-case run,41-case fixture rerun and24 authority/overwrite/copy cases total90 after deduplication.4 failed-copy cases rerun against the built production worker. Older fixture expectations changed from uploaded keys to sealed keys; archive fixture now supplies real bytes. Initial extraction typo and cross-project source import type failures fixed. Existing receipts are preserved; historical bytes changed before this fix cannot be reconstructed locally. No new browser/budget/full suite claim."
+      },
+      "receipt_ui_target": {
+        "source_revision": "f7efbb90f856a50944191301afac64042d172303",
+        "distinct_web_unit_cases": 15,
+        "logs_prefix": "/tmp/r01-receipt-ui-target-",
+        "limits": "Two valid wrong-target baseline failures. The requested AdminApprovalRequestsPage.test.tsx file does not exist; only the wallet page unit file ran. Shared approval UI was read and later tested by existing approval-queue browser checks."
+      },
+      "receipt_approver_locks": {
+        "source_revision": "c9567b9f58fc42deb63e7905000592ecdd54b508",
+        "distinct_api_cases": 143,
+        "logs_prefix": "/tmp/r01-receipt-approver-lock-",
+        "limits": "Eight baseline failures establish that other-approver role/account changes did not wait for settlement. Two added busy-reviewer cases prove409, no side effects and successful retry. Initial types failed on unknown query/JSON values; corrected assertions and passing final types are bound to the amended c9567b9, not transient af3f57a."
+      },
+      "receipt_approval_audit": {
+        "source_revision": "6ed170354768de1304c9596cb501c85410504583",
+        "distinct_api_cases": 122,
+        "logs_prefix": "/tmp/r01-receipt-approval-audit-",
+        "limits": "Four initial fixtures failed on text=uuid; corrected baseline showed missing session/correlation. Four-file122-case regression passes. Session IDs remain audit metadata only, never approval details exposed in the queue."
+      },
+      "receipt_emergency": {
+        "source_revision": "1bb15560a1cd8648090e47258e5c5e1261e420bc",
+        "api_revision": "341246f326849b43acd8148f502012eb0b05ee6b",
+        "distinct_api_cases": 168,
+        "distinct_web_unit_cases": 17,
+        "chromium_cases": 9,
+        "logs_prefix": "/tmp/r01-receipt-emergency-",
+        "limits": "166-case affected API run plus two explicit-grant cases;28-case emergency rerun and10-case controller rerun overlap.17 wallet UI cases and9 production-build Chromium cases include two new bilingual emergency/axe/focus cases, five existing approval queue cases and two receipt-time cases. Initial type mismatch in the SQL-client contract fixed before passing types/build. Existing nonblocking pg/color/bundle warnings preserved. Immediate alerts are in-app; no email/SMS delivery claim. No new full-suite, global coverage, budget, image or deployed-system claim."
       }
     }
   },
