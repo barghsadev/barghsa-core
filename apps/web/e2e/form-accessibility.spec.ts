@@ -1369,6 +1369,76 @@ for (const locale of ['en', 'fa']) {
 }
 
 for (const locale of ['en', 'fa']) {
+  test(`notification switches follow verified availability and reject invalid availability (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let reads = 0;
+    const writes: unknown[] = [];
+    await page.route('**/api/user/settings/notifications', (route) => {
+      if (route.request().method() === 'GET') {
+        reads++;
+        return route.fulfill({
+          json: {
+            channels: ['IN_APP', 'EMAIL'],
+            availableChannels: reads === 1 ? ['EMAIL'] : ['IN_APP', 'EMAIL'],
+          },
+        });
+      }
+      const input = route.request().postDataJSON();
+      writes.push(input);
+      return route.fulfill({ json: { ...input, availableChannels: ['IN_APP', 'EMAIL', 'SMS'] } });
+    });
+    await page.goto('/settings');
+    const card = page.locator('[data-slot="card"]').filter({
+      has: page.getByRole('heading', {
+        name: locale === 'fa' ? 'تنظیمات اعلان‌ها' : 'Notification Preferences',
+        exact: true,
+      }),
+    });
+    const save = card.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+      exact: true,
+    });
+    await expect(card.getByRole('alert')).toBeVisible();
+    await expect(card.getByRole('switch')).toHaveCount(0);
+    await expect(save).toBeDisabled();
+    await card
+      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+      .click();
+    const email = card.getByRole('switch', {
+      name: locale === 'fa' ? 'ایمیل' : 'Email',
+      exact: true,
+    });
+    const sms = card.getByRole('switch', { name: locale === 'fa' ? 'پیامک' : 'SMS', exact: true });
+    const inApp = card.getByRole('switch', {
+      name: locale === 'fa' ? 'اعلان درون برنامه‌ای' : 'In-App',
+      exact: true,
+    });
+    await expect(email).toBeEnabled();
+    await expect(email).toBeChecked();
+    await expect(sms).toBeDisabled();
+    await expect(sms).not.toBeChecked();
+    await expect(sms).toHaveAccessibleDescription(
+      locale === 'fa'
+        ? 'برای فعال‌سازی این روش، اطلاعات تماس را در تنظیمات حساب اضافه و تأیید کنید.'
+        : 'Add and verify this contact in account settings to enable this channel.'
+    );
+    await expect(inApp).toBeDisabled();
+    await expect(inApp).toBeChecked();
+    await email.press('Space');
+    await save.click();
+    await expect(card.getByRole('status')).toBeVisible();
+    await expect(email).not.toBeChecked();
+    await expect(sms).toBeEnabled();
+    await sms.press('Space');
+    await save.click();
+    await expect.poll(() => writes.length).toBe(2);
+    await expect(card.getByRole('status')).toBeVisible();
+    expect(writes).toEqual([{ channels: ['IN_APP'] }, { channels: ['IN_APP', 'SMS'] }]);
+    await expect(inApp).toBeDisabled();
+    await expect(inApp).toBeChecked();
+  });
   for (const kind of ['notifications', 'marketing-consent']) {
     test(`preferences require a valid read and preserve choices through save failures (${kind}, ${locale})`, async ({
       page,
@@ -1385,7 +1455,7 @@ for (const locale of ['en', 'fa']) {
               sms: { optedIn: false, lastChangedAt: null },
             },
           }
-        : { channels: ['IN_APP'] };
+        : { channels: ['IN_APP'], availableChannels: ['IN_APP', 'EMAIL'] };
       const confirmed = marketing
         ? {
             channels: {
@@ -1393,7 +1463,7 @@ for (const locale of ['en', 'fa']) {
               sms: { optedIn: false, lastChangedAt: null },
             },
           }
-        : { channels: ['IN_APP', 'EMAIL'] };
+        : { channels: ['IN_APP', 'EMAIL'], availableChannels: ['IN_APP', 'EMAIL'] };
       let reads = 0;
       let writes = 0;
       let finish: (() => void) | undefined;

@@ -13259,6 +13259,17 @@
                         "type": "string"
                       },
                       "type": "array"
+                    },
+                    "availableChannels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "SMS",
+                          "EMAIL",
+                          "IN_APP"
+                        ]
+                      }
                     }
                   },
                   "type": "object"
@@ -13295,6 +13306,17 @@
                         "type": "string"
                       },
                       "type": "array"
+                    },
+                    "availableChannels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "SMS",
+                          "EMAIL",
+                          "IN_APP"
+                        ]
+                      }
                     }
                   },
                   "type": "object"

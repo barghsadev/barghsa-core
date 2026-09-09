@@ -42,8 +42,7 @@ interface ConsentChannelState {
 
 type MarketingChannels = 'email' | 'sms';
 
-function readChannels(body: unknown): NotificationChannel[] {
-  const channels = (body as { channels?: unknown } | null)?.channels;
+function readChannels(channels: unknown): NotificationChannel[] {
   if (
     !Array.isArray(channels) ||
     !channels.includes('IN_APP') ||
@@ -52,6 +51,15 @@ function readChannels(body: unknown): NotificationChannel[] {
   )
     throw new Error('Invalid preferences');
   return channels as NotificationChannel[];
+}
+
+function readNotificationPreferences(body: unknown) {
+  const value = body as { channels?: unknown; availableChannels?: unknown } | null;
+  const channels = readChannels(value?.channels);
+  const availableChannels = readChannels(value?.availableChannels);
+  if (channels.some((channel) => !availableChannels.includes(channel)))
+    throw new Error('Unavailable preferences');
+  return { channels, availableChannels };
 }
 
 function readConsent(body: unknown): Record<MarketingChannels, ConsentChannelState> {
@@ -79,6 +87,7 @@ function SettingsIndexPage() {
   const locale = useLocale();
 
   const [channels, setChannels] = useState<NotificationChannel[]>([]);
+  const [availableChannels, setAvailableChannels] = useState<NotificationChannel[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -106,7 +115,9 @@ function SettingsIndexPage() {
     try {
       const response = await fetch('/api/user/settings/notifications');
       if (!response.ok) throw new Error('Read failed');
-      setChannels(readChannels(await response.json()));
+      const current = readNotificationPreferences(await response.json());
+      setChannels(current.channels);
+      setAvailableChannels(current.availableChannels);
     } catch {
       setLoadFailed(true);
     } finally {
@@ -121,7 +132,14 @@ function SettingsIndexPage() {
   // ── Toggle handler ─────────────────────────────────────────────────
 
   const handleToggle = (channel: NotificationChannel) => {
-    if (channel === 'IN_APP' || loading || loadFailed || savingRef.current) return; // In-app is always enabled
+    if (
+      channel === 'IN_APP' ||
+      !availableChannels.includes(channel) ||
+      loading ||
+      loadFailed ||
+      savingRef.current
+    )
+      return;
     setSaved(false);
     setSaveFailed(false);
     setChannels((prev) =>
@@ -144,13 +162,14 @@ function SettingsIndexPage() {
         body: JSON.stringify({ channels }),
       });
       if (!response.ok) throw new Error('Save failed');
-      const confirmed = readChannels(await response.json());
+      const confirmed = readNotificationPreferences(await response.json());
       if (
-        confirmed.length !== channels.length ||
-        channels.some((value) => !confirmed.includes(value))
+        confirmed.channels.length !== channels.length ||
+        channels.some((value) => !confirmed.channels.includes(value))
       )
         throw new Error('Mismatched preferences');
-      setChannels(confirmed);
+      setChannels(confirmed.channels);
+      setAvailableChannels(confirmed.availableChannels);
       setSaved(true);
     } catch {
       setSaveFailed(true);
@@ -391,6 +410,7 @@ function SettingsIndexPage() {
               {channelToggles.map((channel) => {
                 const isEnabled = channels.includes(channel.key);
                 const isAlwaysOn = channel.key === 'IN_APP';
+                const isAvailable = availableChannels.includes(channel.key);
 
                 return (
                   <div
@@ -405,7 +425,14 @@ function SettingsIndexPage() {
                       </span>
                       <div>
                         <p className="text-sm font-medium">{channel.label}</p>
-                        <p className="text-xs text-muted-foreground">{channel.description}</p>
+                        <p
+                          id={`notification-${channel.key}-hint`}
+                          className="text-xs text-muted-foreground"
+                        >
+                          {isAvailable
+                            ? channel.description
+                            : preferencesText('unavailableChannel', locale)}
+                        </p>
                       </div>
                     </div>
                     <button
@@ -413,7 +440,8 @@ function SettingsIndexPage() {
                       role="switch"
                       aria-checked={isEnabled}
                       aria-label={channel.label}
-                      disabled={isAlwaysOn || saving}
+                      aria-describedby={`notification-${channel.key}-hint`}
+                      disabled={isAlwaysOn || !isAvailable || saving}
                       onClick={() => handleToggle(channel.key)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 ${
                         isEnabled ? 'bg-primary' : 'bg-input'

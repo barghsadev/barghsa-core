@@ -459,7 +459,10 @@ it.each(['email', 'mobile'] as const)(
     const preferences = () => fetch(`${fixture.base}/api/user/settings/notifications`, { headers });
     const initial = await preferences();
     expect(initial.status).toBe(200);
-    expect(await initial.json()).toEqual({ channels: ['IN_APP', available] });
+    expect(await initial.json()).toEqual({
+      channels: ['IN_APP', available],
+      availableChannels: ['IN_APP', available],
+    });
     const user = await fetch(`${fixture.base}/api/auth/user`, { headers });
     expect(await user.json()).toMatchObject({
       [kind]: username,
@@ -473,7 +476,10 @@ it.each(['email', 'mobile'] as const)(
         body: JSON.stringify({ channels }),
       });
     expect((await save(['IN_APP'])).status).toBe(200);
-    expect(await (await preferences()).json()).toEqual({ channels: ['IN_APP'] });
+    expect(await (await preferences()).json()).toEqual({
+      channels: ['IN_APP'],
+      availableChannels: ['IN_APP', available],
+    });
     expect((await save([available])).status).toBe(200);
     expect((await save([kind === 'email' ? 'SMS' : 'EMAIL'])).status).toBe(400);
     expect(
