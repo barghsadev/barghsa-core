@@ -99,7 +99,7 @@ describe('dueAt override permission gate (T-04.1.03.03)', () => {
     const { controller, service } = makeController();
     const result = await controller.get(adminReq, INVOICE_ID);
     expect(result).toEqual(DTO);
-    expect(service.get).toHaveBeenCalledWith(INVOICE_ID);
+    expect(service.get).toHaveBeenCalledWith(INVOICE_ID, adminReq.session);
   });
 
   it('forwards body, actor, ip, and correlation id to override for admins', async () => {
@@ -110,6 +110,7 @@ describe('dueAt override permission gate (T-04.1.03.03)', () => {
       raw: BODY,
       actorUserId: 'admin-1',
       ip: '127.0.0.1',
+      actorSession: adminReq.session,
       correlationId: 'corr-1',
     });
   });

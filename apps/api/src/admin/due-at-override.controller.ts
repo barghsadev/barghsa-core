@@ -99,7 +99,7 @@ export class DueAtOverrideController {
   ): Promise<InvoiceDueAtDto> {
     this.assertOverridePermission(req);
     assertUuid(invoiceId);
-    return this.service.get(invoiceId);
+    return this.service.get(invoiceId, req.session);
   }
 
   @Post(':invoiceId/due-at')
@@ -146,6 +146,7 @@ export class DueAtOverrideController {
       invoiceId,
       raw: body,
       actorUserId: req.session.userId,
+      actorSession: req.session,
       ip: requestIp(req),
       ...(correlationId ? { correlationId } : {}),
     });

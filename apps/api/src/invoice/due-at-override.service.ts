@@ -13,6 +13,8 @@
  */
 
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -44,6 +46,7 @@ export interface OverrideInvoiceDueAtInput {
   invoiceId: string;
   raw: unknown;
   actorUserId: string;
+  actorSession?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
   correlationId?: string;
   now?: Date;
@@ -106,18 +109,42 @@ export class DueAtOverrideService {
   /**
    * Load the current due-date snapshot for the staff override UI.
    */
-  async get(invoiceId: string): Promise<InvoiceDueAtDto> {
+  async get(
+    invoiceId: string,
+    actorSession?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<InvoiceDueAtDto> {
     const pool = getDbPool();
-    const result = (await pool.query(
-      `SELECT id, state, issued_at, payable_from, due_at, metadata
-       FROM invoices WHERE id = $1`,
-      [invoiceId]
-    )) as { rows: InvoiceDueAtRow[] };
-    const row = result.rows[0];
-    if (!row) {
-      httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${invoiceId}`, 404);
+    const client = actorSession ? await pool.connect() : undefined;
+    try {
+      if (client && actorSession) {
+        await client.query('BEGIN');
+        await requireStaffMutationPermission(
+          client,
+          actorSession.userId,
+          'admin:finance:invoices:override-due-at'
+        );
+        await requireCurrentSession(client, actorSession);
+      }
+      const result = (await (client ?? pool).query(
+        `SELECT id, state, issued_at, payable_from, due_at, metadata
+         FROM invoices WHERE id = $1`,
+        [invoiceId]
+      )) as { rows: InvoiceDueAtRow[] };
+      const row = result.rows[0];
+      if (!row)
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${invoiceId}`, 404);
+      const dto = toDto(row);
+      if (client && actorSession) {
+        await requireCurrentSession(client, actorSession);
+        await client.query('COMMIT');
+      }
+      return dto;
+    } catch (error) {
+      if (client) await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client?.release();
     }
-    return toDto(row);
   }
 
   /**
@@ -150,6 +177,12 @@ export class DueAtOverrideService {
       if (!row) {
         await client.query('ROLLBACK');
         httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${input.invoiceId}`, 404);
+      }
+
+      if (input.actorSession) {
+        if (input.actorSession.userId !== input.actorUserId)
+          httpError(ErrorCodes.AUTHZ_FORBIDDEN.code, 'Session actor mismatch', 403);
+        await requireSessionStepUp(client, input.actorSession);
       }
 
       if (!isDueAtOverrideableState(row.state)) {
@@ -227,6 +260,7 @@ export class DueAtOverrideService {
         now
       );
 
+      if (input.actorSession) await requireSessionStepUp(client, input.actorSession);
       await client.query('COMMIT');
 
       this.logger.log(
