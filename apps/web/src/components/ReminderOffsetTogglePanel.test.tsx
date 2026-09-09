@@ -129,6 +129,25 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     expect(container.textContent).toContain('boom');
   });
 
+  it.each([
+    [],
+    { ok: true },
+    [{ serviceType: 'manual', offset: -7, enabled: false }],
+    [{ serviceType: 'electricity', offset: -7, enabled: 'false' }],
+    [{ serviceType: 'electricity', offset: -7, enabled: true }],
+  ])('does not claim a save when the reply does not confirm the requested cell', async (reply) => {
+    await renderPanel();
+    fetchMock.mockResolvedValue({ ok: true, json: async () => reply });
+    const toggle = container.querySelector(
+      '[data-testid="reminder-toggle-electricity--7"]'
+    ) as HTMLInputElement;
+    await act(async () => {
+      toggle.click();
+    });
+    expect(toggle.checked).toBe(true);
+    expect(container.querySelector('[role="alert"]')).not.toBeNull();
+  });
+
   type PutBody = { serviceType: string; offset: number; enabled: boolean };
   type PutGate = {
     body: PutBody;

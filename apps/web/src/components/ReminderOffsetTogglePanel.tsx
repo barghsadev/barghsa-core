@@ -133,8 +133,10 @@ async function saveToggle(
     if (isStepUpRequired(res, data)) return { kind: 'step_up' };
     if (!res.ok) return { kind: 'error', message: errorMessage(data, fallback) };
     const matrix = Array.isArray(data) ? (data as ReminderOffsetToggleDto[]) : [];
-    const saved = matrix.find((row) => row.serviceType === serviceType && row.offset === offset);
-    return { kind: 'ok', enabled: saved?.enabled ?? enabled };
+    const saved = matrix.filter((row) => row?.serviceType === serviceType && row.offset === offset);
+    if (saved.length !== 1 || saved[0]?.enabled !== enabled)
+      return { kind: 'error', message: fallback };
+    return { kind: 'ok', enabled };
   } catch {
     return { kind: 'error', message: fallback };
   }
