@@ -130,9 +130,12 @@ for (const locale of ['en', 'fa'] as const) {
     const row = page.getByRole('row').filter({ hasText: 'Lifecycle provider' });
     const activate = row.getByRole('button', { name: fa ? 'فعال‌سازی' : 'Activate', exact: true });
     const connection = row.getByRole('button', {
-      name: fa ? 'تست اتصال' : 'Test connection',
-      exact: true,
+      name: fa ? 'ارسال ایمیل آزمایشی' : 'Send test email',
+      exact: false,
     });
+    await expect(connection).toBeDisabled();
+    await row.locator('input[type=email]').fill('staff@example.test');
+    await expect(connection).toContainText('staff@example.test');
     await expect(activate).toBeDisabled();
     await connection.click();
     await expect(row).toContainText(fa ? 'خطا در تست اتصال' : 'Failed to run connection test');
@@ -243,7 +246,7 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       operation === 'disable' ? 'active' : operation === 'rollback' ? 'disabled' : 'draft';
     let provider = {
       id: 'protected-row',
-      transport: 'smtp',
+      transport: operation === 'test-connection' ? 'resend' : 'smtp',
       label: 'Protected row',
       status: initialState,
       lastTestStatus: 'passed',
@@ -254,6 +257,8 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       if (route.request().method() === 'GET') return route.fulfill({ json: [provider] });
       const path = new URL(route.request().url()).pathname;
       attempts.push(path);
+      if (operation === 'test-connection')
+        expect(route.request().postDataJSON()).toEqual({ recipient: 'staff@example.test' });
       if (!verified)
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       provider = {
@@ -283,13 +288,17 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       document.documentElement.lang = 'en';
     });
     const names = {
-      'test-connection': 'Test connection',
+      'test-connection': 'Send test email',
       activate: 'Activate',
       disable: 'Disable',
       rollback: 'Rollback to this version',
     };
     const row = page.getByRole('row').filter({ hasText: 'Protected row' });
-    await row.getByRole('button', { name: names[operation], exact: true }).click();
+    if (operation === 'test-connection')
+      await row.locator('input[type=email]').fill('staff@example.test');
+    await row
+      .getByRole('button', { name: names[operation], exact: operation !== 'test-connection' })
+      .click();
     const dialog = page.getByRole('dialog');
     await dialog.locator('input[type="password"]').fill('correct');
     await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
@@ -311,6 +320,7 @@ test('provider draft edit preserves its stored secret through step-up', async ({
     label: 'Existing provider',
     status: 'draft',
     lastTestStatus: 'pending',
+    maskedConfig: { api_key: '********test', from_email: 'existing@example.test' },
   };
   let verified = false;
   const attempts: unknown[] = [];

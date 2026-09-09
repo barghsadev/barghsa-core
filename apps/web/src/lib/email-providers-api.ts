@@ -13,6 +13,7 @@ export interface EmailProvider {
   activatedBy?: string | null;
   lastTestAt?: string | null;
   lastTestError?: string | null;
+  maskedConfig?: unknown;
 }
 export interface TestConnectionOutcome {
   ok: boolean;

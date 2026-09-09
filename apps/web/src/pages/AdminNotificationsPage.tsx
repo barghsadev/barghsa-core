@@ -97,8 +97,8 @@ const LOCALE_LABELS: Record<TemplateLocale, string> = {
 };
 
 /**
- * Known notification event keys used in the system.
- * These are the canonical events admin can template.
+ * Legacy suggestions supplement event keys already loaded from saved templates.
+ * New keys may be entered without waiting for a frontend release.
  */
 const KNOWN_EVENT_KEYS = [
   'welcome_email',
@@ -659,23 +659,29 @@ export default function AdminNotificationsPage() {
                   className="text-sm text-gray-500 py-2"
                 />
               ) : (
-                <select
+                <input
                   id="notification-template-eventKey"
+                  list="notification-event-suggestions"
                   value={eventKey}
                   onChange={(e) => setEventKey(e.target.value)}
                   className="w-full border border-gray-300 rounded px-3 py-2"
                   required
-                >
-                  {!KNOWN_EVENT_KEYS.includes(eventKey) && (
-                    <option value={eventKey}>{eventKey}</option>
-                  )}
-                  {KNOWN_EVENT_KEYS.map((key) => (
-                    <option key={key} value={key}>
-                      {key}
-                    </option>
-                  ))}
-                </select>
+                  maxLength={100}
+                  pattern="\S+"
+                />
               )}
+              <datalist id="notification-event-suggestions">
+                {[
+                  ...new Set([
+                    ...KNOWN_EVENT_KEYS,
+                    ...templates.map((template) => template.eventKey),
+                  ]),
+                ]
+                  .sort()
+                  .map((key) => (
+                    <option key={key} value={key} />
+                  ))}
+              </datalist>
             </div>
 
             {/* Channel + Locale */}
@@ -807,6 +813,11 @@ export default function AdminNotificationsPage() {
                           <button
                             type="button"
                             disabled={viewOnly || testSending}
+                            draggable={!viewOnly && !testSending}
+                            onDragStart={(event) => {
+                              event.dataTransfer.setData('text/plain', `{{${v.name}}}`);
+                              event.dataTransfer.effectAllowed = 'copy';
+                            }}
                             onClick={() => insertVariable(v.name)}
                             className="w-full text-left px-2 py-1 text-xs font-mono bg-white border border-gray-200 rounded hover:bg-blue-50 hover:border-blue-300"
                             title={v.description ?? undefined}

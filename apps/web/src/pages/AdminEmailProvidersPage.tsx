@@ -93,6 +93,43 @@ const EMPTY_RESEND: ResendForm = {
   sendingDomain: '',
 };
 
+function savedForm(provider: EmailProvider): TransportForm {
+  const value = provider.maskedConfig;
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new ProviderRequestError();
+  const config = value as Record<string, unknown>;
+  const field = (key: string, required = false): string => {
+    const value = config[key] === undefined ? '' : config[key];
+    if (typeof value !== 'string' || (required && !value.trim())) throw new ProviderRequestError();
+    return value;
+  };
+  const integer = (key: string, fallback: number, max: number): string => {
+    const value = config[key] === undefined ? fallback : config[key];
+    if (typeof value !== 'number' || !Number.isInteger(value) || value < 1 || value > max)
+      throw new ProviderRequestError();
+    return String(value);
+  };
+  const common = {
+    fromName: field('from_name'),
+    fromEmail: field('from_email', true),
+    replyTo: field('reply_to'),
+  };
+  if (provider.transport === 'resend') {
+    return { ...common, apiKey: '', sendingDomain: field('sending_domain') };
+  }
+  const security = config.security === undefined ? 'STARTTLS' : config.security;
+  if (security !== 'TLS' && security !== 'STARTTLS') throw new ProviderRequestError();
+  return {
+    ...common,
+    host: field('host', true),
+    port: integer('port', 587, 65535),
+    security,
+    username: field('username'),
+    password: '',
+    connectionTimeout: integer('connection_timeout', 10, 600),
+    commandTimeout: integer('command_timeout', 15, 600),
+  };
+}
+
 function smtpConfig(form: SmtpForm): Record<string, unknown> {
   const config: Record<string, unknown> = {
     host: form.host,
@@ -195,11 +232,19 @@ export default function AdminEmailProvidersPage() {
       setError(providerText('admin.providers.supersededNote', uiLocale));
       return;
     }
+    let saved: TransportForm;
+    try {
+      saved = savedForm(p);
+    } catch {
+      setError(providerText('admin.providers.error.load', uiLocale));
+      setLoadFailed(true);
+      return;
+    }
     setEditId(p.id);
     setEditStatus(p.status);
     setLabel(p.label);
     setTransport(p.transport);
-    setForm(p.transport === 'smtp' ? { ...EMPTY_SMTP } : { ...EMPTY_RESEND });
+    setForm(saved);
     setError(null);
     setNotice(null);
     setShowEditor(true);
@@ -270,6 +315,7 @@ export default function AdminEmailProvidersPage() {
           await createProvider(transport, label.trim(), resendConfig(f));
         }
       }
+      setTestOutcome({});
       closeEditor();
       await fetchAll();
     } catch (err) {
@@ -284,6 +330,7 @@ export default function AdminEmailProvidersPage() {
           async (result) => {
             const saved = validateProviderResult(result, 'draft', editId ?? undefined);
             if (saved.transport !== transport) throw new ProviderRequestError();
+            setTestOutcome({});
             closeEditor();
             await fetchAll();
           }
@@ -436,6 +483,9 @@ export default function AdminEmailProvidersPage() {
           <h1 className="text-2xl font-bold">{providerText('admin.providers.title', uiLocale)}</h1>
           <p className="text-sm text-gray-500 mt-1">
             {providerText('admin.providers.subtitle', uiLocale)}
+          </p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {providerText('admin.providers.test.notice', uiLocale)}
           </p>
         </div>
         {!showEditor && (
@@ -695,19 +745,11 @@ export default function AdminEmailProvidersPage() {
                           >
                             {providerText('admin.providers.update', uiLocale)}
                           </button>
-                          {p.transport === 'resend' ? (
-                            <ResendTestRow provider={p} onTest={handleTest} busy={busy} />
-                          ) : (
-                            <button
-                              onClick={() => handleTest(p, '')}
-                              disabled={busy || loading || loadFailed}
-                              className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
-                            >
-                              {busy
-                                ? providerText('admin.providers.test.running', uiLocale)
-                                : providerText('admin.providers.test.run', uiLocale)}
-                            </button>
-                          )}
+                          <EmailTestRow
+                            provider={p}
+                            onTest={handleTest}
+                            busy={busy || loading || loadFailed}
+                          />
                           <button
                             onClick={() => handleActivate(p)}
                             disabled={
@@ -807,6 +849,20 @@ function SmtpFields({
           <option value="TLS">TLS</option>
         </select>
       </Field>
+      {(['connectionTimeout', 'commandTimeout'] as const).map((key) => (
+        <Field key={key} label={sec(key)} required>
+          <input
+            type="number"
+            min={1}
+            max={600}
+            step={1}
+            required
+            value={form[key]}
+            onChange={(e) => set(key, e.target.value)}
+            className="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </Field>
+      ))}
       <Field label={sec('username')}>
         <input
           type="text"
@@ -918,10 +974,10 @@ function ResendFields({
 }
 
 // ---------------------------------------------------------------------------
-// Resend test row (requires a recipient email)
+// Email self-test row (requires the verified recipient shown before sending)
 // ---------------------------------------------------------------------------
 
-function ResendTestRow({
+function EmailTestRow({
   provider,
   onTest,
   busy,
@@ -937,6 +993,8 @@ function ResendTestRow({
       <input
         type="email"
         value={recipient}
+        maxLength={320}
+        disabled={busy}
         onChange={(e) => setRecipient(e.target.value)}
         aria-label={providerText('admin.providers.test.recipient', uiLocale)}
         placeholder={providerText('admin.providers.test.recipient', uiLocale)}
@@ -947,9 +1005,19 @@ function ResendTestRow({
         disabled={busy || !recipient.trim()}
         className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
       >
-        {busy
-          ? providerText('admin.providers.test.running', uiLocale)
-          : providerText('admin.providers.test.run', uiLocale)}
+        {busy ? (
+          providerText('admin.providers.test.running', uiLocale)
+        ) : (
+          <>
+            {providerText('admin.providers.test.run', uiLocale)}
+            {recipient.trim() && (
+              <>
+                {' '}
+                · <bdi dir="ltr">{recipient.trim()}</bdi>
+              </>
+            )}
+          </>
+        )}
       </button>
     </div>
   );

@@ -614,7 +614,7 @@ export const fa: I18nDictionary = {
   'admin.notifications.bodyHint':
     'برای متغیرها از {{variableName}} استفاده کنید. متغیرهای موجود به رویداد بستگی دارند.',
   'admin.notifications.variables': 'متغیرها',
-  'admin.notifications.insertHint': 'برای درج در مکان‌نما کلیک کنید',
+  'admin.notifications.insertHint': 'متغیر را به متن بکشید یا برای درج در مکان‌نما کلیک کنید',
   'admin.notifications.preview': 'پیش‌نمایش (داده نمونه)',
   'admin.notifications.subjectLabel': 'موضوع:',
   'admin.notifications.variablesLabel': 'متغیرها (جدا با کاما)',
@@ -1491,7 +1491,8 @@ export const en: I18nDictionary = {
   'admin.notifications.bodyHint':
     'Use {{variableName}} for variables. The available variables depend on the event.',
   'admin.notifications.variables': 'Variables',
-  'admin.notifications.insertHint': 'Click to insert at cursor',
+  'admin.notifications.insertHint':
+    'Drag a variable into the body, or click to insert at the cursor',
   'admin.notifications.preview': 'Preview (sample data)',
   'admin.notifications.subjectLabel': 'Subject:',
   'admin.notifications.variablesLabel': 'Variables (comma-separated)',
