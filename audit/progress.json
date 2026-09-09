@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
+  "source_revision": "d0d72ec94bb02510616001baf310e7707f88deae",
   "active_step": "R02",
-  "next_action": "Review R02 notification outbox/delivery and dead-letter triage, saved PR163–170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches.",
+  "next_action": "Add and verify per-channel delivery history in the staff dead-letter panel, then accumulation alert rules. Finish the remaining nine-task batch review before assigning PR/task closure. Preserve the verified session, inbox-transaction, counter and UI acknowledgement repairs.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -686,6 +686,10 @@
     {
       "id": "R02-provider-template-authoring",
       "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+    },
+    {
+      "id": "R02-outbox-delivery-checkpoint",
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
     }
   ],
   "deferred_improvements": [
@@ -1027,16 +1031,47 @@
       "Review both staff dead-letter interfaces, current permissions/session/step-up and masked payloads, retry/resolve/dismiss, metrics and accumulation alerts.",
       "Keep remaining inbox/notification classification and event-specific reminder acceptance in later R02 batches. Operational rollout/alerts require truthful evidence."
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      {
+        "defect": "Dead-letter mutations recheck staff permission but drop session/CSRF/step-up identity before the transaction and generate unrelated audit correlation IDs.",
+        "status": "fixed_verified",
+        "source_revision": "361f4b82234bf226eb540fb74bde746fbc79112c"
+      },
+      {
+        "defect": "In-app adapter writes through a pool independently of the transaction that records job status, delivery log and outbox state; rollback can leave inbox delivery committed alone.",
+        "status": "fixed_verified",
+        "source_revision": "315c6c177ff43f9d598d1eb6eb9280508aa2a0df"
+      },
+      {
+        "defect": "Delivery attempt metrics increment during persistence before commit; a recording failure followed by fallback persistence can count the same physical send again.",
+        "status": "fixed_verified",
+        "source_revision": "315c6c177ff43f9d598d1eb6eb9280508aa2a0df"
+      },
+      {
+        "defect": "Staff triage trusted malformed access/list responses and reported success without checking the acknowledged record and transition.",
+        "status": "fixed_verified",
+        "source_revision": "d0d72ec94bb02510616001baf310e7707f88deae"
+      },
+      {
+        "defect": "Staff dead-letter panel shows only attempt totals; the required per-attempt delivery history is not displayed.",
+        "status": "open"
+      },
+      {
+        "defect": "A Grafana count panel exists but no notification dead-letter accumulation alert rule is configured in the repository.",
+        "status": "open"
+      }
+    ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#R02-provider-template-authoring",
       "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
       "audit/evidence/step-reviews.json#R02-recipient-channel-delivery",
       "audit/evidence/step-reviews.json#R02-daytime-window"
     ],
-    "new_evidence": [],
+    "new_evidence": [
+      "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    ],
     "pr_dispositions": [],
-    "next_action": "Review R02 notification outbox/delivery and dead-letter triage, saved PR163–170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches."
+    "next_action": "Add and verify per-channel delivery history in the staff dead-letter panel, then accumulation alert rules. Finish the remaining nine-task batch review before assigning PR/task closure. Preserve the verified session, inbox-transaction, counter and UI acknowledgement repairs."
   },
   "open_domain_reviews": [
     {

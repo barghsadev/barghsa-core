@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `c6588610`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `d0d72ec9`, 2026-09-09. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -15,6 +15,8 @@ Current through product/test `c6588610`, 2026-09-09. This is the only active pla
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
+
+Current batch checkpoint atd0d72ec9 repairs triage session authority, atomic inbox delivery/attempt counting and staff response validation.70 API,8 chargeback,81 worker and10 browser cases pass;42 budgets unchanged. Counts remain unchanged. Next confirmed repairs are per-attempt staff history and accumulation alert rules; then finish the nine-task batch review. Detailed evidence lives in `evidence/step-reviews.json#R02-outbox-delivery-checkpoint`.
 
 Active R02 batch: **notification outbox/delivery and dead-letter triage**, saved PR163–170 and203. All nine exact requirements, saved bodies and deferrals are read. Review transaction/lease/retry/idempotency paths, same-transaction in-app writes, per-attempt safe logs, staff triage authority/UI, metrics and accumulation alerts. The historical PR170 reinterpretation of “same transaction” remains unverified. Keep remaining inbox/classification and event-specific reminder work in subsequent R02 batches. Exact membership and checkpoints are in progress.json.
 

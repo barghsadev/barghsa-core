@@ -14350,6 +14350,132 @@
         "3 immediate-base source bindings refreshed;38 older refresh records retained.",
         "Previously partial theme remains partial; no coding percentage inferred from review counts."
       ]
+    },
+    {
+      "id": "R02-outbox-delivery-checkpoint",
+      "date": "2026-09-09",
+      "source_revision": "d0d72ec94bb02510616001baf310e7707f88deae",
+      "base_revision": "cadaec40ad77afd3f12ca2d0ad1e26651aa797ef",
+      "product_commits": [
+        "361f4b82234bf226eb540fb74bde746fbc79112c",
+        "315c6c177ff43f9d598d1eb6eb9280508aa2a0df",
+        "d0d72ec94bb02510616001baf310e7707f88deae"
+      ],
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.02.01",
+        "02-auth-users-admin.md#T-09.09.03"
+      ],
+      "summary": "In-flight feature-batch checkpoint. Four confirmed defects repaired and verified; historical task/PR closure counts unchanged.",
+      "review": [
+        "Dead-letter retry/resolve/dismiss now carry the full current session/CSRF identity into the permission-locked transaction and recheck step-up before commit. Atomic audit includes session/proof and the request correlation ID. Both HTTP aliases pass revocation, permission, CSRF and expired-proof races. Queue identity, channel-only retry, snapshots and conflict behavior remain intact.",
+        "An old actor-lock test blocked the HTTP session guard before reaching the intended lock. The corrected test calls the actual service with the fixture session and revokes the role while the actor lock is held. All 70 focused API cases pass, including 43 real-database/HTTP cases.",
+        "In-app delivery now receives the pinned worker transaction after the parent claim is locked. Inbox insertion, jobs, dead-letter/log records and aggregate state commit together. External transports remain outside that transaction. Local dispatch does not call the pool lease renewal while holding its own parent lock. This proves the worker delivery transaction, not synchronous business-producer inbox insertion.",
+        "External delivery counters increment once per dispatch result; local inbox outcomes are counted by commit/rollback. Fallback persistence does not invent another physical send metric. Four actual database trigger failures at inbox/job/log/outbox writes prove rollback, failure counting and one durable inbox on retry, with stable external idempotency identity.",
+        "81 focused worker cases and 8 actual chargeback-producer/dispatch integration cases pass. Prior provider/recipient/branding tests are reused only within their unchanged or rerun scope. No live provider or production delivery claim.",
+        "Staff triage validates booleans, IDs, enum fields, dates, counters, payload shape and unique bounded list rows. Every success acknowledgment must identify the selected outbox/job/channel and expected transition. Malformed acknowledgment stays in the dialog with an error. All 10 distinct FA/EN Chromium cases pass, including six action acknowledgment cases and prior paging/step-up recovery. Two initial read-test failures matched both timezone and queue alerts; the corrected exact alert locator passes without changing application behavior.",
+        "API/worker/web types, applicable scoped lint/format and frontend build pass; all 42 unchanged budgets pass. Full regression and coverage remain V02. Per-attempt staff history and accumulation alert configuration remain confirmed repairs; no historical acceptance or PR disposition is closed at this checkpoint."
+      ],
+      "verification": {
+        "api": "70 focused API cases, including43 HTTP/database;8 chargeback integration cases.",
+        "worker": "81 focused worker cases, including4 new write-failure rollback cases.",
+        "browser": "10 distinct Chromium FA/EN cases. Initial8 pass plus2 corrected read-recovery cases.",
+        "quality": "API/worker/web types, scoped lint/format, frontend build and42 unchanged budgets pass.",
+        "regression": "Full regression/coverage and operational alert delivery remain separate."
+      },
+      "remaining": [
+        "Add and verify per-channel delivery history in the staff dead-letter panel, then accumulation alert rules. Finish the remaining nine-task batch review before assigning PR/task closure. Preserve the verified session, inbox-transaction, counter and UI acknowledgement repairs."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
+          "sha256": "cd3b7e3a67faa6452204aacb960795ffa3dce0d0d0cd208dc27f397b3225ace0"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.controller.ts",
+          "sha256": "96efefc09628ab6bb1f6af4cbdf4d4a8da80b457202ef0e0f5c08be7f6a6581e"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.service.test.ts",
+          "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.service.ts",
+          "sha256": "adef84205d95bb292cb4f3a29c0bab2f734596bd36f2e8ca2b1ff0b865e2a14a"
+        },
+        {
+          "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+          "sha256": "5e879339717ee372b3c4c4691e5cadd34df6b9541cf65516fd27a59f2795aec5"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
+          "sha256": "e43bd8af020230b0d879294419c2fb24ac749ac7cd727073d9a033f2d5027368"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications.spec.ts",
+          "sha256": "6abfc867206c6489d76948e12a7a51adee6df183ed9b5b533a2183f4ca88ec8d"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "2b509a334d9eb11287330419bc8527b9d0d3db2ae6e2bec760043d6d9d620e63"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+          "sha256": "6e165111094831d5a25213d89e2e96ddbb3157f4d0f3807b1805a234f9a42ac7"
+        },
+        {
+          "path": "apps/worker/src/notifications/in-app-transport.ts",
+          "sha256": "da86928a19025906061a0a39d77976500ec066ebba0121d785944e65e92b7613"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "17d5cbb802168b74972805fc9d68e3fbcaa57e5478b55fbb6ababb0c482cbf7d"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "e0117c307b41a6f03d0b4cbe84ca972aedb9877c3fbd2b31cf0fd47dd9d7bb5a"
+        },
+        {
+          "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
+          "sha256": "a7d44cd42d6beadc0502752eb024358070bd3fc79c14efdc910ceb5678568494"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-deadletter-authority-api-2.log",
+        "/tmp/r02-deadletter-authority-api.log",
+        "/tmp/r02-deadletter-authority-format-2.log",
+        "/tmp/r02-deadletter-authority-format-check.log",
+        "/tmp/r02-deadletter-authority-format.log",
+        "/tmp/r02-deadletter-authority-lint.log",
+        "/tmp/r02-deadletter-authority-types.log",
+        "/tmp/r02-deadletter-ui-browser-reads.log",
+        "/tmp/r02-deadletter-ui-browser.log",
+        "/tmp/r02-deadletter-ui-budgets.log",
+        "/tmp/r02-deadletter-ui-build.log",
+        "/tmp/r02-deadletter-ui-format-check.log",
+        "/tmp/r02-deadletter-ui-format.log",
+        "/tmp/r02-deadletter-ui-lint.log",
+        "/tmp/r02-deadletter-ui-test-format-2.log",
+        "/tmp/r02-deadletter-ui-types.log",
+        "/tmp/r02-outbox-atomic-chargeback.log",
+        "/tmp/r02-outbox-atomic-format-check.log",
+        "/tmp/r02-outbox-atomic-format.log",
+        "/tmp/r02-outbox-atomic-lint.log",
+        "/tmp/r02-outbox-atomic-types.log",
+        "/tmp/r02-outbox-atomic-worker.log"
+      ],
+      "pr_dispositions": [],
+      "pr_counts": {
+        "closed": 0,
+        "open": 0,
+        "blocked": 0
+      }
     }
   ]
 }
