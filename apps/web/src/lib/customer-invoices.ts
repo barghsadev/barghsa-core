@@ -33,6 +33,7 @@ export interface CustomerInvoiceNode {
   issuedAt: string | null;
   payableFrom: string | null;
   dueAt: string | null;
+  dueAtOverrideReason?: string | null;
   cancelledAt: string | null;
   createdAt: string;
   replacesInvoiceId: string | null;

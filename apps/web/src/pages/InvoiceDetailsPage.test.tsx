@@ -144,6 +144,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
 
   it('shows the original invoice and the replacement with its explanation', async () => {
     const payload = replacementPayload();
+    payload.chain[0]!.dueAtOverrideReason = '<strong>Extra time requested</strong>';
     vi.stubGlobal(
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
@@ -171,6 +172,12 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     expect(container.textContent).toContain('Corrected usage');
     expect(container.textContent).toContain('Aug 1, 2026, 3:00 AM');
     expect(container.textContent).toContain('Aug 8, 2026, 3:00 AM');
+    const reason = container.querySelector(`[data-testid="invoice-due-reason-${ORIGINAL_ID}"]`);
+    expect(reason?.textContent).toContain('<strong>Extra time requested</strong>');
+    expect(reason?.querySelector('strong')).toBeNull();
+    expect(
+      container.querySelector(`[data-testid="invoice-due-reason-${REPLACEMENT_ID}"]`)
+    ).toBeNull();
   });
 
   it('shows linked post-payment adjustments with explanations', async () => {

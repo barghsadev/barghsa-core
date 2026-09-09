@@ -16,7 +16,10 @@ beforeAll(async () => {
   await http.pool.query(
     "INSERT INTO user_roles(user_id,role_id) VALUES ('due-finance','role-finance')"
   );
-  await http.pool.query("INSERT INTO profiles(id,user_id) VALUES ($1,'due-customer')", [profileId]);
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,is_default) VALUES ($1,'due-customer',true)",
+    [profileId]
+  );
 }, 40_000);
 afterAll(async () => {
   await http?.close();
@@ -94,6 +97,22 @@ it('Finance reads and changes the deadline with an attributed customer-visible r
     { offset: -7, status: 'sent' },
     { offset: -1, status: 'cancelled' },
   ]);
+  const customerSession = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,'due-customer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+    [customerSession, randomUUID(), randomUUID()]
+  );
+  const customer = await fetch(`${http.base}/api/invoices/${f.invoiceId}`, {
+    headers: { Cookie: `barghsa_session=${customerSession}` },
+  });
+  expect(customer.status).toBe(200);
+  const details = await customer.json();
+  expect(details).toMatchObject({
+    invoice: { dueAt: body.dueAt, dueAtOverrideReason: body.reason },
+  });
+  expect(JSON.stringify(details)).not.toContain('due-finance');
+  expect(JSON.stringify(details)).not.toContain('reminderPlanDirty');
 });
 
 it('requires session, CSRF, current permission and step-up', async () => {

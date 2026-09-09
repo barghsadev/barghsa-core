@@ -21,7 +21,11 @@ import { activeProfileSql } from '../profiles/profile-context.js';
 import { HttpException, Injectable } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { isAdjustmentKind, type AdjustmentKind } from '@barghsa/shared/finance';
+import {
+  isAdjustmentKind,
+  readDueAtOverrideSnapshot,
+  type AdjustmentKind,
+} from '@barghsa/shared/finance';
 import { isInvoiceState, type InvoiceState } from './invoice-state.model.js';
 
 /** How this invoice participates in a correction chain. */
@@ -50,6 +54,8 @@ export interface CustomerInvoiceNodeDto {
   issuedAt: string | null;
   payableFrom: string | null;
   dueAt: string | null;
+  /** Latest public reason for the current deadline; staff identity stays private. */
+  dueAtOverrideReason: string | null;
   cancelledAt: string | null;
   createdAt: string;
   replacesInvoiceId: string | null;
@@ -297,6 +303,8 @@ export function assembleCustomerInvoiceDetails(input: {
 
 function toNode(row: InvoiceFamilyRow, lines: InvoiceLineRow[]): CustomerInvoiceNodeDto {
   const metadata = asMetadataObject(row.metadata);
+  const override = readDueAtOverrideSnapshot(metadata);
+  const dueAt = iso(row.due_at);
   const orderedLines = lines
     .slice()
     .sort((a, b) => a.position - b.position)
@@ -317,7 +325,11 @@ function toNode(row: InvoiceFamilyRow, lines: InvoiceLineRow[]): CustomerInvoice
     adjustmentKind: isAdjustmentKind(row.adjustment_kind) ? row.adjustment_kind : null,
     issuedAt: iso(row.issued_at),
     payableFrom: iso(row.payable_from),
-    dueAt: iso(row.due_at),
+    dueAt,
+    dueAtOverrideReason:
+      override && dueAt && new Date(override.dueAt).getTime() === new Date(dueAt).getTime()
+        ? override.reason
+        : null,
     cancelledAt: iso(row.cancelled_at),
     createdAt: isoRequired(row.created_at),
     replacesInvoiceId: row.replaces_invoice_id,

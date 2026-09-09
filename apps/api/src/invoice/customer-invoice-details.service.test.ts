@@ -151,6 +151,33 @@ describe('explanationForCorrection', () => {
   });
 });
 
+describe('customer deadline reason', () => {
+  const override = {
+    dueAt: '2026-08-08T10:00:00.000Z',
+    previousDueAt: null,
+    reason: 'Extra time requested',
+    actorUserId: 'private-staff-id',
+    overriddenAt: '2026-08-02T10:00:00.000Z',
+    customerVisible: true,
+  };
+  it.each([
+    [override, 'Extra time requested'],
+    [{ ...override, customerVisible: false }, null],
+    [{ ...override, dueAt: '2026-08-09T10:00:00.000Z' }, null],
+    [{ reason: 'Incomplete metadata' }, null],
+    [null, null],
+  ])('exposes only the public reason for the stored deadline', (snapshot, expected) => {
+    const result = assembleCustomerInvoiceDetails({
+      viewedInvoiceId: ORIGINAL_ID,
+      originalInvoiceId: ORIGINAL_ID,
+      rows: [row({ id: ORIGINAL_ID, metadata: { dueAtOverride: snapshot } })],
+      linesByInvoiceId: new Map(),
+    });
+    expect(result.invoice.dueAtOverrideReason).toBe(expected);
+    expect(JSON.stringify(result)).not.toContain('private-staff-id');
+  });
+});
+
 describe('roleForInvoice', () => {
   it('classifies original, replacement, charge, and credit', () => {
     expect(

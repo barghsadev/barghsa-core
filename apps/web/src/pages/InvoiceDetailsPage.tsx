@@ -61,12 +61,15 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
   }, [invoiceId]);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div
+      className="mx-auto max-w-3xl space-y-6 rounded-lg bg-background p-4 text-foreground"
+      dir={isRtl ? 'rtl' : 'ltr'}
+    >
       {time.notice}
       <nav aria-label={t('invoices.details.back', locale)}>
         <Link
           to="/invoices"
-          className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+          className="inline-flex items-center gap-2 text-sm text-foreground underline underline-offset-4"
         >
           <ArrowRightIcon className={`h-4 w-4 ${isRtl ? '' : 'rotate-180'}`} aria-hidden="true" />
           {t('invoices.details.back', locale)}
@@ -75,20 +78,22 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
 
       <header className="flex items-center gap-2">
         <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-        <h1 className="text-2xl font-bold text-gray-900">{t('invoices.details.title', locale)}</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          {t('invoices.details.title', locale)}
+        </h1>
       </header>
 
       {loading ? (
-        <p className="flex items-center gap-2 text-sm text-gray-500">
+        <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
           {t('invoices.details.loading', locale)}
         </p>
       ) : error === 'not-found' ? (
-        <p className="text-red-600" role="alert">
+        <p className="text-destructive" role="alert">
           {t('invoices.details.notFound', locale)}
         </p>
       ) : error ? (
-        <p className="text-red-600" role="alert">
+        <p className="text-destructive" role="alert">
           {t('invoices.details.error', locale)}
         </p>
       ) : details ? (
@@ -113,10 +118,10 @@ function InvoiceDetailsBody({
   return (
     <section aria-labelledby="invoice-chain-heading" className="space-y-3">
       <div>
-        <h2 id="invoice-chain-heading" className="text-lg font-semibold text-gray-900">
+        <h2 id="invoice-chain-heading" className="text-lg font-semibold text-foreground">
           {t('invoices.details.chain', locale)}
         </h2>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           {t('invoices.details.chainDescription', locale)}
         </p>
       </div>
@@ -181,13 +186,13 @@ function InvoiceCard({
       data-testid={`invoice-card-${node.invoiceId}`}
       data-role={node.role}
       aria-current={current ? 'page' : undefined}
-      className={`rounded-lg border bg-white p-4 shadow-sm ${
-        current ? 'border-primary ring-1 ring-primary/20' : 'border-gray-200'
+      className={`rounded-lg border bg-card text-card-foreground p-4 shadow-sm ${
+        current ? 'border-primary ring-1 ring-primary/20' : 'border-border'
       }`}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-semibold text-gray-900">{heading}</h3>
-        <p className="text-sm text-gray-600">{t(stateI18nKey(node.state), locale)}</p>
+        <h3 className="font-semibold text-foreground">{heading}</h3>
+        <p className="text-sm text-muted-foreground">{t(stateI18nKey(node.state), locale)}</p>
       </header>
 
       {showExplanation || explanation ? (
@@ -202,20 +207,29 @@ function InvoiceCard({
 
       <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
         <div>
-          <dt className="text-gray-500">{t('invoices.details.total', locale)}</dt>
-          <dd className="font-medium text-gray-900">{numbers.money(node.totalAmount)}</dd>
+          <dt className="text-muted-foreground">{t('invoices.details.total', locale)}</dt>
+          <dd className="font-medium text-foreground">{numbers.money(node.totalAmount)}</dd>
         </div>
         <div>
-          <dt className="text-gray-500">{t('invoices.details.paid', locale)}</dt>
-          <dd className="font-medium text-gray-900">{numbers.money(node.paidAmount)}</dd>
+          <dt className="text-muted-foreground">{t('invoices.details.paid', locale)}</dt>
+          <dd className="font-medium text-foreground">{numbers.money(node.paidAmount)}</dd>
         </div>
         <div>
-          <dt className="text-gray-500">{t('invoices.details.issuedAt', locale)}</dt>
+          <dt className="text-muted-foreground">{t('invoices.details.issuedAt', locale)}</dt>
           <dd>{formatTimestamp(node.issuedAt)}</dd>
         </div>
         <div>
-          <dt className="text-gray-500">{t('invoices.details.dueAt', locale)}</dt>
+          <dt className="text-muted-foreground">{t('invoices.details.dueAt', locale)}</dt>
           <dd>{formatTimestamp(node.dueAt)}</dd>
+          {node.dueAtOverrideReason ? (
+            <dd
+              data-testid={`invoice-due-reason-${node.invoiceId}`}
+              className="mt-1 text-foreground"
+            >
+              <span className="font-medium">{t('invoices.details.explanation', locale)}: </span>
+              {node.dueAtOverrideReason}
+            </dd>
+          ) : null}
         </div>
       </dl>
 
@@ -223,7 +237,7 @@ function InvoiceCard({
         <table className="mt-4 w-full text-sm">
           <caption className="sr-only">{t('invoices.details.lines', locale)}</caption>
           <thead>
-            <tr className="border-b text-start text-gray-500">
+            <tr className="border-b text-start text-muted-foreground">
               <th scope="col" className="py-1 font-medium">
                 {t('invoices.details.line.description', locale)}
               </th>
@@ -237,7 +251,7 @@ function InvoiceCard({
           </thead>
           <tbody>
             {node.lines.map((line, index) => (
-              <tr key={`${node.invoiceId}-line-${index}`} className="border-b border-gray-100">
+              <tr key={`${node.invoiceId}-line-${index}`} className="border-b border-border">
                 <td className="py-1">{line.description}</td>
                 <td className="py-1">{line.quantity}</td>
                 <td className="py-1">{numbers.money(line.lineTotal)}</td>
@@ -252,7 +266,7 @@ function InvoiceCard({
           <Link
             to="/invoices/$invoiceId"
             params={{ invoiceId: node.invoiceId }}
-            className="text-sm text-primary hover:underline"
+            className="text-sm text-foreground underline underline-offset-4"
           >
             {t('invoices.details.open', locale)}
           </Link>
