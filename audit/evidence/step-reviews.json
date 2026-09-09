@@ -13157,6 +13157,135 @@
         "/tmp/r02-provider-self-test-tests.log",
         "/tmp/r02-provider-self-test-types.log"
       ]
+    },
+    {
+      "id": "R02-provider-activation-proof",
+      "date": "2026-09-09",
+      "source_revision": "83a27ac8bef59439e99b07b8cbc65395a7f9ca64",
+      "base_revision": "64fa735c63d57ad1bb35621c316a5898cdfd6667",
+      "product_commits": [
+        "83a27ac8bef59439e99b07b8cbc65395a7f9ca64"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.06.02"
+      ],
+      "summary": "Activation requires durable verified-contact delivery bound to transport, saved configuration and exact test time. All SMS mappings tested; rollback retests legacy settings before replacing the active provider. Intermediate R02 repair.",
+      "review": [
+        "Migration0126 adds nullable proof columns without inventing evidence or changing historical results. Email columns are Drizzle-managed; SMS remains SQL-managed under0081. Trigger rejects new active rows and transitions/config changes without matching proof; unchanged legacy active providers continue operating. Old-writer failed promotion rolls back to the working provider.",
+        "Proof uses PostgreSQL SHA256 of canonical JSONB transport/config and exact database timestamps. Drafts with legacy/stale passed results report pending. Trusted server sends alone write proof; failures and config edits clear it. Public client-supplied result endpoints remain rejected. Microsecond renewal and config changes cannot reuse proof.",
+        "SMS test runs every configured mapping; eventKey selects order only. Missing/duplicate events, empty variables, duplicate remote parameters and unavailable internal variables are rejected. Active local template rows are locked during validation; activation revalidates current variable availability. One failing mapping prevents activation.",
+        "Rollback clones saved settings, performs current verified-contact delivery inside the existing mutation transaction and only then supersedes the active provider. Legacy history may recover through a fresh test. Delivery or audit failure leaves provider history and audit unchanged. Existing session/permission/step-up checks remain, including pre-dispatch and pre-commit.",
+        "Updated existing consumer fixture seeds to carry explicit synthetic proof. Four generic HTTP rollback-success/audit assertions depended on the old no-send shortcut; replaced by nine real-DB SMTP/Resend/SMS rollback success, send-failure and audit-failure cases. Existing HTTP authorization/race cases remain.",
+        "Reviewed generated migration/snapshot and API diff. Generator timestamp preceded the existing journal tail; migration validation caught this and the new entry was advanced monotonically. Initial failed logs retained. The only OpenAPI change is the SMS test description; no public DTO or frontend change."
+      ],
+      "verification": {
+        "focused": "330 distinct checks:30 email/SMS service unit cases,105 provider mutation HTTP cases,108 final API cases (47 self-delivery/proof, controller, client-result rejection, auth delivery and trusted-device consumers),53 worker delivery cases,34 migration/snapshot cases. Earlier149 integration checks overlap and are not added.31 new regressions:29 service/proof cases and2 legacy migration cases.",
+        "quality": "API/DB/worker types, scoped ESLint/Prettier, OpenAPI generation/check,2 database snapshot gate tests and generation consistency, diff checks pass.",
+        "scope": "Real PostgreSQL and controlled transport responses prove local behavior. No production send, rollout, browser/budget renewal or whole-repository regression claimed."
+      },
+      "remaining": [
+        "Deploy migration0126 before the new API. Existing active providers are deliberately preserved; operational retesting/delivery confirmation remains outside local evidence. External sends cannot be rolled back after a later audit/authority failure.",
+        "Finish R02 branding/preferences/daytime consumers and remaining provider/template UI acceptance, including clear disclosure that SMS testing sends through every mapping. Localized diagnostics remain R03.",
+        "No task or saved PR closes at this intermediate checkpoint. Full V02 regression and remaining plan phases still required."
+      ],
+      "evidence_reuse": [
+        "18 immediate-base acceptance bindings refreshed;38 older retained refresh records not recertified. Prior provider/template authority and adapter evidence preserved."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "9c81036c46a7ad66360f2d31a49bc4ff4513f1c0c4f495192a3dcb1353b8a623"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "06d987fc594f43f2849fa2f7a4c4514ece998d24a5940ee1ec715e8bc7ee2931"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "sha256": "e32eacecd13bfb2e44eb3abdaf186cd64831bd5f42f2e6cb904839b7c351a5c4"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "3205a3f591e46d155c31f23ea813ce92e835b06e54c409555d82d22b29ec829d"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "27b883721fe2b2f2122d5675890f88972e560c2c69200beb0145c4ca8050a1a8"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "d197f6601513eef345e66a96d5b0e2f9d4a751780817761acd1c19cc87467bae"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "a04f0bd143ac644ea99dacad645f7ae48d03056ffb03b32a2b0adf552224a318"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+          "sha256": "641da3a08452af096a507d4d6dc2868f2e963d8595e435a75e9e49ef3ae95e3c"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2b71b8097c562332e3899fd13c215a18bfc73482742d58ed5b3112ba9c35d3e9"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+          "sha256": "91faa62e6ecca511e41ea5cd4dee3bf4fd6b1869a88e41dbf60e4000899c553b"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "b0c882280746dfa048b035dde1a011bbb7226eafb691434534ab7ccd19325716"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+          "sha256": "9dae00081622ad3db1aa4df8a4120ffca9522eb823168f1f95e42c3f2a2be19a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
+          "sha256": "e35d9078a52c79b5f2b2d3e622a5938eeebfcdca642bb63b0b779529a3e7cd41"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0126_snapshot.json",
+          "sha256": "468b31bc09aa47f6367a83c7b15025326908c160b33100d47e3d1b5771e66f3c"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "b1e7983e0a0ebee5cf40bc21823f90e28dc10d876b3c0fa6f7ad03cd104ce981"
+        },
+        {
+          "path": "packages/db/src/migrate.provider-delivery-proof.test.ts",
+          "sha256": "635a78292eaed500e05cbb349f51eaab59aaef84491092aa1fddc9a8a5da0e70"
+        },
+        {
+          "path": "packages/db/src/schema/email-provider-configs.ts",
+          "sha256": "02164ec65c34a4204803e1ed3d6b31dfb44a4f4ea9ac52427fcc3dc6eeeee802"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-provider-proof-api-final.log",
+        "/tmp/r02-provider-proof-api-types.log",
+        "/tmp/r02-provider-proof-db-types.log",
+        "/tmp/r02-provider-proof-format-check.log",
+        "/tmp/r02-provider-proof-format-final.log",
+        "/tmp/r02-provider-proof-format-initial.log",
+        "/tmp/r02-provider-proof-generate.log",
+        "/tmp/r02-provider-proof-lint.log",
+        "/tmp/r02-provider-proof-migration-format.log",
+        "/tmp/r02-provider-proof-migration-tests.log",
+        "/tmp/r02-provider-proof-openapi-check.log",
+        "/tmp/r02-provider-proof-openapi-generate.log",
+        "/tmp/r02-provider-proof-openapi-update.log",
+        "/tmp/r02-provider-proof-snapshot-gate.log",
+        "/tmp/r02-provider-proof-tests-fixed-journal.log",
+        "/tmp/r02-provider-proof-tests-initial.log",
+        "/tmp/r02-provider-proof-worker-types.log",
+        "/tmp/r02-provider-proof-worker.log"
+      ]
     }
   ]
 }

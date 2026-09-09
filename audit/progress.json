@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "01f4a856a5ee5db30d2268ab8a3551cc06238631",
+  "source_revision": "83a27ac8bef59439e99b07b8cbc65395a7f9ca64",
   "active_step": "R02",
-  "next_action": "Bind activation to durable verified self-delivery proof for every configured SMS mapping, including legacy/old-writer behavior. Preserve active-provider recovery. Then finish branding/preferences/daytime and remaining UI acceptance.",
+  "next_action": "Finish R02 active-branding consumption in email/template sends, then delivery preferences/daytime and remaining provider/template UI. Activation proof and all SMS mapping delivery are repaired at83a27ac8; preserve their tests and migration0126.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -658,6 +658,10 @@
     {
       "id": "R02-provider-self-tests",
       "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
+    },
+    {
+      "id": "R02-provider-activation-proof",
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
     }
   ],
   "deferred_improvements": [
@@ -1019,11 +1023,13 @@
       },
       {
         "defect": "Activation accepts legacy passing results without current verified self-delivery proof.",
-        "status": "remaining"
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
       },
       {
         "defect": "One tested SMS mapping can approve other untested mappings.",
-        "status": "remaining"
+        "status": "repaired",
+        "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
       }
     ],
     "reused_evidence": [
@@ -1034,10 +1040,11 @@
     "new_evidence": [
       "audit/evidence/step-reviews.json#R02-provider-session-authority",
       "audit/evidence/step-reviews.json#R02-template-session-authority",
-      "audit/evidence/step-reviews.json#R02-provider-self-tests"
+      "audit/evidence/step-reviews.json#R02-provider-self-tests",
+      "audit/evidence/step-reviews.json#R02-provider-activation-proof"
     ],
     "pr_dispositions": [],
-    "next_action": "Bind activation to durable verified self-delivery proof for every configured SMS mapping, including legacy/old-writer behavior. Preserve active-provider recovery. Then finish branding/preferences/daytime and remaining UI acceptance."
+    "next_action": "Finish R02 active-branding consumption in email/template sends, then delivery preferences/daytime and remaining provider/template UI. Activation proof and all SMS mapping delivery are repaired at83a27ac8; preserve their tests and migration0126."
   },
   "open_domain_reviews": [
     {

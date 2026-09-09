@@ -4,17 +4,17 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Product/test HEAD **01f4a856**. Active R02-notification-delivery-foundation, PR113/156/161/192/193/194. All six requirements, saved bodies and deferrals are read.
+Branch codex/audit-fixes. Product/test HEAD **83a27ac8**. Active R02-notification-delivery-foundation, PR113/156/161/192/193/194. All six requirements, saved bodies and deferrals are read.
 
-Provider self-tests use current verified contacts, require SMTP message acceptance and valid SMS.ir identifiers, redact echoed secrets and recheck authority after network probes. **204 distinct focused checks**, types/lint/format/OpenAPI pass. [Self-test review](evidence/step-reviews.json#R02-provider-self-tests). Preserve provider authority at2b669c93 and template authority atd1b156ac; their173/300 cases overlap later runs and must not be added indiscriminately.
+Provider activation now requires proof bound to transport, saved configuration and exact database test time. Every SMS mapping must pass; rollback retests legacy settings before replacing the working provider. **330 distinct focused checks**, API/DB/worker types, lint/format, OpenAPI and database snapshot gates pass. [Activation review](evidence/step-reviews.json#R02-provider-activation-proof). Preserve self-tests01f4a856, provider authority2b669c93 and template authorityd1b156ac. Counts overlap; do not add earlier runs indiscriminately.
 
-No task/PR closure is claimed for intermediate R02 repairs. Counts: **131 verified /32 partial /159 pending =322 claims**; **108 closed /23 open /170 unreviewed =301 saved PRs**;58 skips,3 verified/55 pending. Saved GitHub inventory ends September3. **2228 logs indexed.** 17 immediate-base bindings refreshed here;38 older evidence refresh records remain. Full regression/coverage is V02.
+No task/PR closure is claimed for intermediate R02 repairs. Counts: **131 verified /32 partial /159 pending =322 claims**; **108 closed /23 open /170 unreviewed =301 saved PRs**;58 skips,3 verified/55 pending. Saved GitHub inventory ends September3. **2246 logs indexed.** 18 immediate-base bindings refreshed here;38 older evidence refresh records remain. Full regression/coverage is V02.
 
 Completed R01 work and valid tests remain recorded in progress/step reviews. Do not rebuild or repeat those reviews. The earlier wallet-controller fixture failures are fixed; the interrupted broad run is still not regression evidence.
 
 ## Next action
 
-Bind activation to durable verified self-delivery proof for every configured SMS mapping, including legacy/old-writer behavior. Preserve active-provider recovery. Then finish branding/preferences/daytime and remaining UI acceptance. No blanket acceptance or production-delivery claim.
+Finish R02 active-branding consumption in email/template sends, then delivery preferences/daytime and remaining provider/template UI. Activation proof and all SMS mapping delivery are repaired at83a27ac8; preserve their tests and migration0126. No blanket acceptance or production-delivery claim.
 
 Preserve all verification repairs. Manual notices now identify the profile and explain corrections/support review. The banner reads the latest unread, state-matching notice for the current owner and selected profile; reading it cannot revive an older notice. Actual email/SMS delivery per preferences remainsR02. No production identity adapter exists. Encrypted/redacted credentials, current authority, atomic provider configuration, async verification and staff retry remain explicit prerequisites before enabling API mode. Never simulate approval or ask again for a provider. The framework's formerly permanent OPEN circuit now admits bounded recovery probes.
 
@@ -34,4 +34,4 @@ Retain Vite SPA/ADR004. Dependency licenses waived. No automatic identity provid
 
 Use rtk and codebase-memory. Keep output small. Save ended logs and inspect failures. Do not edit source/tests while their checks run or overlap shared/API builds with consumer checks. Build web before browser checks. Read every process exit before dependent edits or commits. Reuse valid evidence; do not rerun broad suites at each checkpoint.
 
-Local edits and explicit commits only. No push, PR publication/merge, scheduler/state changes, deployment or PR304 action. Migrations0123/0124/0125 precede API rollout. Continue authorized work; the full plan is unfinished.
+Local edits and explicit commits only. No push, PR publication/merge, scheduler/state changes, deployment or PR304 action. Migrations0123/0124/0125/0126 precede API rollout.0126 preserves legacy active providers; operational retesting remains. SMS test UI must disclose that all mappings send to the verified staff contact. Continue authorized work; the full plan is unfinished.
