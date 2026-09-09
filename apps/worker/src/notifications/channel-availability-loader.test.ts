@@ -39,12 +39,19 @@ describe('loadChannelAvailabilityContext', () => {
     expect(ctx).toEqual(EMPTY_AVAILABILITY_CONTEXT);
   });
 
-  it('marks email + sms verified from the user contact columns', async () => {
+  it('maps verified destinations returned by the contact query', async () => {
     const { pool } = makePool({
-      contactRows: [{ email: 'a@example.com', mobile: '+989121234567' }],
+      contactRows: [
+        {
+          email: 'a@example.com',
+          mobile: '+989121234567',
+          notification_preferences: 'IN_APP,EMAIL',
+        },
+      ],
     });
     const ctx = await loadChannelAvailabilityContext(pool, 'ob-1');
     expect(ctx.verifiedEmail).toBe(true);
+    expect(ctx.enabledChannels).toEqual({ email: true, sms: false });
     expect(ctx.verifiedPhone).toBe(true);
     expect(ctx.marketingOptedIn).toEqual({});
   });
@@ -60,7 +67,13 @@ describe('loadChannelAvailabilityContext', () => {
 
   it('reads marketing opt-in from user_notification_preferences', async () => {
     const { pool } = makePool({
-      contactRows: [{ email: 'a@example.com', mobile: '+989121234567' }],
+      contactRows: [
+        {
+          email: 'a@example.com',
+          mobile: '+989121234567',
+          notification_preferences: 'IN_APP,EMAIL',
+        },
+      ],
       prefRows: [
         { channel: 'email', marketing_opted_in: true },
         { channel: 'sms', marketing_opted_in: false },
@@ -73,7 +86,13 @@ describe('loadChannelAvailabilityContext', () => {
 
   it('ignores unknown preference channels and defaults absent channels to no consent', async () => {
     const { pool } = makePool({
-      contactRows: [{ email: 'a@example.com', mobile: '+989121234567' }],
+      contactRows: [
+        {
+          email: 'a@example.com',
+          mobile: '+989121234567',
+          notification_preferences: 'IN_APP,EMAIL',
+        },
+      ],
       prefRows: [{ channel: 'in_app', marketing_opted_in: true }],
     });
     const ctx = await loadChannelAvailabilityContext(pool, 'ob-1');

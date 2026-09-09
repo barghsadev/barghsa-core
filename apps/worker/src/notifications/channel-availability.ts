@@ -9,13 +9,13 @@
  *   - `mandatory` (and `system`) events: the in-app channel is ALWAYS
  *     delivered — transactional/security/payment/contract notifications must
  *     never be silently dropped. An external channel (email/sms) is delivered
- *     ONLY when the profile owns a verified destination for that channel.
+ *     ONLY when the recipient has enabled that channel and owns a verified destination.
  *     Without a verified email, an `email` leg is skipped; without a verified
  *     phone number, an `sms` leg is skipped.
  *   - `marketing` events: the in-app channel is still always delivered (in-app
  *     delivery is never consent-gated). An external channel (email/sms) is
  *     delivered ONLY when the profile HAS opted in to marketing on that
- *     channel AND owns a verified destination. If not opted in, the whole
+ *     channel AND owns a verified destination AND has enabled the account channel. If not opted in, the whole
  *     external surface is skipped—no email/SMS marketing is ever sent without
  *     explicit consent.
  *
@@ -52,6 +52,8 @@ export type ChannelAvailabilityCategory = 'mandatory' | 'marketing' | 'system';
  * (profile, channel) in `user_notification_preferences` (T-05.05.01).
  */
 export interface ChannelAvailabilityContext {
+  /** Account-wide channel choices; missing external choices are disabled. */
+  enabledChannels: Partial<Record<'email' | 'sms', boolean>>;
   /** Whether the profile owns a verified email destination. */
   verifiedEmail: boolean;
   /** Whether the profile owns a verified phone (SMS) destination. */
@@ -64,7 +66,10 @@ export interface ChannelAvailabilityContext {
 
 /** Reason an external channel leg was skipped by the availability gate. */
 export type ChannelSkipReason =
-  'verified_destination_missing' | 'marketing_opt_in_required' | 'email_suppressed';
+  | 'verified_destination_missing'
+  | 'marketing_opt_in_required'
+  | 'email_suppressed'
+  | 'channel_disabled';
 
 /** One skipped channel leg and why it was dropped. */
 export interface SkippedChannel {
@@ -101,8 +106,8 @@ export function hasVerifiedDestination(
  * Evaluate the gate for one external channel. Returns whether it may be
  * dispatched and, when not, the machine-readable reason.
  *
- *   - `mandatory` / `system` — a verified destination is required; no consent.
- *   - `marketing` — verified destination AND explicit opt-in required.
+ *   - All external delivery requires the account channel enabled and a verified destination.
+ *   - `marketing` also requires explicit profile marketing consent.
  */
 export function externalChannelAllowed(
   category: ChannelAvailabilityCategory,
@@ -113,6 +118,9 @@ export function externalChannelAllowed(
     return { allowed: false, reason: 'email_suppressed' };
   if (!hasVerifiedDestination(channel, ctx)) {
     return { allowed: false, reason: 'verified_destination_missing' };
+  }
+  if (!ctx.enabledChannels[channel]) {
+    return { allowed: false, reason: 'channel_disabled' };
   }
   if (category === 'marketing' && !ctx.marketingOptedIn[channel]) {
     return { allowed: false, reason: 'marketing_opt_in_required' };

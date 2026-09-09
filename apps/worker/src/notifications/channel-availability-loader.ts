@@ -4,7 +4,10 @@
  * bounce suppression applies independently of marketing consent.
  */
 import type { NotificationChannel } from '@barghsa/shared/notifications';
-import type { ChannelAvailabilityContext } from './channel-availability.js';
+import {
+  resolveChannelAvailability,
+  type ChannelAvailabilityContext,
+} from './channel-availability.js';
 
 /** Minimal pool surface used by the loader (matches the worker's test pools). */
 export interface AvailabilityPool {
@@ -13,6 +16,7 @@ export interface AvailabilityPool {
 
 /** A fully-opted-out, zero-verified-destination default context. */
 export const EMPTY_AVAILABILITY_CONTEXT: ChannelAvailabilityContext = {
+  enabledChannels: {},
   verifiedEmail: false,
   verifiedPhone: false,
   marketingOptedIn: {},
@@ -32,6 +36,13 @@ export async function loadChannelAvailabilityContext(
 ): Promise<ChannelAvailabilityContext> {
   const row = await loadNotificationRecipient(pool, outboxId);
   if (!row) return EMPTY_AVAILABILITY_CONTEXT;
+  return loadRecipientAvailability(pool, row);
+}
+
+async function loadRecipientAvailability(
+  pool: AvailabilityPool,
+  row: NotificationRecipient
+): Promise<ChannelAvailabilityContext> {
   const verifiedEmail = Boolean(row.email);
   const verifiedPhone = Boolean(row.mobile);
 
@@ -42,18 +53,17 @@ export async function loadChannelAvailabilityContext(
   const pref = await pool.query(
     `SELECT channel, marketing_opted_in
        FROM user_notification_preferences
-      WHERE profile_id = (
-        SELECT profile_id FROM notification_outbox WHERE id = $1
-      )`,
-    [outboxId]
+      WHERE profile_id = $1`,
+    [row.profileId]
   );
   for (const p of pref.rows) {
     const ch = p.channel;
     if (ch !== 'email' && ch !== 'sms') continue;
-    consents[ch] = Boolean(p.marketing_opted_in);
+    consents[ch] = p.marketing_opted_in === true;
   }
 
   return {
+    enabledChannels: row.enabledChannels,
     verifiedEmail,
     verifiedPhone,
     emailSuppressed: row.emailSuppressed,
@@ -63,6 +73,7 @@ export async function loadChannelAvailabilityContext(
 
 export type { NotificationChannel };
 export interface NotificationRecipient {
+  enabledChannels: ChannelAvailabilityContext['enabledChannels'];
   userId: string;
   profileId: string | null;
   email: string | null;
@@ -77,19 +88,34 @@ export async function loadNotificationRecipient(
   outboxId: string
 ): Promise<NotificationRecipient | null> {
   const result = await pool.query(
-    `SELECT o.profile_id,u.user_id,u.locale,
-      COALESCE(u.email,CASE WHEN u.username LIKE '%@%' THEN u.username END) AS email,
-      COALESCE(u.mobile,CASE WHEN u.username LIKE '+%' THEN u.username END) AS mobile,
-      EXISTS (SELECT 1 FROM email_suppressions s WHERE lower(s.address)=lower(
-        COALESCE(u.email,CASE WHEN u.username LIKE '%@%' THEN u.username END))) AS email_suppressed
+    `SELECT o.profile_id,u.user_id,u.locale,u.notification_preferences,contacts.email,contacts.mobile,
+      EXISTS (SELECT 1 FROM email_suppressions s WHERE lower(s.address)=lower(contacts.email)) AS email_suppressed
     FROM notification_outbox o LEFT JOIN profiles p ON p.id=o.profile_id
     JOIN users u ON u.user_id=COALESCE(o.user_id,p.user_id)
+    CROSS JOIN LATERAL (
+      SELECT
+        CASE WHEN EXISTS (SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id
+          AND i.kind='email' AND i.destination=lower(u.email) AND i.verified_at IS NOT NULL)
+          THEN u.email
+          WHEN u.username LIKE '%@%' AND EXISTS (SELECT 1 FROM account_login_identifiers i
+            WHERE i.user_id=u.user_id AND i.kind='primary' AND i.destination=lower(u.username))
+          THEN u.username END AS email,
+        CASE WHEN EXISTS (SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id
+          AND i.kind='mobile' AND i.destination=u.mobile AND i.verified_at IS NOT NULL)
+          THEN u.mobile
+          WHEN u.username LIKE '+%' AND EXISTS (SELECT 1 FROM account_login_identifiers i
+            WHERE i.user_id=u.user_id AND i.kind='primary' AND i.destination=u.username)
+          THEN u.username END AS mobile
+    ) contacts
     WHERE o.id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
     [outboxId]
   );
   const row = result.rows[0];
   if (!row) return null;
+  const preferences =
+    typeof row.notification_preferences === 'string' ? row.notification_preferences.split(',') : [];
   return {
+    enabledChannels: { email: preferences.includes('EMAIL'), sms: preferences.includes('SMS') },
     userId: row.user_id as string,
     profileId: (row.profile_id as string | null) ?? null,
     email: typeof row.email === 'string' && row.email.trim() ? row.email.trim() : null,
@@ -97,4 +123,30 @@ export async function loadNotificationRecipient(
     locale: row.locale === 'en' ? 'en' : 'fa',
     emailSuppressed: row.email_suppressed === true,
   };
+}
+
+/** Recheck after rendering/snapshot work, before handing an external message to its sender. */
+export async function assertNotificationRecipientAvailable(
+  pool: AvailabilityPool,
+  outboxId: string,
+  eventKey: string,
+  channel: 'email' | 'sms',
+  expected: NotificationRecipient
+): Promise<void> {
+  const current = await loadNotificationRecipient(pool, outboxId);
+  const destination = channel === 'email' ? 'email' : 'mobile';
+  if (
+    !current ||
+    current.userId !== expected.userId ||
+    current.profileId !== expected.profileId ||
+    current[destination] !== expected[destination]
+  ) {
+    throw new Error('Notification recipient changed; delivery requires reconciliation');
+  }
+  const decision = resolveChannelAvailability(
+    eventKey,
+    [channel],
+    await loadRecipientAvailability(pool, current)
+  );
+  if (decision.skipped.length) throw new Error(decision.skipped[0]!.reason);
 }

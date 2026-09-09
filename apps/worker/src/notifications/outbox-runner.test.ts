@@ -89,7 +89,12 @@ const baseRow = {
  * tests exercise channel fan-out without being affected by the T-05.05.02
  * availability gate.
  */
-const fullyAvailable = () => ({ verifiedEmail: true, verifiedPhone: true, marketingOptedIn: {} });
+const fullyAvailable = () => ({
+  enabledChannels: { email: true, sms: true },
+  verifiedEmail: true,
+  verifiedPhone: true,
+  marketingOptedIn: {},
+});
 
 describe('runOutboxPoll', () => {
   it('marks a fully-delivered row and jobs as done, persisting real provider refs', async () => {
@@ -201,7 +206,12 @@ describe('runOutboxPoll', () => {
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email') },
       // Marketing event: verified destination in-app only; no marketing consent.
-      availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }),
+      availability: () => ({
+        enabledChannels: { email: true, sms: true },
+        verifiedEmail: true,
+        verifiedPhone: false,
+        marketingOptedIn: {},
+      }),
     });
     // in_app delivered; the gated email leg is skipped, so the row is delivered.
     expect(r).toEqual({ leased: 1, delivered: 1, failed: 0 });

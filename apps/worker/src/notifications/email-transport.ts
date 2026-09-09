@@ -11,7 +11,10 @@ import {
   type NotificationSendPayload,
   type NotificationSendResult,
 } from '@barghsa/shared/notifications';
-import { loadNotificationRecipient } from './channel-availability-loader.js';
+import {
+  assertNotificationRecipientAvailable,
+  loadNotificationRecipient,
+} from './channel-availability-loader.js';
 
 export class EmailNotificationTransport implements INotificationTransport {
   readonly channel = 'email' as const;
@@ -112,6 +115,13 @@ export class EmailNotificationTransport implements INotificationTransport {
     ) {
       throw new Error('Email recipient or identity changed; delivery requires reconciliation');
     }
+    await assertNotificationRecipientAvailable(
+      this.pool,
+      payload.outboxId,
+      payload.eventKey,
+      'email',
+      recipient
+    );
     const providerRef = await createEmailSender(
       this.pool,
       this.request

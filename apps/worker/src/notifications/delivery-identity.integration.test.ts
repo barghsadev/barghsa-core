@@ -305,7 +305,12 @@ it('the real runner reuses delivered channel outcomes after an email failure', a
   const options = {
     pool,
     transports,
-    availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }),
+    availability: () => ({
+      enabledChannels: { email: true, sms: true },
+      verifiedEmail: true,
+      verifiedPhone: false,
+      marketingOptedIn: {},
+    }),
     deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
   };
   expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 });
@@ -388,7 +393,12 @@ it('delivers mixed-channel inboxes immediately in each recipient timezone and pr
         },
       },
     },
-    availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }),
+    availability: () => ({
+      enabledChannels: { email: true, sms: true },
+      verifiedEmail: true,
+      verifiedPhone: false,
+      marketingOptedIn: {},
+    }),
     deliveryWindow: { timezone: 'UTC', startHour: 9, endHour: 21 },
   };
   vi.useFakeTimers({ toFake: ['Date'] });
@@ -484,7 +494,12 @@ it('exhausts one channel without exhausting a different channel or repeating the
         },
       },
     },
-    availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }),
+    availability: () => ({
+      enabledChannels: { email: true, sms: true },
+      verifiedEmail: true,
+      verifiedPhone: false,
+      marketingOptedIn: {},
+    }),
     deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
   };
   expect((await runOutboxPoll(options)).failed).toBe(1);
@@ -561,7 +576,12 @@ it('renews a slow delivery claim so another poll cannot take it', async () => {
         },
       },
     },
-    availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }),
+    availability: () => ({
+      enabledChannels: { email: true, sms: true },
+      verifiedEmail: true,
+      verifiedPhone: false,
+      marketingOptedIn: {},
+    }),
     deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
   };
   const running = runOutboxPoll(options);
@@ -632,7 +652,12 @@ it('a replaced claim cannot send the next channel or overwrite its successor', a
         },
       },
     },
-    availability: () => ({ verifiedEmail: true, verifiedPhone: true, marketingOptedIn: {} }),
+    availability: () => ({
+      enabledChannels: { email: true, sms: true },
+      verifiedEmail: true,
+      verifiedPhone: true,
+      marketingOptedIn: {},
+    }),
     deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
   };
   const running = runOutboxPoll(options);
@@ -684,7 +709,7 @@ it('a replaced claim cannot send the next channel or overwrite its successor', a
 it('uses the explicit recipient, applies address suppression, and refuses disabled or unactivated recipients', async () => {
   const id = randomUUID();
   await pool.query(
-    "INSERT INTO users(user_id,username,password_hash,locale) VALUES ('delivery-recipient','Recipient@example.test','test-only','en')"
+    "INSERT INTO users(user_id,username,password_hash,locale,notification_preferences) VALUES ('delivery-recipient','Recipient@example.test','test-only','en','IN_APP,EMAIL,SMS')"
   );
   await pool.query(
     `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,idempotency_key)
@@ -845,6 +870,9 @@ it('refuses to retarget a snapshotted email after the recipient changes', async 
   await pool.query(
     "UPDATE users SET email='new-recipient@example.test' WHERE user_id='delivery-recipient'"
   );
+  await pool.query(
+    "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ('new-recipient@example.test','delivery-recipient','email',NOW())"
+  );
   try {
     await expect(
       new EmailNotificationTransport(pool, request).send({
@@ -891,6 +919,9 @@ it('sends stable mapped SMS parameters across a retry and shares the provider qu
     "UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')"
   );
   await pool.query("UPDATE users SET mobile='+989121234567' WHERE user_id='delivery-recipient'");
+  await pool.query(
+    "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ('+989121234567','delivery-recipient','mobile',NOW())"
+  );
   const config = {
     api_key: 'local-test-only',
     sender: '3000',

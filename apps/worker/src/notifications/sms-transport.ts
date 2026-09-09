@@ -10,7 +10,10 @@ import type {
   NotificationSendPayload,
   NotificationSendResult,
 } from '@barghsa/shared/notifications';
-import { loadNotificationRecipient } from './channel-availability-loader.js';
+import {
+  assertNotificationRecipientAvailable,
+  loadNotificationRecipient,
+} from './channel-availability-loader.js';
 
 export class SmsNotificationTransport implements INotificationTransport {
   readonly channel = 'sms' as const;
@@ -93,6 +96,13 @@ export class SmsNotificationTransport implements INotificationTransport {
     ) {
       throw new Error('SMS recipient or identity changed; delivery requires reconciliation');
     }
+    await assertNotificationRecipientAvailable(
+      this.pool,
+      payload.outboxId,
+      payload.eventKey,
+      'sms',
+      recipient
+    );
     const providerRef = await createSmsSender(this.pool, this.request)(message, payload.signal);
     return { status: 'delivered', providerRef };
   }

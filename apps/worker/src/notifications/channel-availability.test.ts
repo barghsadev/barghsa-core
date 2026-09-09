@@ -13,30 +13,35 @@ import {
  */
 
 const noVerified: ChannelAvailabilityContext = {
+  enabledChannels: { email: true, sms: true },
   verifiedEmail: false,
   verifiedPhone: false,
   marketingOptedIn: {},
 };
 
 const emailVerifiedNoConsent: ChannelAvailabilityContext = {
+  enabledChannels: { email: true, sms: true },
   verifiedEmail: true,
   verifiedPhone: false,
   marketingOptedIn: {},
 };
 
 const emailVerifiedMarketingOptedIn: ChannelAvailabilityContext = {
+  enabledChannels: { email: true, sms: true },
   verifiedEmail: true,
   verifiedPhone: false,
   marketingOptedIn: { email: true },
 };
 
 const smsVerifiedMarketingOptedIn: ChannelAvailabilityContext = {
+  enabledChannels: { email: true, sms: true },
   verifiedEmail: false,
   verifiedPhone: true,
   marketingOptedIn: { sms: true },
 };
 
 const noDestinationSmsOptedIn: ChannelAvailabilityContext = {
+  enabledChannels: { email: true, sms: true },
   verifiedEmail: false,
   verifiedPhone: false,
   marketingOptedIn: { sms: true },
