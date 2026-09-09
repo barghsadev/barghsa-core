@@ -320,6 +320,15 @@ export class TicketsService {
         );
         if (!profile.rows.length) throw new HttpException('Profile not found', 404);
       }
+      const id = randomUUID();
+      const assignment = await this.assignmentService.choose(
+        client,
+        'ticket',
+        id,
+        userId,
+        [data.relatedEntityType ?? 'support'],
+        actor ? [userId] : []
+      );
       if (actor) await authorizeTicketMutation(client, actor, userId, false);
       if (data.relatedEntityId) {
         // Contracts are not implemented in this schema. Never accept unverifiable links.
@@ -343,10 +352,6 @@ export class TicketsService {
             data.profileId ?? null
           )
         : [];
-      const id = randomUUID();
-      const assignment = await this.assignmentService.choose(client, 'ticket', id, userId, [
-        data.relatedEntityType ?? 'support',
-      ]);
       const result = await client.query(
         `INSERT INTO tickets(user_id,subject,body,profile_id,related_entity_type,related_entity_id,priority,status,attachments,id,assigned_to,assigned_team_id)
         VALUES ($1,$2,$3,$4,$5,$6,$7,CASE WHEN $10::text IS NULL THEN 'open' ELSE 'in_progress' END,$8::jsonb,$9,$10,$11) RETURNING *`,

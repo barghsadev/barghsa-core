@@ -23,7 +23,8 @@ export class StaffAssignmentService {
     workType: StaffAssignmentWorkType,
     itemId: string,
     actorId: string,
-    skills: string[]
+    skills: string[],
+    additionalUserLocks: string[] = []
   ): Promise<WorkAssignment | null> {
     await client.query('SELECT pg_advisory_xact_lock_shared(hashtext($1))', [
       STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
@@ -56,6 +57,18 @@ export class StaffAssignmentService {
         [teamIds]
       )
     ).rows;
+    if (additionalUserLocks.length) {
+      // Callers that validate an actor after choosing must include that account
+      // in the same ordered lock set as candidates. Teams always come first.
+      await client.query(
+        `SELECT u.user_id FROM users u
+         WHERE u.user_id=ANY($2::text[]) OR EXISTS (
+           SELECT 1 FROM staff_team_members m
+           WHERE m.user_id=u.user_id AND m.team_id=ANY($1::uuid[])
+         ) ORDER BY u.user_id FOR NO KEY UPDATE OF u`,
+        [teams.map((team) => team.id), additionalUserLocks]
+      );
+    }
     const rows = (
       await client.query(
         `SELECT u.user_id,u.is_admin,m.team_id,

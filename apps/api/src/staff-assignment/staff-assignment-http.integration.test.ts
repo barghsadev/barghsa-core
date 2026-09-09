@@ -56,6 +56,84 @@ async function rule(strategy: string, team: string | null = teamId) {
     [JSON.stringify({ ticket: { teamId: team, strategy } })]
   );
 }
+it('allows staff ticket creation alongside manual assignment to that staff member', async () => {
+  const existing = (await (await create('Existing customer ticket')).json()) as { id: string };
+  const staffHeaders: Record<string, Record<string, string>> = {};
+  for (const user of ['alpha', 'beta']) {
+    const session = randomUUID(),
+      csrf = randomUUID();
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      [session, user, csrf, randomUUID()]
+    );
+    staffHeaders[user] = {
+      Cookie: `barghsa_session=${session}`,
+      'X-CSRF-Token': csrf,
+      'Content-Type': 'application/json',
+    };
+  }
+  await rule('round_robin');
+  const blocker = await http.pool.connect();
+  let creation: Promise<Response> | undefined, assignment: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+      'admin.staff_assignment_rules',
+    ]);
+    const blockerPid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+    creation = fetch(`${http.base}/api/tickets`, {
+      method: 'POST',
+      headers: staffHeaders.alpha!,
+      body: JSON.stringify({ subject: 'Staff support question', body: 'Details' }),
+    });
+    let creatorPid: number | undefined;
+    await expect
+      .poll(
+        async () => {
+          creatorPid = (
+            await http.pool.query(
+              'SELECT pid FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+              [blockerPid]
+            )
+          ).rows[0]?.pid;
+          return creatorPid;
+        },
+        { timeout: 5000, interval: 20 }
+      )
+      .toBeDefined();
+    let assigned = false;
+    assignment = fetch(`${http.base}/api/staff/tickets/${existing.id}/assign`, {
+      method: 'PUT',
+      headers: staffHeaders.beta!,
+      body: JSON.stringify({ assigneeId: 'alpha', teamId }),
+    }).finally(() => {
+      assigned = true;
+    });
+    await expect
+      .poll(
+        async () =>
+          assigned ||
+          (
+            await http.pool.query(
+              'SELECT 1 FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+              [creatorPid]
+            )
+          ).rows.length > 0,
+        { timeout: 5000, interval: 20 }
+      )
+      .toBe(true);
+    await blocker.query('COMMIT');
+    const [created, reassigned] = await Promise.all([creation, assignment]);
+    expect([created.status, reassigned.status], http.logs()).toEqual([201, 200]);
+    expect(await reassigned.json()).toMatchObject({ assignedTo: 'alpha', assignedTeamId: teamId });
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await Promise.allSettled([creation, assignment].filter(Boolean));
+  }
+});
+
 it('keeps work manual by default and assigns eight concurrent new tickets evenly without selecting ineligible members', async () => {
   const manual = await create(),
     old = (await manual.json()) as { id: string; assignedTo: string | null; status: string };
