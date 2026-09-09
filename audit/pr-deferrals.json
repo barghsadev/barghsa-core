@@ -1304,7 +1304,21 @@
       "- [x] Predefined roles shown read-only (custom-role editing deferred to follow-up by design)",
       "- [ ] Audit `role_permission_change` — not applicable this slice: predefined roles are read-only and there is no permission-mutation endpoint yet; the audit event will land with custom-role editing"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Reviewed: initial read-only scope verified; both editing deferrals belong to the explicit future custom-role extension.",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "Canonical T-09.05.01 explicitly says predefined roles are read-only initially and custom roles future. No role-permission mutation is implemented or claimed; role_permission_change audit must accompany future editing. Current read-only role/effective views verified in audit/evidence/step-reviews.json#R01-staff-role-catalogue."
+      },
+      {
+        "statement_index": 1,
+        "disposition": "separate_future_dependency",
+        "evidence": "Canonical T-09.05.01 explicitly says predefined roles are read-only initially and custom roles future. No role-permission mutation is implemented or claimed; role_permission_change audit must accompany future editing. Current read-only role/effective views verified in audit/evidence/step-reviews.json#R01-staff-role-catalogue."
+      }
+    ],
+    "reviewed_source_revision": "e7e34a765f3b5097156cc2c7c04bf220f7335916",
+    "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
   },
   {
     "pr": 161,

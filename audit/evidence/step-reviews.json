@@ -12517,6 +12517,121 @@
         "/tmp/r01-staff-audit-lint.log",
         "/tmp/r01-staff-audit-web-types.log"
       ]
+    },
+    {
+      "id": "R01-staff-role-catalogue",
+      "date": "2026-09-09",
+      "source_revision": "e7e34a765f3b5097156cc2c7c04bf220f7335916",
+      "base_revision": "69e399ba6e717c82ddd63b19d54242ae4aab6674",
+      "product_commits": [
+        "e7e34a765f3b5097156cc2c7c04bf220f7335916"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.05.01"
+      ],
+      "summary": "Role catalogue and effective permission lookup verified; corrected permission mismatch and required read-only UI.",
+      "review": [
+        "Read exact T-09.05.01, saved PR162 body and both historical deferrals. The requirement explicitly limits predefined roles to read-only initially and defers custom roles. Existing DB mapping contains all six predefined sets; listStaffRoles reads persisted mappings and resolves predefined identity. No permission-writing endpoint exists.",
+        "Confirmed role administrators could list roles under admin:roles:edit but lookup required unrelated staff:roles:view. New HTTP regression failed403 before repair. Both reads now enforce the canonical admin:roles:edit grant. Current permission revocation denies both; unrelated historical staff:roles:view alone is insufficient.",
+        "Real HTTP verifies multi-role additive union without duplicate profiles:read or unrelated payments:write, disabled targets returning no effective permissions, and authenticated/unauthenticated authorization. Existing wildcard/deny-by-default staff evidence and unchanged service tests from214c8a1 are reused.",
+        "Replaced plain permission text with disabled checked native controls for the granted set, grouped under accessible module legends. Excluded permissions remain denied; the UI does not offer writes. Translated seeded role names/descriptions, module labels and effective-role names; technical permission IDs remain exact LTR identifiers. Wildcard copy no longer incorrectly calls every wildcard recipient a platform admin.",
+        "Replaced fixed light-theme colors and made lookup wrapping/identifiers fit mobile. Browser scans found4.39:1 muted text on muted table headers/badges; switched those to normal foreground. Final desktop/mobile fa/en light/dark axe checks pass without disabled rules.",
+        "Malformed role responses, wrong-user lookup responses, stale pending lookups, retries and clearing changed targets remain covered. Ten such current-build browser cases passed before the final four class-only contrast corrections; four affected catalogue cases then passed on the rebuilt final source. No count inflation from reruns.",
+        "Initial broader boundary check found three old verification fixtures still sending the pre-Draft→Active body. Updated fixture to valid draft/action/version while preserving denial checks. All144 boundary cases pass. No verification runtime changes.",
+        "Both PR162 deferrals have explicit future-scope dispositions supported by its read-only canonical UI requirement. Custom role editing is not added or counted as implemented. No backend response/decorator/schema contract changed; OpenAPI regeneration is unnecessary for this permission/comment-only controller diff."
+      ],
+      "verification": {
+        "api": "156 distinct cases:12 actual-HTTP staff cases plus144 capability boundary cases. Earlier153 passing cases overlap; do not add.",
+        "browser": "14 distinct production Chromium cases across fa/en desktop/mobile:10 recovery/race cases plus4 final catalogue/theme cases.",
+        "i18n": "50 cases pass.",
+        "quality": "API/web types, scoped ESLint, final Prettier, production build,42 unchanged payload budgets and diff review pass. Final source formatting is nonsemantic."
+      },
+      "remaining": [],
+      "pr_dispositions": [
+        {
+          "pr": 162,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.05.01"
+          ],
+          "reason": "Initial read-only catalogue/effective lookup criteria verified. Both custom-role/mutation-audit deferrals explicitly belong to future editing scope.",
+          "source_revision": "e7e34a765f3b5097156cc2c7c04bf220f7335916",
+          "evidence": [
+            "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
+          ]
+        }
+      ],
+      "pr_counts": {
+        "closed": 1,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "Unchanged role service/mapping and current permission resolution reviewed with prior staff evidence; 9 immediate-base source bindings refreshed. Older stale bindings retained.",
+        "audit/evidence/step-reviews.json#R01-staff-permission-audit: unchanged service tests for catalogue mapping remain valid; no broad regression renewal."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
+        },
+        {
+          "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+          "sha256": "01a35987810c65b71d29f8690c91cc1c15f7818544d3da47597bdde23fd0f882"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
+        },
+        {
+          "path": "apps/web/src/pages/AdminRolesPage.tsx",
+          "sha256": "ee5c862cc96f686c5ea907147f8c6569fee533ab4efbd4ffc8fe014a5367e2c5"
+        },
+        {
+          "path": "apps/web/e2e/role-permission-recovery.spec.ts",
+          "sha256": "4e758c3199b31d24f9ea7abc2a0b82dc27bf1428fce80da69d7261bece91ee8b"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "b4fccbb4072dfdcb6da1ab8c1f3d09cc254657ca8fcfd7a3f161ca1c6a8972f4"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "5fcf4799e88da331a11abc5a7a477832c0b48d740af7bb61bd1ad89651f3840c"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "1d335cd2f15bbfb71a5f625d1654617d566703303cc17e4a4f778e20e9517485"
+        },
+        {
+          "path": "packages/db/src/schema/staff-roles.ts",
+          "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "8726d58a5d98796484fcce91511b22fb03ea72df0f55120a426ec5bfe2ffed47"
+        }
+      ],
+      "logs": [
+        "/tmp/r01-role-catalogue-api-before.log",
+        "/tmp/r01-role-catalogue-api-types.log",
+        "/tmp/r01-role-catalogue-api.log",
+        "/tmp/r01-role-catalogue-boundaries-final.log",
+        "/tmp/r01-role-catalogue-browser-final.log",
+        "/tmp/r01-role-catalogue-browser.log",
+        "/tmp/r01-role-catalogue-budgets-final.log",
+        "/tmp/r01-role-catalogue-budgets.log",
+        "/tmp/r01-role-catalogue-build-final.log",
+        "/tmp/r01-role-catalogue-format-complete.log",
+        "/tmp/r01-role-catalogue-format-corrected.log",
+        "/tmp/r01-role-catalogue-format-final.log",
+        "/tmp/r01-role-catalogue-format-verified.log",
+        "/tmp/r01-role-catalogue-format.log",
+        "/tmp/r01-role-catalogue-i18n.log",
+        "/tmp/r01-role-catalogue-lint.log",
+        "/tmp/r01-role-catalogue-web-build.log",
+        "/tmp/r01-role-catalogue-web-types.log"
+      ]
     }
   ]
 }

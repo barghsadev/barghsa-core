@@ -3133,7 +3133,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -3299,7 +3299,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5212,7 +5212,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
         },
         {
           "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
@@ -5330,7 +5330,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
         },
         {
           "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
@@ -5423,7 +5423,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
         },
         {
           "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
@@ -7704,7 +7704,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
+          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -8673,7 +8673,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
+          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
@@ -13591,7 +13591,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
+          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -13825,7 +13825,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "97b049e4e97a0db5e36718984c27bf5e629fe765e0d0cf18f3bb16e0a95af3ee"
+          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -13833,7 +13833,7 @@
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
-          "sha256": "0a94300c22165d7917d7015a8e06f929d5599455898d26542385239ed849fd54"
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
         },
         {
           "path": "apps/api/src/admin/admin.service.test.ts",
@@ -13858,6 +13858,69 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.05.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "e7e34a765f3b5097156cc2c7c04bf220f7335916",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 696,
+      "requirement": "**T-09.05.01 — Staff role management**\n\n- Description: Admin can view/edit staff roles and their permissions. Predefined roles: Customer Support, CRM & Verification, Finance, Legal & Contracts, Operations, Admin. Each with associated permission set.\n- Technical notes: Permissions: `admin:roles:edit`. Role-permission mapping stored in DB (role_id → permission[]). Allow custom roles in future, initially fixed set. Audit: role_permission_change.\n- UI/UX: Table of roles with permission checkboxes grouped by module. Read-only for predefined roles initially. \"View effective permissions\" for a staff user.\n- Dependencies: T-05.03.02, admin config framework\n- Complexity: L",
+      "requirement_sha256": "973e3cb68d2bf461fe774842cbec0eded8a71dc299f89fc14902f91ead91b832",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3fa808e1089baa3136e7d91d8d34a7a57896ae20477b6bf5bfa5458d36202964"
+        },
+        {
+          "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+          "sha256": "01a35987810c65b71d29f8690c91cc1c15f7818544d3da47597bdde23fd0f882"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
+        },
+        {
+          "path": "apps/web/src/pages/AdminRolesPage.tsx",
+          "sha256": "ee5c862cc96f686c5ea907147f8c6569fee533ab4efbd4ffc8fe014a5367e2c5"
+        },
+        {
+          "path": "apps/web/e2e/role-permission-recovery.spec.ts",
+          "sha256": "4e758c3199b31d24f9ea7abc2a0b82dc27bf1428fce80da69d7261bece91ee8b"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "b4fccbb4072dfdcb6da1ab8c1f3d09cc254657ca8fcfd7a3f161ca1c6a8972f4"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "5fcf4799e88da331a11abc5a7a477832c0b48d740af7bb61bd1ad89651f3840c"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "1d335cd2f15bbfb71a5f625d1654617d566703303cc17e4a4f778e20e9517485"
+        },
+        {
+          "path": "packages/db/src/schema/staff-roles.ts",
+          "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "8726d58a5d98796484fcce91511b22fb03ea72df0f55120a426ec5bfe2ffed47"
+        }
+      ],
+      "checks": [
+        "Exact requirement and saved PR162 reviewed.",
+        "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
+      ],
+      "limitations": [
+        "Predefined roles are read-only as explicitly required initially. Custom-role editing and its role_permission_change audit belong to that future extension; no mutation endpoint or editing acceptance claimed."
+      ],
+      "merged_prs": [
+        162
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
     }
   ],
   "pending_task_keys": [
@@ -13962,7 +14025,6 @@
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
     "02-auth-users-admin.md#T-09.04.01",
-    "02-auth-users-admin.md#T-09.05.01",
     "05-notifications-documents-ai.md#T-05.01.01",
     "05-notifications-documents-ai.md#T-05.01.02",
     "05-notifications-documents-ai.md#T-05.01.03",
@@ -16881,6 +16943,23 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit",
       "note": "Refresh only exact immediate-base bindings for two theme classes and additive tests. Existing unrelated test bodies and staff list/authority implementation remain unchanged; older stale bindings retained."
+    },
+    {
+      "source_revision": "e7e34a765f3b5097156cc2c7c04bf220f7335916",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-10.01.01",
+        "02-auth-users-admin.md#T-09.07.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-10.01.02"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue",
+      "note": "Refresh only immediate-base bindings. Runtime controller change is confined to effective-permission read authority; all other methods and existing dictionary keys remain except truthful wildcard copy. Current boundary/HTTP and browser/i18n checks verify affected behavior. Older stale bindings retained."
     }
   ]
 }

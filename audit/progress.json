@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "214c8a1bfde80d08a2aa3088508711ee9ec013e5",
+  "source_revision": "e7e34a765f3b5097156cc2c7c04bf220f7335916",
   "active_step": "R01",
-  "next_action": "Read existing role-permission recovery tests and relevant prior evidence. Repair the required role catalogue presentation and verify current permission lookup/authority; preserve predefined read-only scope.",
+  "next_action": "Reconcile remaining agent-role and sensitive-action caller evidence once across completed domain batches; fix confirmed gaps in built callers and retain exact future/R02 prerequisites.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -639,6 +639,10 @@
     {
       "id": "R01-staff-permission-audit",
       "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit"
+    },
+    {
+      "id": "R01-staff-role-catalogue",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
     }
   ],
   "deferred_improvements": [
@@ -657,9 +661,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 130,
+    "acceptance_verified": 131,
     "partial": 32,
-    "pending": 160,
+    "pending": 159,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -948,30 +952,33 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R01-staff-role-catalogue",
-    "name": "Staff role catalogue and effective permissions",
+    "id": "R01-cross-domain-authorization",
+    "name": "Remaining agent-role and sensitive-action caller evidence",
     "status": "in_progress",
     "prs": [
-      162
+      92,
+      134
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-09.05.01"
+      "02-auth-users-admin.md#T-02.02.04",
+      "02-auth-users-admin.md#T-05.04.04"
     ],
     "remaining_checklist": [
-      "Exact requirement, saved PR162 body and both deferrals read. Predefined roles are explicitly read-only; custom-role editing is a future extension. Disposition role_permission_change accordingly.",
-      "AdminRolesPage and list/effective API methods read. Compare required grouped permission checkboxes, FA/EN labels, effective-user lookup and theme behavior. Existing page renders permission strings instead of required checkboxes and uses fixed light-theme colors.",
-      "Reuse repaired lookup validation/race and current staff authority evidence; read role-permission-recovery.spec.ts before adding checks. Review only confirmed remaining gaps and consolidate task/PR disposition."
+      "Exact requirements, PR92/134 bodies and PR92 deferrals read at the preceding checkpoint. Both tasks already partial; preserve recorded completed domain evidence.",
+      "Link completed invoice/wallet/receipt/payment, staff, profile/ownership and address/order caller reviews to the required matrix. Check only remaining implemented gaps; use progress.open_domain_reviews and the existing route/session caller reviews.",
+      "Explicitly assign storage/provider/price consumers to their owning R02 batches if still unreviewed. Refund/contract cancellation and signing retain exact unbuilt prerequisites; never build those full product flows just to close a review.",
+      "Keep unresolved criteria partial/open with exact ownership. Lost-contact policy and signed-webhook owner questions remain pending; do not ask again."
     ],
-    "confirmed_defects": [
-      "Required grouped permission-checkbox presentation is absent from current role catalogue."
-    ],
+    "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-staff-task-acceptance",
-      "audit/evidence/step-reviews.json#R01-staff-permission-audit"
+      "audit/evidence/step-reviews.json#R01-session-recovery",
+      "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+      "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals",
+      "audit/evidence/step-reviews.json#R01-profile-addresses"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Read existing role-permission recovery tests and relevant prior evidence. Repair the required role catalogue presentation and verify current permission lookup/authority; preserve predefined read-only scope."
+    "next_action": "Reconcile remaining agent-role and sensitive-action caller evidence once across completed domain batches; fix confirmed gaps in built callers and retain exact future/R02 prerequisites."
   },
   "open_domain_reviews": [
     {
