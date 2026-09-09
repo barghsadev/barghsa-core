@@ -748,7 +748,7 @@ export class ProfilesService {
       if (data.provinceId !== undefined || data.cityId !== undefined) {
         const current = (
           await client.query(
-            'SELECT province_id,city_id FROM addresses WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+            'SELECT province_id,city_id FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR UPDATE',
             [addressId, profileId]
           )
         ).rows[0];
@@ -800,7 +800,7 @@ export class ProfilesService {
       params.push(addressId, profileId);
 
       const result = await client.query(
-        `UPDATE addresses SET ${updates.join(', ')} WHERE id = $${paramIndex++} AND profile_id = $${paramIndex++}
+        `UPDATE addresses SET ${updates.join(', ')} WHERE id = $${paramIndex++} AND profile_id = $${paramIndex++} AND deleted_at IS NULL
          RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
         params
       );
@@ -846,7 +846,7 @@ export class ProfilesService {
   }
 
   /**
-   * Delete an address for a profile.
+   * Remove an address from a profile's saved list while retaining its history.
    *
    * If the address is the main address, the user must first set a new main
    * address. Orders retain copied snapshot fields independently of the saved
@@ -892,7 +892,8 @@ export class ProfilesService {
       await this.lockAddressActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
       const deleted = await client.query(
-        `DELETE FROM addresses WHERE id=$1 AND profile_id=$2 AND NOT main_address RETURNING id`,
+        `UPDATE addresses SET deleted_at=NOW(), updated_at=NOW()
+         WHERE id=$1 AND profile_id=$2 AND NOT main_address AND deleted_at IS NULL RETURNING id`,
         [addressId, profileId]
       );
       if (deleted.rowCount !== 1)
@@ -971,7 +972,7 @@ export class ProfilesService {
 
       // Set the new main address
       const result = await client.query(
-        `UPDATE addresses SET main_address = true, updated_at = NOW() WHERE id = $1 AND profile_id = $2
+        `UPDATE addresses SET main_address = true, updated_at = NOW() WHERE id = $1 AND profile_id = $2 AND deleted_at IS NULL
          RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
         [addressId, profileId]
       );
@@ -1016,7 +1017,7 @@ export class ProfilesService {
               p.name_fa AS province_name_fa,p.name_en AS province_name_en,
               c.name_fa AS city_name_fa,c.name_en AS city_name_en
        FROM addresses a LEFT JOIN provinces p ON p.id=a.province_id LEFT JOIN cities c ON c.id=a.city_id
-       WHERE a.profile_id = $1
+       WHERE a.profile_id = $1 AND a.deleted_at IS NULL
        ORDER BY a.main_address DESC, a.created_at ASC`,
       [profileId]
     );

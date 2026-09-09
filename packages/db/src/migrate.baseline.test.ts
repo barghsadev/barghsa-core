@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { Pool } from 'pg';
 import { randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
-import { readFileSync } from 'node:fs';
+import { readFileSync, mkdtempSync, mkdirSync, copyFileSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { createHash } from 'node:crypto';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { runMigrations, verifyMigrationVersion } from './migrate';
@@ -22,6 +23,81 @@ afterEach(async () => {
 });
 
 describe('complete production schema baseline', () => {
+  it('adds address removal history to a populated 0123 database without changing saved addresses', async () => {
+    if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
+    const name = `test_address_upgrade_${randomUUID().replaceAll('-', '')}`;
+    const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
+    try {
+      await management.query(`CREATE DATABASE "${name}"`);
+      databases.push(name);
+    } finally {
+      await management.end();
+    }
+    const url = new URL(process.env.TEST_DATABASE_URL);
+    url.pathname = `/${name}`;
+    const options = { connection: { pgdirectUrl: url.toString() } };
+    const previousFolder = mkdtempSync(resolve(tmpdir(), 'barghsa-address-migrations-'));
+    const pool = new Pool({ connectionString: url.toString() });
+    try {
+      const journal = JSON.parse(readFileSync(resolve(folder, 'meta/_journal.json'), 'utf8'));
+      const previousIndex = journal.entries.findIndex(
+        (entry: { tag: string }) => entry.tag === '0123_preauth_sessions'
+      );
+      expect(previousIndex).toBeGreaterThan(0);
+      journal.entries = journal.entries.slice(0, previousIndex + 1);
+      mkdirSync(resolve(previousFolder, 'meta'));
+      writeFileSync(resolve(previousFolder, 'meta/_journal.json'), JSON.stringify(journal));
+      for (const entry of journal.entries)
+        copyFileSync(
+          resolve(folder, entry.tag + '.sql'),
+          resolve(previousFolder, entry.tag + '.sql')
+        );
+      expect((await runMigrations({ ...options, migrationsFolder: previousFolder })).ok).toBe(true);
+      await pool.query(
+        "INSERT INTO users(user_id,username,password_hash) VALUES ('address-upgrade','upgrade@example.test','fixture')"
+      );
+      const profile = (
+        await pool.query("INSERT INTO profiles(user_id) VALUES ('address-upgrade') RETURNING id")
+      ).rows[0].id;
+      const province = (
+        await pool.query(
+          "INSERT INTO provinces(name_fa,name_en) VALUES ('استان','Province') RETURNING id"
+        )
+      ).rows[0].id;
+      const city = (
+        await pool.query(
+          "INSERT INTO cities(province_id,name_fa,name_en) VALUES ($1,'شهر','City') RETURNING id",
+          [province]
+        )
+      ).rows[0].id;
+      await pool.query(
+        "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES ($1,$2,$3,'Main street','1234567890',true),($1,$2,$3,'Second street','2345678901',false)",
+        [profile, province, city]
+      );
+      const before = (await pool.query('SELECT * FROM addresses ORDER BY id')).rows;
+      expect(await runMigrations(options)).toEqual({
+        ok: true,
+        applied: ['0124_address_soft_delete'],
+      });
+      expect((await pool.query('SELECT * FROM addresses ORDER BY id')).rows).toEqual(
+        before.map((row) => ({ ...row, deleted_at: null }))
+      );
+      await expect(
+        pool.query('UPDATE addresses SET deleted_at=NOW() WHERE main_address')
+      ).rejects.toMatchObject({ code: '23514', constraint: 'addresses_deleted_not_main' });
+      await pool.query('UPDATE addresses SET deleted_at=NOW() WHERE NOT main_address');
+      const removed = (await pool.query('SELECT * FROM addresses WHERE NOT main_address')).rows[0];
+      expect(removed).toMatchObject({
+        full_address: 'Second street',
+        postal_code: '2345678901',
+        deleted_at: expect.any(Date),
+      });
+      expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
+    } finally {
+      await pool.end();
+      rmSync(previousFolder, { recursive: true, force: true });
+    }
+  });
   it('creates the declared schema in an empty database without test-only prerequisite tables', async () => {
     if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
     const name = `test_baseline_${randomUUID().replaceAll('-', '')}`;
@@ -81,6 +157,8 @@ describe('complete production schema baseline', () => {
         '0120_rolling_rate_limits',
         '0121_device_trust_ip',
         '0122_password_reset_authorization',
+        '0123_preauth_sessions',
+        '0124_address_soft_delete',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -161,6 +239,9 @@ describe('complete production schema baseline', () => {
 
       // Representative deployed state: populated current product/finance
       // tables with the old migration journal and missing unjournaled schema.
+      await pool.query(
+        'ALTER TABLE addresses DROP COLUMN deleted_at CASCADE; DROP TABLE preauth_sessions'
+      );
       await pool.query(
         "UPDATE users SET email='profile-contact@example.test',mobile='+989121234567' WHERE user_id='baseline-user'"
       );
@@ -246,7 +327,7 @@ describe('complete production schema baseline', () => {
       await pool.query('DROP TABLE sms_provider_configs');
       const oldHistory = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations')).rows;
       const productsBefore = (await pool.query('SELECT * FROM products ORDER BY id')).rows;
-      expect((await runMigrations(options)).ok).toBe(true);
+      expect(await runMigrations(options)).toMatchObject({ ok: true });
       expect(
         (
           await pool.query('SELECT contact_email,contact_mobile FROM profiles WHERE id=$1', [

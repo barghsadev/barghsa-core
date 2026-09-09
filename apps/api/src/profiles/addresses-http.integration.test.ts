@@ -138,9 +138,25 @@ it('allows managers, automatically sets the first main address, and preserves or
   expect((await http.pool.query('SELECT * FROM orders WHERE id=$1', [order.id])).rows[0]).toEqual(
     order
   );
-  expect((await http.pool.query('SELECT * FROM addresses WHERE id=$1', [second.id])).rows).toEqual(
-    []
-  );
+  const removed = (await http.pool.query('SELECT * FROM addresses WHERE id=$1', [second.id])).rows;
+  expect(removed).toEqual([
+    expect.objectContaining({
+      id: second.id,
+      full_address: 'Changed address',
+      main_address: false,
+      deleted_at: expect.any(Date),
+    }),
+  ]);
+  expect(
+    ((await (await request('GET')).json()) as { addresses: { id: string }[] }).addresses.map(
+      (a) => a.id
+    )
+  ).toEqual([first.id]);
+  expect(
+    (await request('PUT', '/' + second.id, 'manager', { fullAddress: 'Resurrected' })).status
+  ).toBe(404);
+  expect((await request('POST', '/' + second.id + '/set-main', 'manager')).status).toBe(404);
+  expect((await request('DELETE', '/' + second.id, 'manager')).status).toBe(404);
   expect((await request('DELETE', `/${first.id}`, 'manager')).status).toBe(400);
   expect(
     (

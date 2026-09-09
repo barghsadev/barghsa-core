@@ -29,7 +29,7 @@ export async function editCrmAddress(client: PoolClient, profileId: string, inpu
       `SELECT id,province_id AS "provinceId",city_id AS "cityId",full_address AS "fullAddress",
        postal_code AS "postalCode",main_address AS "mainAddress",created_at AS "createdAt",
        to_char(updated_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS "updatedAt"
-     FROM addresses WHERE id=$1 AND profile_id=$2 FOR UPDATE`,
+     FROM addresses WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR UPDATE`,
       [edit.id, profileId]
     )
   ).rows[0];
@@ -44,7 +44,7 @@ export async function editCrmAddress(client: PoolClient, profileId: string, inpu
       await requireAddressGeography(client, edit.provinceId, edit.cityId);
     await client.query(
       `UPDATE addresses SET province_id=$1,city_id=$2,full_address=$3,postal_code=$4,updated_at=NOW()
-       WHERE id=$5 AND profile_id=$6`,
+       WHERE id=$5 AND profile_id=$6 AND deleted_at IS NULL`,
       [edit.provinceId, edit.cityId, edit.fullAddress, edit.postalCode, edit.id, profileId]
     );
   }
@@ -56,7 +56,7 @@ export async function editCrmAddress(client: PoolClient, profileId: string, inpu
        json_build_object('nameFa',p.name_fa,'nameEn',p.name_en) AS "provinceName",
        json_build_object('nameFa',c.name_fa,'nameEn',c.name_en) AS "cityName"
      FROM addresses a JOIN provinces p ON p.id=a.province_id JOIN cities c ON c.id=a.city_id
-     WHERE a.id=$1 AND a.profile_id=$2`,
+     WHERE a.id=$1 AND a.profile_id=$2 AND a.deleted_at IS NULL`,
       [edit.id, profileId]
     )
   ).rows[0]!;

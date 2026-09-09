@@ -1,0 +1,2 @@
+ALTER TABLE "addresses" ADD COLUMN "deleted_at" timestamp with time zone;--> statement-breakpoint
+ALTER TABLE "addresses" ADD CONSTRAINT "addresses_deleted_not_main" CHECK ("addresses"."deleted_at" IS NULL OR NOT "addresses"."main_address");

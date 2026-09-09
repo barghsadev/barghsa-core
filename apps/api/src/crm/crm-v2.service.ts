@@ -286,7 +286,7 @@ export class CrmV2Service {
        FROM addresses a
        LEFT JOIN provinces p ON p.id=a.province_id
        LEFT JOIN cities c ON c.id=a.city_id AND c.province_id=p.id
-       WHERE a.profile_id = $1
+       WHERE a.profile_id = $1 AND a.deleted_at IS NULL
        ORDER BY a.main_address DESC, a.created_at ASC`,
       [profileId]
     );

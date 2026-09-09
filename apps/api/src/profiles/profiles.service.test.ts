@@ -789,7 +789,7 @@ describe('ProfilesService', () => {
 
     const mainAddress = { ...nonMainAddress, id: 'addr-main', main_address: true };
 
-    it('deletes an address that is not linked to orders', async () => {
+    it('soft deletes a non-main address while retaining its record', async () => {
       mockPool.query
         .mockResolvedValueOnce({ rows: [profileRow] })
         .mockResolvedValueOnce({ rows: [nonMainAddress] });
@@ -803,7 +803,7 @@ describe('ProfilesService', () => {
 
       await service.deleteAddress(addressActor, 'prof-1', 'addr-1');
 
-      expect(mockClient.query.mock.calls[2]![0]).toContain('DELETE FROM addresses');
+      expect(mockClient.query.mock.calls[2]![0]).toContain('UPDATE addresses SET deleted_at=NOW()');
     });
 
     it('rejects deleting the main address', async () => {

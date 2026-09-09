@@ -202,6 +202,24 @@ it('rejects invalid address fields, identity edits and new inactive or unrelated
   ).toBe('Original street');
   expect(await audit(profileId)).toEqual([]);
 });
+it('hides removed addresses and rejects edits without changing the profile or retained record', async () => {
+  const { profileId, address, edit } = await setup();
+  await http.pool.query('UPDATE addresses SET main_address=false,deleted_at=NOW() WHERE id=$1', [
+    address.id,
+  ]);
+  const before = (await http.pool.query('SELECT * FROM addresses WHERE id=$1', [address.id])).rows;
+  const response = await fetch(http.base + '/api/crm/profiles/' + profileId, { headers });
+  expect(response.status).toBe(200);
+  expect(((await response.json()) as CrmProfileDetail).addresses).toEqual([]);
+  expect((await update(profileId, { title: 'Must roll back', address: edit })).status).toBe(404);
+  expect((await http.pool.query('SELECT * FROM addresses WHERE id=$1', [address.id])).rows).toEqual(
+    before
+  );
+  expect(
+    (await http.pool.query('SELECT title FROM profiles WHERE id=$1', [profileId])).rows[0].title
+  ).toBe('Original title');
+  expect(await audit(profileId)).toEqual([]);
+});
 it('rejects cross-profile, missing, stale and archived address edits', async () => {
   const target = await setup(),
     other = await setup();
