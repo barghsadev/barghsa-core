@@ -4,11 +4,11 @@ Read [fix-plan.md](fix-plan.md) and [progress.json](progress.json), then only se
 
 ## Current checkpoint
 
-Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **1bb1556**. Last consolidated batch **R01-wallet-ledger** remains complete at48ac9d7:8 new task acceptances plus preserved balance card;14 PR reviews closed. Preserve unchanged money/concurrency and dashboard evidence.
+Workspace `/Users/majid/www/barghsa/barghsa-core`, branch `codex/audit-fixes`. Product/test HEAD **3b67bbc**. Last consolidated batch **R01-wallet-ledger** remains complete at48ac9d7:8 new task acceptances plus preserved balance card;14 PR reviews closed. Preserve unchanged money/concurrency and dashboard evidence.
 
 Active **R01-bank-receipts-approval**:16 saved PRs195,196,266–268,278–279,286–287,296–302;10 mapped tasks. Exact keys, criteria, deferrals and checks are in progress.json.active_batch. No receipt task/PR closure yet.
 
-Ten repairs verified locally:
+Eleven repairs verified locally:
 
 - **0d75b64**: customer receipt session/owner/Finance authority through commit, atomic empty-wallet creation and submission audit.222 distinct affected API cases.
 - **397d8fd**: generic approval creation/resolution retains current account, role, session and step-up.64 distinct affected API cases.
@@ -22,13 +22,15 @@ Ten repairs verified locally:
 - **341246f**: required emergency override for one already-pending receipt, separate permission, fresh step-up, reason, atomic audit/settlement and immediate private in-app finance alerts.168 distinct affected API cases including explicit grants, expiry, evidence/rejection, rollback and busy-recipient retries.
 - **1bb1556**: permitted emergency wallet UI captures target/reason through step-up, restores focus and supports fa/en.17 web unit cases and9 production Chromium checks, including two new axe/focus cases, pass.
 
-Counts overlap across repairs. Relevant API types/lint/format/build/OpenAPI pass.1559 logs indexed, including failures. Nine receipt/approval Chromium checks now pass. No new budget/broad/coverage claim. Fixtures and extraction/type errors are documented with retained logs in progress.json. Receipt API fixtures rebuild worker; the cleanup integration imports its built output to respect TypeScript project boundaries.
+- **3b67bbc**: missing threshold screen added to the approval queue, strict localized amounts, captured password-verified save, zero/failure/permission states. Corrupt persisted reads return503 instead of a false disabled default.14 API and9 distinct Chromium cases pass, including four new threshold cases and the five refreshed approval queue cases. Both locale threshold cases pass axe. Types/lint/web build pass.
+
+Counts overlap across repairs. Relevant API types/lint/format/build/OpenAPI pass.1569 logs indexed, including failures. Receipt/emergency and threshold browser evidence is saved separately; their five shared queue cases overlap. No new budget/broad/coverage claim. Fixtures and extraction/type errors are documented with retained logs in progress.json. Receipt API fixtures rebuild worker; the cleanup integration imports its built output to respect TypeScript project boundaries.
 
 WalletService getWallet/createWallet now accept an optional transaction client. Default behavior is unchanged; customer receipt regression includes wallet unit/controller checks. Refresh narrow wallet/card bindings when consolidating; do not rerun or claim renewal of all648 historical finance cases. Historical receipt bytes modified before the sealing repair cannot be reconstructed locally.
 
 ## Next action
 
-Reconcile receipt requirements and repeated PRs into one batch review. Emergency override, both-approver authority, audit context and wallet step-up target fixes are complete locally. Compare saved duplicate PR diffs, inspect incidental T-04.3.01.06 overpayment coverage, verify remaining customer upload/config UI evidence, refresh narrow wallet/card source bindings, then close tasks and PRs individually.
+Finish bounded receipt acceptance: customer upload UI/evidence and remaining repeated PR product diffs, incidental T-04.3.01.06 coverage, narrow wallet/card source refresh, then one consolidated task/PR batch closure. Threshold UI and corrupt-read handling are now complete; do not rebuild them.
 
 No receipt task/PR closure yet. No required fix is knowingly left in the four newly reviewed paths. Remaining acceptance and historical PR dispositions still need consolidation. T-04.3.01.06 is **overpayment wallet credit**, not a notification task; correct that earlier shorthand when reviewing PR298. Notification delivery remains R02 where required.
 

@@ -3,9 +3,9 @@
   "updated": "2026-09-09",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "1bb15560a1cd8648090e47258e5c5e1261e420bc",
+  "source_revision": "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
   "active_step": "R01",
-  "next_action": "Reconcile receipt requirements and repeated PRs into one batch review. Emergency override, both-approver authority, audit context and wallet step-up target fixes are complete locally. Compare saved duplicate PR diffs, inspect incidental T-04.3.01.06 overpayment coverage, verify remaining customer upload/config UI evidence, refresh narrow wallet/card source bindings, then close tasks and PRs individually.",
+  "next_action": "Finish bounded receipt acceptance: customer upload UI/evidence and remaining repeated PR product diffs, incidental T-04.3.01.06 coverage, narrow wallet/card source refresh, then one consolidated task/PR batch closure. Threshold UI and corrupt-read handling are now complete; do not rebuild them.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -928,6 +928,11 @@
         "status": "fixed_and_verified",
         "commit": "6ed170354768de1304c9596cb501c85410504583",
         "summary": "Wallet/invoice approval initiation, resolution and rejection synchronization retain current session/correlation audit context.122 affected API cases and types/lint pass. Initial audit test used a uuid[] against text IDs; corrected before four valid baseline failures."
+      },
+      {
+        "status": "fixed_and_verified",
+        "commit": "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
+        "summary": "Threshold configuration had no staff UI. Added a bilingual panel to the approval queue using captured TeamActionDialog password verification, strict localized money validation, exact display, explicit zero semantics and failure/permission states. Corrupt stored config now returns503 instead of falsely reporting disabled.14 API and9 distinct Chromium cases, both package types, lint and web build pass."
       }
     ],
     "reused_evidence": [
@@ -936,7 +941,7 @@
       "audit/final-repair-checkpoint.json"
     ],
     "pr_dispositions": [],
-    "next_action": "Reconcile receipt requirements and repeated PRs into one batch review. Emergency override, both-approver authority, audit context and wallet step-up target fixes are complete locally. Compare saved duplicate PR diffs, inspect incidental T-04.3.01.06 overpayment coverage, verify remaining customer upload/config UI evidence, refresh narrow wallet/card source bindings, then close tasks and PRs individually.",
+    "next_action": "Finish bounded receipt acceptance: customer upload UI/evidence and remaining repeated PR product diffs, incidental T-04.3.01.06 coverage, narrow wallet/card source refresh, then one consolidated task/PR batch closure. Threshold UI and corrupt-read handling are now complete; do not rebuild them.",
     "product_commits": [
       "0d75b640e7ef2bea4be352de70c4577ebb97147e",
       "397d8fd6080a4b617224d757c56b3642d1795833",
@@ -947,7 +952,8 @@
       "c9567b9f58fc42deb63e7905000592ecdd54b508",
       "6ed170354768de1304c9596cb501c85410504583",
       "341246f326849b43acd8148f502012eb0b05ee6b",
-      "1bb15560a1cd8648090e47258e5c5e1261e420bc"
+      "1bb15560a1cd8648090e47258e5c5e1261e420bc",
+      "3b67bbcb25c254b5824a01ce4de6d57d3b189417"
     ],
     "verification": {
       "receipt_submission": {
@@ -1006,8 +1012,19 @@
         "chromium_cases": 9,
         "logs_prefix": "/tmp/r01-receipt-emergency-",
         "limits": "166-case affected API run plus two explicit-grant cases;28-case emergency rerun and10-case controller rerun overlap.17 wallet UI cases and9 production-build Chromium cases include two new bilingual emergency/axe/focus cases, five existing approval queue cases and two receipt-time cases. Initial type mismatch in the SQL-client contract fixed before passing types/build. Existing nonblocking pg/color/bundle warnings preserved. Immediate alerts are in-app; no email/SMS delivery claim. No new full-suite, global coverage, budget, image or deployed-system claim."
+      },
+      "threshold_screen": {
+        "source_revision": "3b67bbcb25c254b5824a01ce4de6d57d3b189417",
+        "distinct_api_cases": 14,
+        "chromium_cases": 9,
+        "logs_prefix": "/tmp/r01-threshold-screen-",
+        "limits": "API unit/controller checks cover valid/missing/corrupt reads and writes. Four new browser cases plus five existing queue cases. First browser run passed7/9; two test locators could not see the correctly inert page behind the password dialog. DOM-state assertion corrected; the two targeted reruns pass, with prior seven preserved. Both locale cases include axe. No new whole-suite, coverage, budget, image or deployment claim."
       }
-    }
+    },
+    "historical_review_notes": [
+      "Two repeated receipt groups: confirmation/UI267/278/286/301 and overpayment268/279/287/302. Later PRs add focus/reject/RTL, wallet-before-invoice lock order, payable-state restrictions and accurate excess-credit notice payloads. They modify one service/page rather than create parallel implementations. Actual279/287/302 product diffs and286 UI diff read;278/301 full product diff review and final dispositions remain. Saved stat inventory: /tmp/r01-receipt-pr-repeat-review.log.",
+      "PR298 incidental T-04.3.01.06 is separate wallet overpayment credit, not notification. Current invoice confirm uses its distinct idempotency key; final acceptance mapping still pending."
+    ]
   },
   "open_domain_reviews": [
     {
