@@ -1,3 +1,6 @@
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import type { PoolClient } from 'pg';
 import { isDeepStrictEqual } from 'node:util';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
@@ -5,6 +8,8 @@ import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import 'zod';
 import { getDbPool } from '@barghsa/db';
+
+type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 import { rulesSchemas, rulesErrorDetails } from './ai-policies.rules.js';
 
 /**
@@ -101,6 +106,7 @@ export interface CreatePolicyInput {
   policyType: PolicyType;
   rules: Record<string, unknown>;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
   /** Optional initial active/inactive state; defaults to enabled. */
   enabled?: boolean;
@@ -113,6 +119,7 @@ export interface UpdatePolicyInput {
   rules?: Record<string, unknown>;
   enabled?: boolean;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -120,6 +127,7 @@ export interface CreatePolicyGroupInput {
   title: string;
   description: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -127,6 +135,7 @@ export interface UpdatePolicyGroupInput {
   title?: string;
   description?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -134,6 +143,7 @@ export interface AddGroupMemberInput {
   groupId: string;
   policyId: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -223,7 +233,7 @@ export class AiPoliciesService {
 
   /** Create a policy. */
   async createPolicy(input: CreatePolicyInput): Promise<PolicyDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const id = uuidv7();
       const now = new Date();
       const enabled = input.enabled ?? true;
@@ -282,7 +292,7 @@ export class AiPoliciesService {
 
   /** Update a policy's fields. */
   async updatePolicy(id: string, input: UpdatePolicyInput): Promise<PolicyDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const existing = await this.findPolicy(id, client);
       if (!existing) throw this.policyNotFound(id);
 
@@ -396,8 +406,13 @@ export class AiPoliciesService {
   }
 
   /** Delete a policy (cascades to group memberships). */
-  async removePolicy(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(actorUserId, async (client) => {
+  async removePolicy(
+    id: string,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<void> {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const existing = await this.findPolicy(id, client);
       if (!existing) throw this.policyNotFound(id);
 
@@ -457,7 +472,7 @@ export class AiPoliciesService {
 
   /** Create a policy group. */
   async createGroup(input: CreatePolicyGroupInput): Promise<PolicyGroupDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const id = uuidv7();
       const now = new Date();
 
@@ -495,7 +510,7 @@ export class AiPoliciesService {
 
   /** Update a policy group's title/description. */
   async updateGroup(id: string, input: UpdatePolicyGroupInput): Promise<PolicyGroupDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const existing = await this.findGroup(id, client);
       if (!existing) throw this.groupNotFound(id);
 
@@ -549,8 +564,13 @@ export class AiPoliciesService {
   }
 
   /** Delete a policy group (cascades to its memberships). */
-  async removeGroup(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(actorUserId, async (client) => {
+  async removeGroup(
+    id: string,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<void> {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const existing = await this.findGroup(id, client);
       if (!existing) throw this.groupNotFound(id);
 
@@ -573,7 +593,7 @@ export class AiPoliciesService {
 
   /** Link a policy into a group (idempotent; both records must exist). */
   async addGroupMember(input: AddGroupMemberInput): Promise<void> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const group = await this.findGroup(input.groupId, client);
       if (!group) throw this.groupNotFound(input.groupId);
       const policy = await this.findPolicy(input.policyId, client);
@@ -627,9 +647,10 @@ export class AiPoliciesService {
     groupId: string,
     policyId: string,
     actorUserId: string,
-    ip: string
+    ip: string,
+    session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const group = await this.findGroup(groupId, client);
       if (!group) throw this.groupNotFound(groupId);
 
@@ -761,13 +782,18 @@ export class AiPoliciesService {
 
   private async withTransaction<T>(
     actorUserId: string,
+    session: MutationSession,
     work: (client: PoolClient) => Promise<T>
   ): Promise<T> {
+    if (!session || session.userId !== actorUserId)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:ai:policies');
+      await requireSessionStepUp(client, session);
       const result = await work(client);
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       return result;
     } catch (error) {

@@ -146,6 +146,7 @@ export class AiModelsController {
       modelName: parsed.data.modelName,
       ...(parsed.data.apiToken !== undefined ? { apiToken: parsed.data.apiToken } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -179,6 +180,7 @@ export class AiModelsController {
       ...(parsed.data.modelName !== undefined ? { modelName: parsed.data.modelName } : {}),
       ...(parsed.data.apiToken !== undefined ? { apiToken: parsed.data.apiToken } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -194,7 +196,7 @@ export class AiModelsController {
     @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<void> {
     this.assertAiModelsPermission(req);
-    return this.service.remove(id, req.session.userId, requestIp(req));
+    return this.service.remove(id, req.session.userId, requestIp(req), req.session);
   }
 
   @Post(':id/test')
@@ -215,6 +217,6 @@ export class AiModelsController {
     @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<TestAiModelResult> {
     this.assertAiModelsPermission(req);
-    return this.service.test(id, req.session.userId, requestIp(req));
+    return this.service.test(id, req.session.userId, requestIp(req), req.session);
   }
 }

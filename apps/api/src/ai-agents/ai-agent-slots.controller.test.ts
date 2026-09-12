@@ -12,8 +12,14 @@ const mockService = {
   assign: mockAssign,
 } as unknown as AgentSlotsService;
 
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'test-session',
+  csrfToken: 'test-csrf',
+};
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: adminSession,
   ip: '10.0.0.8',
   socket: { remoteAddress: '10.0.0.8' },
 } as never;
@@ -106,6 +112,7 @@ describe('AgentSlotsController (T-09.11.05)', () => {
         slotKey: 'individual_chatbot',
         agentId: AGENT_ID,
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -117,6 +124,7 @@ describe('AgentSlotsController (T-09.11.05)', () => {
         slotKey: 'telegram_chatbot',
         agentId: null,
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });

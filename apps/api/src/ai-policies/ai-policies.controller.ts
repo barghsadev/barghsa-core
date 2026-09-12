@@ -207,6 +207,7 @@ export class PoliciesController {
       rules: parsed.data.rules,
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -246,6 +247,7 @@ export class PoliciesController {
       ...(parsed.data.rules !== undefined ? { rules: parsed.data.rules } : {}),
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -261,7 +263,7 @@ export class PoliciesController {
     @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<void> {
     this.assertPolicyPermission(req);
-    return this.service.removePolicy(id, req.session.userId, requestIp(req));
+    return this.service.removePolicy(id, req.session.userId, requestIp(req), req.session);
   }
 }
 
@@ -329,6 +331,7 @@ export class PolicyGroupsController {
       title: parsed.data.title,
       description: parsed.data.description ?? '',
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -358,6 +361,7 @@ export class PolicyGroupsController {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
       ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -373,7 +377,7 @@ export class PolicyGroupsController {
     @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<void> {
     this.assertPolicyPermission(req);
-    return this.service.removeGroup(id, req.session.userId, requestIp(req));
+    return this.service.removeGroup(id, req.session.userId, requestIp(req), req.session);
   }
 
   @Post(':id/members')
@@ -404,6 +408,7 @@ export class PolicyGroupsController {
       groupId: id,
       policyId: parsed.data.policyId,
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -426,6 +431,12 @@ export class PolicyGroupsController {
     @Param('policyId', new ParseUUIDPipe()) policyId: string
   ): Promise<void> {
     this.assertPolicyPermission(req);
-    return this.service.removeGroupMember(id, policyId, req.session.userId, requestIp(req));
+    return this.service.removeGroupMember(
+      id,
+      policyId,
+      req.session.userId,
+      requestIp(req),
+      req.session
+    );
   }
 }

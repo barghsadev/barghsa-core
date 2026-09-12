@@ -106,7 +106,7 @@ it.each(cases)('rechecks current authority for $kind $action', async (entry) => 
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%' "
             )
           ).rows[0].count
         )
@@ -200,7 +200,7 @@ it.each(['add', 'remove'] as const)('rechecks membership %s authority', async (a
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%'"
             )
           ).rows[0].count
         )
@@ -430,5 +430,51 @@ it.each(ruleCases)(
     expect(
       (await http.pool.query("SELECT event FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
     ).toEqual([{ event: 'ai_policy_created' }]);
+  }
+);
+
+async function expireDuringAudit(run: () => Promise<void>) {
+  await http.pool
+    .query(`CREATE OR REPLACE FUNCTION expire_settings_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='policy-admin'; RETURN NEW; END $$;
+    CREATE TRIGGER expire_settings_session BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_policy_%') EXECUTE FUNCTION expire_settings_session()`);
+  try {
+    await run();
+  } finally {
+    await http.pool.query('DROP TRIGGER expire_settings_session ON audit_log');
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),revoked_at=NULL,csrf_token=$1 WHERE user_id='policy-admin'",
+      [headers['x-csrf-token']]
+    );
+  }
+}
+
+it.each(cases)('rejects $kind $action when session expires before commit', async (entry) => {
+  await expireDuringAudit(async () => {
+    expect((await request(entry)).status).toBe(401);
+    expect((await http.pool.query(`SELECT id,title FROM ${entry.table}`)).rows).toEqual([
+      { id: ids[entry.kind], title: entry.title },
+    ]);
+    expect(
+      (await http.pool.query('SELECT group_id,policy_id FROM ai_policy_group_members')).rows
+    ).toEqual([{ group_id: ids.group, policy_id: ids.policy }]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+    ).toHaveLength(0);
+  });
+});
+it.each(['add', 'remove'] as const)(
+  'rejects membership %s when session expires before commit',
+  async (action) => {
+    if (action === 'add') await http.pool.query('DELETE FROM ai_policy_group_members');
+    await expireDuringAudit(async () => {
+      expect((await membershipRequest(action)).status).toBe(401);
+      expect(
+        (await http.pool.query('SELECT policy_id FROM ai_policy_group_members')).rows
+      ).toHaveLength(action === 'add' ? 0 : 1);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+      ).toHaveLength(0);
+    });
   }
 );

@@ -144,6 +144,7 @@ export class AgentSlotsController {
       slotKey: key,
       agentId: parsed.data.agentId,
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }

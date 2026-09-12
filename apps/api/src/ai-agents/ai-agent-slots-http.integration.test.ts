@@ -86,7 +86,7 @@ it.each(['assign', 'clear'] as const)('rechecks current authority for slot %s', 
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%'"
             )
           ).rows[0].count
         )
@@ -189,3 +189,43 @@ it('rejects unknown slot-assignment payload fields', async () => {
     (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
   ).toHaveLength(0);
 });
+
+async function expireDuringAudit(run: () => Promise<void>) {
+  await http.pool
+    .query(`CREATE OR REPLACE FUNCTION expire_settings_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='slot-admin'; RETURN NEW; END $$;
+    CREATE TRIGGER expire_settings_session BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_agent_slot_%') EXECUTE FUNCTION expire_settings_session()`);
+  try {
+    await run();
+  } finally {
+    await http.pool.query('DROP TRIGGER expire_settings_session ON audit_log');
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),revoked_at=NULL,csrf_token=$1 WHERE user_id='slot-admin'",
+      [headers['x-csrf-token']]
+    );
+  }
+}
+
+it.each(['assign', 'clear'] as const)(
+  'rejects slot %s when session expires before commit',
+  async (action) => {
+    if (action === 'clear')
+      await http.pool.query(
+        "UPDATE ai_agent_slots SET agent_id=$1 WHERE slot_key='individual_chatbot'",
+        [agentId]
+      );
+    await expireDuringAudit(async () => {
+      expect((await assign(action === 'assign' ? agentId : null)).status).toBe(401);
+      expect(
+        (
+          await http.pool.query(
+            "SELECT agent_id FROM ai_agent_slots WHERE slot_key='individual_chatbot'"
+          )
+        ).rows
+      ).toEqual([{ agent_id: action === 'clear' ? agentId : null }]);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+      ).toHaveLength(0);
+    });
+  }
+);

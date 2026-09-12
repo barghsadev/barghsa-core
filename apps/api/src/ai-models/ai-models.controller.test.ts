@@ -20,8 +20,14 @@ const mockService = {
   test: mockTest,
 } as unknown as AiModelsService;
 
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'test-session',
+  csrfToken: 'test-csrf',
+};
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: adminSession,
   ip: '10.0.0.8',
   socket: { remoteAddress: '10.0.0.8' },
 } as never;
@@ -126,6 +132,7 @@ describe('AiModelsController (T-09.11.01)', () => {
         modelName: 'gpt-4o',
         apiToken: 'sk-new',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -138,7 +145,12 @@ describe('AiModelsController (T-09.11.01)', () => {
       expect(result.title).toBe('Renamed');
       expect(mockUpdate).toHaveBeenCalledWith(
         'm-1',
-        expect.objectContaining({ title: 'Renamed', actorUserId: 'admin-1', ip: '10.0.0.8' })
+        expect.objectContaining({
+          title: 'Renamed',
+          actorUserId: 'admin-1',
+          session: adminSession,
+          ip: '10.0.0.8',
+        })
       );
     });
 
@@ -152,7 +164,7 @@ describe('AiModelsController (T-09.11.01)', () => {
     it('deletes the model', async () => {
       mockRemove.mockResolvedValue(undefined);
       await expect(controller.remove(adminReq, 'm-1')).resolves.toBeUndefined();
-      expect(mockRemove).toHaveBeenCalledWith('m-1', 'admin-1', '10.0.0.8');
+      expect(mockRemove).toHaveBeenCalledWith('m-1', 'admin-1', '10.0.0.8', adminSession);
     });
   });
 
@@ -165,7 +177,7 @@ describe('AiModelsController (T-09.11.01)', () => {
       const result = await controller.test(adminReq, 'm-1');
       expect(result.test.ok).toBe(true);
       expect(result.model.status).toBe('reachable');
-      expect(mockTest).toHaveBeenCalledWith('m-1', 'admin-1', '10.0.0.8');
+      expect(mockTest).toHaveBeenCalledWith('m-1', 'admin-1', '10.0.0.8', adminSession);
     });
   });
 

@@ -1,7 +1,12 @@
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+
+type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /**
  * AI agent slot assignment service (S-09.11, T-09.11.05).
@@ -65,6 +70,7 @@ export interface AssignSlotInput {
   /** null clears the assignment; otherwise must be an existing agent id. */
   agentId: string | null;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -109,7 +115,7 @@ export class AgentSlotsService {
    * request is a no-op that emits no audit. Runs in one transaction.
    */
   assign(input: AssignSlotInput): Promise<AgentSlotDto> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q) => {
       const existing = await this.findSlot(q, input.slotKey);
       if (!existing) throw this.slotNotFound(input.slotKey);
 
@@ -224,14 +230,19 @@ export class AgentSlotsService {
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
   private async withTransaction<T>(
     actorUserId: string,
+    session: MutationSession,
     fn: (q: DbExecutor) => Promise<T>
   ): Promise<T> {
+    if (!session || session.userId !== actorUserId)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:ai:agents');
+      await requireSessionStepUp(client, session);
       const result = await fn(client);
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       committed = true;
       return result;

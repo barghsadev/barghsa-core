@@ -123,7 +123,7 @@ it.each(['create', 'update', 'delete'])('rejects revoked authority during %s', a
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%' "
             )
           ).rows[0].count
         )
@@ -372,5 +372,78 @@ it.each(['baseUrl', 'providerType'] as const)(
     expect(
       (await http.pool.query('SELECT api_token FROM ai_models WHERE id=$1', [id])).rows
     ).toEqual([{ api_token: null }]);
+  }
+);
+
+async function expireDuringAudit(run: () => Promise<void>) {
+  await http.pool
+    .query(`CREATE OR REPLACE FUNCTION expire_settings_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='operator'; RETURN NEW; END $$;
+    CREATE TRIGGER expire_settings_session BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_model_%') EXECUTE FUNCTION expire_settings_session()`);
+  try {
+    await run();
+  } finally {
+    await http.pool.query('DROP TRIGGER expire_settings_session ON audit_log');
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),revoked_at=NULL,csrf_token=$1 WHERE user_id='operator'",
+      [headers.operator!['X-CSRF-Token']]
+    );
+  }
+}
+
+it.each(['create', 'update', 'delete'] as const)(
+  'rejects model %s when session expires before commit',
+  async (action) => {
+    const id = await seed();
+    await expireDuringAudit(async () => {
+      const response =
+        action === 'create'
+          ? await request('', 'POST', input)
+          : action === 'update'
+            ? await request(`/${id}`, 'PUT', { title: 'Changed' })
+            : await request(`/${id}`, 'DELETE');
+      expect(response.status).toBe(401);
+      expect((await http.pool.query('SELECT id,title FROM ai_models')).rows).toEqual([
+        { id, title: 'Original' },
+      ]);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+      ).toHaveLength(0);
+    });
+  }
+);
+it.each([
+  ["expires_at=clock_timestamp()-INTERVAL '1 second'", 401],
+  ['revoked_at=clock_timestamp()', 401],
+  ["csrf_token='rotated-proof'", 403],
+  ['step_up_verified_at=NULL', 403],
+] as const)(
+  'rejects result after provider wait when session proof changes: %s',
+  async (change, status) => {
+    const id = await seed();
+    await http.pool.query('UPDATE ai_models SET base_url=$1 WHERE id=$2', [providerBase, id]);
+    const count = providerReplies.length;
+    const pending = request(`/${id}/test`, 'POST');
+    try {
+      await expect.poll(() => providerReplies.length).toBe(count + 1);
+      await http.pool.query(`UPDATE sessions SET ${change} WHERE user_id='operator'`);
+      providerReplies[count]!.end(
+        JSON.stringify({ choices: [{ message: { content: 'local pong' } }] })
+      );
+      expect((await pending).status).toBe(status);
+      expect(
+        (await http.pool.query('SELECT last_test_status FROM ai_models WHERE id=$1', [id])).rows
+      ).toEqual([{ last_test_status: 'pending' }]);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
+      ).toHaveLength(0);
+    } finally {
+      providerReplies[count]?.end();
+      await pending;
+      await http.pool.query(
+        "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),revoked_at=NULL,csrf_token=$1 WHERE user_id='operator'",
+        [headers.operator!['X-CSRF-Token']]
+      );
+    }
   }
 );

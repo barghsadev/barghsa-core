@@ -1,9 +1,14 @@
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import type { PoolClient } from 'pg';
 import { AiModelTestQueueService } from './ai-model-test-queue.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+
+type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 import { AiModelSecretsService, isMaskedAiToken } from './ai-model-secrets.service.js';
 import {
   AI_MODEL_PROVIDER_TYPES,
@@ -56,6 +61,7 @@ export interface CreateAiModelInput {
   /** Plaintext token to encrypt. Omit for token-less local endpoints. */
   apiToken?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -67,6 +73,7 @@ export interface UpdateAiModelInput {
   /** Plaintext new token, or a masked placeholder to preserve the stored one. */
   apiToken?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -129,7 +136,7 @@ export class AiModelsService {
     const now = new Date();
     const token = this.prepareTokenForStore(input.apiToken, null);
 
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const result = await client.query<AiModelRow>(
         `INSERT INTO ai_models
          (id, title, provider_type, base_url, model_name, api_token, created_by, created_at, updated_at)
@@ -169,7 +176,7 @@ export class AiModelsService {
 
   /** Update a model; a masked placeholder token preserves the stored token. */
   async update(id: string, input: UpdateAiModelInput): Promise<AiModelDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const existing = await this.findRow(id, client);
       if (!existing) throw this.notFound(id);
 
@@ -253,8 +260,13 @@ export class AiModelsService {
   }
 
   /** Delete an unreferenced model; the agent foreign key protects models in use. */
-  async remove(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(actorUserId, async (client) => {
+  async remove(
+    id: string,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<void> {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const existing = await this.findRow(id, client);
       if (!existing) throw this.notFound(id);
 
@@ -289,8 +301,13 @@ export class AiModelsService {
    * Test-button run: queue the worker request, await its safe result, persist
    * the outcome, and return the refreshed model + safe result.
    */
-  async test(id: string, actorUserId: string, ip: string): Promise<TestAiModelResult> {
-    const { existing, jobId } = await this.withTransaction(actorUserId, async (client) => {
+  async test(
+    id: string,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<TestAiModelResult> {
+    const { existing, jobId } = await this.withTransaction(actorUserId, session, async (client) => {
       const row = await this.findRow(id, client);
       if (!row) throw this.notFound(id);
       const jobId = await this.queue.enqueue(client, row.id, row.revision, actorUserId);
@@ -299,7 +316,7 @@ export class AiModelsService {
     // The API releases its transaction while the separate worker makes the request.
     const result = await this.queue.wait(jobId);
 
-    return this.withTransaction(actorUserId, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const current = await this.findRow(id, client);
       if (!current) throw this.notFound(id);
       // PostgreSQL's tuple transaction ID also detects edits with identical
@@ -418,13 +435,18 @@ export class AiModelsService {
 
   private async withTransaction<T>(
     actor: string,
+    session: MutationSession,
     work: (client: PoolClient) => Promise<T>
   ): Promise<T> {
+    if (!session || session.userId !== actor)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor, 'admin:ai:models');
+      await requireSessionStepUp(client, session);
       const result = await work(client);
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       return result;
     } catch (error) {

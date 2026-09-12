@@ -1,3 +1,6 @@
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 vi.mock('../admin/staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -38,6 +41,7 @@ function groupBaseRow(over: Record<string, unknown> = {}) {
 }
 
 const ACTOR = 'user-admin-1';
+const SESSION = { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' };
 
 /** Load AiPoliciesService with a mocked @barghsa/db pool. */
 async function loadService(pool: { query: ReturnType<typeof mockPool>['mockQuery'] }) {
@@ -126,6 +130,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         policyType: 'disallowed_actions',
         rules: { actions: ['financial_advice'] },
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ id: 'pol-1', groupCount: 0, enabled: true });
@@ -151,6 +156,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         rules: { actions: ['x'] },
         enabled: false,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ enabled: false });
@@ -164,7 +170,12 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       mockQuery.mockResolvedValueOnce({ rows: [] }); // findPolicy
 
       await expect(
-        service.updatePolicy('missing', { title: 'x', actorUserId: ACTOR, ip: '1.2.3.4' })
+        service.updatePolicy('missing', {
+          title: 'x',
+          actorUserId: ACTOR,
+          session: SESSION,
+          ip: '1.2.3.4',
+        })
       ).rejects.toMatchObject({ status: 404 });
     });
 
@@ -182,6 +193,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       const result = await service.updatePolicy('pol-1', {
         enabled: false,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ enabled: false, groupCount: 2 });
@@ -203,6 +215,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         service.updatePolicy('pol-1', {
           rules: { topics: ['finance'] },
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({
@@ -227,6 +240,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         service.updatePolicy('pol-1', {
           policyType: 'response_style',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({
@@ -249,6 +263,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       const result = await service.updatePolicy('pol-1', {
         rules: { actions: ['financial_advice', 'promises'] },
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ id: 'pol-1' });
@@ -277,6 +292,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         policyType: 'response_style',
         rules: { tone: 'friendly', language: 'fa' },
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ policyType: 'response_style' });
@@ -295,6 +311,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
           policyType: 'response_style',
           rules: { actions: ['financial_advice'] }, // actions[] is invalid for response_style
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({
@@ -318,6 +335,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         rules: { actions: ['financial_advice'] },
         enabled: true,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       // Same values → no changedFields → no audit event (matches the
@@ -336,7 +354,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         .mockResolvedValueOnce({ rows: [] }) // delete
         .mockResolvedValueOnce({ rows: [] }); // audit
 
-      await service.removePolicy('pol-1', ACTOR, '1.2.3.4');
+      await service.removePolicy('pol-1', ACTOR, '1.2.3.4', SESSION);
       const deleteSql = String(mockQuery.mock.calls[1]![0]);
       expect(deleteSql).toContain('DELETE FROM ai_policies');
     });
@@ -391,6 +409,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         title: 'Consumer guardrails',
         description: '',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ id: 'grp-1', memberCount: 0 });
@@ -401,9 +420,11 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       service = await loadService({ query: mockQuery });
       mockQuery.mockResolvedValueOnce({ rows: [] });
 
-      await expect(service.removeGroup('missing', ACTOR, '1.2.3.4')).rejects.toMatchObject({
-        status: 404,
-      });
+      await expect(service.removeGroup('missing', ACTOR, '1.2.3.4', SESSION)).rejects.toMatchObject(
+        {
+          status: 404,
+        }
+      );
     });
   });
 
@@ -422,6 +443,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
           groupId: 'grp-1',
           policyId: 'pol-1',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).resolves.toBeUndefined();
@@ -449,6 +471,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
           groupId: 'grp-1',
           policyId: 'pol-1',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).resolves.toBeUndefined();
@@ -470,6 +493,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
           groupId: 'grp-1',
           policyId: 'missing',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({ status: 404, response: { error: 'AI_POLICY_NOT_FOUND' } });
@@ -484,7 +508,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         .mockResolvedValueOnce({ rows: [] }); // audit
 
       await expect(
-        service.removeGroupMember('grp-1', 'pol-1', ACTOR, '1.2.3.4')
+        service.removeGroupMember('grp-1', 'pol-1', ACTOR, '1.2.3.4', SESSION)
       ).resolves.toBeUndefined();
     });
   });

@@ -32,8 +32,14 @@ const mockService = {
   removeGroupMember: mockRemoveGroupMember,
 } as unknown as AiPoliciesService;
 
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'test-session',
+  csrfToken: 'test-csrf',
+};
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: adminSession,
   ip: '10.0.0.8',
   socket: { remoteAddress: '10.0.0.8' },
 } as never;
@@ -136,6 +142,7 @@ describe('PoliciesController (T-09.11.03)', () => {
         policyType: 'disallowed_actions',
         rules: { actions: ['financial_advice'] },
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -156,6 +163,7 @@ describe('PoliciesController (T-09.11.03)', () => {
         rules: { actions: ['financial_advice'] },
         enabled: false,
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -190,6 +198,7 @@ describe('PoliciesController (T-09.11.03)', () => {
       expect(mockUpdatePolicy).toHaveBeenCalledWith('01900000-0000-7000-8000-000000000001', {
         enabled: false,
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -204,7 +213,8 @@ describe('PoliciesController (T-09.11.03)', () => {
       expect(mockRemovePolicy).toHaveBeenCalledWith(
         '01900000-0000-7000-8000-000000000001',
         'admin-1',
-        '10.0.0.8'
+        '10.0.0.8',
+        adminSession
       );
     });
   });
@@ -253,6 +263,7 @@ describe('PolicyGroupsController (T-09.11.03)', () => {
         title: 'Consumer guardrails',
         description: '',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -270,6 +281,7 @@ describe('PolicyGroupsController (T-09.11.03)', () => {
         groupId: 'grp-1',
         policyId: '01900000-0000-7000-8000-000000000001',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -292,7 +304,8 @@ describe('PolicyGroupsController (T-09.11.03)', () => {
         'grp-1',
         '01900000-0000-7000-8000-000000000001',
         'admin-1',
-        '10.0.0.8'
+        '10.0.0.8',
+        adminSession
       );
     });
   });

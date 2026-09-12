@@ -1,3 +1,6 @@
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 vi.mock('../admin/staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -73,6 +76,7 @@ async function loadService(pool: { query: ReturnType<typeof mockPool>['mockQuery
 }
 
 const ACTOR = 'user-admin-1';
+const SESSION = { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' };
 
 describe('AiModelsService (T-09.11.01)', () => {
   describe('list', () => {
@@ -127,6 +131,7 @@ describe('AiModelsService (T-09.11.01)', () => {
           modelName: 'gpt-4o',
           apiToken: 'sk-never-plaintext',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         });
         expect.fail('create should have thrown with 503');
@@ -157,6 +162,7 @@ describe('AiModelsService (T-09.11.01)', () => {
         modelName: 'gpt-4o',
         apiToken: 'sk-plain-create',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
 
@@ -185,6 +191,7 @@ describe('AiModelsService (T-09.11.01)', () => {
           baseUrl: 'https://api.openai.com/v1',
           modelName: 'm',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toBeInstanceOf(HttpException);
@@ -207,6 +214,7 @@ describe('AiModelsService (T-09.11.01)', () => {
         title: 'Renamed',
         apiToken: '****1234',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
 
@@ -231,6 +239,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       await service.update('row-1', {
         apiToken: 'sk-new-token',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
 
@@ -253,6 +262,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       const dto = await service.update('row-1', {
         apiToken: '',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
 
@@ -268,7 +278,11 @@ describe('AiModelsService (T-09.11.01)', () => {
       await loadService({ query: mockQuery });
       // Persistent answer: the no-op path re-reads via get() → findRow.
       mockQuery.mockResolvedValue({ rows: [makeRow()] });
-      const dto = await service.update('row-1', { actorUserId: ACTOR, ip: '1.2.3.4' });
+      const dto = await service.update('row-1', {
+        actorUserId: ACTOR,
+        session: SESSION,
+        ip: '1.2.3.4',
+      });
       expect(dto.id).toBe('row-1');
       // Only the SELECTs ran — no UPDATE, no audit.
       const calls = mockQuery.mock.calls;
@@ -292,7 +306,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       mockQuery.mockResolvedValueOnce({ rows: [] }); // delete
       mockQuery.mockResolvedValueOnce({ rows: [] }); // audit
 
-      await service.remove('row-1', ACTOR, '1.2.3.4');
+      await service.remove('row-1', ACTOR, '1.2.3.4', SESSION);
 
       const calls = mockQuery.mock.calls;
       expect(calls.some((c) => String(c[0]).startsWith('DELETE FROM ai_models'))).toBe(true);
@@ -328,7 +342,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       }); // update (persist failed) + RETURNING
       mockQuery.mockResolvedValueOnce({ rows: [] }); // audit
 
-      const { model, test } = await service.test('row-1', ACTOR, '1.2.3.4');
+      const { model, test } = await service.test('row-1', ACTOR, '1.2.3.4', SESSION);
 
       expect(test.ok).toBe(false);
       expect(test.error).toMatch(/could not be decrypted/);
@@ -353,7 +367,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       }); // update
       mockQuery.mockResolvedValueOnce({ rows: [] }); // audit
 
-      const { model, test } = await service.test('row-1', ACTOR, '1.2.3.4');
+      const { model, test } = await service.test('row-1', ACTOR, '1.2.3.4', SESSION);
 
       expect(test.ok).toBe(true);
       expect(test.responsePreview).toBe('pong');

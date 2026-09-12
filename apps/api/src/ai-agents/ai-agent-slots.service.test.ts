@@ -1,3 +1,6 @@
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 vi.mock('../admin/staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -43,6 +46,7 @@ function slotsResult(
 }
 
 const ACTOR = 'user-admin-1';
+const SESSION = { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' };
 const AGENT_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 
 /** Load AgentSlotsService with a mocked @barghsa/db pool. */
@@ -142,6 +146,7 @@ describe('AgentSlotsService (T-09.11.05)', () => {
         slotKey: 'individual_chatbot',
         agentId: AGENT_ID,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '10.0.0.8',
       });
 
@@ -187,6 +192,7 @@ describe('AgentSlotsService (T-09.11.05)', () => {
         slotKey: 'telegram_chatbot',
         agentId: null,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '10.0.0.8',
       });
 
@@ -229,6 +235,7 @@ describe('AgentSlotsService (T-09.11.05)', () => {
         slotKey: 'individual_chatbot',
         agentId: AGENT_ID,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '10.0.0.8',
       });
 
@@ -249,6 +256,7 @@ describe('AgentSlotsService (T-09.11.05)', () => {
           slotKey: 'website_chatbot',
           agentId: AGENT_ID,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '10.0.0.8',
         })
       ).rejects.toMatchObject({
@@ -269,6 +277,7 @@ describe('AgentSlotsService (T-09.11.05)', () => {
           slotKey: 'individual_chatbot',
           agentId: AGENT_ID,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '10.0.0.8',
         })
       ).rejects.toMatchObject({
@@ -292,6 +301,7 @@ describe('AgentSlotsService (T-09.11.05)', () => {
           slotKey: 'individual_chatbot',
           agentId: AGENT_ID,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '10.0.0.8',
         })
       ).rejects.toMatchObject({
@@ -316,6 +326,7 @@ describe('AgentSlotsService (T-09.11.05)', () => {
           slotKey: 'individual_chatbot',
           agentId: AGENT_ID,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '10.0.0.8',
         })
       ).rejects.toThrow('db down');
