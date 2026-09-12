@@ -79,7 +79,7 @@ export default function AdminAiModelsPage() {
     AI_MODEL_CHANGED: label('changed'),
     AI_MODEL_TEST_UNAVAILABLE: label('workerUnavailable'),
     AI_MODEL_TEST_EXPIRED: label('workerUnavailable'),
-    'VALIDATION:PARSE_ZOD': label('invalid'),
+    'VALIDATION:PARSE:ZOD_ERROR': label('invalid'),
   };
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -140,7 +140,7 @@ export default function AdminAiModelsPage() {
       ) : (
         <>
           {result && (
-            <div role={result.ok ? 'status' : 'alert'} className="rounded border bg-white p-4">
+            <div role={result.ok ? 'status' : 'alert'} className="rounded border bg-background p-4">
               <p>{label(result.ok ? 'success' : 'testFailed')}</p>
               {result.text && (
                 <p className="mt-2 whitespace-pre-wrap break-words" dir="auto">
@@ -160,7 +160,7 @@ export default function AdminAiModelsPage() {
           {draft && (
             <form
               onSubmit={submit}
-              className="max-w-2xl space-y-4 rounded-lg border bg-white p-5"
+              className="max-w-2xl space-y-4 rounded-lg border bg-background p-5"
               aria-label={label('form')}
             >
               <h2 className="text-lg font-semibold">{label(draft.id ? 'edit' : 'add')}</h2>
@@ -183,7 +183,7 @@ export default function AdminAiModelsPage() {
                 <Label htmlFor="ai-model-provider">{label('provider')}</Label>
                 <select
                   id="ai-model-provider"
-                  className="w-full rounded border bg-white p-2"
+                  className="w-full rounded border bg-background p-2"
                   value={draft.providerType}
                   onChange={(event) =>
                     setDraft({
@@ -204,7 +204,7 @@ export default function AdminAiModelsPage() {
                   </p>
                   <select
                     id="ai-model-token-choice"
-                    className="w-full rounded border bg-white p-2"
+                    className="w-full rounded border bg-background p-2"
                     value={draft.tokenChoice}
                     onChange={(event) =>
                       setDraft({
@@ -250,13 +250,13 @@ export default function AdminAiModelsPage() {
             <p>{label('empty')}</p>
           ) : (
             <div
-              className="overflow-x-auto rounded-lg border bg-white"
+              className="overflow-x-auto rounded-lg border bg-background"
               role="region"
               aria-label={label('title')}
               tabIndex={0}
             >
               <table className="w-full min-w-[760px] table-fixed text-start text-sm">
-                <thead className="border-b bg-slate-50">
+                <thead className="border-b bg-muted">
                   <tr>
                     {['name', 'provider', 'modelName', 'status', 'actions'].map((key) => (
                       <th key={key} scope="col" className="p-4 text-start font-semibold">
@@ -298,7 +298,7 @@ export default function AdminAiModelsPage() {
                           </p>
                         )}
                         {model.lastTestError && (
-                          <p className="break-words text-red-700" dir="auto">
+                          <p className="break-words text-red-700 dark:text-red-300" dir="auto">
                             {model.lastTestError}
                           </p>
                         )}
