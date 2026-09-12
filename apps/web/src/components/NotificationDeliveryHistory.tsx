@@ -207,6 +207,7 @@ export function NotificationDeliveryHistory({
           </form>
         )}
         {time.notice}
+        <p className="text-sm">{label('attemptHelp')}</p>
         {loading ? (
           <p role="status">{t('admin.notifications.loading', locale)}</p>
         ) : error ? (

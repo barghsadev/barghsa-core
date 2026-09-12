@@ -679,7 +679,9 @@ export const fa: I18nDictionary = {
   'admin.notifications.history.loadFailed':
     'تاریخچه ارسال در دسترس نیست یا دسترسی شما تغییر کرده است.',
   'admin.notifications.history.empty': 'هیچ تلاش ارسالی ثبت نشده است.',
-  'admin.notifications.history.attempt': 'شماره تلاش',
+  'admin.notifications.history.attempt': 'نوبت پردازش',
+  'admin.notifications.history.attemptHelp':
+    'هر ردیف یک نوبت پردازش است. هنگام بازیابی، ممکن است شناسه ارسال قبلی بدون ارسال دوباره استفاده شود.',
   'admin.notifications.history.date': 'زمان',
   'admin.notifications.history.status': 'نتیجه',
   'admin.notifications.history.receipt': 'شناسه تحویل',
@@ -1578,7 +1580,9 @@ export const en: I18nDictionary = {
   'admin.notifications.history.loadFailed':
     'Delivery history is unavailable or your access has changed.',
   'admin.notifications.history.empty': 'No delivery attempts have been recorded.',
-  'admin.notifications.history.attempt': 'Attempt',
+  'admin.notifications.history.attempt': 'Processing attempt',
+  'admin.notifications.history.attemptHelp':
+    'Each row records a processing attempt. Recovery can reuse a previous delivery reference without sending again.',
   'admin.notifications.history.date': 'Time',
   'admin.notifications.history.status': 'Outcome',
   'admin.notifications.history.receipt': 'Delivery reference',

@@ -859,6 +859,14 @@ it('delivers a queued email with the recipient locale, template and durable rece
     expect(
       (
         await pool.query(
+          "SELECT attempt_number,latency_ms FROM notification_delivery_log WHERE notification_id=$1 AND channel='email'",
+          [id]
+        )
+      ).rows
+    ).toEqual([{ attempt_number: 1, latency_ms: null }]);
+    expect(
+      (
+        await pool.query(
           'SELECT count(*)::int AS count FROM in_app_notifications WHERE delivery_key=$1',
           [`outbox:${id}`]
         )
@@ -1156,6 +1164,14 @@ for (const channel of ['email', 'sms'] as const) {
         last_error: expect.stringContaining('reconciliation required'),
       });
       expect(request).toHaveBeenCalledOnce();
+      expect(
+        (
+          await pool.query(
+            'SELECT latency_ms FROM notification_delivery_log WHERE notification_id=$1 AND channel=$2 ORDER BY created_at DESC LIMIT 1',
+            [id, channel]
+          )
+        ).rows[0].latency_ms
+      ).toBeNull();
     } finally {
       await pool.query(
         "UPDATE users SET notification_preferences='IN_APP,EMAIL,SMS' WHERE user_id='delivery-recipient'"

@@ -127,13 +127,13 @@ export async function runOutboxPoll(
           if (channel === 'in_app') continue;
           try {
             const receipt = await readDeliveryReceipt(pool, row.id, channel);
-            if (receipt) recovered.push({ channel, result: receipt, latencyMs: 0 });
+            if (receipt) recovered.push({ channel, result: receipt, latencyMs: null });
           } catch (error) {
             if (!(error instanceof DeliveryOutcomeUnknown)) throw error;
             recovered.push({
               channel,
               result: { status: 'failed', providerRef: '' },
-              latencyMs: 0,
+              latencyMs: null,
               error: error.message,
               requiresReconciliation: true,
             });
@@ -230,7 +230,7 @@ interface DispatchOutcome {
   channel: NotificationChannel;
   result: { providerRef: string; status: 'delivered' | 'failed' };
   /** Provider round-trip latency in milliseconds for this attempt. */
-  latencyMs: number;
+  latencyMs: number | null;
   error?: string;
   requiresReconciliation?: boolean;
 }

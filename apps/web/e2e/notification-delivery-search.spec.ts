@@ -57,6 +57,10 @@ for (const locale of ['en', 'fa'] as const) {
     await browse.click();
     const dialog = page.getByRole('dialog');
     await expect(dialog.locator('tbody tr')).toHaveCount(25);
+    await expect(
+      dialog.getByRole('columnheader', { name: fa ? 'نوبت پردازش' : 'Processing attempt' })
+    ).toBeVisible();
+    await expect(dialog).toContainText(fa ? 'بدون ارسال دوباره' : 'without sending again');
     expect(queries.at(-1)?.has('notificationId')).toBe(false);
     expect(queries.at(-1)?.has('channel')).toBe(false);
     await expect(dialog).toContainText(notificationId);
