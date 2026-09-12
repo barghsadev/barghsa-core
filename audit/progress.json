@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+  "source_revision": "088b010e288f076c3b76e63816885ab783c2cccc",
   "active_step": "R02",
-  "next_action": "Review invoice reminders PR243/245: current invoice/deadline/offset/channel/window policy at dispatch and actual versioned FA/EN delivery. Preserve current planner/admin UI/authority evidence.",
+  "next_action": "Review receipt confirmation/rejection and online top-up expiry notification producers with existing finance evidence. Verify actual recipient/template payloads and durable dedup; repair confirmed gaps, then one feature checkpoint.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -706,6 +706,10 @@
     {
       "id": "R02-email-provider-callbacks",
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+    },
+    {
+      "id": "R02-invoice-reminder-delivery",
+      "review_record": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
     }
   ],
   "deferred_improvements": [
@@ -729,8 +733,8 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 163,
-    "partial": 34,
+    "acceptance_verified": 165,
+    "partial": 32,
     "pending": 125,
     "merged_prs": 301,
     "historical_skips": 58,
@@ -1021,29 +1025,37 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-invoice-reminder-delivery",
-    "name": "Invoice reminder policy and delivery",
+    "id": "R02-receipt-expiry-notices",
+    "name": "Receipt decisions and top-up expiry notifications",
     "status": "reviewing",
     "prs": [
-      243,
-      245
+      267,
+      270,
+      278,
+      281,
+      286,
+      289,
+      299,
+      301
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "04-invoices-wallet-contracts.md#T-04.1.04.05"
+      "04-invoices-wallet-contracts.md#T-04.2.02.04",
+      "04-invoices-wallet-contracts.md#T-04.2.02.07",
+      "04-invoices-wallet-contracts.md#T-04.3.01.04"
     ],
     "remaining_checklist": [
-      "Read exact story criteria, saved bodies and deferrals.",
-      "Reuse deadline/planner/admin evidence; trace queued reminder dispatch and template payloads.",
-      "Repair confirmed policy/delivery gaps, focused review, one batch checkpoint."
+      "Read exact requirements and all contributing PR bodies/deferrals.",
+      "Reuse verified finance transaction/authority work; trace notification producers and current templates.",
+      "Repair confirmed delivery gaps and record focused evidence/dispositions once."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+      "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review invoice reminders PR243/245: current invoice/deadline/offset/channel/window policy at dispatch and actual versioned FA/EN delivery. Preserve current planner/admin UI/authority evidence."
+    "next_action": "Review receipt confirmation/rejection and online top-up expiry notification producers with existing finance evidence. Verify actual recipient/template payloads and durable dedup; repair confirmed gaps, then one feature checkpoint."
   },
   "open_domain_reviews": [
     {

@@ -11364,7 +11364,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -11404,7 +11404,8 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         236
@@ -11527,7 +11528,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -11567,7 +11568,8 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         237
@@ -11690,7 +11692,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -11730,7 +11732,8 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         238
@@ -11853,7 +11856,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -11893,7 +11896,8 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         239
@@ -12016,7 +12020,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -12056,7 +12060,8 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         240
@@ -12179,7 +12184,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -12219,7 +12224,8 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         241
@@ -12245,8 +12251,8 @@
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "status": "partial",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "status": "acceptance_verified",
+      "reviewed_sha": "088b010e288f076c3b76e63816885ab783c2cccc",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 172,
       "requirement": "| T-04.1.04.03 | Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox | M |",
@@ -12342,7 +12348,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -12371,6 +12377,74 @@
         {
           "path": "packages/i18n/src/invoice-due-periods.ts",
           "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2bbd786bd038ba8e222cab32a976418e8986b300a0d74c7b60d617c5d979d801"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "373d9427b9eea1a17bf68a4e73a1f31416e89160baa8f07f9458a77c6beed8b5"
+        },
+        {
+          "path": "apps/web/src/lib/sms-providers-api.ts",
+          "sha256": "049bcdd6dde2bb7e07b9a292f632c4167f7d9bb07a1045b748e623530c0dc721"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "de2cd76ee5d762b81841884004aeaac8b4e8dc1236d94e626bcdbb83f20afafe"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-delivery-policy.ts",
+          "sha256": "d9d75522dfd50dfb5ee9e8742f80362c077ebefbd8d2b59ed1fd90816e6976e1"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
+          "sha256": "3c0dac8623a3b4e7237a7a1b97e03d561c0f04b3375d2ff556106655f3a86a25"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.test.ts",
+          "sha256": "662d4375077f98bf1c6bfc8b8cc704bd3727509766ecbb1caa3d2c12579d865c"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
+        },
+        {
+          "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
+          "sha256": "c6c10741a0c719bdee7e307a635ba129329963f48de38b15fe70720be893a05d"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+        },
+        {
+          "path": "packages/i18n/src/providers.ts",
+          "sha256": "f63f3fcc769aff7833706b1c506be8f117b5bfc94357d0fb759e348c914fa00a"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
+          "sha256": "63c6e5a9dce10b593999c506d8e3707e01e1eba9050d18e1d12d20e2bcd8cd38"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.test.ts",
+          "sha256": "7e26a6afe2ec4482dcd073a2c67372d391724eb50b1aa730359025c0c3c6dd55"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.ts",
+          "sha256": "6271b76980aabc6454d9cab83196f3f0e9a806aa77fc547cb6a5c6aa8b6ae85a"
         }
       ],
       "checks": [
@@ -12382,22 +12456,25 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Current planned/queued reminder policy and exact active FA/EN email/SMS delivery verified. audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         243
       ],
       "historically_skipped": false,
       "limitations": [
-        "R02 retains actual versioned FA/EN delivery, recipient/channel/window enforcement and current invoice/deadline revalidation after outbox acceptance. Hourly claiming, current invoice state, atomic outbox insertion and idempotency are verified. A sent schedule row means outbox acceptance, not external delivery."
+        "Production rollout, live provider delivery and historical incomplete reminder reconciliation remain operational prerequisites; no execution claimed."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "review_record": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12507,7 +12584,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -12547,7 +12624,8 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         244
@@ -12573,8 +12651,8 @@
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "status": "partial",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "status": "acceptance_verified",
+      "reviewed_sha": "088b010e288f076c3b76e63816885ab783c2cccc",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 174,
       "requirement": "| T-04.1.04.05 | Admin toggle UI: enable/disable each offset per service type | M |",
@@ -12670,7 +12748,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -12699,6 +12777,74 @@
         {
           "path": "packages/i18n/src/invoice-due-periods.ts",
           "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2bbd786bd038ba8e222cab32a976418e8986b300a0d74c7b60d617c5d979d801"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "373d9427b9eea1a17bf68a4e73a1f31416e89160baa8f07f9458a77c6beed8b5"
+        },
+        {
+          "path": "apps/web/src/lib/sms-providers-api.ts",
+          "sha256": "049bcdd6dde2bb7e07b9a292f632c4167f7d9bb07a1045b748e623530c0dc721"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "de2cd76ee5d762b81841884004aeaac8b4e8dc1236d94e626bcdbb83f20afafe"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-delivery-policy.ts",
+          "sha256": "d9d75522dfd50dfb5ee9e8742f80362c077ebefbd8d2b59ed1fd90816e6976e1"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
+          "sha256": "3c0dac8623a3b4e7237a7a1b97e03d561c0f04b3375d2ff556106655f3a86a25"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.test.ts",
+          "sha256": "662d4375077f98bf1c6bfc8b8cc704bd3727509766ecbb1caa3d2c12579d865c"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
+        },
+        {
+          "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
+          "sha256": "c6c10741a0c719bdee7e307a635ba129329963f48de38b15fe70720be893a05d"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+        },
+        {
+          "path": "packages/i18n/src/providers.ts",
+          "sha256": "f63f3fcc769aff7833706b1c506be8f117b5bfc94357d0fb759e348c914fa00a"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
+          "sha256": "63c6e5a9dce10b593999c506d8e3707e01e1eba9050d18e1d12d20e2bcd8cd38"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.test.ts",
+          "sha256": "7e26a6afe2ec4482dcd073a2c67372d391724eb50b1aa730359025c0c3c6dd55"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.ts",
+          "sha256": "6271b76980aabc6454d9cab83196f3f0e9a806aa77fc547cb6a5c6aa8b6ae85a"
         }
       ],
       "checks": [
@@ -12710,22 +12856,25 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Current planned/queued reminder policy and exact active FA/EN email/SMS delivery verified. audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         245
       ],
       "historically_skipped": false,
       "limitations": [
-        "The repaired UI/API stores offset policy safely; scheduler applies it to new/rebuilt plans. A later toggle does not change existing plans, and sender does not recheck it. R02 must enforce current offset policy on already planned/queued reminders. The historical new-plans-only limit is unfinished acceptance, not a requirements waiver."
+        "Production rollout, live provider delivery and historical incomplete reminder reconciliation remain operational prerequisites; no execution claimed."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "review_record": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12835,7 +12984,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.ts",
-          "sha256": "582b64a9c4700baf827db2142bb5979482b049725ce7fbd7af57cbf5b904cd2c"
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
         },
         {
           "path": "apps/worker/src/invoices/overdue-scanner.ts",
@@ -12875,7 +13024,8 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "merged_prs": [
         246
@@ -14223,7 +14373,7 @@
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.ts",
-          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
         },
         {
           "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
@@ -14235,7 +14385,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -14255,7 +14405,7 @@
         },
         {
           "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-          "sha256": "2b71b8097c562332e3899fd13c215a18bfc73482742d58ed5b3112ba9c35d3e9"
+          "sha256": "2bbd786bd038ba8e222cab32a976418e8986b300a0d74c7b60d617c5d979d801"
         },
         {
           "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -14267,7 +14417,7 @@
         },
         {
           "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-          "sha256": "b44f385a73415127a248180ab3c0a5d08b5192115434336db53ca541d0c9f75a"
+          "sha256": "373d9427b9eea1a17bf68a4e73a1f31416e89160baa8f07f9458a77c6beed8b5"
         },
         {
           "path": "apps/web/src/lib/email-providers-api.ts",
@@ -14275,7 +14425,7 @@
         },
         {
           "path": "apps/web/src/lib/sms-providers-api.ts",
-          "sha256": "5b6141c437a66cb4e837a76d2918e21fb60ea52518a7e9e489df229c01a482d2"
+          "sha256": "049bcdd6dde2bb7e07b9a292f632c4167f7d9bb07a1045b748e623530c0dc721"
         },
         {
           "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -14283,7 +14433,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-          "sha256": "7472859618c9a8e8f07a0c4da1c7f4158cd7965a2e972051f79a0832403c4f6d"
+          "sha256": "de2cd76ee5d762b81841884004aeaac8b4e8dc1236d94e626bcdbb83f20afafe"
         },
         {
           "path": "apps/web/src/routes/admin/providers.tsx",
@@ -14303,7 +14453,7 @@
         },
         {
           "path": "packages/i18n/src/providers.ts",
-          "sha256": "98f455c54d024b34f7464bb678e3822cf99a1a187912c885fa2f07d6a31a7da7"
+          "sha256": "f63f3fcc769aff7833706b1c506be8f117b5bfc94357d0fb759e348c914fa00a"
         },
         {
           "path": "packages/shared/src/notifications/index.ts",
@@ -14319,7 +14469,8 @@
         "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
         "Reuse unchanged provider lifecycle/proof/rollback/recovery evidence in R02-provider-session-authority, R02-provider-self-tests and R02-provider-activation-proof; current recipient proof and shared tester helper are rechecked.",
         "407 focused cases and21 distinct browser cases pass; scopes and logs in audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
-        "Narrow authoring/copy or type-only source refresh with scoped browser evidence; unchanged SMS/runtime behavior reused. audit/evidence/step-reviews.json#R02-provider-template-authoring"
+        "Narrow authoring/copy or type-only source refresh with scoped browser evidence; unchanged SMS/runtime behavior reused. audit/evidence/step-reviews.json#R02-provider-template-authoring",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -14351,7 +14502,7 @@
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.ts",
-          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
         },
         {
           "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -14371,7 +14522,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -14419,7 +14570,7 @@
         },
         {
           "path": "packages/i18n/src/providers.ts",
-          "sha256": "98f455c54d024b34f7464bb678e3822cf99a1a187912c885fa2f07d6a31a7da7"
+          "sha256": "f63f3fcc769aff7833706b1c506be8f117b5bfc94357d0fb759e348c914fa00a"
         },
         {
           "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -14445,7 +14596,8 @@
       "checks": [
         "Template authoring supports all event keys with existing/legacy suggestions, required body drag insertion and keyboard/caret insertion, FA/EN drafts, restricted/escaped variables, version publication, actual branded previews and tests to current verified staff contacts. Earlier template authority, engine, delivery and branding repairs remain valid; current authoring/recovery/browser checks close both saved frontend/preview deferrals.",
         "Current authoring/lifecycle/browser evidence and exact reuse boundaries: audit/evidence/step-reviews.json#R02-provider-template-authoring",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -14477,7 +14629,7 @@
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.ts",
-          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
         },
         {
           "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -14497,7 +14649,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -14545,7 +14697,7 @@
         },
         {
           "path": "packages/i18n/src/providers.ts",
-          "sha256": "98f455c54d024b34f7464bb678e3822cf99a1a187912c885fa2f07d6a31a7da7"
+          "sha256": "f63f3fcc769aff7833706b1c506be8f117b5bfc94357d0fb759e348c914fa00a"
         },
         {
           "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -14571,7 +14723,8 @@
       "checks": [
         "SMTP/Resend drafts retain saved nonsecret transport settings and expose SMTP timeouts while secrets remain write-only. Both test controls show the explicit staff recipient, preserve it through password confirmation and rely on current verified-contact enforcement. Successful edits clear stale test outcomes and require renewed server proof. Version activation/rollback, current permission/session/CSRF, encrypted secrets and OTP recovery gates retain verified backend evidence. Full provider UI deferral closes.",
         "Current authoring/lifecycle/browser evidence and exact reuse boundaries: audit/evidence/step-reviews.json#R02-provider-template-authoring",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -14701,7 +14854,7 @@
         },
         {
           "path": "apps/worker/src/notifications/outbox-runner.ts",
-          "sha256": "df0126c8c348583c0aaaf97e58d74fa02282b82b3e6221938f233ac7bba2f5a5"
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
         },
         {
           "path": "packages/shared/src/notifications/notification-registry.ts",
@@ -14710,7 +14863,8 @@
       ],
       "checks": [
         "Retry ladder 1m/5m/30m/2h/final with bounded jitter, per-type caps and urgent ordering are implemented. Focused schedule/writer cases pass; channel budgets, claim renewals and actual worker dispatch reuse recorded integration evidence.",
-        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -14742,7 +14896,7 @@
         },
         {
           "path": "apps/worker/src/notifications/sms-transport.ts",
-          "sha256": "405e2ea4f2a3420a4f0ab46e2d26305def714fdfe44daaace1668dcdb443fd38"
+          "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
         },
         {
           "path": "packages/shared/src/notification-delivery/email.ts",
@@ -14750,7 +14904,7 @@
         },
         {
           "path": "packages/shared/src/notification-delivery/sms.ts",
-          "sha256": "031b5579025565a7b9c559b188d80c681ea594eb60503a1285f1dcc64a102b07"
+          "sha256": "6271b76980aabc6454d9cab83196f3f0e9a806aa77fc547cb6a5c6aa8b6ae85a"
         },
         {
           "path": "packages/db/drizzle/production/0128_notification_attempt_history.sql",
@@ -14768,7 +14922,8 @@
       "checks": [
         "Application send ownership and durable accepted receipts prevent automatic uncertain resends. Concurrent claims, response loss, failed receipt writes and process restart are tested for real email/SMS adapters. This establishes application guarding, not provider deduplication.",
         "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [
         "Provider-level SMS idempotency is not established; Resend retry-window guarantees and authoritative provider reconciliation remain unverified. Unknown outcomes must stay held.",
@@ -14803,7 +14958,7 @@
         },
         {
           "path": "apps/worker/src/notifications/outbox-runner.ts",
-          "sha256": "df0126c8c348583c0aaaf97e58d74fa02282b82b3e6221938f233ac7bba2f5a5"
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
         },
         {
           "path": "apps/api/src/admin/failed-notifications.service.ts",
@@ -14836,7 +14991,8 @@
       ],
       "checks": [
         "Each new external send commits its unique history row with receipt claim before I/O. Outcome and receipt update together. Receipt-owned sequence advances on rejected retry even after lost worker bookkeeping; recovery preserves original row/duration. In-app/preflight history remains transactional. Real PostgreSQL fault injection and compiled-process shutdown/restart prove durability and no duplicate sends. Staff status filters/rendering support started-without-outcome and unknown in FA/EN.",
-        "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+        "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [
         "Migration0128 preserves earlier processing rows and snapshots retained receipts. It cannot reconstruct already missing historical attempts; legacy rows must not be summed as physical sends. Drain old workers before rollout."
@@ -14958,7 +15114,7 @@
         },
         {
           "path": "apps/worker/src/notifications/outbox-runner.ts",
-          "sha256": "df0126c8c348583c0aaaf97e58d74fa02282b82b3e6221938f233ac7bba2f5a5"
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
         },
         {
           "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
@@ -14967,7 +15123,8 @@
       ],
       "checks": [
         "In-app schema includes required fields, link_params and profile/date index. Adapter synchronously writes through the pinned worker outcome transaction; database failure tests prove rollback with job/history/outbox. This corrects PR170 inline-pool reinterpretation. Business transaction persists outbox intent; inbox materializes in worker transaction.",
-        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -15201,12 +15358,13 @@
         },
         {
           "path": "apps/worker/src/notifications/outbox-runner.ts",
-          "sha256": "df0126c8c348583c0aaaf97e58d74fa02282b82b3e6221938f233ac7bba2f5a5"
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
         }
       ],
       "checks": [
         "All35 canonical Appendix classifications match the compiled code-defined registry; explicit Appendix immediate exceptions are retained.10 registry cases pass. Security/auth and finance extensions are registered; unknown keys default daytime. Worker scheduling consumes the registry through unchanged channel-window code. Per-producer/template acceptance remains in later R02 batches.",
-        "audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+        "audit/evidence/step-reviews.json#R02-inbox-notification-policy",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -15353,7 +15511,7 @@
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.ts",
-          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.spec.ts",
@@ -15407,7 +15565,8 @@
       "checks": [
         "Current schema has unique version identity, active-family uniqueness and supersedes lineage. Admin mutations hold current staff/session/CSRF/step-up authority and family locks through audited commit. Draft creation allocates the next version; publication archives prior active content; published/archived content cannot be edited or deleted. Existing template service, real HTTP and boundary evidence is unchanged and reused.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -15455,7 +15614,7 @@
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.ts",
-          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.spec.ts",
@@ -15509,7 +15668,8 @@
       "checks": [
         "The shared engine limits interpolation to declared safe own data properties and escapes variable values. Existing prototype/accessor/secret rejection evidence remains valid. Current catalog tests render every subject/body, check missing values, descriptions and injection escaping; all35 Appendix event/channel/language combinations are present.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -15557,7 +15717,7 @@
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.ts",
-          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.spec.ts",
@@ -15611,7 +15771,8 @@
       "checks": [
         "Preview supports event/channel/locale/version selection, descriptions, sample rendering and variable warnings, including archived versions via the status filter. Fixed selector showing draft v3 while body rendered active v2. Two FA/EN regressions and six current branded/isolation/plain-text browser cases pass.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -15659,7 +15820,7 @@
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.ts",
-          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.spec.ts",
@@ -15713,7 +15874,8 @@
       "checks": [
         "Existing test-send requires an explicit owned currently verified email/mobile or explicit development/test allowlist, uses active provider adapters, records template timestamp/outcome and a test-marked audit without customer data. Earlier contact, authority, branding, failure and real HTTP evidence remains valid; no production delivery is claimed.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -15761,7 +15923,7 @@
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.ts",
-          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
         },
         {
           "path": "apps/api/src/notifications/notification-template.service.spec.ts",
@@ -15815,7 +15977,8 @@
       "checks": [
         "Added missing refresh-token-reuse FA/EN templates and SMS system-test templates. Notification-only data migration creates absent families at active version1, preserves all existing versions, uses the same family lock as admin authoring, and rolls back the whole catalog on failure.18 real-PostgreSQL/catalog cases pass, including the actual CLI entry point, concurrent imports, unchanged custom drafts/archives and fault-injected rollback. This explicit data migration is separate from the schema journal; deployment must run it. Existing customized inactive families require deliberate admin publication.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
-        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -15888,11 +16051,11 @@
         },
         {
           "path": "apps/worker/src/notifications/sms-transport.ts",
-          "sha256": "405e2ea4f2a3420a4f0ab46e2d26305def714fdfe44daaace1668dcdb443fd38"
+          "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
         },
         {
           "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
-          "sha256": "2a7fc87108e9b5321d088a3062e5eb776c523b42699c64679807537f5e549a79"
+          "sha256": "c6c10741a0c719bdee7e307a635ba129329963f48de38b15fe70720be893a05d"
         },
         {
           "path": "packages/shared/src/notifications/notification-registry.ts",
@@ -15901,7 +16064,8 @@
       ],
       "checks": [
         "Mandatory requested in-app delivery remains ungated. External delivery requires current verified destinations/enabled account channels; marketing additionally requires profile opt-in. Loader/gate source is unchanged since the verified56-case recipient batch. Later transport/history bindings match the completed delivery batch. Email/SMS templates are selected by exact event/channel/locale, with no transactional fallback for marketing events.",
-        "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+        "audit/evidence/step-reviews.json#R02-marketing-consent-channels",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -16030,7 +16194,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -16094,7 +16258,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "e41fe88073092777055cbb03546bf89809a069dd471bde83b017ac5d78baa96e"
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -16187,7 +16351,8 @@
       ],
       "checks": [
         "Provider schema and Draft/Test/Active/Superseded/Disabled lifecycle, unique active provider, sole-OTP guard, current session/CSRF/step-up, atomic audit and verified-recipient activation proof remain implemented. Latest controller/mutation/recipient/self-test bindings match prior records; service changes since c6588610 only propagate transient outcomes and are covered by current circuit/lifecycle checks.",
-        "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -16267,7 +16432,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -16331,7 +16496,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "e41fe88073092777055cbb03546bf89809a069dd471bde83b017ac5d78baa96e"
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -16424,7 +16589,8 @@
       ],
       "checks": [
         "SMTP preserves all configuration fields, configured handshake and verified-recipient self-send. Fixed DNS rebinding in API tests: dial the validated IP with the original TLS hostname, preserving explicit deployment allowlist exceptions. Both TLS/STARTTLS regressions failed before repair;89 API and60 shared guard cases pass. Existing production sender already pins checked IPs.",
-        "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -16504,7 +16670,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -16568,7 +16734,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "e41fe88073092777055cbb03546bf89809a069dd471bde83b017ac5d78baa96e"
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -16661,7 +16827,8 @@
       ],
       "checks": [
         "Resend validates the configured sending domain and sends to the current verified staff email. Tester changes since prior proof only classify transient HTTP/network outcomes; current focused tester and self-delivery suites pass. Actual sender retains from/reply-to settings. No real external email was sent.",
-        "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -16741,7 +16908,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -16805,7 +16972,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "e41fe88073092777055cbb03546bf89809a069dd471bde83b017ac5d78baa96e"
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -16898,7 +17065,8 @@
       ],
       "checks": [
         "Provider admin page, API adapter, settings/recovery browser tests and provider dictionary exactly match the verified authoring batch. Reuse19 email browser cases for field preservation, masked write-only secrets, saved draft recovery, test recipient, confirmation and activation gating. Active metadata, rollback and sole-provider warning remain. New correction queue is separate and passes4 FA/EN browser cases;10 neighboring recovery cases pass unchanged.",
-        "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -16978,7 +17146,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -17042,7 +17210,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "e41fe88073092777055cbb03546bf89809a069dd471bde83b017ac5d78baa96e"
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -17135,7 +17303,8 @@
       ],
       "checks": [
         "Owner approved limited server-side decryption on September13; canonical T-05.06.05 and current requirement ledger updated. AES-256-GCM field encryption, missing-key refusal for new writes, masked responses and diagnostic redaction remain.18 secret tests pass. Callback verification now decrypts only its signing secret. Legacy plaintext read compatibility remains; production legacy-secret inventory/reconciliation stays the existing V01/operations prerequisite, with no assertion that stored production rows were migrated.",
-        "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -17215,7 +17384,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -17279,7 +17448,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "e41fe88073092777055cbb03546bf89809a069dd471bde83b017ac5d78baa96e"
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -17372,7 +17541,8 @@
       ],
       "checks": [
         "Fixed exact rolling consecutive transient threshold, atomic bounded failure timestamps and single cooldown probes. Permanent failures and local bookkeeping errors no longer degrade providers; accepted sends with receipt-persistence errors count as provider success; caller cancellation is not a provider failure.202 API cases plus the additional cancellation case and75 worker cases pass (overlapping reruns excluded). Migration0130 conservatively backfills old earliest-window evidence. Local EmailProviderDegraded rule passes Prometheus tests with replica disagreement/recovery cases. Deployed alert routing/delivery remains unverified, so PR190/task.06 stays open/partial.",
-        "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [
         "Deployed ops alert delivery needs operational execution evidence."
@@ -17454,7 +17624,7 @@
         },
         {
           "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
         },
         {
           "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -17518,7 +17688,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "e41fe88073092777055cbb03546bf89809a069dd471bde83b017ac5d78baa96e"
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -17611,7 +17781,8 @@
       ],
       "checks": [
         "Fixed actual Resend recipient-array/nested-bounce payloads and Svix space-separated signature candidates. Migration0129 records every verifying active/superseded config identity. Callback replay, provider/message attribution and early feedback are transactional; callbacks never mutate worker ownership/outbox jobs/accepted receipts or append false sends. History derives feedback on the original accepted email attempt only. Legacy unidentified callbacks are not guessed.25 final HTTP cases cover callback and correction behavior;8 signature and59 neighboring admin/dead-letter cases remain valid. Complaints atomically suppress normalized addresses and create one open staff correction per address. Migration0131 backfills complaint suppressions and retains suppression/history after profile deletion. Current staff read/write authority, CSRF, step-up, strict notes, concurrent idempotent completion, audit rollback and renewed complaints pass actual HTTP checks. Resolution never removes suppression or sends a message. One prior-to-current migration case passes;4 FA/EN browser cases cover denial, malformed responses, pagination, read-only access, step-up, mismatched acknowledgments and completed history.",
-        "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
       ],
       "limitations": [],
       "merged_prs": [
@@ -20370,6 +20541,338 @@
         233
       ],
       "historically_skipped": false
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
+      "status": "partial",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 172,
+      "requirement": "| T-04.1.04.03 | Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox | M |",
+      "requirement_sha256": "28813f660d002ab68b5157754a0638623a3a9375aa8993c859c009d0f4b20305",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "dbe66789a71127ae334199619e67d62d97a4ef8010fa07ec7b70c60367a81e9d"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
+        "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+      ],
+      "merged_prs": [
+        243
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "R02 retains actual versioned FA/EN delivery, recipient/channel/window enforcement and current invoice/deadline revalidation after outbox acceptance. Hourly claiming, current invoice state, atomic outbox insertion and idempotency are verified. A sent schedule row means outbox acceptance, not external delivery."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+        "changed_paths_reviewed": [
+          "apps/api/openapi.json"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-verification-policy"
+      }
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
+      "status": "partial",
+      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 174,
+      "requirement": "| T-04.1.04.05 | Admin toggle UI: enable/disable each offset per service type | M |",
+      "requirement_sha256": "9d759f4980d8027eca778803a0d4e559e1332acc77b2e3d55c700ae4803785b6",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/service-due-periods.ts",
+          "sha256": "25bfa4e179b96f62129b513c2758107c9882974282ead5ba91f86f02d088e674"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-schedule.ts",
+          "sha256": "b5d3222d0d471ee8b6b654c9729d34176ef58f75e7f902e32302c10d0d1a6ccc"
+        },
+        {
+          "path": "packages/db/src/schema/invoice-reminder-offset-toggles.ts",
+          "sha256": "712aec884044dd950f9295e3f1249a6a783b8d9f5b6118200b12ff413f184d30"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/shared/src/finance/service-due-periods.ts",
+          "sha256": "a948d2edfa91f22e2b47eac779c017760da893492e3cb00527b9426e77d2238b"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at.ts",
+          "sha256": "f876fad39bd8d2850fd4cc1af1bf51934b9735448153a117906da2ad3bc2a524"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "755f042070a85ec52bf1b7b83568d27dc5f1bb7583f36242f07e8221d30820dd"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-schedule.ts",
+          "sha256": "9bf0a6618f8bb7c5b72fa1bda8be6a3a159ae74c1c756170bb11b7a2482cf9bc"
+        },
+        {
+          "path": "packages/shared/src/finance/reminder-offset-toggles.ts",
+          "sha256": "c0c66a7ec09635fabdb258a3c59e0be9781a54e025bef8e9d409aee1b4b420e1"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.service.ts",
+          "sha256": "74ec6ed6d90657e029594293e8d785f135478d49b434c832fa69defc96a91b12"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at.repository.ts",
+          "sha256": "efc2e7ac33ac0e0e06dd4ce54d38ae798131147470f2640ac76ee08c9bcbc096"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "f461993deae6627972aa04da712e7296b4629b29b7937dd565ead740f30691ea"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "28cf9ca2148a979804358b173704d9b07b6a5ea9f68016612c7b98522fd4c33e"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.service.ts",
+          "sha256": "8269f224a5549cbdebea9a5df207e7e81b5083d4e993212f1d35f6f786dbed50"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "dbe66789a71127ae334199619e67d62d97a4ef8010fa07ec7b70c60367a81e9d"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "74d84b6a9a35726814224580b6c44d3941fe40240fe9b44208d72de53b1018ad"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
+        },
+        {
+          "path": "apps/worker/src/invoices/overdue-scanner.ts",
+          "sha256": "d8b802ff230780d113b53393fe1bef81847c21982ab7d7850be3f930b93d5a56"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "3602543acd5bb18d2ca5e0f29cc9c18522b6ae94f9fa8330e87ef560ffc38be9"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "863ee087d39b649b8724088a1ca8a4c4e54cfaa9e8ccb476b2bcaabf719a60d2"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "2f9021dc629921fa97c6a69c1149bf3e59023d6056066c4d663920388a73f48b"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "c9811f9cf0bb242dcbf3dc412ff76b5f8bc7cb1b6fa883c1abad6f250f1376fc"
+        },
+        {
+          "path": "packages/i18n/src/invoice-due-periods.ts",
+          "sha256": "71ead878b4e5f267849f565fdda98e5e460875e0a28e6ad534cb7da0342b0c85"
+        }
+      ],
+      "checks": [
+        "Exact requirements/current workflow and saved PR bodies reviewed. audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Focused checks and reused evidence recorded in the consolidated batch.",
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
+        "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
+        "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
+        "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+      ],
+      "merged_prs": [
+        245
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "The repaired UI/API stores offset policy safely; scheduler applies it to new/rebuilt plans. A later toggle does not change existing plans, and sender does not recheck it. R02 must enforce current offset policy on already planned/queued reminders. The historical new-plans-only limit is unfinished acceptance, not a requirements waiver."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-state-transitions",
+        "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+      ],
+      "evidence_refresh": {
+        "date": "2026-09-09",
+        "prior_reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+        "changed_paths_reviewed": [
+          "apps/api/openapi.json"
+        ],
+        "evidence": "audit/evidence/step-reviews.json#R01-verification-policy"
+      }
     }
   ],
   "current_requirements_register": "audit/current-task-requirements.json",
@@ -20916,6 +21419,45 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
       "note": "Only immediate-base matching bindings refreshed after additive admin/UI and checked delivery/circuit/alert changes. Older38 refresh records retained."
+    },
+    {
+      "source_revision": "088b010e288f076c3b76e63816885ab783c2cccc",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.04.01",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "05-notifications-documents-ai.md#T-05.02.01",
+        "05-notifications-documents-ai.md#T-05.03.01",
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05",
+        "05-notifications-documents-ai.md#T-05.05.02",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+      "note": "Only matching immediate-base bindings refreshed; older38 refresh records retained."
     }
   ]
 }

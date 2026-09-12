@@ -16241,6 +16241,230 @@
         "05-notifications-documents-ai.md#T-05.04.04",
         "05-notifications-documents-ai.md#T-05.04.05"
       ]
+    },
+    {
+      "id": "R02-invoice-reminder-delivery",
+      "date": "2026-09-13",
+      "source_revision": "088b010e288f076c3b76e63816885ab783c2cccc",
+      "base_revision": "a439f958b16a33364218756bbf96563b6dfd6c72",
+      "product_commits": [
+        "546383453b22d558023dd372d5a8d35a68463a2f",
+        "9f63e7c0d5a4c001421752f2d791104ed20089bd",
+        "d544921c7a308c213facce93b03393f2941e08eb",
+        "088b010e288f076c3b76e63816885ab783c2cccc"
+      ],
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05"
+      ],
+      "summary": "Invoice reminder delivery:2 task acceptances verified/2 saved PR reviews closed. Existing planner/admin evidence preserved.",
+      "review": [
+        "Exact reminder story/tasks and both saved PR bodies reviewed. Reuse prior scheduler/deadline/admin authority and UI checks where source is unchanged. Historical localized-delivery and new-plans-only caveats were unfinished acceptance and are repaired here.",
+        "Sender filters disabled current offsets and dirty plans before selecting its bounded batch, then rechecks policy under the invoice/admin advisory locks. Existing plans pause/resume without replacement. Four baseline policy regressions reproduced;75 scheduler/sender cases pass.",
+        "One outbox occurrence receives all scheduled channels for an invoice/offset, preserving later times as job wake-ups. Duplicate occurrences are accepted only with matching recipient/deadline and all channel jobs. Missing legacy channels remain scheduled with a reconciliation error, without deleting history or inventing a second send.25 final sender cases pass; this overlaps the75-case run.",
+        "Queued reminder dispatch rechecks current invoice state/deadline/profile owner/account and offset under profile→user→invoice locks. Dirty plans and disabled offsets defer without consuming attempts. Current recipient timezone/configured window replaces stale saved window. Payment/archive/deadline changes suppress stale reminders; concurrent payments wait through provider I/O and persistence. Per-pool guard serialization retains a free receipt/heartbeat connection; pools need at least2 connections.",
+        "Accepted/unknown durable receipts are recovered before current-policy checks and never resent. Tests cover payment before/while policy locks, five concurrent reminders with pool5, current window, disabled pause/resume, dirty plans and terminal/deadline/account outcomes. Latest49 worker cases include all29 recipient/reminder cases and20 delivery-identity cases; other26 unchanged runner/receipt cases from expanded run remain valid. Do not sum overlapping runs.",
+        "Actual email and SMS transports select exact active FA/EN templates, snapshot version900 and payload, and make one controlled provider request. SMS remote mappings now support optional fa/en; exact locale overrides a shared legacy mapping, never the other language. Staff self-tests verify every mapping separately; a failed language blocks activation. Template test-send passes its locale. Existing immutable attempted snapshots and proof hashes remain intact.",
+        "All102 affected provider/template API cases and7 shared mapping/wire cases pass.10 distinct production Chromium settings cases pass across the full run and focused correction; FA/EN save acknowledgment rejects dropped locales, preserves edits and previews all tests. Existing mobile/RTL/accessibility and lifecycle cases pass. The first Persian test matched two status messages; selector now targets saved text without weakening behavior.",
+        "Final API/web/worker/shared/i18n types, scoped lint/format, web build and42 unchanged route/interaction budgets pass. API/OpenAPI build completed in focused test setup. No schema change; earlier schema evidence remains valid. Full regression staysV02.",
+        "Runbook records coordinated worker/API/web rollout, pool minimum, legacy missing-channel reconciliation and retained attempted templates. Live provider delivery/template text, production rollout and historical data reconciliation are operational prerequisites; none executed. Failed product and fixture logs retained."
+      ],
+      "verification": {
+        "sender": "75 scheduler/sender then25 focused sender cases; overlapping runs.",
+        "delivery": "49 final worker cases plus26 unchanged runner/receipt cases from expanded run; actual FA/EN email/SMS paths covered.",
+        "provider": "102 API and7 shared cases.",
+        "browser": "10 distinct SMS settings cases across full and focused runs.",
+        "quality": "Types/lint/format/build and42 unchanged budgets pass; full regression staysV02."
+      },
+      "remaining": [
+        "Coordinated rollout and legacy incomplete reminder occurrence reconciliation; no operational execution.",
+        "Receipt/expiry/rejection producers next."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "84688c56b49e30a4fe2afafe55f1683f7525a63e6951714c58aaa8dcd0e05de9"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2bbd786bd038ba8e222cab32a976418e8986b300a0d74c7b60d617c5d979d801"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "373d9427b9eea1a17bf68a4e73a1f31416e89160baa8f07f9458a77c6beed8b5"
+        },
+        {
+          "path": "apps/web/src/lib/sms-providers-api.ts",
+          "sha256": "049bcdd6dde2bb7e07b9a292f632c4167f7d9bb07a1045b748e623530c0dc721"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "de2cd76ee5d762b81841884004aeaac8b4e8dc1236d94e626bcdbb83f20afafe"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-delivery-policy.ts",
+          "sha256": "d9d75522dfd50dfb5ee9e8742f80362c077ebefbd8d2b59ed1fd90816e6976e1"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
+          "sha256": "3c0dac8623a3b4e7237a7a1b97e03d561c0f04b3375d2ff556106655f3a86a25"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.test.ts",
+          "sha256": "662d4375077f98bf1c6bfc8b8cc704bd3727509766ecbb1caa3d2c12579d865c"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "aa4fbf6a369d2e7261bbec43b46b2268ddab10a22aab6d5fe8eb113d9b5a59ac"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
+        },
+        {
+          "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
+          "sha256": "c6c10741a0c719bdee7e307a635ba129329963f48de38b15fe70720be893a05d"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+        },
+        {
+          "path": "packages/i18n/src/providers.ts",
+          "sha256": "f63f3fcc769aff7833706b1c506be8f117b5bfc94357d0fb759e348c914fa00a"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
+          "sha256": "63c6e5a9dce10b593999c506d8e3707e01e1eba9050d18e1d12d20e2bcd8cd38"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.test.ts",
+          "sha256": "7e26a6afe2ec4482dcd073a2c67372d391724eb50b1aa730359025c0c3c6dd55"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.ts",
+          "sha256": "6271b76980aabc6454d9cab83196f3f0e9a806aa77fc547cb6a5c6aa8b6ae85a"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-reminder-channel-handoff-baseline.log",
+        "/tmp/r02-reminder-channel-handoff-final.log",
+        "/tmp/r02-reminder-channel-handoff-format-write.log",
+        "/tmp/r02-reminder-channel-handoff-format.log",
+        "/tmp/r02-reminder-channel-handoff-lint.log",
+        "/tmp/r02-reminder-channel-handoff-types.log",
+        "/tmp/r02-reminder-dispatch-policy-baseline.log",
+        "/tmp/r02-reminder-dispatch-policy-email-final.log",
+        "/tmp/r02-reminder-dispatch-policy-expanded.log",
+        "/tmp/r02-reminder-dispatch-policy-expanded2.log",
+        "/tmp/r02-reminder-dispatch-policy-first.log",
+        "/tmp/r02-reminder-dispatch-policy-format-final.log",
+        "/tmp/r02-reminder-dispatch-policy-format-write.log",
+        "/tmp/r02-reminder-dispatch-policy-format.log",
+        "/tmp/r02-reminder-dispatch-policy-lint.log",
+        "/tmp/r02-reminder-dispatch-policy-second.log",
+        "/tmp/r02-reminder-dispatch-policy-test-format-fixed.log",
+        "/tmp/r02-reminder-dispatch-policy-test-format.log",
+        "/tmp/r02-reminder-dispatch-policy-types-first.log",
+        "/tmp/r02-reminder-dispatch-policy-types.log",
+        "/tmp/r02-reminder-dispatch-policy-verified.log",
+        "/tmp/r02-reminder-final-budgets.log",
+        "/tmp/r02-reminder-final-format.log",
+        "/tmp/r02-reminder-final-lint.log",
+        "/tmp/r02-reminder-final-types.log",
+        "/tmp/r02-reminder-runbook-format.log",
+        "/tmp/r02-reminder-sender-policy-baseline.log",
+        "/tmp/r02-reminder-sender-policy-baseline2.log",
+        "/tmp/r02-reminder-sender-policy-final.log",
+        "/tmp/r02-reminder-sender-policy-format-write.log",
+        "/tmp/r02-reminder-sender-policy-format.log",
+        "/tmp/r02-reminder-sender-policy-lint.log",
+        "/tmp/r02-reminder-sender-policy-types.log",
+        "/tmp/r02-reminder-sms-locale-api.log",
+        "/tmp/r02-reminder-sms-locale-backend-format.log",
+        "/tmp/r02-reminder-sms-locale-baseline.log",
+        "/tmp/r02-reminder-sms-locale-browser-confirm.log",
+        "/tmp/r02-reminder-sms-locale-browser.log",
+        "/tmp/r02-reminder-sms-locale-format-write.log",
+        "/tmp/r02-reminder-sms-locale-i18n-build.log",
+        "/tmp/r02-reminder-sms-locale-shared.log",
+        "/tmp/r02-reminder-sms-locale-test-format.log",
+        "/tmp/r02-reminder-sms-locale-web-build.log",
+        "/tmp/r02-reminder-sms-locale-worker.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 243,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.03"
+          ],
+          "reason": "Hourly durable sender and actual versioned FA/EN delivery verified. Current invoice/deadline/recipient/channel/window/offset policy enforced through dispatch. Historical E05 delivery deferral satisfied; legacy data and live rollout remain explicit operational work.",
+          "source_revision": "088b010e288f076c3b76e63816885ab783c2cccc",
+          "evidence": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        },
+        {
+          "pr": 245,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.1.04.05"
+          ],
+          "reason": "Existing admin toggle API/UI authority retained. Current offsets now pause already planned and queued occurrences, and resume the same occurrence on re-enable. Historical new-plans-only caveat repaired; no requirement waived.",
+          "source_revision": "088b010e288f076c3b76e63816885ab783c2cccc",
+          "evidence": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        }
+      ],
+      "pr_counts": {
+        "closed": 2,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+        "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      ],
+      "refreshed_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.04.01",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "05-notifications-documents-ai.md#T-05.02.01",
+        "05-notifications-documents-ai.md#T-05.03.01",
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05",
+        "05-notifications-documents-ai.md#T-05.05.02",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07"
+      ]
     }
   ]
 }

@@ -1,24 +1,26 @@
 # Remaining fix plan
 
-Current through product/test `3d4868c4` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `088b010e` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 160 | 34 | 69 | 263 |
+| Tasks with merged PR evidence | 162 | 32 | 69 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 163 | 34 | 125 | 322 |
+| All claims | 165 | 32 | 125 | 322 |
 
-**159 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**157 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Email provider/callback batch PR185–191:6 verified/1 partial;6 saved PR reviews closed/1 open. Current totals163 verified/34 partial/125 pending;140 closed/26 open/135 unreviewed PRs.2712 logs indexed. Actual callback payload/signature/identity, send-history ownership, rolling transient circuit, complaint correction queue and SMTP DNS pinning are repaired. Focused backend/browser/migration and42 budget checks pass; matching prior provider lifecycle/UI evidence reused. PR190 remains open for deployed alerts.21 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-email-provider-callbacks), [handoff](HANDOFF.md).
+Invoice reminder delivery PR243/245 is locally complete at088b010e:2 task acceptances verified/2 saved PR reviews closed. Current totals165 verified/32 partial/125 pending;142 closed/24 open/135 unreviewed PRs.2756 logs indexed. Current offsets/deadlines/recipient/window policy now applies through dispatch; delayed channel legs share one occurrence; exact FA/EN SMS mappings are configurable and tested.75 scheduler/sender then25 overlapping sender,49 current worker plus26 unchanged runner/receipt,102 API,7 shared and10 distinct browser cases support closure. Types/lint/format/build and42 unchanged budgets pass.31 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-invoice-reminder-delivery), [handoff](HANDOFF.md).
 
-Next batch: invoice reminder delivery/current policy, PR243/245. Reuse completed planner/admin authority work. Check queued reminders against current state, deadlines, offsets, channel/window settings and exact active FA/EN templates. Receipt/expiry/rejection producers PR281/299/301 follow. Preserve migration0129–0131 rollout and existing legacy-secret review prerequisites; no production execution claimed.
+Next batch: receipt decisions and top-up expiry notification producers, PR267/270/278/281/286/289/299/301. Reuse finance transaction/authority work and current delivery foundation. Check exact recipients, template variables, dedup and persisted failures. Preserve coordinated reminder/SMS rollout and legacy incomplete-occurrence reconciliation; no production execution claimed.
+
+Email provider/callback batch remains6 verified/1 partial. PR190 retains deployed ops alert delivery. Prior migration0129–0131 and legacy-secret prerequisites remain.
 
 Marketing consent/channel PR182–184 remains verified. Legacy opt-ins from the old all-profile endpoint need owner review before production marketing; old audits lack profile identity.
 
@@ -62,7 +64,7 @@ PR225 remains open for missing concrete submission workflows; existing order cre
 
 Invoice deadlines/reminders consolidated at `6b9831c`: **8 tasks verified /2 partial;8 PR reviews closed /2 open**, saved PRs236–241,243–246. Seven repairs cover deadline authority and forms, reminder replanning, public customer reasons, reminder-setting authority/confirmation, and missing default-period administration.69 DB and71 reminder worker cases pass; other focused counts and valid reuse are recorded in [the consolidated review](evidence/step-reviews.json#R01-invoice-deadlines-reminders). All42 budgets pass.1911 logs indexed.
 
-PR243/245 remain open for R02: actual versioned FA/EN delivery and current invoice/deadline/channel/window/offset policy for already planned or queued reminders. The historical new-plans-only toggle behavior is unfinished acceptance, not an approved exception. Historical overrides without dirty markers require operational reconciliation; updated worker must precede or accompany API rollout. No deployment occurred.
+PR243/245 are now locally closed by R02-invoice-reminder-delivery: actual versioned FA/EN delivery and current invoice/deadline/channel/window/offset policy are verified for planned and queued reminders. The historical new-plans-only limitation is repaired. Historical overrides without dirty markers require operational reconciliation; updated worker must precede or accompany API rollout. No deployment occurred.
 
 Active **R01-wallet-invoice-payments-reversals**:5 tasks T-04.2.03.01–.04 and T-04.2.04.01, saved PRs271–275,282–285,290–293. Exact story/task criteria read. All13 saved PR bodies are read and68 payment/cache cases pass; reuse wallet/chargeback money and authority evidence, compare useful repeated implementations, then review actual payment/reversal callers and repair confirmed gaps.
 
@@ -73,7 +75,7 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 | Step / original groups | Remaining work | Exit evidence |
 | --- | --- | --- |
 | R01 / F03–F08, F12–F16, F23 | Critical authentication, permissions, money and domain acceptance listed below. | Required negative paths and transaction boundaries pass; each confirmed defect is repaired or explicitly dispositioned. |
-| R02 / F09–F11, F17 | Active branding in email/notifications; integrated KB upload T-09.11.02; actual-agent test chat T-09.11.04; policy integration and remaining delivery/template/retry/inbox acceptance. Include invoice reminders PR243/245: actual FA/EN delivery and current offset/deadline/state/channel/window policy after scheduling. | Required consumers, permissions, persisted outcomes, failures/retries and fa/en pass. A connection probe does not fulfill agent chat. |
+| R02 / F09–F11, F17 | Active branding in email/notifications; integrated KB upload T-09.11.02; actual-agent test chat T-09.11.04; policy integration and remaining delivery/template/retry/inbox acceptance. Invoice reminders PR243/245 are verified; retain their rollout/legacy reconciliation prerequisites. | Required consumers, permissions, persisted outcomes, failures/retries and fa/en pass. A connection probe does not fulfill agent chat. |
 | R03 / F19, F20 | Localized application errors; correlation through required outbox/worker consumers; remaining accessibility, RTL, themes and failure states. Check the recorded dark-theme terms error banner and shared button/link/alert contrast consumers. | Required screens and consumers pass relevant checks. Scanner warnings require a confirmed defect before becoming work. |
 | R04 / F19 | Eager customer purchase routes within unchanged complete-route budgets. Earlier over-budget attempts were reverted. | Production build, required loading and affected payload budgets pass. Retain Vite SPA. |
 | R05 / F19 | Strict dependency checks in API/web/worker/DB; geoip-country maintenance/data-update disposition. Last strict DB run found 146 declaration errors, 144 Drizzle and 2 Vite. | Compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation pass. No broad suppression or weaker requirement. |
@@ -122,7 +124,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all33 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all32 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 

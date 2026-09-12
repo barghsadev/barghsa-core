@@ -18985,6 +18985,314 @@
       "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
       "encoding": "gzip",
       "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-channel-handoff-baseline.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-channel-handoff-baseline.log.gz",
+      "sha256": "b796194dccc7f0132a7d0fe0e182b870c80a7f28047fb49530377e38d8e1c231",
+      "encoding": "gzip",
+      "stored_sha256": "6cbbcaae0e616903dc608ad298fbca60502a52f2f1015e81cba7c87b5646268f"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-channel-handoff-final.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-channel-handoff-final.log.gz",
+      "sha256": "84d47d079fc158ee8789a0454b93d55f20ff8c4cc8834fda76d7c6a8980189e7",
+      "encoding": "gzip",
+      "stored_sha256": "7a09808e6bf3a10061585954166d068d8d5fe822a248add7d26790a9b8d26396"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-channel-handoff-format-write.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-channel-handoff-format-write.log.gz",
+      "sha256": "db0b1874c3c554764554d9003a8d73c03b364b57207a527ad67983c8fc79bb95",
+      "encoding": "gzip",
+      "stored_sha256": "1bdc32791e8aa464097348387ff927e11f1bd01ba2a85c33a0f7562c8722786e"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-channel-handoff-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-channel-handoff-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-channel-handoff-types.log",
+      "path": "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz",
+      "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
+      "encoding": "gzip",
+      "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-baseline.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-baseline.log.gz",
+      "sha256": "6b477b7ebfcc56cb86bf8323e40161f6ebc9eb5dbaeea7f2559dd10d4f8e75ab",
+      "encoding": "gzip",
+      "stored_sha256": "7e4e67f58274ee097beab77327322bb0229e78e0379cf67d5014bc911c8ed5d2"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-email-final.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-email-final.log.gz",
+      "sha256": "7532580996b07401a4c1731a9f4e455b24b006e590584815859e02092970735c",
+      "encoding": "gzip",
+      "stored_sha256": "a4714e491ca37bd222fe82719286bbbbc1f55db0fdf96c8d37caafee2ee2b33f"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-expanded.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-expanded.log.gz",
+      "sha256": "1a3886078433ede110169e120222449125d55badd4af54709e4d678942e5f92f",
+      "encoding": "gzip",
+      "stored_sha256": "765a9b113d88cf273ed4ebc2d7e10d5d1df3c9753561381e774dc81e13e676cc"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-expanded2.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-expanded2.log.gz",
+      "sha256": "fe90489abad3cd2bb0e7a1d2ab202c0c93f9dedd601140505e84857d2f6cc168",
+      "encoding": "gzip",
+      "stored_sha256": "5d404686329df905c8b243934989cecc4e62b1a4af5a6abb7071fb771f579d2e"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-first.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-first.log.gz",
+      "sha256": "f3289eb34fedc11f0b4400a14d6333c9da8aa501a260b1a32a459bc01c3e5d88",
+      "encoding": "gzip",
+      "stored_sha256": "cd9942bed4545ec31e5670d5a5ed4e5f1b7c6a776c9c8c7dd0fb446dae09fd40"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-format-final.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-format-final.log.gz",
+      "sha256": "5e373782fe604b003bcbee488cba333dedb4724e164879988e1ebb1885c31f2c",
+      "encoding": "gzip",
+      "stored_sha256": "c684001509af180b58071d49d38cdbc775614f11d6291c659a02087b10b123a8"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-format-write.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-format-write.log.gz",
+      "sha256": "ab2e9a22487243e411f7bc5f87abccc8ce4b7d22300877db6379d240d4b2d913",
+      "encoding": "gzip",
+      "stored_sha256": "a5db0924636c46235344da8486ad7e2855e79a959eff79d43312f57eb58e234c"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-second.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-second.log.gz",
+      "sha256": "35db3901c29139834a3e64f80d6a8a08d21f7af05bbafa24e74c19fb6598b1ca",
+      "encoding": "gzip",
+      "stored_sha256": "bc40f1da8890efcd7608b61ed67756fbd19d92c5fd0ffafcb10c9ef7e6d192e1"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-test-format-fixed.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-test-format-fixed.log.gz",
+      "sha256": "a0c6f78c9458c0a99eb0e6afa41b69a9580971cfebf0c6a6e7a619a57b0189e9",
+      "encoding": "gzip",
+      "stored_sha256": "b090e3ec81d3942aad22653c84c0bbd010348756d9a1da547a312ad6419c09fa"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-test-format.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-test-format.log.gz",
+      "sha256": "c2284290cddf68f83af79584bae57306c0de088971d2c4eb50933f9c93f07873",
+      "encoding": "gzip",
+      "stored_sha256": "4776cf79f741b1d21f2274544541edc68d3ae82cbff2c494290d3d02fce6e024"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-types-first.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-types-first.log.gz",
+      "sha256": "64ddbc7cc1cbc24fee47a449e2fafeba70e82068f691e78b71dd2128e3fb230a",
+      "encoding": "gzip",
+      "stored_sha256": "c4ca1669362d58d609b42d678a0cd3386e0449c1eb3c1863a816687a918b78c3"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-types.log",
+      "path": "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz",
+      "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
+      "encoding": "gzip",
+      "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-dispatch-policy-verified.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-dispatch-policy-verified.log.gz",
+      "sha256": "6d8a3d06cb309f88bd417939435014ef9453e1eb13d7e09ec43a90086198309c",
+      "encoding": "gzip",
+      "stored_sha256": "e0424380375b7d94288283c73361148c7f1e5709521fae861641ecf0e1e4677f"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-final-budgets.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-final-budgets.log.gz",
+      "sha256": "b34f3d2a04b55a6e1e1c5d02cb936646077c60a1dfbce6123af761a01103caed",
+      "encoding": "gzip",
+      "stored_sha256": "0ca9a8af11093512855e4ff9908917f240e3fb5dd3be68767c88b106c7da4432"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-final-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-final-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-final-types.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-final-types.log.gz",
+      "sha256": "ea00a09c89267b20890e550f5d3fad821fa1d5f8653fb6451b419caaffc350ae",
+      "encoding": "gzip",
+      "stored_sha256": "54da8e115fc13a047abcb656d8689cd023ae272b80a2da49cb1c7b9bc66852db"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-runbook-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sender-policy-baseline.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sender-policy-baseline.log.gz",
+      "sha256": "565cc746239b79c255dc599488f9e7b61a56dd3ef9ba15be4f2adca404c3abe2",
+      "encoding": "gzip",
+      "stored_sha256": "f6879f26fa6e0daad5b2b748522b50151609542d02303f2092921f1b6e20ef0c"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sender-policy-baseline2.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sender-policy-baseline2.log.gz",
+      "sha256": "b5288b6d78011cf404b210503f050d89aac03b05851ad71f2ccca4e580dd5be6",
+      "encoding": "gzip",
+      "stored_sha256": "06d0303f27cfbda35524940dbb3ee08fb24e88d38f3009195bd6c7f8da8d74dc"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sender-policy-final.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sender-policy-final.log.gz",
+      "sha256": "d27440e3d9d3ea610bc1c21284edaaa2b1434cf3d9a57c4d9d1727cd6bb9ffcd",
+      "encoding": "gzip",
+      "stored_sha256": "1a3cc41cba72e95e9a136847aaf60dc9a4b0b81a9c9e8d569f188dd3aa2f2656"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sender-policy-format-write.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sender-policy-format-write.log.gz",
+      "sha256": "e47f154de68b787b952e4df07cf03e4d872f28f6c4d8c102ead3ced847294789",
+      "encoding": "gzip",
+      "stored_sha256": "9851a87a3066f55b74d9ebe45f0ce81c4eee884d01035003c9658c8dc2b93f8a"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sender-policy-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sender-policy-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sender-policy-types.log",
+      "path": "audit/evidence/r01/barghsa-reset-stages-worker-types.log.gz",
+      "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
+      "encoding": "gzip",
+      "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-api.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-api.log.gz",
+      "sha256": "ee7dee44123e9983fafffd36046e0f92750f3c6ca3c2b784f00ef1571ed966c1",
+      "encoding": "gzip",
+      "stored_sha256": "b64df4529dc2f061b7935dabafc9cf88ed1cb4fc55628c95e3a46173e4fdc75e"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-backend-format.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-backend-format.log.gz",
+      "sha256": "c54a92bc95f20d744b88d685e8a620138dc3fa0851650136b40e4b61029f4b84",
+      "encoding": "gzip",
+      "stored_sha256": "ddd4bddde92ea8666b8cf60e966716509e16d658d6bcfa9c695b4fb51dd5f74b"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-baseline.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-baseline.log.gz",
+      "sha256": "d9ec534f13381593e94f1d2db78460eeeb78465ba445fe938b090e85b7fb69bc",
+      "encoding": "gzip",
+      "stored_sha256": "a3ccfbe694fa84d99367eb65af610bc9af179d8858a49588be8f24e252a7b008"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-browser-confirm.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-browser-confirm.log.gz",
+      "sha256": "eee5ebdda61a32db04f6f6cff0b33e7915a7915b23fa127cff43b49bd05df1d1",
+      "encoding": "gzip",
+      "stored_sha256": "fe0a2bb050892a52b88033aba566d1ccc175fbe55b68e2c4248478331710d359"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-browser.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-browser.log.gz",
+      "sha256": "b9c3a42f1d4e4decb513c1000ef59c2422296c78778e720a3885dad8bf9b1017",
+      "encoding": "gzip",
+      "stored_sha256": "8d6a8b5e0885f56ad067e9df3d0bca00d2223e1ee9826ae09055dd9a64a58bfc"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-format-write.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-format-write.log.gz",
+      "sha256": "15e4f258097197fc519e9525fc3ca6f982135d72c77fcb03a2f04c8dd31ab9b5",
+      "encoding": "gzip",
+      "stored_sha256": "865cf615f9dca42489f80e57e41f9700cb5f5521f542fc7fea7cbee10a829930"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-i18n-build.log",
+      "path": "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+      "sha256": "e96c18cf633b90ecae7f4d8c8fadef8b222995210eddf31da455e2a436493ae6",
+      "encoding": "gzip",
+      "stored_sha256": "efa98b77f7947a1708258290f0d1f9cd008002c7e204044a1c2f8fcc4fb48bd3"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-shared.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-shared.log.gz",
+      "sha256": "161f36a5ff4ec7b83610ad09e93e410a5f61ebb03d6502cc1da5191e2d0d4ff7",
+      "encoding": "gzip",
+      "stored_sha256": "59423af576730c3f95a5e5adcb42a8f0392e06df6d7513ed8035c45c13d7adb3"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-test-format.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-test-format.log.gz",
+      "sha256": "10b5bc8067e14a12920c08c7809410a78e4062363583e8bb6724e621a90ff287",
+      "encoding": "gzip",
+      "stored_sha256": "3e01ca69e797ba0d887e792e9cecc6756239ff75ea431e51c680628c5aacc886"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-web-build.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-web-build.log.gz",
+      "sha256": "81d2327f78a65390344e8707a2ef89cdbd5a8d95a06a797bbc75721b44a62ff3",
+      "encoding": "gzip",
+      "stored_sha256": "476faa5b50c82b88924f17c55ca51f0c28ff0a1d0dd067d24eb70c53960f1b56"
+    },
+    {
+      "original_path": "/tmp/r02-reminder-sms-locale-worker.log",
+      "path": "audit/evidence/r02-invoice-reminders/r02-reminder-sms-locale-worker.log.gz",
+      "sha256": "f8a73bc3d5f16f66f8c42afbb149c62d51e3dc8b0dffe5c1320247fe43e79058",
+      "encoding": "gzip",
+      "stored_sha256": "eefe7bd15d34a6b32562f9bfce39d0095df838fe1b2d8566e937fe402c39fa90"
     }
   ]
 }

@@ -4,9 +4,13 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Latest product/test commit **3d4868c4**; approved secret requirement **981e98d6**. Email provider/callback batch PR185–191:6 task acceptances verified/1 partial;6 saved PR reviews closed/1 open. PR190 still needs deployed ops alert delivery.
+Branch codex/audit-fixes. Latest product/test commit **088b010e**. Reminder batch PR243/245:2 task acceptances verified/2 saved PR reviews closed. Prior email batch remains6 verified/1 partial; PR190 still needs deployed ops alert delivery.
 
-Counts:163 verified/34 partial/125 pending claims;140 closed/26 open/135 unreviewed saved PRs.58 skips,3 verified/55 pending.2712 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
+Counts:165 verified/32 partial/125 pending claims;142 closed/24 open/135 unreviewed saved PRs.58 skips,3 verified/55 pending.2756 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
+
+Reminder sender now checks current offsets/dirty plans and transfers all channel jobs once, preserving later wake-ups. Queued delivery checks current invoice/deadline/owner/account/offset/window under locks through provider dispatch. Accepted/unknown receipts remain durable. SMS supports exact FA/EN mappings with shared legacy fallback; every saved mapping must pass provider testing.75 scheduler/sender,25 overlapping sender,49 final worker plus26 unchanged runner/receipt,102 API,7 shared and10 distinct FA/EN browser cases support the batch. Types/lint/format/build and42 unchanged budgets pass.31 immediate-base bindings refreshed. [Batch review](evidence/step-reviews.json#R02-invoice-reminder-delivery).
+
+Drain older workers before rollout; reminder pools need at least2 connections. Coordinate API/web/SMS workers before saving language mappings. Legacy occurrences with missing channel jobs remain held for reconciliation; no history deletion or automatic resend. [Runbook](../docs/operations/notification-delivery-recovery.md). No live send, rollout or data reconciliation claimed.
 
 Fixed actual Resend payload/signatures, callback provider identity and physical-send history, rolling transient circuit thresholds, complaint correction tasks and SMTP DNS address pinning.25 callback/correction HTTP,203 expanded circuit/lifecycle API,75 worker,89 SMTP API,60 shared guard,18 secret,1 migration and4 new FA/EN browser cases pass; counts overlap and must not be summed.10 neighboring browser cases and matching prior provider lifecycle/UI evidence remain valid. Applicable types/lint/format/build/OpenAPI/snapshot checks and42 budgets pass.21 immediate-base source bindings refreshed; older38 retained.
 
@@ -27,13 +31,13 @@ Outbox/delivery remains7 closed/2 open. Durable send history at4614c8bf passes49
 
 Migration0128 retains legacy history and snapshots available receipts; it cannot reconstruct missing attempts. Deploy API/web readers, drain older notification workers, then migrate/start updated workers. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
 
-Active batch **R02-invoice-reminder-delivery**, saved PR243/245. Review current policy at dispatch and actual versioned FA/EN delivery. Reuse prior deadline/planner/admin evidence; receipt/expiry/rejection producers PR281/299/301 follow.
+Active batch **R02-receipt-expiry-notices**, saved PR267/270/278/281/286/289/299/301 for three qualified tasks. Reuse finance authority/transaction evidence; review notification producers and exact recipient/template payloads.
 
 Build changed shared/i18n dependencies before consumer checks or web builds. Preserve completed work, valid evidence and all pending external/future prerequisites. Full regression staysV02.
 
 ## Next action
 
-Read invoice reminder story/task criteria, PR243/245 bodies and deferrals. Trace already queued reminders against current invoice state/deadline, configured offsets, enabled channels and daytime windows. Verify exact active FA/EN template payloads and repair confirmed gaps. Preserve completed reminder settings/authority and planner work.
+Read exact receipt-confirmation/rejection and online top-up expiry requirements, all eight contributing PR bodies and deferrals. Trace producers through outbox delivery and active FA/EN templates; repair confirmed gaps without rebuilding verified finance work.
 
 Reuse completed producer, recipient, branding and provider evidence where source remains valid. Keep remaining inbox/classification and event-specific reminders in later R02 batches. Preserve local monitoring rules and their runbook; operational alert delivery needs external execution evidence.
 
@@ -47,7 +51,7 @@ Graph snippets use indexed line ranges. After editing a file, reindex or read bo
 
 Prior authentication, profile/onboarding, contact/address, agents/invitations/ownership, CRM, wallet, receipt, online payment, chargeback and invoice repairs are consolidated. Wallet settlement/reversal atcb7ac5b and adjustment approval at8a9ea42 remain verified. Preserve them. PR225 auto-invoicing still has no actual submission caller; current DRAFT orders must not be charged. Refund/order/contract workflows retain their own prerequisites. Contract and ticket record-view dependencies have exact keys in `progress.json.open_domain_reviews`. Overpayment credit T-04.3.01.06 is already implemented.
 
-R02 retains actual notification delivery, current queued-reminder policy, expiry/receipt notices and remaining producer/template payload contracts. PR243/245 and281/299/301 remain open. R03 retains shared contrast/localization and structured online-limit snapshots. Legacy invoice/reversal CHECK reconciliation and validation remainV01. No operational execution is claimed.
+R02 retains expiry/receipt notices and remaining producer/template payload contracts. PR243/245 are locally closed; PR281/299/301 remain open. R03 retains shared contrast/localization and structured online-limit snapshots. Legacy invoice/reversal CHECK reconciliation and validation remainV01. No operational execution is claimed.
 
 Pre-login CSRFf1b879b and shared race71f5e49 are complete. Browser payment-return GET is read-only; explicit confirmation uses session CSRF. Signed-webhook wording and lost-contact owner policy remain pending. Do not ask again or change those requirements.
 
