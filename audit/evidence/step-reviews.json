@@ -15403,6 +15403,229 @@
         "02-auth-users-admin.md#T-06.01.03",
         "02-auth-users-admin.md#T-07.01.03"
       ]
+    },
+    {
+      "id": "R02-template-lifecycle-seeding",
+      "date": "2026-09-13",
+      "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+      "base_revision": "efdb593b9e90346757579699e2d3e0e167d2ad68",
+      "product_commits": [
+        "0c3efccac3a2fe98f8cf8f5d830ca2d0d80f5f37",
+        "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed"
+      ],
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05"
+      ],
+      "summary": "Template lifecycle batch PR177–181 closes locally. Five task acceptances verified; seed migration safety and preview identity repaired.",
+      "review": [
+        "Current schema has unique version identity, active-family uniqueness and supersedes lineage. Admin mutations hold current staff/session/CSRF/step-up authority and family locks through audited commit. Draft creation allocates the next version; publication archives prior active content; published/archived content cannot be edited or deleted. Existing template service, real HTTP and boundary evidence is unchanged and reused.",
+        "The shared engine limits interpolation to declared safe own data properties and escapes variable values. Existing prototype/accessor/secret rejection evidence remains valid. Current catalog tests render every subject/body, check missing values, descriptions and injection escaping; all35 Appendix event/channel/language combinations are present.",
+        "Preview supports event/channel/locale/version selection, descriptions, sample rendering and variable warnings, including archived versions via the status filter. Fixed selector showing draft v3 while body rendered active v2. Two FA/EN regressions and six current branded/isolation/plain-text browser cases pass.",
+        "Existing test-send requires an explicit owned currently verified email/mobile or explicit development/test allowlist, uses active provider adapters, records template timestamp/outcome and a test-marked audit without customer data. Earlier contact, authority, branding, failure and real HTTP evidence remains valid; no production delivery is claimed.",
+        "Added missing refresh-token-reuse FA/EN templates and SMS system-test templates. Notification-only data migration creates absent families at active version1, preserves all existing versions, uses the same family lock as admin authoring, and rolls back the whole catalog on failure.18 real-PostgreSQL/catalog cases pass, including the actual CLI entry point, concurrent imports, unchanged custom drafts/archives and fault-injected rollback. This explicit data migration is separate from the schema journal; deployment must run it. Existing customized inactive families require deliberate admin publication.",
+        "Four pre-fix database failures reproduce missing registry seed, draft version conflict, concurrent import collisions and partial commits after failure. Initial expanded test mistakes treated Appendix Any as a literal channel and reused a previously seeded DB; corrected by expanding all three channels and running the migration CLI against an isolated DB. Missing SMS system-test content was then added. All logs retained.",
+        "Two production-browser baseline failures show active body with draft selector. Binding value to the selected template fixes both. Current browser run also checks archived versions, language/channel/event changes, sandboxed branded email, plain text and variable descriptions.",
+        "Nine template controller method bodies and source-bound template backend/engine/authoring evidence match c6588610. Reuse latest118 template service/HTTP cases and earlier boundary/engine checks within their recorded scope. No broad regression renewal.",
+        "Notification-only data migration resolves PR181 script deferral without a duplicate catalog or schema snapshot. It is explicit, not automatically journal-applied; operators must run the documented command. Missing historical custom content is never overwritten. Refresh-token reuse currently emits its private in-app notice directly; a new template does not create an email producer."
+      ],
+      "confirmed_defects": [
+        {
+          "defect": "Missing refresh-token-reuse templates and SMS system-test channel",
+          "status": "repaired"
+        },
+        {
+          "defect": "Seeder overwrites inactive family intent, races on initial version and partially commits failures",
+          "status": "repaired"
+        },
+        {
+          "defect": "Preview selected option disagrees with rendered version",
+          "status": "repaired"
+        }
+      ],
+      "verification": {
+        "database": "18 distinct cases pass, including real PostgreSQL/actual migration CLI; prior runs overlap.35 Appendix events and160 concrete templates checked.",
+        "browser": "8 distinct Chromium cases pass in FA/EN;2 new version regressions and6 existing preview cases.",
+        "quality": "DB/web types, scoped lint/format, production web build,42 unchanged size budgets and diff checks pass.",
+        "regression": "Full regression/coverage remainsV02. No deployment or live-provider execution."
+      },
+      "remaining": [
+        "Run explicit data migration during deployment; review intentionally inactive customized families before publishing.",
+        "Continue R02 marketing consent and channel availability, then provider/callback and event-specific delivery acceptance."
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+        },
+        {
+          "path": "packages/db/src/schema/notification-templates.ts",
+          "sha256": "dfd6979f0da572420ca149a7f2cbeb223c8a5318866c999ba92527d57325541a"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.spec.ts",
+          "sha256": "0cdc2d49cb240e101392ca04c0cdcf17160c8cd2017ad9f452ed11abf6e1149f"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-versions.spec.ts",
+          "sha256": "e70137a51a5ea9391aa89308ef3c6a8ed1bfa0101ebb39be94bff7a76f6562b3"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-template-preview-before.log",
+        "/tmp/r02-template-preview-budgets.log",
+        "/tmp/r02-template-preview-build.log",
+        "/tmp/r02-template-preview-final.log",
+        "/tmp/r02-template-preview-format-check.log",
+        "/tmp/r02-template-preview-format.log",
+        "/tmp/r02-template-preview-lint.log",
+        "/tmp/r02-template-preview-types.log",
+        "/tmp/r02-template-reuse.log",
+        "/tmp/r02-template-seed-after.log",
+        "/tmp/r02-template-seed-before.log",
+        "/tmp/r02-template-seed-cli-format.log",
+        "/tmp/r02-template-seed-cli.log",
+        "/tmp/r02-template-seed-final.log",
+        "/tmp/r02-template-seed-format-check.log",
+        "/tmp/r02-template-seed-format.log",
+        "/tmp/r02-template-seed-lint.log",
+        "/tmp/r02-template-seed-test-format.log",
+        "/tmp/r02-template-seed-types.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 177,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.04.01"
+          ],
+          "reason": "Current schema has unique version identity, active-family uniqueness and supersedes lineage. Admin mutations hold current staff/session/CSRF/step-up authority and family locks through audited commit. Draft creation allocates the next version; publication archives prior active content; published/archived content cannot be edited or deleted. Existing template service, real HTTP and boundary evidence is unchanged and reused.",
+          "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+          "evidence": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+        },
+        {
+          "pr": 178,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.04.02"
+          ],
+          "reason": "The shared engine limits interpolation to declared safe own data properties and escapes variable values. Existing prototype/accessor/secret rejection evidence remains valid. Current catalog tests render every subject/body, check missing values, descriptions and injection escaping; all35 Appendix event/channel/language combinations are present.",
+          "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+          "evidence": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+        },
+        {
+          "pr": 179,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.04.03"
+          ],
+          "reason": "Preview supports event/channel/locale/version selection, descriptions, sample rendering and variable warnings, including archived versions via the status filter. Fixed selector showing draft v3 while body rendered active v2. Two FA/EN regressions and six current branded/isolation/plain-text browser cases pass.",
+          "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+          "evidence": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+        },
+        {
+          "pr": 180,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.04.04"
+          ],
+          "reason": "Existing test-send requires an explicit owned currently verified email/mobile or explicit development/test allowlist, uses active provider adapters, records template timestamp/outcome and a test-marked audit without customer data. Earlier contact, authority, branding, failure and real HTTP evidence remains valid; no production delivery is claimed.",
+          "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+          "evidence": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+        },
+        {
+          "pr": 181,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.04.05"
+          ],
+          "reason": "Added missing refresh-token-reuse FA/EN templates and SMS system-test templates. Notification-only data migration creates absent families at active version1, preserves all existing versions, uses the same family lock as admin authoring, and rolls back the whole catalog on failure.18 real-PostgreSQL/catalog cases pass, including the actual CLI entry point, concurrent imports, unchanged custom drafts/archives and fault-injected rollback. This explicit data migration is separate from the schema journal; deployment must run it. Existing customized inactive families require deliberate admin publication.",
+          "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+          "evidence": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+        }
+      ],
+      "pr_counts": {
+        "closed": 5,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+        "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests",
+        "audit/evidence/step-reviews.json#R02-branded-admin-previews"
+      ],
+      "refreshed_task_keys": [
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-02.01.01",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03"
+      ]
     }
   ]
 }

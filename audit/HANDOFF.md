@@ -4,25 +4,27 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Latest product/test HEAD **b168ee2b**. Inbox/notification-policy batch PR171–176 closes locally:6 task acceptances verified/6 PR reviews closed.2e3bc191 rechecks profile access in the final inbox statement; b168ee2b repairs stale UI responses, optimistic restoration, unread paging and event icons.
+Branch codex/audit-fixes. Latest product/test HEAD **dd6c6d62**. Template lifecycle PR177–181 closes locally:5 task acceptances verified/5 saved PR reviews closed.0c3efcca repairs catalog coverage and atomic, history-preserving imports; dd6c6d62 aligns preview selection with rendered content.
 
-Counts:149 verified/33 partial/140 pending claims;126 closed/25 open/150 unreviewed saved PRs.58 skips,3 verified/55 pending. 2610 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
+Counts:154 verified/33 partial/135 pending claims;131 closed/25 open/145 unreviewed saved PRs.58 skips,3 verified/55 pending.2629 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
 
-Current inbox evidence:22 API,30 distinct web unit,14 distinct FA/EN Chromium,50 i18n cases and42 unchanged budgets pass. Two pagination reruns overlap. Four corrected real-DB revocation cases fail with old scope and pass after repair. Initial prototype-spy failures did not intercept the child HTTP server and are not regression proof. All logs retained. Existing window code and controls are unchanged since246abe5a; its56 API/46 worker/16 shared/6 browser evidence remains valid within recorded source scope.10 registry tests pass;35 Appendix classifications match.
+Template evidence:18 DB/catalog cases,8 FA/EN Chromium cases, types/lint/format/build and42 unchanged budgets pass. Four seed baseline failures and two browser baseline failures reproduce repaired defects.35 Appendix events/all required channels/locales and160 templates checked. Nine controller method bodies and latest template service/HTTP/engine/authoring bindings are unchanged; reuse their recorded evidence.3 immediate-base bindings refreshed.
 
-Build changed shared/i18n dependencies before web build or consumer checks. Initial browser output used stale i18n artifacts; corrected dependency build and scoped alert selectors pass. Preserve valid tests and the completed source comparison. R03 global themes/contrast and V02 regression remain separate.
+The notification-only data migration is explicit and separate from the schema journal. It creates only absent families as active version1, preserves drafts/archives/customized versions, serializes imports with admin family locks, and rolls back entirely on failure. Actual CLI execution passed against a disposable DB. Deployment must run it; no deployment claim. [Runbook](../docs/operations/notification-template-seeding.md). Refresh-token reuse still emits its private in-app notice directly; adding its template adds no email producer.
 
-Prior outbox/delivery batch remains7 closed/2 open. Durable send history at4614c8bf passes49 worker/47 API/12 browser cases; local Grafana proof at05dc4f9b verifies all5 panels. [Screenshot](evidence/r02-outbox-delivery/grafana-dashboard.png). PR166 provider guarantees/reconciliation/key wording and PR168 deployed alerts remain explicit prerequisites. Unknown sends stay held. No operational execution claimed.
+Inbox/policy atb168ee2b remains6 verified/6 closed. Its22 API/30 distinct web unit/14 distinct browser/50 i18n cases and42 budgets remain valid within recorded scope.35 classifications match; unchanged window evidence reused. See consolidated step records instead of repeating these tests.
 
-Migration0128 retains legacy history and snapshots available receipts; it cannot reconstruct already missing attempts. Deploy API/web readers, drain older notification workers, then migrate/start updated workers. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
+Outbox/delivery remains7 closed/2 open. Durable send history at4614c8bf passes49 worker/47 API/12 browser cases; Grafana proof at05dc4f9b verifies all5 panels using local synthetic data. PR166 provider guarantees/reconciliation/key wording and PR168 deployed alerts remain explicit prerequisites. Unknown sends stay held. [Dashboard screenshot](evidence/r02-outbox-delivery/grafana-dashboard.png).
 
-Active batch **R02-template-lifecycle-seeding**, saved PR177–181. Five exact requirements, bodies and PR179/180/181 deferrals read. Next: schema/versioning, preview/test-send and real seed coverage, reusing earlier authoring/provider evidence. Preserve existing customized templates. The missing auth.refresh_token_reused seed remains a known follow-up; compare current catalog before repair.
+Migration0128 retains legacy history and snapshots available receipts; it cannot reconstruct missing attempts. Deploy API/web readers, drain older notification workers, then migrate/start updated workers. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
 
-Completed R01 work and valid tests remain recorded in progress/step reviews. Do not rebuild or repeat those reviews. The earlier wallet-controller fixture failures are fixed; the interrupted broad run is still not regression evidence.
+Active batch **R02-marketing-consent-channels**, saved PR182–184. Read exact requirements/bodies/deferrals, then check current consent authority, dispatch-time enforcement and customer UI. Reuse R02-recipient-channel-delivery where source is unchanged.
+
+Build changed shared/i18n dependencies before consumer checks or web builds. Preserve completed work, valid evidence and all pending external/future prerequisites. Full regression staysV02.
 
 ## Next action
 
-Review R02 template lifecycle/preview/test-send/seeding, PR177–181. Exact requirements, saved bodies and PR179/180/181 deferrals are read. Reuse existing authoring/provider evidence; verify catalog coverage and the missing auth.refresh_token_reused seed before fixing confirmed gaps.
+Review R02 marketing consent/current channel availability, PR182–184. Read exact three requirements, bodies and deferrals. Reuse current recipient-channel evidence; check consent and profile authority through dispatch plus customer controls.
 
 Reuse completed producer, recipient, branding and provider evidence where source remains valid. Keep remaining inbox/classification and event-specific reminders in later R02 batches. Preserve local monitoring rules and their runbook; operational alert delivery needs external execution evidence.
 
@@ -36,7 +38,7 @@ Graph snippets use indexed line ranges. After editing a file, reindex or read bo
 
 Prior authentication, profile/onboarding, contact/address, agents/invitations/ownership, CRM, wallet, receipt, online payment, chargeback and invoice repairs are consolidated. Wallet settlement/reversal atcb7ac5b and adjustment approval at8a9ea42 remain verified. Preserve them. PR225 auto-invoicing still has no actual submission caller; current DRAFT orders must not be charged. Refund/order/contract workflows retain their own prerequisites. Contract and ticket record-view dependencies have exact keys in `progress.json.open_domain_reviews`. Overpayment credit T-04.3.01.06 is already implemented.
 
-R02 retains actual notification delivery, current queued-reminder policy, expiry/receipt notices and the missing auth.refresh_token_reused seed. PR243/245 and281/299/301 remain open. R03 retains shared contrast/localization and structured online-limit snapshots. Legacy invoice/reversal CHECK reconciliation and validation remainV01. No operational execution is claimed.
+R02 retains actual notification delivery, current queued-reminder policy, expiry/receipt notices and remaining producer/template payload contracts. PR243/245 and281/299/301 remain open. R03 retains shared contrast/localization and structured online-limit snapshots. Legacy invoice/reversal CHECK reconciliation and validation remainV01. No operational execution is claimed.
 
 Pre-login CSRFf1b879b and shared race71f5e49 are complete. Browser payment-return GET is read-only; explicit confirmation uses session CSRF. Signed-webhook wording and lost-contact owner policy remain pending. Do not ask again or change those requirements.
 

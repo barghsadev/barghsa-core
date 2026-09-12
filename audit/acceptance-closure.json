@@ -569,7 +569,7 @@
         },
         {
           "path": "packages/db/package.json",
-          "sha256": "07ea6c59a78be70fe5812a1337d8c92c65fd7a43669e8265c28df31fdd56a373"
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
         },
         {
           "path": "packages/i18n/package.json",
@@ -580,7 +580,8 @@
         "Reviewed changed workspace/build/test manifests and root configuration against this task; existing Vitest4 projects compatibility limitation remains recorded where applicable.",
         "Runtime/build configuration and lockfile are unchanged since full checkpoint9529872; reuse its frozen production-image builds, workspace typechecks, route budgets and applicable test evidence.",
         "Fresh package consumer verification passes all18 shared ESM/CJS export tests and all5 UI distribution/strict consumer tests. Every advertised shared/UI/i18n export target exists.",
-        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+        "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
+        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-template-lifecycle-seeding; preserved template content/history and unrelated seeders. Focused seed/preview checks pass."
       ],
       "limitations": [
         "This verifies test orchestration, not passing domain coverage thresholds. Hosted workflow execution is not claimed."
@@ -2537,7 +2538,7 @@
       "source_evidence": [
         {
           "path": "packages/db/package.json",
-          "sha256": "07ea6c59a78be70fe5812a1337d8c92c65fd7a43669e8265c28df31fdd56a373"
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -2547,7 +2548,8 @@
       "checks": [
         "Reviewed current pool/timeout/cancellation/health source changes against the canonical database foundation requirement.",
         "Fresh focused database run: 47 tests in six files pass, including real PostgreSQL timeout selection, cancellation, query reuse, pool health cleanup, startup options and TLS configuration.",
-        "Current shared/UI package consumer checks pass 18 and five tests; existing migrated API evidence remains separate and was not rerun in this metadata step."
+        "Current shared/UI package consumer checks pass 18 and five tests; existing migrated API evidence remains separate and was not rerun in this metadata step.",
+        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-template-lifecycle-seeding; preserved template content/history and unrelated seeders. Focused seed/preview checks pass."
       ],
       "limitations": [
         "The package exposes compiled dist entry points for production consumers rather than executing source TypeScript. pg supplies its pg-pool implementation."
@@ -9031,7 +9033,7 @@
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
-          "sha256": "344c799548e71e3586cfd1e8fd310b650362d234ed3e6d6836f997cf28f8d6d4"
+          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
         },
         {
           "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
@@ -9064,7 +9066,8 @@
       ],
       "checks": [
         "Exact story/task criteria and current implementation reviewed in audit/evidence/step-reviews.json#R01-chargebacks-alerts",
-        "Four confirmed repairs and focused current/reused evidence recorded once in the consolidated batch."
+        "Four confirmed repairs and focused current/reused evidence recorded once in the consolidated batch.",
+        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-template-lifecycle-seeding; preserved template content/history and unrelated seeders. Focused seed/preview checks pass."
       ],
       "merged_prs": [
         277,
@@ -15292,6 +15295,511 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.01",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 135,
+      "requirement": "| **T-05.04.01 — Template entity & CRUD API** | L | P0 |\n| `notification_templates` table: `id`, `event_key`, `language` (fa/en), `channel` (email/sms/in-app), `version` (auto-increment), `subject` (email subject or SMS title), `body` (content template), `variables` (JSONB of allowed variable names + descriptions), `is_active` (boolean), `created_by`, `supersedes_version`, `created_at`. Unique on `(event_key, language, channel, version)`. CRUD API with permission: admin only. | | |",
+      "requirement_sha256": "ad5dcb2f741fa374f63b8d18fbfb1a0247a672be489b9798c0d9158ac9d716ce",
+      "status": "acceptance_verified",
+      "reviewed_sha": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+      "source_evidence": [
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+        },
+        {
+          "path": "packages/db/src/schema/notification-templates.ts",
+          "sha256": "dfd6979f0da572420ca149a7f2cbeb223c8a5318866c999ba92527d57325541a"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.spec.ts",
+          "sha256": "0cdc2d49cb240e101392ca04c0cdcf17160c8cd2017ad9f452ed11abf6e1149f"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-versions.spec.ts",
+          "sha256": "e70137a51a5ea9391aa89308ef3c6a8ed1bfa0101ebb39be94bff7a76f6562b3"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+        }
+      ],
+      "checks": [
+        "Current schema has unique version identity, active-family uniqueness and supersedes lineage. Admin mutations hold current staff/session/CSRF/step-up authority and family locks through audited commit. Draft creation allocates the next version; publication archives prior active content; published/archived content cannot be edited or deleted. Existing template service, real HTTP and boundary evidence is unchanged and reused.",
+        "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        177
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.02",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 137,
+      "requirement": "| **T-05.04.02 — Variable interpolation & escaping** | M | P0 |\n| Template engine: `{{variable_name}}` syntax. Allow-list per template. Escape HTML for email/SMS output. Safe rendering that never exposes internal state or secrets. Unit tests for each template's variable contract. | | |",
+      "requirement_sha256": "b997c6d68bd8424a69b805f020b558a852832819cefc7cf8c63664b9b3168dac",
+      "status": "acceptance_verified",
+      "reviewed_sha": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+      "source_evidence": [
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+        },
+        {
+          "path": "packages/db/src/schema/notification-templates.ts",
+          "sha256": "dfd6979f0da572420ca149a7f2cbeb223c8a5318866c999ba92527d57325541a"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.spec.ts",
+          "sha256": "0cdc2d49cb240e101392ca04c0cdcf17160c8cd2017ad9f452ed11abf6e1149f"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-versions.spec.ts",
+          "sha256": "e70137a51a5ea9391aa89308ef3c6a8ed1bfa0101ebb39be94bff7a76f6562b3"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+        }
+      ],
+      "checks": [
+        "The shared engine limits interpolation to declared safe own data properties and escapes variable values. Existing prototype/accessor/secret rejection evidence remains valid. Current catalog tests render every subject/body, check missing values, descriptions and injection escaping; all35 Appendix event/channel/language combinations are present.",
+        "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        178
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.03",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 139,
+      "requirement": "| **T-05.04.03 — Template preview** | S | P1 |\n| Admin UI: select event key, language, channel, version → see rendered subject and body with sample/last-known data. Show available variables and their descriptions. Highlight missing required variables. | | |",
+      "requirement_sha256": "b6fd3d23e243ba0e613abde4cd4faef9dc06122282b766ebc9f38ff1660d4449",
+      "status": "acceptance_verified",
+      "reviewed_sha": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+      "source_evidence": [
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+        },
+        {
+          "path": "packages/db/src/schema/notification-templates.ts",
+          "sha256": "dfd6979f0da572420ca149a7f2cbeb223c8a5318866c999ba92527d57325541a"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.spec.ts",
+          "sha256": "0cdc2d49cb240e101392ca04c0cdcf17160c8cd2017ad9f452ed11abf6e1149f"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-versions.spec.ts",
+          "sha256": "e70137a51a5ea9391aa89308ef3c6a8ed1bfa0101ebb39be94bff7a76f6562b3"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+        }
+      ],
+      "checks": [
+        "Preview supports event/channel/locale/version selection, descriptions, sample rendering and variable warnings, including archived versions via the status filter. Fixed selector showing draft v3 while body rendered active v2. Two FA/EN regressions and six current branded/isolation/plain-text browser cases pass.",
+        "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        179
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.04",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 141,
+      "requirement": "| **T-05.04.04 — Test-send** | M | P1 |\n| Admin enters an explicitly owned and verified destination (their own email/phone). Validate destination belongs to the admin or is an allow-listed test address (dev-only). Send through active provider. Log as test (no customer data). Record last_test_sent_at and last_test_status on template version. | | |",
+      "requirement_sha256": "8a9bdbba2dbff05f9ffb146374001373c5a36105e0a68852eac26db56f0deb64",
+      "status": "acceptance_verified",
+      "reviewed_sha": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+      "source_evidence": [
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+        },
+        {
+          "path": "packages/db/src/schema/notification-templates.ts",
+          "sha256": "dfd6979f0da572420ca149a7f2cbeb223c8a5318866c999ba92527d57325541a"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.spec.ts",
+          "sha256": "0cdc2d49cb240e101392ca04c0cdcf17160c8cd2017ad9f452ed11abf6e1149f"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-versions.spec.ts",
+          "sha256": "e70137a51a5ea9391aa89308ef3c6a8ed1bfa0101ebb39be94bff7a76f6562b3"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+        }
+      ],
+      "checks": [
+        "Existing test-send requires an explicit owned currently verified email/mobile or explicit development/test allowlist, uses active provider adapters, records template timestamp/outcome and a test-marked audit without customer data. Earlier contact, authority, branding, failure and real HTTP evidence remains valid; no production delivery is claimed.",
+        "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        180
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 143,
+      "requirement": "| **T-05.04.05 — Template seeding** | S | P1 |\n| Seed all initial templates (fa + en) for every business event defined in the Appendix. Migration script creates initial versions with `version=1, is_active=true`. | | |\n\n---",
+      "requirement_sha256": "594f7b9d733f3e8ee9f4f98feb36f70a08062d6067f31354be03590ae4f10847",
+      "status": "acceptance_verified",
+      "reviewed_sha": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+      "source_evidence": [
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+        },
+        {
+          "path": "packages/db/src/schema/notification-templates.ts",
+          "sha256": "dfd6979f0da572420ca149a7f2cbeb223c8a5318866c999ba92527d57325541a"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
+        {
+          "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
+          "sha256": "e9efa18db0c939841002babcac39775cd2882770cadae63ce6a955f04b74b119"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "7452f2417dbe40fb2b5e8fb1eb32e629ff8787d4b1dc235ce1e3610a14920155"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.spec.ts",
+          "sha256": "0cdc2d49cb240e101392ca04c0cdcf17160c8cd2017ad9f452ed11abf6e1149f"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
+          "sha256": "82f649c61ac994d4da8534245098f04815513a182b53f2bc6a57111ab8cd45ae"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.ts",
+          "sha256": "47fce02fdec335878c01c10f8e2df91aafdd5313c272cb33f5586f83cdab82ac"
+        },
+        {
+          "path": "packages/shared/src/notifications/template-engine.test.ts",
+          "sha256": "47da3bc0311a71c04396370cd30c7c6514c7ef0ed6390b4c9deeecf3cb7e7bd2"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.ts",
+          "sha256": "b014ab4fccbcbc0c348d32ad1b6be5be2601d99cd90beec430302f630b7dc3af"
+        },
+        {
+          "path": "apps/web/src/lib/template-preview.test.ts",
+          "sha256": "343472a86313f6f2e691345bb005b968828a0390de16722afba7b3fe5fabe906"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "00306f65c110031c880e8ccfe9bcee1fa105214eb68e782c9af4a339e020dc2d"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-versions.spec.ts",
+          "sha256": "e70137a51a5ea9391aa89308ef3c6a8ed1bfa0101ebb39be94bff7a76f6562b3"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+        }
+      ],
+      "checks": [
+        "Added missing refresh-token-reuse FA/EN templates and SMS system-test templates. Notification-only data migration creates absent families at active version1, preserves all existing versions, uses the same family lock as admin authoring, and rolls back the whole catalog on failure.18 real-PostgreSQL/catalog cases pass, including the actual CLI entry point, concurrent imports, unchanged custom drafts/archives and fault-injected rollback. This explicit data migration is separate from the schema journal; deployment must run it. Existing customized inactive families require deliberate admin publication.",
+        "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        181
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
     }
   ],
   "pending_task_keys": [
@@ -15395,11 +15903,6 @@
     "01-platform-infrastructure.md#T-07.05.04",
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
-    "05-notifications-documents-ai.md#T-05.04.01",
-    "05-notifications-documents-ai.md#T-05.04.02",
-    "05-notifications-documents-ai.md#T-05.04.03",
-    "05-notifications-documents-ai.md#T-05.04.04",
-    "05-notifications-documents-ai.md#T-05.04.05",
     "05-notifications-documents-ai.md#T-05.05.01",
     "05-notifications-documents-ai.md#T-05.05.02",
     "05-notifications-documents-ai.md#T-05.05.03",
@@ -18554,6 +19057,17 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy",
       "note": "Refresh only immediate-base bindings. Added notification retry labels leave other app dictionary entries unchanged; current inbox privacy and UI behavior have focused checks, including unchanged verification-notice flows. Earlier38 refresh records remain."
+    },
+    {
+      "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-02.01.01",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+      "note": "Only immediate-base bindings refreshed. Added seed families, preserved custom versions and corrected preview selection; unrelated source behavior retained. Older38 refresh records remain."
     }
   ]
 }

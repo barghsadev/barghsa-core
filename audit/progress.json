@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "b168ee2b02f45a7287fb35ba9c197bf44c96300f",
+  "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
   "active_step": "R02",
-  "next_action": "Review R02 template lifecycle/preview/test-send/seeding, PR177–181. Exact requirements, saved bodies and PR179/180/181 deferrals are read. Reuse existing authoring/provider evidence; verify catalog coverage and the missing auth.refresh_token_reused seed before fixing confirmed gaps.",
+  "next_action": "Review R02 marketing consent and current channel availability, saved PR182–184. Read exact requirements/bodies/deferrals, reuse existing recipient-channel proof, verify current profile authority and consent through dispatch plus customer UI.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -694,6 +694,10 @@
     {
       "id": "R02-inbox-notification-policy",
       "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+    },
+    {
+      "id": "R02-template-lifecycle-seeding",
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
     }
   ],
   "deferred_improvements": [
@@ -717,9 +721,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 149,
+    "acceptance_verified": 154,
     "partial": 33,
-    "pending": 140,
+    "pending": 135,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1008,38 +1012,30 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-template-lifecycle-seeding",
-    "name": "Notification template lifecycle, preview, test-send and seed coverage",
+    "id": "R02-marketing-consent-channels",
+    "name": "Marketing consent and current channel availability",
     "status": "reviewing",
     "prs": [
-      177,
-      178,
-      179,
-      180,
-      181
+      182,
+      183,
+      184
     ],
     "task_keys": [
-      "05-notifications-documents-ai.md#T-05.04.01",
-      "05-notifications-documents-ai.md#T-05.04.02",
-      "05-notifications-documents-ai.md#T-05.04.03",
-      "05-notifications-documents-ai.md#T-05.04.04",
-      "05-notifications-documents-ai.md#T-05.04.05"
+      "05-notifications-documents-ai.md#T-05.05.01",
+      "05-notifications-documents-ai.md#T-05.05.02",
+      "05-notifications-documents-ai.md#T-05.05.03"
     ],
     "remaining_checklist": [
-      "Five exact requirements and saved PR bodies plus PR179/180/181 deferrals read.",
-      "Review schema/versioning/variables/admin authority and preview descriptions/missing-variable handling.",
-      "Reuse verified external self-test ownership, active-provider delivery, audit and template tracking from earlier R02.",
-      "Compare seed catalog with all35 canonical Appendix event/channel/language contracts and auth.refresh_token_reused; preserve existing customized versions on migration/reseed.",
-      "Disposition seeder versus migration requirement explicitly; do not infer complete production seeding from unit mocks."
+      "Read all three exact requirements, saved PR bodies and PR182/183 deferrals; completed at template checkpoint.",
+      "Review consent mutation authority and current worker recipient/consent gates, plus FA/EN customer controls."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-provider-template-authoring",
-      "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+      "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review R02 template lifecycle/preview/test-send/seeding, PR177–181. Exact requirements, saved bodies and PR179/180/181 deferrals are read. Reuse existing authoring/provider evidence; verify catalog coverage and the missing auth.refresh_token_reused seed before fixing confirmed gaps."
+    "next_action": "Review R02 marketing consent and current channel availability, saved PR182–184. Read exact requirements/bodies/deferrals, reuse existing recipient-channel proof, verify current profile authority and consent through dispatch plus customer UI."
   },
   "open_domain_reviews": [
     {

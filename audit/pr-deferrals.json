@@ -1247,7 +1247,16 @@
     "historical_deferrals": [
       "Note: seeding is implemented as a seeder in the db seed runner (consistent with the existing admin/products/geography seeders) rather than a raw DDL migration, since the schema already exists; the row data is initial version-1 active content inserted in one idempotent pass. No `Closes` reference — kanban task key used."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "All historical deferrals satisfied locally by the reviewed template lifecycle batch; operational execution remains separate.",
+    "reviewed_source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+    "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Added missing refresh-token-reuse FA/EN templates and SMS system-test templates. Notification-only data migration creates absent families at active version1, preserves all existing versions, uses the same family lock as admin authoring, and rolls back the whole catalog on failure.18 real-PostgreSQL/catalog cases pass, including the actual CLI entry point, concurrent imports, unchanged custom drafts/archives and fault-injected rollback. This explicit data migration is separate from the schema journal; deployment must run it. Existing customized inactive families require deliberate admin publication. audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      }
+    ]
   },
   {
     "pr": 180,
@@ -1258,7 +1267,16 @@
     "historical_deferrals": [
       "- [ ] Out-of-app (email/SMS) transport — pending T-05.06 provider configuration; test-send delivers via in-app today"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "All historical deferrals satisfied locally by the reviewed template lifecycle batch; operational execution remains separate.",
+    "reviewed_source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+    "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Existing test-send requires an explicit owned currently verified email/mobile or explicit development/test allowlist, uses active provider adapters, records template timestamp/outcome and a test-marked audit without customer data. Earlier contact, authority, branding, failure and real HTTP evidence remains valid; no production delivery is claimed. audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      }
+    ]
   },
   {
     "pr": 179,
@@ -1270,7 +1288,21 @@
       "- [ ] Templates exist for all business events — storage/seeding is T-05.04.05 (out of scope)",
       "- [ ] Versioning immutability — covered in T-05.04.01/backend (unchanged here)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "All historical deferrals satisfied locally by the reviewed template lifecycle batch; operational execution remains separate.",
+    "reviewed_source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+    "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Added missing refresh-token-reuse FA/EN templates and SMS system-test templates. Notification-only data migration creates absent families at active version1, preserves all existing versions, uses the same family lock as admin authoring, and rolls back the whole catalog on failure.18 real-PostgreSQL/catalog cases pass, including the actual CLI entry point, concurrent imports, unchanged custom drafts/archives and fault-injected rollback. This explicit data migration is separate from the schema journal; deployment must run it. Existing customized inactive families require deliberate admin publication. audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current schema has unique version identity, active-family uniqueness and supersedes lineage. Admin mutations hold current staff/session/CSRF/step-up authority and family locks through audited commit. Draft creation allocates the next version; publication archives prior active content; published/archived content cannot be edited or deleted. Existing template service, real HTTP and boundary evidence is unchanged and reused. audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      }
+    ]
   },
   {
     "pr": 175,
