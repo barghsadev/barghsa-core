@@ -1,4 +1,4 @@
-import { notificationLink } from '@barghsa/shared/notifications';
+import { classifyNotificationType, notificationLink } from '@barghsa/shared/notifications';
 import { NotificationCenterService, notificationScope } from './notification-center.service.js';
 import { Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -47,15 +47,7 @@ export interface DeliveryLogRow {
   createdAt: Date;
 }
 
-/**
- * In-app notification service (minimal stub for E-02 scope).
- *
- * Responsible for creating and retrieving in-app notifications.
- * The full delivery infrastructure (email/SMS transport, outbox,
- * worker) belongs to E-05.
- *
- * T-07.01.03 — Verification notification to user.
- */
+/** Canonical inbox writes and transactional delivery for verification notices. */
 @Injectable()
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
@@ -64,8 +56,6 @@ export class NotificationsService {
    * Create a new in-app notification for a user.
    *
    * Writes to the canonical notification center, including private account notices.
-   * Future E-05 infrastructure will handle out-of-app delivery
-   * (email/SMS) based on user preferences.
    *
    * @param params - Notification creation parameters.
    * @returns The created notification record.
@@ -110,6 +100,46 @@ export class NotificationsService {
       createdAt: now,
       updatedAt: now,
     };
+  }
+
+  /** Queue external verification channels in the caller's status-change transaction. */
+  async createVerification(
+    params: CreateNotificationParams & {
+      profileId: string;
+      profileName: string;
+      status: string;
+      localizedContent: NonNullable<CreateNotificationParams['localizedContent']>;
+    },
+    transaction: { query(sql: string, params?: unknown[]): Promise<unknown> }
+  ): Promise<NotificationResult> {
+    const notice = await this.create(params, transaction);
+    const outboxId = uuidv7();
+    const eventKey = 'profile.verification_status';
+    // The inbox entry already exists; external workers enforce current recipients/preferences.
+    await transaction.query(
+      `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts)
+       VALUES($1,$2,$3,$4,$5,ARRAY['email','sms'],'queued',$6,5)`,
+      [
+        outboxId,
+        params.profileId,
+        params.userId,
+        eventKey,
+        {
+          profileName: params.profileName,
+          status: params.status,
+          messageFa: params.localizedContent.fa.body,
+          messageEn: params.localizedContent.en.body,
+        },
+        `verification-notice:${notice.id}`,
+      ]
+    );
+    const priority = classifyNotificationType(eventKey) === 'immediate' ? 'urgent' : 'normal';
+    await transaction.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts)
+       VALUES($1,'email','queued',$2,5),($1,'sms','queued',$2,5)`,
+      [outboxId, priority]
+    );
+    return notice;
   }
 
   /**

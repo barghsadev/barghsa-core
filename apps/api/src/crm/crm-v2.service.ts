@@ -700,10 +700,12 @@ export class CrmV2Service {
                   body: `Your profile "${profile.profile_name}" is awaiting verification again. Reason: ${reason}\nOpen profile settings, select this profile and correct the requested details. Send a support ticket to request another review.`,
                 },
               };
-      await this.notificationsService.create(
+      await this.notificationsService.createVerification(
         {
           userId: profile.user_id,
           profileId,
+          profileName: profile.profile_name,
+          status: targetStatus,
           type:
             action === 'verify'
               ? 'profile_verified'

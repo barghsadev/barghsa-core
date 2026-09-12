@@ -420,10 +420,21 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'profile.verification_status',
     faSubject: 'وضعیت احراز هویت',
     enSubject: 'Verification status change',
-    faBody: 'وضعیت احراز هویت شما به «{{status}}» تغییر کرد.',
-    enBody: 'Your verification status changed to "{{status}}".',
-    channels: ['email', 'in_app'],
-    variables: [{ name: 'status', description: 'وضعیت جدید / New status' }],
+    faBody: '{{messageFa}}',
+    enBody: '{{messageEn}}',
+    channels: ['email', 'sms', 'in_app'],
+    variables: [
+      { name: 'profileName', description: 'نام پروفایل / Profile name' },
+      { name: 'status', description: 'وضعیت جدید / New status' },
+      {
+        name: 'messageFa',
+        description: 'نتیجه و راهنمای اصلاح فارسی / Persian result and correction guidance',
+      },
+      {
+        name: 'messageEn',
+        description: 'نتیجه و راهنمای اصلاح انگلیسی / English result and correction guidance',
+      },
+    ],
   },
   {
     eventKey: 'profile.invitation_received',

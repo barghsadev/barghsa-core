@@ -1,3 +1,7 @@
+import { buildSeedTemplates } from '../../../../packages/db/dist/seed/notification-templates.js';
+import { runOutboxPoll } from '../../../worker/dist/notifications/outbox-runner.js';
+import { EmailNotificationTransport } from '../../../worker/dist/notifications/email-transport.js';
+import { SmsNotificationTransport } from '../../../worker/dist/notifications/sms-transport.js';
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -309,3 +313,215 @@ it('does not expose notices from another profile, recipient, previous owner or o
   );
   expect((await banner()).verificationNotice).toBeNull();
 });
+
+for (const action of ['verify', 'unverify', 'reverify'] as const) {
+  it(`queues ${action} email and SMS together with the in-app notice`, async () => {
+    const id = await profile(action === 'verify' ? 'PENDING_VERIFICATION' : 'VERIFIED');
+    await service.verifyProfile(
+      id,
+      { action, ...(action === 'verify' ? {} : { reason: 'Correct the registration number' }) },
+      'verify-staff',
+      ''
+    );
+    const rows = (
+      await db.pool.query(
+        'SELECT id,event_key,payload,channels,user_id FROM notification_outbox WHERE profile_id=$1',
+        [id]
+      )
+    ).rows;
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      event_key: 'profile.verification_status',
+      channels: ['email', 'sms'],
+      user_id: 'verify-owner',
+      payload: { profileName: 'Main profile' },
+    });
+    expect(rows[0].payload.messageEn).toContain('Main profile');
+    if (action !== 'verify') {
+      expect(rows[0].payload.messageEn).toContain('Correct the registration number');
+      expect(rows[0].payload.messageEn).toContain('support ticket');
+    }
+    expect(
+      (
+        await db.pool.query(
+          'SELECT channel,status FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+          [rows[0].id]
+        )
+      ).rows
+    ).toEqual([
+      { channel: 'email', status: 'queued' },
+      { channel: 'sms', status: 'queued' },
+    ]);
+    // Repeating the same status transition must not produce another delivery.
+    await service.verifyProfile(
+      id,
+      { action, ...(action === 'verify' ? {} : { reason: 'Correct the registration number' }) },
+      'verify-staff',
+      ''
+    );
+    expect(
+      (await db.pool.query('SELECT id FROM notification_outbox WHERE profile_id=$1', [id])).rows
+    ).toHaveLength(1);
+  });
+}
+
+it('rolls back verification, audit and inbox when external notice queuing fails', async () => {
+  const id = await profile('PENDING_VERIFICATION');
+  await db.pool
+    .query(`CREATE FUNCTION fail_verification_delivery() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN IF NEW.event_key='profile.verification_status' THEN RAISE EXCEPTION 'injected verification queue failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_verification_delivery BEFORE INSERT ON notification_outbox FOR EACH ROW EXECUTE FUNCTION fail_verification_delivery()`);
+  try {
+    await expect(
+      service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '')
+    ).rejects.toThrow('injected verification queue failure');
+  } finally {
+    await db.pool.query('DROP TRIGGER fail_verification_delivery ON notification_outbox');
+  }
+  expect(await state(id)).toBe('PENDING_VERIFICATION');
+  expect(
+    (await db.pool.query('SELECT id FROM in_app_notifications WHERE profile_id=$1', [id])).rows
+  ).toHaveLength(0);
+  expect(
+    (
+      await db.pool.query(
+        "SELECT id FROM audit_log WHERE event='verification_change' AND metadata::jsonb->>'profileId'=$1",
+        [id]
+      )
+    ).rows
+  ).toHaveLength(0);
+});
+
+for (const locale of ['fa', 'en'] as const) {
+  for (const action of ['verify', 'unverify', 'reverify'] as const) {
+    it(`delivers ${action} through real email/SMS transports in ${locale} with current preferences`, async () => {
+      await db.pool.query(
+        "UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')"
+      );
+      const userId = randomUUID(),
+        email = `${userId}@example.test`,
+        phone = `+9891200000${locale === 'fa' ? '1' : '2'}${['verify', 'unverify', 'reverify'].indexOf(action)}`;
+      await db.pool.query(
+        "INSERT INTO users(user_id,username,email,mobile,password_hash,locale,notification_preferences) VALUES($1,$2,$2,$3,'fixture-only',$4,'EMAIL,SMS')",
+        [userId, email, phone, locale]
+      );
+      await db.pool.query(
+        "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES($2,$1,'mobile',NOW())",
+        [userId, phone]
+      );
+      const id = (
+        await db.pool.query(
+          "INSERT INTO profiles(user_id,status,title) VALUES($1,$2,'Named verification profile') RETURNING id",
+          [userId, action === 'verify' ? 'PENDING_VERIFICATION' : 'VERIFIED']
+        )
+      ).rows[0].id;
+      const templates = buildSeedTemplates().filter(
+        (t) => t.eventKey === 'profile.verification_status' && t.locale === locale
+      );
+      for (const t of templates) {
+        await db.pool.query(
+          "UPDATE notification_templates SET status='archived',is_active=false WHERE event_key=$1 AND channel=$2 AND locale=$3",
+          [t.eventKey, t.channel, t.locale]
+        );
+        await db.pool.query(
+          `INSERT INTO notification_templates(event_key,channel,locale,version,subject,body_template,variables,status,is_active)
+          VALUES($1,$2,$3,(SELECT COALESCE(MAX(version),0)+1 FROM notification_templates WHERE event_key=$1 AND channel=$2 AND locale=$3),$4,$5,$6,'active',true)`,
+          [t.eventKey, t.channel, t.locale, t.subject, t.bodyTemplate, JSON.stringify(t.variables)]
+        );
+      }
+      await db.pool.query(
+        "UPDATE email_provider_configs SET status='superseded' WHERE status='active'"
+      );
+      await db.pool.query(
+        "UPDATE sms_provider_configs SET status='superseded' WHERE status='active'"
+      );
+      for (const channel of ['email', 'sms']) {
+        const transport = channel === 'email' ? 'resend' : 'smsir';
+        const config =
+          channel === 'email'
+            ? { api_key: 'fixture-only', from_email: 'sender@example.test' }
+            : {
+                api_key: 'fixture-only',
+                sender: '3000',
+                template_mappings: [
+                  {
+                    event_key: 'profile.verification_status',
+                    locale,
+                    template_id: locale === 'fa' ? '42' : '43',
+                    variables: { [locale === 'fa' ? 'messageFa' : 'messageEn']: 'MESSAGE' },
+                  },
+                ],
+              };
+        await db.pool.query(
+          `INSERT INTO ${channel === 'email' ? 'email_provider_configs' : 'sms_provider_configs'}(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+          VALUES($1,'Verification fixture','active',$2,$3,'passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array($1::text,$2::jsonb)::text,'UTF8')),'hex'))`,
+          [transport, JSON.stringify(config), userId]
+        );
+      }
+      const reason = 'Correct your registration number';
+      await service.verifyProfile(
+        id,
+        { action, ...(action === 'verify' ? {} : { reason }) },
+        'verify-staff',
+        ''
+      );
+      const outbox = (
+        await db.pool.query('SELECT id FROM notification_outbox WHERE profile_id=$1', [id])
+      ).rows[0];
+      expect(outbox).toBeDefined();
+      const request = vi.fn<typeof fetch>(
+        async (url) =>
+          new Response(
+            JSON.stringify(
+              String(url).includes('sms.ir')
+                ? { status: 1, data: { messageId: 123 } }
+                : { id: randomUUID() }
+            ),
+            { status: 200 }
+          )
+      );
+      const options = {
+        pool: db.pool,
+        deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
+        transports: {
+          email: new EmailNotificationTransport(db.pool, request),
+          sms: new SmsNotificationTransport(db.pool, request),
+        },
+      };
+      expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+      expect(request).toHaveBeenCalledTimes(2);
+      const messages = request.mock.calls.map((call) => JSON.parse(String(call[1]?.body)));
+      const mail = messages.find((m) => m.html),
+        sms = messages.find((m) => m.TemplateId);
+      expect(mail.to).toEqual([email]);
+      expect(sms.TemplateId).toBe(locale === 'fa' ? 42 : 43);
+      const text = sms.Parameters[0].Value;
+      expect(text).toContain('Named verification profile');
+      expect(mail.html).toContain('Named verification profile');
+      expect(mail.html).not.toContain('{{');
+      expect(text).toContain(locale === 'fa' ? 'پروفایل' : 'profile');
+      if (action !== 'verify') {
+        expect(text).toContain(reason);
+        expect(mail.html).toContain(reason);
+        expect(text).toContain(locale === 'fa' ? 'تیکت پشتیبانی' : 'support ticket');
+      }
+      expect(
+        (await db.pool.query('SELECT id FROM in_app_notifications WHERE profile_id=$1', [id])).rows
+      ).toHaveLength(1);
+      expect(await runOutboxPoll(options)).toEqual({ leased: 0, delivered: 0, failed: 0 });
+      expect(request).toHaveBeenCalledTimes(2);
+      // A queued notice must honor a channel choice changed before dispatch.
+      await service.verifyProfile(
+        id,
+        { action: action === 'verify' ? 'reverify' : 'verify', reason },
+        'verify-staff',
+        ''
+      );
+      await db.pool.query("UPDATE users SET notification_preferences='IN_APP' WHERE user_id=$1", [
+        userId,
+      ]);
+      expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+      expect(request).toHaveBeenCalledTimes(2);
+    });
+  }
+}
