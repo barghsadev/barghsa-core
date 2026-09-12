@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
+  "source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
   "active_step": "R02",
-  "next_action": "Review implemented AI model, policy and slot settings together; preserve KB/chat future prerequisites.",
+  "next_action": "Review catalogue/VAT and their sensitive price-change callers, reusing completed provider/storage/AI proofs.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -718,6 +718,10 @@
     {
       "id": "R02-kb-agent-integration",
       "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration"
+    },
+    {
+      "id": "R02-ai-settings",
+      "review_record": "audit/evidence/step-reviews.json#R02-ai-settings"
     }
   ],
   "deferred_improvements": [
@@ -741,9 +745,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 166,
-    "partial": 33,
-    "pending": 123,
+    "acceptance_verified": 168,
+    "partial": 34,
+    "pending": 120,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1033,31 +1037,31 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-ai-settings",
-    "name": "AI model, policy and slot settings",
+    "id": "R02-catalogue-vat",
+    "name": "Catalogue, VAT and sensitive price changes",
     "status": "reviewing",
     "prs": [
-      207,
-      209,
-      211
+      92,
+      212,
+      213
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-09.11.01",
-      "02-auth-users-admin.md#T-09.11.03",
-      "02-auth-users-admin.md#T-09.11.05"
+      "02-auth-users-admin.md#T-09.12.01",
+      "02-auth-users-admin.md#T-09.12.02",
+      "02-auth-users-admin.md#T-02.02.04"
     ],
     "remaining_checklist": [
-      "Read exact requirements and saved deferrals; inspect model tests, policy editors and slot UI.",
-      "Repair current transaction authorization and confirmed integration gaps.",
-      "Run focused checks, then record individual PR dispositions together."
+      "Read exact catalogue/VAT and step-up criteria and saved PR deferrals.",
+      "Review existing versioned prices/VAT, referenced-product archival, invoice snapshots and UI warnings.",
+      "Repair confirmed transaction/audit/UI gaps; reuse previous financial/provider/storage evidence."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-kb-agent-integration"
+      "audit/evidence/step-reviews.json#R02-ai-settings"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review implemented AI model, policy and slot settings together; preserve KB/chat future prerequisites."
+    "next_action": "Review catalogue/VAT and their sensitive price-change callers, reusing completed provider/storage/AI proofs."
   },
   "open_domain_reviews": [
     {
@@ -1344,6 +1348,19 @@
         "05-notifications-documents-ai.md#T-05.21.01",
         "05-notifications-documents-ai.md#T-05.21.02",
         "05-notifications-documents-ai.md#T-05.21.03"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.05",
+      "prs": [
+        211
+      ],
+      "owner_batch": "V01/B01 future chatbot consumers",
+      "remaining": "Actual chatbot/frontend/external slot consumers remain unbuilt. The administration endpoint and stable slot keys do not prove runtime consumption. Requires the actual agent backend under 02-auth-users-admin.md#T-09.11.04 and profile-scoped slot context under 05-notifications-documents-ai.md#T-05.22.04.",
+      "review_record": "audit/evidence/step-reviews.json#R02-ai-settings",
+      "prerequisite_task_keys": [
+        "02-auth-users-admin.md#T-09.11.04",
+        "05-notifications-documents-ai.md#T-05.22.04"
       ]
     }
   ]

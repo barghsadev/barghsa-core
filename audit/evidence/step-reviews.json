@@ -16839,6 +16839,251 @@
           "evidence": "audit/evidence/step-reviews.json#R02-kb-agent-integration"
         }
       ]
+    },
+    {
+      "id": "R02-ai-settings",
+      "date": "2026-09-13",
+      "source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+      "base_revision": "b663118dad25bd5d60794e7f491f4a042996a308",
+      "product_commits": [
+        "1d02740247981011f95c2c35262e0733169096bf",
+        "6e8642ac88fd7dbff7f0e8662a34986369c6cc74",
+        "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.01",
+        "02-auth-users-admin.md#T-09.11.03",
+        "02-auth-users-admin.md#T-09.11.05"
+      ],
+      "summary": "AI settings:2 tasks verified and1 partial; PR207/209 closed,PR211 open for actual slot consumers.168 verified/34 partial/120 pending;147 closed/24 open/130 unreviewed saved PRs.",
+      "review": [
+        "Model CRUD/token encryption, masked-token preservation, explicit credential choice after destination change, worker test request/result persistence and model revision binding verified.10 worker and48 shared cases cover leases, timeout, redaction, DNS rebinding guards, bounded transport and both OpenAI-compatible/Anthropic request shapes. Real HTTP fixture starts a separate worker and controlled local provider; no live vendor call claimed.",
+        "All four structured policy editors, type badges, active flag and group CRUD/membership are implemented. Type/rules consistency after concurrent edits, atomic mutation/audit and permission/session boundaries pass. FA/EN browser checks include topics, response style, other two types, group creation/link/unlink, password retries and mobile accessibility. Runtime policy evaluation belongs to the separate future T-05.18.03; this task manages configuration.",
+        "All five fixed slots, assign/clear, multiple-slot reuse, disabled-agent warning, shared-use warning, FK behavior and audit are implemented. Current HTTP and FA/EN dropdown/retry/permission-loss checks pass. Required runtime consumers remain explicitly partial.",
+        "Read exact requirements and all three saved PR bodies/deferrals. The synchronous-test historical note in PR207 is satisfied by the current separate worker and durable revision-bound queue. No model connection probe is treated as actual agent chat.",
+        "17 baseline HTTP failures reproduced commit after session expiry and result persistence after expired/revoked/rotated-CSRF/missing-step-up sessions. Repaired model/policy/slot services with actor-bound proof before/after transaction work; recheck each side of the model worker wait.13 obsolete permission-wait fixtures corrected to current shared guard SQL.",
+        "Two FA/EN browser baselines reproduced dark model-table contrast at1.04:1. Theme surfaces and error text repaired; canonical validation-error mapping fixed. Final browser journeys verify preserved credentials, local validation feedback, safe text preview, blocked deletion/retry, all structured policy types and group membership. Initial post-fix browser failures were missing admin dictionary imports in the fixture; retained and corrected without weakening assertions.",
+        "Five baseline audit failures reproduced missing stepUpVerified/timestamp. All five AI settings services now pass the locked-session verification time into existing atomic audit writes.334 API cases pass including five regressions; only a local alias rename followed, avoiding whole-handler formatting churn.5 proof cases/types/lint rerun afterward pass. KB/agent partial requirements remain unchanged.",
+        "10 worker,48 shared and31 DB cases pass.10 distinct FA/EN Chromium cases pass;8 final model/policy cases plus2 unchanged slots from preceding run. Types/scoped lint/format/build and42 unchanged budgets pass. Final metadata-only API repair reuses valid browser/worker/transport/schema evidence.",
+        "Preserve encrypted secrets, historical audits and stable slot keys. No migration, duplicate deletion/rebuild, live provider request, GitHub update, deployment or scheduler action."
+      ],
+      "verification": {
+        "api": "334 cases; earlier162 and five final proof checks overlap.",
+        "browser": "10 distinct FA/EN cases; dark model contrast and mobile policy accessibility pass.",
+        "worker_shared_db": "10 worker,48 shared,31 DB pass.",
+        "quality": "API/web types, scoped lint/format, production build and42 budgets pass. Full regression remainsV02."
+      },
+      "remaining": [
+        "Actual chatbot/frontend/external slot consumers remain unbuilt. The administration endpoint and stable slot keys do not prove runtime consumption. Requires the actual agent backend under 02-auth-users-admin.md#T-09.11.04 and profile-scoped slot context under 05-notifications-documents-ai.md#T-05.22.04."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots-http.integration.test.ts",
+          "sha256": "3ad7880c5be94107c5b6e9cf0ce27bce610479cae2409fdf6a4b9d10a9e104c5"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.test.ts",
+          "sha256": "4b1e2adf1517597c1192aa7174e7ad685c939b4d2f4e869c6f2faf332057804e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.ts",
+          "sha256": "43f17bb53a14ac06a573cd8cadbe49f0e236be33bbfa43495797cda156c7f3fa"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
+          "sha256": "8481d615e2f3f6ae69d3c9492c580907e688cb691455680699c6e81bb9bb1156"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.service.ts",
+          "sha256": "93a518f9a552b4916702b9639beb8a579b4ef30789b895d3cba279f45e27e837"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+          "sha256": "37e610ff286928bcce15b7e174891a276ca3d465693d2f3bcab81333c61a602e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.service.ts",
+          "sha256": "46596cffcb2ee1073a1ffcecb6971796505f0c14c41d731c91f37055fe4f5e9e"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+          "sha256": "d82550c784be49a2a38d3c2fc702127fa3bc1816d1696518609e3edf7bca5bcb"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.test.ts",
+          "sha256": "8b58e732291403282956deae7ac2a45913d5935471d728c9f5011150c37dd323"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.ts",
+          "sha256": "9858b18d34ac654eb1e8073dcaa559e61cee1b7ff8ee842947c2c1fad69e1b34"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.test.ts",
+          "sha256": "a227244c84ed3a85931568ab8a7e5f941e4049ff42f35f5abea364136f6b0dc1"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.ts",
+          "sha256": "466e50a4fc1a36f1841b5af7ccdd61dba9b7ad3254460141ce5141e8d6696b12"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+          "sha256": "c1996b5fa59ed5365e836deb752744e13edca9d386673d5c163e7101be3cba13"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.test.ts",
+          "sha256": "bceafd079293a47e2f8b088129d41ad55b2cfd9a7cb15e4171ad2dd2c809d52a"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
+          "sha256": "17caecddec484ae81af5510e479ac9bbc461f89f05f93009f2c4333bdc2f2cc1"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.service.test.ts",
+          "sha256": "6d2e2ef026148f4f628e410d46c3b1d95161fa1be35953dfec457a081cecfb56"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.service.ts",
+          "sha256": "a9052ba2819f45f6d846ca92e03089b0f2b6fb0b5aeb6094b3b7ab870909c04a"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "bec662497415795b9d60a74c7fb2d1834909551041c81451ed9bcd568df109ff"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "c6867a24336dcad3da81d5d431a6dec65940ab12be7d9551aede053847ea752f"
+        },
+        {
+          "path": "apps/web/e2e/agent-slots.spec.ts",
+          "sha256": "ea5fa870d0c52007c573f60df316ed1cfcc488763e8552f7c7a2b77bcbd61fdd"
+        },
+        {
+          "path": "apps/web/e2e/ai-models.spec.ts",
+          "sha256": "290f39861aada2cf31dcd8b62652164da1ce686b17604a2f63118219ae20584d"
+        },
+        {
+          "path": "apps/web/e2e/ai-policies.spec.ts",
+          "sha256": "5b510371ae8972d20780cce4729ed4373e3ab874fafe7094b9fe0d41dcb0a160"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "2804d7714d274c47420fd6a85eff0c123c270deebae6d2ff246610816a4b12c2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "8e47f91359751c26de28bf8e25a1a9c5fae96c0ee5354b3e189dbce47f925a96"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "2e9e6c274f0503631aa788d125f5ce50236337eb5721b432659e426b8f5de4f8"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "7d96bf76fd4f563e1394bc761748fca17bfc4cd68b29a5e61b69d8ce2d4f0021"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "6b3f166fc6f3df610636e9288843393758e701b35805504111b529e2f210b863"
+        },
+        {
+          "path": "packages/db/src/schema/ai-agent-slots.test.ts",
+          "sha256": "cfa2cc76b23d5b438a481f537189372962b3ae44295d0e0724c6194b59ab64fa"
+        },
+        {
+          "path": "packages/db/src/schema/ai-models.test.ts",
+          "sha256": "d71b74fe67983d8702aa24f40035333cd1e923320026ad47ce92945ce8dfd894"
+        },
+        {
+          "path": "packages/db/src/schema/ai-policies.test.ts",
+          "sha256": "465670f84d01900e25ee4ee93007062ea0eb82948d44ad1736777366df8f67e5"
+        },
+        {
+          "path": "packages/shared/src/ai-models/index.ts",
+          "sha256": "10133baa7872503d9a449ee023a4a7a0e345cbf7af4381f90d0c7fe67b5d3ead"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.test.ts",
+          "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.ts",
+          "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.test.ts",
+          "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.ts",
+          "sha256": "c02c010f570f26d9217d3fe874cde7294fef9589538c47471c454cef8879965b"
+        },
+        {
+          "path": "packages/shared/src/ai-models/transport.test.ts",
+          "sha256": "7329eb9f4a7f8fabded26ed2b923c177f1c7e40120eb502b62f97880e7c20e7c"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-ai-settings-api-final.log",
+        "/tmp/r02-ai-settings-api.log",
+        "/tmp/r02-ai-settings-audit-api.log",
+        "/tmp/r02-ai-settings-audit-baseline.log",
+        "/tmp/r02-ai-settings-audit-compact-format.log",
+        "/tmp/r02-ai-settings-audit-format.log",
+        "/tmp/r02-ai-settings-audit-lint.log",
+        "/tmp/r02-ai-settings-audit-proof-final.log",
+        "/tmp/r02-ai-settings-audit-types-final.log",
+        "/tmp/r02-ai-settings-audit-types.log",
+        "/tmp/r02-ai-settings-browser-final.log",
+        "/tmp/r02-ai-settings-browser-format.log",
+        "/tmp/r02-ai-settings-browser.log",
+        "/tmp/r02-ai-settings-budgets.log",
+        "/tmp/r02-ai-settings-db.log",
+        "/tmp/r02-ai-settings-format-check.log",
+        "/tmp/r02-ai-settings-format.log",
+        "/tmp/r02-ai-settings-lint.log",
+        "/tmp/r02-ai-settings-session-baseline.log",
+        "/tmp/r02-ai-settings-shared.log",
+        "/tmp/r02-ai-settings-theme-baseline.log",
+        "/tmp/r02-ai-settings-types.log",
+        "/tmp/r02-ai-settings-web-build.log",
+        "/tmp/r02-ai-settings-web-format-check.log",
+        "/tmp/r02-ai-settings-web-format.log",
+        "/tmp/r02-ai-settings-web-lint.log",
+        "/tmp/r02-ai-settings-web-types.log",
+        "/tmp/r02-ai-settings-worker.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 207,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.11.01"
+          ],
+          "reason": "Model CRUD/token encryption, masked-token preservation, explicit credential choice after destination change, worker test request/result persistence and model revision binding verified.10 worker and48 shared cases cover leases, timeout, redaction, DNS rebinding guards, bounded transport and both OpenAI-compatible/Anthropic request shapes. Real HTTP fixture starts a separate worker and controlled local provider; no live vendor call claimed. All saved UI deferrals explicitly satisfied.",
+          "source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+          "evidence": "audit/evidence/step-reviews.json#R02-ai-settings"
+        },
+        {
+          "pr": 209,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.11.03"
+          ],
+          "reason": "All four structured policy editors, type badges, active flag and group CRUD/membership are implemented. Type/rules consistency after concurrent edits, atomic mutation/audit and permission/session boundaries pass. FA/EN browser checks include topics, response style, other two types, group creation/link/unlink, password retries and mobile accessibility. Runtime policy evaluation belongs to the separate future T-05.18.03; this task manages configuration. All saved UI deferrals explicitly satisfied.",
+          "source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+          "evidence": "audit/evidence/step-reviews.json#R02-ai-settings"
+        },
+        {
+          "pr": 211,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.11.05"
+          ],
+          "reason": "Actual chatbot/frontend/external slot consumers remain unbuilt. The administration endpoint and stable slot keys do not prove runtime consumption. Requires the actual agent backend under 02-auth-users-admin.md#T-09.11.04 and profile-scoped slot context under 05-notifications-documents-ai.md#T-05.22.04.",
+          "source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+          "evidence": "audit/evidence/step-reviews.json#R02-ai-settings"
+        }
+      ]
     }
   ]
 }

@@ -1,22 +1,26 @@
 # Remaining fix plan
 
-Current through product/test `b8201978` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `c4098cdd` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 163 | 31 | 69 | 263 |
+| Tasks with merged PR evidence | 165 | 34 | 64 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 166 | 31 | 125 | 322 |
+| All claims | 168 | 34 | 120 | 322 |
 
-**156 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**154 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Receipt/expiry notices complete locally atb8201978:3 task acceptances verified (1 newly verified,2 preserved);8 contributing saved PR reviews closed,3 newly closed and5 preserved. Current totals166 verified/33 partial/123 pending;145 closed/23 open/133 unreviewed PRs.2771 logs indexed.35 worker and38 shared cases pass, including8 actual seeded FA/EN receipt/expiry delivery cases. Worker/shared types/lint/format pass. Matching prior receipt API/UI and42 budget evidence reused.10 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-receipt-expiry-notices).
+Continue **R02-catalogue-vat**, PR92/212/213. Review catalogue versioned prices, product archival and VAT snapshots, then repair their remaining step-up, audit and UI criteria. AI settings atc4098cdd:2 tasks verified/1 partial;PR207/209 close,PR211 remains open for future slot consumers. Current168 verified/34 partial/120 pending;147 closed/24 open/130 unreviewed PRs;2827 logs indexed. [Review](evidence/step-reviews.json#R02-ai-settings).
+
+Earlier checkpoints, retained for evidence reuse:
+
+Receipt/expiry notices complete locally atb8201978:3 task acceptances verified (1 newly verified,2 preserved);8 contributing saved PR reviews closed,3 newly closed and5 preserved. At the receipt checkpoint,2771 logs were indexed.35 worker and38 shared cases pass, including8 actual seeded FA/EN receipt/expiry delivery cases. Worker/shared types/lint/format pass. Matching prior receipt API/UI and42 budget evidence reused.10 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-receipt-expiry-notices).
 
 Next batch: integrated KB uploads and real agent test chat, PR208/210; qualified tasks02-auth-users-admin.md#T-09.11.02 andT-09.11.04. Read exact criteria, bodies and current implementation; a provider connection probe is insufficient. Reuse provider/storage authority work.
 
@@ -98,6 +102,8 @@ Notification outbox/delivery has individual dispositions at `05dc4f9b`: seven cl
 
 KB/agent batch at0e59d835 repaired uploads and transaction authorization. PR208/210 remain open; both tasks partial for future processing/policy/chat prerequisites. Continue AI model/policy/slot settings, PR207/209/211. [Review](evidence/step-reviews.json#R02-kb-agent-integration).
 
+AI settings checkpoint c4098cdd: PR207/209 closed,PR211 open for unbuilt runtime slot consumers. Current168 verified/34 partial/120 pending;147 closed/24 open/130 unreviewed PRs. Continue catalogue/VAT and sensitive price callers,PR92/212/213. [Review](evidence/step-reviews.json#R02-ai-settings).
+
 ## Feature-batch rules
 
 Approved September 8 to reduce repeated discovery, checks and audit work. This changes execution granularity, not requirements, acceptance thresholds, authority or phase order. Finish an in-flight change/check safely before switching. The supervisor's one-task/one-PR dispatch protocol remains separate and unchanged.
@@ -128,7 +134,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all33 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all34 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 

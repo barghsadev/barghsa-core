@@ -17871,7 +17871,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-          "sha256": "2dfb39d6f4a8b3ab4e728076b2a9bbbf2cb87120198636fe177dafd16f531e53"
+          "sha256": "37e610ff286928bcce15b7e174891a276ca3d465693d2f3bcab81333c61a602e"
         },
         {
           "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -17887,11 +17887,11 @@
         },
         {
           "path": "apps/api/src/ai-agents/ai-agents.service.ts",
-          "sha256": "15cb37d21c70ab8e3eb903b163e6ac5e077bb43b44db920dfcd22a454335985a"
+          "sha256": "46596cffcb2ee1073a1ffcecb6971796505f0c14c41d731c91f37055fe4f5e9e"
         },
         {
           "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-          "sha256": "bfe2fdbdd834134238b70c0aec79167223361d1e6326a3f160d0d49df8f27a37"
+          "sha256": "bec662497415795b9d60a74c7fb2d1834909551041c81451ed9bcd568df109ff"
         },
         {
           "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -17907,7 +17907,7 @@
         },
         {
           "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-          "sha256": "73df526714c63db9006073978ff9971a407fa84b1a718c996ca08cd1c7780443"
+          "sha256": "c6867a24336dcad3da81d5d431a6dec65940ab12be7d9551aede053847ea752f"
         },
         {
           "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -18003,7 +18003,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
-          "sha256": "2dfb39d6f4a8b3ab4e728076b2a9bbbf2cb87120198636fe177dafd16f531e53"
+          "sha256": "37e610ff286928bcce15b7e174891a276ca3d465693d2f3bcab81333c61a602e"
         },
         {
           "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
@@ -18019,11 +18019,11 @@
         },
         {
           "path": "apps/api/src/ai-agents/ai-agents.service.ts",
-          "sha256": "15cb37d21c70ab8e3eb903b163e6ac5e077bb43b44db920dfcd22a454335985a"
+          "sha256": "46596cffcb2ee1073a1ffcecb6971796505f0c14c41d731c91f37055fe4f5e9e"
         },
         {
           "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-          "sha256": "bfe2fdbdd834134238b70c0aec79167223361d1e6326a3f160d0d49df8f27a37"
+          "sha256": "bec662497415795b9d60a74c7fb2d1834909551041c81451ed9bcd568df109ff"
         },
         {
           "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -18039,7 +18039,7 @@
         },
         {
           "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
-          "sha256": "73df526714c63db9006073978ff9971a407fa84b1a718c996ca08cd1c7780443"
+          "sha256": "c6867a24336dcad3da81d5d431a6dec65940ab12be7d9551aede053847ea752f"
         },
         {
           "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -18123,6 +18123,506 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 832,
+      "requirement": "**T-09.11.01 — AI model management**\n\n- Description: Admin manages AI models: title, base URL, model name, API token (encrypted), provider type. Test button checks connection and displays response.\n- Technical notes: Permissions: `admin:ai:models`. CRUD for model records. API tokens encrypted at rest. Test: worker sends simple request and returns response. Provider types: OpenAI-compatible, Anthropic, etc. Models are referenced by AI agents.\n- UI/UX: Table: name, provider type, model, status (reachable/unreachable). Add/edit form. Test button per row with response preview.\n- Dependencies: admin config framework\n- Complexity: L",
+      "requirement_sha256": "6cefcbc91b191e29df18f72b963f83a3bd519af7279184b83fc9d12b4ec5554b",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots-http.integration.test.ts",
+          "sha256": "3ad7880c5be94107c5b6e9cf0ce27bce610479cae2409fdf6a4b9d10a9e104c5"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.test.ts",
+          "sha256": "4b1e2adf1517597c1192aa7174e7ad685c939b4d2f4e869c6f2faf332057804e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.ts",
+          "sha256": "43f17bb53a14ac06a573cd8cadbe49f0e236be33bbfa43495797cda156c7f3fa"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
+          "sha256": "8481d615e2f3f6ae69d3c9492c580907e688cb691455680699c6e81bb9bb1156"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.service.ts",
+          "sha256": "93a518f9a552b4916702b9639beb8a579b4ef30789b895d3cba279f45e27e837"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+          "sha256": "37e610ff286928bcce15b7e174891a276ca3d465693d2f3bcab81333c61a602e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.service.ts",
+          "sha256": "46596cffcb2ee1073a1ffcecb6971796505f0c14c41d731c91f37055fe4f5e9e"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+          "sha256": "d82550c784be49a2a38d3c2fc702127fa3bc1816d1696518609e3edf7bca5bcb"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.test.ts",
+          "sha256": "8b58e732291403282956deae7ac2a45913d5935471d728c9f5011150c37dd323"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.ts",
+          "sha256": "9858b18d34ac654eb1e8073dcaa559e61cee1b7ff8ee842947c2c1fad69e1b34"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.test.ts",
+          "sha256": "a227244c84ed3a85931568ab8a7e5f941e4049ff42f35f5abea364136f6b0dc1"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.ts",
+          "sha256": "466e50a4fc1a36f1841b5af7ccdd61dba9b7ad3254460141ce5141e8d6696b12"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+          "sha256": "c1996b5fa59ed5365e836deb752744e13edca9d386673d5c163e7101be3cba13"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.test.ts",
+          "sha256": "bceafd079293a47e2f8b088129d41ad55b2cfd9a7cb15e4171ad2dd2c809d52a"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
+          "sha256": "17caecddec484ae81af5510e479ac9bbc461f89f05f93009f2c4333bdc2f2cc1"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.service.test.ts",
+          "sha256": "6d2e2ef026148f4f628e410d46c3b1d95161fa1be35953dfec457a081cecfb56"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.service.ts",
+          "sha256": "a9052ba2819f45f6d846ca92e03089b0f2b6fb0b5aeb6094b3b7ab870909c04a"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "bec662497415795b9d60a74c7fb2d1834909551041c81451ed9bcd568df109ff"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "c6867a24336dcad3da81d5d431a6dec65940ab12be7d9551aede053847ea752f"
+        },
+        {
+          "path": "apps/web/e2e/agent-slots.spec.ts",
+          "sha256": "ea5fa870d0c52007c573f60df316ed1cfcc488763e8552f7c7a2b77bcbd61fdd"
+        },
+        {
+          "path": "apps/web/e2e/ai-models.spec.ts",
+          "sha256": "290f39861aada2cf31dcd8b62652164da1ce686b17604a2f63118219ae20584d"
+        },
+        {
+          "path": "apps/web/e2e/ai-policies.spec.ts",
+          "sha256": "5b510371ae8972d20780cce4729ed4373e3ab874fafe7094b9fe0d41dcb0a160"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "2804d7714d274c47420fd6a85eff0c123c270deebae6d2ff246610816a4b12c2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "8e47f91359751c26de28bf8e25a1a9c5fae96c0ee5354b3e189dbce47f925a96"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "2e9e6c274f0503631aa788d125f5ce50236337eb5721b432659e426b8f5de4f8"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "7d96bf76fd4f563e1394bc761748fca17bfc4cd68b29a5e61b69d8ce2d4f0021"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "6b3f166fc6f3df610636e9288843393758e701b35805504111b529e2f210b863"
+        },
+        {
+          "path": "packages/db/src/schema/ai-agent-slots.test.ts",
+          "sha256": "cfa2cc76b23d5b438a481f537189372962b3ae44295d0e0724c6194b59ab64fa"
+        },
+        {
+          "path": "packages/db/src/schema/ai-models.test.ts",
+          "sha256": "d71b74fe67983d8702aa24f40035333cd1e923320026ad47ce92945ce8dfd894"
+        },
+        {
+          "path": "packages/db/src/schema/ai-policies.test.ts",
+          "sha256": "465670f84d01900e25ee4ee93007062ea0eb82948d44ad1736777366df8f67e5"
+        },
+        {
+          "path": "packages/shared/src/ai-models/index.ts",
+          "sha256": "10133baa7872503d9a449ee023a4a7a0e345cbf7af4381f90d0c7fe67b5d3ead"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.test.ts",
+          "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.ts",
+          "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.test.ts",
+          "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.ts",
+          "sha256": "c02c010f570f26d9217d3fe874cde7294fef9589538c47471c454cef8879965b"
+        },
+        {
+          "path": "packages/shared/src/ai-models/transport.test.ts",
+          "sha256": "7329eb9f4a7f8fabded26ed2b923c177f1c7e40120eb502b62f97880e7c20e7c"
+        }
+      ],
+      "checks": [
+        "Model CRUD/token encryption, masked-token preservation, explicit credential choice after destination change, worker test request/result persistence and model revision binding verified.10 worker and48 shared cases cover leases, timeout, redaction, DNS rebinding guards, bounded transport and both OpenAI-compatible/Anthropic request shapes. Real HTTP fixture starts a separate worker and controlled local provider; no live vendor call claimed.",
+        "Current session/CSRF/step-up authority is checked inside each transaction before work and before commit; worker test results recheck after the provider wait. Audit records true step-up flag and the database verification timestamp.",
+        "334 current API cases pass across five AI administration services, including KB/agent follow-up.5 overlapping HTTP proof cases rerun after a local variable rename; types and lint also pass after rename.10 distinct FA/EN browser,10 worker,48 shared,31 DB cases and42 budgets pass."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        207
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-ai-settings"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 848,
+      "requirement": "**T-09.11.03 — Policy management**\n\n- Description: Admin manages AI usage policies and policy groups. Policies define rules, permissions, guardrails for AI agents.\n- Technical notes: Policy types: allowed topics, disallowed actions, data access scope, response style, etc. Policy groups combine policies.\n- UI/UX: Policy list with type badges. Editor per policy (structured fields). Group management.\n- Dependencies: T-09.11.01\n- Complexity: L",
+      "requirement_sha256": "549353325a38fcf716cdcc566462a0cdbb11801bfcf306f2d58902a15b0713ad",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots-http.integration.test.ts",
+          "sha256": "3ad7880c5be94107c5b6e9cf0ce27bce610479cae2409fdf6a4b9d10a9e104c5"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.test.ts",
+          "sha256": "4b1e2adf1517597c1192aa7174e7ad685c939b4d2f4e869c6f2faf332057804e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.ts",
+          "sha256": "43f17bb53a14ac06a573cd8cadbe49f0e236be33bbfa43495797cda156c7f3fa"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
+          "sha256": "8481d615e2f3f6ae69d3c9492c580907e688cb691455680699c6e81bb9bb1156"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.service.ts",
+          "sha256": "93a518f9a552b4916702b9639beb8a579b4ef30789b895d3cba279f45e27e837"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+          "sha256": "37e610ff286928bcce15b7e174891a276ca3d465693d2f3bcab81333c61a602e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.service.ts",
+          "sha256": "46596cffcb2ee1073a1ffcecb6971796505f0c14c41d731c91f37055fe4f5e9e"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+          "sha256": "d82550c784be49a2a38d3c2fc702127fa3bc1816d1696518609e3edf7bca5bcb"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.test.ts",
+          "sha256": "8b58e732291403282956deae7ac2a45913d5935471d728c9f5011150c37dd323"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.ts",
+          "sha256": "9858b18d34ac654eb1e8073dcaa559e61cee1b7ff8ee842947c2c1fad69e1b34"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.test.ts",
+          "sha256": "a227244c84ed3a85931568ab8a7e5f941e4049ff42f35f5abea364136f6b0dc1"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.ts",
+          "sha256": "466e50a4fc1a36f1841b5af7ccdd61dba9b7ad3254460141ce5141e8d6696b12"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+          "sha256": "c1996b5fa59ed5365e836deb752744e13edca9d386673d5c163e7101be3cba13"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.test.ts",
+          "sha256": "bceafd079293a47e2f8b088129d41ad55b2cfd9a7cb15e4171ad2dd2c809d52a"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
+          "sha256": "17caecddec484ae81af5510e479ac9bbc461f89f05f93009f2c4333bdc2f2cc1"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.service.test.ts",
+          "sha256": "6d2e2ef026148f4f628e410d46c3b1d95161fa1be35953dfec457a081cecfb56"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.service.ts",
+          "sha256": "a9052ba2819f45f6d846ca92e03089b0f2b6fb0b5aeb6094b3b7ab870909c04a"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "bec662497415795b9d60a74c7fb2d1834909551041c81451ed9bcd568df109ff"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "c6867a24336dcad3da81d5d431a6dec65940ab12be7d9551aede053847ea752f"
+        },
+        {
+          "path": "apps/web/e2e/agent-slots.spec.ts",
+          "sha256": "ea5fa870d0c52007c573f60df316ed1cfcc488763e8552f7c7a2b77bcbd61fdd"
+        },
+        {
+          "path": "apps/web/e2e/ai-models.spec.ts",
+          "sha256": "290f39861aada2cf31dcd8b62652164da1ce686b17604a2f63118219ae20584d"
+        },
+        {
+          "path": "apps/web/e2e/ai-policies.spec.ts",
+          "sha256": "5b510371ae8972d20780cce4729ed4373e3ab874fafe7094b9fe0d41dcb0a160"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "2804d7714d274c47420fd6a85eff0c123c270deebae6d2ff246610816a4b12c2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "8e47f91359751c26de28bf8e25a1a9c5fae96c0ee5354b3e189dbce47f925a96"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "2e9e6c274f0503631aa788d125f5ce50236337eb5721b432659e426b8f5de4f8"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "7d96bf76fd4f563e1394bc761748fca17bfc4cd68b29a5e61b69d8ce2d4f0021"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "6b3f166fc6f3df610636e9288843393758e701b35805504111b529e2f210b863"
+        },
+        {
+          "path": "packages/db/src/schema/ai-agent-slots.test.ts",
+          "sha256": "cfa2cc76b23d5b438a481f537189372962b3ae44295d0e0724c6194b59ab64fa"
+        },
+        {
+          "path": "packages/db/src/schema/ai-models.test.ts",
+          "sha256": "d71b74fe67983d8702aa24f40035333cd1e923320026ad47ce92945ce8dfd894"
+        },
+        {
+          "path": "packages/db/src/schema/ai-policies.test.ts",
+          "sha256": "465670f84d01900e25ee4ee93007062ea0eb82948d44ad1736777366df8f67e5"
+        },
+        {
+          "path": "packages/shared/src/ai-models/index.ts",
+          "sha256": "10133baa7872503d9a449ee023a4a7a0e345cbf7af4381f90d0c7fe67b5d3ead"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.test.ts",
+          "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.ts",
+          "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.test.ts",
+          "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.ts",
+          "sha256": "c02c010f570f26d9217d3fe874cde7294fef9589538c47471c454cef8879965b"
+        },
+        {
+          "path": "packages/shared/src/ai-models/transport.test.ts",
+          "sha256": "7329eb9f4a7f8fabded26ed2b923c177f1c7e40120eb502b62f97880e7c20e7c"
+        }
+      ],
+      "checks": [
+        "All four structured policy editors, type badges, active flag and group CRUD/membership are implemented. Type/rules consistency after concurrent edits, atomic mutation/audit and permission/session boundaries pass. FA/EN browser checks include topics, response style, other two types, group creation/link/unlink, password retries and mobile accessibility. Runtime policy evaluation belongs to the separate future T-05.18.03; this task manages configuration.",
+        "Current session/CSRF/step-up authority is checked inside each transaction before work and before commit; worker test results recheck after the provider wait. Audit records true step-up flag and the database verification timestamp.",
+        "334 current API cases pass across five AI administration services, including KB/agent follow-up.5 overlapping HTTP proof cases rerun after a local variable rename; types and lint also pass after rename.10 distinct FA/EN browser,10 worker,48 shared,31 DB cases and42 budgets pass."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        209
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-ai-settings"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.05",
+      "status": "partial",
+      "reviewed_sha": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 864,
+      "requirement": "**T-09.11.05 — Agent slot assignment**\n\n- Description: Admin assigns agents to predefined slots: Individual chatbot, Legal Entity chatbot, Staff chatbot, Website chatbot, Telegram chatbot. One agent can be used in multiple slots.\n- Technical notes: Slots defined as system configuration. Each slot mapped to an agent_id. Changing slot agent is audited. Slots are consumed by frontend and external integrations.\n- UI/UX: Per-slot dropdown showing all available agents. Current assignment displayed. \"This agent is also used in [other slots]\" warning.\n- Dependencies: T-09.11.04\n- Complexity: M",
+      "requirement_sha256": "50922474cb1f3de03747179cf1f59342174e1126700f3fc3636534aa5ef49650",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots-http.integration.test.ts",
+          "sha256": "3ad7880c5be94107c5b6e9cf0ce27bce610479cae2409fdf6a4b9d10a9e104c5"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.test.ts",
+          "sha256": "4b1e2adf1517597c1192aa7174e7ad685c939b4d2f4e869c6f2faf332057804e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.ts",
+          "sha256": "43f17bb53a14ac06a573cd8cadbe49f0e236be33bbfa43495797cda156c7f3fa"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
+          "sha256": "8481d615e2f3f6ae69d3c9492c580907e688cb691455680699c6e81bb9bb1156"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.service.ts",
+          "sha256": "93a518f9a552b4916702b9639beb8a579b4ef30789b895d3cba279f45e27e837"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+          "sha256": "37e610ff286928bcce15b7e174891a276ca3d465693d2f3bcab81333c61a602e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.service.ts",
+          "sha256": "46596cffcb2ee1073a1ffcecb6971796505f0c14c41d731c91f37055fe4f5e9e"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+          "sha256": "d82550c784be49a2a38d3c2fc702127fa3bc1816d1696518609e3edf7bca5bcb"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.test.ts",
+          "sha256": "8b58e732291403282956deae7ac2a45913d5935471d728c9f5011150c37dd323"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.ts",
+          "sha256": "9858b18d34ac654eb1e8073dcaa559e61cee1b7ff8ee842947c2c1fad69e1b34"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.test.ts",
+          "sha256": "a227244c84ed3a85931568ab8a7e5f941e4049ff42f35f5abea364136f6b0dc1"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.ts",
+          "sha256": "466e50a4fc1a36f1841b5af7ccdd61dba9b7ad3254460141ce5141e8d6696b12"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies-http.integration.test.ts",
+          "sha256": "c1996b5fa59ed5365e836deb752744e13edca9d386673d5c163e7101be3cba13"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.test.ts",
+          "sha256": "bceafd079293a47e2f8b088129d41ad55b2cfd9a7cb15e4171ad2dd2c809d52a"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
+          "sha256": "17caecddec484ae81af5510e479ac9bbc461f89f05f93009f2c4333bdc2f2cc1"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.service.test.ts",
+          "sha256": "6d2e2ef026148f4f628e410d46c3b1d95161fa1be35953dfec457a081cecfb56"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.service.ts",
+          "sha256": "a9052ba2819f45f6d846ca92e03089b0f2b6fb0b5aeb6094b3b7ab870909c04a"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "bec662497415795b9d60a74c7fb2d1834909551041c81451ed9bcd568df109ff"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "c6867a24336dcad3da81d5d431a6dec65940ab12be7d9551aede053847ea752f"
+        },
+        {
+          "path": "apps/web/e2e/agent-slots.spec.ts",
+          "sha256": "ea5fa870d0c52007c573f60df316ed1cfcc488763e8552f7c7a2b77bcbd61fdd"
+        },
+        {
+          "path": "apps/web/e2e/ai-models.spec.ts",
+          "sha256": "290f39861aada2cf31dcd8b62652164da1ce686b17604a2f63118219ae20584d"
+        },
+        {
+          "path": "apps/web/e2e/ai-policies.spec.ts",
+          "sha256": "5b510371ae8972d20780cce4729ed4373e3ab874fafe7094b9fe0d41dcb0a160"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
+          "sha256": "2804d7714d274c47420fd6a85eff0c123c270deebae6d2ff246610816a4b12c2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "8e47f91359751c26de28bf8e25a1a9c5fae96c0ee5354b3e189dbce47f925a96"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "2e9e6c274f0503631aa788d125f5ce50236337eb5721b432659e426b8f5de4f8"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "7d96bf76fd4f563e1394bc761748fca17bfc4cd68b29a5e61b69d8ce2d4f0021"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "6b3f166fc6f3df610636e9288843393758e701b35805504111b529e2f210b863"
+        },
+        {
+          "path": "packages/db/src/schema/ai-agent-slots.test.ts",
+          "sha256": "cfa2cc76b23d5b438a481f537189372962b3ae44295d0e0724c6194b59ab64fa"
+        },
+        {
+          "path": "packages/db/src/schema/ai-models.test.ts",
+          "sha256": "d71b74fe67983d8702aa24f40035333cd1e923320026ad47ce92945ce8dfd894"
+        },
+        {
+          "path": "packages/db/src/schema/ai-policies.test.ts",
+          "sha256": "465670f84d01900e25ee4ee93007062ea0eb82948d44ad1736777366df8f67e5"
+        },
+        {
+          "path": "packages/shared/src/ai-models/index.ts",
+          "sha256": "10133baa7872503d9a449ee023a4a7a0e345cbf7af4381f90d0c7fe67b5d3ead"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.test.ts",
+          "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.ts",
+          "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.test.ts",
+          "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.ts",
+          "sha256": "c02c010f570f26d9217d3fe874cde7294fef9589538c47471c454cef8879965b"
+        },
+        {
+          "path": "packages/shared/src/ai-models/transport.test.ts",
+          "sha256": "7329eb9f4a7f8fabded26ed2b923c177f1c7e40120eb502b62f97880e7c20e7c"
+        }
+      ],
+      "checks": [
+        "All five fixed slots, assign/clear, multiple-slot reuse, disabled-agent warning, shared-use warning, FK behavior and audit are implemented. Current HTTP and FA/EN dropdown/retry/permission-loss checks pass. Required runtime consumers remain explicitly partial.",
+        "Current session/CSRF/step-up authority is checked inside each transaction before work and before commit; worker test results recheck after the provider wait. Audit records true step-up flag and the database verification timestamp.",
+        "334 current API cases pass across five AI administration services, including KB/agent follow-up.5 overlapping HTTP proof cases rerun after a local variable rename; types and lint also pass after rename.10 distinct FA/EN browser,10 worker,48 shared,31 DB cases and42 budgets pass."
+      ],
+      "limitations": [
+        "Actual chatbot/frontend/external slot consumers remain unbuilt. The administration endpoint and stable slot keys do not prove runtime consumption. Requires the actual agent backend under 02-auth-users-admin.md#T-09.11.04 and profile-scoped slot context under 05-notifications-documents-ai.md#T-05.22.04."
+      ],
+      "merged_prs": [
+        211
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-ai-settings"
     }
   ],
   "pending_task_keys": [
@@ -18234,9 +18734,6 @@
     "02-auth-users-admin.md#T-09.10.01",
     "02-auth-users-admin.md#T-09.10.02",
     "02-auth-users-admin.md#T-09.10.03",
-    "02-auth-users-admin.md#T-09.11.01",
-    "02-auth-users-admin.md#T-09.11.03",
-    "02-auth-users-admin.md#T-09.11.05",
     "02-auth-users-admin.md#T-09.12.01",
     "02-auth-users-admin.md#T-09.12.02",
     "02-auth-users-admin.md#T-09.12.03",
@@ -22068,6 +22565,16 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
       "note": "Only matching immediate-base upload/KB/agent bindings refreshed. Older38 records retained."
+    },
+    {
+      "source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.02",
+        "02-auth-users-admin.md#T-09.11.04"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-ai-settings",
+      "note": "Only matching immediate-base bindings refreshed. KB/agent audit proof follow-up is additive; previous partial dependencies preserved. Older38 retained."
     }
   ]
 }

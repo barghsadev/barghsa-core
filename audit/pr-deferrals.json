@@ -911,7 +911,16 @@
     "historical_deferrals": [
       "- [ ] \"This agent is also used in [other slots]\" warning UI, per-slot dropdown — **deferred UI slice** (consistent with T-09.11.04's deferred web UI; `alsoUsedIn` data is already served). Also deferred: fa/en dictionaries + RTL/a11y for the admin UI."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Saved UI deferrals satisfied by current administration; PR211 runtime consumers remain partial.",
+    "reviewed_source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+    "review_record": "audit/evidence/step-reviews.json#R02-ai-settings",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R02-ai-settings; FA/EN administration and affected browser/API checks pass."
+      }
+    ]
   },
   {
     "pr": 210,
@@ -955,7 +964,21 @@
       "- Web UI + fa/en dictionaries + RTL/a11y deferred (same split as T-09.11.02, per the review convention for these API slices).",
       "- [ ] Web UI with type badges + per-policy structured editor + group management (deferred: API slice; UI/UX + fa/en dicts + RTL/a11y belong to the later UI pass)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Saved UI deferrals satisfied by current administration; PR211 runtime consumers remain partial.",
+    "reviewed_source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+    "review_record": "audit/evidence/step-reviews.json#R02-ai-settings",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R02-ai-settings; FA/EN administration and affected browser/API checks pass."
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R02-ai-settings; FA/EN administration and affected browser/API checks pass."
+      }
+    ]
   },
   {
     "pr": 208,
@@ -998,7 +1021,16 @@
     "historical_deferrals": [
       "- [ ] Web UI table/form/test button — web app surface deferred (backend slice; consistent with prior S-09.10.x splits)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Saved UI deferrals satisfied by current administration; PR211 runtime consumers remain partial.",
+    "reviewed_source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+    "review_record": "audit/evidence/step-reviews.json#R02-ai-settings",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R02-ai-settings; FA/EN administration and affected browser/API checks pass."
+      }
+    ]
   },
   {
     "pr": 206,
