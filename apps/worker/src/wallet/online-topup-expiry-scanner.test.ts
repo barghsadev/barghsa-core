@@ -35,7 +35,13 @@ function makeFakeDb(
   const calls: Array<{ sql: string; params: unknown[] }> = [];
   const respond = async (sql: string, params: unknown[] = []) => {
     calls.push({ sql, params });
-    const result = onSql(sql, params);
+    const result = sql.includes('FROM profiles')
+      ? { rows: [{ user_id: ACTOR }] }
+      : sql.includes('SELECT locale FROM users')
+        ? { rows: [{ locale: 'en' }] }
+        : sql.includes('INSERT INTO notification_outbox')
+          ? { rows: [{ id: TX_ID }] }
+          : onSql(sql, params);
     return { rows: result.rows ?? [], rowCount: result.rowCount ?? result.rows?.length ?? 0 };
   };
   const client = { query: respond, release: vi.fn() };
@@ -79,6 +85,7 @@ function pendingCandidate(
     id,
     wallet_id: WALLET_ID,
     type: 'topup',
+    amount: '75000',
     state: 'Pending',
     created_at: PAST,
     metadata,

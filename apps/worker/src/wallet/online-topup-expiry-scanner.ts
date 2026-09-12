@@ -11,7 +11,10 @@ import {
   onlineTopUpExpiryCutoff,
   parseOnlineTopUpPendingTtlMs,
   readOnlineTopUpChannel,
+  buildBankReceiptTopUpFailedNotificationPayload,
+  onlineTopUpExpiryNoticeReason,
 } from '@barghsa/shared/finance';
+import { enqueueOutbox } from '../notifications/outbox-writer.js';
 
 /**
  * Online top-up Pending TTL expiry scanner (S-04.2.02, T-04.2.02.07).
@@ -113,7 +116,7 @@ export const FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL = `SELECT id, wallet_id, t
         ORDER BY created_at ASC, id ASC
         LIMIT $3`;
 
-const LOCK_TOPUP_SQL = `SELECT id, wallet_id, type, state, created_at, metadata
+const LOCK_TOPUP_SQL = `SELECT id, wallet_id, type, state, amount::text, created_at, metadata
         FROM wallet_transactions
         WHERE id = $1
         FOR UPDATE SKIP LOCKED`;
@@ -147,6 +150,7 @@ interface CandidateRow {
   state: string;
   created_at: Date | string;
   metadata: unknown;
+  amount?: string;
 }
 
 /**
@@ -220,6 +224,7 @@ export async function expireStaleOnlineTopUps(
       await client.query('BEGIN');
       const rejected = await rejectOneExpired(client, {
         transactionId: candidate.id,
+        walletId: candidate.wallet_id,
         actorUserId,
         now,
         ttlMs,
@@ -250,6 +255,7 @@ async function rejectOneExpired(
   client: PoolClient,
   input: {
     transactionId: string;
+    walletId: string;
     actorUserId: string;
     now: Date;
     ttlMs: number;
@@ -257,6 +263,10 @@ async function rejectOneExpired(
     newId: () => string;
   }
 ): Promise<boolean> {
+  // Match the profile-first finance lock order and bind the notice to its owner.
+  const profile = (
+    await client.query('SELECT user_id FROM profiles WHERE id=$1 FOR SHARE', [input.walletId])
+  ).rows[0];
   const locked = await client.query<CandidateRow>(LOCK_TOPUP_SQL, [input.transactionId]);
   const row = locked.rows[0];
   if (!row) return false;
@@ -274,6 +284,11 @@ async function rejectOneExpired(
   ) {
     return false;
   }
+  if (row.wallet_id !== input.walletId || !profile?.user_id)
+    throw new Error('Expired top-up customer unavailable');
+  const user = (await client.query('SELECT locale FROM users WHERE user_id=$1', [profile.user_id]))
+    .rows[0];
+  if (!user || !row.amount) throw new Error('Expired top-up notice data unavailable');
 
   const updated = await client.query(REJECT_EXPIRED_ONLINE_TOPUP_SQL, [
     row.id,
@@ -307,6 +322,22 @@ async function rejectOneExpired(
     null,
     input.now,
   ]);
+
+  await enqueueOutbox(client, {
+    profileId: row.wallet_id,
+    userId: profile.user_id,
+    eventKey: 'payment.wallet_topup_failed',
+    idempotencyKey: `payment.wallet_topup_failed:expiry:${row.id}`,
+    channels: ['in_app', 'email'],
+    payload: {
+      ...buildBankReceiptTopUpFailedNotificationPayload({
+        amount: row.amount,
+        pendingTransactionId: row.id,
+        reason: onlineTopUpExpiryNoticeReason(user.locale),
+      }),
+      expired_at: input.now.toISOString(),
+    },
+  });
 
   return true;
 }

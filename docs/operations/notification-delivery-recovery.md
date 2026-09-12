@@ -93,6 +93,28 @@ they do not verify live SMS.ir template text or delivery.
 
 ## Reconciliation
 
+### Top-up expiry notices
+
+Replace all older expiry workers before the next scheduled expiry scan. Updated
+workers enqueue `payment.wallet_topup_failed` in-app/email jobs in the same
+transaction as the TTL rejection and audit record. The notice uses the existing
+wallet template and a Persian/English expiry explanation. Publish the required
+templates using the template-seeding runbook before enabling external dispatch.
+
+The expiry occurrence key includes the original top-up ID; a repeated scan does
+not create another notice. A missing customer owner or failed outbox write leaves
+the intent Pending and reports a failed scan for investigation. Its wallet balance
+never changes. The profile lock binds the queued notice to the current owner;
+delivery still applies current recipient availability and preferences.
+
+Gateway authority remains available for a later verified callback. Expiry means
+the confirmation deadline passed, not proof that no money was deducted. The
+notice asks the customer to check their wallet before retrying. Previously expired
+rows are not backfilled or resent automatically. No production rollout or live
+delivery has been executed by the local audit.
+
+### Uncertain provider outcomes
+
 Keep the outbox ID, channel, provider identity, occurrence key, attempt token,
 safe error, timestamps and any receipt with the incident. Establish that no
 older worker remains in flight. Obtain authoritative provider evidence for

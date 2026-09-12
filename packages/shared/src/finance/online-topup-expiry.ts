@@ -30,6 +30,15 @@ export const ONLINE_TOPUP_EXPIRED_STATE = 'Rejected' as const;
 /** Customer/staff-visible reason stamped on the rejected row metadata. */
 export const ONLINE_TOPUP_EXPIRY_REASON = 'Pending online top-up expired beyond TTL' as const;
 
+const expiryNoticeReasons = {
+  en: 'No payment confirmation arrived before the deadline. Check your wallet before trying again.',
+  fa: 'تا پایان مهلت، تأیید پرداخت دریافت نشد. پیش از تلاش دوباره، کیف پول خود را بررسی کنید.',
+};
+
+export function onlineTopUpExpiryNoticeReason(locale: unknown): string {
+  return expiryNoticeReasons[locale === 'en' ? 'en' : 'fa'];
+}
+
 /** Canonical audit event when the expiry cron auto-rejects a Pending top-up. */
 export const ONLINE_TOPUP_EXPIRY_AUDIT_EVENT = 'wallet.online_topup.expired' as const;
 

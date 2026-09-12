@@ -61,15 +61,24 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
     await ctx.pool.query(`CREATE TABLE IF NOT EXISTS profiles (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v7(), user_id TEXT
     )`);
     await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (
-      user_id TEXT PRIMARY KEY
+      user_id TEXT PRIMARY KEY, locale TEXT DEFAULT 'en'
     )`);
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
     await ctx.pool.query(readFileSync(EXPIRY_IDX_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(
+      readFileSync(
+        resolve(__dirname, '../../../../packages/db/drizzle/0025_create_notification_outbox.sql'),
+        'utf8'
+      )
+    );
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [WALLET_A, WALLET_B]);
+    await ctx.pool.query(
+      `INSERT INTO profiles (id,user_id) VALUES ($1,'online-expiry-scanner-actor'), ($2,'online-expiry-scanner-actor')`,
+      [WALLET_A, WALLET_B]
+    );
     await ctx.pool.query(
       `INSERT INTO wallets (profile_id, posted_balance, reserved_balance, version)
        VALUES ($1, 0, 0, 0), ($2, 0, 0, 0)`,
@@ -87,6 +96,7 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
   });
 
   beforeEach(async () => {
+    await ctx.pool.query('DELETE FROM notification_outbox');
     await ctx.pool.query('DELETE FROM audit_log');
     await ctx.pool.query('DELETE FROM wallet_transactions');
   });
@@ -121,6 +131,92 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
     );
     return id;
   }
+
+  it('queues one customer notice with both channels atomically with expiry', async () => {
+    const id = await insertTopUp({
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: EXPIRED_EARLY,
+      authority: 'still-reconcilable',
+    });
+    const options = { pool: ctx.pool, actorUserId: ACTOR_USER_ID, now: () => NOW };
+    expect((await expireStaleOnlineTopUps(options)).rejected).toBe(1);
+    const notices = await ctx.pool.query(
+      'SELECT id,user_id,profile_id,event_key,payload,channels FROM notification_outbox'
+    );
+    expect(notices.rows).toHaveLength(1);
+    expect(notices.rows[0]).toMatchObject({
+      user_id: ACTOR_USER_ID,
+      profile_id: WALLET_A,
+      event_key: 'payment.wallet_topup_failed',
+      channels: ['in_app', 'email'],
+      payload: { amount: '75000', pending_transaction_id: id, link_route: '/wallet' },
+    });
+    expect(notices.rows[0].payload.reason).toContain('confirmation');
+    expect(
+      (
+        await ctx.pool.query(
+          'SELECT channel FROM notification_job WHERE outbox_id=$1 ORDER BY channel',
+          [notices.rows[0].id]
+        )
+      ).rows
+    ).toEqual([{ channel: 'email' }, { channel: 'in_app' }]);
+    expect((await expireStaleOnlineTopUps(options)).rejected).toBe(0);
+    expect((await ctx.pool.query('SELECT id FROM notification_outbox')).rows).toHaveLength(1);
+  });
+  it('rolls expiry and audit back when the customer notice cannot be queued', async () => {
+    const id = await insertTopUp({
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: EXPIRED_EARLY,
+    });
+    await ctx.pool
+      .query(`CREATE FUNCTION reject_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'notice unavailable'; END $$;
+      CREATE TRIGGER reject_notice BEFORE INSERT ON notification_outbox FOR EACH ROW EXECUTE FUNCTION reject_notice()`);
+    try {
+      const result = await expireStaleOnlineTopUps({
+        pool: ctx.pool,
+        actorUserId: ACTOR_USER_ID,
+        now: () => NOW,
+      });
+      expect(result.rejected).toBe(0);
+      expect(result.errors).toHaveLength(1);
+      expect(
+        (await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [id])).rows[0]
+          .state
+      ).toBe('Pending');
+      expect((await ctx.pool.query('SELECT id FROM audit_log')).rows).toHaveLength(0);
+    } finally {
+      await ctx.pool.query(
+        'DROP TRIGGER reject_notice ON notification_outbox; DROP FUNCTION reject_notice()'
+      );
+    }
+  });
+
+  it('retains a pending top-up when no customer owner can receive its notice', async () => {
+    const id = await insertTopUp({
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: EXPIRED_EARLY,
+    });
+    await ctx.pool.query('UPDATE profiles SET user_id=NULL WHERE id=$1', [WALLET_A]);
+    try {
+      const result = await expireStaleOnlineTopUps({
+        pool: ctx.pool,
+        actorUserId: ACTOR_USER_ID,
+        now: () => NOW,
+      });
+      expect(result.rejected).toBe(0);
+      expect(result.errors[0]).toContain('customer unavailable');
+      expect(
+        (await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [id])).rows[0]
+          .state
+      ).toBe('Pending');
+      expect((await ctx.pool.query('SELECT id FROM notification_outbox')).rows).toHaveLength(0);
+    } finally {
+      await ctx.pool.query('UPDATE profiles SET user_id=$2 WHERE id=$1', [WALLET_A, ACTOR_USER_ID]);
+    }
+  });
 
   it('candidate query returns only online Pending rows older than the cutoff', async () => {
     const expiredEarly = await insertTopUp({
