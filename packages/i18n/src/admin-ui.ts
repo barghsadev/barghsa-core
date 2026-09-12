@@ -669,6 +669,13 @@ export const fa: I18nDictionary = {
   'admin.notifications.error.testSend': 'خطا در ارسال آزمایشی',
   'admin.notifications.deadLetter.title': 'صف پیام‌های ناموفق (Dead Letter)',
   'admin.notifications.history.title': 'تاریخچه تلاش‌های ارسال',
+  'admin.notifications.history.browse': 'جست‌وجوی همه ارسال‌ها',
+  'admin.notifications.history.allDescription':
+    'تاریخچه ارسال اعلان‌ها، شامل ارسال‌های موفق و تلاش‌های ناموفق.',
+  'admin.notifications.history.notificationId': 'شناسه اعلان',
+  'admin.notifications.history.channel': 'کانال',
+  'admin.notifications.history.all': 'همه',
+  'admin.notifications.history.search': 'جست‌وجو',
   'admin.notifications.history.loadFailed':
     'تاریخچه ارسال در دسترس نیست یا دسترسی شما تغییر کرده است.',
   'admin.notifications.history.empty': 'هیچ تلاش ارسالی ثبت نشده است.',
@@ -1561,6 +1568,13 @@ export const en: I18nDictionary = {
   'admin.notifications.error.testSend': 'Failed to send test notification',
   'admin.notifications.deadLetter.title': 'Dead-Letter Queue',
   'admin.notifications.history.title': 'Delivery attempt history',
+  'admin.notifications.history.browse': 'Search all deliveries',
+  'admin.notifications.history.allDescription':
+    'Notification delivery history, including successful deliveries and failed attempts.',
+  'admin.notifications.history.notificationId': 'Notification ID',
+  'admin.notifications.history.channel': 'Channel',
+  'admin.notifications.history.all': 'All',
+  'admin.notifications.history.search': 'Search',
   'admin.notifications.history.loadFailed':
     'Delivery history is unavailable or your access has changed.',
   'admin.notifications.history.empty': 'No delivery attempts have been recorded.',

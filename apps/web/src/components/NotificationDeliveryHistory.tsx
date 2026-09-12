@@ -6,6 +6,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  Input,
 } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import type { Locale } from '@barghsa/i18n/app';
@@ -30,14 +31,26 @@ interface Target {
   eventKey: string;
 }
 
-function isAttempt(value: unknown, target: Target): value is DeliveryAttempt {
+interface Filters {
+  notificationId: string;
+  channel: string;
+  status: string;
+}
+const UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+function isAttempt(value: unknown, filters: Filters): value is DeliveryAttempt {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const row = value as Record<string, unknown>;
   return (
     typeof row.id === 'string' &&
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(row.id) &&
-    row.notificationId === target.outboxId &&
-    row.channel === target.channel &&
+    UUID.test(row.id) &&
+    typeof row.notificationId === 'string' &&
+    UUID.test(row.notificationId) &&
+    (!filters.notificationId ||
+      row.notificationId.toLowerCase() === filters.notificationId.toLowerCase()) &&
+    typeof row.channel === 'string' &&
+    ['in_app', 'email', 'sms'].includes(row.channel) &&
+    (!filters.channel || row.channel === filters.channel) &&
+    (!filters.status || row.status === filters.status) &&
     (row.status === 'delivered' || row.status === 'failed') &&
     Number.isSafeInteger(row.attemptNumber) &&
     Number(row.attemptNumber) > 0 &&
@@ -56,7 +69,7 @@ export function NotificationDeliveryHistory({
   locale,
   onClose,
 }: {
-  target: Target;
+  target?: Target;
   locale: Locale;
   onClose: () => void;
 }) {
@@ -69,6 +82,13 @@ export function NotificationDeliveryHistory({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const [draft, setDraft] = useState<Filters>({ notificationId: '', channel: '', status: '' });
+  const [filters, setFilters] = useState<Filters>(draft);
+  const channelLabel = (channel: string) =>
+    t(
+      `admin.notifications.deadLetter.channel${channel === 'email' ? 'Email' : channel === 'sms' ? 'Sms' : 'InApp'}`,
+      locale
+    );
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
@@ -77,12 +97,14 @@ export function NotificationDeliveryHistory({
     setHasMore(false);
     void (async () => {
       try {
+        const applied = target
+          ? { notificationId: target.outboxId, channel: target.channel, status: '' }
+          : filters;
         const query = new URLSearchParams({
-          notificationId: target.outboxId,
-          channel: target.channel,
           limit: '26',
           offset: String(offset),
         });
+        for (const [key, value] of Object.entries(applied)) if (value) query.set(key, value);
         const response = await fetch(`/api/admin/notifications/delivery-logs?${query}`, {
           signal: controller.signal,
         });
@@ -91,7 +113,7 @@ export function NotificationDeliveryHistory({
         if (
           !Array.isArray(result) ||
           result.length > 26 ||
-          !result.every((item): item is DeliveryAttempt => isAttempt(item, target)) ||
+          !result.every((item): item is DeliveryAttempt => isAttempt(item, applied)) ||
           new Set(result.map((item) => item.id)).size !== result.length
         )
           throw new Error('Invalid history');
@@ -106,7 +128,7 @@ export function NotificationDeliveryHistory({
       }
     })();
     return () => controller.abort();
-  }, [target, offset, revision]);
+  }, [target, filters, offset, revision]);
 
   return (
     <Dialog
@@ -122,13 +144,68 @@ export function NotificationDeliveryHistory({
         <DialogHeader>
           <DialogTitle>{label('title')}</DialogTitle>
           <DialogDescription>
-            <bdi>{target.eventKey}</bdi> ·{' '}
-            {t(
-              `admin.notifications.deadLetter.channel${target.channel === 'email' ? 'Email' : target.channel === 'sms' ? 'Sms' : 'InApp'}`,
-              locale
+            {target ? (
+              <>
+                <bdi>{target.eventKey}</bdi> · {channelLabel(target.channel)}
+              </>
+            ) : (
+              label('allDescription')
             )}
           </DialogDescription>
         </DialogHeader>
+        {!target && (
+          <form
+            className="flex flex-wrap items-end gap-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setFilters({ ...draft, notificationId: draft.notificationId.trim() });
+              setOffset(0);
+            }}
+          >
+            <label className="min-w-0 flex-1 space-y-1">
+              {label('notificationId')}
+              <Input
+                dir="ltr"
+                value={draft.notificationId}
+                pattern={UUID.source.slice(1, -1)}
+                onChange={(event) =>
+                  setDraft({ ...draft, notificationId: event.target.value.trim() })
+                }
+              />
+            </label>
+            <label className="space-y-1">
+              {label('channel')}
+              <select
+                className="block rounded border p-2"
+                value={draft.channel}
+                onChange={(event) => setDraft({ ...draft, channel: event.target.value })}
+              >
+                <option value="">{label('all')}</option>
+                {['in_app', 'email', 'sms'].map((channel) => (
+                  <option key={channel} value={channel}>
+                    {channelLabel(channel)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="space-y-1">
+              {label('status')}
+              <select
+                className="block rounded border p-2"
+                value={draft.status}
+                onChange={(event) => setDraft({ ...draft, status: event.target.value })}
+              >
+                <option value="">{label('all')}</option>
+                {['delivered', 'failed'].map((status) => (
+                  <option key={status} value={status}>
+                    {label(status)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Button type="submit">{label('search')}</Button>
+          </form>
+        )}
         {time.notice}
         {loading ? (
           <p role="status">{t('admin.notifications.loading', locale)}</p>
@@ -147,6 +224,12 @@ export function NotificationDeliveryHistory({
             <table className="w-full text-sm text-start" aria-label={label('title')}>
               <thead>
                 <tr>
+                  {!target && (
+                    <>
+                      <th className="border-b p-2 text-start">{label('notificationId')}</th>
+                      <th className="border-b p-2 text-start">{label('channel')}</th>
+                    </>
+                  )}
                   {['attempt', 'date', 'status', 'receipt', 'latency', 'error'].map((key) => (
                     <th className="border-b p-2 text-start" key={key}>
                       {label(key)}
@@ -157,6 +240,14 @@ export function NotificationDeliveryHistory({
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.id}>
+                    {!target && (
+                      <>
+                        <td className="border-b p-2">
+                          <bdi className="break-all">{row.notificationId}</bdi>
+                        </td>
+                        <td className="border-b p-2">{channelLabel(row.channel)}</td>
+                      </>
+                    )}
                     <td className="border-b p-2">{numbers.number(row.attemptNumber)}</td>
                     <td className="border-b p-2 whitespace-nowrap">{time.format(row.createdAt)}</td>
                     <td className="border-b p-2">{label(row.status)}</td>

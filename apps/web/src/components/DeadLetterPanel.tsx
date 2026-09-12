@@ -107,6 +107,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
   const [revision, setRevision] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [history, setHistory] = useState<DeadLetterRow | null>(null);
+  const [allHistory, setAllHistory] = useState(false);
   const [access, setAccess] = useState<{ canView: boolean; canRetry: boolean } | null>(null);
   const [action, setAction] = useState<
     | (TeamAction & {
@@ -191,6 +192,11 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
       {time.notice}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{label('title')}</h2>
+        {access?.canView && (
+          <Button variant="outline" onClick={() => setAllHistory(true)}>
+            {t('admin.notifications.history.browse', uiLocale)}
+          </Button>
+        )}
         <Button variant="outline" disabled={loading} onClick={() => setRevision((v) => v + 1)}>
           {t('admin.jobs.refresh', uiLocale)}
         </Button>
@@ -413,6 +419,9 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
             {t('admin.jobs.next', uiLocale)}
           </Button>
         </nav>
+      )}
+      {allHistory && (
+        <NotificationDeliveryHistory locale={uiLocale} onClose={() => setAllHistory(false)} />
       )}
       {history && (
         <NotificationDeliveryHistory

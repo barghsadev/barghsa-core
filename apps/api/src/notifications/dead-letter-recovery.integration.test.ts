@@ -126,6 +126,41 @@ it('serves scoped stable delivery-history pages and honors revoked read permissi
   await db.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'");
   expect((await read(0)).status).toBe(403);
 });
+it('searches successful and failed delivery logs without requiring a dead-letter entry', async () => {
+  const row = await seed();
+  await db.pool.query('DELETE FROM notification_dead_letter WHERE id=$1', [row.dead]);
+  await db.pool.query(
+    `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_ref)
+    VALUES ($1,'email','delivered',2,'accepted-receipt'),($1,'email','failed',1,NULL)`,
+    [row.outbox]
+  );
+  const url = `${fixture.base}/api/admin/notifications/delivery-logs`;
+  const filtered = await fetch(
+    `${url}?notificationId=${row.outbox}&channel=email&status=delivered`,
+    { headers }
+  );
+  expect(filtered.status).toBe(200);
+  expect(await filtered.json()).toMatchObject([
+    {
+      notificationId: row.outbox,
+      channel: 'email',
+      status: 'delivered',
+      providerRef: 'accepted-receipt',
+    },
+  ]);
+  const general = await fetch(`${url}?channel=email&status=delivered&limit=100`, { headers });
+  expect(general.status).toBe(200);
+  expect(await general.json()).toEqual(
+    expect.arrayContaining([expect.objectContaining({ notificationId: row.outbox })])
+  );
+  const failed = await fetch(`${url}?notificationId=${row.outbox}&status=failed`, { headers });
+  expect(failed.status).toBe(200);
+  expect(await failed.json()).toMatchObject([
+    { notificationId: row.outbox, status: 'failed', attemptNumber: 1 },
+  ]);
+  await db.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'");
+  expect((await fetch(`${url}?status=delivered`, { headers })).status).toBe(403);
+});
 for (const status of ['sending', 'unknown']) {
   it(`blocks manual retry of ${status} external delivery while allowing no-send triage`, async () => {
     const row = await seed();
