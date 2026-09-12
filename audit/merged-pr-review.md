@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 130 have unresolved mapped tasks; 4 have no current task mapping; 167 map only to verified tasks.
+301 merged PRs: 124 have unresolved mapped tasks; 4 have no current task mapping; 173 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **120 closed / 25 open / 0 blocked**; 156 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **126 closed / 25 open / 0 blocked**; 150 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -18,9 +18,9 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 | 02-auth-users-admin.md | 36 |
 | 03-core-business.md | 4 |
 | 04-invoices-wallet-contracts.md | 7 |
-| 05-notifications-documents-ai.md | 23 |
+| 05-notifications-documents-ai.md | 17 |
 | 07-ui-ux-design.md | 3 |
-| Total | 123 |
+| Total | 117 |
 
 Also review 56 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
@@ -200,12 +200,12 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#168](https://github.com/barghsadev/barghsa-core/pull/168) | 05-notifications-documents-ai.md#T-05.01.06 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-outbox-delivery-checkpoint) | 1 |
 | [#169](https://github.com/barghsadev/barghsa-core/pull/169) | 05-notifications-documents-ai.md#T-05.01.07 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-outbox-delivery-checkpoint) | 0 |
 | [#170](https://github.com/barghsadev/barghsa-core/pull/170) | 05-notifications-documents-ai.md#T-05.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-outbox-delivery-checkpoint) | 1 |
-| [#171](https://github.com/barghsadev/barghsa-core/pull/171) | 05-notifications-documents-ai.md#T-05.02.02 (pending) | Task review remains | Not reviewed | 0 |
-| [#172](https://github.com/barghsadev/barghsa-core/pull/172) | 05-notifications-documents-ai.md#T-05.02.03 (pending) | Task review remains | Not reviewed | 0 |
-| [#173](https://github.com/barghsadev/barghsa-core/pull/173) | 05-notifications-documents-ai.md#T-05.02.04 (pending) | Task review remains | Not reviewed | 0 |
-| [#174](https://github.com/barghsadev/barghsa-core/pull/174) | 05-notifications-documents-ai.md#T-05.03.01 (pending) | Task review remains | Not reviewed | 1 |
-| [#175](https://github.com/barghsadev/barghsa-core/pull/175) | 05-notifications-documents-ai.md#T-05.03.02 (pending) | Task review remains | Not reviewed | 1 |
-| [#176](https://github.com/barghsadev/barghsa-core/pull/176) | 05-notifications-documents-ai.md#T-05.03.03 (pending) | Task review remains | Not reviewed | 0 |
+| [#171](https://github.com/barghsadev/barghsa-core/pull/171) | 05-notifications-documents-ai.md#T-05.02.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-inbox-notification-policy) | 0 |
+| [#172](https://github.com/barghsadev/barghsa-core/pull/172) | 05-notifications-documents-ai.md#T-05.02.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-inbox-notification-policy) | 0 |
+| [#173](https://github.com/barghsadev/barghsa-core/pull/173) | 05-notifications-documents-ai.md#T-05.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-inbox-notification-policy) | 0 |
+| [#174](https://github.com/barghsadev/barghsa-core/pull/174) | 05-notifications-documents-ai.md#T-05.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-inbox-notification-policy) | 1 |
+| [#175](https://github.com/barghsadev/barghsa-core/pull/175) | 05-notifications-documents-ai.md#T-05.03.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-inbox-notification-policy) | 1 |
+| [#176](https://github.com/barghsadev/barghsa-core/pull/176) | 05-notifications-documents-ai.md#T-05.03.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-inbox-notification-policy) | 0 |
 | [#177](https://github.com/barghsadev/barghsa-core/pull/177) | 05-notifications-documents-ai.md#T-05.04.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#178](https://github.com/barghsadev/barghsa-core/pull/178) | 05-notifications-documents-ai.md#T-05.04.02 (pending) | Task review remains | Not reviewed | 0 |
 | [#179](https://github.com/barghsadev/barghsa-core/pull/179) | 05-notifications-documents-ai.md#T-05.04.03 (pending) | Task review remains | Not reviewed | 2 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `50cbacc04fea94c60172d2b081799b550ae9d6f0a9484bb35bcd1bd441823fdc`
-- `pr-deferrals.json`: `a719c382f79cce95ac6173aeae319c5e108658d306e835d40c625271b5564242`
-- `evidence/step-reviews.json`: `a928e0248313478c8503d4a65a047de2680f2ac988a64abad45b2f3536723209`
+- `acceptance-closure.json`: `b76157e2bdea40f245a2bd647b71ddef3e04fbe3eb819442102644ad4d8dddf9`
+- `pr-deferrals.json`: `5173be09c59d9a0ff2546704e84cdb905d299cbbef255a79cd7f4723b6282ad8`
+- `evidence/step-reviews.json`: `cba657c5e062d353e312de84c0c85fbf7ca782ad5cc59816420f47518d4ab18d`

@@ -1281,7 +1281,16 @@
     "historical_deferrals": [
       "- [ ] Per-profile timezone from the `profiles` table — profiles currently have no timezone column; timezone is resolved from the admin window config. Adding a profile timezone attribute + per-user resolution is follow-up (ties to the admin UI in T-05.03.03)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Satisfied by reviewed later implementation.",
+    "reviewed_source_revision": "b168ee2b02f45a7287fb35ba9c197bf44c96300f",
+    "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Worker resolves recipient timezone through outbox user or profile owner, schedules external daytime channels at the next opening, rechecks due work, preserves saved window snapshots and keeps in-app immediate. Channel scheduling/window source is unchanged since246abe5a. Its46 worker cases and later current delivery integration evidence are reused. audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+      }
+    ]
   },
   {
     "pr": 174,
@@ -1292,7 +1301,16 @@
     "historical_deferrals": [
       "- [ ] Worker delivery-window scheduling (resolve timezone, set scheduled_for when outside window) — this is T-05.03.02 (explicitly out of scope for this task)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Satisfied by reviewed later implementation.",
+    "reviewed_source_revision": "b168ee2b02f45a7287fb35ba9c197bf44c96300f",
+    "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "All35 canonical Appendix classifications match the compiled code-defined registry; explicit Appendix immediate exceptions are retained.10 registry cases pass. Security/auth and finance extensions are registered; unknown keys default daytime. Worker scheduling consumes the registry through unchanged channel-window code. Per-producer/template acceptance remains in later R02 batches. audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+      }
+    ]
   },
   {
     "pr": 170,

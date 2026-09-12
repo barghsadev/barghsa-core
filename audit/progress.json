@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-12",
+  "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
+  "source_revision": "b168ee2b02f45a7287fb35ba9c197bf44c96300f",
   "active_step": "R02",
-  "next_action": "Review R02 inbox/notification policy: exact PR171–176 requirements and deferrals are read. Compare current source once, reuse unchanged evidence, fix confirmed gaps and validate each meaningful change.",
+  "next_action": "Review R02 template lifecycle/preview/test-send/seeding, PR177–181. Exact requirements, saved bodies and PR179/180/181 deferrals are read. Reuse existing authoring/provider evidence; verify catalog coverage and the missing auth.refresh_token_reused seed before fixing confirmed gaps.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -690,6 +690,10 @@
     {
       "id": "R02-outbox-delivery-checkpoint",
       "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "id": "R02-inbox-notification-policy",
+      "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy"
     }
   ],
   "deferred_improvements": [
@@ -713,9 +717,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 143,
+    "acceptance_verified": 149,
     "partial": 33,
-    "pending": 146,
+    "pending": 140,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1004,41 +1008,38 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-inbox-notification-policy",
-    "name": "Notification center and delivery classification/window policy",
+    "id": "R02-template-lifecycle-seeding",
+    "name": "Notification template lifecycle, preview, test-send and seed coverage",
     "status": "reviewing",
     "prs": [
-      171,
-      172,
-      173,
-      174,
-      175,
-      176
+      177,
+      178,
+      179,
+      180,
+      181
     ],
     "task_keys": [
-      "05-notifications-documents-ai.md#T-05.02.02",
-      "05-notifications-documents-ai.md#T-05.02.03",
-      "05-notifications-documents-ai.md#T-05.02.04",
-      "05-notifications-documents-ai.md#T-05.03.01",
-      "05-notifications-documents-ai.md#T-05.03.02",
-      "05-notifications-documents-ai.md#T-05.03.03"
+      "05-notifications-documents-ai.md#T-05.04.01",
+      "05-notifications-documents-ai.md#T-05.04.02",
+      "05-notifications-documents-ai.md#T-05.04.03",
+      "05-notifications-documents-ai.md#T-05.04.04",
+      "05-notifications-documents-ai.md#T-05.04.05"
     ],
     "remaining_checklist": [
-      "Six exact requirements, saved PR bodies and PR174/175 deferrals read.",
-      "Review profile/current-owner scoping, cursor pagination, mark-read/all and counts.",
-      "Review bell/latest10, full page, linked-record navigation, empty/loading/error/RTL states, optimistic updates,30s polling and background document title.",
-      "Compare actual producer keys with code-defined immediate/daytime registry; review user timezone and wakeup recheck.",
-      "Review delivery-window admin authority/validation and preservation of previously scheduled timing.",
-      "Reuse minute-window/timezone, recipient and previous inbox evidence if source remains valid; keep event-specific producers/reminders in later R02."
+      "Five exact requirements and saved PR bodies plus PR179/180/181 deferrals read.",
+      "Review schema/versioning/variables/admin authority and preview descriptions/missing-variable handling.",
+      "Reuse verified external self-test ownership, active-provider delivery, audit and template tracking from earlier R02.",
+      "Compare seed catalog with all35 canonical Appendix event/channel/language contracts and auth.refresh_token_reused; preserve existing customized versions on migration/reseed.",
+      "Disposition seeder versus migration requirement explicitly; do not infer complete production seeding from unit mocks."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
-      "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+      "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review R02 inbox/notification policy: exact PR171–176 requirements and deferrals are read. Compare current source once, reuse unchanged evidence, fix confirmed gaps and validate each meaningful change."
+    "next_action": "Review R02 template lifecycle/preview/test-send/seeding, PR177–181. Exact requirements, saved bodies and PR179/180/181 deferrals are read. Reuse existing authoring/provider evidence; verify catalog coverage and the missing auth.refresh_token_reused seed before fixing confirmed gaps."
   },
   "open_domain_reviews": [
     {

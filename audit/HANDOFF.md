@@ -4,23 +4,25 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Product/test repair **4614c8bf**; dashboard proof **05dc4f9b**. Notification outbox/delivery batch consolidated locally:7 task acceptances and7 saved PR reviews closed; PR166/168 remain partial/open for provider guarantees/reconciliation/key wording and deployed alerts.
+Branch codex/audit-fixes. Latest product/test HEAD **b168ee2b**. Inbox/notification-policy batch PR171–176 closes locally:6 task acceptances verified/6 PR reviews closed.2e3bc191 rechecks profile access in the final inbox statement; b168ee2b repairs stale UI responses, optimistic restoration, unread paging and event icons.
 
-Counts:143 verified/33 partial/146 pending claims;120 closed/25 open/156 unreviewed saved PRs.58 skips,3 verified/55 pending. 2569 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
+Counts:149 verified/33 partial/140 pending claims;126 closed/25 open/150 unreviewed saved PRs.58 skips,3 verified/55 pending. 2610 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
 
-Durable per-send history now commits before I/O and finishes with the receipt. Rejected retries retain prior attempts even without worker bookkeeping; restart/recovery reuses the original row/duration.49 distinct worker cases pass, including9 compiled-process cases;47 API,12 FA/EN Chromium,50 i18n cases and42 unchanged budgets pass. Applicable types/lint/format/build/contract/snapshot pass. Earlier scoped evidence remains recorded; overlapping tests are not additive.
+Current inbox evidence:22 API,30 distinct web unit,14 distinct FA/EN Chromium,50 i18n cases and42 unchanged budgets pass. Two pagination reruns overlap. Four corrected real-DB revocation cases fail with old scope and pass after repair. Initial prototype-spy failures did not intercept the child HTTP server and are not regression proof. All logs retained. Existing window code and controls are unchanged since246abe5a; its56 API/46 worker/16 shared/6 browser evidence remains valid within recorded source scope.10 registry tests pass;35 Appendix classifications match.
 
-Grafana11.2.0 and Prometheus3.5.0 imported the dashboard in an isolated local stack. All5 queries and rendered panels match controlled samples, including orange12.5% failure ratio. [Screenshot](evidence/r02-outbox-delivery/grafana-dashboard.png). Temporary containers/network/browser removed. Production scrape/Alertmanager evidence remains external.
+Build changed shared/i18n dependencies before web build or consumer checks. Initial browser output used stale i18n artifacts; corrected dependency build and scoped alert selectors pass. Preserve valid tests and the completed source comparison. R03 global themes/contrast and V02 regression remain separate.
 
-Migration0128 retains legacy processing rows and snapshots retained receipts; it cannot reconstruct already missing attempts. Deploy API/web readers, drain older notification workers, then migrate and start updated workers. Unknown/sending receipts remain held. Do not invent provider-side exactly-once or eventual-delivery guarantees. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
+Prior outbox/delivery batch remains7 closed/2 open. Durable send history at4614c8bf passes49 worker/47 API/12 browser cases; local Grafana proof at05dc4f9b verifies all5 panels. [Screenshot](evidence/r02-outbox-delivery/grafana-dashboard.png). PR166 provider guarantees/reconciliation/key wording and PR168 deployed alerts remain explicit prerequisites. Unknown sends stay held. No operational execution claimed.
 
-Active batch **R02-inbox-notification-policy**, saved PR171–176, six qualified tasks in progress.json. Exact requirements, saved bodies and PR174/175 deferrals read. Next: source comparison for center API/UI, polling and classification/timezone/window policy. Preserve valid delivery/recipient/minute-window evidence; do not repeat the previous batch.
+Migration0128 retains legacy history and snapshots available receipts; it cannot reconstruct already missing attempts. Deploy API/web readers, drain older notification workers, then migrate/start updated workers. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
+
+Active batch **R02-template-lifecycle-seeding**, saved PR177–181. Five exact requirements, bodies and PR179/180/181 deferrals read. Next: schema/versioning, preview/test-send and real seed coverage, reusing earlier authoring/provider evidence. Preserve existing customized templates. The missing auth.refresh_token_reused seed remains a known follow-up; compare current catalog before repair.
 
 Completed R01 work and valid tests remain recorded in progress/step reviews. Do not rebuild or repeat those reviews. The earlier wallet-controller fixture failures are fixed; the interrupted broad run is still not regression evidence.
 
 ## Next action
 
-Review R02 inbox/notification policy: exact PR171–176 requirements and deferrals are read. Compare current source once, reuse unchanged evidence, fix confirmed gaps and validate each meaningful change.
+Review R02 template lifecycle/preview/test-send/seeding, PR177–181. Exact requirements, saved bodies and PR179/180/181 deferrals are read. Reuse existing authoring/provider evidence; verify catalog coverage and the missing auth.refresh_token_reused seed before fixing confirmed gaps.
 
 Reuse completed producer, recipient, branding and provider evidence where source remains valid. Keep remaining inbox/classification and event-specific reminders in later R02 batches. Preserve local monitoring rules and their runbook; operational alert delivery needs external execution evidence.
 
