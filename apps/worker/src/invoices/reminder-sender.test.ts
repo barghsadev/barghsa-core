@@ -278,7 +278,21 @@ describe('ReminderSender contract (T-04.1.04.03)', () => {
   });
 
   it('marks sent even when the outbox row is a duplicate idempotency hit', async () => {
-    const db = makeFakeDb(defaultHandler());
+    const original = defaultHandler();
+    const db = makeFakeDb((sql) =>
+      sql.includes('FROM notification_outbox o')
+        ? {
+            rows: [
+              {
+                profile_id: PROFILE_ID,
+                user_id: USER_ID,
+                channels: ['in_app', 'email'],
+                payload: { invoiceId: INVOICE_ID, offset: -7, dueAt: DUE.toISOString() },
+              },
+            ],
+          }
+        : original(sql)
+    );
     const enqueue = vi.fn().mockResolvedValue({ outboxId: null, inserted: false });
     const result = await sendDueInvoiceReminders(sendOptions(db, { enqueue }));
     expect(result.sent).toBe(1);

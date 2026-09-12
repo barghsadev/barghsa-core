@@ -20,8 +20,9 @@ import { cancelRemindersIfStopState } from './reminder-canceller.js';
  * Hourly worker pass that claims `invoice_reminder_schedule` rows whose
  * `scheduled_at` is due, re-checks the invoice is still allowed to be
  * reminded, and writes one notification-outbox event per
- * (invoice, offset) so in-app + enabled external channels share a single
- * durable delivery intent.
+ * (invoice, offset) so all planned channels share a single durable delivery
+ * intent. Later channel times become outbox job wake-ups rather than a second
+ * enqueue with the same key. Current disabled offsets and dirty plans pause.
  *
  * Guarantees:
  * - **Eligibility re-check under lock.** Candidates exclude Paid /
@@ -33,7 +34,8 @@ import { cancelRemindersIfStopState } from './reminder-canceller.js';
  *   row, or enqueue a reminder that stays `scheduled`.
  * - **Idempotent.** Outbox `idempotency_key` is
  *   sha256(`payment.invoice_reminder:{invoiceId}:{offset}`). A replay
- *   that finds a duplicate still stamps the schedule rows `sent`.
+ *   that finds a matching duplicate with every channel still stamps rows `sent`.
+ *   Incomplete legacy occurrences require reconciliation without a new send.
  *   Unique (invoiceId, offset, channel) is enforced by migration 0061
  *   (T-04.1.04.04).
  * - **Failure isolation.** One group’s failure is recorded and skipped;
@@ -127,7 +129,6 @@ const LOCK_DUE_ROWS_SQL = `SELECT id, invoice_id, "offset", channel, scheduled_a
         WHERE invoice_id = $1
           AND "offset" = $2
           AND status = 'scheduled'
-          AND scheduled_at <= $3
         FOR UPDATE SKIP LOCKED`;
 
 const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.profile_id, i.due_at, p.user_id,
@@ -292,9 +293,14 @@ async function sendOneGroup(
   const lockedRows = await client.query<ScheduleRow>(LOCK_DUE_ROWS_SQL, [
     group.invoice_id,
     group.offset,
-    now,
   ]);
-  if (lockedRows.rows.length === 0) return 'skipped';
+  if (
+    !lockedRows.rows.some((row) => {
+      const at = parseInstant(row.scheduled_at);
+      return at !== null && at <= now;
+    })
+  )
+    return 'skipped';
 
   const channels = channelsForOutbox(lockedRows.rows.map((row) => row.channel));
   const earliest = lockedRows.rows.reduce<Date | null>((acc, row) => {
@@ -305,7 +311,7 @@ async function sendOneGroup(
   }, parseInstant(group.scheduled_at));
 
   const dueAt = parseInstant(invoice.due_at);
-  await enqueue(client, {
+  const queued = await enqueue(client, {
     profileId: invoice.profile_id,
     userId: invoice.user_id,
     eventKey: PAYMENT_INVOICE_REMINDER_EVENT_KEY,
@@ -319,6 +325,38 @@ async function sendOneGroup(
     idempotencyKey: reminderOutboxIdempotencyKey(invoice.id, group.offset),
     status: 'queued',
   });
+
+  if (queued.inserted && queued.outboxId) {
+    // Transfer the whole occurrence once. The outbox owns later channel wake-ups.
+    for (const row of lockedRows.rows) {
+      const at = parseInstant(row.scheduled_at);
+      if (at && at > now)
+        await client.query(
+          `UPDATE notification_job SET run_after=$3 WHERE outbox_id=$1 AND channel=$2`,
+          [queued.outboxId, row.channel, at]
+        );
+    }
+  } else {
+    // Older senders could omit a later channel. Do not falsely stamp it sent or
+    // replace an existing occurrence/recipient; keep it available for reconciliation.
+    const previous = await client.query(
+      `SELECT o.profile_id,o.user_id,o.payload,
+        ARRAY(SELECT channel FROM notification_job WHERE outbox_id=o.id) AS channels
+       FROM notification_outbox o WHERE idempotency_key=$1`,
+      [reminderOutboxIdempotencyKey(invoice.id, group.offset)]
+    );
+    const saved = previous.rows[0];
+    if (
+      !saved ||
+      saved.profile_id !== invoice.profile_id ||
+      saved.user_id !== invoice.user_id ||
+      saved.payload?.invoiceId !== invoice.id ||
+      saved.payload?.offset !== group.offset ||
+      saved.payload?.dueAt !== (dueAt?.toISOString() ?? null) ||
+      !channels.every((channel) => saved.channels?.includes(channel))
+    )
+      throw new Error('Existing reminder occurrence requires reconciliation');
+  }
 
   const ids = lockedRows.rows.map((row) => row.id);
   const updated = await client.query(MARK_SENT_SQL, [ids, now]);

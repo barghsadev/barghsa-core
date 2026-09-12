@@ -390,6 +390,49 @@ describe('reminder sender — real PostgreSQL (T-04.1.04.03)', () => {
     expect(jobs.rows.map((row) => row.channel)).toEqual(['email', 'in_app']);
   });
 
+  it('queues every channel once while retaining a later external delivery time', async () => {
+    const invoiceId = await plannedInvoice();
+    for (const channel of ['email', 'sms'])
+      await insertSchedule({ invoiceId, offset: -7, channel, scheduledAt: FUTURE_SCHEDULED });
+    expect(await sendDueInvoiceReminders({ pool: ctx.pool, now: NOW })).toMatchObject({
+      sent: 1,
+      errors: [],
+    });
+    expect(
+      (await ctx.pool.query('SELECT channel,run_after FROM notification_job ORDER BY channel')).rows
+    ).toEqual([
+      { channel: 'email', run_after: FUTURE_SCHEDULED },
+      { channel: 'in_app', run_after: null },
+      { channel: 'sms', run_after: FUTURE_SCHEDULED },
+    ]);
+    expect(
+      (await ctx.pool.query('SELECT status FROM invoice_reminder_schedule')).rows.every(
+        (row) => row.status === 'sent'
+      )
+    ).toBe(true);
+    expect(await sendDueInvoiceReminders({ pool: ctx.pool, now: FUTURE_SCHEDULED })).toMatchObject({
+      sent: 0,
+      errors: [],
+    });
+    expect((await ctx.pool.query('SELECT id FROM notification_outbox')).rows).toHaveLength(1);
+  });
+
+  it('does not silently mark an omitted legacy channel sent', async () => {
+    const invoiceId = await plannedInvoice();
+    expect((await sendDueInvoiceReminders({ pool: ctx.pool, now: NOW })).sent).toBe(1);
+    await insertSchedule({ invoiceId, offset: -7, channel: 'email', scheduledAt: DUE_SCHEDULED });
+    const result = await sendDueInvoiceReminders({ pool: ctx.pool, now: NOW });
+    expect(result.sent).toBe(0);
+    expect(result.errors).toEqual([expect.stringContaining('requires reconciliation')]);
+    expect(
+      (await ctx.pool.query(`SELECT status FROM invoice_reminder_schedule WHERE channel='email'`))
+        .rows
+    ).toEqual([{ status: 'scheduled' }]);
+    expect((await ctx.pool.query('SELECT channel FROM notification_job')).rows).toEqual([
+      { channel: 'in_app' },
+    ]);
+  });
+
   it('does not send when the invoice is Paid, Cancelled, or Refunded', async () => {
     const paid = await insertInvoice({ state: 'Paid', paidAmount: 1_000_000 });
     const cancelled = await insertInvoice({ state: 'Cancelled' });
