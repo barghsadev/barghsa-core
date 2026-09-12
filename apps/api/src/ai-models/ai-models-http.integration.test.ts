@@ -447,3 +447,21 @@ it.each([
     }
   }
 );
+
+it('records current step-up proof on the mutation audit', async () => {
+  const verifiedAt = new Date(Date.now() - 60_000);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='operator'", [
+    verifiedAt,
+  ]);
+  expect((await request('', 'POST', input)).ok).toBe(true);
+  const rows = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'ai_model_%'"
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  expect(rows[0].metadata).toMatchObject({
+    stepUpVerified: true,
+    stepUpVerifiedAt: verifiedAt.toISOString(),
+  });
+});

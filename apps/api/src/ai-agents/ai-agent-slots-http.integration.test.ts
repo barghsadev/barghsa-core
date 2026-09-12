@@ -229,3 +229,21 @@ it.each(['assign', 'clear'] as const)(
     });
   }
 );
+
+it('records current step-up proof on the mutation audit', async () => {
+  const verifiedAt = new Date(Date.now() - 60_000);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='slot-admin'", [
+    verifiedAt,
+  ]);
+  expect((await assign(agentId)).ok).toBe(true);
+  const rows = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'ai_agent_slot_%'"
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  expect(rows[0].metadata).toMatchObject({
+    stepUpVerified: true,
+    stepUpVerifiedAt: verifiedAt.toISOString(),
+  });
+});

@@ -267,7 +267,7 @@ export class KnowledgeBasesService {
 
   /** Create a KB. */
   async createKb(input: CreateKbInput): Promise<KbDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const id = uuidv7();
       const now = new Date();
 
@@ -289,6 +289,7 @@ export class KnowledgeBasesService {
         );
       }
       await this.recordAudit(
+        verifiedAt,
         'kb_created',
         input.actorUserId,
         input.ip,
@@ -305,7 +306,7 @@ export class KnowledgeBasesService {
 
   /** Update a KB's title/description. */
   async updateKb(id: string, input: UpdateKbInput): Promise<KbDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const existing = await this.findKb(id, client);
       if (!existing) throw this.kbNotFound(id);
 
@@ -337,6 +338,7 @@ export class KnowledgeBasesService {
       const groups = await this.groupRefsForKb(id, client);
       const docs = await this.docsForKb(id, client);
       await this.recordAudit(
+        verifiedAt,
         'kb_updated',
         input.actorUserId,
         input.ip,
@@ -360,12 +362,13 @@ export class KnowledgeBasesService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const existing = await this.findKb(id, client);
       if (!existing) throw this.kbNotFound(id);
 
       await client.query('DELETE FROM knowledge_bases WHERE id = $1', [id]);
       await this.recordAudit(
+        verifiedAt,
         'kb_deleted',
         actorUserId,
         ip,
@@ -420,7 +423,7 @@ export class KnowledgeBasesService {
    * a no-op returning the existing link (idempotent).
    */
   async attachDocument(input: AttachDocumentInput): Promise<KbDocumentDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const kb = await this.findKb(input.kbId, client);
       if (!kb) throw this.kbNotFound(input.kbId);
 
@@ -487,6 +490,7 @@ export class KnowledgeBasesService {
       );
       if (result.rows[0]) {
         await this.recordAudit(
+          verifiedAt,
           'kb_document_attached',
           input.actorUserId,
           input.ip,
@@ -530,7 +534,7 @@ export class KnowledgeBasesService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const kb = await this.findKb(kbId, client);
       if (!kb) throw this.kbNotFound(kbId);
 
@@ -550,6 +554,7 @@ export class KnowledgeBasesService {
         kbId,
       ]);
       await this.recordAudit(
+        verifiedAt,
         'kb_document_detached',
         actorUserId,
         ip,
@@ -601,7 +606,7 @@ export class KnowledgeBasesService {
 
   /** Create a KB group. */
   async createGroup(input: CreateKbGroupInput): Promise<KbGroupDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const id = uuidv7();
       const now = new Date();
 
@@ -623,6 +628,7 @@ export class KnowledgeBasesService {
         );
       }
       await this.recordAudit(
+        verifiedAt,
         'kb_group_created',
         input.actorUserId,
         input.ip,
@@ -639,7 +645,7 @@ export class KnowledgeBasesService {
 
   /** Update a KB group's title/description. */
   async updateGroup(id: string, input: UpdateKbGroupInput): Promise<KbGroupDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const existing = await this.findGroup(id, client);
       if (!existing) throw this.groupNotFound(id);
 
@@ -670,6 +676,7 @@ export class KnowledgeBasesService {
 
       const memberCount = await this.memberCountForGroup(id, client);
       await this.recordAudit(
+        verifiedAt,
         'kb_group_updated',
         input.actorUserId,
         input.ip,
@@ -691,12 +698,13 @@ export class KnowledgeBasesService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const existing = await this.findGroup(id, client);
       if (!existing) throw this.groupNotFound(id);
 
       await client.query('DELETE FROM kb_groups WHERE id = $1', [id]);
       await this.recordAudit(
+        verifiedAt,
         'kb_group_deleted',
         actorUserId,
         ip,
@@ -714,7 +722,7 @@ export class KnowledgeBasesService {
 
   /** Link a KB into a group (idempotent; both records must exist). */
   async addGroupMember(input: AddGroupMemberInput): Promise<void> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const group = await this.findGroup(input.groupId, client);
       if (!group) throw this.groupNotFound(input.groupId);
       const kb = await this.findKb(input.kbId, client);
@@ -743,6 +751,7 @@ export class KnowledgeBasesService {
         throw error;
       }
       await this.recordAudit(
+        verifiedAt,
         'kb_group_member_added',
         input.actorUserId,
         input.ip,
@@ -766,7 +775,7 @@ export class KnowledgeBasesService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const group = await this.findGroup(groupId, client);
       if (!group) throw this.groupNotFound(groupId);
 
@@ -785,6 +794,7 @@ export class KnowledgeBasesService {
         );
       }
       await this.recordAudit(
+        verifiedAt,
         'kb_group_member_removed',
         actorUserId,
         ip,
@@ -959,7 +969,7 @@ export class KnowledgeBasesService {
   private async withTransaction<T>(
     actorUserId: string,
     session: MutationSession,
-    work: (client: PoolClient) => Promise<T>
+    work: (client: PoolClient, verifiedAt: Date) => Promise<T>
   ): Promise<T> {
     if (!session || session.userId !== actorUserId) {
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
@@ -968,8 +978,8 @@ export class KnowledgeBasesService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:ai:kb');
-      await requireSessionStepUp(client, session);
-      const result = await work(client);
+      const verifiedAt = await requireSessionStepUp(client, session);
+      const result = await work(client, verifiedAt);
       await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       return result;
@@ -982,6 +992,7 @@ export class KnowledgeBasesService {
   }
 
   private async recordAudit(
+    verifiedAt: Date,
     event: string,
     actorUserId: string,
     ip: string,
@@ -992,7 +1003,19 @@ export class KnowledgeBasesService {
     await (client ?? getDbPool()).query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-      [auditId, actorUserId, event, JSON.stringify(meta), uuidv7(), ip, new Date()]
+      [
+        auditId,
+        actorUserId,
+        event,
+        JSON.stringify({
+          ...meta,
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
+        }),
+        uuidv7(),
+        ip,
+        new Date(),
+      ]
     );
   }
 }

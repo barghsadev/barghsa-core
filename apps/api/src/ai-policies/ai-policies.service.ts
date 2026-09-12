@@ -233,7 +233,7 @@ export class AiPoliciesService {
 
   /** Create a policy. */
   async createPolicy(input: CreatePolicyInput): Promise<PolicyDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const id = uuidv7();
       const now = new Date();
       const enabled = input.enabled ?? true;
@@ -268,11 +268,16 @@ export class AiPoliciesService {
       const row = result.rows[0];
       if (!row) {
         throw new HttpException(
-          { statusCode: 500, error: 'AI_POLICY_CREATE_FAILED', message: 'Failed to create policy' },
+          {
+            statusCode: 500,
+            error: 'AI_POLICY_CREATE_FAILED',
+            message: 'Failed to create policy',
+          },
           500
         );
       }
       await this.recordAudit(
+        verifiedAt,
         'ai_policy_created',
         input.actorUserId,
         input.ip,
@@ -292,7 +297,7 @@ export class AiPoliciesService {
 
   /** Update a policy's fields. */
   async updatePolicy(id: string, input: UpdatePolicyInput): Promise<PolicyDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const existing = await this.findPolicy(id, client);
       if (!existing) throw this.policyNotFound(id);
 
@@ -382,6 +387,7 @@ export class AiPoliciesService {
       // either; only real guardrail changes produce an ai_policy_updated event.
       if (changedFields.length > 0) {
         await this.recordAudit(
+          verifiedAt,
           'ai_policy_updated',
           input.actorUserId,
           input.ip,
@@ -412,12 +418,13 @@ export class AiPoliciesService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const existing = await this.findPolicy(id, client);
       if (!existing) throw this.policyNotFound(id);
 
       await client.query('DELETE FROM ai_policies WHERE id = $1', [id]);
       await this.recordAudit(
+        verifiedAt,
         'ai_policy_deleted',
         actorUserId,
         ip,
@@ -472,7 +479,7 @@ export class AiPoliciesService {
 
   /** Create a policy group. */
   async createGroup(input: CreatePolicyGroupInput): Promise<PolicyGroupDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const id = uuidv7();
       const now = new Date();
 
@@ -494,6 +501,7 @@ export class AiPoliciesService {
         );
       }
       await this.recordAudit(
+        verifiedAt,
         'ai_policy_group_created',
         input.actorUserId,
         input.ip,
@@ -510,7 +518,7 @@ export class AiPoliciesService {
 
   /** Update a policy group's title/description. */
   async updateGroup(id: string, input: UpdatePolicyGroupInput): Promise<PolicyGroupDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const existing = await this.findGroup(id, client);
       if (!existing) throw this.groupNotFound(id);
 
@@ -548,6 +556,7 @@ export class AiPoliciesService {
 
       const memberCount = await this.memberCountForGroup(id, client);
       await this.recordAudit(
+        verifiedAt,
         'ai_policy_group_updated',
         input.actorUserId,
         input.ip,
@@ -570,12 +579,13 @@ export class AiPoliciesService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const existing = await this.findGroup(id, client);
       if (!existing) throw this.groupNotFound(id);
 
       await client.query('DELETE FROM ai_policy_groups WHERE id = $1', [id]);
       await this.recordAudit(
+        verifiedAt,
         'ai_policy_group_deleted',
         actorUserId,
         ip,
@@ -593,7 +603,7 @@ export class AiPoliciesService {
 
   /** Link a policy into a group (idempotent; both records must exist). */
   async addGroupMember(input: AddGroupMemberInput): Promise<void> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const group = await this.findGroup(input.groupId, client);
       if (!group) throw this.groupNotFound(input.groupId);
       const policy = await this.findPolicy(input.policyId, client);
@@ -626,6 +636,7 @@ export class AiPoliciesService {
       // Only audit a real link; a no-op re-link must not emit a duplicate event.
       if (inserted) {
         await this.recordAudit(
+          verifiedAt,
           'ai_policy_group_member_added',
           input.actorUserId,
           input.ip,
@@ -650,7 +661,7 @@ export class AiPoliciesService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const group = await this.findGroup(groupId, client);
       if (!group) throw this.groupNotFound(groupId);
 
@@ -669,6 +680,7 @@ export class AiPoliciesService {
         );
       }
       await this.recordAudit(
+        verifiedAt,
         'ai_policy_group_member_removed',
         actorUserId,
         ip,
@@ -783,7 +795,7 @@ export class AiPoliciesService {
   private async withTransaction<T>(
     actorUserId: string,
     session: MutationSession,
-    work: (client: PoolClient) => Promise<T>
+    work: (client: PoolClient, verifiedAt: Date) => Promise<T>
   ): Promise<T> {
     if (!session || session.userId !== actorUserId)
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
@@ -791,8 +803,8 @@ export class AiPoliciesService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:ai:policies');
-      await requireSessionStepUp(client, session);
-      const result = await work(client);
+      const verifiedAt = await requireSessionStepUp(client, session);
+      const result = await work(client, verifiedAt);
       await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       return result;
@@ -805,6 +817,7 @@ export class AiPoliciesService {
   }
 
   private async recordAudit(
+    verifiedAt: Date,
     event: string,
     actorUserId: string,
     ip: string,
@@ -815,7 +828,19 @@ export class AiPoliciesService {
     await (client ?? getDbPool()).query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-      [auditId, actorUserId, event, JSON.stringify(meta), uuidv7(), ip, new Date()]
+      [
+        auditId,
+        actorUserId,
+        event,
+        JSON.stringify({
+          ...meta,
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
+        }),
+        uuidv7(),
+        ip,
+        new Date(),
+      ]
     );
   }
 }

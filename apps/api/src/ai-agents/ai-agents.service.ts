@@ -278,7 +278,7 @@ export class AiAgentsService {
 
   /** Create an agent, optionally linking KBs and policies in the same call. */
   create(input: CreateAgentInput): Promise<AgentDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const id = uuidv7();
       const now = new Date();
       const enabled = input.enabled ?? true;
@@ -336,7 +336,7 @@ export class AiAgentsService {
         input.policyGroupIds ?? []
       );
 
-      await this.recordAudit(q, 'ai_agent_created', input.actorUserId, input.ip, {
+      await this.recordAudit(verifiedAt, q, 'ai_agent_created', input.actorUserId, input.ip, {
         targetId: row.id,
         title: row.title,
         modelId: row.model_id,
@@ -371,7 +371,7 @@ export class AiAgentsService {
    * half-updated. A links-only change bumps `updated_at`.
    */
   update(id: string, input: UpdateAgentInput): Promise<AgentDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const existing = await this.findAgent(q, id, true);
       if (!existing) throw this.agentNotFound(id);
 
@@ -485,7 +485,7 @@ export class AiAgentsService {
       // Only a real change emits ai_agent_updated (no-op PUTs are not audited),
       // matching the no-op-PUT discipline of T-09.11.03.
       if (changedFields.length > 0 || linksChanged) {
-        await this.recordAudit(q, 'ai_agent_updated', input.actorUserId, input.ip, {
+        await this.recordAudit(verifiedAt, q, 'ai_agent_updated', input.actorUserId, input.ip, {
           targetId: id,
           title: afterRow.title,
           changedFields,
@@ -521,12 +521,12 @@ export class AiAgentsService {
 
   /** Delete an agent (its KB/policy links cascade). */
   remove(id: string, actorUserId: string, ip: string, session: MutationSession): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (q) => {
+    return this.withTransaction(actorUserId, session, async (q, verifiedAt) => {
       const existing = await this.findAgent(q, id, true);
       if (!existing) throw this.agentNotFound(id);
 
       await q.query('DELETE FROM ai_agents WHERE id = $1', [id]);
-      await this.recordAudit(q, 'ai_agent_deleted', actorUserId, ip, {
+      await this.recordAudit(verifiedAt, q, 'ai_agent_deleted', actorUserId, ip, {
         targetId: existing.id,
         title: existing.title,
       });
@@ -538,7 +538,7 @@ export class AiAgentsService {
 
   /** Link a KB to an agent (idempotent; both records must exist). */
   async addKb(input: AddAgentKbInput): Promise<void> {
-    return this.withTransaction(input.actorUserId, input.session, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const agent = await this.findAgent(q, input.agentId, true);
       if (!agent) throw this.agentNotFound(input.agentId);
       const kb = await this.findKb(q, input.kbId);
@@ -569,7 +569,7 @@ export class AiAgentsService {
         throw error;
       }
       if (inserted) {
-        await this.recordAudit(q, 'ai_agent_kb_added', input.actorUserId, input.ip, {
+        await this.recordAudit(verifiedAt, q, 'ai_agent_kb_added', input.actorUserId, input.ip, {
           targetId: input.agentId,
           kbId: input.kbId,
         });
@@ -588,7 +588,7 @@ export class AiAgentsService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (q) => {
+    return this.withTransaction(actorUserId, session, async (q, verifiedAt) => {
       const agent = await this.findAgent(q, agentId, true);
       if (!agent) throw this.agentNotFound(agentId);
 
@@ -606,7 +606,7 @@ export class AiAgentsService {
           404
         );
       }
-      await this.recordAudit(q, 'ai_agent_kb_removed', actorUserId, ip, {
+      await this.recordAudit(verifiedAt, q, 'ai_agent_kb_removed', actorUserId, ip, {
         targetId: agentId,
         kbId,
       });
@@ -618,7 +618,7 @@ export class AiAgentsService {
 
   /** Link a policy to an agent (idempotent; both records must exist). */
   async addPolicy(input: AddAgentPolicyInput): Promise<void> {
-    return this.withTransaction(input.actorUserId, input.session, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const agent = await this.findAgent(q, input.agentId, true);
       if (!agent) throw this.agentNotFound(input.agentId);
       const policy = await this.findPolicy(q, input.policyId);
@@ -648,10 +648,17 @@ export class AiAgentsService {
         throw error;
       }
       if (inserted) {
-        await this.recordAudit(q, 'ai_agent_policy_added', input.actorUserId, input.ip, {
-          targetId: input.agentId,
-          policyId: input.policyId,
-        });
+        await this.recordAudit(
+          verifiedAt,
+          q,
+          'ai_agent_policy_added',
+          input.actorUserId,
+          input.ip,
+          {
+            targetId: input.agentId,
+            policyId: input.policyId,
+          }
+        );
       }
       this.logger.log(
         `Policy ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, policy=${input.policyId}, actor=${input.actorUserId}`
@@ -667,7 +674,7 @@ export class AiAgentsService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (q) => {
+    return this.withTransaction(actorUserId, session, async (q, verifiedAt) => {
       const agent = await this.findAgent(q, agentId, true);
       if (!agent) throw this.agentNotFound(agentId);
 
@@ -685,7 +692,7 @@ export class AiAgentsService {
           404
         );
       }
-      await this.recordAudit(q, 'ai_agent_policy_removed', actorUserId, ip, {
+      await this.recordAudit(verifiedAt, q, 'ai_agent_policy_removed', actorUserId, ip, {
         targetId: agentId,
         policyId,
       });
@@ -706,7 +713,7 @@ export class AiAgentsService {
   private async withTransaction<T>(
     actorUserId: string,
     session: MutationSession,
-    fn: (q: DbExecutor) => Promise<T>
+    fn: (q: DbExecutor, verifiedAt: Date) => Promise<T>
   ): Promise<T> {
     if (!session || session.userId !== actorUserId) {
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
@@ -716,8 +723,8 @@ export class AiAgentsService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:ai:agents');
-      await requireSessionStepUp(client, session);
-      const result = await fn(client);
+      const verifiedAt = await requireSessionStepUp(client, session);
+      const result = await fn(client, verifiedAt);
       await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       committed = true;
@@ -1046,6 +1053,7 @@ export class AiAgentsService {
   }
 
   private async recordAudit(
+    verifiedAt: Date,
     q: DbExecutor,
     event: string,
     actorUserId: string,
@@ -1056,7 +1064,19 @@ export class AiAgentsService {
     await q.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-      [auditId, actorUserId, event, JSON.stringify(meta), uuidv7(), ip, new Date()]
+      [
+        auditId,
+        actorUserId,
+        event,
+        JSON.stringify({
+          ...meta,
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
+        }),
+        uuidv7(),
+        ip,
+        new Date(),
+      ]
     );
   }
 }

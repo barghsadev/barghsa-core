@@ -115,7 +115,7 @@ export class AgentSlotsService {
    * request is a no-op that emits no audit. Runs in one transaction.
    */
   assign(input: AssignSlotInput): Promise<AgentSlotDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const existing = await this.findSlot(q, input.slotKey);
       if (!existing) throw this.slotNotFound(input.slotKey);
 
@@ -154,7 +154,7 @@ export class AgentSlotsService {
       }
 
       const event = input.agentId === null ? 'ai_agent_slot_cleared' : 'ai_agent_slot_assigned';
-      await this.recordAudit(q, event, input.actorUserId, input.ip, {
+      await this.recordAudit(verifiedAt, q, event, input.actorUserId, input.ip, {
         slotKey: input.slotKey,
         label: existing.label,
         agentIdBefore: existing.agent_id,
@@ -231,7 +231,7 @@ export class AgentSlotsService {
   private async withTransaction<T>(
     actorUserId: string,
     session: MutationSession,
-    fn: (q: DbExecutor) => Promise<T>
+    fn: (q: DbExecutor, verifiedAt: Date) => Promise<T>
   ): Promise<T> {
     if (!session || session.userId !== actorUserId)
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
@@ -240,8 +240,8 @@ export class AgentSlotsService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:ai:agents');
-      await requireSessionStepUp(client, session);
-      const result = await fn(client);
+      const verifiedAt = await requireSessionStepUp(client, session);
+      const result = await fn(client, verifiedAt);
       await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       committed = true;
@@ -308,6 +308,7 @@ export class AgentSlotsService {
   }
 
   private async recordAudit(
+    verifiedAt: Date,
     q: DbExecutor,
     event: string,
     actorUserId: string,
@@ -318,7 +319,19 @@ export class AgentSlotsService {
     await q.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-      [auditId, actorUserId, event, JSON.stringify(meta), uuidv7(), ip, new Date()]
+      [
+        auditId,
+        actorUserId,
+        event,
+        JSON.stringify({
+          ...meta,
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
+        }),
+        uuidv7(),
+        ip,
+        new Date(),
+      ]
     );
   }
 }

@@ -136,7 +136,7 @@ export class AiModelsService {
     const now = new Date();
     const token = this.prepareTokenForStore(input.apiToken, null);
 
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const result = await client.query<AiModelRow>(
         `INSERT INTO ai_models
          (id, title, provider_type, base_url, model_name, api_token, created_by, created_at, updated_at)
@@ -166,7 +166,15 @@ export class AiModelsService {
           500
         );
       }
-      await this.recordAudit('ai_model_created', row, input.actorUserId, input.ip, {}, client);
+      await this.recordAudit(
+        verifiedAt,
+        'ai_model_created',
+        row,
+        input.actorUserId,
+        input.ip,
+        {},
+        client
+      );
       this.logger.log(
         `AI model created: id=${id}, title=${input.title}, actor=${input.actorUserId}`
       );
@@ -176,7 +184,7 @@ export class AiModelsService {
 
   /** Update a model; a masked placeholder token preserves the stored token. */
   async update(id: string, input: UpdateAiModelInput): Promise<AiModelDto> {
-    return this.withTransaction(input.actorUserId, input.session, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const existing = await this.findRow(id, client);
       if (!existing) throw this.notFound(id);
 
@@ -245,6 +253,7 @@ export class AiModelsService {
       const row = result.rows[0];
       if (!row) throw this.notFound(id);
       await this.recordAudit(
+        verifiedAt,
         'ai_model_updated',
         row,
         input.actorUserId,
@@ -266,7 +275,7 @@ export class AiModelsService {
     ip: string,
     session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const existing = await this.findRow(id, client);
       if (!existing) throw this.notFound(id);
 
@@ -292,7 +301,7 @@ export class AiModelsService {
         throw error;
       }
 
-      await this.recordAudit('ai_model_deleted', existing, actorUserId, ip, {}, client);
+      await this.recordAudit(verifiedAt, 'ai_model_deleted', existing, actorUserId, ip, {}, client);
       this.logger.log(`AI model deleted: id=${id}, actor=${actorUserId}`);
     });
   }
@@ -316,7 +325,7 @@ export class AiModelsService {
     // The API releases its transaction while the separate worker makes the request.
     const result = await this.queue.wait(jobId);
 
-    return this.withTransaction(actorUserId, session, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const current = await this.findRow(id, client);
       if (!current) throw this.notFound(id);
       // PostgreSQL's tuple transaction ID also detects edits with identical
@@ -346,6 +355,7 @@ export class AiModelsService {
       const row = updated.rows[0];
       if (!row) throw this.notFound(id);
       await this.recordAudit(
+        verifiedAt,
         'ai_model_tested',
         row,
         actorUserId,
@@ -436,7 +446,7 @@ export class AiModelsService {
   private async withTransaction<T>(
     actor: string,
     session: MutationSession,
-    work: (client: PoolClient) => Promise<T>
+    work: (client: PoolClient, verifiedAt: Date) => Promise<T>
   ): Promise<T> {
     if (!session || session.userId !== actor)
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
@@ -444,8 +454,8 @@ export class AiModelsService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor, 'admin:ai:models');
-      await requireSessionStepUp(client, session);
-      const result = await work(client);
+      const verifiedAt = await requireSessionStepUp(client, session);
+      const result = await work(client, verifiedAt);
       await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       return result;
@@ -458,6 +468,7 @@ export class AiModelsService {
   }
 
   private async recordAudit(
+    verifiedAt: Date,
     event: string,
     row: AiModelRow,
     actorUserId: string,
@@ -481,6 +492,8 @@ export class AiModelsService {
           modelName: row.model_name,
           maskedToken: row.api_token === null ? null : this.secrets.maskToken(row.api_token),
           ...extra,
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
         }),
         correlationId,
         ip,
