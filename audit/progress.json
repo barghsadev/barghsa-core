@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+  "source_revision": "e13b596e7650404c1acc5b717dd6ffd657433178",
   "active_step": "R03",
-  "next_action": "Continue R03-controls: inspect/fix remaining shared input/select/dropdown/tab/checkbox/radio/switch focus and RTL states, then assigned error/localization/correlation checks. Preserve current theme evidence and B01 unbuilt theme-editor prerequisites.",
+  "next_action": "Continue R03-errors: normalize unsafe application error messages, verify stable codes and downstream correlation, then CSP report behavior. Reuse valid filter/parser/provider/worker evidence. Return to remaining auxiliary UI/consumer states afterward.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -267,7 +267,7 @@
       "implementation_status": "partial",
       "acceptance_status": "pending",
       "remaining": [
-        "Current shared/public/terms/branding theme defects repaired in audit/evidence/step-reviews.json#R03-theme-contrast. Remaining controls/consumer locale, RTL, focus, contrast and loading-state acceptance stays R03-controls. Four skipped tasks are partial; unbuilt admin/per-user theme overrides remain B01."
+        "audit/evidence/step-reviews.json#R03-controls: core controls repaired; remaining auxiliary components, implemented consumer locale/timezone/theme/focus and exact skeleton/error-state acceptance stays R03. Unbuilt theme-editor/per-user capabilities remain B01."
       ]
     },
     {
@@ -287,7 +287,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review18 partial and251 pending records; preserve53 revision-bound verified assessments and reconcile evidence_refresh_queue. Reconcile301 PRs and170 historical deferral statements, including the new explicit dispositions for PR129/218, plus58 historical skips. Keep1,033 queue gaps separate."
+        "Review38 partial and114 pending task records; preserve170 verified assessments. Reconcile149 closed/24 open/128 unreviewed saved PRs and38 older source refreshes. Preserve58 skips and separate historical queue gaps."
       ]
     },
     {
@@ -733,6 +733,10 @@
     {
       "id": "R03-theme-contrast",
       "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast"
+    },
+    {
+      "id": "R03-controls",
+      "review_record": "audit/evidence/step-reviews.json#R03-controls"
     }
   ],
   "deferred_improvements": [
@@ -1048,32 +1052,34 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R03-controls",
-    "name": "Shared keyboard, focus and RTL states",
+    "id": "R03-errors",
+    "name": "Safe localized errors, correlation and CSP reports",
     "status": "reviewing",
     "prs": [
-      156
+      29,
+      61
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-09.01.02",
-      "01-platform-infrastructure.md#T-06.03.02",
-      "01-platform-infrastructure.md#T-06.03.03",
-      "01-platform-infrastructure.md#T-06.03.06"
+      "01-platform-infrastructure.md#T-01.05.01",
+      "01-platform-infrastructure.md#T-06.01.04",
+      "01-platform-infrastructure.md#T-04.04.02",
+      "02-auth-users-admin.md#T-02.02.03"
     ],
     "remaining_checklist": [
-      "Read current shared-control implementations once; exact T-06.03.02/.03/.06 criteria already read.",
-      "Fix physical select/dropdown indicators, weak/non-offset focus and remaining confirmed shared-control contrast/motion defects.",
-      "Review loading/error consumers and remaining implemented touchpoints; preserve current source-bound theme/consent/branding proof."
+      "Read exact task/PR29/61 requirements and historical nonce deferral. Preserve earlier parser/correlation and prelogin CSRF evidence.",
+      "Repair raw application HttpException message exposure and verify safe code normalization, current structured online-limit payload and localized responses.",
+      "Trace current request-to-outbox/worker correlation and native CSP reports. Keep signed-webhook owner wording pending; do not reask or waive it."
     ],
     "confirmed_defects": [
-      "Select and dropdown indicators still use physical right/left placement. Several controls still use translucent3px focus without required2px offset."
+      "HttpExceptionFilter still returns arbitrary application 4xx raw messages, including possible provider/database details."
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R03-theme-contrast"
+      "audit/evidence/step-reviews.json#R03-controls",
+      "audit/acceptance-closure.json#01-platform-infrastructure.md#T-01.05.01"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Continue R03-controls: inspect/fix remaining shared input/select/dropdown/tab/checkbox/radio/switch focus and RTL states, then assigned error/localization/correlation checks. Preserve current theme evidence and B01 unbuilt theme-editor prerequisites."
+    "next_action": "Continue R03-errors: normalize unsafe application error messages, verify stable codes and downstream correlation, then CSP report behavior. Reuse valid filter/parser/provider/worker evidence. Return to remaining auxiliary UI/consumer states afterward."
   },
   "open_domain_reviews": [
     {
@@ -1322,6 +1328,13 @@
         "02-auth-users-admin.md#T-09.11.04",
         "05-notifications-documents-ai.md#T-05.22.04"
       ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.02",
+      "owner_batch": "R03 auxiliary UI and consumer acceptance",
+      "criteria": "Toast/command/avatar/progress logical placement; remaining shared/consumer themes and keyboard/focus; linked T-06.03.03 and .06 skeleton/state acceptance.",
+      "status": "Core control repairs complete; remaining implementation review stays R03 after safe error/correlation work.",
+      "evidence": "audit/evidence/step-reviews.json#R03-controls"
     }
   ]
 }

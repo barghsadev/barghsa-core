@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `b99c7a76` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `e13b596e` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,7 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Continue **R03-controls**. Theme/terms/public/branding repairs verified locally atb99c7a76;34 distinct browser,49 UI,8 provider,50 i18n cases and42 budgets pass. Current170 verified/38 partial/114 pending;149 closed/24 open/128 unreviewed PRs. Four shared skips now have explicit partial reviews. [Review](evidence/step-reviews.json#R03-theme-contrast).
+Continue **R03-errors**,PR29/61. Core control repairs ate13b596e pass24 distinct browser cases,49 UI cases and42 budgets with final quality gates. Then return to remaining auxiliary UI/consumer states in R03. Counts remain170 verified/38 partial/114 pending;149 closed/24 open/128 unreviewed PRs. [Review](evidence/step-reviews.json#R03-controls).
 
 Earlier checkpoints, retained for evidence reuse:
 

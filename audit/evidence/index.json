@@ -20252,6 +20252,188 @@
       "sha256": "d44cbcf7caa18d03b32871223fa885515f1381a85289af343c7a6a81b7ad0dbd",
       "encoding": "gzip",
       "stored_sha256": "cdf0dce10e1557ef6fcd0258c0d041d8d45c56f7533f00f506a6acf4a821754c"
+    },
+    {
+      "original_path": "/tmp/r03-controls-baseline-final.log",
+      "path": "audit/evidence/r03/r03-controls-baseline-final.log.gz",
+      "sha256": "53f5eac5b45f3c1972971e63866663513529745aef30840e4835859a3caf30d4",
+      "encoding": "gzip",
+      "stored_sha256": "c5981340dca258713b77dfb7318ab1a6ed74f3d23fcd2f398ed332531451bd64"
+    },
+    {
+      "original_path": "/tmp/r03-controls-baseline.log",
+      "path": "audit/evidence/r03/r03-controls-baseline.log.gz",
+      "sha256": "c0584fcd18f7ca86d3cd76509290e724f65ca2a67058b977747d1e86e1a2bfbd",
+      "encoding": "gzip",
+      "stored_sha256": "369312edd048f29dc56e9c6b616887c6e57acf82be76150be3577771ce8a7578"
+    },
+    {
+      "original_path": "/tmp/r03-controls-browser.log",
+      "path": "audit/evidence/r03/r03-controls-browser.log.gz",
+      "sha256": "65c8498f10fb4ddeed05a79bbd718f0e9887946eb9f9a76368f5a84781fb74ba",
+      "encoding": "gzip",
+      "stored_sha256": "7edc9e1680ccd5ec895c644895111c35feed76cffb06525707607fc456457c83"
+    },
+    {
+      "original_path": "/tmp/r03-controls-build.log",
+      "path": "audit/evidence/r03/r03-controls-build.log.gz",
+      "sha256": "22771b8e0e2d5d36fa99737057f2c34e4c4759edcecdc97d09fc7e2d696a8d37",
+      "encoding": "gzip",
+      "stored_sha256": "07506db9ecf0137baf9326e997429a3359ec1880f02e1db0e68b5217f93374d6"
+    },
+    {
+      "original_path": "/tmp/r03-controls-docs.log",
+      "path": "audit/evidence/r03/r03-controls-docs.log.gz",
+      "sha256": "f1a4820c305f17a794a038ac33fbc71496abc426692d5cda9484e749b33ba468",
+      "encoding": "gzip",
+      "stored_sha256": "bb4d21cd1a144833ed6ae510d687917c80185a23dabeb745f2501fab7a599fc8"
+    },
+    {
+      "original_path": "/tmp/r03-controls-extra-baseline.log",
+      "path": "audit/evidence/r03/r03-controls-extra-baseline.log.gz",
+      "sha256": "a4e596fe3f5c9a90d9ccdf6bc6681a0a5d8d205a3f2239756e71e1d9dfad367f",
+      "encoding": "gzip",
+      "stored_sha256": "6cd7e5845a78eadb3db2663ffff35a991e0018c626b273ff9dc17a5b6f63c96c"
+    },
+    {
+      "original_path": "/tmp/r03-controls-extra-browser.log",
+      "path": "audit/evidence/r03/r03-controls-extra-browser.log.gz",
+      "sha256": "31e1a54f5a250a4701d09ef8a60667ecb81fe0d85ef9124324ea0c535a75d7a9",
+      "encoding": "gzip",
+      "stored_sha256": "9edcf949f691a1c72de9d6be959a68f70e2e18ddb5d604445502f5509ecc53e1"
+    },
+    {
+      "original_path": "/tmp/r03-controls-extra-docs.log",
+      "path": "audit/evidence/r03/r03-controls-extra-docs.log.gz",
+      "sha256": "f31186e4a1531fb7483d34f1749c03c45c8ee539076d5023b14c44eca2251924",
+      "encoding": "gzip",
+      "stored_sha256": "a54b8c89b055df8f8860eac3094d8ef2107e31d4733b5f75166efabd5635a2cc"
+    },
+    {
+      "original_path": "/tmp/r03-controls-extra-final-format.log",
+      "path": "audit/evidence/r03/r03-controls-extra-final-format.log.gz",
+      "sha256": "186a625d465ce2dcb01c404bfdaf60cf69106339f5a3ac7d4025fd603c26a08c",
+      "encoding": "gzip",
+      "stored_sha256": "66263eb62c01d17d735682e29d78fef6ddc23a8aed86bfc1902f5381eae1d351"
+    },
+    {
+      "original_path": "/tmp/r03-controls-extra-format.log",
+      "path": "audit/evidence/r03/r03-controls-extra-format.log.gz",
+      "sha256": "7e0b6497f13d3e7b77a384009fe2a55ba701d10c7ba202a40d05cbb2c8610422",
+      "encoding": "gzip",
+      "stored_sha256": "94048d332824af7d20b7d6c8abef8d624ef5d0b5a76591e4dce357af5c7471fe"
+    },
+    {
+      "original_path": "/tmp/r03-controls-final-browser.log",
+      "path": "audit/evidence/r03/r03-controls-final-browser.log.gz",
+      "sha256": "ba22acb4a91f1aa3448679d8b78272079fca8ce05f799ca961b2bddcbb05c278",
+      "encoding": "gzip",
+      "stored_sha256": "4d6a376401fdb0c96727fa3e285153392d552bf3082ab71accab9352f3370cf8"
+    },
+    {
+      "original_path": "/tmp/r03-controls-final-build.log",
+      "path": "audit/evidence/r03/r03-controls-final-build.log.gz",
+      "sha256": "967dc85a33b830f4948838291a557d7118d9c8f5aae454c9ddb5016a0b4df57b",
+      "encoding": "gzip",
+      "stored_sha256": "6d9141e22a3683df2ad3477e2317b6ca50f919686431ce3c654d19c21bb28305"
+    },
+    {
+      "original_path": "/tmp/r03-controls-final-format-check.log",
+      "path": "audit/evidence/r03/r03-controls-final-format-check.log.gz",
+      "sha256": "59061d7052be010e5e9a6bff7bfb1e408f1a52627a909f5c755331378ae08813",
+      "encoding": "gzip",
+      "stored_sha256": "d08edd2e3d2297d4fd01155d2c35ee92069f5ff30954ba6ef1eac6fe4cfbd19c"
+    },
+    {
+      "original_path": "/tmp/r03-controls-final-format.log",
+      "path": "audit/evidence/r03/r03-controls-final-format.log.gz",
+      "sha256": "0117b0ccf7e45d2fb993dd22f2871f686fc9d737138861e49f4eda5e85118d00",
+      "encoding": "gzip",
+      "stored_sha256": "f00f043b4fed5faf8af560ef294e79c3ea01c79d582dd20cb14586639c421d27"
+    },
+    {
+      "original_path": "/tmp/r03-controls-final-quality.log",
+      "path": "audit/evidence/r03/r03-controls-final-quality.log.gz",
+      "sha256": "3e75de3b9e1fd7092a02b17fadafff917cd948aa3d516237106b1a2f8594bc62",
+      "encoding": "gzip",
+      "stored_sha256": "b4efedea7367417365fb819c1bcaf011d1653ecfc1aecd7038da0887056b0e89"
+    },
+    {
+      "original_path": "/tmp/r03-controls-fixture-diagnostic.log",
+      "path": "audit/evidence/r03/r03-controls-fixture-diagnostic.log.gz",
+      "sha256": "98e4224f10b25dbdb52a28636768416f3e90b4d41fb12b29f80ddb3899014d27",
+      "encoding": "gzip",
+      "stored_sha256": "6bbd5ab080091dca1f0a73a365f4b558a43358a84e71d80b71e8551005f78679"
+    },
+    {
+      "original_path": "/tmp/r03-controls-format.log",
+      "path": "audit/evidence/r03/r03-controls-format.log.gz",
+      "sha256": "3afbde80695cf33eca6caf4b178bf6b7a6da172a5d216eb2cfb7f946a9ada84f",
+      "encoding": "gzip",
+      "stored_sha256": "17538c33cdf89d92d9830d7111cffa00620aaae9636ebc0c68b4d9e77c67f632"
+    },
+    {
+      "original_path": "/tmp/r03-controls-integration.log",
+      "path": "audit/evidence/r03/r03-controls-integration.log.gz",
+      "sha256": "320152431c29532bdf8c1de80c59f4c7b7c4ac8ed80c32e088f4ced9d754998b",
+      "encoding": "gzip",
+      "stored_sha256": "c6be5c306eb35bd3ead054e867343246fb8eb6f1ef6cbd5503359d4098805473"
+    },
+    {
+      "original_path": "/tmp/r03-controls-keyboard-browser.log",
+      "path": "audit/evidence/r03/r03-controls-keyboard-browser.log.gz",
+      "sha256": "66813e14d7c178f65d38981c247dbad1f4e086612848f80f8ada9250d4bac2a5",
+      "encoding": "gzip",
+      "stored_sha256": "8c54e1359c3aceba2de9649cbffc90ced4ccc557f96d8075ac6ac340fe729064"
+    },
+    {
+      "original_path": "/tmp/r03-controls-keyboard-format.log",
+      "path": "audit/evidence/r03/r03-controls-keyboard-format.log.gz",
+      "sha256": "80352b142a747c497a6dcb2cb0ccf02d7da127a4291f9773813a57650b98e9d1",
+      "encoding": "gzip",
+      "stored_sha256": "6cb602f0044fadbc2c762344a32215d0b51a3cc14d1804b7ae1dc0dfd4873b24"
+    },
+    {
+      "original_path": "/tmp/r03-controls-orientation-browser.log",
+      "path": "audit/evidence/r03/r03-controls-orientation-browser.log.gz",
+      "sha256": "51d82685eb8b175c0cf7652f2cb8ff298abf73c9f854aaf4a015c27e7f5d36ba",
+      "encoding": "gzip",
+      "stored_sha256": "54c0cb37d59004a02d9a0cdeabba5965e69c3fb08890aabcef1e4aef473d19d4"
+    },
+    {
+      "original_path": "/tmp/r03-controls-orientation-format.log",
+      "path": "audit/evidence/r03/r03-controls-orientation-format.log.gz",
+      "sha256": "dee064e3c7d1d77c87dab272fd752189ef9123871c1a65971ebac178c492153b",
+      "encoding": "gzip",
+      "stored_sha256": "9379d36a53212a2d1417b180e6cf8cf29de7a9b8423f78c3d511fefb60da8041"
+    },
+    {
+      "original_path": "/tmp/r03-controls-quality.log",
+      "path": "audit/evidence/r03/r03-theme-quality.log.gz",
+      "sha256": "34264e0234a6338f96e5d0fe7c9f3a3244f040b7ebc4d73f6d0811538e630d4e",
+      "encoding": "gzip",
+      "stored_sha256": "2fbcd7126bd7cae9864c2115d97eda189e7329d10fa7416f977b76e5de5cdb7c"
+    },
+    {
+      "original_path": "/tmp/r03-controls-separator-docs.log",
+      "path": "audit/evidence/r03/r03-controls-separator-docs.log.gz",
+      "sha256": "592b17863efda0654b92518efdf95ec17723b08de073ba09ea2099c78b21a19b",
+      "encoding": "gzip",
+      "stored_sha256": "6c3326dddc754f88beab5d22c05991f48d50369a224150f9e0d75b355b9b732c"
+    },
+    {
+      "original_path": "/tmp/r03-controls-unit-budget.log",
+      "path": "audit/evidence/r03/r03-controls-unit-budget.log.gz",
+      "sha256": "08921afc6c3368f6e08ceae13e440b3573ccc020d88f14a81be2b6ac2acf0628",
+      "encoding": "gzip",
+      "stored_sha256": "ff9852fb4ccf40706b2ba0fe6e89d593d30ffe84de65cbb9f9f8f8c3b2b2b80b"
+    },
+    {
+      "original_path": "/tmp/r03-controls-visual.log",
+      "path": "audit/evidence/r03/r03-controls-visual.log.gz",
+      "sha256": "f41324a4300a3133a23928779060d540e07e95a400fb7a7d0a7eb1ec5b245c85",
+      "encoding": "gzip",
+      "stored_sha256": "4282c9839f5a5455ebc9ca9d4aeb9e9d4bfa9ee993d22646907c6f79e9be13da"
     }
   ]
 }

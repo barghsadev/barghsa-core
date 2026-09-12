@@ -869,7 +869,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-09.01.02",
       "status": "partial",
-      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 640,
       "requirement": "**T-09.01.02 — Theme application**\n\n- Description: Branding settings applied to auth pages, public pages, email templates, and notification templates. Full light/dark theme support.\n- Technical notes: CSS custom properties injected from brand config. Email templates reference brand colors. Both themes independently configurable or derived from primary.\n- UI/UX: Instant preview on dashboard. Consistent across all touchpoints.\n- Dependencies: T-09.01.01\n- Complexity: M",
@@ -909,7 +909,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -925,7 +925,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
         },
         {
           "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -989,14 +989,68 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "7bfdab0e81ea50911fa31b3a116139282cd236583fd094b65cdd5b9983c2925e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/checkbox.tsx",
+          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "7e838a66ec265498f1e10b72f20cdf9a1b9892510b53af5b41b7e120828dd917"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/radio-group.tsx",
+          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "6fc3e3e80fe8c3d2f6272d624085a62a8e092e4ec4088f6eb87c200b1e37c0e0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/separator.tsx",
+          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
+        },
+        {
+          "path": "packages/ui/src/components/ui/switch.tsx",
+          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
         }
       ],
       "checks": [
         "Seven provider regression tests pass; all four initial cases failed before repair",
         "Real activation refreshes title and component colors immediately in both languages",
         "Email/notification branding and actual previews are now verified through R02-email-branding-delivery, R02-branded-admin-previews and subsequent contact/delivery repairs. audit/evidence/step-reviews.json#R02-provider-template-authoring",
-        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
+        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass."
       ],
       "limitations": [
         "Required theme/contrast review across remaining implemented touchpoints continues in R03. Current public/auth, terms and branding editor checks do not certify every page. Historical email/notification branding deferral remains satisfied by R02."
@@ -1005,7 +1059,7 @@
         156
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast"
+      "review_record": "audit/evidence/step-reviews.json#R03-controls"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
@@ -10016,12 +10070,13 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         }
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         223
@@ -10199,12 +10254,13 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         }
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         224
@@ -10382,12 +10438,13 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         }
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         225
@@ -10565,12 +10622,13 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         }
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         226
@@ -10748,12 +10806,13 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         }
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         227
@@ -10931,12 +10990,13 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         }
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         228
@@ -11114,12 +11174,13 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         }
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         229
@@ -11297,7 +11358,7 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         },
         {
           "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
@@ -11310,7 +11371,8 @@
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         232,
@@ -11491,12 +11553,13 @@
         },
         {
           "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "89cbe4e496094d3f3bf773e2a94546e1f88f4e7842b6f804f149be0c1244610c"
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
         }
       ],
       "checks": [
         "Exact story/task requirements and all ten saved PR descriptions reviewed. audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
-        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch."
+        "Focused current checks and unchanged evidence reuse recorded once in the consolidated batch.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "merged_prs": [
         233
@@ -19141,7 +19204,9 @@
       "requirement": "- **T-06.03.02:** Create themed component set with RTL support\n  - **Notes:** Each component uses CSS logical properties (`padding-inline-start` instead of `padding-left`, `margin-inline-end` instead of `margin-right`, `border-inline-start` instead of `border-left`). Use Tailwind `rtl:`/`ltr:` modifiers for any property that can't use logical properties. Theme tokens in CSS variables: `--color-primary`, `--color-background`, `--color-text`, `--border-radius`, `--spacing-*`. Both light and dark variants defined.\n  - **Dependencies:** T-06.03.01\n  - **Complexity:** L",
       "requirement_sha256": "0b0ec13a345afaaecbe64843f42351635dc66385c02d009ffc3cb74f04bcb55f",
       "checks": [
-        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
+        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass."
       ],
       "source_evidence": [
         {
@@ -19162,7 +19227,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -19178,7 +19243,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
@@ -19254,15 +19319,67 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "7bfdab0e81ea50911fa31b3a116139282cd236583fd094b65cdd5b9983c2925e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/checkbox.tsx",
+          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "7e838a66ec265498f1e10b72f20cdf9a1b9892510b53af5b41b7e120828dd917"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/radio-group.tsx",
+          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "6fc3e3e80fe8c3d2f6272d624085a62a8e092e4ec4088f6eb87c200b1e37c0e0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/separator.tsx",
+          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
+        },
+        {
+          "path": "packages/ui/src/components/ui/switch.tsx",
+          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
         }
       ],
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
-      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
+      "review_record": "audit/evidence/step-reviews.json#R03-controls",
       "limitations": [
-        "Other shared controls still contain physical select/dropdown placements and incomplete focus styling. Complete their RTL/theme/state checks in R03-controls."
+        "Remaining auxiliary shared components and implemented consumer RTL/theme acceptance continues after R03 errors. Toast, command, avatar and progress still contain physical placement classes; do not claim full library acceptance."
       ]
     },
     {
@@ -19273,7 +19390,9 @@
       "requirement": "- **T-06.03.03:** Implement WCAG 2.2 AA accessibility in all shared components\n  - **Notes:** Every interactive element has visible focus indicator (2px solid offset ring, not just outline). Color contrast: minimum 4.5:1 for text, 3:1 for large text (18px+). ARIA: `role`, `aria-label`, `aria-describedby`, `aria-errormessage` on form fields. Keyboard: Tab order follows visual order, Escape closes dialogs/dropdowns, Enter toggles selects/checkboxes. Screen reader: live regions for dynamic content (toast, loading state). Reduced motion: `@media (prefers-reduced-motion: reduce)` disables CSS animations and transitions. Components span loading, empty, error, and disabled states.\n  - **Dependencies:** T-06.03.01\n  - **Complexity:** XL",
       "requirement_sha256": "9816a15613881ecba94df1e7e3f260b797efd982e2d2434f3edcc15287bba9bd",
       "checks": [
-        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
+        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass."
       ],
       "source_evidence": [
         {
@@ -19294,7 +19413,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -19310,7 +19429,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
@@ -19386,15 +19505,67 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "7bfdab0e81ea50911fa31b3a116139282cd236583fd094b65cdd5b9983c2925e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/checkbox.tsx",
+          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "7e838a66ec265498f1e10b72f20cdf9a1b9892510b53af5b41b7e120828dd917"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/radio-group.tsx",
+          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "6fc3e3e80fe8c3d2f6272d624085a62a8e092e4ec4088f6eb87c200b1e37c0e0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/separator.tsx",
+          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
+        },
+        {
+          "path": "packages/ui/src/components/ui/switch.tsx",
+          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
         }
       ],
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
-      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
+      "review_record": "audit/evidence/step-reviews.json#R03-controls",
       "limitations": [
-        "Buttons, alerts and terms dialogs now pass targeted contrast/focus/motion checks. Remaining select/input/checkbox/radio/tab/switch and consumer keyboard/focus/state acceptance is R03-controls; this is not a full WCAG certification."
+        "Core form/select/menu/tab/switch/slider/scroll/badge focus, contrast, keyboard and orientation verified. Other auxiliary shared controls, complete consumer states and full WCAG acceptance remain R03; no whole-library certification."
       ]
     },
     {
@@ -19405,7 +19576,8 @@
       "requirement": "- **T-06.03.05:** Implement theme system with admin overrides\n  - **Notes:** CSS variables for all theme tokens. Admin can customize: primary color, background color, font family, border radius, spacing scale. Theme overrides stored in admin config (Draft → Active → Superseded). Apply via CSS custom properties on `<html>` element. Light/dark mode toggle per user. Admin-set theme defaults applied to all users when no per-user override exists. Animations respect `prefers-reduced-motion` — disable all non-essential motion.\n  - **Dependencies:** T-06.03.02\n  - **Complexity:** L\n  - **UI/UX:** Theme settings in admin dashboard with color pickers, preview area showing live component examples, save as draft vs activate immediately.",
       "requirement_sha256": "0636c68694fc93db1464ae65871005e6b0fac31d4a25125e2c3f32472ffc07ba",
       "checks": [
-        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing."
       ],
       "source_evidence": [
         {
@@ -19426,7 +19598,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -19442,7 +19614,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
@@ -19518,7 +19690,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
         }
       ],
       "merged_prs": [],
@@ -19537,7 +19709,9 @@
       "requirement": "- **T-06.03.06:** Create loading/empty/error state components\n  - **Notes:** `<Skeleton>` for content placeholders (matching card/table/input shapes with shimmer animation, disabled when reduced-motion). `<EmptyState icon title description action? />` for zero-data pages. `<ErrorBoundary>` catches rendering errors, displays \"Something went wrong\" with retry button and support contact. `<PageLoading>` full-page spinner/skeleton for route transitions.\n  - **Dependencies:** T-06.03.02\n  - **Complexity:** M\n  - **UI/UX:** Skeleton components match the exact dimensions of the content they replace. Loading never shows raw text \"Loading...\" except as ARIA label. Empty states are informative, not blank.\n\n---",
       "requirement_sha256": "84cc721b7f86d11a10ff65a8da1231835e874d8331737b88e1d67b2043ad7534",
       "checks": [
-        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
+        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
+        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass."
       ],
       "source_evidence": [
         {
@@ -19558,7 +19732,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -19574,7 +19748,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
@@ -19650,15 +19824,67 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "7bfdab0e81ea50911fa31b3a116139282cd236583fd094b65cdd5b9983c2925e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/checkbox.tsx",
+          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "7e838a66ec265498f1e10b72f20cdf9a1b9892510b53af5b41b7e120828dd917"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/radio-group.tsx",
+          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "6fc3e3e80fe8c3d2f6272d624085a62a8e092e4ec4088f6eb87c200b1e37c0e0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/separator.tsx",
+          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
+        },
+        {
+          "path": "packages/ui/src/components/ui/switch.tsx",
+          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
         }
       ],
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
-      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
+      "review_record": "audit/evidence/step-reviews.json#R03-controls",
       "limitations": [
-        "Empty/error/retry/support and hidden loading semantics are implemented and covered by shared tests. Exact skeleton shape/dimension and remaining consumer loading-state acceptance still needs R03-controls review."
+        "Existing shared empty/error/retry/support behavior remains verified. Exact skeleton dimensions/shimmer and all remaining consumer loading/error-state acceptance still require R03 review."
       ]
     }
   ],
@@ -23648,6 +23874,28 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
       "note": "Only matching immediate-base bindings refreshed after reviewed presentation changes.38 older refreshes retained."
+    },
+    {
+      "source_revision": "e13b596e7650404c1acc5b717dd6ffd657433178",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-06.03.06"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-controls",
+      "note": "Matching immediate-base bindings only;38 older source refreshes retained."
     }
   ]
 }

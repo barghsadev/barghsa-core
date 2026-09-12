@@ -17626,6 +17626,149 @@
           "evidence": "audit/evidence/step-reviews.json#R03-theme-contrast"
         }
       ]
+    },
+    {
+      "id": "R03-controls",
+      "date": "2026-09-13",
+      "source_revision": "e13b596e7650404c1acc5b717dd6ffd657433178",
+      "base_revision": "c3d7c88c6b1b0c8f83d8b0dc1c88b2cb5092da3b",
+      "product_commits": [
+        "e13b596e"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-06.03.06"
+      ],
+      "summary": "Core shared controls now preserve visible focus, stable theme contrast, RTL layout and keyboard behavior. Visual review also repaired obsolete orientation selectors hiding slider tracks and mislaying tabs/separators. Remaining auxiliary components and consumer acceptance stay explicit.",
+      "review": [
+        "Read exact shared-control criteria and current Base UI wrappers; used official component documentation and local primitive contracts. Kept prior theme/consent/provider evidence.",
+        "Initial baseline had duplicate fixture accessible names from combining implicit labels and aria-label. Corrected fixture labels, retained failed diagnostics and stopped the superseded run. Valid baseline then reproduced weak/no-offset focus and RTL switch movement. Tabs use manual activation, so fixture presses Enter after arrow navigation rather than assuming automatic selection.",
+        "Input, textarea, select, native-select, checkbox, radio, tabs, switch, menus, badges and scroll/slider controls now show full2px offset focus. Invalid rings no longer replace focus. Current keyboard ring dimensions and focused elements are checked in both languages/themes, including selected menu/option items and nested menus.",
+        "Checkbox Enter previously submitted its form per upstream behavior, conflicting with the exact task. Wrapper now toggles once and prevents implicit submission while preserving consumer cancellation/read-only/disabled state. Real registration consent cases still pass. No authorization or submission-handler changes.",
+        "Continuous theme color transitions briefly reduced text contrast in controls and scroll content. Removed color transitions while retaining shadow/thumb motion and global reduced-motion behavior. Stronger input outlines and scroll thumb, readable badge/link/hover colors pass three-brand/light-dark scans.",
+        "Select/menu indicators and submenu placement/chevrons follow logical direction. RTL checked switch thumb moves inward. Scalar slider values render one handle rather than two; per-thumb labels support ranges, with keyboard values checked.",
+        "Visual inspection caught missing slider tracks and side-by-side horizontal tab content despite keyboard passes. Four wrappers still used obsolete data-horizontal/data-vertical selectors. Correct data-orientation selectors restore slider/scrollbar/separator dimensions and tab layout. New geometry assertions and current screenshots verify the actual rendering.",
+        "Final format check initially failed after adding screenshot output; formatting was corrected before the successful final quality run. No failed run is counted as passing evidence.",
+        "Refreshed14 matching immediate-base bindings;38 older refreshes retained. Remaining auxiliary controls/consumer states are recorded, and skipped theme-editor capabilities remain B01."
+      ],
+      "verification": {
+        "browser": "24 distinct cases:8 expanded component/theme +5 direction +11 registration-consent. Latest13 orientation/component cases supersede their overlapping earlier cases;2 visual reruns are not added. Earlier8 terms/branding theme cases pass at the same input-token revision and remain applicable; later changes target control wrappers absent from those workflows.",
+        "unit": "49 shared UI cases pass; later changes only correct orientation/scrollbar CSS and add a decorative separator fixture, so unchanged behavior evidence is reused.",
+        "quality": "Final UI/web builds/types, scoped lint/format/diff and42 unchanged route/interaction budgets pass. Full regression remainsV02."
+      },
+      "remaining": [
+        "Auxiliary toast/command/avatar/progress placement and other shared/consumer acceptance remain R03 after errors.",
+        "Exact skeleton dimensions/shimmer and remaining consumer loading/error/timezone acceptance.",
+        "Unbuilt T-06.03.05 background/font/radius/spacing admin controls and per-user overrides remain B01."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "7bfdab0e81ea50911fa31b3a116139282cd236583fd094b65cdd5b9983c2925e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/checkbox.tsx",
+          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "7e838a66ec265498f1e10b72f20cdf9a1b9892510b53af5b41b7e120828dd917"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/radio-group.tsx",
+          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "6fc3e3e80fe8c3d2f6272d624085a62a8e092e4ec4088f6eb87c200b1e37c0e0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/separator.tsx",
+          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
+        },
+        {
+          "path": "packages/ui/src/components/ui/switch.tsx",
+          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+        }
+      ],
+      "logs": [
+        "/tmp/r03-controls-baseline-final.log",
+        "/tmp/r03-controls-baseline.log",
+        "/tmp/r03-controls-browser.log",
+        "/tmp/r03-controls-build.log",
+        "/tmp/r03-controls-docs.log",
+        "/tmp/r03-controls-extra-baseline.log",
+        "/tmp/r03-controls-extra-browser.log",
+        "/tmp/r03-controls-extra-docs.log",
+        "/tmp/r03-controls-extra-final-format.log",
+        "/tmp/r03-controls-extra-format.log",
+        "/tmp/r03-controls-final-browser.log",
+        "/tmp/r03-controls-final-build.log",
+        "/tmp/r03-controls-final-format-check.log",
+        "/tmp/r03-controls-final-format.log",
+        "/tmp/r03-controls-final-quality.log",
+        "/tmp/r03-controls-fixture-diagnostic.log",
+        "/tmp/r03-controls-format.log",
+        "/tmp/r03-controls-integration.log",
+        "/tmp/r03-controls-keyboard-browser.log",
+        "/tmp/r03-controls-keyboard-format.log",
+        "/tmp/r03-controls-orientation-browser.log",
+        "/tmp/r03-controls-orientation-format.log",
+        "/tmp/r03-controls-quality.log",
+        "/tmp/r03-controls-separator-docs.log",
+        "/tmp/r03-controls-unit-budget.log",
+        "/tmp/r03-controls-visual.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 156,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.01.02"
+          ],
+          "reason": "Historical branding deferral satisfied; full remaining implemented touchpoint/shared-library acceptance continues R03.",
+          "source_revision": "e13b596e7650404c1acc5b717dd6ffd657433178",
+          "evidence": "audit/evidence/step-reviews.json#R03-controls"
+        }
+      ]
     }
   ]
 }
