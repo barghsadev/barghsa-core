@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "088b010e288f076c3b76e63816885ab783c2cccc",
+  "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
   "active_step": "R02",
-  "next_action": "Review receipt confirmation/rejection and online top-up expiry notification producers with existing finance evidence. Verify actual recipient/template payloads and durable dedup; repair confirmed gaps, then one feature checkpoint.",
+  "next_action": "Review exact KB upload and agent test-chat requirements, PR208/210 bodies and existing implementation. Reuse storage/provider authority proofs; repair confirmed integration gaps with focused workflow tests.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -710,6 +710,10 @@
     {
       "id": "R02-invoice-reminder-delivery",
       "review_record": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+    },
+    {
+      "id": "R02-receipt-expiry-notices",
+      "review_record": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
     }
   ],
   "deferred_improvements": [
@@ -733,8 +737,8 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 165,
-    "partial": 32,
+    "acceptance_verified": 166,
+    "partial": 31,
     "pending": 125,
     "merged_prs": 301,
     "historical_skips": 58,
@@ -1025,37 +1029,27 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-receipt-expiry-notices",
-    "name": "Receipt decisions and top-up expiry notifications",
+    "id": "R02-kb-agent-integration",
+    "name": "Knowledge-base uploads and agent test chat",
     "status": "reviewing",
     "prs": [
-      267,
-      270,
-      278,
-      281,
-      286,
-      289,
-      299,
-      301
+      208,
+      210
     ],
     "task_keys": [
-      "04-invoices-wallet-contracts.md#T-04.2.02.04",
-      "04-invoices-wallet-contracts.md#T-04.2.02.07",
-      "04-invoices-wallet-contracts.md#T-04.3.01.04"
+      "02-auth-users-admin.md#T-09.11.02",
+      "02-auth-users-admin.md#T-09.11.04"
     ],
     "remaining_checklist": [
-      "Read exact requirements and all contributing PR bodies/deferrals.",
-      "Reuse verified finance transaction/authority work; trace notification producers and current templates.",
-      "Repair confirmed delivery gaps and record focused evidence/dispositions once."
+      "Read exact criteria/PR bodies/deferrals and current integration once.",
+      "Verify integrated KB upload and real configured-agent test chat; a connection probe is insufficient.",
+      "Repair confirmed gaps and record one feature checkpoint."
     ],
     "confirmed_defects": [],
-    "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-      "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
-    ],
+    "reused_evidence": [],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review receipt confirmation/rejection and online top-up expiry notification producers with existing finance evidence. Verify actual recipient/template payloads and durable dedup; repair confirmed gaps, then one feature checkpoint."
+    "next_action": "Review exact KB upload and agent test-chat requirements, PR208/210 bodies and existing implementation. Reuse storage/provider authority proofs; repair confirmed integration gaps with focused workflow tests."
   },
   "open_domain_reviews": [
     {

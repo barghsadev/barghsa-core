@@ -1,24 +1,26 @@
 # Remaining fix plan
 
-Current through product/test `088b010e` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `b8201978` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 162 | 32 | 69 | 263 |
+| Tasks with merged PR evidence | 163 | 31 | 69 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 165 | 32 | 125 | 322 |
+| All claims | 166 | 31 | 125 | 322 |
 
-**157 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**156 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Invoice reminder delivery PR243/245 is locally complete at088b010e:2 task acceptances verified/2 saved PR reviews closed. Current totals165 verified/32 partial/125 pending;142 closed/24 open/135 unreviewed PRs.2756 logs indexed. Current offsets/deadlines/recipient/window policy now applies through dispatch; delayed channel legs share one occurrence; exact FA/EN SMS mappings are configurable and tested.75 scheduler/sender then25 overlapping sender,49 current worker plus26 unchanged runner/receipt,102 API,7 shared and10 distinct browser cases support closure. Types/lint/format/build and42 unchanged budgets pass.31 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-invoice-reminder-delivery), [handoff](HANDOFF.md).
+Receipt/expiry notices complete locally atb8201978:3 task acceptances verified (1 newly verified,2 preserved);8 contributing saved PR reviews closed,3 newly closed and5 preserved. Current totals166 verified/31 partial/125 pending;145 closed/21 open/135 unreviewed PRs.2771 logs indexed.35 worker and38 shared cases pass, including8 actual seeded FA/EN receipt/expiry delivery cases. Worker/shared types/lint/format pass. Matching prior receipt API/UI and42 budget evidence reused.10 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-receipt-expiry-notices).
 
-Next batch: receipt decisions and top-up expiry notification producers, PR267/270/278/281/286/289/299/301. Reuse finance transaction/authority work and current delivery foundation. Check exact recipients, template variables, dedup and persisted failures. Preserve coordinated reminder/SMS rollout and legacy incomplete-occurrence reconciliation; no production execution claimed.
+Next batch: integrated KB uploads and real agent test chat, PR208/210; qualified tasks02-auth-users-admin.md#T-09.11.02 andT-09.11.04. Read exact criteria, bodies and current implementation; a provider connection probe is insufficient. Reuse provider/storage authority work.
+
+Reminder PR243/245 remain locally closed at088b010e. Preserve coordinated worker/SMS rollout, minimum2 worker pool connections and legacy incomplete-occurrence reconciliation. Expiry workers now queue customer notices atomically; replace older expiry workers and publish templates before dispatch. No historical expiry backfill or production execution claimed.
 
 Email provider/callback batch remains6 verified/1 partial. PR190 retains deployed ops alert delivery. Prior migration0129–0131 and legacy-secret prerequisites remain.
 
@@ -124,7 +126,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all32 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all31 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 

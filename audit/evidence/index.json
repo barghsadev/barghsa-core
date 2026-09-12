@@ -19293,6 +19293,111 @@
       "sha256": "f8a73bc3d5f16f66f8c42afbb149c62d51e3dc8b0dffe5c1320247fe43e79058",
       "encoding": "gzip",
       "stored_sha256": "eefe7bd15d34a6b32562f9bfce39d0095df838fe1b2d8566e937fe402c39fa90"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-delivery-final.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-delivery-final.log.gz",
+      "sha256": "408caf7ceb3dd5a8a24f48f00b81a3310fff984f180c29f1d30c253f4e1faff7",
+      "encoding": "gzip",
+      "stored_sha256": "3c755d2e3c1b0b88e5b5dc95547c80366ab16634567f6a0421b5f8653dbd25ea"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-delivery-first.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-delivery-first.log.gz",
+      "sha256": "ea04d4d9fc30f558921c6a818c7b8d73e188e22b4bad70529193021e0f75063c",
+      "encoding": "gzip",
+      "stored_sha256": "fe0f086611501ad5da110a5c1ed1d5107df08094916bd9cb1105ff1265f5da3b"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-delivery-format-final.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-delivery-format-final.log.gz",
+      "sha256": "4ae318c05df8d9f2260e0f0fccde9a916e8b8407246a8eaf3c0fe58d6e759899",
+      "encoding": "gzip",
+      "stored_sha256": "81d299c661e79d049027e3283d170677b7c1a24fa405f002096f66fd753d71d3"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-delivery-format.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-delivery-format.log.gz",
+      "sha256": "3baed25e21a4dd9795419361d5f98f580d985214e886a9e1a28fe268e5f0798e",
+      "encoding": "gzip",
+      "stored_sha256": "6420e969fe2e790e07674c5d0638dd30d96ddfc4bf64d585085bfc74681a2e5f"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-delivery-second.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-delivery-second.log.gz",
+      "sha256": "b414dbd40635dd87dfe8817cdfa2316c075f4d57a360ef60270993c2f692e36d",
+      "encoding": "gzip",
+      "stored_sha256": "4616a35a11326a7ed223b0a63f7ce33c10089a041c5add3ab60de89b5669eb55"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-delivery-third.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-delivery-third.log.gz",
+      "sha256": "dd691503b2756e9666c2d65588f9691bf55aeb9c8eb264af4187563f5cfd76b8",
+      "encoding": "gzip",
+      "stored_sha256": "74ef8ea51efeb111e5f8585a26a02fc9717e61b17887a06ee2254b7cd389951a"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-expiry-baseline.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-expiry-baseline.log.gz",
+      "sha256": "3fa6e301106de59d80ee43ca07f99c63c4adb41e2c24b6306113e4c90dbac302",
+      "encoding": "gzip",
+      "stored_sha256": "a3d82be14268218b7ae76f8503e3809676e37276666bc0895daac34e6cf4057a"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-expiry-first.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-expiry-first.log.gz",
+      "sha256": "290418af280fabddb51c32e0805c5c3d024b46b9d31a6c3de56669bfab223a03",
+      "encoding": "gzip",
+      "stored_sha256": "d666fe669d1b25fe94daecb6e490836477d9ef71c49303a16c69e412c0534708"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-expiry-format.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-expiry-format.log.gz",
+      "sha256": "252c81ef041a7fd1f09941a8cfbc4e93bbf2410e44899bf32010b36d9911f8e6",
+      "encoding": "gzip",
+      "stored_sha256": "310c12edd71b4a1bde1bf85d9bed984c3df992682709e657f0e36bc6b42bff54"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-expiry-test-format.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-expiry-test-format.log.gz",
+      "sha256": "91eee918d7dbcd78e40974ee696e7ab1c3a790d7a3d4ce1f675bb0d176382782",
+      "encoding": "gzip",
+      "stored_sha256": "f4110614747d2e0121d3f9106ee4af03e8b01b8d18987e9b8f48eb37f52936c9"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-final-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-final-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-final-shared.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-final-shared.log.gz",
+      "sha256": "cfa7d1394d191b666854bafd769ce38db72fe34900d2fcc037f00836bde1573f",
+      "encoding": "gzip",
+      "stored_sha256": "3605b69d5e79e47e8d63a610d1ed7eca4469e19885bdb8bea6f6f53664609ff0"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-final-types.log",
+      "path": "audit/evidence/r02-receipt-notices/r02-receipt-final-types.log.gz",
+      "sha256": "2f1725643475fc93e2c92189506b78c74edc9813581737fa02b191aef79eade3",
+      "encoding": "gzip",
+      "stored_sha256": "82c1c930ebae81f7ea11e1793c15c17bfd895639676f5bdf4a449e573a85151d"
+    },
+    {
+      "original_path": "/tmp/r02-receipt-runbook-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
     }
   ]
 }

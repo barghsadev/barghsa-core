@@ -16465,6 +16465,185 @@
         "05-notifications-documents-ai.md#T-05.06.06",
         "05-notifications-documents-ai.md#T-05.06.07"
       ]
+    },
+    {
+      "id": "R02-receipt-expiry-notices",
+      "date": "2026-09-13",
+      "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+      "base_revision": "0c2c12ca295b96284c597048b5bf4db6fe01a3fb",
+      "product_commits": [
+        "b820197832524fab16b13bf0389232f34027fdf8"
+      ],
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04"
+      ],
+      "summary": "Receipt/expiry notices:3 task acceptances verified (1 newly verified,2 preserved); all8 contributing saved PR reviews closed, including3 newly closed and5 preserved.",
+      "review": [
+        "Exact three story/task requirements and all eight saved PR bodies read. Repeated UI/expiry PRs contain useful incremental accessibility, transaction, index and concurrency fixes; preserve the combined implementation. No duplicate rebuild/deletion warranted.",
+        "Both receipt task source-evidence sets exactly matched current source before this batch. Reuse verified staff authority/CSRF/step-up, dual approval, sealed attachments, atomic wallet credit/invoice allocation, rejection/audit/outbox rollback, idempotency and FA/EN production browser evidence from R01-bank-receipts-approval. Producer helper payloads match the active seeded template variables; no receipt/API/UI repair needed.",
+        "Expiry lacked the customer event explicitly deferred by PR281. It now locks the current profile before the ledger, preserves exclusive cutoff/online discriminator/gateway authority, and atomically writes rejection/audit/payment.wallet_topup_failed with in-app/email jobs. Stable key includes the original intent ID. Missing owner or enqueue failure rolls back. Balances never change; late verified callback reconciliation remains intact.",
+        "Two baseline PostgreSQL regressions reproduced missing notice and missing rollback.27 final expiry unit/integration cases include real cutoff/concurrency/idempotency/audit and new atomic notice/missing-owner checks.8 production-schema worker cases cover completed, failed, rejected and expiry notices in FA/EN through real seeded templates, real email transport with controlled fetch and real in-app persistence. Verify exact recipient, amount/reason, template version900, no unresolved placeholders and no repeated provider request. Receipt payload builder→queue→transport checks compose with unchanged API transaction tests; they do not claim a new HTTP end-to-end run.",
+        "38 shared finance helper cases and worker/shared types/scoped lint/format pass. Worker test setup built current dependencies. No API/web/schema product change; matching financial/UI and42 budget evidence remains valid. Required preferences, verified contacts, retries, send receipts and delivery identity retain the immediately preceding delivery-batch proofs; those consumers are unchanged.",
+        "Failed fixture runs preserved: current email destination required, reservation trigger already created the identifier, in-app recipient column name and UUID/text parameter casts corrected. No product guard was relaxed. Rollout replaces older expiry workers and publishes templates first; old expired rows are not backfilled or resent. No live provider call, deployment, GitHub refresh or scheduler change."
+      ],
+      "verification": {
+        "worker": "35 cases:27 expiry and8 actual seeded FA/EN delivery; earlier26 expiry run overlaps.",
+        "shared": "38 existing finance helper cases pass.",
+        "quality": "Worker/shared types and scoped lint/format pass; matching prior API/UI/build/budget evidence reused."
+      },
+      "remaining": [
+        "Operational rollout/template publication and live-provider evidence; no historical expiry backfill.",
+        "Integrated KB upload and actual agent test chat next."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+          "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+          "sha256": "72df4135243d7ecf96d26fcd24d6171104dd809a33e9ea1f8be4f1d1d9a59148"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+          "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "sha256": "37341347b5826dbb5dfe6548d1caf54c72a03759d9018aa5543016aac875a470"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
+        },
+        {
+          "path": "packages/shared/src/finance/online-topup-expiry.ts",
+          "sha256": "399d5d67f1a2b68757c9bf34a67e44d56978eb410660d8252ad26e87c0c3ea22"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-receipt-delivery-final.log",
+        "/tmp/r02-receipt-delivery-first.log",
+        "/tmp/r02-receipt-delivery-format-final.log",
+        "/tmp/r02-receipt-delivery-format.log",
+        "/tmp/r02-receipt-delivery-second.log",
+        "/tmp/r02-receipt-delivery-third.log",
+        "/tmp/r02-receipt-expiry-baseline.log",
+        "/tmp/r02-receipt-expiry-first.log",
+        "/tmp/r02-receipt-expiry-format.log",
+        "/tmp/r02-receipt-expiry-test-format.log",
+        "/tmp/r02-receipt-final-format.log",
+        "/tmp/r02-receipt-final-lint.log",
+        "/tmp/r02-receipt-final-shared.log",
+        "/tmp/r02-receipt-final-types.log",
+        "/tmp/r02-receipt-runbook-format.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 267,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "reason": "Existing finance authority, transaction, rejection/dual-approval and staff UI evidence matches current source. Actual seeded FA/EN customer delivery is verified. Earlier dual-approval, granular permission, attachment sealing and browser deferrals are satisfied by the receipt batch; template seeding remains an explicit rollout step.",
+          "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+          "evidence": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        },
+        {
+          "pr": 270,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.07"
+          ],
+          "reason": "TTL/customer notification deferral is satisfied: expiry, audit and in-app/email enqueue commit atomically; actual seeded FA/EN dispatch passes. Actor/TTL/env configuration and late provider reconciliation remain supported; historical expired rows are not backfilled.",
+          "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+          "evidence": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        },
+        {
+          "pr": 278,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "reason": "Existing finance authority, transaction, rejection/dual-approval and staff UI evidence matches current source. Actual seeded FA/EN customer delivery is verified. Earlier dual-approval, granular permission, attachment sealing and browser deferrals are satisfied by the receipt batch; template seeding remains an explicit rollout step.",
+          "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+          "evidence": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        },
+        {
+          "pr": 281,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.07"
+          ],
+          "reason": "TTL/customer notification deferral is satisfied: expiry, audit and in-app/email enqueue commit atomically; actual seeded FA/EN dispatch passes. Actor/TTL/env configuration and late provider reconciliation remain supported; historical expired rows are not backfilled.",
+          "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+          "evidence": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        },
+        {
+          "pr": 286,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "reason": "Existing finance authority, transaction, rejection/dual-approval and staff UI evidence matches current source. Actual seeded FA/EN customer delivery is verified. Earlier dual-approval, granular permission, attachment sealing and browser deferrals are satisfied by the receipt batch; template seeding remains an explicit rollout step.",
+          "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+          "evidence": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        },
+        {
+          "pr": 289,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.07"
+          ],
+          "reason": "TTL/customer notification deferral is satisfied: expiry, audit and in-app/email enqueue commit atomically; actual seeded FA/EN dispatch passes. Actor/TTL/env configuration and late provider reconciliation remain supported; historical expired rows are not backfilled.",
+          "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+          "evidence": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        },
+        {
+          "pr": 299,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.3.01.04"
+          ],
+          "reason": "Existing finance authority, transaction, rejection/dual-approval and staff UI evidence matches current source. Actual seeded FA/EN customer delivery is verified. Earlier dual-approval, granular permission, attachment sealing and browser deferrals are satisfied by the receipt batch; template seeding remains an explicit rollout step.",
+          "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+          "evidence": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        },
+        {
+          "pr": 301,
+          "status": "closed",
+          "task_keys": [
+            "04-invoices-wallet-contracts.md#T-04.2.02.04"
+          ],
+          "reason": "Existing finance authority, transaction, rejection/dual-approval and staff UI evidence matches current source. Actual seeded FA/EN customer delivery is verified. Earlier dual-approval, granular permission, attachment sealing and browser deferrals are satisfied by the receipt batch; template seeding remains an explicit rollout step.",
+          "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+          "evidence": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        }
+      ],
+      "pr_counts": {
+        "closed": 8,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-online-topups-callbacks",
+        "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+      ],
+      "refreshed_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07"
+      ]
     }
   ]
 }

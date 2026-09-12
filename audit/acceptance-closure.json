@@ -8119,7 +8119,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "reviewed_sha": "b820197832524fab16b13bf0389232f34027fdf8",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 266,
       "requirement": "| T-04.2.02.04 | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` | M |",
@@ -8188,11 +8188,36 @@
         {
           "path": "packages/i18n/src/wallet-receipts.ts",
           "sha256": "937678c5b44fa691fb2ddc5c5407105ad34c832a1d0cddb22a2db3922a609bcb"
+        },
+        {
+          "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+          "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+          "sha256": "72df4135243d7ecf96d26fcd24d6171104dd809a33e9ea1f8be4f1d1d9a59148"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+          "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "sha256": "37341347b5826dbb5dfe6548d1caf54c72a03759d9018aa5543016aac875a470"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
+        },
+        {
+          "path": "packages/shared/src/finance/online-topup-expiry.ts",
+          "sha256": "399d5d67f1a2b68757c9bf34a67e44d56978eb410660d8252ad26e87c0c3ea22"
         }
       ],
       "checks": [
         "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added.",
+        "Actual seeded FA/EN template payloads, current recipient and durable delivery identity verified;35 worker and38 shared cases pass. Existing finance/UI source bindings match earlier acceptance. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "merged_prs": [
         267,
@@ -8202,9 +8227,9 @@
       ],
       "historically_skipped": false,
       "limitations": [
-        "Staff UI, settlement, rejection and dual approval verified. PR301 customer-notice delivery remains separately open in R02; transactional enqueue alone is not delivery proof."
+        "Production rollout, template seeding and live delivery remain operational prerequisites; no historical expiry backfill or live execution claimed."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "review_record": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
@@ -8508,8 +8533,8 @@
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.04",
-      "status": "partial",
-      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b820197832524fab16b13bf0389232f34027fdf8",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 351,
       "requirement": "| T-04.3.01.04 | Staff rejection API: mark receipt Rejected, store reason, notify customer | M |",
@@ -8570,20 +8595,45 @@
         {
           "path": "packages/shared/src/finance/invoice-overpayment.ts",
           "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+        },
+        {
+          "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+          "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+          "sha256": "72df4135243d7ecf96d26fcd24d6171104dd809a33e9ea1f8be4f1d1d9a59148"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+          "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "sha256": "37341347b5826dbb5dfe6548d1caf54c72a03759d9018aa5543016aac875a470"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
+        },
+        {
+          "path": "packages/shared/src/finance/online-topup-expiry.ts",
+          "sha256": "399d5d67f1a2b68757c9bf34a67e44d56978eb410660d8252ad26e87c0c3ea22"
         }
       ],
       "checks": [
         "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added.",
+        "Actual seeded FA/EN template payloads, current recipient and durable delivery identity verified;35 worker and38 shared cases pass. Existing finance/UI source bindings match earlier acceptance. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "merged_prs": [
         299
       ],
       "historically_skipped": false,
       "limitations": [
-        "Rejection state/reason/current authority, audit and atomic customer-notice enqueue are verified. Required actual customer delivery, preferences, retries and templates remain R02; task stays partial."
+        "Production rollout, template seeding and live delivery remain operational prerequisites; no historical expiry backfill or live execution claimed."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "review_record": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
@@ -8889,7 +8939,7 @@
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.07",
       "status": "acceptance_verified",
-      "reviewed_sha": "a1d995953e6303d7697664de615dfb8a71cc1130",
+      "reviewed_sha": "b820197832524fab16b13bf0389232f34027fdf8",
       "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
       "requirement_line": 269,
       "requirement": "| T-04.2.02.07 | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL | M |\n\n---",
@@ -8897,15 +8947,15 @@
       "source_evidence": [
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-          "sha256": "04c8f156751bffa4ac790c4143dd2ef1f28910042dd5fdb84e795f38cd9f0f3c"
+          "sha256": "37341347b5826dbb5dfe6548d1caf54c72a03759d9018aa5543016aac875a470"
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
-          "sha256": "63945a422bb3511cfb41fd44cd39c3b8541bf52c7d47f0ab70799507b1957ce3"
+          "sha256": "6fa833494c9e51b47f57a5da0b2322e5684f4bc4c0002dc083c65f5d0ed937af"
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
-          "sha256": "751a02942d9bea3626d016f737b962fba7a94222fadb20cd66c7d9e2f4c702e1"
+          "sha256": "72df4135243d7ecf96d26fcd24d6171104dd809a33e9ea1f8be4f1d1d9a59148"
         },
         {
           "path": "apps/worker/src/main.ts",
@@ -8913,7 +8963,7 @@
         },
         {
           "path": "packages/shared/src/finance/online-topup-expiry.ts",
-          "sha256": "17976e309024b7181519cfec79f826d083f5412d0ae16d3e0b50857489c5ea71"
+          "sha256": "399d5d67f1a2b68757c9bf34a67e44d56978eb410660d8252ad26e87c0c3ea22"
         },
         {
           "path": "packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql",
@@ -8930,11 +8980,21 @@
         {
           "path": "apps/api/src/wallet/online-topup-callback.service.ts",
           "sha256": "3dc86ff965ca1f0a3c3fe8552675073720fe2100fe2313454e121b1ca71e975e"
+        },
+        {
+          "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
+          "sha256": "5f3ad4148ae9bbda7f39f971a6b664684f4db625b83865890b982570593163c4"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         }
       ],
       "checks": [
         "Exact story/task criteria and current implementations reviewed together in audit/evidence/step-reviews.json#R01-online-topups-callbacks",
-        "Six repairs and focused current/reused checks recorded once in the consolidated review; overlapping counts are not added."
+        "Six repairs and focused current/reused checks recorded once in the consolidated review; overlapping counts are not added.",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+        "Actual seeded FA/EN template payloads, current recipient and durable delivery identity verified;35 worker and38 shared cases pass. Existing finance/UI source bindings match earlier acceptance. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "merged_prs": [
         270,
@@ -8943,9 +9003,9 @@
       ],
       "historically_skipped": false,
       "limitations": [
-        "Expiry requires a real system audit actor. It preserves provider reconciliation and does not credit. Actual expiry customer-notice delivery is separately assigned to R02, including PR281 historical deferral."
+        "Production rollout, template seeding and live delivery remain operational prerequisites; no historical expiry backfill or live execution claimed."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks",
+      "review_record": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger",
@@ -12428,7 +12488,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "packages/i18n/src/providers.ts",
@@ -12458,7 +12518,8 @@
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
         "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Current planned/queued reminder policy and exact active FA/EN email/SMS delivery verified. audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Current planned/queued reminder policy and exact active FA/EN email/SMS delivery verified. audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "merged_prs": [
         243
@@ -12828,7 +12889,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "packages/i18n/src/providers.ts",
@@ -12858,7 +12919,8 @@
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
         "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Current planned/queued reminder policy and exact active FA/EN email/SMS delivery verified. audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Current planned/queued reminder policy and exact active FA/EN email/SMS delivery verified. audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "merged_prs": [
         245
@@ -16258,7 +16320,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -16352,7 +16414,8 @@
       "checks": [
         "Provider schema and Draft/Test/Active/Superseded/Disabled lifecycle, unique active provider, sole-OTP guard, current session/CSRF/step-up, atomic audit and verified-recipient activation proof remain implemented. Latest controller/mutation/recipient/self-test bindings match prior records; service changes since c6588610 only propagate transient outcomes and are covered by current circuit/lifecycle checks.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "limitations": [],
       "merged_prs": [
@@ -16496,7 +16559,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -16590,7 +16653,8 @@
       "checks": [
         "SMTP preserves all configuration fields, configured handshake and verified-recipient self-send. Fixed DNS rebinding in API tests: dial the validated IP with the original TLS hostname, preserving explicit deployment allowlist exceptions. Both TLS/STARTTLS regressions failed before repair;89 API and60 shared guard cases pass. Existing production sender already pins checked IPs.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "limitations": [],
       "merged_prs": [
@@ -16734,7 +16798,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -16828,7 +16892,8 @@
       "checks": [
         "Resend validates the configured sending domain and sends to the current verified staff email. Tester changes since prior proof only classify transient HTTP/network outcomes; current focused tester and self-delivery suites pass. Actual sender retains from/reply-to settings. No real external email was sent.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "limitations": [],
       "merged_prs": [
@@ -16972,7 +17037,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -17066,7 +17131,8 @@
       "checks": [
         "Provider admin page, API adapter, settings/recovery browser tests and provider dictionary exactly match the verified authoring batch. Reuse19 email browser cases for field preservation, masked write-only secrets, saved draft recovery, test recipient, confirmation and activation gating. Active metadata, rollback and sole-provider warning remain. New correction queue is separate and passes4 FA/EN browser cases;10 neighboring recovery cases pass unchanged.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "limitations": [],
       "merged_prs": [
@@ -17210,7 +17276,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -17304,7 +17370,8 @@
       "checks": [
         "Owner approved limited server-side decryption on September13; canonical T-05.06.05 and current requirement ledger updated. AES-256-GCM field encryption, missing-key refusal for new writes, masked responses and diagnostic redaction remain.18 secret tests pass. Callback verification now decrypts only its signing secret. Legacy plaintext read compatibility remains; production legacy-secret inventory/reconciliation stays the existing V01/operations prerequisite, with no assertion that stored production rows were migrated.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "limitations": [],
       "merged_prs": [
@@ -17448,7 +17515,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -17542,7 +17609,8 @@
       "checks": [
         "Fixed exact rolling consecutive transient threshold, atomic bounded failure timestamps and single cooldown probes. Permanent failures and local bookkeeping errors no longer degrade providers; accepted sends with receipt-persistence errors count as provider success; caller cancellation is not a provider failure.202 API cases plus the additional cancellation case and75 worker cases pass (overlapping reruns excluded). Migration0130 conservatively backfills old earliest-window evidence. Local EmailProviderDegraded rule passes Prometheus tests with replica disagreement/recovery cases. Deployed alert routing/delivery remains unverified, so PR190/task.06 stays open/partial.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "limitations": [
         "Deployed ops alert delivery needs operational execution evidence."
@@ -17688,7 +17756,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "83ee1c2b886aae32fe61a704857dfe8a545195502b41aad451108e47f94f2795"
+          "sha256": "9cd349b2cf34d1684f63704503d40fb0bc7263c5839a7610a03f70445327bfa7"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -17782,7 +17850,8 @@
       "checks": [
         "Fixed actual Resend recipient-array/nested-bounce payloads and Svix space-separated signature candidates. Migration0129 records every verifying active/superseded config identity. Callback replay, provider/message attribution and early feedback are transactional; callbacks never mutate worker ownership/outbox jobs/accepted receipts or append false sends. History derives feedback on the original accepted email attempt only. Legacy unidentified callbacks are not guessed.25 final HTTP cases cover callback and correction behavior;8 signature and59 neighboring admin/dead-letter cases remain valid. Complaints atomically suppress normalized addresses and create one open staff correction per address. Migration0131 backfills complaint suppressions and retains suppression/history after profile deletion. Current staff read/write authority, CSRF, step-up, strict notes, concurrent idempotent completion, audit rollback and renewed complaints pass actual HTTP checks. Resolution never removes suppression or sends a message. One prior-to-current migration case passes;4 FA/EN browser cases cover denial, malformed responses, pagination, read-only access, step-up, mismatched acknowledgments and completed history.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
       ],
       "limitations": [],
       "merged_prs": [
@@ -20873,6 +20942,249 @@
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-verification-policy"
       }
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 266,
+      "requirement": "| T-04.2.02.04 | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` | M |",
+      "requirement_sha256": "d6c34da3e66520fe9ada651a0f357c3debc251c2b70924077bb0ce7b6a7571cc",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+          "sha256": "3ac6a8b5f14411896520960a95e666ba67eca90fa2b551b26e797bb4d13cfe60"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-approval.ts",
+          "sha256": "f99964244fe55bf2937ddb5177a5c054ffb1fba7ccfa6c0d4091295565614930"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "6b80643c19106ae0ffd34ab08efa268fd667ad9e81588ee35ee8dd58b419f848"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "fa06908b9c86b30a6573c5a7fb77a7291d8e0cf6d0da5ed9a72af948d83a9671"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
+        },
+        {
+          "path": "apps/web/e2e/receipt-emergency.spec.ts",
+          "sha256": "68201ad8640e1682d5e7496550cac5019e9e82fa3ed8694f753b4c69375ded3f"
+        },
+        {
+          "path": "apps/web/src/lib/bank-receipt-confirmation.ts",
+          "sha256": "1572ee12f4defc1166bd5aaca35d6e8d8916f57403495d7bdf6859887a15d97d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+          "sha256": "b9d4dc43aa87ae39f67523646dae0b3bcaf2273838738d85391afc8bc3e62eb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "2880b44433f5e65cbeef53e625f3d634d0201ec487d4fb6abf67ca3fdb8ce223"
+        },
+        {
+          "path": "packages/i18n/src/wallet-receipts.ts",
+          "sha256": "937678c5b44fa691fb2ddc5c5407105ad34c832a1d0cddb22a2db3922a609bcb"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        267,
+        278,
+        286,
+        301
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Staff UI, settlement, rejection and dual approval verified. PR301 customer-notice delivery remains separately open in R02; transactional enqueue alone is not delivery proof."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.04",
+      "status": "partial",
+      "reviewed_sha": "b4356e03514ce16507f87ca49fad515e8802dd96",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 351,
+      "requirement": "| T-04.3.01.04 | Staff rejection API: mark receipt Rejected, store reason, notify customer | M |",
+      "requirement_sha256": "5eaa39188c4c429d606d0aac2acc33bb2e7f5ece21694c77b0608b43acb76e61",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "ffe4079b2cd8c3a5371489232de11497d3cc2c69d12dab03d577149ef1ec33ba"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "bc5d8ee1034f668654459add8b2964664c7d8b3cec17f6ee2f84d2adc43fdfa7"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "006e38eae0ae4dced1a66aa532c4747568f50b94735d0f96b74cffdfae01b61f"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "d663139ddae3acb837a4e7029b3dcb64f5946d536ea2dc24c12d7cd43645490e"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "09e9540500f64a15ba640c7e84fefb04195a6a547765a8b671e19396882c720b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "5a4a0f74fe600dfa3dc7c85bcbd9c2ad4589151d145d51baa9b65280f7fb6706"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+          "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+          "sha256": "3647ec9f359bac9f73b351d160199142811688bd0e08903606e4af78b2ce2a78"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.ts",
+          "sha256": "600ca3c5f63ffabf3e58c09d1749a85318d575faf84235ec5dbcb95e4f6dc9a2"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-overpayment.ts",
+          "sha256": "aea6f39b60551a70ddcb84877785fe53b43bbed825812abeaaa0e38b64765bfd"
+        }
+      ],
+      "checks": [
+        "Current implementation and exact story/task requirements reviewed together in audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "Focused API/web/browser evidence is recorded per repair in the consolidated review; overlapping case counts are not added."
+      ],
+      "merged_prs": [
+        299
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Rejection state/reason/current authority, audit and atomic customer-notice enqueue are verified. Required actual customer delivery, preferences, retries and templates remain R02; task stays partial."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.07",
+      "status": "acceptance_verified",
+      "reviewed_sha": "a1d995953e6303d7697664de615dfb8a71cc1130",
+      "requirement_file": "kanban/epics/04-invoices-wallet-contracts.md",
+      "requirement_line": 269,
+      "requirement": "| T-04.2.02.07 | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL | M |\n\n---",
+      "requirement_sha256": "c3144354e43827d6a13791c65b76dde163414b6d706c69719c084876da4b6be3",
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "sha256": "04c8f156751bffa4ac790c4143dd2ef1f28910042dd5fdb84e795f38cd9f0f3c"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
+          "sha256": "63945a422bb3511cfb41fd44cd39c3b8541bf52c7d47f0ab70799507b1957ce3"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+          "sha256": "751a02942d9bea3626d016f737b962fba7a94222fadb20cd66c7d9e2f4c702e1"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "d485a28edf1db7d2288d30b1e7e5f9923c1d612421bc44d46a634fbe2bcad560"
+        },
+        {
+          "path": "packages/shared/src/finance/online-topup-expiry.ts",
+          "sha256": "17976e309024b7181519cfec79f826d083f5412d0ae16d3e0b50857489c5ea71"
+        },
+        {
+          "path": "packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql",
+          "sha256": "f4de404ae7c395f4e7e1aa7b58c1c75f133aad3402270b4ee8a710b28263b73d"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "36f2a34085333da44c7b8071b27b61f59d6dcef76806d6c2472945fa3b5d472e"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-authority.integration.test.ts",
+          "sha256": "a3f7cfcf9c73462673474e04d9a060c64bc067c9e5187fa6a821e6acad22f00e"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "3dc86ff965ca1f0a3c3fe8552675073720fe2100fe2313454e121b1ca71e975e"
+        }
+      ],
+      "checks": [
+        "Exact story/task criteria and current implementations reviewed together in audit/evidence/step-reviews.json#R01-online-topups-callbacks",
+        "Six repairs and focused current/reused checks recorded once in the consolidated review; overlapping counts are not added."
+      ],
+      "merged_prs": [
+        270,
+        281,
+        289
+      ],
+      "historically_skipped": false,
+      "limitations": [
+        "Expiry requires a real system audit actor. It preserves provider reconciliation and does not credit. Actual expiry customer-notice delivery is separately assigned to R02, including PR281 historical deferral."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
+        "audit/evidence/step-reviews.json#R01-wallet-ledger",
+        "audit/final-repair-checkpoint.json"
+      ]
     }
   ],
   "current_requirements_register": "audit/current-task-requirements.json",
@@ -21458,6 +21770,24 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
       "note": "Only matching immediate-base bindings refreshed; older38 refresh records retained."
+    },
+    {
+      "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+      "note": "Only matching immediate-base expiry bindings refreshed; older38 retained."
     }
   ]
 }
